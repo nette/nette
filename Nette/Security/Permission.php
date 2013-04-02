@@ -22,14 +22,19 @@ use Nette;
  *
  * @copyright  Copyright (c) 2005, 2007 Zend Technologies USA Inc.
  * @author     David Grudl
+ * @author     Jachym Tousek
  *
  * @property-read array $roles
  * @property-read array $resources
- * @property-read mixed $queriedRole
- * @property-read mixed $queriedResource
  */
 class Permission extends Nette\Object implements IAuthorizator
 {
+	/** @var string  default role for unauthenticated user */
+	public $guestRole = 'guest';
+
+	/** @var string  default role for authenticated user without own identity */
+	public $authenticatedRole = 'authenticated';
+
 	/** @var array  Role storage */
 	private $roles = array();
 
@@ -51,8 +56,14 @@ class Permission extends Nette\Object implements IAuthorizator
 		'byResource' => array(),
 	);
 
-	/** @var mixed */
-	private $queriedRole, $queriedResource;
+	/** @var IIdentity|NULL */
+	private $queriedIdentity;
+
+	/** @var string|IRole */
+	private $queriedRole;
+
+	/** @var string|IResource */
+	private $queriedResource;
 
 
 
@@ -126,7 +137,12 @@ class Permission extends Nette\Object implements IAuthorizator
 			throw new Nette\InvalidArgumentException("Role must be a non-empty string.");
 
 		} elseif ($need && !isset($this->roles[$role])) {
-			throw new Nette\InvalidStateException("Role '$role' does not exist.");
+			// lazy addition of guest role and authenticated role
+			if ($role === $this->guestRole || $role === $this->authenticatedRole) {
+				$this->addRole($role);
+			} else {
+				throw new Nette\InvalidStateException("Role '$role' does not exist.");
+			}
 		}
 	}
 
@@ -613,28 +629,22 @@ class Permission extends Nette\Object implements IAuthorizator
 
 
 	/**
-	 * Returns TRUE if and only if the Role has access to [certain $privileges upon] the Resource.
+	 * Returns TRUE if and only if the user has access to [certain $privileges upon] the Resource.
 	 *
 	 * This method checks Role inheritance using a depth-first traversal of the Role list.
 	 * The highest priority parent (i.e., the parent most recently added) is checked first,
 	 * and its respective parents are checked similarly before the lower-priority parents of
 	 * the Role are checked.
 	 *
-	 * @param  string|Permission::ALL|IRole  role
+	 * @param  IIdentity|NULL  identity or NULL for guest
 	 * @param  string|Permission::ALL|IResource  resource
 	 * @param  string|Permission::ALL  privilege
 	 * @throws Nette\InvalidStateException
 	 * @return bool
 	 */
-	public function isAllowed($role = self::ALL, $resource = self::ALL, $privilege = self::ALL)
+	public function isAllowed(IIdentity $identity = NULL, $resource = self::ALL, $privilege = self::ALL)
 	{
-		$this->queriedRole = $role;
-		if ($role !== self::ALL) {
-			if ($role instanceof IRole) {
-				$role = $role->getRoleId();
-			}
-			$this->checkRole($role);
-		}
+		$this->queriedIdentity = $identity;
 
 		$this->queriedResource = $resource;
 		if ($resource !== self::ALL) {
@@ -644,64 +654,85 @@ class Permission extends Nette\Object implements IAuthorizator
 			$this->checkResource($resource);
 		}
 
-		do {
-			// depth-first search on $role if it is not 'allRoles' pseudo-parent
-			if ($role !== NULL && NULL !== ($result = $this->searchRolePrivileges($privilege === self::ALL, $role, $resource, $privilege))) {
-				break;
+		if (!$identity) { // guest
+			$roles = array($this->guestRole);
+		} else {
+			$roles = $identity->getRoles();
+			if (empty($roles)) { // authenticated user without a role
+				$roles = array($this->authenticatedRole);
 			}
+		}
 
-			if ($privilege === self::ALL) {
-				if ($rules = $this->getRules($resource, self::ALL)) { // look for rule on 'allRoles' psuedo-parent
-					foreach ($rules['byPrivilege'] as $privilege => $rule) {
-						if (self::DENY === ($result = $this->getRuleType($resource, NULL, $privilege))) {
-							break 2;
-						}
-					}
-					if (NULL !== ($result = $this->getRuleType($resource, NULL, NULL))) {
-						break;
-					}
-				}
-			} else {
-				if (NULL !== ($result = $this->getRuleType($resource, NULL, $privilege))) { // look for rule on 'allRoles' pseudo-parent
-					break;
-
-				} elseif (NULL !== ($result = $this->getRuleType($resource, NULL, NULL))) {
-					break;
-				}
+		foreach ($roles as $role) {
+			$this->queriedRole = $role;
+			if ($role instanceof IRole) {
+				$role = $role->getRoleId();
 			}
+			$this->checkRole($role);
+			$result = $this->isRoleAllowed($role, $resource, $privilege);
+			if ($result !== NULL) {
+				return $result;
+			}
+		}
 
-			$resource = $this->resources[$resource]['parent']; // try next Resource
-		} while (TRUE);
-
-		$this->queriedRole = $this->queriedResource = NULL;
-		return $result;
-	}
-
-
-
-	/**
-	 * Returns real currently queried Role. Use by assertion.
-	 * @return mixed
-	 */
-	public function getQueriedRole()
-	{
-		return $this->queriedRole;
-	}
-
-
-
-	/**
-	 * Returns real currently queried Resource. Use by assertion.
-	 * @return mixed
-	 */
-	public function getQueriedResource()
-	{
-		return $this->queriedResource;
+		// no rule matched
+		return FALSE;
 	}
 
 
 
 	/********************* internals ****************d*g**/
+
+
+
+	/**
+	 * Returns TRUE if and only if the role has access to [certain $privileges upon] the Resource.
+	 *
+	 * @param  string  role
+	 * @param  string|Permission::ALL  resource
+	 * @param  string|Permission::ALL  privilege
+	 * @return bool
+	 */
+	private function isRoleAllowed($role, $resource, $privilege)
+	{
+		do {
+			// depth-first search on $role if it is not 'allRoles' pseudo-parent
+			if ($role !== NULL) {
+				$result = $this->searchRolePrivileges($privilege === self::ALL, $role, $resource, $privilege);
+				if ($result !== NULL) {
+					return $result;
+				}
+			}
+
+			if ($privilege === self::ALL) {
+				$rules = $this->getRules($resource, self::ALL); // look for rule on 'allRoles' psuedo-parent
+				if ($rules) {
+					foreach ($rules['byPrivilege'] as $privilege => $rule) {
+						if ($this->getRuleType($resource, NULL, $privilege) === self::DENY) {
+							return self::DENY;
+						}
+					}
+					$result = $this->getRuleType($resource, NULL, NULL);
+					if ($result !== NULL) {
+						return $result;
+					}
+				}
+			} else {
+				$result = $this->getRuleType($resource, NULL, $privilege);
+				if ($result !== NULL) { // look for rule on 'allRoles' pseudo-parent
+					return $result;
+
+				} else {
+					$result = $this->getRuleType($resource, NULL, NULL);
+					if ($result !== NULL) {
+						return $result;
+					}
+				}
+			}
+
+			$resource = $this->resources[$resource]['parent']; // try next Resource
+		} while (TRUE);
+	}
 
 
 
@@ -728,20 +759,25 @@ class Permission extends Nette\Object implements IAuthorizator
 			if ($all) {
 				if ($rules = $this->getRules($resource, $role)) {
 					foreach ($rules['byPrivilege'] as $privilege2 => $rule) {
-						if (self::DENY === $this->getRuleType($resource, $role, $privilege2)) {
+						if ($this->getRuleType($resource, $role, $privilege2) === self::DENY) {
 							return self::DENY;
 						}
 					}
-					if (NULL !== ($type = $this->getRuleType($resource, $role, NULL))) {
-						return $type;
+					$result = $this->getRuleType($resource, $role, NULL);
+					if ($result !== NULL) {
+						return $result;
 					}
 				}
 			} else {
-				if (NULL !== ($type = $this->getRuleType($resource, $role, $privilege))) {
-					return $type;
+				$result = $this->getRuleType($resource, $role, $privilege);
+				if ($result !== NULL) {
+					return $result;
 
-				} elseif (NULL !== ($type = $this->getRuleType($resource, $role, NULL))) {
-					return $type;
+				} else {
+					$result = $this->getRuleType($resource, $role, NULL);
+					if ($result !== NULL) {
+						return $result;
+					}
 				}
 			}
 
@@ -781,13 +817,13 @@ class Permission extends Nette\Object implements IAuthorizator
 			$rule = $rules['byPrivilege'][$privilege];
 		}
 
-		if ($rule['assert'] === NULL || $rule['assert']->__invoke($this, $role, $resource, $privilege)) {
+		if ($rule['assert'] === NULL || $rule['assert']->__invoke($this->queriedIdentity, $this->queriedResource, $this->queriedRole)) {
 			return $rule['type'];
 
 		} elseif ($resource !== self::ALL || $role !== self::ALL || $privilege !== self::ALL) {
 			return NULL;
 
-		} elseif (self::ALLOW === $rule['type']) {
+		} elseif ($rule['type'] === self::ALLOW) {
 			return self::DENY;
 
 		} else {

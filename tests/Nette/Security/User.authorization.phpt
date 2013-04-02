@@ -4,12 +4,14 @@
  * Test: Nette\Security\User authorization.
  *
  * @author     David Grudl
- * @package    Nette\Http
+ * @author     Jachym Tousek
+ * @package    Nette\Security
  */
 
 use Nette\Security\IAuthenticator,
-	Nette\Security\Identity,
-	Nette\Security\IAuthorizator;
+	Nette\Security\IAuthorizator,
+	Nette\Security\IIdentity,
+	Nette\Security\Identity;
 
 
 
@@ -51,14 +53,14 @@ class Authenticator implements IAuthenticator
 class Authorizator implements IAuthorizator
 {
 	/**
-	 * @param  string  role
+	 * @param  IIdentity  identity
 	 * @param  string  resource
 	 * @param  string  privilege
 	 * @return bool
 	 */
-	function isAllowed($role = self::ALL, $resource = self::ALL, $privilege = self::ALL)
+	function isAllowed(IIdentity $identity = NULL, $resource = self::ALL, $privilege = self::ALL)
 	{
-		return $role === 'admin' && strpos($resource, 'jany') === FALSE;
+		return $identity && $identity->getRoles() === array('admin') && strpos($resource, 'jany') === FALSE;
 	}
 
 }
@@ -73,9 +75,8 @@ $user = $container->user;
 Assert::false( $user->isLoggedIn() );
 
 
-Assert::same( array('guest'), $user->getRoles() );
+Assert::same( array(), $user->getRoles() );
 Assert::false( $user->isInRole('admin') );
-Assert::true( $user->isInRole('guest') );
 
 
 
@@ -89,7 +90,7 @@ $user->login('john', 'xxx');
 Assert::true( $user->isLoggedIn() );
 Assert::same( array('admin'), $user->getRoles() );
 Assert::true( $user->isInRole('admin') );
-Assert::false( $user->isInRole('guest') );
+Assert::false( $user->isInRole('user') );
 
 
 // authorization
@@ -106,7 +107,6 @@ Assert::false( $user->isAllowed('sleep_with_jany') );
 
 
 // log out
-// logging out...
 $user->logout(FALSE);
 
 Assert::false( $user->isAllowed('delete_file') );

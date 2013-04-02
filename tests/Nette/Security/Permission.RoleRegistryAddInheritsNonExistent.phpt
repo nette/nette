@@ -17,5 +17,5 @@ require __DIR__ . '/../bootstrap.php';
 
 $acl = new Permission;
 Assert::exception(function() use ($acl) {
-	$acl->addRole('guest', 'nonexistent');
+	$acl->addRole('user', 'nonexistent');
 }, 'Nette\InvalidStateException', "Role 'nonexistent' does not exist.");

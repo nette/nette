@@ -16,10 +16,10 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $acl = new Permission;
-Assert::false( $acl->hasRole('guest') );
+Assert::false( $acl->hasRole('user') );
 
-$acl->addRole('guest');
-Assert::true( $acl->hasRole('guest') );
+$acl->addRole('user');
+Assert::true( $acl->hasRole('user') );
 
-$acl->removeRole('guest');
-Assert::false( $acl->hasRole('guest') );
+$acl->removeRole('user');
+Assert::false( $acl->hasRole('user') );

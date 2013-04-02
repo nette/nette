@@ -1,9 +1,8 @@
 <?php
 
 /**
- * Test: Nette\Security\Permission Ensures that ACL-wide rules (all Resources and privileges) work properly for a particular Role.
+ * Test: Nette\Security\Permission Ensures that authenticated role is automatically added to identity with no roles.
  *
- * @author     David Grudl
  * @author     Jachym Tousek
  * @package    Nette\Security
  */
@@ -17,10 +16,12 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$identity = new Identity(1, array('user'));
 $acl = new Permission;
-$acl->addRole('user');
-$acl->allow('user');
+$acl->allow('authenticated');
+
+$identity = new Identity(1);
 Assert::true( $acl->isAllowed($identity) );
-$acl->deny('user');
+
+$acl->addRole('user');
+$identity = new Identity(1, array('user'));
 Assert::false( $acl->isAllowed($identity) );
