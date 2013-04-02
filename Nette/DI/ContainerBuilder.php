@@ -15,8 +15,7 @@ use Nette,
 	Nette\Utils\Validators,
 	Nette\Utils\Strings,
 	Nette\Reflection,
-	Nette\PhpGenerator\Helpers as PhpHelpers,
-	Nette\PhpGenerator\PhpLiteral;
+	Nette\PhpGenerator\Helpers as PhpHelpers;
 
 
 
@@ -410,7 +409,7 @@ class ContainerBuilder extends Nette\Object
 			try {
 				$prop->value[$name] = $this->getByType($name);
 			} catch (ServiceCreationException $e) {
-				$prop->value[$name] = new PhpLiteral('FALSE, //' . strstr($e->getMessage(), ':'));
+				$prop->value[$name] = self::literal('FALSE, //' . strstr($e->getMessage(), ':'));
 			}
 		}
 
@@ -458,7 +457,7 @@ class ContainerBuilder extends Nette\Object
 		$parameters = $this->parameters;
 		foreach ($this->expand($def->parameters) as $k => $v) {
 			$v = explode(' ', is_int($k) ? $v : $k);
-			$parameters[end($v)] = new PhpLiteral('$' . end($v));
+			$parameters[end($v)] = self::literal('$' . end($v));
 		}
 
 		$code = '$service = ' . $this->formatStatement(Helpers::expand($def->factory, $parameters, TRUE)) . ";\n";
@@ -637,17 +636,17 @@ class ContainerBuilder extends Nette\Object
 			list($val) = $that->normalizeEntity(array($val));
 
 			if ($val instanceof Statement) {
-				$val = new PhpLiteral($that->formatStatement($val, $self));
+				$val = ContainerBuilder::literal($that->formatStatement($val, $self));
 
 			} elseif ($val === '@' . ContainerBuilder::THIS_CONTAINER) {
-				$val = new PhpLiteral('$this');
+				$val = ContainerBuilder::literal('$this');
 
 			} elseif ($service = $that->getServiceName($val, $self)) {
 				$val = $service === $self ? '$service' : $that->formatStatement(new Statement($val));
-				$val = new PhpLiteral($val);
+				$val = ContainerBuilder::literal($val);
 
 			} elseif (is_string($val) && preg_match('#^[\w\\\\]*::[A-Z][A-Z0-9_]*\z#', $val, $m)) {
-				$val = new PhpLiteral(ltrim($val, ':'));
+				$val = ContainerBuilder::literal(ltrim($val, ':'));
 			}
 		});
 		return PhpHelpers::formatArgs($statement, $args);
@@ -662,6 +661,16 @@ class ContainerBuilder extends Nette\Object
 	public function expand($value)
 	{
 		return Helpers::expand($value, $this->parameters, TRUE);
+	}
+
+
+
+	/**
+	 * @return Nette\PhpGenerator\PhpLiteral
+	 */
+	public static function literal($phpCode)
+	{
+		return new Nette\PhpGenerator\PhpLiteral($phpCode);
 	}
 
 
