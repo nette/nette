@@ -80,6 +80,8 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 					}
 				}
 			}
+
+			$this->injectHttpRequest($presenter->getContext()->getByType('Nette\Http\IRequest'));
 		}
 		parent::attached($presenter);
 	}

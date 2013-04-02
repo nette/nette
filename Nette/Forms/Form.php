@@ -40,8 +40,8 @@ class Form extends Container
 		FILLED = ':filled',
 		VALID = ':valid';
 
-	// CSRF protection
-	const PROTECTION = 'Nette\Forms\Controls\HiddenField::validateEqual';
+	/** @deprecated CSRF protection */
+	const PROTECTION = Controls\CsrfProtection::PROTECTION;
 
 	// button
 	const SUBMITTED = ':submitted';
@@ -107,6 +107,8 @@ class Form extends Container
 	/** @var array */
 	private $errors = array();
 
+	/** @var Nette\Http\IRequest */
+	private $httpRequest;
 
 
 	/**
@@ -212,20 +214,11 @@ class Form extends Container
 	 * Cross-Site Request Forgery (CSRF) form protection.
 	 * @param  string
 	 * @param  int
-	 * @return void
+	 * @return Controls\CsrfProtection
 	 */
 	public function addProtection($message = NULL, $timeout = NULL)
 	{
-		$session = $this->getSession()->getSection('Nette.Forms.Form/CSRF');
-		$key = "key$timeout";
-		if (isset($session->$key)) {
-			$token = $session->$key;
-		} else {
-			$session->$key = $token = Nette\Utils\Strings::random();
-		}
-		$session->setExpiration($timeout, $key);
-		$this[self::PROTECTOR_ID] = new Controls\HiddenField($token);
-		$this[self::PROTECTOR_ID]->addRule(self::PROTECTION, $message, $token);
+		return $this[self::PROTECTOR_ID] = new Controls\CsrfProtection($message, $timeout);
 	}
 
 
@@ -612,21 +605,34 @@ class Form extends Container
 
 
 	/**
-	 * @return Nette\Http\IRequest
+	 * @return Form  provides a fluent interface
 	 */
-	protected function getHttpRequest()
+	public function injectHttpRequest(Nette\Http\IRequest $httpRequest)
 	{
-		return Nette\Environment::getHttpRequest();
+		if ($this->httpRequest) {
+			throw new Nette\InvalidStateException('Service Nette\Http\IRequest has already been set.');
+		}
+		$this->httpRequest = $httpRequest;
+		return $this;
 	}
 
 
 
 	/**
-	 * @return Nette\Http\Session
+	 * @return Nette\Http\IRequest
 	 */
-	protected function getSession()
+	protected function getHttpRequest()
 	{
-		return Nette\Environment::getSession();
+		if (!$this->httpRequest) {
+			$factory = new Nette\Http\RequestFactory;
+			$factory->setEncoding('UTF-8');
+			$this->httpRequest = $factory->createHttpRequest();
+
+			if ($token = $this->getComponent(self::PROTECTOR_ID, FALSE)) {
+				$token->injectHttpRequest($this->httpRequest);
+			}
+		}
+		return $this->httpRequest;
 	}
 
 }

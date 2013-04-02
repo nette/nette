@@ -244,7 +244,15 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	 */
 	public function renderErrors(Nette\Forms\IControl $control = NULL)
 	{
-		$errors = $control ? $control->getErrors() : $this->form->getErrors();
+		if ($control) {
+			$errors = $control->getErrors();
+		} else {
+			$errors = $this->form->getErrors();
+			foreach ($this->form->getComponents(TRUE, 'Nette\Forms\Controls\HiddenField') as $hidden) {
+				$errors = array_merge($errors, $hidden->getErrors());
+			}
+		}
+
 		if (!$errors) {
 			return;
 		}
