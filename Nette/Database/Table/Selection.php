@@ -649,7 +649,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 	/**
 	 * @internal
-	 * @param  string|NULL column name or (NULL to reload all columns & disable columns cache)
+	 * @param  string  column name
 	 * @param  bool
 	 */
 	public function accessColumn($key, $selectColumn = TRUE)
@@ -658,25 +658,14 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 			return;
 		}
 
-		if ($key === NULL) {
-			$this->accessedColumns = FALSE;
-			$currentKey = key((array) $this->data);
-		} elseif ($this->accessedColumns !== FALSE) {
+		if ($this->accessedColumns !== FALSE) {
 			$this->accessedColumns[$key] = $selectColumn;
 		}
 
-		if ($selectColumn && !$this->sqlBuilder->getSelect() && $this->previousAccessedColumns && ($key === NULL || !isset($this->previousAccessedColumns[$key]))) {
+		if ($selectColumn && !$this->sqlBuilder->getSelect() && $this->previousAccessedColumns && !isset($this->previousAccessedColumns[$key])) {
 			$this->previousAccessedColumns = FALSE;
 			$this->emptyResultSet();
 			$this->dataRefreshed = TRUE;
-
-			if ($key === NULL) {
-				// we need to move iterator in resultset
-				$this->execute();
-				while (key($this->data) !== $currentKey) {
-					next($this->data);
-				}
-			}
 		}
 	}
 
