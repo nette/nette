@@ -199,14 +199,4 @@ class Helpers
 		return $count;
 	}
 
-
-
-	public static function createDebugPanel($connection, $explain = TRUE)
-	{
-		$panel = new Nette\Database\Diagnostics\ConnectionPanel($connection);
-		$panel->explain = $explain;
-		Nette\Diagnostics\Debugger::$bar->addPanel($panel);
-		return $panel;
-	}
-
 }

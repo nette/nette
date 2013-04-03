@@ -80,6 +80,9 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		'debugger' => TRUE,
 		'explain' => TRUE,
 		'reflection' => 'Nette\Database\Reflection\DiscoveredReflection',
+		'skipPaths' => array(
+			NETTE_DIR
+		),
 	);
 
 
@@ -346,7 +349,12 @@ class NetteExtension extends Nette\Config\CompilerExtension
 				));
 
 			if ($container->parameters['debugMode'] && $info['debugger']) {
-				$connection->addSetup('Nette\Database\Helpers::createDebugPanel', array($connection, !empty($info['explain'])));
+				$container->addDefinition($this->prefix("database.$name.panel"))
+					->setClass('Nette\Database\Diagnostics\ConnectionPanel', array($connection))
+					->setAutowired($info['autowired'])
+					->addSetup('$service->explain = ?', !empty($info['explain']))
+					->addSetup('$service->skipPaths[] = ?', $info['skipPaths'])
+					->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array('@self'));
 			}
 		}
 	}
