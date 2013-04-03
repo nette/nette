@@ -213,6 +213,11 @@ class Dumper
 			$fields = array('file' => $rc->getFileName(), 'line' => $rc->getStartLine(), 'parameters' => implode(', ', $fields));
 		} elseif ($var instanceof \SplFileInfo) {
 			$fields = array('path' => $var->getPathname());
+		} elseif ($var instanceof \SplObjectStorage) {
+			$fields = array();
+			foreach ($var as $obj) {
+				$fields[] = array('item' => $obj, 'data' => $var->getInfo());
+			}
 		} else {
 			$fields = (array) $var;
 		}
