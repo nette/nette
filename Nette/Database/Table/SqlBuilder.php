@@ -408,7 +408,7 @@ class SqlBuilder extends Nette\Object
 			$chain = '.' . $chain;  // unified chain format
 		}
 
-		$parent = $this->tableName;
+		$parent = $parentAlias = $this->tableName;
 		if ($chain == ".{$parent}") { // case-sensitive
 			return "{$parent}.{$match['column']}";
 		}
@@ -429,8 +429,9 @@ class SqlBuilder extends Nette\Object
 				$primary = $this->databaseReflection->getPrimary($table);
 			}
 
-			$joins[$table] = array($table, $keyMatch['key'] ?: $table, $parent, $column, $primary, !isset($joins[$table]) && $inner);
+			$joins[$table] = array($table, $keyMatch['key'] ?: $table, $parentAlias, $column, $primary, !isset($joins[$table]) && $inner);
 			$parent = $table;
+			$parentAlias = $keyMatch['key'];
 		}
 
 		return ($keyMatch['key'] ?: $table) . ".{$match['column']}";
