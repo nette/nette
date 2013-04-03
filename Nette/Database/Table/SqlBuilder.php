@@ -377,7 +377,7 @@ class SqlBuilder extends Nette\Object
 
 
 
-	protected function buildSelect($columns)
+	protected function buildSelect(array $columns)
 	{
 		return "SELECT{$this->buildTopClause()} " . implode(', ', $columns);
 	}
@@ -389,11 +389,11 @@ class SqlBuilder extends Nette\Object
 		$builder = $this;
 		$query = preg_replace_callback('~
 			(?(DEFINE)
-				(?<word> [a-z][\w_]* )
-				(?<del> [.:] )
-				(?<node> (?&del)? (?&word) )
+				(?P<word> [a-z][\w_]* )
+				(?P<del> [.:] )
+				(?P<node> (?&del)? (?&word) )
 			)
-			(?<chain> (?!\.) (?&node)*)  \. (?<column> (?&word) | \*  )
+			(?P<chain> (?!\.) (?&node)*)  \. (?P<column> (?&word) | \*  )
 		~xi', function($match) use (& $joins, $inner, $builder) {
 			return $builder->parseJoinsCb($joins, $match, $inner);
 		}, $query);
@@ -415,9 +415,9 @@ class SqlBuilder extends Nette\Object
 
 		preg_match_all('~
 			(?(DEFINE)
-				(?<word> [a-z][\w_]* )
+				(?P<word> [a-z][\w_]* )
 			)
-			(?<del> [.:])?(?<key> (?&word))
+			(?P<del> [.:])?(?P<key> (?&word))
 		~xi', $chain, $keyMatches, PREG_SET_ORDER);
 
 		foreach ($keyMatches as $keyMatch) {
@@ -438,7 +438,7 @@ class SqlBuilder extends Nette\Object
 
 
 
-	protected function buildQueryJoins($joins)
+	protected function buildQueryJoins(array $joins)
 	{
 		$return = '';
 		foreach ($joins as $join) {
