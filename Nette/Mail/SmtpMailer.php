@@ -107,7 +107,7 @@ class SmtpMailer extends Nette\Object implements IMailer
 	 * Connects and authenticates to SMTP server.
 	 * @return void
 	 */
-	private function connect()
+	protected function connect()
 	{
 		$this->connection = @fsockopen( // intentionally @
 			($this->secure === 'ssl' ? 'ssl://' : '') . $this->host,
@@ -146,7 +146,7 @@ class SmtpMailer extends Nette\Object implements IMailer
 	 * Disconnects from SMTP server.
 	 * @return void
 	 */
-	private function disconnect()
+	protected function disconnect()
 	{
 		fclose($this->connection);
 		$this->connection = NULL;
@@ -161,7 +161,7 @@ class SmtpMailer extends Nette\Object implements IMailer
 	 * @param  string  error message
 	 * @return void
 	 */
-	private function write($line, $expectedCode = NULL, $message = NULL)
+	protected function write($line, $expectedCode = NULL, $message = NULL)
 	{
 		fwrite($this->connection, $line . Message::EOL);
 		if ($expectedCode && !in_array((int) $this->read(), (array) $expectedCode)) {
@@ -175,7 +175,7 @@ class SmtpMailer extends Nette\Object implements IMailer
 	 * Reads response from server.
 	 * @return string
 	 */
-	private function read()
+	protected function read()
 	{
 		$s = '';
 		while (($line = fgets($this->connection, 1e3)) != NULL) { // intentionally ==
