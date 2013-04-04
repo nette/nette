@@ -29,6 +29,11 @@ Assert::exception(function() {
 
 
 Assert::exception(function() {
+	Neon::decode(" - first\n - second");
+}, 'Nette\Utils\NeonException', "Unexpected indentation. on line 2, column 2." );
+
+
+Assert::exception(function() {
 	Neon::decode('item [a, b]');
 }, 'Nette\Utils\NeonException', "Unexpected ',' on line 1, column 8." );
 
