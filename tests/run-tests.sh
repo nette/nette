@@ -29,7 +29,7 @@ done
 if [ -n "$phpIni" ]; then
 	php -c "$phpIni" "$runnerScript" -j 20 "$@"
 else
-	php -c "$dir/php.ini-unix" "$runnerScript" -j 20 -c "$dir/php.ini-unix" "$@"
+	php -c "$dir/php-unix.ini" "$runnerScript" -j 20 -c "$dir/php-unix.ini" "$@"
 fi
 error=$?
 
