@@ -98,7 +98,7 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 
 
 	/**
-	 * Internal: returns submitted HTTP data or NULL whether form was not submitted.
+	 * Internal: returns submitted HTTP data or NULL when form was not submitted.
 	 * @return array|NULL
 	 */
 	protected function receiveHttpData()
