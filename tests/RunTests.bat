@@ -9,6 +9,9 @@ IF NOT EXIST %testRunner% (
 )
 
 SET phpIni="%~dp0php-win.ini"
+IF NOT EXIST %phpIni% (
+	SET phpIni="%~dp0php-win.default.ini"
+)
 
 php.exe -c %phpIni% %testRunner% -p php-cgi.exe -c %phpIni% -j 20 -log "%~dp0test.log" %*
 
