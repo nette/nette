@@ -77,7 +77,7 @@ class Compiler extends Nette\Object
 
 
 	/**
-	 * Returns configuration without expanded parameters.
+	 * Returns configuration.
 	 * @return array
 	 */
 	public function getConfig()
@@ -105,7 +105,7 @@ class Compiler extends Nette\Object
 	public function processParameters()
 	{
 		if (isset($this->config['parameters'])) {
-			$this->container->parameters = $this->config['parameters'];
+			$this->container->parameters = Nette\DI\Helpers::expand($this->config['parameters'], $this->config['parameters'], TRUE);
 		}
 	}
 
@@ -113,8 +113,12 @@ class Compiler extends Nette\Object
 
 	public function processExtensions()
 	{
-		for ($i = 0; $slice = array_slice($this->extensions, $i, 1); $i++) {
-			reset($slice)->loadConfiguration();
+		for ($i = 0; $slice = array_slice($this->extensions, $i, 1, TRUE); $i++) {
+			$name = key($slice);
+			if (isset($this->config[$name])) {
+				$this->config[$name] = $this->container->expand($this->config[$name]);
+			}
+			$this->extensions[$name]->loadConfiguration();
 		}
 
 		if ($extra = array_diff_key($this->config, self::$reserved, $this->extensions)) {
@@ -163,7 +167,7 @@ class Compiler extends Nette\Object
 
 
 	/**
-	 * Parses section 'services' from configuration file.
+	 * Parses section 'services' from (unexpanded) configuration file.
 	 * @return void
 	 */
 	public static function parseServices(Nette\DI\ContainerBuilder $container, array $config, $namespace = NULL)
@@ -185,6 +189,15 @@ class Compiler extends Nette\Object
 			} else {
 				$name = ($namespace ? $namespace . '.' : '') . strtr($origName, '\\', '_');
 			}
+
+			$params = $container->parameters;
+			if (is_array($def) && isset($def['parameters'])) {
+				foreach ((array) $def['parameters'] as $k => $v) {
+					$v = explode(' ', is_int($k) ? $v : $k);
+					$params[end($v)] = $container::literal('$' . end($v));
+				}
+			}
+			$def = Nette\DI\Helpers::expand($def, $params);
 
 			if (($parent = Helpers::takeParent($def)) && $parent !== $name) {
 				$container->removeDefinition($name);

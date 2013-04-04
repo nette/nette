@@ -25,7 +25,7 @@
 <tr>
 	<th><label>Your gender:</label></th>
 
-	<td><input type="radio" name="gender" id="frm-gender-0" value="m" /><label for="frm-gender-0">male</label><br /><input type="radio" name="gender" id="frm-gender-1" value="f" /><label for="frm-gender-1">female</label><br /></td>
+	<td><input type="radio" name="gender" id="frm-gender-m" value="m" /><label for="frm-gender-m">male</label><br /><input type="radio" name="gender" id="frm-gender-f" value="f" /><label for="frm-gender-f">female</label><br /></td>
 </tr>
 
 <tr>

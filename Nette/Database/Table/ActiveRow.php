@@ -21,8 +21,9 @@ use Nette,
  * ActiveRow is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
  *
  * @author     Jakub Vrana
+ * @author     Jan Skrasek
  */
-class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
+class ActiveRow implements \IteratorAggregate, IRow
 {
 	/** @var Selection */
 	private $table;
@@ -59,7 +60,6 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 	/**
 	 * @internal
-	 * @ignore
 	 */
 	public function getTable()
 	{
@@ -174,14 +174,16 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 	/**
 	 * Updates row.
-	 * @param  array or NULL for all modified values
+	 * @param  array|\Traversable (column => value)
 	 * @return int number of affected rows or FALSE in case of an error
 	 */
-	public function update($data = NULL)
+	public function update($data)
 	{
 		if ($data === NULL) {
 			$data = $this->modified;
 		}
+		$this->data = $data + $this->data;
+		$this->modified = $data + $this->modified;
 		return $this->table->getConnection()
 			->table($this->table->getName())
 			->wherePrimary($this->getPrimary())
@@ -277,6 +279,7 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 	public function __set($key, $value)
 	{
+		trigger_error('Changing properties of ActiveRow is deprecated; use update() instead.', E_USER_DEPRECATED);
 		$this->data[$key] = $value;
 		$this->modified[$key] = $value;
 	}
@@ -319,6 +322,7 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 	public function __unset($key)
 	{
+		trigger_error('Unsetting properties of ActiveRow is deprecated.', E_USER_DEPRECATED);
 		unset($this->data[$key]);
 		unset($this->modified[$key]);
 	}

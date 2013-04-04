@@ -557,6 +557,10 @@ class Session extends Nette\Object
 	 */
 	private function sendCookie()
 	{
+		if (!headers_sent() && ob_get_level() && ob_get_length()) {
+			trigger_error("Possible problem: you are starting session while already having some data in output buffer. This may not work if the outputted data grows. Try starting the session earlier.", E_USER_NOTICE);
+		}
+
 		$cookie = $this->getCookieParameters();
 		$this->response->setCookie(
 			session_name(), session_id(),

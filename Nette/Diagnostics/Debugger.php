@@ -294,12 +294,17 @@ final class Debugger
 		$exceptionFilename = NULL;
 		if ($message instanceof \Exception) {
 			$exception = $message;
-			$message = ($message instanceof Nette\FatalErrorException
-				? 'Fatal error: ' . $exception->getMessage()
-				: get_class($exception) . ": " . $exception->getMessage())
-				. " in " . $exception->getFile() . ":" . $exception->getLine();
+			while ($exception) {
+				$tmp[] = ($exception instanceof Nette\FatalErrorException
+					? 'Fatal error: ' . $exception->getMessage()
+					: get_class($exception) . ": " . $exception->getMessage())
+					. " in " . $exception->getFile() . ":" . $exception->getLine();
+				$exception = /*5.2*(method_exists($exception, 'getPrevious') ? */$exception->getPrevious()/*5.2* : (isset($exception->previous) ? $exception->previous : NULL))*/;
+			}
+			$exception = $message;
+			$message = implode($tmp, "\ncaused by ");
 
-			$hash = md5($exception /*5.2*. (method_exists($exception, 'getPrevious') ? $exception->getPrevious() : (isset($exception->previous) ? $exception->previous : ''))*/);
+			$hash = md5(preg_replace('~(Resource id #)\d+~', '$1', $exception /*5.2*. (method_exists($exception, 'getPrevious') ? $exception->getPrevious() : (isset($exception->previous) ? $exception->previous : ''))*/));
 			$exceptionFilename = "exception-" . @date('Y-m-d-H-i-s') . "-$hash.html";
 			foreach (new \DirectoryIterator(self::$logDirectory) as $entry) {
 				if (strpos($entry, $hash)) {

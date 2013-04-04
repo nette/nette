@@ -7,8 +7,7 @@
  * @package    Nette\Forms
  */
 
-use Nette\Forms\Form,
-	Nette\ArrayHash;
+use Nette\Forms\Form;
 
 
 

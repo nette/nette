@@ -16,17 +16,32 @@ INSERT INTO `nUsers` (`nUserId`, `name`) VALUES
 (2,	'Doe');
 
 
+DROP TABLE IF EXISTS `nPriorities`;
+CREATE TABLE `nPriorities` (
+		`nPriorityId` int(11) NOT NULL AUTO_INCREMENT,
+		`name` varchar(100) COLLATE utf8_czech_ci NOT NULL,
+		PRIMARY KEY (`nPriorityId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+
+INSERT INTO `nPriorities` (`nPriorityId`, `name`) VALUES
+(20,	'High'),
+(21,	'Medium'),
+(22, 	'Low');
+
+
 DROP TABLE IF EXISTS `nTopics`;
 CREATE TABLE `nTopics` (
   `nTopicId` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) COLLATE utf8_czech_ci NOT NULL,
-  PRIMARY KEY (`nTopicId`)
+	`nPriorityId` int(11) NOT NULL,
+  PRIMARY KEY (`nTopicId`),
+	CONSTRAINT priority_id FOREIGN KEY (nPriorityId) REFERENCES nPriorities (nPriorityId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
-INSERT INTO `nTopics` (`nTopicId`, `title`) VALUES
-(10,	'Topic #1'),
-(11,	'Topic #2'),
-(12, 	'Topic #3');
+INSERT INTO `nTopics` (`nTopicId`, `title`, `nPriorityId`) VALUES
+(10,	'Topic #1', 20),
+(11,	'Topic #2', 20),
+(12, 	'Topic #3', 22);
 
 
 DROP TABLE IF EXISTS `nUsers_nTopics`;

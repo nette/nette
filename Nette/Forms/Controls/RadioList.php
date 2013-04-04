@@ -57,12 +57,29 @@ class RadioList extends BaseControl
 
 	/**
 	 * Returns selected radio value.
-	 * @param  bool
 	 * @return mixed
 	 */
 	public function getValue($raw = FALSE)
 	{
-		return is_scalar($this->value) && ($raw || isset($this->items[$this->value])) ? $this->value : NULL;
+		if ($raw) {
+			trigger_error(__METHOD__ . '(TRUE) is deprecated; use getRawValue() instead.', E_USER_DEPRECATED);
+		}
+		$value = $this->getRawValue();
+		return ($raw || isset($this->items[$value])) ? $value : NULL;
+	}
+
+
+
+	/**
+	 * Returns selected radio value (not checked).
+	 * @return mixed
+	 */
+	public function getRawValue()
+	{
+		if (is_scalar($this->value)) {
+			$foo = array($this->value => NULL);
+			return key($foo);
+		}
 	}
 
 
@@ -81,11 +98,12 @@ class RadioList extends BaseControl
 	/**
 	 * Sets options from which to choose.
 	 * @param  array
+	 * @param  bool
 	 * @return RadioList  provides a fluent interface
 	 */
-	public function setItems(array $items)
+	public function setItems(array $items, $useKeys = TRUE)
 	{
-		$this->items = $items;
+		$this->items = $useKeys ? $items : array_combine($items, $items);
 		return $this;
 	}
 
@@ -131,27 +149,23 @@ class RadioList extends BaseControl
 	 */
 	public function getControl($key = NULL)
 	{
-		if ($key === NULL) {
-			$container = clone $this->container;
-			$separator = (string) $this->separator;
+		$value = $this->value === NULL ? NULL : (string) $this->getValue();
+		$control = parent::getControl();
 
-		} elseif (!isset($this->items[$key])) {
-			return NULL;
+		if ($key !== NULL) {
+			$control->id .= '-' . $key;
+			$control->checked = (string) $key === $value;
+			$control->value = $key;
+			return $control;
 		}
 
-		$control = parent::getControl();
 		$id = $control->id;
-		$counter = -1;
-		$value = $this->value === NULL ? NULL : (string) $this->getValue();
-		$label = Html::el('label');
+		$container = clone $this->container;
+		$separator = (string) $this->separator;
+		$label = $this->getLabel();
 
 		foreach ($this->items as $k => $val) {
-			$counter++;
-			if ($key !== NULL && (string) $key !== (string) $k) {
-				continue;
-			}
-
-			$control->id = $label->for = $id . '-' . $counter;
+			$control->id = $label->for = $id . '-' . $k;
 			$control->checked = (string) $k === $value;
 			$control->value = $k;
 
@@ -159,10 +173,6 @@ class RadioList extends BaseControl
 				$label->setHtml($val);
 			} else {
 				$label->setText($this->translate((string) $val));
-			}
-
-			if ($key !== NULL) {
-				return Html::el()->add($control)->add($label);
 			}
 
 			$container->add((string) $control . (string) $label . $separator);
@@ -178,12 +188,18 @@ class RadioList extends BaseControl
 	/**
 	 * Generates label's HTML element.
 	 * @param  string
+	 * @param  mixed
 	 * @return void
 	 */
-	public function getLabel($caption = NULL)
+	public function getLabel($caption = NULL, $key = NULL)
 	{
-		$label = parent::getLabel($caption);
-		$label->for = NULL;
+		if ($key === NULL) {
+			$label = parent::getLabel($caption);
+			$label->for = NULL;
+		} else {
+			$label = parent::getLabel($caption === NULL ? $this->items[$key] : $caption);
+			$label->for .= '-' . $key;
+		}
 		return $label;
 	}
 
