@@ -21,15 +21,21 @@ class Ipsum
 
 class Lorem
 {
-	public $ipsum;
+	public $injects;
 
-	public function injectIpsum(Ipsum $ipsum)
+	function injectIpsum(Ipsum $ipsum)
 	{
-		$this->ipsum = $ipsum;
+		$this->injects[] = __METHOD__;
 	}
 
-	public function inject($val)
+	function inject($val)
 	{
+		$this->injects[] = __METHOD__ . ' ' . $val;
+	}
+
+	function injectOptional(DateTime $obj = NULL)
+	{
+		$this->injects[] = __METHOD__;
 	}
 
 }
@@ -51,5 +57,4 @@ require TEMP_DIR . '/code.php';
 
 $container = new Container;
 
-Assert::true( $container->getService('lorem') instanceof Lorem );
-Assert::true( $container->getService('lorem')->ipsum instanceof Ipsum );
+Assert::same( array('Lorem::injectOptional', 'Lorem::inject 123', 'Lorem::injectIpsum'), $container->getService('lorem')->injects );

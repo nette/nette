@@ -38,3 +38,54 @@ Assert::same( array(
 - x
 a: x
 ') );
+
+
+Assert::same( array(
+	'x' => array(
+		'x',
+		'a' => 'x',
+	),
+), Neon::decode('
+x:
+	- x
+	a: x
+') );
+
+
+Assert::same( array(
+	'x' => array(
+		'y' => array(
+			NULL,
+		),
+		'a' => 'x',
+	),
+), Neon::decode('
+x:
+	y:
+		-
+	a: x
+') );
+
+
+Assert::same( array(
+	'x' => array(
+		'a' => 1,
+		'b' => 2,
+	),
+), Neon::decode('
+x: {
+	a: 1
+b: 2
+}
+') );
+
+
+Assert::same( array(
+	'one',
+	'two',
+), Neon::decode('
+{
+	one
+two
+}
+') );
