@@ -17,11 +17,11 @@ require __DIR__ . '/../bootstrap.php';
 
 $form = new Form();
 
-$form->addText("input");
-$form->addText("ignoredInput")
-	->setIgnored();
+$form->addText("validInput");
+$form->addText("discardedInput")
+	->setDiscarded();
 
 $values = $form->getValues();
 
-Assert::true(array_key_exists("input", $values));
-Assert::false(array_key_exists("ignoredInput", $values));
+Assert::true(array_key_exists("validInput", $values));
+Assert::false(array_key_exists("discardedInput", $values));

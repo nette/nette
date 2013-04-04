@@ -60,10 +60,10 @@ interface IControl
 	function isDisabled();
 
 	/**
-	 * Is control ignored for output?
+	 * Is control value discarded from output?
 	 * @return bool
 	 */
-	function isIgnored();
+	function isDiscarded();
 
 	/**
 	 * Returns translated string.

@@ -33,7 +33,7 @@ use Nette,
  * @property-read bool $filled
  * @property-write $defaultValue
  * @property   bool $disabled
- * @property   bool $ignored
+ * @property   bool $discarded
  * @property-read Nette\Utils\Html $control
  * @property-read Nette\Utils\Html $label
  * @property-read Nette\Utils\Html $controlPrototype
@@ -66,7 +66,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	private $disabled = FALSE;
 
 	/** @var bool */
-	private $ignored = FALSE;
+	private $discarded = FALSE;
 
 	/** @var string */
 	private $htmlId;
@@ -374,25 +374,25 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
-	 * Set control ignored or not.
+	 * Set control value discarded or not.
 	 * @param  bool
 	 * @return BaseControl  provides a fluent interface
 	 */
-	public function setIgnored($value = TRUE)
+	public function setDiscarded($value = TRUE)
 	{
-		$this->ignored = (bool) $value;
+		$this->discarded = (bool) $value;
 		return $this;
 	}
 
 
 
 	/**
-	 * Is control ignored for output?
+	 * Is control value discarded from output?
 	 * @return bool
 	 */
-	public function isIgnored()
+	public function isDiscarded()
 	{
-		return $this->ignored;
+		return $this->discarded;
 	}
 
 
