@@ -177,8 +177,9 @@ class Statement extends \PDOStatement
 		if ($this->types === NULL) {
 			$this->types = array();
 			if ($this->connection->getSupplementalDriver()->isSupported(ISupplementalDriver::SUPPORT_COLUMNS_META)) { // workaround for PHP bugs #53782, #54695
-				$col = 0;
-				while ($meta = $this->getColumnMeta($col++)) {
+				$count = $this->columnCount();
+				for ($col = 0; $col < $count; $col++) {
+					$meta = $this->getColumnMeta($col);
 					if (isset($meta['native_type'])) {
 						$this->types[$meta['name']] = Helpers::detectType($meta['native_type']);
 					}
