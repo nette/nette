@@ -179,6 +179,9 @@ class ActiveRow implements \IteratorAggregate, IRow
 	 */
 	public function update($data)
 	{
+		if ($data instanceof \Traversable) {
+			$data = iterator_to_array($data);
+		}
 		if ($data === NULL) {
 			$data = $this->modified;
 		}
