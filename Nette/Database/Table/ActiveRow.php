@@ -179,6 +179,9 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	 */
 	public function update($data = NULL)
 	{
+		if ($data instanceof \Traversable) {
+			$data = iterator_to_array($data);
+		}
 		if ($data === NULL) {
 			$data = $this->modified;
 		}
