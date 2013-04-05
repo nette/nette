@@ -159,8 +159,9 @@ class Statement extends Nette\Object implements \Iterator, IRowContainer
 		if ($this->types === NULL) {
 			$this->types = array();
 			if ($this->connection->getSupplementalDriver()->isSupported(ISupplementalDriver::SUPPORT_COLUMNS_META)) { // workaround for PHP bugs #53782, #54695
-				$col = 0;
-				while ($meta = $this->pdoStatement->getColumnMeta($col++)) {
+				$count = $this->pdoStatement->columnCount();
+				for ($col = 0; $col < $count; $col++) {
+					$meta = $this->pdoStatement->getColumnMeta($col);
 					if (isset($meta['native_type'])) {
 						$this->types[$meta['name']] = Helpers::detectType($meta['native_type']);
 					}
