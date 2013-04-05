@@ -181,6 +181,8 @@ class ActiveRow implements \IteratorAggregate, IRow
 	{
 		if ($data === NULL) {
 			$data = $this->modified;
+			$this->modified = array();
+			$this->data = array_merge($this->data, $data);
 		}
 		$this->data = $data + $this->data;
 		$this->modified = $data + $this->modified;
