@@ -11,11 +11,11 @@
 $query = 'mysql';
 require __DIR__ . '/connect.inc.php'; // create $connection
 
-Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/mysql-nette_test3.sql");
+Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/mysql-nette_test3.sql');
 
 
 
-$res = $connection->query("SELECT * FROM types");
+$res = $connection->query('SELECT * FROM types');
 
 Assert::equal( array(
 	'unsigned_int' => 1,
@@ -114,4 +114,11 @@ Assert::equal( array(
 	'longtext' => NULL,
 	'enum' => NULL,
 	'set' => NULL,
+), (array) $res->fetch() );
+
+
+$res = $connection->query('SELECT `int` AS a, `char` AS a FROM types');
+
+Assert::equal( array(
+	'a' => 'a',
 ), (array) $res->fetch() );

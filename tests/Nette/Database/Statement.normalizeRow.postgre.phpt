@@ -11,11 +11,11 @@
 $query = 'postgresql';
 require __DIR__ . '/connect.inc.php'; // create $connection
 
-Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/pgsql-nette_test3.sql");
+Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/pgsql-nette_test3.sql');
 
 
 
-$res = $connection->query("SELECT * FROM types");
+$res = $connection->query('SELECT * FROM types');
 
 $row = $res->fetch();
 Assert::true( is_string($row->money) );
@@ -120,4 +120,11 @@ Assert::equal( array(
 	'path' => NULL,
 	'point' => NULL,
 	'polygon' => NULL,
+), (array) $res->fetch() );
+
+
+$res = $connection->query('SELECT "integer" AS a, "text" AS a FROM types');
+
+Assert::equal( array(
+	'a' => 'a',
 ), (array) $res->fetch() );
