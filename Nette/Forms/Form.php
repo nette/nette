@@ -356,8 +356,8 @@ class Form extends Container
 	 */
 	final public function isSubmitted()
 	{
-		if ($this->submittedBy === NULL && count($this->getControls())) {
-			$this->submittedBy = (bool) $this->getHttpData();
+		if ($this->submittedBy === NULL) {
+			$this->getHttpData();
 		}
 		return $this->submittedBy;
 	}
@@ -397,7 +397,9 @@ class Form extends Container
 			if (!$this->isAnchored()) {
 				throw new Nette\InvalidStateException('Form is not anchored and therefore can not determine whether it was submitted.');
 			}
-			$this->httpData = $this->receiveHttpData();
+			$data = $this->receiveHttpData();
+			$this->httpData = (array) $data;
+			$this->submittedBy = is_array($data);
 		}
 		return $this->httpData;
 	}
@@ -445,25 +447,28 @@ class Form extends Container
 
 
 	/**
-	 * Internal: receives submitted HTTP data.
-	 * @return array
+	 * Internal: returns submitted HTTP data or NULL whether form was not submitted.
+	 * @return array|NULL
 	 */
 	protected function receiveHttpData()
 	{
 		$httpRequest = $this->getHttpRequest();
 		if (strcasecmp($this->getMethod(), $httpRequest->getMethod())) {
-			return array();
+			return;
 		}
 
 		if ($httpRequest->isMethod('post')) {
 			$data = Nette\Utils\Arrays::mergeTree($httpRequest->getPost(), $httpRequest->getFiles());
 		} else {
 			$data = $httpRequest->getQuery();
+			if (!$data) {
+				return;
+			}
 		}
 
 		if ($tracker = $this->getComponent(self::TRACKER_ID, FALSE)) {
 			if (!isset($data[self::TRACKER_ID]) || $data[self::TRACKER_ID] !== $tracker->getValue()) {
-				return array();
+				return;
 			}
 		}
 
