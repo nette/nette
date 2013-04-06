@@ -114,7 +114,7 @@
 
 	<dt></dt>
 
-	<dd><input type="submit" class="button" name="submit_" id="frm-submit" value="Send" /></dd>
+	<dd><input type="submit" class="button" name="_submit" id="frm-submit" value="Send" /></dd>
 
 </dl>
 
