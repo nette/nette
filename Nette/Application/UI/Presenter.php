@@ -653,13 +653,9 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		if ($destination instanceof Application\Request) {
 			$this->sendResponse(new Responses\ForwardResponse($destination));
-
-		} elseif (!is_array($args)) {
-			$args = func_get_args();
-			array_shift($args);
 		}
 
-		$this->createRequest($this, $destination, $args, 'forward');
+		$this->createRequest($this, $destination, is_array($args) ? $args : array_slice(func_get_args(), 1), 'forward');
 		$this->sendResponse(new Responses\ForwardResponse($this->lastCreatedRequest));
 	}
 
@@ -1147,8 +1143,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public static function getPersistentComponents()
 	{
-		/*5.2*$arg = func_get_arg(0);*/
-		return (array) Reflection\ClassType::from(/*5.2*$arg*//**/get_called_class()/**/)
+		return (array) Reflection\ClassType::from(/*5.2*func_get_arg(0)*//**/get_called_class()/**/)
 			->getAnnotation('persistent');
 	}
 

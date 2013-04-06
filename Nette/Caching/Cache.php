@@ -230,8 +230,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	{
 		$key = func_get_args();
 		return $this->load($key, function() use ($function, $key) {
-			array_shift($key);
-			return Nette\Callback::create($function)->invokeArgs($key);
+			return Nette\Callback::create($function)->invokeArgs(array_slice($key, 1));
 		});
 	}
 
@@ -373,8 +372,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	public static function checkCallbacks($callbacks)
 	{
 		foreach ($callbacks as $callback) {
-			$func = array_shift($callback);
-			if (!call_user_func_array($func, $callback)) {
+			if (!call_user_func_array(array_shift($callback), $callback)) {
 				return FALSE;
 			}
 		}

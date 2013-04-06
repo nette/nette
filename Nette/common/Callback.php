@@ -89,8 +89,7 @@ final class Callback extends Object
 		if (!is_callable($this->cb)) {
 			throw new InvalidStateException("Callback '$this' is not callable.");
 		}
-		$args = func_get_args();
-		return call_user_func_array($this->cb, $args);
+		return call_user_func_array($this->cb, func_get_args());
 	}
 
 
@@ -104,8 +103,7 @@ final class Callback extends Object
 		if (!is_callable($this->cb)) {
 			throw new InvalidStateException("Callback '$this' is not callable.");
 		}
-		$args = func_get_args();
-		return call_user_func_array($this->cb, $args);
+		return call_user_func_array($this->cb, func_get_args());
 	}
 
 

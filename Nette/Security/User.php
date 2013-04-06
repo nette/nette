@@ -94,8 +94,7 @@ class User extends Nette\Object
 	{
 		$this->logout(TRUE);
 		if (!$id instanceof IIdentity) {
-			$credentials = func_get_args();
-			$id = $this->getAuthenticator()->authenticate($credentials);
+			$id = $this->getAuthenticator()->authenticate(func_get_args());
 		}
 		$this->storage->setIdentity($id);
 		$this->storage->setAuthenticated(TRUE);

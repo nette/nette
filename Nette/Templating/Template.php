@@ -119,7 +119,6 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function __toString()
 	{
-		$args = func_get_args();
 		ob_start();
 		try {
 			$this->render();
@@ -127,7 +126,7 @@ class Template extends Nette\Object implements ITemplate
 
 		} catch (\Exception $e) {
 			ob_end_clean();
-			if ($args && $args[0]) {
+			if (func_get_args() && func_get_arg(0)) {
 				throw $e;
 			} else {
 				trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);

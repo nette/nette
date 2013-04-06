@@ -252,8 +252,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 */
 	public static function getPersistentParams()
 	{
-		/*5.2*$arg = func_get_arg(0);*/
-		$rc = new Nette\Reflection\ClassType(/*5.2*$arg*//**/get_called_class()/**/);
+		$rc = new Nette\Reflection\ClassType(/*5.2*func_get_arg(0)*//**/get_called_class()/**/);
 		$params = array();
 		foreach ($rc->getProperties(\ReflectionProperty::IS_PUBLIC) as $rp) {
 			if (!$rp->isStatic() && $rp->hasAnnotation('persistent')) {
@@ -310,13 +309,8 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 */
 	public function link($destination, $args = array())
 	{
-		if (!is_array($args)) {
-			$args = func_get_args();
-			array_shift($args);
-		}
-
 		try {
-			return $this->getPresenter()->createRequest($this, $destination, $args, 'link');
+			return $this->getPresenter()->createRequest($this, $destination, is_array($args) ? $args : array_slice(func_get_args(), 1), 'link');
 
 		} catch (InvalidLinkException $e) {
 			return $this->getPresenter()->handleInvalidLink($e);
@@ -333,12 +327,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 */
 	public function lazyLink($destination, $args = array())
 	{
-		if (!is_array($args)) {
-			$args = func_get_args();
-			array_shift($args);
-		}
-
-		return new Link($this, $destination, $args);
+		return new Link($this, $destination, is_array($args) ? $args : array_slice(func_get_args(), 1));
 	}
 
 
@@ -353,11 +342,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	public function isLinkCurrent($destination = NULL, $args = array())
 	{
 		if ($destination !== NULL) {
-			if (!is_array($args)) {
-				$args = func_get_args();
-				array_shift($args);
-			}
-			$this->getPresenter()->createRequest($this, $destination, $args, 'test');
+			$this->getPresenter()->createRequest($this, $destination, is_array($args) ? $args : array_slice(func_get_args(), 1), 'test');
 		}
 		return $this->getPresenter()->getLastCreatedRequestFlag('current');
 	}
@@ -381,10 +366,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 		}
 
 		if (!is_array($args)) {
-			$args = func_get_args();
-			if (is_numeric(array_shift($args))) {
-				array_shift($args);
-			}
+			$args = array_slice(func_get_args(), is_numeric($code) ? 2 : 1);
 		}
 
 		$presenter = $this->getPresenter();
