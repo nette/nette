@@ -363,8 +363,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 			return $this;
 		}
 
-		$args = func_get_args();
-		if (call_user_func_array(array($this->sqlBuilder, 'addWhere'), $args)) {
+		if (call_user_func_array(array($this->sqlBuilder, 'addWhere'), func_get_args())) {
 			$this->emptyResultSet();
 		}
 

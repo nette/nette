@@ -84,11 +84,7 @@ class ServiceDefinition extends Nette\Object
 
 	public function addSetup($target, $args = NULL)
 	{
-		if (!is_array($args)) {
-			$args = func_get_args();
-			array_shift($args);
-		}
-		$this->setup[] = new Statement($target, $args);
+		$this->setup[] = new Statement($target, is_array($args) ? $args : array_slice(func_get_args(), 1));
 		return $this;
 	}
 
