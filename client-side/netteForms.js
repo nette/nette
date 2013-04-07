@@ -61,7 +61,7 @@ Nette.getValue = function(elem) {
 		return Nette.getValue(elem.form.elements[elem.name].nodeName ? [elem] : elem.form.elements[elem.name]);
 
 	} else {
-		return elem.value.replace(/^\s+|\s+$/g, '');
+		return elem.value.replace("\r", '').replace(/^\s+|\s+$/g, '');
 	}
 };
 
