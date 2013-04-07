@@ -56,15 +56,13 @@ class User extends Nette\Object
 	/** @var IAuthorizator */
 	private $authorizator;
 
-	/** @var Nette\DI\Container */
-	private $context;
 
 
-
-	public function __construct(IUserStorage $storage, Nette\DI\Container $context)
+	public function __construct(IUserStorage $storage, IAuthenticator $authenticator = NULL, IAuthorizator $authorizator = NULL)
 	{
 		$this->storage = $storage;
-		$this->context = $context; // with IAuthenticator, IAuthorizator
+		$this->authenticator = $authenticator;
+		$this->authorizator = $authorizator;
 	}
 
 
@@ -94,7 +92,7 @@ class User extends Nette\Object
 	{
 		$this->logout(TRUE);
 		if (!$id instanceof IIdentity) {
-			$id = $this->getAuthenticator()->authenticate(func_get_args());
+			$id = $this->authenticator->authenticate(func_get_args());
 		}
 		$this->storage->setIdentity($id);
 		$this->storage->setAuthenticated(TRUE);
@@ -173,7 +171,7 @@ class User extends Nette\Object
 	 */
 	final public function getAuthenticator()
 	{
-		return $this->authenticator ?: $this->context->getByType('Nette\Security\IAuthenticator');
+		return $this->authenticator;
 	}
 
 
@@ -246,9 +244,8 @@ class User extends Nette\Object
 	 */
 	public function isAllowed($resource = IAuthorizator::ALL, $privilege = IAuthorizator::ALL)
 	{
-		$authorizator = $this->getAuthorizator();
 		foreach ($this->getRoles() as $role) {
-			if ($authorizator->isAllowed($role, $resource, $privilege)) {
+			if ($this->authorizator->isAllowed($role, $resource, $privilege)) {
 				return TRUE;
 			}
 		}
@@ -276,7 +273,7 @@ class User extends Nette\Object
 	 */
 	final public function getAuthorizator()
 	{
-		return $this->authorizator ?: $this->context->getByType('Nette\Security\IAuthorizator');
+		return $this->authorizator;
 	}
 
 }
