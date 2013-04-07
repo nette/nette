@@ -60,7 +60,7 @@ interface IControl
 	function isDisabled();
 
 	/**
-	 * Is control value omitted from output?
+	 * Is control value excluded from $form->getValues() result?
 	 * @return bool
 	 */
 	function isOmitted();

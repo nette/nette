@@ -374,7 +374,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
-	 * Set control value omitted or not.
+	 * Sets whether control value is excluded from $form->getValues() result.
 	 * @param  bool
 	 * @return BaseControl  provides a fluent interface
 	 */
@@ -387,7 +387,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
-	 * Is control value omitted from output?
+	 * Is control value excluded from $form->getValues() result?
 	 * @return bool
 	 */
 	public function isOmitted()
