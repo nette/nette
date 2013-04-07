@@ -48,12 +48,17 @@ class Connection extends Nette\Object
 
 
 
-	public function __construct($dsn, $user = NULL, $password = NULL, array $options = NULL, $driverClass = NULL)
+	public function __construct($dsn, $user = NULL, $password = NULL, array $options = NULL)
 	{
-		$this->pdo = $pdo = new PDO($this->dsn = $dsn, $user, $password, $options);
-		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->pdo = new PDO($this->dsn = $dsn, $user, $password, $options);
+		$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-		$driverClass = $driverClass ?: 'Nette\Database\Drivers\\' . ucfirst(str_replace('sql', 'Sql', $pdo->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver';
+		if (func_num_args() > 4) { // compatiblity
+			$options['driverClass'] = func_get_arg(4);
+		}
+		$driverClass = empty($options['driverClass'])
+			? 'Nette\Database\Drivers\\' . ucfirst(str_replace('sql', 'Sql', $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver'
+			: $options['driverClass'];
 		$this->driver = new $driverClass($this, (array) $options);
 		$this->preprocessor = new SqlPreprocessor($this);
 	}
