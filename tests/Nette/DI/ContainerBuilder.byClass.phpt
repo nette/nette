@@ -17,10 +17,11 @@ require __DIR__ . '/../bootstrap.php';
 
 class Factory
 {
+	public static $methods;
 
 	static function create($arg)
 	{
-		Notes::add(__METHOD__ . ' ' . get_class($arg));
+		self::$methods[] = array(__FUNCTION__, func_get_args());
 		return new stdClass;
 	}
 
@@ -28,11 +29,12 @@ class Factory
 
 class AnnotatedFactory
 {
+	public $methods;
 
 	/** @return stdClass */
-	static function create()
+	function create()
 	{
-		Notes::add(__METHOD__);
+		$this->methods[] = array(__FUNCTION__, func_get_args());
 		return new stdClass;
 	}
 
@@ -67,21 +69,26 @@ require TEMP_DIR . '/code.php';
 
 $container = new Container;
 
-
-Assert::true( $container->getService('factory') instanceof Factory );
+$factory = $container->getService('factory');
+Assert::true( $factory instanceof Factory );
 
 Assert::true( $container->getService('two') instanceof stdClass );
 Assert::same(array(
-	'Factory::create Factory',
-	'Factory::create Factory',
-), Notes::fetch());
+	array('create', array($factory)),
+	array('create', array($factory)),
+), Factory::$methods);
+
+Factory::$methods = NULL;
 
 Assert::true( $container->getService('three') instanceof stdClass );
 Assert::same(array(
-	'Factory::create Factory',
-), Notes::fetch());
+	array('create', array($factory)),
+), Factory::$methods);
+
+$annotatedFactory = $container->getService('annotatedFactory');
+Assert::true( $annotatedFactory instanceof AnnotatedFactory );
 
 Assert::true( $container->getService('four') instanceof stdClass );
 Assert::same(array(
-	'AnnotatedFactory::create',
-), Notes::fetch());
+	array('create', array()),
+), $annotatedFactory->methods);

@@ -314,14 +314,15 @@ class ContainerBuilder extends Nette\Object
 		} elseif (is_array($factory)) { // method calling
 			if ($service = $this->getServiceName($factory[0])) {
 				if (Strings::contains($service, '\\')) { // @\Class
-					throw new ServiceCreationException("Unable resolve class name for service '$name'.");
-				}
-				$factory[0] = $this->resolveClass($service, $recursive);
-				if (!$factory[0]) {
-					return;
-				}
-				if ($this->definitions[$service]->implement && $factory[1] === 'create') {
-					return $def->class = $factory[0];
+					$factory[0] = $service;
+				} else {
+					$factory[0] = $this->resolveClass($service, $recursive);
+					if (!$factory[0]) {
+						return;
+					}
+					if ($this->definitions[$service]->implement && $factory[1] === 'create') {
+						return $def->class = $factory[0];
+					}
 				}
 			}
 			$factory = new Nette\Callback($factory);
