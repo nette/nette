@@ -277,6 +277,18 @@ class Statement extends Nette\Object implements \Iterator, IRowContainer
 
 
 	/**
+	 * Fetches single field.
+	 * @return mixed|FALSE
+	 */
+	public function fetchField($column = 0)
+	{
+		$row = $this->fetch();
+		return $row ? $row[$column] : FALSE;
+	}
+
+
+
+	/**
 	 * @inheritDoc
 	 */
 	public function fetchPairs($key, $value = NULL)

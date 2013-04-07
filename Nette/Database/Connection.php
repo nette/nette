@@ -185,15 +185,15 @@ class Connection extends Nette\Object
 
 
 	/**
-	 * Shortcut for query()->fetchColumn()
+	 * Shortcut for query()->fetchField()
 	 * @param  string  statement
 	 * @param  mixed   [parameters, ...]
 	 * @return mixed
 	 */
-	public function fetchColumn($args)
+	public function fetchField($args)
 	{
 		$args = func_get_args();
-		return $this->queryArgs(array_shift($args), $args)->fetchColumn();
+		return $this->queryArgs(array_shift($args), $args)->fetchField();
 	}
 
 
