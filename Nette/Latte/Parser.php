@@ -108,7 +108,7 @@ class Parser extends Nette\Object
 
 			} elseif (!empty($matches['macro'])) { // {macro}
 				$token = $this->addToken(Token::MACRO_TAG, $matches[0]);
-				list($token->name, $token->value, $token->modifiers) = $this->parseMacroTag($matches['macro']);
+				list($token->name, $token->value, $token->modifiers, $token->empty) = $this->parseMacroTag($matches['macro']);
 			}
 
 			$this->filter();
@@ -343,6 +343,7 @@ class Parser extends Nette\Object
 				(?P<noescape>!?)(?P<shortname>/?[=\~#%^&_]?)      ## !expression, !=expression, ...
 			)(?P<args>.*?)
 			(?P<modifiers>\|[a-z](?:'.Parser::RE_STRING.'|[^\'"])*)?
+			(?P<empty>/?\z)
 		()\z~isx');
 
 		if (!$match) {
@@ -354,7 +355,7 @@ class Parser extends Nette\Object
 				$match['modifiers'] .= '|escape';
 			}
 		}
-		return array($match['name'], trim($match['args']), $match['modifiers']);
+		return array($match['name'], trim($match['args']), $match['modifiers'], (bool) $match['empty']);
 	}
 
 

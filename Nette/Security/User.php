@@ -56,15 +56,13 @@ class User extends Nette\Object
 	/** @var IAuthorizator */
 	private $authorizator;
 
-	/** @var Nette\DI\Container */
-	private $context;
 
 
-
-	public function __construct(IUserStorage $storage, Nette\DI\Container $context)
+	public function __construct(IUserStorage $storage, IAuthenticator $authenticator = NULL, IAuthorizator $authorizator = NULL)
 	{
 		$this->storage = $storage;
-		$this->context = $context; // with IAuthenticator, IAuthorizator
+		$this->authenticator = $authenticator;
+		$this->authorizator = $authorizator;
 	}
 
 
@@ -94,8 +92,7 @@ class User extends Nette\Object
 	{
 		$this->logout(TRUE);
 		if (!$id instanceof IIdentity) {
-			$credentials = func_get_args();
-			$id = $this->getAuthenticator()->authenticate($credentials);
+			$id = $this->getAuthenticator()->authenticate(func_get_args());
 		}
 		$this->storage->setIdentity($id);
 		$this->storage->setAuthenticated(TRUE);
@@ -172,9 +169,12 @@ class User extends Nette\Object
 	 * Returns authentication handler.
 	 * @return IAuthenticator
 	 */
-	final public function getAuthenticator()
+	final public function getAuthenticator($need = TRUE)
 	{
-		return $this->authenticator ?: $this->context->getByType('Nette\Security\IAuthenticator');
+		if ($need && !$this->authenticator) {
+			throw new Nette\InvalidStateException('Authenticator has not been set.');
+		}
+		return $this->authenticator;
 	}
 
 
@@ -247,9 +247,8 @@ class User extends Nette\Object
 	 */
 	public function isAllowed($resource = IAuthorizator::ALL, $privilege = IAuthorizator::ALL)
 	{
-		$authorizator = $this->getAuthorizator();
 		foreach ($this->getRoles() as $role) {
-			if ($authorizator->isAllowed($role, $resource, $privilege)) {
+			if ($this->getAuthorizator()->isAllowed($role, $resource, $privilege)) {
 				return TRUE;
 			}
 		}
@@ -275,9 +274,12 @@ class User extends Nette\Object
 	 * Returns current authorization handler.
 	 * @return IAuthorizator
 	 */
-	final public function getAuthorizator()
+	final public function getAuthorizator($need = TRUE)
 	{
-		return $this->authorizator ?: $this->context->getByType('Nette\Security\IAuthorizator');
+		if ($need && !$this->authorizator) {
+			throw new Nette\InvalidStateException('Authorizator has not been set.');
+		}
+		return $this->authorizator;
 	}
 
 }

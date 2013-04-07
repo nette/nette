@@ -141,9 +141,7 @@ class Strings
 	 */
 	public static function normalize($s)
 	{
-		// standardize line endings to unix-like
-		$s = str_replace("\r\n", "\n", $s); // DOS
-		$s = strtr($s, "\r", "\n"); // Mac
+		$s = self::normalizeNewLines($s);
 
 		// remove control characters; leave \t + \n
 		$s = preg_replace('#[\x00-\x08\x0B-\x1F\x7F]+#', '', $s);
@@ -155,6 +153,18 @@ class Strings
 		$s = trim($s, "\n");
 
 		return $s;
+	}
+
+
+
+	/**
+	 * Standardize line endings to unix-like.
+	 * @param  string  UTF-8 encoding or 8-bit
+	 * @return string
+	 */
+	public static function normalizeNewLines($s)
+	{
+		return str_replace(array("\r\n", "\r"), "\n", $s);
 	}
 
 
@@ -536,7 +546,7 @@ class Strings
 	 */
 	public static function replace($subject, $pattern, $replacement = NULL, $limit = -1)
 	{
-		if (is_object($replacement) || is_array($replacement)) {
+		if (is_object($replacement) || is_array($replacement)/*5.2* || preg_match('#^\x00lambda_\d+\z#', $replacement)*/) {
 			if ($replacement instanceof Nette\Callback) {
 				$replacement = $replacement->getNative();
 			}

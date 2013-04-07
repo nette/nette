@@ -65,4 +65,4 @@ Assert::same( '@database.member', $extension->prefix('@member') );
 
 Assert::same( array('foo' => 'hello'), $extension->getConfig() );
 Assert::same( array('foo' => 'hello'), $extension->getConfig(array('foo' => 'bar')) );
-Assert::same( array('foo' => '%bar%'), $extension->getConfig(NULL, FALSE) );
+Assert::same( array('foo2' => 'hello', 'foo' => 'hello'), $extension->getConfig(array('foo2' => '%bar%')) );

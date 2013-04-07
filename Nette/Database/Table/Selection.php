@@ -216,7 +216,10 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	public function getPreviousAccessedColumns()
 	{
 		if ($this->cache && $this->previousAccessedColumns === NULL) {
-			$this->accessedColumns = $this->previousAccessedColumns = (array) $this->cache->load($this->getGeneralCacheKey());
+			$this->accessedColumns = $this->previousAccessedColumns = $this->cache->load($this->getGeneralCacheKey());
+			if ($this->previousAccessedColumns === NULL) {
+				$this->previousAccessedColumns = array();
+			}
 		}
 
 		return array_keys(array_filter((array) $this->previousAccessedColumns));
@@ -360,8 +363,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 			return $this;
 		}
 
-		$args = func_get_args();
-		if (call_user_func_array(array($this->sqlBuilder, 'addWhere'), $args)) {
+		if (call_user_func_array(array($this->sqlBuilder, 'addWhere'), func_get_args())) {
 			$this->emptyResultSet();
 		}
 
@@ -601,7 +603,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 	protected function saveCacheState()
 	{
-		if ($this->observeCache === $this && $this->cache && !$this->sqlBuilder->getSelect() && $this->accessedColumns != $this->previousAccessedColumns) {
+		if ($this->observeCache === $this && $this->cache && !$this->sqlBuilder->getSelect() && $this->accessedColumns !== $this->previousAccessedColumns) {
 			$this->cache->save($this->getGeneralCacheKey(), $this->accessedColumns);
 		}
 	}
@@ -649,7 +651,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 	/**
 	 * @internal
-	 * @param  string|NULL column name or (NULL to reload all columns & disable columns cache)
+	 * @param  string|NULL column name or NULL to reload all columns
 	 * @param  bool
 	 */
 	public function accessColumn($key, $selectColumn = TRUE)
@@ -666,7 +668,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 		}
 
 		if ($selectColumn && !$this->sqlBuilder->getSelect() && $this->previousAccessedColumns && ($key === NULL || !isset($this->previousAccessedColumns[$key]))) {
-			$this->previousAccessedColumns = FALSE;
+			$this->previousAccessedColumns = array();
 			$this->emptyResultSet();
 			$this->dataRefreshed = TRUE;
 

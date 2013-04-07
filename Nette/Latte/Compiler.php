@@ -247,7 +247,10 @@ class Compiler extends Nette\Object
 	{
 		$isRightmost = !isset($this->tokens[$this->position + 1])
 			|| substr($this->tokens[$this->position + 1]->text, 0, 1) === "\n";
-		$this->writeMacro($token->name, $token->value, $token->modifiers, $isRightmost);
+		$this->writeMacro($token->name, $token->value, $token->modifiers, $isRightmost && !$token->empty);
+		if ($token->empty) {
+			$this->writeMacro('/' . $token->name, NULL, NULL, $isRightmost);
+		}
 	}
 
 

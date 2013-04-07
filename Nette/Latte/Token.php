@@ -32,7 +32,7 @@ class Token extends Nette\Object
 	/** @var string  token type [TEXT | MACRO_TAG | HTML_TAG_BEGIN | HTML_TAG_END | HTML_ATTRIBUTE | COMMENT] */
 	public $type;
 
-	/** @var string  content of the token */
+	/** @var string  original text content of the token */
 	public $text;
 
 	/** @var int  line number */
@@ -47,7 +47,10 @@ class Token extends Nette\Object
 	/** @var string  macro modifiers; used for type MACRO_TAG */
 	public $modifiers;
 
-	/** @var bool  is closing HTML tag? used for type HTML_TAG_BEGIN */
+	/** @var bool  is closing HTML tag </tag>? used for type HTML_TAG_BEGIN */
 	public $closing;
+
+	/** @var bool  is tag empty {name/}? used for type MACRO_TAG */
+	public $empty;
 
 }

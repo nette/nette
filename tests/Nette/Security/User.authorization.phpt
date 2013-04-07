@@ -95,7 +95,7 @@ Assert::false( $user->isInRole('guest') );
 // authorization
 Assert::exception(function() use ($user) {
 	$user->isAllowed('delete_file');
-}, 'Nette\InvalidStateException', 'Service of type Nette\Security\IAuthorizator not found.');
+}, 'Nette\InvalidStateException', 'Authorizator has not been set.');
 
 $handler = new Authorizator;
 $user->setAuthorizator($handler);

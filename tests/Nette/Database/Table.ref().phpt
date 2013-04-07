@@ -19,8 +19,9 @@ Assert::same('Jakub Vrana', $connection->table('book')->get(1)->ref('author')->n
 
 
 $book = $connection->table('book')->get(1);
-$book->translator_id = 12;
-$book->update();
+$book->update(array(
+	'translator_id' => 12,
+));
 
 
 
