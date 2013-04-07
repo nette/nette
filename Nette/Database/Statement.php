@@ -128,6 +128,18 @@ class Statement extends \PDOStatement
 
 
 	/**
+	 * Fetches single field.
+	 * @return mixed|FALSE
+	 */
+	public function fetchField($column = 0)
+	{
+		$row = $this->fetch();
+		return $row ? $row[$column] : FALSE;
+	}
+
+
+
+	/**
 	 * Normalizes result row.
 	 * @param  array
 	 * @return array

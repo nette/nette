@@ -187,6 +187,20 @@ class Connection extends PDO
 
 
 	/**
+	 * Shortcut for query()->fetchField()
+	 * @param  string  statement
+	 * @param  mixed   [parameters, ...]
+	 * @return mixed
+	 */
+	public function fetchField($args)
+	{
+		$args = func_get_args();
+		return $this->queryArgs(array_shift($args), $args)->fetchField();
+	}
+
+
+
+	/**
 	 * Shortcut for query()->fetchColumn()
 	 * @param  string  statement
 	 * @param  mixed   [parameters, ...]
