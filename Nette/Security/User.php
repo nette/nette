@@ -92,7 +92,7 @@ class User extends Nette\Object
 	{
 		$this->logout(TRUE);
 		if (!$id instanceof IIdentity) {
-			$id = $this->authenticator->authenticate(func_get_args());
+			$id = $this->getAuthenticator()->authenticate(func_get_args());
 		}
 		$this->storage->setIdentity($id);
 		$this->storage->setAuthenticated(TRUE);
@@ -169,8 +169,11 @@ class User extends Nette\Object
 	 * Returns authentication handler.
 	 * @return IAuthenticator
 	 */
-	final public function getAuthenticator()
+	final public function getAuthenticator($need = TRUE)
 	{
+		if ($need && !$this->authenticator) {
+			throw new Nette\InvalidStateException('Authenticator has not been set.');
+		}
 		return $this->authenticator;
 	}
 
@@ -245,7 +248,7 @@ class User extends Nette\Object
 	public function isAllowed($resource = IAuthorizator::ALL, $privilege = IAuthorizator::ALL)
 	{
 		foreach ($this->getRoles() as $role) {
-			if ($this->authorizator->isAllowed($role, $resource, $privilege)) {
+			if ($this->getAuthorizator()->isAllowed($role, $resource, $privilege)) {
 				return TRUE;
 			}
 		}
@@ -271,8 +274,11 @@ class User extends Nette\Object
 	 * Returns current authorization handler.
 	 * @return IAuthorizator
 	 */
-	final public function getAuthorizator()
+	final public function getAuthorizator($need = TRUE)
 	{
+		if ($need && !$this->authorizator) {
+			throw new Nette\InvalidStateException('Authorizator has not been set.');
+		}
 		return $this->authorizator;
 	}
 
