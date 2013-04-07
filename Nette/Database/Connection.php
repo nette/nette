@@ -31,6 +31,12 @@ class Connection extends Nette\Object
 	/** @var string */
 	private $dsn;
 
+	/** @var array */
+	private $login;
+
+	/** @var array */
+	private $options;
+
 	/** @var ISupplementalDriver */
 	private $driver;
 
@@ -50,16 +56,29 @@ class Connection extends Nette\Object
 
 	public function __construct($dsn, $user = NULL, $password = NULL, array $options = NULL)
 	{
-		$this->pdo = new PDO($this->dsn = $dsn, $user, $password, $options);
-		$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
 		if (func_num_args() > 4) { // compatiblity
 			$options['driverClass'] = func_get_arg(4);
 		}
-		$driverClass = empty($options['driverClass'])
+		$this->dsn = $dsn;
+		$this->login = array($user, $password);
+		$this->options = (array) $options;
+
+		if (empty($options['lazy'])) {
+			$this->connect();
+		}
+	}
+
+
+
+	private function connect()
+	{
+		$this->pdo = new PDO($this->dsn, $this->login[0], $this->login[1], $this->options);
+		$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+		$driverClass = empty($this->options['driverClass'])
 			? 'Nette\Database\Drivers\\' . ucfirst(str_replace('sql', 'Sql', $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver'
-			: $options['driverClass'];
-		$this->driver = new $driverClass($this, (array) $options);
+			: $this->options['driverClass'];
+		$this->driver = new $driverClass($this, $this->options);
 		$this->preprocessor = new SqlPreprocessor($this);
 	}
 
@@ -76,6 +95,9 @@ class Connection extends Nette\Object
 	/** @return PDO */
 	public function getPdo()
 	{
+		if (!$this->pdo) {
+			$this->connect();
+		}
 		return $this->pdo;
 	}
 
@@ -84,6 +106,9 @@ class Connection extends Nette\Object
 	/** @return ISupplementalDriver */
 	public function getSupplementalDriver()
 	{
+		if (!$this->pdo) {
+			$this->connect();
+		}
 		return $this->driver;
 	}
 
@@ -92,7 +117,7 @@ class Connection extends Nette\Object
 	/** @return bool */
 	public function beginTransaction()
 	{
-		return $this->pdo->beginTransaction();
+		return $this->getPdo()->beginTransaction();
 	}
 
 
@@ -100,7 +125,7 @@ class Connection extends Nette\Object
 	/** @return bool */
 	public function commit()
 	{
-		return $this->pdo->commit();
+		return $this->getPdo()->commit();
 	}
 
 
@@ -108,7 +133,7 @@ class Connection extends Nette\Object
 	/** @return bool */
 	public function rollBack()
 	{
-		return $this->pdo->rollBack();
+		return $this->getPdo()->rollBack();
 	}
 
 
@@ -119,7 +144,7 @@ class Connection extends Nette\Object
 	 */
 	public function getInsertId($name = NULL)
 	{
-		return $this->pdo->lastInsertId($name);
+		return $this->getPdo()->lastInsertId($name);
 	}
 
 
@@ -131,7 +156,7 @@ class Connection extends Nette\Object
 	 */
 	public function quote($string, $type = PDO::PARAM_STR)
 	{
-		return $this->pdo->quote($string, $type);
+		return $this->getPdo()->quote($string, $type);
 	}
 
 
@@ -157,6 +182,9 @@ class Connection extends Nette\Object
 	 */
 	public function queryArgs($statement, array $params)
 	{
+		if (!$this->pdo) {
+			$this->connect();
+		}
 		if ($params) {
 			list($statement, $params) = $this->preprocessor->process($statement, $params);
 		}
