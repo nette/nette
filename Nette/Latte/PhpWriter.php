@@ -60,15 +60,15 @@ class PhpWriter extends Nette\Object
 		array_shift($args);
 		$word = strpos($mask, '%node.word') === FALSE ? NULL : $this->argsTokenizer->fetchWord();
 		$me = $this;
-		$mask = Nette\Utils\Strings::replace($mask, '#%escape(\(([^()]*+|(?1))+\))#', /*5.2* new Nette\Callback(*/function($m) use ($me) {
+		$mask = Nette\Utils\Strings::replace($mask, '#%escape(\(([^()]*+|(?1))+\))#', function($m) use ($me) {
 			return $me->escape(substr($m[1], 1, -1));
-		}/*5.2* )*/);
-		$mask = Nette\Utils\Strings::replace($mask, '#%modify(\(([^()]*+|(?1))+\))#', /*5.2* new Nette\Callback(*/function($m) use ($me) {
+		});
+		$mask = Nette\Utils\Strings::replace($mask, '#%modify(\(([^()]*+|(?1))+\))#', function($m) use ($me) {
 			return $me->formatModifiers(substr($m[1], 1, -1));
-		}/*5.2* )*/);
+		});
 
 		return Nette\Utils\Strings::replace($mask, '#([,+]\s*)?%(node\.word|node\.array|node\.args|var|raw)(\?)?(\s*\+\s*)?()#',
-			/*5.2* new Nette\Callback(*/function($m) use ($me, $word, & $args) {
+		function($m) use ($me, $word, & $args) {
 			list(, $l, $macro, $cond, $r) = $m;
 
 			switch ($macro) {
@@ -90,7 +90,7 @@ class PhpWriter extends Nette\Object
 			} else {
 				return $l . $code . $r;
 			}
-		}/*5.2* )*/);
+		});
 	}
 
 
