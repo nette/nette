@@ -57,19 +57,19 @@ class PhpWriter extends Nette\Object
 	public function write($mask)
 	{
 		$me = $this;
-		$mask = Nette\Utils\Strings::replace($mask, '#%escape(\(([^()]*+|(?1))+\))#', /*5.2* new Nette\Callback(*/function($m) use ($me) {
+		$mask = Nette\Utils\Strings::replace($mask, '#%escape(\(([^()]*+|(?1))+\))#', function($m) use ($me) {
 			return $me->escape(substr($m[1], 1, -1));
-		}/*5.2* )*/);
-		$mask = Nette\Utils\Strings::replace($mask, '#%modify(\(([^()]*+|(?1))+\))#', /*5.2* new Nette\Callback(*/function($m) use ($me) {
+		});
+		$mask = Nette\Utils\Strings::replace($mask, '#%modify(\(([^()]*+|(?1))+\))#', function($m) use ($me) {
 			return $me->formatModifiers(substr($m[1], 1, -1));
-		}/*5.2* )*/);
+		});
 
 		$args = func_get_args();
 		$pos = $this->argsTokenizer->position;
 		$word = strpos($mask, '%node.word') === FALSE ? NULL : $this->argsTokenizer->fetchWord();
 
 		$code = Nette\Utils\Strings::replace($mask, '#([,+]\s*)?%(node\.|\d+\.|)(word|var|raw|array|args)(\?)?(\s*\+\s*)?()#',
-			/*5.2* new Nette\Callback(*/function($m) use ($me, $word, & $args) {
+		function($m) use ($me, $word, & $args) {
 			list(, $l, $source, $format, $cond, $r) = $m;
 
 			switch ($source) {
@@ -100,7 +100,7 @@ class PhpWriter extends Nette\Object
 			} else {
 				return $l . $code . $r;
 			}
-		}/*5.2* )*/);
+		});
 
 		$this->argsTokenizer->position = $pos;
 		return $code;
