@@ -38,13 +38,6 @@ class Sqlite2Driver extends SqliteDriver
 	 */
 	public function normalizeRow($row, $statement)
 	{
-		if (!is_object($row)) {
-			$iterator = $row;
-		} elseif ($row instanceof \Traversable) {
-			$iterator = iterator_to_array($row);
-		} else {
-			$iterator = (array) $row;
-		}
 		foreach ($iterator as $key => $value) {
 			unset($row[$key]);
 			if ($key[0] === '[' || $key[0] === '"') {
