@@ -61,7 +61,7 @@ $connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory(
 
 $queries = 0;
 $connection->onQuery[] = function(ResultSet $query) use (& $queries) {
-	if (preg_match('#SHOW|CONSTRAINT_NAME|pg_catalog#i', $query->queryString)) return;
+	if (preg_match('#SHOW|CONSTRAINT_NAME|pg_catalog|sys\.#i', $query->queryString)) return;
 	$queries++;
 };
 

@@ -28,6 +28,13 @@ switch ($driverName) {
 		$connection->query('ALTER TABLE "book" ADD CONSTRAINT "book_volume" FOREIGN KEY ("next_volume") REFERENCES "book" ("id") ON DELETE RESTRICT ON UPDATE RESTRICT;');
 		$connection->query('UPDATE "book" SET "next_volume" = 3 WHERE "id" IN (2,4)');
 		break;
+
+	case 'sqlsrv':
+		$connection->query('ALTER TABLE [book] ADD [next_volume] int NULL;');
+		$connection->query('ALTER TABLE [book] ADD CONSTRAINT [book_volume] FOREIGN KEY ([next_volume]) REFERENCES [book] ([id]);');
+		$connection->query('UPDATE [book] SET [next_volume] = 3 WHERE [id] IN (2,4)');
+		break;
+
 	case 'mysql':
 	default:
 		$connection->query('ALTER TABLE `book` ADD COLUMN `next_volume` int NULL AFTER `title`;');
