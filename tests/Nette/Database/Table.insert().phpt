@@ -16,18 +16,11 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nette_test1.sql");
 
 
-
 $connection->table('author')->insert(array(
-	'id' => 14,
 	'name' => new SqlLiteral('LOWER(?)', 'Eddard Stark'),
 	'web' => 'http://example.com',
-));  // INSERT INTO `author` (`id`, `name`, `web`) VALUES (14, 'Eddard Stark', 'http://example.com')
-
-switch ($driverName) {
-	case 'pgsql':
-	$connection->query("SELECT setval('author_id_seq'::regclass, 14, TRUE)");
-	break;
-}
+));  // INSERT INTO `author` (`name`, `web`) VALUES (LOWER('Eddard Stark'), 'http://example.com')
+// id = 14
 
 
 
@@ -37,6 +30,7 @@ $insert = array(
 	'born' => new Nette\DateTime('2011-11-11'),
 );
 $connection->table('author')->insert($insert);  // INSERT INTO `author` (`name`, `web`, `born`) VALUES ('Catelyn Stark', 'http://example.com', '2011-11-11 00:00:00')
+// id = 15
 
 
 
@@ -71,10 +65,14 @@ Assert::same('eddard stark', $book3->author->name);  // SELECT * FROM `author` W
 
 
 
-Assert::exception(function() use ($connection) {
-	$connection->table('author')->insert(array(
-		'id' => 15,
-		'name' => 'Jon Snow',
-		'web' => 'http://example.com',
-	));
-}, '\PDOException');
+// SQL Server throw PDOException because does not allow insert explicit value for IDENTITY column.
+// This exception is about primary key violation.
+if ($driverName !== 'sqlsrv') {
+	Assert::exception(function() use ($connection) {
+		$connection->table('author')->insert(array(
+			'id' => 15,
+			'name' => 'Jon Snow',
+			'web' => 'http://example.com',
+		));
+	}, '\PDOException');
+}
