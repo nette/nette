@@ -136,16 +136,15 @@ class Statement extends Nette\Object implements \Iterator, IRowContainer
 				$row[$key] = is_float($tmp = $value * 1) ? $value : $tmp;
 
 			} elseif ($type === IReflection::FIELD_FLOAT) {
-				$value = strpos($value, '.') === FALSE ? $value : rtrim(rtrim($value, '0'), '.');
+				$value = ($pos = strpos($value, '.')) === FALSE ? $value : rtrim(rtrim($value, '0'), '.');
 				$float = (float) $value;
-				$row[$key] = (string) $float === $value ? $float : $value;
+				$row[$key] = (string) $float === ($pos === 0 ? "0$value" : $value) ? $float : $value;
 
 			} elseif ($type === IReflection::FIELD_BOOL) {
 				$row[$key] = ((bool) $value) && $value !== 'f' && $value !== 'F';
 
 			} elseif ($type === IReflection::FIELD_DATETIME || $type === IReflection::FIELD_DATE || $type === IReflection::FIELD_TIME) {
 				$row[$key] = new Nette\DateTime($value);
-
 			}
 		}
 
@@ -162,7 +161,10 @@ class Statement extends Nette\Object implements \Iterator, IRowContainer
 				$count = $this->pdoStatement->columnCount();
 				for ($col = 0; $col < $count; $col++) {
 					$meta = $this->pdoStatement->getColumnMeta($col);
-					if (isset($meta['native_type'])) {
+					if (isset($meta['sqlsrv:decl_type']) && $meta['sqlsrv:decl_type'] !== 'timestamp') { // timestamp does not mean time in sqlsrv
+						$this->types[$meta['name']] = Helpers::detectType($meta['sqlsrv:decl_type']);
+
+					} elseif (isset($meta['native_type'])) {
 						$this->types[$meta['name']] = Helpers::detectType($meta['native_type']);
 					}
 				}
