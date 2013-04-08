@@ -245,11 +245,17 @@ Nette.validators = {
 /**
  * Process all toggles in form.
  */
-Nette.toggleForm = function(form) {
-	for (var i = 0; i < form.elements.length; i++) {
+Nette.toggleForm = function(form, firsttime) {
+	var i;
+	Nette.toggles = {};
+	for (i = 0; i < form.elements.length; i++) {
 		if (form.elements[i].nodeName.toLowerCase() in {input: 1, select: 1, textarea: 1, button: 1}) {
-			Nette.toggleControl(form.elements[i]);
+			Nette.toggleControl(form.elements[i], null, null, firsttime);
 		}
+	}
+
+	for (i in Nette.toggles) {
+		Nette.toggle(i, Nette.toggles[i]);
 	}
 };
 
@@ -257,7 +263,7 @@ Nette.toggleForm = function(form) {
 /**
  * Process toggles on form element.
  */
-Nette.toggleControl = function(elem, rules, firsttime) {
+Nette.toggleControl = function(elem, rules, topSuccess, firsttime) {
 	rules = rules || eval('[' + (elem.getAttribute('data-nette-rules') || '') + ']');
 	var has = false, __hasProp = Object.prototype.hasOwnProperty, handler = function() {
 		Nette.toggleForm(elem.form);
@@ -273,15 +279,18 @@ Nette.toggleControl = function(elem, rules, firsttime) {
 		}
 
 		var el = rule.control ? elem.form.elements[rule.control] : elem;
-		var success = Nette.validateRule(el, rule.op, rule.arg);
-		if (success === null) {
-			continue;
-		}
-		if (rule.neg) {
-			success = !success;
+		var success = topSuccess;
+		if (success !== false) {
+			success = Nette.validateRule(el, rule.op, rule.arg);
+			if (success === null) {
+				continue;
+			}
+			if (rule.neg) {
+				success = !success;
+			}
 		}
 
-		if (Nette.toggleControl(elem, rule.rules, firsttime) || rule.toggle) {
+		if (Nette.toggleControl(elem, rule.rules, success, firsttime) || rule.toggle) {
 			has = true;
 			if (firsttime) {
 				if (!el.nodeName) { // radio
@@ -296,7 +305,7 @@ Nette.toggleControl = function(elem, rules, firsttime) {
 			}
 			for (var id2 in rule.toggle || []) {
 				if (__hasProp.call(rule.toggle, id2)) {
-					Nette.toggle(id2, success ? rule.toggle[id2] : !rule.toggle[id2]);
+					Nette.toggles[id2] = Nette.toggles[id2] || (success ? rule.toggle[id2] : !rule.toggle[id2]);
 				}
 			}
 		}
@@ -339,9 +348,7 @@ Nette.initForm = function(form) {
 		form['nette-submittedBy'] = (target.type in {submit: 1, image: 1}) ? target : null;
 	});
 
-	for (var i = 0; i < form.elements.length; i++) {
-		Nette.toggleControl(form.elements[i], null, true);
-	}
+	Nette.toggleForm(form, true);
 };
 
 
