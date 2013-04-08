@@ -483,7 +483,7 @@ class SqlBuilder extends Nette\Object
 		if ($this->order) {
 			$return .= ' ORDER BY ' . implode(', ', $this->order);
 		}
-		if ($this->limit !== NULL && $this->driverName !== 'oci' && $this->driverName !== 'dblib') {
+		if ($this->limit !== NULL && !in_array($this->driverName, array('oci', 'dblib', 'sqlsrv'), TRUE)) {
 			$return .= " LIMIT $this->limit";
 			if ($this->offset !== NULL) {
 				$return .= " OFFSET $this->offset";
@@ -496,7 +496,7 @@ class SqlBuilder extends Nette\Object
 
 	protected function buildTopClause()
 	{
-		if ($this->limit !== NULL && $this->driverName === 'dblib') {
+		if ($this->limit !== NULL && in_array($this->driverName, array('dblib', 'sqlsrv'), TRUE)) {
 			return " TOP ($this->limit)"; //! offset is not supported
 		}
 		return '';
