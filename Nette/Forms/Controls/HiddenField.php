@@ -72,4 +72,16 @@ class HiddenField extends BaseControl
 			->data('nette-rules', NULL);
 	}
 
+
+
+	/**
+	 * Adds error message to the list.
+	 * @param  string  error message
+	 * @return void
+	 */
+	public function addError($message)
+	{
+		$this->getForm()->addError($message);
+	}
+
 }

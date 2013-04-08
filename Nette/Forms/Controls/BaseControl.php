@@ -611,7 +611,10 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	public function validate()
 	{
-		$this->errors = $this->rules->validate();
+		$this->cleanErrors();
+		foreach ($this->rules->validate() as $error) {
+			$this->addError($error);
+		}
 	}
 
 
