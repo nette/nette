@@ -193,13 +193,13 @@ if (!empty($_control->snippetMode)) {
 	public function macroExtends(MacroNode $node, PhpWriter $writer)
 	{
 		if (!$node->args) {
-			throw new CompileException("Missing destination in {extends}");
+			throw new CompileException('Missing destination in {' . $node->name . '}');
 		}
 		if (!empty($node->parentNode)) {
-			throw new CompileException("{extends} must be placed outside any macro.");
+			throw new CompileException('{' . $node->name . '} must be placed outside any macro.');
 		}
 		if ($this->extends !== NULL) {
-			throw new CompileException("Multiple {extends} declarations are not allowed.");
+			throw new CompileException('Multiple {' . $node->name . '} declarations are not allowed.');
 		}
 		if ($node->args === 'none') {
 			$this->extends = 'FALSE';
