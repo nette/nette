@@ -57,6 +57,22 @@ Assert::same( "ITEM['id']",  formatArgs('ITEM[id]') );
 Assert::same( '($first ? \'first\':null), $var ? \'foo\' : \'bar\', $var ? \'foo\':null',  formatArgs('($first ? first), $var ? foo : bar, $var ? foo') );
 
 
+// existential operator
+Assert::same(
+	'$__ex0 = $object,is_object($__ex0) ? ($__ex1 = $__ex0->a,is_object($__ex1) ? ($__ex1->b) : null) : null',
+	formatArgs('$object?->a?->b')
+);
+Assert::same(
+	'$__ex0 = $object,is_object($__ex0) ? ($__ex0->getMessage()) : null',
+	formatArgs('$object?->getMessage()')
+);
+Assert::same( //original code modifications still work
+	'$__ex0 = $object,is_object($__ex0) ? ($__ex0->getMessage($a ? 1:null, array(\'a\'=>1))) : null',
+	formatArgs('$object?->getMessage($a ? 1, [a=>1])')
+);
+
+
+
 // special
 Assert::same( '$var',  formatArgs('$var') );
 Assert::same( '$var => $var',  formatArgs('$var => $var') );

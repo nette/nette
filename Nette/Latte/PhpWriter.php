@@ -259,6 +259,12 @@ class PhpWriter extends Nette\Object
 				$inTernary = NULL;
 			}
 
+			if ($token['type'] === MacroTokenizer::T_VARIABLE) { // ?-> existential operator
+				if ($this->prepareExistentialOperator($tokenizer)) {
+					continue;
+				}
+			}
+
 			if ($token['value'] === '[') { // simplified array syntax [...]
 				if ($arrays[] = $prev['value'] !== ']' && $prev['value'] !== ')' && $prev['type'] !== MacroTokenizer::T_SYMBOL
 					&& $prev['type'] !== MacroTokenizer::T_VARIABLE && $prev['type'] !== MacroTokenizer::T_KEYWORD
@@ -329,6 +335,53 @@ class PhpWriter extends Nette\Object
 		default:
 			return "\$template->escape($s)";
 		}
+	}
+
+
+
+	private function prepareExistentialOperator(MacroTokenizer $tokenizer)
+	{
+		$savedPositon = $tokenizer->position;
+		$tokenizer->position--;
+
+		$parts = array();
+
+		// split by ?->
+		while ($part = $tokenizer->fetchUntil(MacroTokenizer::T_EACCESS)) {
+			$tokenizer->fetchToken();
+			$parts[] = $part;
+		}
+
+		// if no ?-> operator found, exit, nothing to do
+		if (count($parts) <= 1 ) {
+			$tokenizer->position = $savedPositon;
+			return FALSE;
+		}
+
+		// construct new php code
+		$s = $f = $chain = '';
+		for ($i = 0; $i < count($parts) - 1; $i++) {
+			$chain = $i === 0 ? $parts[$i] : "{$tVar}->{$parts[$i]}";
+			$tVar = "\$__ex{$i}";
+			$s .= "{$tVar} = {$chain},is_object({$tVar}) ? (";
+			$f .= ') : null';
+		}
+		$code = "{$s}{$tVar}->{$parts[$i]}{$f}";
+
+		// replace tokens
+		$exOpTokenizer = new MacroTokenizer($code);
+		$originalTokens = $tokenizer->tokens;
+		$tokens = array();
+		for ($i = 0; $i < $savedPositon; $i++) {
+			$tokens[] = $originalTokens[$i];
+		}
+		foreach ($exOpTokenizer->tokens as $token) {
+			$tokens[] = $token;
+		}
+		while ($tokens[] = $tokenizer->fetchToken());
+		$tokenizer->tokens = $tokens;
+		$tokenizer->position = $savedPositon;
+		return TRUE;
 	}
 
 }
