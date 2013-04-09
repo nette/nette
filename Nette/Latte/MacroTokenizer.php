@@ -30,7 +30,9 @@ class MacroTokenizer extends Nette\Utils\Tokenizer
 		T_STRING = 6,
 		T_CAST = 7,
 		T_KEYWORD = 8,
-		T_CHAR = 9;
+		T_CHAR = 9,
+		T_ACCESS = 10,
+		T_EACCESS = 11;
 
 
 
@@ -40,6 +42,8 @@ class MacroTokenizer extends Nette\Utils\Tokenizer
 			self::T_WHITESPACE => '\s+',
 			self::T_COMMENT => '(?s)/\*.*?\*/',
 			self::T_STRING => Parser::RE_STRING,
+			self::T_EACCESS => '\?\->',
+			self::T_ACCESS => '\->',
 			self::T_KEYWORD => '(?:true|false|null|and|or|xor|clone|new|instanceof|return|continue|break|[A-Z_][A-Z0-9_]{2,})(?![\w\pL_])', // keyword or const
 			self::T_CAST => '\((?:expand|string|array|int|integer|float|bool|boolean|object)\)', // type casting
 			self::T_VARIABLE => '\$[\w\pL_]+',
