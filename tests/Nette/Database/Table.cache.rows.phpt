@@ -64,11 +64,11 @@ Assert::equal(3, $books[2]['id']);
 
 
 $row = $connection->table('author')->insert(array(
-	'id' => 14,
 	'name' => 'Eddard Stark',
 	'web' => 'http://example.com',
-));  // INSERT INTO `author` (`id`, `name`, `web`) VALUES (14, 'Eddard Stark', 'http://example.com')
+));  // INSERT INTO `author` (`name`, `web`) VALUES ('Eddard Stark', 'http://example.com')
 Assert::true(is_array($row->toArray()));
+// id = 14
 
 
 $row = $connection->table('author')->where('id', 14)->fetch();
