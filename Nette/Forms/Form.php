@@ -605,4 +605,20 @@ class Form extends Container
 		return $this->httpRequest;
 	}
 
+
+
+	/**
+	 * @return array
+	 */
+	public function getToggles()
+	{
+		$toggles = array();
+		foreach ($this->getControls() as $control) {
+			foreach ($control->getRules()->getToggles(TRUE) as $id => $hide) {
+   				$toggles[$id] = empty($toggles[$id]) ? $hide : TRUE;
+			}
+		}
+		return $toggles;
+	}
+
 }
