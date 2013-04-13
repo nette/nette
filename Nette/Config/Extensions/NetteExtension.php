@@ -33,7 +33,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		),
 		'application' => array(
 			'debugger' => TRUE,
-			'errorPresenter' => NULL,
+			'errorPresenter' => 'Nette:Error',
 			'catchExceptions' => '%productionMode%',
 			'mapping' => NULL
 		),
