@@ -24,6 +24,7 @@ interface IPresenterFactory
 {
 
 	/**
+	 * Generates and checks presenter class name.
 	 * @param  string  presenter name
 	 * @return string  class name
 	 * @throws InvalidPresenterException
@@ -31,7 +32,7 @@ interface IPresenterFactory
 	function getPresenterClass(& $name);
 
 	/**
-	 * Create new presenter instance.
+	 * Creates new presenter instance.
 	 * @param  string  presenter name
 	 * @return IPresenter
 	 */
