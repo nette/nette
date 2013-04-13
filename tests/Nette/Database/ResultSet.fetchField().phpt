@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\Statement: Fetch field.
+ * Test: Nette\Database\ResultSet: Fetch field.
  *
  * @author     David Grudl
  * @package    Nette\Database

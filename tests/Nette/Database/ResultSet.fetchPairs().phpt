@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\Statement: Fetch pairs.
+ * Test: Nette\Database\ResultSet: Fetch pairs.
  *
  * @author     David Grudl
  * @package    Nette\Database

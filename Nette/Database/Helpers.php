@@ -44,15 +44,15 @@ class Helpers
 	 * Displays complete result set as HTML table for debug purposes.
 	 * @return void
 	 */
-	public static function dumpResult(Statement $statement)
+	public static function dumpResult(ResultSet $result)
 	{
-		echo "\n<table class=\"dump\">\n<caption>" . htmlSpecialChars($statement->queryString) . "</caption>\n";
-		if (!$statement->getColumnCount()) {
-			echo "\t<tr>\n\t\t<th>Affected rows:</th>\n\t\t<td>", $statement->getRowCount(), "</td>\n\t</tr>\n</table>\n";
+		echo "\n<table class=\"dump\">\n<caption>" . htmlSpecialChars($result->queryString) . "</caption>\n";
+		if (!$result->getColumnCount()) {
+			echo "\t<tr>\n\t\t<th>Affected rows:</th>\n\t\t<td>", $result->getRowCount(), "</td>\n\t</tr>\n</table>\n";
 			return;
 		}
 		$i = 0;
-		foreach ($statement as $row) {
+		foreach ($result as $row) {
 			if ($i === 0) {
 				echo "<thead>\n\t<tr>\n\t\t<th>#row</th>\n";
 				foreach ($row as $col => $foo) {

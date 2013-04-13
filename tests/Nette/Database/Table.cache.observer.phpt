@@ -8,7 +8,7 @@
  * @dataProvider? databases.ini
  */
 
-use Nette\Database\Statement;
+use Nette\Database\ResultSet;
 
 require __DIR__ . '/connect.inc.php'; // create $connection
 
@@ -60,7 +60,7 @@ $connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory(
 
 
 $queries = 0;
-$connection->onQuery[] = function(Statement $query) use (& $queries) {
+$connection->onQuery[] = function(ResultSet $query) use (& $queries) {
 	if (preg_match('#SHOW|CONSTRAINT_NAME|pg_catalog#i', $query->queryString)) return;
 	$queries++;
 };

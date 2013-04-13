@@ -46,7 +46,7 @@ class Connection extends Nette\Object
 	/** @var PDO */
 	private $pdo;
 
-	/** @var array of function(Statement $result, $params); Occurs after query is executed */
+	/** @var array of function(ResultSet $result, $params); Occurs after query is executed */
 	public $onQuery;
 
 
@@ -160,7 +160,7 @@ class Connection extends Nette\Object
 	 * Generates and executes SQL query.
 	 * @param  string  statement
 	 * @param  mixed   [parameters, ...]
-	 * @return Statement
+	 * @return ResultSet
 	 */
 	public function query($statement)
 	{
@@ -173,7 +173,7 @@ class Connection extends Nette\Object
 	/**
 	 * @param  string  statement
 	 * @param  array
-	 * @return Statement
+	 * @return ResultSet
 	 */
 	public function queryArgs($statement, array $params)
 	{
@@ -181,7 +181,7 @@ class Connection extends Nette\Object
 		if ($params) {
 			list($statement, $params) = $this->preprocessor->process($statement, $params);
 		}
-		return new Statement($this, $statement, $params);
+		return new ResultSet($this, $statement, $params);
 	}
 
 

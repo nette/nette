@@ -18,14 +18,14 @@ use Nette,
 
 
 /**
- * Represents a prepared statement / result set.
+ * Represents a result set.
  *
  * @author     David Grudl
  * @author     Jan Skrasek
  *
  * @property-read Connection $connection
  */
-class Statement extends Nette\Object implements \Iterator, IRowContainer
+class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 {
 	/** @var Connection */
 	private $connection;
@@ -213,7 +213,7 @@ class Statement extends Nette\Object implements \Iterator, IRowContainer
 	public function rewind()
 	{
 		if ($this->result === FALSE) {
-			throw new Nette\InvalidStateException('Nette\\Database\\Statement implements only one way iterator.');
+			throw new Nette\InvalidStateException('Nette\\Database\\ResultSet implements only one way iterator.');
 		}
 	}
 

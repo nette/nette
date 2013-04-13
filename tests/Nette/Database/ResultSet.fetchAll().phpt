@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\Statement: Fetch all.
+ * Test: Nette\Database\ResultSet: Fetch all.
  *
  * @author     David Grudl
  * @package    Nette\Database

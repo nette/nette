@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\Statement::normalizeRow()
+ * Test: Nette\Database\ResultSet::normalizeRow()
  *
  * @author     David Grudl
  * @package    Nette\Database

@@ -51,7 +51,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 
 
 
-	public function logQuery(Nette\Database\Statement $result, array $params = NULL)
+	public function logQuery(Nette\Database\ResultSet $result, array $params = NULL)
 	{
 		if ($this->disabled) {
 			return;
