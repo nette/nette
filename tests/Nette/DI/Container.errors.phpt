@@ -34,8 +34,3 @@ Assert::exception(function() use ($container, $service) {
 	$container->addService('one', $service);
 	$container->addService('one', $service);
 }, 'Nette\InvalidStateException', "Service 'one' has already been registered.");
-
-Assert::exception(function() use ($container, $service) {
-	$container->freeze();
-	$container->addService('two', $service);
-}, 'Nette\InvalidStateException', 'Cannot modify a frozen object Nette\DI\Container.');
