@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Adapters\NeonAdapter errors.
+ * Test: Nette\DI\Config\Adapters\NeonAdapter errors.
  *
  * @author     David Grudl
- * @package    Nette\Config
+ * @package    Nette\DI
  */
 
-use Nette\Config;
+use Nette\DI\Config;
 
 
 

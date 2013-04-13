@@ -4,11 +4,11 @@
  * Test: Overriding class of service definition defined in CompilerExtension.
  *
  * @author     David Grudl
- * @package    Nette\Config
+ * @package    Nette\DI
  */
 
-use Nette\Config\Configurator,
-	Nette\Config\Compiler,
+use Nette\DI\Configurator,
+	Nette\DI\Compiler,
 	Nette\DI\ContainerBuilder;
 
 
@@ -52,7 +52,7 @@ class Ipsum
 }
 
 
-class FooExtension extends Nette\Config\CompilerExtension
+class FooExtension extends Nette\DI\CompilerExtension
 {
 
 	public function loadConfiguration()

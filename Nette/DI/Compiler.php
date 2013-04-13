@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Config;
+namespace Nette\DI;
 
 use Nette,
 	Nette\Utils\Validators;
@@ -22,7 +22,7 @@ use Nette,
  * @author     David Grudl
  *
  * @property-read CompilerExtension[] $extensions
- * @property-read Nette\DI\ContainerBuilder $containerBuilder
+ * @property-read ContainerBuilder $containerBuilder
  * @property-read array $config
  */
 class Compiler extends Nette\Object
@@ -30,7 +30,7 @@ class Compiler extends Nette\Object
 	/** @var CompilerExtension[] */
 	private $extensions = array();
 
-	/** @var Nette\DI\ContainerBuilder */
+	/** @var ContainerBuilder */
 	private $container;
 
 	/** @var array */
@@ -67,7 +67,7 @@ class Compiler extends Nette\Object
 
 
 	/**
-	 * @return Nette\DI\ContainerBuilder
+	 * @return ContainerBuilder
 	 */
 	public function getContainerBuilder()
 	{
@@ -93,7 +93,7 @@ class Compiler extends Nette\Object
 	public function compile(array $config, $className, $parentName)
 	{
 		$this->config = $config;
-		$this->container = new Nette\DI\ContainerBuilder;
+		$this->container = new ContainerBuilder;
 		$this->processParameters();
 		$this->processExtensions();
 		$this->processServices();
@@ -105,7 +105,7 @@ class Compiler extends Nette\Object
 	public function processParameters()
 	{
 		if (isset($this->config['parameters'])) {
-			$this->container->parameters = Nette\DI\Helpers::expand($this->config['parameters'], $this->config['parameters'], TRUE);
+			$this->container->parameters = Helpers::expand($this->config['parameters'], $this->config['parameters'], TRUE);
 		}
 	}
 
@@ -170,14 +170,14 @@ class Compiler extends Nette\Object
 	 * Parses section 'services' from (unexpanded) configuration file.
 	 * @return void
 	 */
-	public static function parseServices(Nette\DI\ContainerBuilder $container, array $config, $namespace = NULL)
+	public static function parseServices(ContainerBuilder $container, array $config, $namespace = NULL)
 	{
 		$services = isset($config['services']) ? $config['services'] : array();
 		$factories = isset($config['factories']) ? $config['factories'] : array();
 		$all = array_merge($services, $factories);
 
 		uasort($all, function($a, $b) {
-			return strcmp(Helpers::isInheriting($a), Helpers::isInheriting($b));
+			return strcmp(Config\Helpers::isInheriting($a), Config\Helpers::isInheriting($b));
 		});
 
 		foreach ($all as $origName => $def) {
@@ -185,7 +185,7 @@ class Compiler extends Nette\Object
 			if ((string) (int) $origName === (string) $origName) {
 				$name = (string) (count($container->getDefinitions()) + 1);
 			} elseif ($shared && array_key_exists($origName, $factories)) {
-				throw new Nette\DI\ServiceCreationException("It is not allowed to use services and factories with the same name: '$origName'.");
+				throw new ServiceCreationException("It is not allowed to use services and factories with the same name: '$origName'.");
 			} else {
 				$name = ($namespace ? $namespace . '.' : '') . strtr($origName, '\\', '_');
 			}
@@ -197,12 +197,12 @@ class Compiler extends Nette\Object
 					$params[end($v)] = $container::literal('$' . end($v));
 				}
 			}
-			$def = Nette\DI\Helpers::expand($def, $params);
+			$def = Helpers::expand($def, $params);
 
-			if (($parent = Helpers::takeParent($def)) && $parent !== $name) {
+			if (($parent = Config\Helpers::takeParent($def)) && $parent !== $name) {
 				$container->removeDefinition($name);
 				$definition = $container->addDefinition($name);
-				if ($parent !== Helpers::OVERWRITE) {
+				if ($parent !== Config\Helpers::OVERWRITE) {
 					foreach ($container->getDefinition($parent) as $k => $v) {
 						$definition->$k = unserialize(serialize($v)); // deep clone
 					}
@@ -210,7 +210,7 @@ class Compiler extends Nette\Object
 			} elseif ($container->hasDefinition($name)) {
 				$definition = $container->getDefinition($name);
 				if ($definition->shared !== $shared) {
-					throw new Nette\DI\ServiceCreationException("It is not allowed to use service and factory with the same name '$name'.");
+					throw new ServiceCreationException("It is not allowed to use service and factory with the same name '$name'.");
 				}
 			} else {
 				$definition = $container->addDefinition($name);
@@ -218,7 +218,7 @@ class Compiler extends Nette\Object
 			try {
 				static::parseService($definition, $def, $shared);
 			} catch (\Exception $e) {
-				throw new Nette\DI\ServiceCreationException("Service '$name': " . $e->getMessage(), NULL, $e);
+				throw new ServiceCreationException("Service '$name': " . $e->getMessage(), NULL, $e);
 			}
 
 			if ($definition->class === 'self') {
@@ -236,7 +236,7 @@ class Compiler extends Nette\Object
 	 * Parses single service from configuration file.
 	 * @return void
 	 */
-	public static function parseService(Nette\DI\ServiceDefinition $definition, $config, $shared = TRUE)
+	public static function parseService(ServiceDefinition $definition, $config, $shared = TRUE)
 	{
 		if ($config === NULL) {
 			return;
@@ -295,7 +295,7 @@ class Compiler extends Nette\Object
 		}
 
 		if (isset($config['setup'])) {
-			if (Helpers::takeParent($config['setup'])) {
+			if (Config\Helpers::takeParent($config['setup'])) {
 				$definition->setup = array();
 			}
 			Validators::assertField($config, 'setup', 'list');
@@ -338,7 +338,7 @@ class Compiler extends Nette\Object
 
 		if (isset($config['tags'])) {
 			Validators::assertField($config, 'tags', 'array');
-			if (Helpers::takeParent($config['tags'])) {
+			if (Config\Helpers::takeParent($config['tags'])) {
 				$definition->tags = array();
 			}
 			foreach ($config['tags'] as $tag => $attrs) {
@@ -354,7 +354,7 @@ class Compiler extends Nette\Object
 
 
 	/**
-	 * Removes ... and replaces entities with Nette\DI\Statement.
+	 * Removes ... and replaces entities with Statement.
 	 * @return array
 	 */
 	public static function filterArguments(array $args)
@@ -363,7 +363,7 @@ class Compiler extends Nette\Object
 			if ($v === '...') {
 				unset($args[$k]);
 			} elseif ($v instanceof \stdClass && isset($v->value, $v->attributes)) {
-				$args[$k] = new Nette\DI\Statement($v->value, self::filterArguments($v->attributes));
+				$args[$k] = new Statement($v->value, self::filterArguments($v->attributes));
 			}
 		}
 		return $args;

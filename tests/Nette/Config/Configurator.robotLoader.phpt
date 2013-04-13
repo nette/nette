@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator::createRobotLoader()
+ * Test: Nette\DI\Configurator::createRobotLoader()
  *
  * @author     David Grudl
- * @package    Nette\Config
+ * @package    Nette\DI
  */
 
-use Nette\Config\Configurator;
+use Nette\DI\Configurator;
 
 
 

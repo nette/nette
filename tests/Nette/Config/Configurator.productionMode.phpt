@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator and production mode.
+ * Test: Nette\DI\Configurator and production mode.
  *
  * @author     David Grudl
- * @package    Nette\Config
+ * @package    Nette\DI
  */
 
-use Nette\Config\Configurator;
+use Nette\DI\Configurator;
 
 
 

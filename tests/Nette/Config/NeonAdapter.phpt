@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Adapters\NeonAdapter
+ * Test: Nette\DI\Config\Adapters\NeonAdapter
  *
  * @author     David Grudl
- * @package    Nette\Config
+ * @package    Nette\DI
  */
 
-use Nette\Config;
+use Nette\DI\Config;
 
 
 

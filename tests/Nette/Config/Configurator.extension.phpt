@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator and user extension.
+ * Test: Nette\DI\Configurator and user extension.
  *
  * @author     David Grudl
- * @package    Nette\Config
+ * @package    Nette\DI
  */
 
-use Nette\Config\Configurator,
-	Nette\Config\Compiler,
+use Nette\DI\Configurator,
+	Nette\DI\Compiler,
 	Nette\DI\ContainerBuilder;
 
 
@@ -17,7 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-class DatabaseExtension extends Nette\Config\CompilerExtension
+class DatabaseExtension extends Nette\DI\CompilerExtension
 {
 
 	public function loadConfiguration()

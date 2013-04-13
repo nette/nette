@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Helpers::merge() with NeonAdapter
+ * Test: Nette\DI\Config\Helpers::merge() with NeonAdapter
  *
  * @author     David Grudl
- * @package    Nette\Config
+ * @package    Nette\DI
  */
 
-use Nette\Config;
+use Nette\DI\Config;
 
 
 

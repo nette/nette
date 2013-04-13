@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Compiler and addExtension on loadConfiguration stage.
+ * Test: Nette\DI\Compiler and addExtension on loadConfiguration stage.
  *
  * @author     Josef Kříž
- * @package    Nette\Config
+ * @package    Nette\DI
  */
 
-use Nette\Config\CompilerExtension;
+use Nette\DI\CompilerExtension;
 
 
 
@@ -50,7 +50,7 @@ class BazExtension extends BaseExtension
 
 }
 
-class ProcessingCompiler extends Nette\Config\Compiler
+class ProcessingCompiler extends Nette\DI\Compiler
 {
 	public function generateCode($className, $parentName)
 	{

@@ -28,7 +28,7 @@ class TestPresenter extends Application\UI\Presenter
 }
 
 
-$container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
+$container = id(new Nette\DI\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
 $presenter = new TestPresenter;
 $container->callMethod($presenter->injectPrimary);
 

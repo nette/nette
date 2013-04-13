@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Adapters\PhpAdapter
+ * Test: Nette\DI\Config\Adapters\PhpAdapter
  *
  * @author     David Grudl
- * @package    Nette\Config
+ * @package    Nette\DI
  */
 
-use Nette\Config;
+use Nette\DI\Config;
 
 
 

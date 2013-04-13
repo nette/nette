@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Config\Adapters;
+namespace Nette\DI\Config\Adapters;
 
 use Nette;
 
@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class PhpAdapter extends Nette\Object implements Nette\Config\IAdapter
+class PhpAdapter extends Nette\Object implements Nette\DI\Config\IAdapter
 {
 
 	/**

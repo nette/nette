@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator: generated services accessors.
+ * Test: Nette\DI\Configurator: generated services accessors.
  *
  * @author     David Grudl
- * @package    Nette\Config
+ * @package    Nette\DI
  */
 
-use Nette\Config\Configurator;
+use Nette\DI\Configurator;
 
 
 

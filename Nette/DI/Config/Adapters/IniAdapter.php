@@ -9,10 +9,10 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Config\Adapters;
+namespace Nette\DI\Config\Adapters;
 
 use Nette,
-	Nette\Config\Helpers;
+	Nette\DI\Config\Helpers;
 
 
 
@@ -21,7 +21,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class IniAdapter extends Nette\Object implements Nette\Config\IAdapter
+class IniAdapter extends Nette\Object implements Nette\DI\Config\IAdapter
 {
 	/** @internal */
 	const INHERITING_SEPARATOR = '<', // child < parent

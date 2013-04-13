@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator and autowiring.
+ * Test: Nette\DI\Configurator and autowiring.
  *
  * @author     David Grudl
- * @package    Nette\Config
+ * @package    Nette\DI
  */
 
-use Nette\Config\Configurator;
+use Nette\DI\Configurator;
 
 
 

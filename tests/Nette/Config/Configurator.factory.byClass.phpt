@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator: services by Class.
+ * Test: Nette\DI\Configurator: services by Class.
  *
  * @author     David Grudl
- * @package    Nette\Config
+ * @package    Nette\DI
  */
 
-use Nette\Config\Configurator;
+use Nette\DI\Configurator;
 
 
 

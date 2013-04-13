@@ -9,10 +9,9 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Config;
+namespace Nette\DI;
 
-use Nette,
-	Nette\DI\ContainerBuilder;
+use Nette;
 
 
 
@@ -21,7 +20,7 @@ use Nette,
  *
  * @author     David Grudl
  * @property-read array $config
- * @property-read Nette\DI\ContainerBuilder $containerBuilder
+ * @property-read ContainerBuilder $containerBuilder
  */
 abstract class CompilerExtension extends Nette\Object
 {
@@ -52,13 +51,13 @@ abstract class CompilerExtension extends Nette\Object
 		$config = $this->compiler->getConfig();
 		$config = isset($config[$this->name]) ? $config[$this->name] : array();
 		unset($config['services'], $config['factories']);
-		return Helpers::merge($config, $this->compiler->getContainerBuilder()->expand($defaults));
+		return Config\Helpers::merge($config, $this->compiler->getContainerBuilder()->expand($defaults));
 	}
 
 
 
 	/**
-	 * @return Nette\DI\ContainerBuilder
+	 * @return ContainerBuilder
 	 */
 	public function getContainerBuilder()
 	{
@@ -74,7 +73,7 @@ abstract class CompilerExtension extends Nette\Object
 	 */
 	public function loadFromFile($file)
 	{
-		$loader = new Loader;
+		$loader = new Config\Loader;
 		$res = $loader->load($file);
 		$container = $this->compiler->getContainerBuilder();
 		foreach ($loader->getDependencies() as $file) {

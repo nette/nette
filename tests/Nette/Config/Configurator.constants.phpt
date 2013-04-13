@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator: constants in config.
+ * Test: Nette\DI\Configurator: constants in config.
  *
  * @author     David Grudl
- * @package    Nette\Config
+ * @package    Nette\DI
  */
 
-use Nette\Config\Configurator;
+use Nette\DI\Configurator;
 
 
 

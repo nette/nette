@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator and circular services.
+ * Test: Nette\DI\Configurator and circular services.
  *
  * @author     David Grudl
- * @package    Nette\Config
+ * @package    Nette\DI
  */
 
-use Nette\Config\Configurator;
+use Nette\DI\Configurator;
 
 
 

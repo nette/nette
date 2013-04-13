@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator and services inheritance and overwriting.
+ * Test: Nette\DI\Configurator and services inheritance and overwriting.
  *
  * @author     David Grudl
- * @package    Nette\Config
+ * @package    Nette\DI
  */
 
-use Nette\Config\Configurator;
+use Nette\DI\Configurator;
 
 
 

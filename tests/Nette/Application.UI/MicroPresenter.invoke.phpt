@@ -24,7 +24,7 @@ class Invokable extends Nette\Object
 }
 
 
-$container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
+$container = id(new Nette\DI\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
 
 $presenter = new NetteModule\MicroPresenter($container);
 

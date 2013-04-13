@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Config;
+namespace Nette\DI;
 
 use Nette,
 	Nette\Caching\Cache;
@@ -95,7 +95,7 @@ class Configurator extends Nette\Object
 	 */
 	public function addParameters(array $params)
 	{
-		$this->parameters = Helpers::merge($params, $this->parameters);
+		$this->parameters = Config\Helpers::merge($params, $this->parameters);
 		return $this;
 	}
 
@@ -213,19 +213,19 @@ class Configurator extends Nette\Object
 			$code .= "// source: $file $section\n";
 			try {
 				if ($section === NULL) { // back compatibility
-					$config = Helpers::merge($loader->load($file, $this->parameters['environment']), $config);
+					$config = Config\Helpers::merge($loader->load($file, $this->parameters['environment']), $config);
 					continue;
 				}
 			} catch (Nette\Utils\AssertionException $e) {}
 
-			$config = Helpers::merge($loader->load($file, $section), $config);
+			$config = Config\Helpers::merge($loader->load($file, $section), $config);
 		}
 		$code .= "\n";
 
 		if (!isset($config['parameters'])) {
 			$config['parameters'] = array();
 		}
-		$config['parameters'] = Helpers::merge($config['parameters'], $this->parameters);
+		$config['parameters'] = Config\Helpers::merge($config['parameters'], $this->parameters);
 
 		$compiler = $this->createCompiler();
 		$this->onCompile($this, $compiler);
@@ -261,7 +261,7 @@ class Configurator extends Nette\Object
 	 */
 	protected function createLoader()
 	{
-		return new Loader;
+		return new Config\Loader;
 	}
 
 

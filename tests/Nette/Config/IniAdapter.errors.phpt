@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Adapters\IniAdapter errors.
+ * Test: Nette\DI\Config\Adapters\IniAdapter errors.
  *
  * @author     David Grudl
- * @package    Nette\Config
+ * @package    Nette\DI
  */
 
-use Nette\Config;
+use Nette\DI\Config;
 
 
 

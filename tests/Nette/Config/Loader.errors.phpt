@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Loader: including files
+ * Test: Nette\DI\Config\Loader: including files
  *
  * @author     David Grudl
- * @package    Nette\Config
+ * @package    Nette\DI
  */
 
-use Nette\Config;
+use Nette\DI\Config;
 
 
 

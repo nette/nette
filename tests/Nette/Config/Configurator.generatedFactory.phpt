@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator: generated services factories.
+ * Test: Nette\DI\Configurator: generated services factories.
  *
  * @author     Filip Prochazka
- * @package    Nette\Config
+ * @package    Nette\DI
  */
 
-use Nette\Config\Configurator;
+use Nette\DI\Configurator;
 
 
 

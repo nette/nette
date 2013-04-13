@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Config;
+namespace Nette\DI\Config;
 
 use Nette;
 

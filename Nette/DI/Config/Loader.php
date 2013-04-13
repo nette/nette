@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Config;
+namespace Nette\DI\Config;
 
 use Nette,
 	Nette\Utils\Validators;
@@ -29,9 +29,9 @@ class Loader extends Nette\Object
 	const INCLUDES_KEY = 'includes';
 
 	private $adapters = array(
-		'php' => 'Nette\Config\Adapters\PhpAdapter',
-		'ini' => 'Nette\Config\Adapters\IniAdapter',
-		'neon' => 'Nette\Config\Adapters\NeonAdapter',
+		'php' => 'Nette\DI\Config\Adapters\PhpAdapter',
+		'ini' => 'Nette\DI\Config\Adapters\IniAdapter',
+		'neon' => 'Nette\DI\Config\Adapters\NeonAdapter',
 	);
 
 	private $dependencies = array();
@@ -103,7 +103,7 @@ class Loader extends Nette\Object
 	/**
 	 * Registers adapter for given file extension.
 	 * @param  string  file extension
-	 * @param  string|Nette\Config\IAdapter
+	 * @param  string|Nette\DI\Config\IAdapter
 	 * @return Loader  provides a fluent interface
 	 */
 	public function addAdapter($extension, $adapter)

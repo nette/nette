@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Config\Extensions;
+namespace Nette\DI\Extensions;
 
 use Nette,
 	Nette\DI\ContainerBuilder;
@@ -21,7 +21,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class ConstantsExtension extends Nette\Config\CompilerExtension
+class ConstantsExtension extends Nette\DI\CompilerExtension
 {
 
 	public function afterCompile(Nette\PhpGenerator\ClassType $class)

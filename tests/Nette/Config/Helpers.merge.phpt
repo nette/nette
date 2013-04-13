@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Helpers::merge()
+ * Test: Nette\DI\Config\Helpers::merge()
  *
  * @author     David Grudl
- * @package    Nette\Config
+ * @package    Nette\DI
  */
 
-use Nette\Config\Helpers;
+use Nette\DI\Config\Helpers;
 
 
 

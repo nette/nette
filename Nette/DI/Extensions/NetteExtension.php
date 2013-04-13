@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Config\Extensions;
+namespace Nette\DI\Extensions;
 
 use Nette,
 	Nette\DI\ContainerBuilder,
@@ -22,7 +22,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class NetteExtension extends Nette\Config\CompilerExtension
+class NetteExtension extends Nette\DI\CompilerExtension
 {
 	public $defaults = array(
 		'session' => array(
@@ -93,7 +93,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		if (isset($config['xhtml'])) {
 			$config['latte']['xhtml'] = $config['xhtml'];
 		}
-		$container->addDefinition('nette')->setClass('Nette\Config\Extensions\NetteAccessor', array('@container'));
+		$container->addDefinition('nette')->setClass('Nette\DI\Extensions\NetteAccessor', array('@container'));
 
 		$this->setupCache($container);
 		$this->setupHttp($container);
@@ -333,7 +333,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 					? 'Nette\Database\Reflection\\' . ucfirst($info['reflection']) . 'Reflection'
 					: $info['reflection'], strtolower($info['reflection']) === 'discovered' ? array('@self') : array());
 			} else {
-				$tmp = Nette\Config\Compiler::filterArguments(array($info['reflection']));
+				$tmp = Nette\DI\Compiler::filterArguments(array($info['reflection']));
 				$reflection = reset($tmp);
 			}
 
@@ -385,14 +385,14 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			foreach ((array) $config['debugger']['bar'] as $item) {
 				$initialize->addBody($container->formatPhp(
 					'Nette\Diagnostics\Debugger::$bar->addPanel(?);',
-					Nette\Config\Compiler::filterArguments(array(is_string($item) ? new Nette\DI\Statement($item) : $item))
+					Nette\DI\Compiler::filterArguments(array(is_string($item) ? new Nette\DI\Statement($item) : $item))
 				));
 			}
 
 			foreach ((array) $config['debugger']['blueScreen'] as $item) {
 				$initialize->addBody($container->formatPhp(
 					'Nette\Diagnostics\Debugger::$blueScreen->addPanel(?);',
-					Nette\Config\Compiler::filterArguments(array($item))
+					Nette\DI\Compiler::filterArguments(array($item))
 				));
 			}
 		}
