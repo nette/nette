@@ -17,6 +17,10 @@ require __DIR__ . '/../bootstrap.php';
 
 class Service
 {
+	static function create()
+	{
+		return new static;
+	}
 }
 
 $one = new Service;
@@ -36,33 +40,45 @@ Assert::same( $one, $container->getService('one') );
 Assert::same( $two, $container->getService('two') );
 
 
-// class name
-$builder = $container->addService('three', 'Service');
+// class name (deprecated)
+Assert::error(function () use ($container) {
+	$container->addService('three', 'Service');
+}, E_USER_DEPRECATED, 'Passing factories to Nette\DI\Container::addService() is deprecated; pass the object itself.');
 
 Assert::true( $container->hasService('three') );
 Assert::true( $container->getService('three') instanceof Service );
 Assert::same( $container->getService('three'), $container->getService('three') ); // shared
 
 
-// factory
-$container->addService('four', function($container){
+// factory (deprecated)
+@$container->addService('factory1', 'Service::create'); // triggers E_USER_DEPRECATED
+Assert::true( $container->hasService('factory1') );
+Assert::true( $container->isCreated('factory1') );
+Assert::true( $container->getService('factory1') instanceof Service );
+
+
+// factory (deprecated)
+@$container->addService('factory2', array('Service', 'create'));
+Assert::true( $container->hasService('factory2') );
+Assert::true( $container->isCreated('factory2') );
+Assert::true( $container->getService('factory2') instanceof Service );
+
+
+// closure factory (deprecated)
+@$container->addService('factory3', function($container){ // triggers E_USER_DEPRECATED
 	Assert::true( $container instanceof Container );
 	return new Service;
 });
-
-Assert::true( $container->hasService('four') );
-Assert::false( $container->isCreated('four') );
-Assert::true( $container->getService('four') instanceof Service );
-Assert::true( $container->isCreated('four') );
-Assert::same( $container->getService('four'), $container->getService('four') ); // shared
+Assert::true( $container->hasService('factory3') );
+Assert::true( $container->isCreated('factory3') );
+Assert::true( $container->getService('factory3') instanceof Service );
 
 
-// bad factory
+// bad factory (deprecated)
 try {
-	$container->addService('five', function($container){});
-	$container->getService('five');
+	@$container->addService('five', function($container){}); // triggers E_USER_DEPRECATED
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::true($e instanceof Nette\UnexpectedValueException);
-	Assert::match("Unable to create service 'five', value returned by factory '%a%' is not object.", $e->getMessage());
+	Assert::true($e instanceof Nette\InvalidArgumentException);
+	Assert::match('Service must be a object, NULL given.', $e->getMessage());
 }
