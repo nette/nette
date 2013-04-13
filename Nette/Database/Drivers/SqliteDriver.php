@@ -99,7 +99,7 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	/**
 	 * Normalizes result row.
 	 */
-	public function normalizeRow($row, $statement)
+	public function normalizeRow($row)
 	{
 		return $row;
 	}

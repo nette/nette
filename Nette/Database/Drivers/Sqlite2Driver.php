@@ -36,7 +36,7 @@ class Sqlite2Driver extends SqliteDriver
 	/**
 	 * Normalizes result row.
 	 */
-	public function normalizeRow($row, $statement)
+	public function normalizeRow($row)
 	{
 		foreach ($iterator as $key => $value) {
 			unset($row[$key]);

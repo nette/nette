@@ -67,10 +67,9 @@ interface ISupplementalDriver
 	/**
 	 * Normalizes result row.
 	 * @param  array
-	 * @param  Statement
 	 * @return array
 	 */
-	function normalizeRow($row, $statement);
+	function normalizeRow($row);
 
 
 	/********************* reflection ****************d*g**/

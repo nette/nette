@@ -104,7 +104,7 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	/**
 	 * Normalizes result row.
 	 */
-	public function normalizeRow($row, $statement)
+	public function normalizeRow($row)
 	{
 		return $row;
 	}

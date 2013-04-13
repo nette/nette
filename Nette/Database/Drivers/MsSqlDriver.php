@@ -99,7 +99,7 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	/**
 	 * Normalizes result row.
 	 */
-	public function normalizeRow($row, $statement)
+	public function normalizeRow($row)
 	{
 		return $row;
 	}

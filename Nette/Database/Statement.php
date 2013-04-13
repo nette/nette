@@ -149,7 +149,7 @@ class Statement extends Nette\Object implements \Iterator, IRowContainer
 			}
 		}
 
-		return $this->connection->getSupplementalDriver()->normalizeRow($row, $this);
+		return $this->connection->getSupplementalDriver()->normalizeRow($row);
 	}
 
 
