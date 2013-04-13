@@ -48,7 +48,7 @@ class PresenterFactory implements IPresenterFactory
 
 
 	/**
-	 * Create new presenter instance.
+	 * Creates new presenter instance.
 	 * @param  string  presenter name
 	 * @return IPresenter
 	 */
@@ -73,6 +73,7 @@ class PresenterFactory implements IPresenterFactory
 
 
 	/**
+	 * Generates and checks presenter class name.
 	 * @param  string  presenter name
 	 * @return string  class name
 	 * @throws InvalidPresenterException
