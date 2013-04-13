@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class Container extends Nette\FreezableObject
+class Container extends Nette\Object
 {
 	const TAGS = 'tags';
 
@@ -70,7 +70,6 @@ class Container extends Nette\FreezableObject
 	 */
 	public function addService($name, $service, array $meta = NULL)
 	{
-		$this->updating();
 		if (!is_string($name) || !$name) {
 			throw new Nette\InvalidArgumentException('Service name must be a non-empty string, ' . gettype($name) . ' given.');
 		}
@@ -103,7 +102,6 @@ class Container extends Nette\FreezableObject
 	 */
 	public function removeService($name)
 	{
-		$this->updating();
 		unset($this->registry[$name], $this->factories[$name], $this->meta[$name]);
 	}
 
@@ -342,7 +340,6 @@ class Container extends Nette\FreezableObject
 	 */
 	public function __set($name, $service)
 	{
-		$this->updating();
 		if (!is_string($name) || $name === '') {
 			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 
