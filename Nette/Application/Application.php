@@ -102,7 +102,6 @@ class Application extends Nette\Object
 
 				} catch (\Exception $e) {
 					$this->onError($this, $e);
-					$e = new ApplicationException("An error occurred while executing error-presenter '$this->errorPresenter'.", 0, $e);
 				}
 			}
 			$this->onShutdown($this, $e);
