@@ -37,7 +37,7 @@ Assert::same( $two, $container->getService('two') );
 
 
 // class name
-$builder = $container->addService('three', 'Service');
+@$builder = $container->addService('three', 'Service'); // deprecated
 
 Assert::true( $container->hasService('three') );
 Assert::true( $container->getService('three') instanceof Service );
@@ -45,13 +45,13 @@ Assert::same( $container->getService('three'), $container->getService('three') )
 
 
 // factory
-$container->addService('four', function($container){
+@$container->addService('four', function($container){ // deprecated
 	Assert::true( $container instanceof Container );
 	return new Service;
 });
 
 Assert::true( $container->hasService('four') );
-Assert::false( $container->isCreated('four') );
+Assert::true( $container->isCreated('four') );
 Assert::true( $container->getService('four') instanceof Service );
 Assert::true( $container->isCreated('four') );
 Assert::same( $container->getService('four'), $container->getService('four') ); // shared
@@ -59,10 +59,9 @@ Assert::same( $container->getService('four'), $container->getService('four') ); 
 
 // bad factory
 try {
-	$container->addService('five', function($container){});
-	$container->getService('five');
+	@$container->addService('five', function($container){}); // deprecated
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::true($e instanceof Nette\UnexpectedValueException);
-	Assert::match("Unable to create service 'five', value returned by factory '%a%' is not object.", $e->getMessage());
+	Assert::true($e instanceof Nette\InvalidArgumentException);
+	Assert::match('Service must be a object, NULL given.', $e->getMessage());
 }
