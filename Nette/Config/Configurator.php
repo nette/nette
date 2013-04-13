@@ -12,7 +12,7 @@
 namespace Nette\Config;
 
 use Nette,
-	Nette\Caching\Cache;
+	Nette\DI;
 
 
 
@@ -32,7 +32,7 @@ class Configurator extends Nette\Object
 		AUTO = TRUE,
 		NONE = FALSE;
 
-	/** @var array of function(Configurator $sender, Compiler $compiler); Occurs after the compiler is created */
+	/** @var array of function(Configurator $sender, DI\Compiler $compiler); Occurs after the compiler is created */
 	public $onCompile;
 
 	/** @var array */
@@ -95,7 +95,7 @@ class Configurator extends Nette\Object
 	 */
 	public function addParameters(array $params)
 	{
-		$this->parameters = Helpers::merge($params, $this->parameters);
+		$this->parameters = DI\Config\Helpers::merge($params, $this->parameters);
 		return $this;
 	}
 
@@ -172,13 +172,13 @@ class Configurator extends Nette\Object
 	public function createContainer()
 	{
 		if ($cacheDir = $this->getCacheDirectory()) {
-			$cache = new Cache(new Nette\Caching\Storages\PhpFileStorage($cacheDir), 'Nette.Configurator');
+			$cache = new Nette\Caching\Cache(new Nette\Caching\Storages\PhpFileStorage($cacheDir), 'Nette.Configurator');
 			$cacheKey = array($this->parameters, $this->files);
 			$cached = $cache->load($cacheKey);
 			if (!$cached) {
 				$code = $this->buildContainer($dependencies);
 				$cache->save($cacheKey, $code, array(
-					Cache::FILES => $dependencies,
+					$cache::FILES => $dependencies,
 				));
 				$cached = $cache->load($cacheKey);
 			}
@@ -213,19 +213,19 @@ class Configurator extends Nette\Object
 			$code .= "// source: $file $section\n";
 			try {
 				if ($section === NULL) { // back compatibility
-					$config = Helpers::merge($loader->load($file, $this->parameters['environment']), $config);
+					$config = DI\Config\Helpers::merge($loader->load($file, $this->parameters['environment']), $config);
 					continue;
 				}
 			} catch (Nette\Utils\AssertionException $e) {}
 
-			$config = Helpers::merge($loader->load($file, $section), $config);
+			$config = DI\Config\Helpers::merge($loader->load($file, $section), $config);
 		}
 		$code .= "\n";
 
 		if (!isset($config['parameters'])) {
 			$config['parameters'] = array();
 		}
-		$config['parameters'] = Helpers::merge($config['parameters'], $this->parameters);
+		$config['parameters'] = DI\Config\Helpers::merge($config['parameters'], $this->parameters);
 
 		$compiler = $this->createCompiler();
 		$this->onCompile($this, $compiler);
@@ -246,11 +246,11 @@ class Configurator extends Nette\Object
 	 */
 	protected function createCompiler()
 	{
-		$compiler = new Compiler;
-		$compiler->addExtension('php', new Extensions\PhpExtension)
-			->addExtension('constants', new Extensions\ConstantsExtension)
-			->addExtension('nette', new Extensions\NetteExtension)
-			->addExtension('extensions', new Extensions\ExtensionsExtension);
+		$compiler = new DI\Compiler;
+		$compiler->addExtension('php', new DI\Extensions\PhpExtension)
+			->addExtension('constants', new DI\Extensions\ConstantsExtension)
+			->addExtension('nette', new DI\Extensions\NetteExtension)
+			->addExtension('extensions', new DI\Extensions\ExtensionsExtension);
 		return $compiler;
 	}
 
@@ -261,7 +261,7 @@ class Configurator extends Nette\Object
 	 */
 	protected function createLoader()
 	{
-		return new Loader;
+		return new DI\Config\Loader;
 	}
 
 
