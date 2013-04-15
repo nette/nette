@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\Statement::normalizeRow()
+ * Test: Nette\Database\ResultSet::normalizeRow()
  *
  * @author     Miloslav Hůla
  * @package    Nette\Database
@@ -122,7 +122,7 @@ $res = $connection->query('SELECT [int] AS a, [text] AS a FROM types');
 
 Assert::equal( array(
 	'a' => 'a',
-), (array) $res->fetch() );
+), (array) @$res->fetch() );
 
 
 
