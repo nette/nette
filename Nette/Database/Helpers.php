@@ -146,7 +146,26 @@ class Helpers
 
 
 	/**
-	 * Heuristic type detection.
+	 * Common column type detection.
+	 * @return array
+	 */
+	public static function detectTypes(\PDOStatement $statement)
+	{
+		$types = array();
+		$count = $statement->columnCount(); // driver must be meta-aware, see PHP bugs #53782, #54695
+		for ($col = 0; $col < $count; $col++) {
+			$meta = $statement->getColumnMeta($col);
+			if (isset($meta['native_type'])) {
+				$types[$meta['name']] = self::detectType($meta['native_type']);
+			}
+		}
+		return $types;
+	}
+
+
+
+	/**
+	 * Heuristic column type detection.
 	 * @param  string
 	 * @return string
 	 * @internal

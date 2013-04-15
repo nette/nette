@@ -103,6 +103,12 @@ interface ISupplementalDriver
 	function getForeignKeys($table);
 
 	/**
+	 * Returns associative array of detected types (IReflection::FIELD_*) in result set.
+	 * @return array
+	 */
+	function getColumnTypes(\PDOStatement $statement);
+
+	/**
 	 * Cheks if driver supports specific property
 	 * @return bool
 	 */

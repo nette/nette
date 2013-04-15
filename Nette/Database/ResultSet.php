@@ -129,7 +129,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	public function normalizeRow($row)
 	{
 		if ($this->types === NULL) {
-			$this->detectColumnTypes();
+			$this->types = (array) $this->connection->getSupplementalDriver()->getColumnTypes($this->pdoStatement);
 		}
 
 		foreach ($this->types as $key => $type) {
@@ -154,20 +154,6 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 		}
 
 		return $this->connection->getSupplementalDriver()->normalizeRow($row);
-	}
-
-
-
-	private function detectColumnTypes()
-	{
-		$this->types = array();
-		$count = $this->connection->getSupplementalDriver()->isSupported(ISupplementalDriver::SUPPORT_COLUMNS_META) ? $this->pdoStatement->columnCount() : 0; // workaround for PHP bugs #53782, #54695
-		for ($col = 0; $col < $count; $col++) {
-			$meta = $this->pdoStatement->getColumnMeta($col);
-			if (isset($meta['native_type'])) {
-				$this->types[$meta['name']] = Helpers::detectType($meta['native_type']);
-			}
-		}
 	}
 
 

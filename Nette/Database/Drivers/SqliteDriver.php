@@ -232,6 +232,16 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 
 
 	/**
+	 * Returns associative array of detected types (IReflection::FIELD_*) in result set.
+	 */
+	public function getColumnTypes(\PDOStatement $statement)
+	{
+		return array();
+	}
+
+
+
+	/**
 	 * @return bool
 	 */
 	public function isSupported($item)
