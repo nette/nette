@@ -33,7 +33,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	/** @var Nette\Database\IReflection */
 	protected $reflection;
 
-	/** @var Nette\Caching\IStorage */
+	/** @var Nette\Caching\Cache */
 	protected $cache;
 
 	/** @var SqlBuilder */
