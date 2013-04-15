@@ -140,7 +140,9 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 				$row[$key] = is_float($tmp = $value * 1) ? $value : $tmp;
 
 			} elseif ($type === IReflection::FIELD_FLOAT) {
-				$value = strpos($value, '.') === FALSE ? $value : rtrim(rtrim($value, '0'), '.');
+				if (($pos = strpos($value, '.')) !== FALSE) {
+					$value = rtrim(rtrim($pos === 0 ? "0$value" : $value, '0'), '.');
+				}
 				$float = (float) $value;
 				$row[$key] = (string) $float === $value ? $float : $value;
 
