@@ -34,6 +34,12 @@ Assert::same( 'SELECT id FROM author WHERE id = 11 OR id = 12', $sql );
 Assert::same( array(), $params );
 
 
+// missing parameters
+Assert::exception(function() use ($preprocessor) {
+	$preprocessor->process('SELECT id FROM author WHERE id = ? OR id = ?', array(12));
+}, 'Nette\InvalidArgumentException', 'There are more placeholders than passed parameters.');
+
+
 // SqlLiteral
 list($sql, $params) = $preprocessor->process('SELECT id FROM author WHERE id =', array(new SqlLiteral('? OR id = ?', 11, 12) ));
 Assert::same( 'SELECT id FROM author WHERE id = ? OR id = ?', $sql );
