@@ -120,6 +120,10 @@ class SqlPreprocessor extends Nette\Object
 		} elseif (is_array($value) || $value instanceof \Traversable) {
 			$vx = $kx = array();
 
+			if ($value instanceof \Traversable) {
+				$value = iterator_to_array($value);
+			}
+
 			if (isset($value[0])) { // non-associative; value, value, value
 				foreach ($value as $v) {
 					$vx[] = $this->formatValue($v);
