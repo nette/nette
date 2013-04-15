@@ -49,6 +49,40 @@ Assert::same( 'SELECT id FROM author WHERE id = 11 OR id = 12', $sql );
 Assert::same( array(), $params );
 
 
+// where
+list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE', array(
+	'id' => NULL,
+	'name' => 'a',
+	'born' => array(1, 2, 3),
+	'web' => array(),
+)));
+
+if ($driverName === 'pgsql') {
+	Assert::same( "SELECT id FROM author WHERE (\"id\" IS NULL) AND (\"name\" = 'a') AND (\"born\" IN (1, 2, 3)) AND (1=0)", $sql );
+} elseif ($driverName === 'sqlsrv') {
+	Assert::same( "SELECT id FROM author WHERE ([id] IS NULL) AND ([name] = 'a') AND ([born] IN (1, 2, 3)) AND (1=0)", $sql );
+} else {
+	Assert::same( "SELECT id FROM author WHERE (`id` IS NULL) AND (`name` = 'a') AND (`born` IN (1, 2, 3)) AND (1=0)", $sql );
+}
+Assert::same( array(), $params );
+
+
+// order
+list($sql, $params) = $preprocessor->process(array('SELECT id FROM author ORDER BY', array(
+	'id' => TRUE,
+	'name' => FALSE,
+)));
+
+if ($driverName === 'pgsql') {
+	Assert::same( 'SELECT id FROM author ORDER BY "id", "name" DESC', $sql );
+} elseif ($driverName === 'sqlsrv') {
+	Assert::same( 'SELECT id FROM author ORDER BY [id], [name] DESC', $sql );
+} else {
+	Assert::same( 'SELECT id FROM author ORDER BY `id`, `name` DESC', $sql );
+}
+Assert::same( array(), $params );
+
+
 // missing parameters
 Assert::exception(function() use ($preprocessor) {
 	$preprocessor->process(array('SELECT id FROM author WHERE id =', '? OR id = ?', 11));
@@ -59,6 +93,27 @@ Assert::exception(function() use ($preprocessor) {
 list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE id =', new SqlLiteral('? OR id = ?', 11, 12) ));
 Assert::same( 'SELECT id FROM author WHERE id = ? OR id = ?', $sql );
 Assert::same( array(11, 12), $params );
+
+
+list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE', new SqlLiteral('id=11'), 'OR', new SqlLiteral('id=?', 12)));
+Assert::same( 'SELECT id FROM author WHERE id=11 OR id=?', $sql );
+Assert::same( array(12), $params );
+
+
+list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE', array(
+	'id' => new SqlLiteral('NULL'),
+	'born' => array(1, 2, new SqlLiteral('3+1')),
+	'web' => new SqlLiteral('NOW()'),
+)));
+
+if ($driverName === 'pgsql') {
+	Assert::same( 'SELECT id FROM author WHERE ("id" IS NULL) AND ("born" IN (1, 2, 3+1)) AND ("web" = NOW())', $sql );
+} elseif ($driverName === 'sqlsrv') {
+	Assert::same( 'SELECT id FROM author WHERE ([id] IS NULL) AND ([born] IN (1, 2, 3+1)) AND ([web] = NOW())', $sql );
+} else {
+	Assert::same( 'SELECT id FROM author WHERE (`id` IS NULL) AND (`born` IN (1, 2, 3+1)) AND (`web` = NOW())', $sql );
+}
+Assert::same( array(), $params );
 
 
 // insert

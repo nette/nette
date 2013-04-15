@@ -70,7 +70,7 @@ class SqlPreprocessor extends Nette\Object
 			} else {
 				$res[] = Nette\Utils\Strings::replace(
 					$param,
-					'~\'.*?\'|".*?"|\?|\b(?:INSERT|REPLACE|UPDATE)\b~si',
+					'~\'.*?\'|".*?"|\?|\b(?:INSERT|REPLACE|UPDATE|WHERE|HAVING|ORDER BY|GROUP BY)\b~si',
 					array($this, 'callback')
 				);
 			}
@@ -94,8 +94,17 @@ class SqlPreprocessor extends Nette\Object
 			}
 			return $this->formatValue($this->params[$this->counter++]);
 
-		} else { // INSERT, REPLACE, UPDATE
-			$this->arrayMode = strtoupper($m) === 'UPDATE' ? 'assoc' : 'values';
+		} else { // command
+			static $cmds = array(
+				'INSERT' => 'values',
+				'REPLACE' => 'values',
+				'UPDATE' => 'assoc',
+				'WHERE' => 'and',
+				'HAVING' => 'and',
+				'ORDER BY' => 'order',
+				'GROUP BY' => 'order',
+			);
+			$this->arrayMode = $cmds[strtoupper($m)];
 			return $m;
 		}
 	}
@@ -160,6 +169,24 @@ class SqlPreprocessor extends Nette\Object
 					$vx[] = $this->formatValue($v);
 				}
 				return '(' . implode(', ', $vx) . ')';
+
+			} elseif ($this->arrayMode === 'and') { // (key [operator] value) AND ...
+				foreach ($value as $k => $v) {
+					$k = $this->driver->delimite($k);
+					if (is_array($v)) {
+						$vx[] = $v ? ($k . ' IN (' . $this->formatValue(array_values($v)) . ')') : '1=0';
+					} else {
+						$v = $this->formatValue($v);
+						$vx[] = $k . ($v === 'NULL' ? ' IS ' : ' = ') . $v;
+					}
+				}
+				return $value ? '(' . implode(') AND (', $vx) . ')' : '1=1';
+
+			} elseif ($this->arrayMode === 'order') { // key, key DESC, ...
+				foreach ($value as $k => $v) {
+					$vx[] = $this->driver->delimite($k) . ($v > 0 ? '' : ' DESC');
+				}
+				return implode(', ', $vx);
 			}
 
 		} elseif ($value instanceof \DateTime) {
