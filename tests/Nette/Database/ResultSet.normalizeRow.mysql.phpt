@@ -121,4 +121,4 @@ $res = $connection->query('SELECT `int` AS a, `char` AS a FROM types');
 
 Assert::equal( array(
 	'a' => 'a',
-), (array) $res->fetch() );
+), (array) @$res->fetch() );

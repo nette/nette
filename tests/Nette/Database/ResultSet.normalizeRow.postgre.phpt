@@ -127,4 +127,4 @@ $res = $connection->query('SELECT "integer" AS a, "text" AS a FROM types');
 
 Assert::equal( array(
 	'a' => 'a',
-), (array) $res->fetch() );
+), (array) @$res->fetch() );
