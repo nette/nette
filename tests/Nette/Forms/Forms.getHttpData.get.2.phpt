@@ -25,5 +25,5 @@ $form->setMethod($form::GET);
 $form->addSubmit('send', 'Send');
 
 Assert::true( (bool) $form->isSubmitted() );
-Assert::equal( array('item'), $form->getHttpData() );
-Assert::equal( array(), $form->getValues(TRUE) );
+Assert::same( array('item'), $form->getHttpData() );
+Assert::same( array(), $form->getValues(TRUE) );

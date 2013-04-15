@@ -23,8 +23,8 @@ $form = new Form();
 $form->addSubmit('send', 'Send');
 
 Assert::true( (bool) $form->isSubmitted() );
-Assert::equal( array(), $form->getHttpData() );
-Assert::equal( array(), $form->getValues(TRUE) );
+Assert::same( array(), $form->getHttpData() );
+Assert::same( array(), $form->getValues(TRUE) );
 
 
 $form = new Form();
@@ -32,5 +32,5 @@ $form->setMethod($form::GET);
 $form->addSubmit('send', 'Send');
 
 Assert::false( (bool) $form->isSubmitted() );
-Assert::equal( array(), $form->getHttpData() );
-Assert::equal( array(), $form->getValues(TRUE) );
+Assert::same( array(), $form->getHttpData() );
+Assert::same( array(), $form->getValues(TRUE) );
