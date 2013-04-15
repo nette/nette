@@ -11,7 +11,7 @@
 $query = 'postgresql';
 require __DIR__ . '/connect.inc.php'; // create $connection
 
-Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/pgsql-nette_test3.sql');
+Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/files/pgsql-nette_test3.sql');
 
 
 
