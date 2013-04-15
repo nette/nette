@@ -68,17 +68,10 @@ class Connection extends Nette\Object
 
 	private function connect()
 	{
-		if ($this->pdo) {
-			return;
+		if (!$this->pdo) {
+			$this->pdo = new PDO($this->params[0], $this->params[1], $this->params[2], $this->options);
+			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		}
-		$this->pdo = new PDO($this->params[0], $this->params[1], $this->params[2], $this->options);
-		$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-		$driverClass = empty($this->options['driverClass'])
-			? 'Nette\Database\Drivers\\' . ucfirst(str_replace('sql', 'Sql', $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver'
-			: $this->options['driverClass'];
-		$this->driver = new $driverClass($this, $this->options);
-		$this->preprocessor = new SqlPreprocessor($this);
 	}
 
 
@@ -103,7 +96,12 @@ class Connection extends Nette\Object
 	/** @return ISupplementalDriver */
 	public function getSupplementalDriver()
 	{
-		$this->connect();
+		if (!$this->driver) {
+			$class = empty($this->options['driverClass'])
+				? 'Nette\Database\Drivers\\' . ucfirst(str_replace('sql', 'Sql', $this->getPdo()->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver'
+				: $this->options['driverClass'];
+			$this->driver = new $class($this, $this->options);
+		}
 		return $this->driver;
 	}
 
@@ -179,6 +177,9 @@ class Connection extends Nette\Object
 	{
 		$this->connect();
 		if ($params) {
+			if (!$this->preprocessor) {
+				$this->preprocessor = new SqlPreprocessor($this);
+			}
 			list($statement, $params) = $this->preprocessor->process($statement, $params);
 		}
 		return new ResultSet($this, $statement, $params);
