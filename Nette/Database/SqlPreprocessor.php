@@ -51,24 +51,32 @@ class SqlPreprocessor extends Nette\Object
 
 
 	/**
-	 * @param  string
 	 * @param  array
 	 * @return array of [sql, params]
 	 */
-	public function process($sql, $params)
+	public function process($params)
 	{
 		$this->params = $params;
 		$this->counter = 0;
 		$this->remaining = array();
 		$this->arrayMode = 'assoc';
-
-		$sql = Nette\Utils\Strings::replace($sql, '~\'.*?\'|".*?"|\?|\b(?:INSERT|REPLACE|UPDATE)\b~si', array($this, 'callback'));
+		$res = array();
 
 		while ($this->counter < count($params)) {
-			$sql .= ' ' . $this->formatValue($params[$this->counter++]);
+			$param = $params[$this->counter++];
+
+			if (($this->counter === 2 && count($params) === 2) || !is_scalar($param)) {
+				$res[] = $this->formatValue($param);
+			} else {
+				$res[] = Nette\Utils\Strings::replace(
+					$param,
+					'~\'.*?\'|".*?"|\?|\b(?:INSERT|REPLACE|UPDATE)\b~si',
+					array($this, 'callback')
+				);
+			}
 		}
 
-		return array($sql, $this->remaining);
+		return array(implode(' ', $res), $this->remaining);
 	}
 
 

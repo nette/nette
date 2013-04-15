@@ -180,7 +180,8 @@ class Connection extends Nette\Object
 			if (!$this->preprocessor) {
 				$this->preprocessor = new SqlPreprocessor($this);
 			}
-			list($statement, $params) = $this->preprocessor->process($statement, $params);
+			array_unshift($params, $statement);
+			list($statement, $params) = $this->preprocessor->process($params);
 		}
 		return new ResultSet($this, $statement, $params);
 	}
