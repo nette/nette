@@ -81,7 +81,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 		foreach ($this->getComponents() as $name => $control) {
 			if ($control instanceof IControl) {
 				if ($onlyDisabled && !$control->isDisabled()) {
-				
+
 				} elseif (array_key_exists($name, $values)) {
 					$control->setValue($values[$name]);
 
