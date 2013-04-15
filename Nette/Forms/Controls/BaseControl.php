@@ -329,7 +329,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	public function setDefaultValue($value)
 	{
 		$form = $this->getForm(FALSE);
-		if (!$form || !$form->isAnchored() || !$form->isSubmitted()) {
+		if ($this->disabled || !$form || !$form->isAnchored() || !$form->isSubmitted()) {
 			$this->setValue($value);
 		}
 		return $this;
