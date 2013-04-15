@@ -128,7 +128,11 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	 */
 	public function normalizeRow($row)
 	{
-		foreach ($this->detectColumnTypes() as $key => $type) {
+		if ($this->types === NULL) {
+			$this->detectColumnTypes();
+		}
+
+		foreach ($this->types as $key => $type) {
 			$value = $row[$key];
 			if ($value === NULL || $value === FALSE || $type === IReflection::FIELD_TEXT) {
 
@@ -156,19 +160,14 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 
 	private function detectColumnTypes()
 	{
-		if ($this->types === NULL) {
-			$this->types = array();
-			if ($this->connection->getSupplementalDriver()->isSupported(ISupplementalDriver::SUPPORT_COLUMNS_META)) { // workaround for PHP bugs #53782, #54695
-				$count = $this->pdoStatement->columnCount();
-				for ($col = 0; $col < $count; $col++) {
-					$meta = $this->pdoStatement->getColumnMeta($col);
-					if (isset($meta['native_type'])) {
-						$this->types[$meta['name']] = Helpers::detectType($meta['native_type']);
-					}
-				}
+		$this->types = array();
+		$count = $this->connection->getSupplementalDriver()->isSupported(ISupplementalDriver::SUPPORT_COLUMNS_META) ? $this->pdoStatement->columnCount() : 0; // workaround for PHP bugs #53782, #54695
+		for ($col = 0; $col < $count; $col++) {
+			$meta = $this->pdoStatement->getColumnMeta($col);
+			if (isset($meta['native_type'])) {
+				$this->types[$meta['name']] = Helpers::detectType($meta['native_type']);
 			}
 		}
-		return $this->types;
 	}
 
 
