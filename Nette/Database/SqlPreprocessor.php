@@ -81,6 +81,9 @@ class SqlPreprocessor extends Nette\Object
 			return $m;
 
 		} elseif ($m === '?') { // placeholder
+			if ($this->counter >= count($this->params)) {
+				throw new Nette\InvalidArgumentException('There are more placeholders than passed parameters.');
+			}
 			return $this->formatValue($this->params[$this->counter++]);
 
 		} else { // INSERT, REPLACE, UPDATE
