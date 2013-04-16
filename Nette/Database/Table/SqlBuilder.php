@@ -255,7 +255,7 @@ class SqlBuilder extends Nette\Object
 
 					if ($this->driverName !== 'mysql') {
 						$arg = NULL;
-						$replace = 'IN (' . $clone->getSql() . ')';
+						$replace = $match[2][0] . '(' . $clone->getSql() . ')';
 						$this->parameters['where'] = array_merge($this->parameters['where'], $clone->getSqlBuilder()->parameters['where']);
 					} else {
 						$arg = array();
