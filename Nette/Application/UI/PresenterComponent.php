@@ -96,7 +96,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 		if ($rc->hasMethod($method)) {
 			$rm = $rc->getMethod($method);
 			if ($rm->isPublic() && !$rm->isAbstract() && !$rm->isStatic()) {
-				$this->checkRequirements($rm);
+				$this->ensureRequirements($rm);
 				$rm->invokeArgs($this, $rc->combineArgs($rm, $params));
 				return TRUE;
 			}
@@ -108,12 +108,26 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 
 	/**
 	 * Checks for requirements such as authorization.
-	 * @return void
+	 * @param Nette\Reflection\ClassType|Nette\Reflection\Method $element
+	 * @return bool
 	 */
 	public function checkRequirements($element)
 	{
+		return TRUE;
 	}
 
+
+	/**
+	 * Checks authorization and throws if requirements not met.
+	 * @param Nette\Reflection\ClassType|Nette\Reflection\Method $element
+	 * @return void
+	 */
+	public function ensureRequirements($element)
+	{
+		if (!$this->checkRequirements($element)) {
+			throw new Nette\Application\ForbiddenRequestException;
+		}
+	}
 
 
 	/**
