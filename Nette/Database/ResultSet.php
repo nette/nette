@@ -30,7 +30,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	/** @var Connection */
 	private $connection;
 
-	/** @var \PDOStatement */
+	/** @var \PDOStatement|NULL */
 	private $pdoStatement;
 
 	/** @var IRow */
@@ -45,6 +45,9 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	/** @var float */
 	private $time;
 
+	/** @var string */
+	private $queryString;
+
 	/** @var array */
 	private $params;
 
@@ -53,14 +56,17 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 
 
 
-	public function __construct(Connection $connection, $sqlQuery, array $params)
+	public function __construct(Connection $connection, $queryString, array $params)
 	{
 		$time = microtime(TRUE);
 		$this->connection = $connection;
+		$this->queryString = $queryString;
 		$this->params = $params;
-		$this->pdoStatement = $connection->getPdo()->prepare($sqlQuery);
-		$this->pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
-		$this->pdoStatement->execute($params);
+		if ($queryString !== NULL) {
+			$this->pdoStatement = $connection->getPdo()->prepare($queryString);
+			$this->pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
+			$this->pdoStatement->execute($params);
+		}
 		$this->time = microtime(TRUE) - $time;
 	}
 
@@ -92,7 +98,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	 */
 	public function getQueryString()
 	{
-		return $this->pdoStatement->queryString;
+		return $this->queryString;
 	}
 
 
@@ -112,7 +118,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	 */
 	public function getColumnCount()
 	{
-		return $this->pdoStatement->columnCount();
+		return $this->pdoStatement ? $this->pdoStatement->columnCount() : NULL;
 	}
 
 
@@ -122,7 +128,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	 */
 	public function getRowCount()
 	{
-		return $this->pdoStatement->rowCount();
+		return $this->pdoStatement ? $this->pdoStatement->rowCount() : NULL;
 	}
 
 
@@ -245,7 +251,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	 */
 	public function fetch()
 	{
-		$data = $this->pdoStatement->fetch();
+		$data = $this->pdoStatement ? $this->pdoStatement->fetch() : NULL;
 		if (!$data) {
 			return FALSE;
 		}
