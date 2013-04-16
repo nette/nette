@@ -127,7 +127,7 @@ class Application extends Nette\Object
 
 		try {
 			$name = $request->getPresenterName();
-			$this->presenterFactory->getPresenterClass($name); // ca
+			$this->presenterFactory->getPresenterClass($name);
 			$request->setPresenterName($name)->freeze();
 		} catch (InvalidPresenterException $e) {
 			throw new BadRequestException($e->getMessage(), 0, $e);
@@ -173,14 +173,15 @@ class Application extends Nette\Object
 			$this->httpResponse->setCode($e instanceof BadRequestException ? ($e->getCode() ?: 404) : 500);
 		}
 
+		$args = array('exception' => $e, 'request' => end($this->requests));
 		if ($this->presenter instanceof UI\Presenter) {
 			try {
-				$this->presenter->forward(":$this->errorPresenter:", array('exception' => $e));
+				$this->presenter->forward(":$this->errorPresenter:", $args);
 			} catch (AbortException $foo) {
 				$this->processRequest($this->presenter->getLastCreatedRequest());
 			}
 		} else {
-			$this->processRequest(new Request($this->errorPresenter, Request::FORWARD, array('exception' => $e)));
+			$this->processRequest(new Request($this->errorPresenter, Request::FORWARD, $args));
 		}
 	}
 
