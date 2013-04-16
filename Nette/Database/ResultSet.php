@@ -46,6 +46,9 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	private $time;
 
 	/** @var array */
+	private $params;
+
+	/** @var array */
 	private $types;
 
 
@@ -54,6 +57,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	{
 		$time = microtime(TRUE);
 		$this->connection = $connection;
+		$this->params = $params;
 		$this->pdoStatement = $connection->getPdo()->prepare($sqlQuery);
 		$this->pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
 		$this->pdoStatement->execute($params);
@@ -89,6 +93,16 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	public function getQueryString()
 	{
 		return $this->pdoStatement->queryString;
+	}
+
+
+
+	/**
+	 * @return array
+	 */
+	public function getParameters()
+	{
+		return $this->params;
 	}
 
 
