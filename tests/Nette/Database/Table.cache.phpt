@@ -31,6 +31,10 @@ switch ($driverName) {
 		Assert::same('SELECT * FROM "book" WHERE ("id" = ?)', $bookSelection->getSql());
 		break;
 
+	case 'sqlsrv':
+		Assert::same('SELECT * FROM [book] WHERE ([id] = ?)', $bookSelection->getSql());
+		break;
+
 	case 'mysql':
 	default:
 		Assert::same('SELECT * FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
@@ -48,6 +52,10 @@ switch ($driverName) {
 		Assert::same('SELECT "id", "title", "translator_id" FROM "book" WHERE ("id" = ?)', $bookSelection->getSql());
 		break;
 
+	case 'sqlsrv':
+		Assert::same('SELECT [id], [title], [translator_id] FROM [book] WHERE ([id] = ?)', $bookSelection->getSql());
+		break;
+
 	case 'mysql':
 	default:
 		Assert::same('SELECT `id`, `title`, `translator_id` FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
@@ -62,6 +70,10 @@ switch ($driverName) {
 		Assert::same('SELECT * FROM "book" WHERE ("id" = ?)', $bookSelection->getSql());
 		break;
 
+	case 'sqlsrv':
+		Assert::same('SELECT * FROM [book] WHERE ([id] = ?)', $bookSelection->getSql());
+		break;
+
 	case 'mysql':
 	default:
 		Assert::same('SELECT * FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
@@ -73,6 +85,10 @@ $bookSelection = $connection->table('book')->wherePrimary(2);
 switch ($driverName) {
 	case 'pgsql':
 		Assert::same('SELECT "id", "title", "translator_id", "author_id" FROM "book" WHERE ("id" = ?)', $bookSelection->getSql());
+		break;
+
+	case 'sqlsrv':
+		Assert::same('SELECT [id], [title], [translator_id], [author_id] FROM [book] WHERE ([id] = ?)', $bookSelection->getSql());
 		break;
 
 	case 'mysql':

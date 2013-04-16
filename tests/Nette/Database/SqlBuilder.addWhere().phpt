@@ -90,6 +90,20 @@ switch ($driverName) {
 		Assert::equal('SELECT * FROM "book" WHERE ("id" NOT IN (?)) AND ("id" NOT IN (SELECT "id" FROM "book"))', $sqlBuilder[10]->buildSelectQuery());
 		break;
 
+	case 'sqlsrv':
+		Assert::equal('SELECT * FROM [book] WHERE ([id] = ? OR [id] IS NULL)', $sqlBuilder[0]->buildSelectQuery());
+		Assert::equal('SELECT * FROM [book] WHERE ([id] IN (SELECT [id] FROM [book]))', $sqlBuilder[1]->buildSelectQuery());
+		Assert::equal('SELECT * FROM [book] WHERE ([id] IN (SELECT [id] FROM [book]))', $sqlBuilder[2]->buildSelectQuery());
+		Assert::equal('SELECT * FROM [book] WHERE ([id] IS NULL OR [id] IN (SELECT [id] FROM [book]))', $sqlBuilder[3]->buildSelectQuery());
+		Assert::equal('SELECT * FROM [book] WHERE ([id] IN (?))', $sqlBuilder[4]->buildSelectQuery());
+		Assert::equal('SELECT * FROM [book] WHERE ([id] = ? OR [id] = ? OR [id] IN (?))', $sqlBuilder[5]->buildSelectQuery());
+		Assert::equal('SELECT * FROM [book] WHERE ([id] IN (NULL))', $sqlBuilder[6]->buildSelectQuery());
+		Assert::equal('SELECT * FROM [book] WHERE ([id] = ? OR [id] = ? OR [id] IN (?) OR [id] LIKE ? OR [id] > ?) AND ([name] = ?)', $sqlBuilder[7]->buildSelectQuery());
+		Assert::equal('SELECT * FROM [book] WHERE (FOO(?)) AND (FOO([id], ?)) AND ([id] & ? = ?) AND (?) AND (NOT ? OR ?) AND (? + ? - ? / ? * ? % ?)', $sqlBuilder[8]->buildSelectQuery());
+		Assert::equal("SELECT * FROM [book] WHERE ([col1] = ?\nOR [col2] = ?)", $sqlBuilder[9]->buildSelectQuery());
+		Assert::equal('SELECT * FROM [book] WHERE ([id] NOT IN (?)) AND ([id] NOT IN (SELECT [id] FROM [book]))', $sqlBuilder[10]->buildSelectQuery());
+		break;
+
 	case 'mysql':
 	default:
 		Assert::equal('SELECT * FROM `book` WHERE (`id` = ? OR `id` IS NULL)', $sqlBuilder[0]->buildSelectQuery());
@@ -122,6 +136,10 @@ Assert::throws(function() use ($connection) {
 switch ($driverName) {
 	case 'pgsql':
 		$connection->query('ALTER TABLE book_tag DROP CONSTRAINT "book_tag_pkey"');
+		break;
+	
+	case 'sqlsrv':
+		$connection->query('ALTER TABLE book_tag DROP CONSTRAINT PK_book_tag');
 		break;
 
 	case 'mysql':

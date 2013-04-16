@@ -55,7 +55,7 @@ INSERT INTO book (author_id, translator_id, title) VALUES
 
 
 
--- Add primary key manually, it is tested to name
+-- Add primary key manually, it is tested to name and dropped by name
 CREATE TABLE book_tag (
 	book_id int NOT NULL,
 	tag_id int NOT NULL,
