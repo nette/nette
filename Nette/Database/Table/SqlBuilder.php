@@ -262,7 +262,9 @@ class SqlBuilder extends Nette\Object
 				$this->parameters['where'][] = $arg;
 			} elseif (is_array($arg)) {
 				if ($hasOperator) {
-					if (trim($match[2][0]) !== 'IN') {
+					if (trim($match[2][0]) === 'NOT') {
+						$match[2][0] = rtrim($match[2][0]) . ' IN ';
+					} elseif (trim($match[2][0]) !== 'IN') {
 						throw new Nette\InvalidArgumentException('Column operator does not accept array argument.');
 					}
 				} else {
