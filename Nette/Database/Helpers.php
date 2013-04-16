@@ -46,7 +46,7 @@ class Helpers
 	 */
 	public static function dumpResult(ResultSet $result)
 	{
-		echo "\n<table class=\"dump\">\n<caption>" . htmlSpecialChars($result->queryString) . "</caption>\n";
+		echo "\n<table class=\"dump\">\n<caption>" . htmlSpecialChars($result->getQueryString()) . "</caption>\n";
 		if (!$result->getColumnCount()) {
 			echo "\t<tr>\n\t\t<th>Affected rows:</th>\n\t\t<td>", $result->getRowCount(), "</td>\n\t</tr>\n</table>\n";
 			return;

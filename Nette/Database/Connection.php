@@ -182,7 +182,15 @@ class Connection extends Nette\Object
 			array_unshift($params, $statement);
 			list($statement, $params) = $this->preprocessor->process($params);
 		}
-		return new ResultSet($this, $statement, $params);
+
+		try {
+			$result = new ResultSet($this, $statement, $params);
+		} catch (\PDOException $e) {
+			$e->queryString = $statement;
+			throw $e;
+		}
+		$this->onQuery($result, $params);
+		return $result;
 	}
 
 

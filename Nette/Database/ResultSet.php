@@ -52,10 +52,12 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 
 	public function __construct(Connection $connection, $sqlQuery, array $params)
 	{
+		$time = microtime(TRUE);
 		$this->connection = $connection;
 		$this->pdoStatement = $connection->getPdo()->prepare($sqlQuery);
 		$this->pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
-		$this->execute($params);
+		$this->pdoStatement->execute($params);
+		$this->time = microtime(TRUE) - $time;
 	}
 
 
@@ -156,24 +158,6 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 		}
 
 		return $this->connection->getSupplementalDriver()->normalizeRow($row);
-	}
-
-
-
-	/**
-	 * Executes statement.
-	 */
-	private function execute(array $params)
-	{
-		$time = microtime(TRUE);
-		try {
-			$this->pdoStatement->execute($params);
-		} catch (\PDOException $e) {
-			$e->queryString = $this->queryString;
-			throw $e;
-		}
-		$this->time = microtime(TRUE) - $time;
-		$this->connection->__call('onQuery', array($this, $params)); // $this->connection->onQuery() in PHP 5.3
 	}
 
 
