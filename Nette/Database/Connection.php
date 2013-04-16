@@ -46,7 +46,7 @@ class Connection extends Nette\Object
 	/** @var PDO */
 	private $pdo;
 
-	/** @var array of function(ResultSet $result, $params); Occurs after query is executed */
+	/** @var array of function(Connection $connection, ResultSet|Exception $result); Occurs after query is executed */
 	public $onQuery;
 
 
@@ -189,7 +189,7 @@ class Connection extends Nette\Object
 			$e->queryString = $statement;
 			throw $e;
 		}
-		$this->onQuery($result, $params);
+		$this->onQuery($this, $result);
 		return $result;
 	}
 

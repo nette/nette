@@ -51,7 +51,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 
 
 
-	public function logQuery(Nette\Database\ResultSet $result, array $params = NULL)
+	public function logQuery(Nette\Database\Connection $connection, $result)
 	{
 		if ($this->disabled) {
 			return;
@@ -65,8 +65,10 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 				break;
 			}
 		}
-		$this->totalTime += $result->getTime();
-		$this->queries[] = array($result->queryString, $params, $result->getTime(), $result->getRowCount(), $result->getConnection(), $source);
+		if ($result instanceof Nette\Database\ResultSet) {
+			$this->totalTime += $result->getTime();
+			$this->queries[] = array($connection, $result->getQueryString(), $result->getParameters(), $source, $result->getTime(), $result->getRowCount());
+		}
 	}
 
 
@@ -107,7 +109,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 		$s = '';
 		$h = 'htmlSpecialChars';
 		foreach ($this->queries as $i => $query) {
-			list($sql, $params, $time, $rows, $connection, $source) = $query;
+			list($connection, $sql, $params, $source, $time, $rows) = $query;
 
 			$explain = NULL; // EXPLAIN is called here to work SELECT FOUND_ROWS()
 			if ($this->explain && preg_match('#\s*\(?\s*SELECT\s#iA', $sql)) {
