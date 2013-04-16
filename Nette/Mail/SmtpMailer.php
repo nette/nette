@@ -43,6 +43,12 @@ class SmtpMailer extends Nette\Object implements IMailer
 	/** @var int */
 	private $timeout;
 
+	/** @var bool */
+	private $usePersistentConnection;
+
+	/** @var int */
+	private $maxAttempts;
+
 
 
 	public function __construct(array $options = array())
@@ -61,6 +67,8 @@ class SmtpMailer extends Nette\Object implements IMailer
 		if (!$this->port) {
 			$this->port = $this->secure === 'ssl' ? 465 : 25;
 		}
+		$this->usePersistentConnection = isset($options['persistent']) ? (bool) $options['persistent'] : FALSE;
+		$this->maxAttempts = isset($options['attempts']) ? (bool) $options['attempts'] : 2;
 	}
 
 
@@ -73,32 +81,52 @@ class SmtpMailer extends Nette\Object implements IMailer
 	{
 		$mail = clone $mail;
 
-		$this->connect();
+		$attempt = 1;
+		while (TRUE) {
+			try {
+				if (!$this->connection) {
+					$this->connect();
+				}
 
-		$from = $mail->getHeader('From');
-		if ($from) {
-			$from = array_keys($from);
-			$this->write("MAIL FROM:<$from[0]>", 250);
+				$from = $mail->getHeader('From');
+				if ($from) {
+					$from = array_keys($from);
+					$this->write("MAIL FROM:<$from[0]>", 250);
+				}
+
+				foreach (array_merge(
+					(array) $mail->getHeader('To'),
+					(array) $mail->getHeader('Cc'),
+					(array) $mail->getHeader('Bcc')
+				) as $email => $name) {
+					$this->write("RCPT TO:<$email>", array(250, 251));
+				}
+
+				$mail->setHeader('Bcc', NULL);
+				$data = $mail->generateMessage();
+				$this->write('DATA', 354);
+				$data = preg_replace('#^\.#m', '..', $data);
+				$this->write($data);
+				$this->write('.', 250);
+
+				if (!$this->usePersistentConnection) {
+					$this->write('QUIT', 221);
+					$this->disconnect();
+				}
+				return;
+
+			} catch (SmtpException $e) {
+				if ($attempt >= $this->maxAttempts) {
+					throw $e;
+				}
+
+				if ($this->connection) {
+					$this->disconnect();
+				}
+
+				$attempt++;
+			}
 		}
-
-		foreach (array_merge(
-			(array) $mail->getHeader('To'),
-			(array) $mail->getHeader('Cc'),
-			(array) $mail->getHeader('Bcc')
-		) as $email => $name) {
-			$this->write("RCPT TO:<$email>", array(250, 251));
-		}
-
-		$mail->setHeader('Bcc', NULL);
-		$data = $mail->generateMessage();
-		$this->write('DATA', 354);
-		$data = preg_replace('#^\.#m', '..', $data);
-		$this->write($data);
-		$this->write('.', 250);
-
-		$this->write('QUIT', 221);
-
-		$this->disconnect();
 	}
 
 
