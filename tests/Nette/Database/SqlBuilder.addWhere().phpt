@@ -56,6 +56,7 @@ $sqlBuilder[6]->addWhere('id', array());
 $sqlBuilder[7] = new SqlBuilder('book', $connection, $reflection);
 $sqlBuilder[7]->addWhere('id = ? OR id ? OR id IN ? OR id LIKE ? OR id > ?', 1, 2, array(1, 2), "%test", 3);
 $sqlBuilder[7]->addWhere('name', "var");
+$sqlBuilder[7]->addWhere('MAIN', 0); // "IN" is not considered as the operator
 
 // auto operator tests
 $sqlBuilder[8] = new SqlBuilder('book', $connection, $reflection);
@@ -84,7 +85,7 @@ switch ($driverName) {
 		Assert::equal('SELECT * FROM `book` WHERE (`id` IN (?))', $sqlBuilder[4]->buildSelectQuery());
 		Assert::equal('SELECT * FROM `book` WHERE (`id` = ? OR `id` = ? OR `id` IN (?))', $sqlBuilder[5]->buildSelectQuery());
 		Assert::equal('SELECT * FROM `book` WHERE (`id` IN (NULL))', $sqlBuilder[6]->buildSelectQuery());
-		Assert::equal('SELECT * FROM `book` WHERE (`id` = ? OR `id` = ? OR `id` IN (?) OR `id` LIKE ? OR `id` > ?) AND (`name` = ?)', $sqlBuilder[7]->buildSelectQuery());
+		Assert::equal('SELECT * FROM `book` WHERE (`id` = ? OR `id` = ? OR `id` IN (?) OR `id` LIKE ? OR `id` > ?) AND (`name` = ?) AND (MAIN = ?)', $sqlBuilder[7]->buildSelectQuery());
 		Assert::equal('SELECT * FROM `book` WHERE (FOO(?)) AND (FOO(`id`, ?)) AND (`id` & ? = ?) AND (?) AND (NOT ? OR ?) AND (? + ? - ? / ? * ? % ?)', $sqlBuilder[8]->buildSelectQuery());
 		Assert::equal("SELECT * FROM `book` WHERE (`col1` = ?\nOR `col2` = ?)", $sqlBuilder[9]->buildSelectQuery());
 		Assert::equal('SELECT * FROM `book` WHERE (`id` NOT IN (?)) AND (`id` NOT IN (?))', $sqlBuilder[10]->buildSelectQuery());
@@ -98,7 +99,7 @@ switch ($driverName) {
 		Assert::equal('SELECT * FROM "book" WHERE ("id" IN (?))', $sqlBuilder[4]->buildSelectQuery());
 		Assert::equal('SELECT * FROM "book" WHERE ("id" = ? OR "id" = ? OR "id" IN (?))', $sqlBuilder[5]->buildSelectQuery());
 		Assert::equal('SELECT * FROM "book" WHERE ("id" IN (NULL))', $sqlBuilder[6]->buildSelectQuery());
-		Assert::equal('SELECT * FROM "book" WHERE ("id" = ? OR "id" = ? OR "id" IN (?) OR "id" LIKE ? OR "id" > ?) AND ("name" = ?)', $sqlBuilder[7]->buildSelectQuery());
+		Assert::equal('SELECT * FROM "book" WHERE ("id" = ? OR "id" = ? OR "id" IN (?) OR "id" LIKE ? OR "id" > ?) AND ("name" = ?) AND (MAIN = ?)', $sqlBuilder[7]->buildSelectQuery());
 		Assert::equal('SELECT * FROM "book" WHERE (FOO(?)) AND (FOO("id", ?)) AND ("id" & ? = ?) AND (?) AND (NOT ? OR ?) AND (? + ? - ? / ? * ? % ?)', $sqlBuilder[8]->buildSelectQuery());
 		Assert::equal("SELECT * FROM \"book\" WHERE (\"col1\" = ?\nOR \"col2\" = ?)", $sqlBuilder[9]->buildSelectQuery());
 		Assert::equal('SELECT * FROM "book" WHERE ("id" NOT IN (?)) AND ("id" NOT IN (SELECT "id" FROM "book"))', $sqlBuilder[10]->buildSelectQuery());
