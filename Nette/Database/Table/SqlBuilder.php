@@ -232,35 +232,7 @@ class SqlBuilder extends Nette\Object
 					throw new Nette\InvalidArgumentException('Column operator does not accept NULL argument.');
 				}
 				$replace = 'IS NULL';
-			} elseif ($arg instanceof Selection) {
-				$clone = clone $arg;
-				if (!$clone->getSqlBuilder()->select) {
-					try {
-						$clone->select($clone->getPrimary());
-					} catch (\LogicException $e) {
-						throw new Nette\InvalidArgumentException('Selection argument must have defined a select column.', 0, $e);
-					}
-				}
-
-				if ($this->driverName !== 'mysql') {
-					$replace = 'IN (' . $clone->getSql() . ')';
-					$this->parameters['where'] = array_merge($this->parameters['where'], $clone->getSqlBuilder()->parameters['where']);
-				} else {
-					$parameter = array();
-					foreach ($clone as $row) {
-						$parameter[] = array_values(iterator_to_array($row));
-					}
-
-					if (!$parameter) {
-						$replace = 'IN (NULL)';
-					}  else {
-						$replace = 'IN (?)';
-						$this->parameters['where'][] = $parameter;
-					}
-				}
-			} elseif ($arg instanceof SqlLiteral) {
-				$this->parameters['where'][] = $arg;
-			} elseif (is_array($arg)) {
+			} elseif (is_array($arg) || $arg instanceof Selection) {
 				if ($hasOperator) {
 					if (trim($match[2][0]) === 'NOT') {
 						$match[2][0] = rtrim($match[2][0]) . ' IN ';
@@ -271,12 +243,38 @@ class SqlBuilder extends Nette\Object
 					$match[2][0] = 'IN ';
 				}
 
-				if (!$arg) {
-					$replace = $match[2][0] . '(NULL)';
-				} else {
-					$replace = $match[2][0] . '(?)';
-					$this->parameters['where'][] = $arg;
+				if ($arg instanceof Selection) {
+					$clone = clone $arg;
+					if (!$clone->getSqlBuilder()->select) {
+						try {
+							$clone->select($clone->getPrimary());
+						} catch (\LogicException $e) {
+							throw new Nette\InvalidArgumentException('Selection argument must have defined a select column.', 0, $e);
+						}
+					}
+
+					if ($this->driverName !== 'mysql') {
+						$arg = NULL;
+						$replace = 'IN (' . $clone->getSql() . ')';
+						$this->parameters['where'] = array_merge($this->parameters['where'], $clone->getSqlBuilder()->parameters['where']);
+					} else {
+						$arg = array();
+						foreach ($clone as $row) {
+							$arg[] = array_values(iterator_to_array($row));
+						}
+					}
 				}
+
+				if ($arg !== NULL) {
+					if (!$arg) {
+						$replace = $match[2][0] . '(NULL)';
+					} else {
+						$replace = $match[2][0] . '(?)';
+						$this->parameters['where'][] = $arg;
+					}
+				}
+			} elseif ($arg instanceof SqlLiteral) {
+				$this->parameters['where'][] = $arg;
 			} else {
 				if ($hasOperator) {
 					$replace = $match[2][0] . '?';
