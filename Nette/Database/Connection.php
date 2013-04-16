@@ -109,26 +109,26 @@ class Connection extends Nette\Object
 
 
 
-	/** @return bool */
+	/** @return void */
 	public function beginTransaction()
 	{
-		return $this->getPdo()->beginTransaction();
+		$this->queryArgs('::beginTransaction', array());
 	}
 
 
 
-	/** @return bool */
+	/** @return void */
 	public function commit()
 	{
-		return $this->getPdo()->commit();
+		$this->queryArgs('::commit', array());
 	}
 
 
 
-	/** @return bool */
+	/** @return void */
 	public function rollBack()
 	{
-		return $this->getPdo()->rollBack();
+		$this->queryArgs('::rollBack', array());
 	}
 
 
