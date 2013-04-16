@@ -208,3 +208,12 @@ var prop2 = {$people};
 <p n:foreach="[1, 2, 3] as $foo" n:class="$iterator->even ? even">{$foo}</p>
 
 <span n:tag-if="0" n:if="1" n:inner-if="2" n:foreach="[0] as $foo" n:tag-foreach="[1] as $foo" n:inner-foreach="[2] as $foo">Hello</span>
+
+
+<ul title="foreach break">
+	<li n:foreach="$people as $person">{$person}{breakIf TRUE}</li>
+</ul>
+
+<ul title="foreach continue">
+	<li n:foreach="$people as $person">{$person}{continueIf TRUE}</li>
+</ul>
