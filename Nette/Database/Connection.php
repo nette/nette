@@ -187,6 +187,7 @@ class Connection extends Nette\Object
 			$result = new ResultSet($this, $statement, $params);
 		} catch (\PDOException $e) {
 			$e->queryString = $statement;
+			$this->onQuery($this, $e);
 			throw $e;
 		}
 		$this->onQuery($this, $result);

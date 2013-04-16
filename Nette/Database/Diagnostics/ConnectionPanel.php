@@ -57,7 +57,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 			return;
 		}
 		$source = NULL;
-		foreach (debug_backtrace(FALSE) as $row) {
+		foreach ($result instanceof \PDOException ? $result->getTrace() : debug_backtrace(FALSE) as $row) {
 			if (isset($row['file']) && is_file($row['file']) && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) !== 0) {
 				if (isset($row['function']) && strpos($row['function'], 'call_user_func') === 0) continue;
 				if (isset($row['class']) && is_subclass_of($row['class'], '\\Nette\\Database\\Connection')) continue;
@@ -67,7 +67,10 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 		}
 		if ($result instanceof Nette\Database\ResultSet) {
 			$this->totalTime += $result->getTime();
-			$this->queries[] = array($connection, $result->getQueryString(), $result->getParameters(), $source, $result->getTime(), $result->getRowCount());
+			$this->queries[] = array($connection, $result->getQueryString(), $result->getParameters(), $source, $result->getTime(), $result->getRowCount(), NULL);
+
+		} elseif ($result instanceof \PDOException) {
+			$this->queries[] = array($connection, $result->queryString, NULL, $source, NULL, NULL, $result->getMessage());
 		}
 	}
 
@@ -109,17 +112,22 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 		$s = '';
 		$h = 'htmlSpecialChars';
 		foreach ($this->queries as $i => $query) {
-			list($connection, $sql, $params, $source, $time, $rows) = $query;
+			list($connection, $sql, $params, $source, $time, $rows, $error) = $query;
 
 			$explain = NULL; // EXPLAIN is called here to work SELECT FOUND_ROWS()
-			if ($this->explain && preg_match('#\s*\(?\s*SELECT\s#iA', $sql)) {
+			if (!$error && $this->explain && preg_match('#\s*\(?\s*SELECT\s#iA', $sql)) {
 				try {
 					$cmd = is_string($this->explain) ? $this->explain : 'EXPLAIN';
 					$explain = $connection->queryArgs("$cmd $sql", $params)->fetchAll();
 				} catch (\PDOException $e) {}
 			}
 
-			$s .= '<tr><td>' . sprintf('%0.3f', $time * 1000);
+			$s .= '<tr><td>';
+			if ($error) {
+				$s .= "<span title=\"{$h($error)}\">ERROR</span>";
+			} elseif ($time !== NULL) {
+				$s .= sprintf('%0.3f', $time * 1000);
+			}
 			if ($explain) {
 				static $counter;
 				$counter++;
