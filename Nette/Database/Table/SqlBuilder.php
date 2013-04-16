@@ -98,21 +98,21 @@ class SqlBuilder extends Nette\Object
 
 	public function buildUpdateQuery()
 	{
-		return "UPDATE{$this->buildTopClause()} {$this->delimitedTable} SET ?" . $this->buildConditions();
+		return $this->tryDelimite("UPDATE{$this->buildTopClause()} {$this->tableName} SET ?" . $this->buildConditions());
 	}
 
 
 
 	public function buildDeleteQuery()
 	{
-		return "DELETE{$this->buildTopClause()} FROM {$this->delimitedTable}" . $this->buildConditions();
+		return $this->tryDelimite("DELETE{$this->buildTopClause()} FROM {$this->tableName}" . $this->buildConditions());
 	}
 
 
 
 	/**
 	 * Returns SQL query.
-	 * @param  list of columns
+	 * @param  string list of columns
 	 * @return string
 	 */
 	public function buildSelectQuery($columns = NULL)
@@ -147,7 +147,7 @@ class SqlBuilder extends Nette\Object
 		}
 
 		$queryJoins = $this->buildQueryJoins($joins);
-		$query = "{$querySelect} FROM {$this->delimitedTable}{$queryJoins}{$queryCondition}{$queryEnd}";
+		$query = "{$querySelect} FROM {$this->tableName}{$queryJoins}{$queryCondition}{$queryEnd}";
 
 		return $this->tryDelimite($query);
 	}
