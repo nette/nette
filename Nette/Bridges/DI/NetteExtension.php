@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\DI\Extensions;
+namespace Nette\Bridges\DI;
 
 use Nette,
 	Nette\DI\ContainerBuilder,
@@ -93,7 +93,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		if (isset($config['xhtml'])) {
 			$config['latte']['xhtml'] = $config['xhtml'];
 		}
-		$container->addDefinition('nette')->setClass('Nette\DI\Extensions\NetteAccessor', array('@container'));
+		$container->addDefinition('nette')->setClass('Nette\Bridges\DI\NetteAccessor', array('@container'));
 
 		$this->setupCache($container);
 		$this->setupHttp($container);

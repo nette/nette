@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\DI\Extensions;
+namespace Nette\Bridges\DI;
 
 use Nette;
 
