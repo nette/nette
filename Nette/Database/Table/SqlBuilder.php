@@ -430,7 +430,7 @@ class SqlBuilder extends Nette\Object
 				$primary = $this->databaseReflection->getPrimary($table);
 			}
 
-			$joins[$table] = array($table, $keyMatch['key'] ?: $table, $parentAlias, $column, $primary, !isset($joins[$table]) && $inner);
+			$joins[$table . $column] = array($table, $keyMatch['key'] ?: $table, $parentAlias, $column, $primary, !isset($joins[$table]) && $inner);
 			$parent = $table;
 			$parentAlias = $keyMatch['key'];
 		}
