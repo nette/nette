@@ -121,7 +121,7 @@ class SqlBuilder extends Nette\Object
 		$queryEnd       = $this->buildQueryEnd();
 
 		$joins = array();
-		$this->parseJoins($joins, $queryCondition, TRUE);
+		$this->parseJoins($joins, $queryCondition);
 		$this->parseJoins($joins, $queryEnd);
 
 		if ($this->select) {
@@ -385,7 +385,7 @@ class SqlBuilder extends Nette\Object
 
 
 
-	protected function parseJoins(& $joins, & $query, $inner = FALSE)
+	protected function parseJoins(& $joins, & $query)
 	{
 		$builder = $this;
 		$query = preg_replace_callback('~
@@ -395,14 +395,14 @@ class SqlBuilder extends Nette\Object
 				(?P<node> (?&del)? (?&word) )
 			)
 			(?P<chain> (?!\.) (?&node)*)  \. (?P<column> (?&word) | \*  )
-		~xi', function($match) use (& $joins, $inner, $builder) {
-			return $builder->parseJoinsCb($joins, $match, $inner);
+		~xi', function($match) use (& $joins, $builder) {
+			return $builder->parseJoinsCb($joins, $match);
 		}, $query);
 	}
 
 
 
-	public function parseJoinsCb(& $joins, $match, $inner)
+	public function parseJoinsCb(& $joins, $match)
 	{
 		$chain = $match['chain'];
 		if (!empty($chain[0]) && ($chain[0] !== '.' || $chain[0] !== ':')) {
@@ -430,7 +430,7 @@ class SqlBuilder extends Nette\Object
 				$primary = $this->databaseReflection->getPrimary($table);
 			}
 
-			$joins[$table . $column] = array($table, $keyMatch['key'] ?: $table, $parentAlias, $column, $primary, !isset($joins[$table]) && $inner);
+			$joins[$table . $column] = array($table, $keyMatch['key'] ?: $table, $parentAlias, $column, $primary);
 			$parent = $table;
 			$parentAlias = $keyMatch['key'];
 		}
@@ -444,11 +444,11 @@ class SqlBuilder extends Nette\Object
 	{
 		$return = '';
 		foreach ($joins as $join) {
-			list($joinTable, $joinAlias, $table, $tableColumn, $joinColumn, $inner) = $join;
+			list($joinTable, $joinAlias, $table, $tableColumn, $joinColumn) = $join;
 
-			$return .= ' ' . ($inner ? 'INNER' : 'LEFT')
-				. " JOIN {$joinTable}" . ($joinTable !== $joinAlias ? " AS {$joinAlias}" : '')
-				. " ON {$table}.{$tableColumn} = {$joinAlias}.{$joinColumn}";
+			$return .=
+				" LEFT JOIN {$joinTable}" . ($joinTable !== $joinAlias ? " AS {$joinAlias}" : '') .
+				" ON {$table}.{$tableColumn} = {$joinAlias}.{$joinColumn}";
 		}
 
 		return $return;
