@@ -135,11 +135,19 @@ abstract class Control extends PresenterComponent implements IRenderable
 	/**
 	 * Forces control or its snippet to repaint.
 	 * @param  string
+	 * @param  array|mixed
 	 * @return void
 	 */
-	public function invalidateControl($snippet = NULL)
+	public function invalidateControl($snippet = NULL, $ids = array())
 	{
+		if (!is_array($ids)) {
+			$ids = func_get_args();
+			array_shift($ids);
+		}
 		$this->invalidSnippets[$snippet] = TRUE;
+		foreach ($ids as $id) {
+			$this->invalidSnippets[$snippet . '-' . $id] = TRUE;
+		}
 	}
 
 
