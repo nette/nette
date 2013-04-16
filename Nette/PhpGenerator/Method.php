@@ -75,7 +75,26 @@ class Method extends Nette\Object
 		$method->visibility = $from->isPrivate() ? 'private' : ($from->isProtected() ? 'protected' : '');
 		$method->final = $from->isFinal();
 		$method->abstract = $from->isAbstract() && !$from->getDeclaringClass()->isInterface();
-		$method->body = $from->isAbstract() ? FALSE : '';
+		if ($from->isAbstract()) {
+			$method->body = FALSE;
+		} else {
+			$filename = $from->getFileName();
+			$start_line = $from->getStartLine() - 1; // it's actually - 1, otherwise you wont get the function() block
+			$end_line = $from->getEndLine();
+			$length = $end_line - $start_line;
+
+			$source = file($filename);
+			$body = implode("", array_slice($source, $start_line, $length));
+
+			// find method and get its body
+			$result = \Nette\Utils\Strings::match($body, "/function[\\s]*{$from->name}[^{]*{(.*)}/ms");
+			if ($result AND count($result) == 2) {
+				// fix increasing number of indents
+				$method->body = \Nette\Utils\Strings::replace($result[1], '/\n\s*/ms', "\n");
+			} else {
+				$method->body = '';
+			}
+		}
 		$method->returnReference = $from->returnsReference();
 		$method->documents = preg_replace('#^\s*\* ?#m', '', trim($from->getDocComment(), "/* \r\n"));
 		return $method;
