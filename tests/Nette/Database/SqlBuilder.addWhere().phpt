@@ -76,20 +76,6 @@ $sqlBuilder[10]->addWhere('id NOT', array(1, 2));
 $sqlBuilder[10]->addWhere('id NOT', $connection->table('book')->select('id'));
 
 switch ($driverName) {
-	case 'mysql':
-		Assert::equal('SELECT * FROM `book` WHERE (`id` = ? OR `id` IS NULL)', $sqlBuilder[0]->buildSelectQuery());
-		Assert::equal('SELECT * FROM `book` WHERE (`id` IN (?))', $sqlBuilder[1]->buildSelectQuery());
-		Assert::equal('SELECT * FROM `book` WHERE (`id` IN (?))', $sqlBuilder[2]->buildSelectQuery());
-		Assert::equal('SELECT * FROM `book` WHERE (`id` IS NULL OR `id` IN (?))', $sqlBuilder[3]->buildSelectQuery());
-		Assert::equal('SELECT * FROM `book` WHERE (`id` IN (?))', $sqlBuilder[4]->buildSelectQuery());
-		Assert::equal('SELECT * FROM `book` WHERE (`id` = ? OR `id` = ? OR `id` IN (?))', $sqlBuilder[5]->buildSelectQuery());
-		Assert::equal('SELECT * FROM `book` WHERE (`id` IN (NULL))', $sqlBuilder[6]->buildSelectQuery());
-		Assert::equal('SELECT * FROM `book` WHERE (`id` = ? OR `id` = ? OR `id` IN (?) OR `id` LIKE ? OR `id` > ?) AND (`name` = ?)', $sqlBuilder[7]->buildSelectQuery());
-		Assert::equal('SELECT * FROM `book` WHERE (FOO(?)) AND (FOO(`id`, ?)) AND (`id` & ? = ?) AND (?) AND (NOT ? OR ?) AND (? + ? - ? / ? * ? % ?)', $sqlBuilder[8]->buildSelectQuery());
-		Assert::equal("SELECT * FROM `book` WHERE (`col1` = ?\nOR `col2` = ?)", $sqlBuilder[9]->buildSelectQuery());
-		Assert::equal('SELECT * FROM `book` WHERE (`id` NOT IN (?)) AND (`id` NOT IN (?))', $sqlBuilder[10]->buildSelectQuery());
-		break;
-
 	case 'pgsql':
 		Assert::equal('SELECT * FROM "book" WHERE ("id" = ? OR "id" IS NULL)', $sqlBuilder[0]->buildSelectQuery());
 		Assert::equal('SELECT * FROM "book" WHERE ("id" IN (SELECT "id" FROM "book"))', $sqlBuilder[1]->buildSelectQuery());
@@ -102,6 +88,21 @@ switch ($driverName) {
 		Assert::equal('SELECT * FROM "book" WHERE (FOO(?)) AND (FOO("id", ?)) AND ("id" & ? = ?) AND (?) AND (NOT ? OR ?) AND (? + ? - ? / ? * ? % ?)', $sqlBuilder[8]->buildSelectQuery());
 		Assert::equal("SELECT * FROM \"book\" WHERE (\"col1\" = ?\nOR \"col2\" = ?)", $sqlBuilder[9]->buildSelectQuery());
 		Assert::equal('SELECT * FROM "book" WHERE ("id" NOT IN (?)) AND ("id" NOT IN (SELECT "id" FROM "book"))', $sqlBuilder[10]->buildSelectQuery());
+		break;
+
+	case 'mysql':
+	default:
+		Assert::equal('SELECT * FROM `book` WHERE (`id` = ? OR `id` IS NULL)', $sqlBuilder[0]->buildSelectQuery());
+		Assert::equal('SELECT * FROM `book` WHERE (`id` IN (?))', $sqlBuilder[1]->buildSelectQuery());
+		Assert::equal('SELECT * FROM `book` WHERE (`id` IN (?))', $sqlBuilder[2]->buildSelectQuery());
+		Assert::equal('SELECT * FROM `book` WHERE (`id` IS NULL OR `id` IN (?))', $sqlBuilder[3]->buildSelectQuery());
+		Assert::equal('SELECT * FROM `book` WHERE (`id` IN (?))', $sqlBuilder[4]->buildSelectQuery());
+		Assert::equal('SELECT * FROM `book` WHERE (`id` = ? OR `id` = ? OR `id` IN (?))', $sqlBuilder[5]->buildSelectQuery());
+		Assert::equal('SELECT * FROM `book` WHERE (`id` IN (NULL))', $sqlBuilder[6]->buildSelectQuery());
+		Assert::equal('SELECT * FROM `book` WHERE (`id` = ? OR `id` = ? OR `id` IN (?) OR `id` LIKE ? OR `id` > ?) AND (`name` = ?)', $sqlBuilder[7]->buildSelectQuery());
+		Assert::equal('SELECT * FROM `book` WHERE (FOO(?)) AND (FOO(`id`, ?)) AND (`id` & ? = ?) AND (?) AND (NOT ? OR ?) AND (? + ? - ? / ? * ? % ?)', $sqlBuilder[8]->buildSelectQuery());
+		Assert::equal("SELECT * FROM `book` WHERE (`col1` = ?\nOR `col2` = ?)", $sqlBuilder[9]->buildSelectQuery());
+		Assert::equal('SELECT * FROM `book` WHERE (`id` NOT IN (?)) AND (`id` NOT IN (?))', $sqlBuilder[10]->buildSelectQuery());
 		break;
 }
 
@@ -119,12 +120,14 @@ Assert::throws(function() use ($connection) {
 }, 'Nette\InvalidArgumentException', 'Selection argument must have defined a select column.');
 
 switch ($driverName) {
-	case 'mysql':
-		$connection->query('CREATE INDEX book_tag_unique ON book_tag (book_id, tag_id)');
-		$connection->query('ALTER TABLE book_tag DROP PRIMARY KEY');
-		break;
 	case 'pgsql':
 		$connection->query('ALTER TABLE book_tag DROP CONSTRAINT "book_tag_pkey"');
+		break;
+
+	case 'mysql':
+	default:
+		$connection->query('CREATE INDEX book_tag_unique ON book_tag (book_id, tag_id)');
+		$connection->query('ALTER TABLE book_tag DROP PRIMARY KEY');
 		break;
 }
 

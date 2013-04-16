@@ -26,14 +26,17 @@ $connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory($conn
 
 // Leave literals lower-cased, also not-delimiting them is tested.
 switch ($driverName) {
-	case 'mysql':
-		$literal = new SqlLiteral('year(now())');
-		break;
 	case 'pgsql':
 		$literal = new SqlLiteral('extract(year from now())::int');
 		break;
+
 	case 'sqlsrv':
 		$literal = new SqlLiteral('year(cast(current_timestamp as datetime))');
+		break;
+
+	case 'mysql':
+	default:
+		$literal = new SqlLiteral('year(now())');
 		break;
 }
 
@@ -67,12 +70,19 @@ Assert::same(array(
 
 
 
-if ($driverName === 'mysql') {
-	$authors = array();
-	$selection = $connection->table('author')->order('FIELD(name, ?)', array('Jakub Vrana', 'David Grudl', 'Geek'));
-	foreach ($selection as $author) {
-		$authors[] = $author->name;
-	}
+switch ($driverName) {
+	case 'pgsql':
+	case 'sqlsrv':
+		break;
 
-	Assert::equal(array('Jakub Vrana', 'David Grudl', 'Geek'), $authors);
+	case 'mysql':
+	default:
+		$authors = array();
+		$selection = $connection->table('author')->order('FIELD(name, ?)', array('Jakub Vrana', 'David Grudl', 'Geek'));
+		foreach ($selection as $author) {
+			$authors[] = $author->name;
+		}
+
+		Assert::equal(array('Jakub Vrana', 'David Grudl', 'Geek'), $authors);
+		break;
 }
