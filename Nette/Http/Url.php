@@ -341,7 +341,7 @@ class Url extends Nette\FreezableObject
 	 */
 	public function getAbsoluteUrl()
 	{
-		return ($this->scheme ? $this->scheme . ':' : '') . '//' . $this->getAuthority() . $this->path
+		return $this->getHostUrl() . $this->path
 			. ($this->query === '' ? '' : '?' . $this->query)
 			. ($this->fragment === '' ? '' : '#' . $this->fragment);
 	}
@@ -355,7 +355,7 @@ class Url extends Nette\FreezableObject
 	public function getAuthority()
 	{
 		$authority = $this->host;
-		if ($this->port && isset(self::$defaultPorts[$this->scheme]) && $this->port !== self::$defaultPorts[$this->scheme]) {
+		if ($this->port && (!isset(self::$defaultPorts[$this->scheme]) || $this->port !== self::$defaultPorts[$this->scheme])) {
 			$authority .= ':' . $this->port;
 		}
 
@@ -374,7 +374,7 @@ class Url extends Nette\FreezableObject
 	 */
 	public function getHostUrl()
 	{
-		return $this->scheme . '://' . $this->getAuthority();
+		return ($this->scheme ? $this->scheme . ':' : '') . '//' . $this->getAuthority();
 	}
 
 
@@ -397,7 +397,7 @@ class Url extends Nette\FreezableObject
 	 */
 	public function getBaseUrl()
 	{
-		return $this->scheme . '://' . $this->getAuthority() . $this->getBasePath();
+		return $this->getHostUrl() . $this->getBasePath();
 	}
 
 
@@ -433,7 +433,7 @@ class Url extends Nette\FreezableObject
 			}
 
 		} else {
-			if ($part !== $this->scheme . '://' . $this->getAuthority() . $this->path) {
+			if ($part !== $this->getHostUrl() . $this->path) {
 				return FALSE;
 			}
 		}
