@@ -28,7 +28,8 @@ interface IReflection
 		FIELD_FLOAT = 'float',
 		FIELD_DATE = 'date',
 		FIELD_TIME = 'time',
-		FIELD_DATETIME = 'datetime';
+		FIELD_DATETIME = 'datetime',
+		FIELD_UNIX_TIMESTAMP = 'timestamp';
 
 	/**
 	 * Gets primary key of $table.
