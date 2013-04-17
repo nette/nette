@@ -50,7 +50,8 @@ INSERT INTO book (author_id, translator_id, title) VALUES (11, NULL, 'JUSH');
 INSERT INTO book (author_id, translator_id, title) VALUES (12, 12, 'Nette');
 INSERT INTO book (author_id, translator_id, title) VALUES (12, 12, 'Dibi');
 
--- -- Add primary key manually, it is tested to name
+
+
 CREATE TABLE book_tag (
 	book_id INTEGER NOT NULL,
 	tag_id INTEGER NOT NULL,
@@ -58,7 +59,6 @@ CREATE TABLE book_tag (
 	CONSTRAINT book_tag_book FOREIGN KEY (book_id) REFERENCES book (id) ON DELETE CASCADE,
 	PRIMARY KEY (book_id, tag_id)
 );
--- ALTER TABLE book_tag ADD CONSTRAINT PK_book_tag PRIMARY KEY CLUSTERED (book_id, tag_id);
 
 INSERT INTO book_tag (book_id, tag_id) VALUES (1, 21);
 INSERT INTO book_tag (book_id, tag_id) VALUES (3, 21);
