@@ -122,12 +122,20 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	 */
 	public function getTables()
 	{
-		return $this->connection->query("
+		$tables = array();
+		foreach ($this->connection->query("
 			SELECT name, type = 'view' as view FROM sqlite_master WHERE type IN ('table', 'view')
 			UNION ALL
 			SELECT name, type = 'view' as view FROM sqlite_temp_master WHERE type IN ('table', 'view')
 			ORDER BY name
-		")->fetchAll();
+		") as $row) {
+			$tables[] = array(
+				'name' => $row->name,
+				'view' => (bool) $row->view,
+			);
+		}
+
+		return $tables;
 	}
 
 
@@ -151,9 +159,9 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 			$columns[] = array(
 				'name' => $column,
 				'table' => $table,
-				'fullname' => "$table.$column",
 				'nativetype' => strtoupper($type[0]),
 				'size' => isset($type[1]) ? (int) $type[1] : NULL,
+				'unsigned' => FALSE,
 				'nullable' => $row['notnull'] == '0',
 				'default' => $row['dflt_value'],
 				'autoincrement' => (bool) preg_match($pattern, $meta['sql']),
@@ -175,6 +183,7 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 		foreach ($this->connection->query("PRAGMA index_list({$this->delimite($table)})") as $row) {
 			$indexes[$row['name']]['name'] = $row['name'];
 			$indexes[$row['name']]['unique'] = (bool) $row['unique'];
+			$indexes[$row['name']]['primary'] = FALSE;
 		}
 
 		foreach ($indexes as $index => $values) {
@@ -187,14 +196,12 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 		$columns = $this->getColumns($table);
 		foreach ($indexes as $index => $values) {
 			$column = $indexes[$index]['columns'][0];
-			$primary = FALSE;
 			foreach ($columns as $info) {
 				if ($column == $info['name']) {
-					$primary = $info['primary'];
+					$indexes[$index]['primary'] = (bool) $info['primary'];
 					break;
 				}
 			}
-			$indexes[$index]['primary'] = (bool) $primary;
 		}
 		if (!$indexes) { // @see http://www.sqlite.org/lang_createtable.html#rowid
 			foreach ($columns as $column) {
@@ -243,7 +250,21 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	 */
 	public function getColumnTypes(\PDOStatement $statement)
 	{
-		return array();
+		$types = array();
+		$count = $statement->columnCount();
+		for ($col = 0; $col < $count; $col++) {
+			$meta = $statement->getColumnMeta($col);
+			if (isset($meta['sqlite:decl_type'])) {
+				if ($meta['sqlite:decl_type'] === 'DATE') {
+					$types[$meta['name']] = Nette\Database\IReflection::FIELD_UNIX_TIMESTAMP;
+				} else {
+					$types[$meta['name']] = Nette\Database\Helpers::detectType($meta['sqlite:decl_type']);
+				}
+			} elseif (isset($meta['native_type'])) {
+				$types[$meta['name']] = Nette\Database\Helpers::detectType($meta['native_type']);
+			}
+		}
+		return $types;
 	}
 
 
@@ -253,7 +274,7 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	 */
 	public function isSupported($item)
 	{
-		return FALSE;
+		return $item === self::SUPPORT_COLUMNS_META;
 	}
 
 }

@@ -32,6 +32,7 @@ switch ($driverName) {
 		Assert::same('"hello"', $tryDelimite->invoke($sqlBuilder, '"hello"'));
 		break;
 
+	case 'sqlite':
 	case 'sqlsrv':
 		Assert::same('[hello]', $tryDelimite->invoke($sqlBuilder, 'hello'));
 		Assert::same(' [hello] ', $tryDelimite->invoke($sqlBuilder, ' hello '));

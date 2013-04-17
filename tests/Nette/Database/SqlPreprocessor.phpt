@@ -16,6 +16,7 @@ use Nette\Database\SqlLiteral;
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
 
 
+
 $preprocessor = new Nette\Database\SqlPreprocessor($connection);
 
 // basic
@@ -59,7 +60,7 @@ list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE'
 
 if ($driverName === 'pgsql') {
 	Assert::same( "SELECT id FROM author WHERE (\"id\" IS NULL) AND (\"name\" = 'a') AND (\"born\" IN (1, 2, 3)) AND (1=0)", $sql );
-} elseif ($driverName === 'sqlsrv') {
+} elseif ($driverName === 'sqlsrv' || $driverName === 'sqlite') {
 	Assert::same( "SELECT id FROM author WHERE ([id] IS NULL) AND ([name] = 'a') AND ([born] IN (1, 2, 3)) AND (1=0)", $sql );
 } else {
 	Assert::same( "SELECT id FROM author WHERE (`id` IS NULL) AND (`name` = 'a') AND (`born` IN (1, 2, 3)) AND (1=0)", $sql );
@@ -75,7 +76,7 @@ list($sql, $params) = $preprocessor->process(array('SELECT id FROM author ORDER 
 
 if ($driverName === 'pgsql') {
 	Assert::same( 'SELECT id FROM author ORDER BY "id", "name" DESC', $sql );
-} elseif ($driverName === 'sqlsrv') {
+} elseif ($driverName === 'sqlsrv' || $driverName === 'sqlite') {
 	Assert::same( 'SELECT id FROM author ORDER BY [id], [name] DESC', $sql );
 } else {
 	Assert::same( 'SELECT id FROM author ORDER BY `id`, `name` DESC', $sql );
@@ -108,7 +109,7 @@ list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE'
 
 if ($driverName === 'pgsql') {
 	Assert::same( 'SELECT id FROM author WHERE ("id" IS NULL) AND ("born" IN (1, 2, 3+1)) AND ("web" = NOW())', $sql );
-} elseif ($driverName === 'sqlsrv') {
+} elseif ($driverName === 'sqlsrv' || $driverName === 'sqlite') {
 	Assert::same( 'SELECT id FROM author WHERE ([id] IS NULL) AND ([born] IN (1, 2, 3+1)) AND ([web] = NOW())', $sql );
 } else {
 	Assert::same( 'SELECT id FROM author WHERE (`id` IS NULL) AND (`born` IN (1, 2, 3+1)) AND (`web` = NOW())', $sql );
@@ -123,6 +124,8 @@ list($sql, $params) = $preprocessor->process(array('INSERT INTO author',
 
 if ($driverName === 'pgsql') {
 	Assert::same( "INSERT INTO author (\"name\", \"born\") VALUES ('Catelyn Stark', '2011-11-11 00:00:00')", $sql );
+} elseif ($driverName === 'sqlite') {
+	Assert::same( "INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', 1320966000)", $sql );
 } elseif ($driverName === 'sqlsrv') {
 	Assert::same( "INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00')", $sql );
 } else {
@@ -139,6 +142,8 @@ list($sql, $params) = $preprocessor->process(array('INSERT INTO author', array(
 
 if ($driverName === 'pgsql') {
 	Assert::same( "INSERT INTO author (\"name\", \"born\") VALUES ('Catelyn Stark', '2011-11-11 00:00:00'), ('Sansa Stark', '2021-11-11 00:00:00')", $sql );
+} elseif ($driverName === 'sqlite') {
+	Assert::same( "INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', 1320966000), ('Sansa Stark', 1636585200)", $sql ); // only syntax check; sqlite does not support multi-insert
 } elseif ($driverName === 'sqlsrv') {
 	Assert::same( "INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00'), ('Sansa Stark', '2021-11-11 00:00:00')", $sql );
 } else {
@@ -154,7 +159,7 @@ list($sql, $params) = $preprocessor->process(array('UPDATE author SET ?',
 
 if ($driverName === 'pgsql') {
 	Assert::same( "UPDATE author SET \"id\"=12, \"name\"=UPPER(?)", $sql );
-} elseif ($driverName === 'sqlsrv') {
+} elseif ($driverName === 'sqlsrv' || $driverName === 'sqlite') {
 	Assert::same( "UPDATE author SET [id]=12, [name]=UPPER(?)", $sql );
 } else {
 	Assert::same( "UPDATE author SET `id`=12, `name`=UPPER(?)", $sql );
@@ -170,7 +175,7 @@ list($sql, $params) = $preprocessor->process(array('INSERT INTO author ? ON DUPL
 
 if ($driverName === 'pgsql') {
 	Assert::same( "INSERT INTO author (\"id\", \"name\") VALUES (12, 'John Doe') ON DUPLICATE KEY UPDATE \"web\"='http://nette.org', \"name\"='Dave Lister'", $sql );
-} elseif ($driverName === 'sqlsrv') {
+} elseif ($driverName === 'sqlsrv' || $driverName === 'sqlite') {
 	Assert::same( "INSERT INTO author ([id], [name]) VALUES (12, 'John Doe') ON DUPLICATE KEY UPDATE [web]='http://nette.org', [name]='Dave Lister'", $sql );
 } else {
 	Assert::same( "INSERT INTO author (`id`, `name`) VALUES (12, 'John Doe') ON DUPLICATE KEY UPDATE `web`='http://nette.org', `name`='Dave Lister'", $sql );

@@ -17,7 +17,8 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName
 $res = $connection->query('SELECT id FROM book ORDER BY id');
 
 // sqlsrv: for real row count, PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL must be used when $pdo->prepare(). Nette\Database doesn't allowes it now.
-Assert::same($driverName === 'sqlsrv' ? -1 : 4, $res->rowCount);
+// sqlite: rowCount for SELECT queries is not supported
+Assert::same($driverName === 'sqlsrv' ? -1 : ($driverName === 'sqlite' ? 0 : 4), $res->rowCount);
 Assert::same(1, $res->columnCount);
 Assert::same('SELECT id FROM book ORDER BY id', $res->getQueryString());
 

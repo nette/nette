@@ -177,6 +177,8 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 			} elseif ($type === IReflection::FIELD_DATETIME || $type === IReflection::FIELD_DATE || $type === IReflection::FIELD_TIME) {
 				$row[$key] = new Nette\DateTime($value);
 
+			} elseif ($type === IReflection::FIELD_UNIX_TIMESTAMP) {
+				$row[$key] = Nette\DateTime::from($value);
 			}
 		}
 
