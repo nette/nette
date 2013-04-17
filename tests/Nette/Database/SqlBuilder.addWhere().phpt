@@ -105,7 +105,7 @@ $books = $connection->table('book')->where('id',
 );
 Assert::same(3, $books->count());
 
-Assert::throws(function() use ($connection) {
+Assert::exception(function() use ($connection) {
 	$connection->table('book')->where('id',
 		$connection->table('book_tag')->where('tag_id', 21)
 	);
@@ -128,7 +128,7 @@ switch ($driverName) {
 $reflection = new DiscoveredReflection($connection);
 $connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory($connection, $reflection));
 
-Assert::throws(function() use ($connection) {
+Assert::exception(function() use ($connection) {
 	$books = $connection->table('book')->where('id',
 		$connection->table('book_tag')->where('tag_id', 21)
 	);
@@ -137,21 +137,21 @@ Assert::throws(function() use ($connection) {
 
 
 
-Assert::throws(function() use ($connection, $reflection) {
+Assert::exception(function() use ($connection, $reflection) {
 	$sqlBuilder = new SqlBuilder('book', $connection, $reflection);
 	$sqlBuilder->addWhere('id ?');
 }, 'Nette\InvalidArgumentException', 'Argument count does not match placeholder count.');
 
 
 
-Assert::throws(function() use ($connection, $reflection) {
+Assert::exception(function() use ($connection, $reflection) {
 	$sqlBuilder = new SqlBuilder('book', $connection, $reflection);
 	$sqlBuilder->addWhere('id = ?', NULL);
 }, 'Nette\InvalidArgumentException', 'Column operator does not accept NULL argument.');
 
 
 
-Assert::throws(function() use ($connection, $reflection) {
+Assert::exception(function() use ($connection, $reflection) {
 	$sqlBuilder = new SqlBuilder('book', $connection, $reflection);
 	$sqlBuilder->addWhere('id = ?', array(1, 2));
 }, 'Nette\InvalidArgumentException', 'Column operator does not accept array argument.');
