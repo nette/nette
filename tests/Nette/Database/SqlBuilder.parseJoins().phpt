@@ -39,18 +39,18 @@ $joins = array();
 $query = 'WHERE :nusers_ntopics.topic.priorit.id IS NULL';
 $sqlBuilder->parseJoins($joins, $query);
 $join = $sqlBuilder->buildQueryJoins($joins);
-Assert::equal('WHERE priorit.id IS NULL', $query);
+Assert::same('WHERE priorit.id IS NULL', $query);
 
 $tables = $connection->getSupplementalDriver()->getTables();
 if (!in_array($tables[0]['name'], array('npriorities', 'ntopics', 'nusers', 'nusers_ntopics', 'nusers_ntopics_alt'), TRUE)) {
-	Assert::equal(
+	Assert::same(
 		'LEFT JOIN nUsers_nTopics AS nusers_ntopics ON nUsers.nUserId = nusers_ntopics.nUserId ' .
 		'LEFT JOIN nTopics AS topic ON nusers_ntopics.nTopicId = topic.nTopicId ' .
 		'LEFT JOIN nPriorities AS priorit ON topic.nPriorityId = priorit.nPriorityId',
 		trim($join)
 	);
 } else {
-	Assert::equal(
+	Assert::same(
 		'LEFT JOIN nusers_ntopics ON nUsers.nUserId = nusers_ntopics.nUserId ' .
 		'LEFT JOIN ntopics AS topic ON nusers_ntopics.nTopicId = topic.nTopicId ' .
 		'LEFT JOIN npriorities AS priorit ON topic.nPriorityId = priorit.nPriorityId',

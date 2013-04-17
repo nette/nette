@@ -29,7 +29,7 @@ Assert::same('Jakub Vrana', $connection->fetchField('SELECT name FROM author ORD
 
 // fetchPairs
 $pairs = $connection->fetchPairs('SELECT name, id FROM author WHERE id > ? ORDER BY id', 11);
-Assert::equal(array(
+Assert::same(array(
 	'David Grudl' => 12,
 	'Geek' => 13,
 ), $pairs);

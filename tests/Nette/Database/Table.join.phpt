@@ -30,38 +30,12 @@ Assert::same(array(
 
 
 $joinSql = $connection->table('book_tag')->where('book_id', 1)->select('tag.*')->getSql();
-switch ($driverName) {
-	case 'pgsql':
-		Assert::same('SELECT "tag".* FROM "book_tag" LEFT JOIN "tag" ON "book_tag"."tag_id" = "tag"."id" WHERE ("book_id" = ?)', $joinSql);
-		break;
-
-	case 'sqlsrv':
-		Assert::same('SELECT [tag].* FROM [book_tag] LEFT JOIN [tag] ON [book_tag].[tag_id] = [tag].[id] WHERE ([book_id] = ?)', $joinSql);
-		break;
-
-	case 'mysql':
-	default:
-		Assert::same('SELECT `tag`.* FROM `book_tag` LEFT JOIN `tag` ON `book_tag`.`tag_id` = `tag`.`id` WHERE (`book_id` = ?)', $joinSql);
-		break;
-}
+Assert::same(reformat('SELECT [tag].* FROM [book_tag] LEFT JOIN [tag] ON [book_tag].[tag_id] = [tag].[id] WHERE ([book_id] = ?)'), $joinSql);
 
 
 
 $joinSql = $connection->table('book_tag')->where('book_id', 1)->select('Tag.id')->getSql();
-switch ($driverName) {
-	case 'pgsql':
-		Assert::same('SELECT "Tag"."id" FROM "book_tag" LEFT JOIN "Tag" ON "book_tag"."Tag_id" = "Tag"."id" WHERE ("book_id" = ?)', $joinSql);
-		break;
-
-	case 'sqlsrv':
-		Assert::same('SELECT [Tag].[id] FROM [book_tag] LEFT JOIN [Tag] ON [book_tag].[Tag_id] = [Tag].[id] WHERE ([book_id] = ?)', $joinSql);
-		break;
-
-	case 'mysql':
-	default:
-		Assert::same('SELECT `Tag`.`id` FROM `book_tag` LEFT JOIN `Tag` ON `book_tag`.`Tag_id` = `Tag`.`id` WHERE (`book_id` = ?)', $joinSql);
-		break;
-}
+Assert::same(reformat('SELECT [Tag].[id] FROM [book_tag] LEFT JOIN [Tag] ON [book_tag].[Tag_id] = [Tag].[id] WHERE ([book_id] = ?)'), $joinSql);
 
 
 

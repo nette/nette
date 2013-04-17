@@ -40,7 +40,7 @@ foreach ($authors as $author) {
 	$webs[$author->web] = NULL;
 }
 ksort($webs);
-Assert::equal(array(
+Assert::same(array(
 	'http://davidgrudl.com/',
 	'http://www.vrana.cz/',
 ), array_keys($webs));
@@ -57,9 +57,9 @@ $books = array();
 $books[] = $bookSelection->fetch();
 $books[] = $bookSelection->fetch()->toArray();
 $books[] = $bookSelection->fetch()->toArray();
-Assert::equal(1, $books[0]['id']);
-Assert::equal(2, $books[1]['id']);
-Assert::equal(3, $books[2]['id']);
+Assert::same(1, $books[0]['id']);
+Assert::same(2, $books[1]['id']);
+Assert::same(3, $books[2]['id']);
 
 
 

@@ -76,34 +76,29 @@ $sqlBuilder[10] = new SqlBuilder('book', $connection, $reflection);
 $sqlBuilder[10]->addWhere('id NOT', array(1, 2));
 $sqlBuilder[10]->addWhere('id NOT', $connection->table('book')->select('id'));
 
+Assert::same(reformat('SELECT * FROM [book] WHERE ([id] = ? OR [id] IS NULL)'), $sqlBuilder[0]->buildSelectQuery());
+Assert::same(reformat('SELECT * FROM [book] WHERE ([id] IN (?))'), $sqlBuilder[4]->buildSelectQuery());
+Assert::same(reformat('SELECT * FROM [book] WHERE ([id] = ? OR [id] = ? OR [id] IN (?))'), $sqlBuilder[5]->buildSelectQuery());
+Assert::same(reformat('SELECT * FROM [book] WHERE ([id] IN (NULL))'), $sqlBuilder[6]->buildSelectQuery());
+Assert::same(reformat('SELECT * FROM [book] WHERE ([id] = ? OR [id] = ? OR [id] IN (?) OR [id] LIKE ? OR [id] > ?) AND ([name] = ?) AND (MAIN = ?)'), $sqlBuilder[7]->buildSelectQuery());
+Assert::same(reformat('SELECT * FROM [book] WHERE (FOO(?)) AND (FOO([id], ?)) AND ([id] & ? = ?) AND (?) AND (NOT ? OR ?) AND (? + ? - ? / ? * ? % ?)'), $sqlBuilder[8]->buildSelectQuery());
+Assert::same(reformat("SELECT * FROM [book] WHERE ([col1] = ?\nOR [col2] = ?)"), $sqlBuilder[9]->buildSelectQuery());
+
 switch ($driverName) {
 	case 'mysql':
-		Assert::equal('SELECT * FROM `book` WHERE (`id` = ? OR `id` IS NULL)', $sqlBuilder[0]->buildSelectQuery());
 		Assert::equal('SELECT * FROM `book` WHERE (`id` IN (?))', $sqlBuilder[1]->buildSelectQuery());
 		Assert::equal('SELECT * FROM `book` WHERE (`id` IN (?))', $sqlBuilder[2]->buildSelectQuery());
 		Assert::equal('SELECT * FROM `book` WHERE (`id` IS NULL OR `id` IN (?))', $sqlBuilder[3]->buildSelectQuery());
-		Assert::equal('SELECT * FROM `book` WHERE (`id` IN (?))', $sqlBuilder[4]->buildSelectQuery());
-		Assert::equal('SELECT * FROM `book` WHERE (`id` = ? OR `id` = ? OR `id` IN (?))', $sqlBuilder[5]->buildSelectQuery());
-		Assert::equal('SELECT * FROM `book` WHERE (`id` IN (NULL))', $sqlBuilder[6]->buildSelectQuery());
-		Assert::equal('SELECT * FROM `book` WHERE (`id` = ? OR `id` = ? OR `id` IN (?) OR `id` LIKE ? OR `id` > ?) AND (`name` = ?) AND (MAIN = ?)', $sqlBuilder[7]->buildSelectQuery());
-		Assert::equal('SELECT * FROM `book` WHERE (FOO(?)) AND (FOO(`id`, ?)) AND (`id` & ? = ?) AND (?) AND (NOT ? OR ?) AND (? + ? - ? / ? * ? % ?)', $sqlBuilder[8]->buildSelectQuery());
-		Assert::equal("SELECT * FROM `book` WHERE (`col1` = ?\nOR `col2` = ?)", $sqlBuilder[9]->buildSelectQuery());
 		Assert::equal('SELECT * FROM `book` WHERE (`id` NOT IN (?)) AND (`id` NOT IN (?))', $sqlBuilder[10]->buildSelectQuery());
 		break;
-
 	case 'pgsql':
-		Assert::equal('SELECT * FROM "book" WHERE ("id" = ? OR "id" IS NULL)', $sqlBuilder[0]->buildSelectQuery());
 		Assert::equal('SELECT * FROM "book" WHERE ("id" IN (SELECT "id" FROM "book"))', $sqlBuilder[1]->buildSelectQuery());
 		Assert::equal('SELECT * FROM "book" WHERE ("id" IN (SELECT "id" FROM "book"))', $sqlBuilder[2]->buildSelectQuery());
 		Assert::equal('SELECT * FROM "book" WHERE ("id" IS NULL OR "id" IN (SELECT "id" FROM "book"))', $sqlBuilder[3]->buildSelectQuery());
-		Assert::equal('SELECT * FROM "book" WHERE ("id" IN (?))', $sqlBuilder[4]->buildSelectQuery());
-		Assert::equal('SELECT * FROM "book" WHERE ("id" = ? OR "id" = ? OR "id" IN (?))', $sqlBuilder[5]->buildSelectQuery());
-		Assert::equal('SELECT * FROM "book" WHERE ("id" IN (NULL))', $sqlBuilder[6]->buildSelectQuery());
-		Assert::equal('SELECT * FROM "book" WHERE ("id" = ? OR "id" = ? OR "id" IN (?) OR "id" LIKE ? OR "id" > ?) AND ("name" = ?) AND (MAIN = ?)', $sqlBuilder[7]->buildSelectQuery());
-		Assert::equal('SELECT * FROM "book" WHERE (FOO(?)) AND (FOO("id", ?)) AND ("id" & ? = ?) AND (?) AND (NOT ? OR ?) AND (? + ? - ? / ? * ? % ?)', $sqlBuilder[8]->buildSelectQuery());
-		Assert::equal("SELECT * FROM \"book\" WHERE (\"col1\" = ?\nOR \"col2\" = ?)", $sqlBuilder[9]->buildSelectQuery());
 		Assert::equal('SELECT * FROM "book" WHERE ("id" NOT IN (?)) AND ("id" NOT IN (SELECT "id" FROM "book"))', $sqlBuilder[10]->buildSelectQuery());
 		break;
+	default:
+		Assert::fail("Unsupported driver $driverName");
 }
 
 
@@ -111,7 +106,7 @@ switch ($driverName) {
 $books = $connection->table('book')->where('id',
 	$connection->table('book_tag')->select('book_id')->where('tag_id', 21)
 );
-Assert::equal(3, $books->count());
+Assert::same(3, $books->count());
 
 Assert::throws(function() use ($connection) {
 	$connection->table('book')->where('id',
@@ -127,6 +122,8 @@ switch ($driverName) {
 	case 'pgsql':
 		$connection->query('ALTER TABLE book_tag DROP CONSTRAINT "book_tag_pkey"');
 		break;
+	default:
+		Assert::fail("Unsupported driver $driverName");
 }
 
 $reflection = new DiscoveredReflection($connection);

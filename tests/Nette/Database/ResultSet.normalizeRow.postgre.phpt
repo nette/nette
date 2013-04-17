@@ -54,7 +54,7 @@ Assert::equal( array(
 	'polygon' => '((10,20),(30,40))',
 ), (array) $row );
 
-Assert::equal( array(
+Assert::same( array(
 	'smallint' => 0,
 	'integer' => 0,
 	'bigint' => 0,
@@ -88,7 +88,7 @@ Assert::equal( array(
 	'polygon' => '((10,20),(30,40))',
 ), (array) $res->fetch() );
 
-Assert::equal( array(
+Assert::same( array(
 	'smallint' => NULL,
 	'integer' => NULL,
 	'bigint' => NULL,
@@ -125,6 +125,6 @@ Assert::equal( array(
 
 $res = $connection->query('SELECT "integer" AS a, "text" AS a FROM types');
 
-Assert::equal( array(
+Assert::same( array(
 	'a' => 'a',
 ), (array) @$res->fetch() );

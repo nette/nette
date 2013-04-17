@@ -57,13 +57,7 @@ list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE'
 	'web' => array(),
 )));
 
-if ($driverName === 'pgsql') {
-	Assert::same( "SELECT id FROM author WHERE (\"id\" IS NULL) AND (\"name\" = 'a') AND (\"born\" IN (1, 2, 3)) AND (1=0)", $sql );
-} elseif ($driverName === 'sqlsrv') {
-	Assert::same( "SELECT id FROM author WHERE ([id] IS NULL) AND ([name] = 'a') AND ([born] IN (1, 2, 3)) AND (1=0)", $sql );
-} else {
-	Assert::same( "SELECT id FROM author WHERE (`id` IS NULL) AND (`name` = 'a') AND (`born` IN (1, 2, 3)) AND (1=0)", $sql );
-}
+Assert::same( reformat("SELECT id FROM author WHERE ([id] IS NULL) AND ([name] = 'a') AND ([born] IN (1, 2, 3)) AND (1=0)"), $sql );
 Assert::same( array(), $params );
 
 
@@ -73,13 +67,7 @@ list($sql, $params) = $preprocessor->process(array('SELECT id FROM author ORDER 
 	'name' => FALSE,
 )));
 
-if ($driverName === 'pgsql') {
-	Assert::same( 'SELECT id FROM author ORDER BY "id", "name" DESC', $sql );
-} elseif ($driverName === 'sqlsrv') {
-	Assert::same( 'SELECT id FROM author ORDER BY [id], [name] DESC', $sql );
-} else {
-	Assert::same( 'SELECT id FROM author ORDER BY `id`, `name` DESC', $sql );
-}
+Assert::same( reformat('SELECT id FROM author ORDER BY [id], [name] DESC'), $sql );
 Assert::same( array(), $params );
 
 
@@ -106,13 +94,7 @@ list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE'
 	'web' => new SqlLiteral('NOW()'),
 )));
 
-if ($driverName === 'pgsql') {
-	Assert::same( 'SELECT id FROM author WHERE ("id" IS NULL) AND ("born" IN (1, 2, 3+1)) AND ("web" = NOW())', $sql );
-} elseif ($driverName === 'sqlsrv') {
-	Assert::same( 'SELECT id FROM author WHERE ([id] IS NULL) AND ([born] IN (1, 2, 3+1)) AND ([web] = NOW())', $sql );
-} else {
-	Assert::same( 'SELECT id FROM author WHERE (`id` IS NULL) AND (`born` IN (1, 2, 3+1)) AND (`web` = NOW())', $sql );
-}
+Assert::same( reformat('SELECT id FROM author WHERE ([id] IS NULL) AND ([born] IN (1, 2, 3+1)) AND ([web] = NOW())'), $sql );
 Assert::same( array(), $params );
 
 
@@ -121,13 +103,7 @@ list($sql, $params) = $preprocessor->process(array('INSERT INTO author',
 	array('name' => 'Catelyn Stark', 'born' => new DateTime('2011-11-11')),
 ));
 
-if ($driverName === 'pgsql') {
-	Assert::same( "INSERT INTO author (\"name\", \"born\") VALUES ('Catelyn Stark', '2011-11-11 00:00:00')", $sql );
-} elseif ($driverName === 'sqlsrv') {
-	Assert::same( "INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00')", $sql );
-} else {
-	Assert::same( "INSERT INTO author (`name`, `born`) VALUES ('Catelyn Stark', '2011-11-11 00:00:00')", $sql );
-}
+Assert::same( reformat("INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00')"), $sql );
 Assert::same( array(), $params );
 
 
@@ -137,13 +113,7 @@ list($sql, $params) = $preprocessor->process(array('INSERT INTO author', array(
 	array('name' => 'Sansa Stark', 'born' => new DateTime('2021-11-11'))
 )));
 
-if ($driverName === 'pgsql') {
-	Assert::same( "INSERT INTO author (\"name\", \"born\") VALUES ('Catelyn Stark', '2011-11-11 00:00:00'), ('Sansa Stark', '2021-11-11 00:00:00')", $sql );
-} elseif ($driverName === 'sqlsrv') {
-	Assert::same( "INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00'), ('Sansa Stark', '2021-11-11 00:00:00')", $sql );
-} else {
-	Assert::same( "INSERT INTO author (`name`, `born`) VALUES ('Catelyn Stark', '2011-11-11 00:00:00'), ('Sansa Stark', '2021-11-11 00:00:00')", $sql );
-}
+Assert::same( reformat("INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00'), ('Sansa Stark', '2021-11-11 00:00:00')"), $sql );
 Assert::same( array(), $params );
 
 
@@ -152,13 +122,7 @@ list($sql, $params) = $preprocessor->process(array('UPDATE author SET ?',
 	array('id' => 12, 'name' => new SqlLiteral('UPPER(?)', 'John Doe')),
 ));
 
-if ($driverName === 'pgsql') {
-	Assert::same( "UPDATE author SET \"id\"=12, \"name\"=UPPER(?)", $sql );
-} elseif ($driverName === 'sqlsrv') {
-	Assert::same( "UPDATE author SET [id]=12, [name]=UPPER(?)", $sql );
-} else {
-	Assert::same( "UPDATE author SET `id`=12, `name`=UPPER(?)", $sql );
-}
+Assert::same( reformat("UPDATE author SET [id]=12, [name]=UPPER(?)"), $sql );
 Assert::same( array('John Doe'), $params );
 
 
@@ -168,11 +132,5 @@ list($sql, $params) = $preprocessor->process(array('INSERT INTO author ? ON DUPL
 	array('web' => 'http://nette.org', 'name' => 'Dave Lister'),
 ));
 
-if ($driverName === 'pgsql') {
-	Assert::same( "INSERT INTO author (\"id\", \"name\") VALUES (12, 'John Doe') ON DUPLICATE KEY UPDATE \"web\"='http://nette.org', \"name\"='Dave Lister'", $sql );
-} elseif ($driverName === 'sqlsrv') {
-	Assert::same( "INSERT INTO author ([id], [name]) VALUES (12, 'John Doe') ON DUPLICATE KEY UPDATE [web]='http://nette.org', [name]='Dave Lister'", $sql );
-} else {
-	Assert::same( "INSERT INTO author (`id`, `name`) VALUES (12, 'John Doe') ON DUPLICATE KEY UPDATE `web`='http://nette.org', `name`='Dave Lister'", $sql );
-}
+Assert::same( reformat("INSERT INTO author ([id], [name]) VALUES (12, 'John Doe') ON DUPLICATE KEY UPDATE [web]='http://nette.org', [name]='Dave Lister'"), $sql );
 Assert::same( array(), $params );

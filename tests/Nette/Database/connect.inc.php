@@ -26,3 +26,19 @@ try {
 
 Tester\Helpers::lock($options['dsn'], dirname(TEMP_DIR));
 $driverName = $connection->getPdo()->getAttribute(PDO::ATTR_DRIVER_NAME);
+
+
+/** Replaces [] with driver-specific quotes */
+function reformat($s)
+{
+	global $driverName;
+	if ($driverName === 'mysql') {
+		return strtr($s, '[]', '``');
+	} elseif ($driverName === 'pgsql') {
+		return strtr($s, '[]', '""');
+	} elseif ($driverName === 'sqlsrv') {
+		return $s;
+	} else {
+		trigger_error("Unsupported driver $driverName", E_USER_WARNING);
+	}
+}

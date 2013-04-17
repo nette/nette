@@ -35,6 +35,8 @@ switch ($driverName) {
 	case 'sqlsrv':
 		$literal = new SqlLiteral('year(cast(current_timestamp as datetime))');
 		break;
+	default:
+		Assert::fail("Unsupported driver $driverName");
 }
 
 $selection = $connection
@@ -74,5 +76,5 @@ if ($driverName === 'mysql') {
 		$authors[] = $author->name;
 	}
 
-	Assert::equal(array('Jakub Vrana', 'David Grudl', 'Geek'), $authors);
+	Assert::same(array('Jakub Vrana', 'David Grudl', 'Geek'), $authors);
 }

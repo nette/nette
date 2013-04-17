@@ -83,7 +83,7 @@ Assert::equal( array(
 	'xml' => '',
 ), (array) $res->fetch() );
 
-Assert::equal( array(
+Assert::same( array(
 	'bigint' => NULL,
 	'binary_3' => NULL,
 	'bit' => NULL,
@@ -120,7 +120,7 @@ Assert::equal( array(
 
 $res = $connection->query('SELECT [int] AS a, [text] AS a FROM types');
 
-Assert::equal( array(
+Assert::same( array(
 	'a' => 'a',
 ), (array) @$res->fetch() );
 

@@ -83,7 +83,7 @@ Assert::equal( array(
 	'set' => '',
 ), (array) $res->fetch() );
 
-Assert::equal( array(
+Assert::same( array(
 	'unsigned_int' => NULL,
 	'int' => NULL,
 	'smallint' => NULL,
@@ -119,6 +119,6 @@ Assert::equal( array(
 
 $res = $connection->query('SELECT `int` AS a, `char` AS a FROM types');
 
-Assert::equal( array(
+Assert::same( array(
 	'a' => 'a',
 ), (array) @$res->fetch() );
