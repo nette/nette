@@ -25,10 +25,10 @@ class PresenterFactory implements IPresenterFactory
 	/** @var bool */
 	public $caseSensitive = FALSE;
 
-	/** @var string[] of module => mask */
+	/** @var array[] of module => splited mask */
 	private $mapping = array(
-		'*' => '\*Module\*Presenter',
-		'Nette' => 'NetteModule\*\*Presenter',
+		'*' => array('', '*Module\\', '*Presenter'),
+		'Nette' => array('NetteModule\\', '*\\', '*Presenter'),
 	);
 
 	/** @var string */
@@ -137,7 +137,12 @@ class PresenterFactory implements IPresenterFactory
 	 */
 	public function setMapping(array $mapping)
 	{
-		$this->mapping = $mapping + $this->mapping;
+		foreach ($mapping as $module => $mask) {
+			if (!preg_match('#^\\\\?([\w\\\\]*\\\\)?(\w*\*\w*?\\\\)?([\w\\\\]*\*\w*)\z#', $mask, $m)) {
+				throw new Nette\InvalidStateException("Invalid mapping mask '$mask'.");
+			}
+			$this->mapping[$module] = array($m[1], $m[2] ?: '*Module\\', $m[3]);
+		}
 		return $this;
 	}
 
@@ -152,14 +157,14 @@ class PresenterFactory implements IPresenterFactory
 	{
 		/*5.2*return strtr($presenter, ':', '_') . 'Presenter';*/
 		$parts = explode(':', $presenter);
-		$mapping = explode('\\*', isset($parts[1], $this->mapping[$parts[0]])
+		$mapping = isset($parts[1], $this->mapping[$parts[0]])
 			? $this->mapping[array_shift($parts)]
-			: $this->mapping['*']);
-		$class = $mapping[0];
+			: $this->mapping['*'];
+
 		while ($part = array_shift($parts)) {
-			$class .= ($class ? '\\' : '') . $part . $mapping[$parts ? 1 : 2];
+			$mapping[0] .= str_replace('*', $part, $mapping[$parts ? 1 : 2]);
 		}
-		return $class;
+		return $mapping[0];
 	}
 
 
@@ -173,11 +178,10 @@ class PresenterFactory implements IPresenterFactory
 	{
 		/*5.2*return strtr(substr($class, 0, -9), '_', ':');*/
 		foreach ($this->mapping as $module => $mapping) {
-			$mapping = explode('\\\\\*', preg_quote($mapping, '#'));
-			$mapping[0] .= $mapping[0] ? '\\\\' : '';
-			if (preg_match("#^\\\\?$mapping[0]((?:\\w+$mapping[1]\\\\)*)(\\w+)$mapping[2]\\z#i", $class, $matches)) {
+			$mapping = str_replace(array('\\', '*'), array('\\\\', '(\w+)'), $mapping);
+			if (preg_match("#^\\\\?$mapping[0]((?:$mapping[1])*)$mapping[2]\z#i", $class, $matches)) {
 				return ($module === '*' ? '' : $module . ':')
-					. str_replace($mapping[1] . '\\', ':', $matches[1]) . $matches[2];
+					. preg_replace("#$mapping[1]#iA", '$1:', $matches[1]) . $matches[3];
 			}
 		}
 	}

@@ -37,3 +37,19 @@ Assert::same( 'My\App\BarPresenter', $factory->formatPresenterClass('Foo3:Bar') 
 Assert::same( 'My\App\BarMod\BazPresenter', $factory->formatPresenterClass('Foo3:Bar:Baz') );
 
 Assert::same( 'NetteModule\FooPresenter', $factory->formatPresenterClass('Nette:Foo') );
+
+
+
+$factory = new PresenterFactory(NULL, $container);
+
+$factory->setMapping(array(
+	'Foo2' => 'App2\*Presenter',
+	'Foo3' => 'My\App\*Presenter',
+));
+
+Assert::same( 'Foo2Presenter', $factory->formatPresenterClass('Foo2') );
+Assert::same( 'App2\BarPresenter', $factory->formatPresenterClass('Foo2:Bar') );
+Assert::same( 'App2\BarModule\BazPresenter', $factory->formatPresenterClass('Foo2:Bar:Baz') );
+
+Assert::same( 'My\App\BarPresenter', $factory->formatPresenterClass('Foo3:Bar') );
+Assert::same( 'My\App\BarModule\BazPresenter', $factory->formatPresenterClass('Foo3:Bar:Baz') );
