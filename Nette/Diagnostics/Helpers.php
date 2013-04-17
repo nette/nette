@@ -69,6 +69,7 @@ final class Helpers
 		return Dumper::toHtml($var);
 	}
 
+	/** @deprecated */
 	public static function clickableDump($var)
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use Nette\Diagnostics\Dumper::toHtml() instead.', E_USER_DEPRECATED);

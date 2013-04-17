@@ -197,6 +197,7 @@ abstract class TextBase extends BaseControl
 	/** @deprecated */
 	public static function validateRegexp(TextBase $control, $regexp)
 	{
+		trigger_error('Validator REGEXP is deprecated; use PATTERN instead (which is matched against the entire value and is case sensitive).', E_USER_DEPRECATED);
 		return (bool) Strings::match($control->getValue(), $regexp);
 	}
 

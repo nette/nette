@@ -658,7 +658,6 @@ final class Debugger
 
 
 
-	/** @deprecated */
 	public static function addPanel(IBarPanel $panel, $id = NULL)
 	{
 		return self::$bar->addPanel($panel, $id);

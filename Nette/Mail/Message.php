@@ -370,6 +370,7 @@ class Message extends MimePart
 	 */
 	public function setMailer(IMailer $mailer)
 	{
+		//trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
 		$this->mailer = $mailer;
 		return $this;
 	}
@@ -381,6 +382,7 @@ class Message extends MimePart
 	 */
 	public function getMailer()
 	{
+		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
 		if ($this->mailer === NULL) {
 			$this->mailer = is_object(static::$defaultMailer) ? static::$defaultMailer : new static::$defaultMailer;
 		}

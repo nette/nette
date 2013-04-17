@@ -785,7 +785,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * @param  mixed  optional expiration time
 	 * @return void
 	 * @throws Nette\Application\AbortException
-	 * @deprecated
 	 */
 	public function lastModified($lastModified, $etag = NULL, $expire = NULL)
 	{
@@ -1395,6 +1394,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	final public function getService($name)
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use $container->getService() instead.', E_USER_DEPRECATED);
 		return $this->context->getService($name);
 	}
 
