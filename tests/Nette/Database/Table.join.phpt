@@ -35,6 +35,7 @@ switch ($driverName) {
 		Assert::same('SELECT "tag".* FROM "book_tag" LEFT JOIN "tag" ON "book_tag"."tag_id" = "tag"."id" WHERE ("book_id" = ?)', $joinSql);
 		break;
 
+	case 'sqlite':
 	case 'sqlsrv':
 		Assert::same('SELECT [tag].* FROM [book_tag] LEFT JOIN [tag] ON [book_tag].[tag_id] = [tag].[id] WHERE ([book_id] = ?)', $joinSql);
 		break;
@@ -53,6 +54,7 @@ switch ($driverName) {
 		Assert::same('SELECT "Tag"."id" FROM "book_tag" LEFT JOIN "Tag" ON "book_tag"."Tag_id" = "Tag"."id" WHERE ("book_id" = ?)', $joinSql);
 		break;
 
+	case 'sqlite':
 	case 'sqlsrv':
 		Assert::same('SELECT [Tag].[id] FROM [book_tag] LEFT JOIN [Tag] ON [book_tag].[Tag_id] = [Tag].[id] WHERE ([book_id] = ?)', $joinSql);
 		break;
