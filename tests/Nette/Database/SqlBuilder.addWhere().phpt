@@ -120,6 +120,21 @@ switch ($driverName) {
 		$connection->query('ALTER TABLE book_tag DROP CONSTRAINT "book_tag_pkey"');
 		break;
 	case 'sqlite':
+		// dropping constraint or column is not supported
+		$connection->query('
+			CREATE TABLE book_tag_temp (
+				book_id INTEGER NOT NULL,
+				tag_id INTEGER NOT NULL,
+				CONSTRAINT book_tag_tag FOREIGN KEY (tag_id) REFERENCES tag (id),
+				CONSTRAINT book_tag_book FOREIGN KEY (book_id) REFERENCES book (id) ON DELETE CASCADE
+			)
+		');
+		$connection->query('INSERT INTO book_tag_temp SELECT book_id, tag_id FROM book_tag');
+		$connection->query('DROP TABLE book_tag');
+		$connection->query('ALTER TABLE book_tag_temp RENAME TO book_tag');
+		break;
+	case 'sqlsrv':
+		$connection->query('ALTER TABLE book_tag DROP CONSTRAINT PK_book_tag');
 		break;
 	default:
 		Assert::fail("Unsupported driver $driverName");
@@ -128,13 +143,15 @@ switch ($driverName) {
 $reflection = new DiscoveredReflection($connection);
 $connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory($connection, $reflection));
 
-Assert::exception(function() use ($connection) {
+$e = Assert::exception(function() use ($connection) {
 	$books = $connection->table('book')->where('id',
 		$connection->table('book_tag')->where('tag_id', 21)
 	);
 	$books->fetch();
 }, 'Nette\InvalidArgumentException', 'Selection argument must have defined a select column.');
 
+Assert::same('LogicException', get_class($e->getPrevious()));
+Assert::same('Table "book_tag" does not have a primary key.', $e->getPrevious()->getMessage());
 
 
 Assert::exception(function() use ($connection, $reflection) {
