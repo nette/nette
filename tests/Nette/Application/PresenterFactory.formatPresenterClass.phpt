@@ -20,8 +20,10 @@ $container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->crea
 
 $factory = new PresenterFactory(NULL, $container);
 
-$factory->mapping['Foo2'] = 'App2\*\*Presenter';
-$factory->mapping['Foo3'] = 'My\App\*Mod\*Presenter';
+$factory->setMapping(array(
+	'Foo2' => 'App2\*\*Presenter',
+	'Foo3' => 'My\App\*Mod\*Presenter',
+));
 
 Assert::same( 'FooPresenter', $factory->formatPresenterClass('Foo') );
 Assert::same( 'FooModule\BarPresenter', $factory->formatPresenterClass('Foo:Bar') );

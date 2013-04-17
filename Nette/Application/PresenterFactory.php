@@ -26,7 +26,7 @@ class PresenterFactory implements IPresenterFactory
 	public $caseSensitive = FALSE;
 
 	/** @var string[] of module => mask */
-	public $mapping = array(
+	private $mapping = array(
 		'*' => '\*Module\*Presenter',
 		'Nette' => 'NetteModule\*\*Presenter',
 	);
@@ -127,6 +127,18 @@ class PresenterFactory implements IPresenterFactory
 		}
 
 		return $class;
+	}
+
+
+
+	/**
+	 * Sets mapping as pairs [module => mask]
+	 * @return PresenterFactory  provides a fluent interface
+	 */
+	public function setMapping(array $mapping)
+	{
+		$this->mapping = $mapping + $this->mapping;
+		return $this;
 	}
 
 

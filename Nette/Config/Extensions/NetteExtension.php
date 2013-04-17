@@ -222,7 +222,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 				isset($container->parameters['appDir']) ? $container->parameters['appDir'] : NULL
 			));
 		if ($config['mapping']) {
-			$presenterFactory->addSetup('$service->mapping = ? + $service->mapping;', array($config['mapping']));
+			$presenterFactory->addSetup('setMapping', array($config['mapping']));
 		}
 	}
 

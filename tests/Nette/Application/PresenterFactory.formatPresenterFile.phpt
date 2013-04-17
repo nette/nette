@@ -20,7 +20,9 @@ $container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->crea
 
 $factory = new PresenterFactory('base', $container);
 
-$factory->mapping['Foo2'] = 'App2\*\*Presenter';
+$factory->setMapping(array(
+	'Foo2' => 'App2\*\*Presenter',
+));
 
 Assert::same( 'base/presenters/FooPresenter.php', $factory->formatPresenterFile('Foo') );
 Assert::same( 'base/FooModule/presenters/BarPresenter.php', $factory->formatPresenterFile('Foo:Bar') );
