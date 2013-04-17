@@ -61,6 +61,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		),
 		'container' => array(
 			'debugger' => FALSE,
+			'accessors' => TRUE,
 		),
 		'debugger' => array(
 			'email' => NULL,
@@ -104,6 +105,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		$this->setupForms($container);
 		$this->setupTemplating($container, $config['latte']);
 		$this->setupDatabase($container, $config['database']);
+		$this->setupContainer($container, $config['container']);
 	}
 
 
@@ -348,6 +350,15 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			if ($container->parameters['debugMode'] && $info['debugger']) {
 				$connection->addSetup('Nette\Database\Helpers::createDebugPanel', array($connection, !empty($info['explain']), $name));
 			}
+		}
+	}
+
+
+
+	private function setupContainer(ContainerBuilder $container, array $config)
+	{
+		if ($config['accessors']) {
+			$container->parameters['container']['accessors'] = TRUE;
 		}
 	}
 

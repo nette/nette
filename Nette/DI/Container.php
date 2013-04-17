@@ -287,51 +287,48 @@ class Container extends Nette\Object
 
 
 
-	/**
-	 * Gets the service object, shortcut for getService().
-	 * @param  string
-	 * @return object
-	 */
+	/** @deprecated */
 	public function &__get($name)
 	{
+		$this->error(__METHOD__, 'getService');
 		$tmp = $this->getService($name);
 		return $tmp;
 	}
 
 
 
-	/**
-	 * Adds the service object.
-	 * @param  string
-	 * @param  object
-	 * @return void
-	 */
+	/** @deprecated */
 	public function __set($name, $service)
 	{
+		$this->error(__METHOD__, 'addService');
 		$this->addService($name, $service);
 	}
 
 
 
-	/**
-	 * Does the service exist?
-	 * @param  string
-	 * @return bool
-	 */
+	/** @deprecated */
 	public function __isset($name)
 	{
+		$this->error(__METHOD__, 'hasService');
 		return $this->hasService($name);
 	}
 
 
 
-	/**
-	 * Removes the service, shortcut for removeService().
-	 * @return void
-	 */
+	/** @deprecated */
 	public function __unset($name)
 	{
+		$this->error(__METHOD__, 'removeService');
 		$this->removeService($name);
+	}
+
+
+
+	private function error($oldName, $newName)
+	{
+		if (empty($this->parameters['container']['accessors'])) {
+			trigger_error("$oldName() is deprecated; use $newName() or enable nette.accessors in configuration.", E_USER_DEPRECATED);
+		}
 	}
 
 
