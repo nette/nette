@@ -287,50 +287,46 @@ class Container extends Nette\Object
 
 
 
-	/**
-	 * Gets the service object, shortcut for getService().
-	 * @param  string
-	 * @return object
-	 */
+	/** @deprecated */
 	public function &__get($name)
 	{
+		if (empty($this->parameters['nette']['accessors'])) {
+			trigger_error(__METHOD__ . '() is deprecated; use getService() instead.', E_USER_DEPRECATED);
+		}
 		$tmp = $this->getService($name);
 		return $tmp;
 	}
 
 
 
-	/**
-	 * Adds the service object.
-	 * @param  string
-	 * @param  object
-	 * @return void
-	 */
+	/** @deprecated */
 	public function __set($name, $service)
 	{
+		if (empty($this->parameters['nette']['accessors'])) {
+			trigger_error(__METHOD__ . '() is deprecated; use addService() instead.', E_USER_DEPRECATED);
+		}
 		$this->addService($name, $service);
 	}
 
 
 
-	/**
-	 * Does the service exist?
-	 * @param  string
-	 * @return bool
-	 */
+	/** @deprecated */
 	public function __isset($name)
 	{
+		if (empty($this->parameters['nette']['accessors'])) {
+			trigger_error(__METHOD__ . '() is deprecated; use hasService() instead.', E_USER_DEPRECATED);
+		}
 		return $this->hasService($name);
 	}
 
 
 
-	/**
-	 * Removes the service, shortcut for removeService().
-	 * @return void
-	 */
+	/** @deprecated */
 	public function __unset($name)
 	{
+		if (empty($this->parameters['nette']['accessors'])) {
+			trigger_error(__METHOD__ . '() is deprecated; use removeService() instead.', E_USER_DEPRECATED);
+		}
 		$this->removeService($name);
 	}
 

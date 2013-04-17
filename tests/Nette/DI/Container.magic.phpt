@@ -23,7 +23,7 @@ $one = new Service;
 $two = new Service;
 
 
-$container = new Container;
+$container = new Container(array('nette' => array('accessors' => TRUE)));
 $container->one = $one;
 @$container->addService('two', 'Service'); // deprecated
 
