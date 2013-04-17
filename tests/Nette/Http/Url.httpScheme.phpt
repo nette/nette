@@ -32,3 +32,6 @@ Assert::same( 'http://hostname:60',  $url->hostUrl );
 Assert::same( 'http://hostname:60/path/script.php?arg=value#anchor',  $url->absoluteUrl );
 Assert::same( 'http://hostname:60/path/',  $url->baseUrl );
 Assert::same( 'script.php?arg=value#anchor',  $url->relativeUrl );
+
+$url->scheme = NULL;
+Assert::same( '//username:password@hostname:60/path/script.php?arg=value#anchor',  $url->absoluteUrl );
