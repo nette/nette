@@ -48,7 +48,7 @@ class CsrfProtection extends HiddenField
 	{
 		parent::attached($parent);
 		if (!$this->session && $parent instanceof Nette\Application\UI\Presenter) {
-			$this->session = $parent->getContext()->getByType('Nette\Http\Session');
+			$this->session = $parent->getSession();
 		}
 	}
 
