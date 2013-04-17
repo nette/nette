@@ -274,7 +274,7 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	 */
 	public function isSupported($item)
 	{
-		return $item === self::SUPPORT_COLUMNS_META;
+		return FALSE;
 	}
 
 }
