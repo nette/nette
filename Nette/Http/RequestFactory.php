@@ -224,6 +224,67 @@ class RequestFactory extends Nette\Object
 			}
 		}
 
+
+		// workaround for exceeded post_max_size
+		if (!$post && !$files
+			&& isset($_SERVER['REQUEST_METHOD'], $_SERVER['CONTENT_TYPE'])
+			&& $_SERVER['REQUEST_METHOD'] === 'POST'
+			&& preg_match('#^multipart/form\-data; boundary=(.*)$#', $_SERVER['CONTENT_TYPE'], $match)
+			&& $fp = @fopen('php://input', 'r')
+		) {
+			$boundary = "--$match[1]\r\n";
+			$end = "--$match[1]--\r\n";
+
+			$buffer = fgets($fp);
+			while ($buffer) {
+				if ($buffer === $boundary
+					&& preg_match('#^Content\-Disposition: form-data; name="([^"]+)"(?:; filename="([^"]+)")?#', fgets($fp), $match)
+				) {
+					if (isset($match[2])) {
+						$name = $match[2];
+						if ($this->encoding) {
+							$name = preg_replace(self::NONCHARS, '', Strings::fixEncoding($name));
+						}
+						$list = & $files;
+						$item = new FileUpload(array(
+							'name' => $name,
+							'type' => '',
+							'size' => 0,
+							'tmp_name' => '',
+							'error' => UPLOAD_ERR_INI_SIZE
+						));
+					} else {
+						$list = & $post;
+						$item = '';
+						if (fgets($fp) !== "\r\n") continue;
+						while ($buffer = fgets($fp)) {
+							if ($buffer === $boundary || $buffer === $end) {
+								$item = substr($item, 0, -2);
+								break;
+							} else {
+								$item .= $buffer;
+							}
+						}
+					}
+
+					$key = $match[1];
+					if ($this->encoding && is_string($key) && (preg_match(self::NONCHARS, $key) || preg_last_error())) {
+						continue;
+					}
+					parse_str("$key=", $tmp);
+					while (is_array($tmp)) {
+						$k = key($tmp);
+						$tmp = & $tmp[$k];
+						$list = & $list[$k];
+					}
+					$list = $item;
+				} else {
+					$buffer = fgets($fp);
+				}
+			}
+			fclose($fp);
+		}
+
 		error_reporting($old);
 
 
