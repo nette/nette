@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\ComponentModel\Container component named factory 4.
+ * Test: Nette\ComponentModel\Container component named factory 6.
  *
  * @author     David Grudl
  * @package    Nette\ComponentModel
@@ -20,7 +20,8 @@ class TestClass extends Container
 
 	public function createComponentB($name)
 	{
-		return new self;
+		$this->addComponent($component = new self, $name);
+		return $component;
 	}
 
 }

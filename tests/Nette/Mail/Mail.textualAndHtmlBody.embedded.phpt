@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Mail\Message - textual and HTML body with attachment.
+ * Test: Nette\Mail\Message - textual and HTML body with embedded image.
  *
  * @author     David Grudl
  * @package    Nette\Mail
@@ -25,10 +25,9 @@ $mail->setSubject('Hello Jane!');
 
 $mail->setBody('Sample text');
 
-$mail->setHTMLBody('<b>Sample text</b>');
-
-$mail->addAttachment(__DIR__ . '/files/example.zip', NULL, 'application/zip');
+$mail->setHTMLBody('<b>Sample text</b> <img src="background.png">', __DIR__ . '/files');
+// append automatically $mail->addEmbeddedFile('files/background.png');
 
 $mail->send();
 
-Assert::match(file_get_contents(__DIR__ . '/Mail.005.expect'), TestMailer::$output);
+Assert::match(file_get_contents(__DIR__ . '/Mail.textualAndHtmlBody.embedded.expect'), TestMailer::$output);
