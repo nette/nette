@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\Connection: reflection for MySQL
+ * Test: Nette\Database\Connection: reflection
  *
  * @author     David Grudl
  * @package    Nette\Database
@@ -91,6 +91,14 @@ switch ($driverName) {
 		$expectedColumns[1]['size'] = NULL;
 		$expectedColumns[2]['size'] = NULL;
 		break;
+	case 'sqlite':
+		$expectedColumns[0]['nativetype'] = 'INTEGER';
+		$expectedColumns[0]['size'] = NULL;
+		$expectedColumns[1]['nativetype'] = 'TEXT';
+		$expectedColumns[1]['size'] = NULL;
+		$expectedColumns[2]['nativetype'] = 'TEXT';
+		$expectedColumns[2]['size'] = NULL;
+		break;
 	case 'sqlsrv':
 		$expectedColumns[0]['size'] = NULL;
 		$expectedColumns[1]['size'] = NULL;
@@ -110,6 +118,19 @@ switch ($driverName) {
 		Assert::same( array(
 			array(
 				'name' => 'book_tag_pkey',
+				'unique' => TRUE,
+				'primary' => TRUE,
+				'columns' => array(
+					'book_id',
+					'tag_id',
+				),
+			),
+		), $indexes);
+		break;
+	case 'sqlite':
+		Assert::same( array(
+			array(
+				'name' => 'sqlite_autoindex_book_tag_1',
 				'unique' => TRUE,
 				'primary' => TRUE,
 				'columns' => array(

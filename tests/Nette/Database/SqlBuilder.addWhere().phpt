@@ -91,14 +91,11 @@ switch ($driverName) {
 		Assert::equal('SELECT * FROM `book` WHERE (`id` IS NULL OR `id` IN (?))', $sqlBuilder[3]->buildSelectQuery());
 		Assert::equal('SELECT * FROM `book` WHERE (`id` NOT IN (?)) AND (`id` NOT IN (?))', $sqlBuilder[10]->buildSelectQuery());
 		break;
-	case 'pgsql':
-		Assert::equal('SELECT * FROM "book" WHERE ("id" IN (SELECT "id" FROM "book"))', $sqlBuilder[1]->buildSelectQuery());
-		Assert::equal('SELECT * FROM "book" WHERE ("id" IN (SELECT "id" FROM "book"))', $sqlBuilder[2]->buildSelectQuery());
-		Assert::equal('SELECT * FROM "book" WHERE ("id" IS NULL OR "id" IN (SELECT "id" FROM "book"))', $sqlBuilder[3]->buildSelectQuery());
-		Assert::equal('SELECT * FROM "book" WHERE ("id" NOT IN (?)) AND ("id" NOT IN (SELECT "id" FROM "book"))', $sqlBuilder[10]->buildSelectQuery());
-		break;
 	default:
-		Assert::fail("Unsupported driver $driverName");
+		Assert::equal(reformat('SELECT * FROM [book] WHERE ([id] IN (SELECT [id] FROM [book]))'), $sqlBuilder[1]->buildSelectQuery());
+		Assert::equal(reformat('SELECT * FROM [book] WHERE ([id] IN (SELECT [id] FROM [book]))'), $sqlBuilder[2]->buildSelectQuery());
+		Assert::equal(reformat('SELECT * FROM [book] WHERE ([id] IS NULL OR [id] IN (SELECT [id] FROM [book]))'), $sqlBuilder[3]->buildSelectQuery());
+		Assert::equal(reformat('SELECT * FROM [book] WHERE ([id] NOT IN (?)) AND ([id] NOT IN (SELECT [id] FROM [book]))'), $sqlBuilder[10]->buildSelectQuery());
 }
 
 
@@ -121,6 +118,8 @@ switch ($driverName) {
 		break;
 	case 'pgsql':
 		$connection->query('ALTER TABLE book_tag DROP CONSTRAINT "book_tag_pkey"');
+		break;
+	case 'sqlite':
 		break;
 	default:
 		Assert::fail("Unsupported driver $driverName");

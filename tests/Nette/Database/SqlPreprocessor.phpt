@@ -103,7 +103,13 @@ list($sql, $params) = $preprocessor->process(array('INSERT INTO author',
 	array('name' => 'Catelyn Stark', 'born' => new DateTime('2011-11-11')),
 ));
 
-Assert::same( reformat("INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00')"), $sql );
+switch ($driverName) {
+	case 'sqlite':
+		Assert::same( reformat("INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', 1320966000)"), $sql );
+		break;
+	default:
+		Assert::same( reformat("INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00')"), $sql );
+}
 Assert::same( array(), $params );
 
 
@@ -113,7 +119,13 @@ list($sql, $params) = $preprocessor->process(array('INSERT INTO author', array(
 	array('name' => 'Sansa Stark', 'born' => new DateTime('2021-11-11'))
 )));
 
-Assert::same( reformat("INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00'), ('Sansa Stark', '2021-11-11 00:00:00')"), $sql );
+switch ($driverName) {
+	case 'sqlite':
+		Assert::same( reformat("INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', 1320966000), ('Sansa Stark', 1636585200)"), $sql );
+		break;
+	default:
+		Assert::same( reformat("INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00'), ('Sansa Stark', '2021-11-11 00:00:00')"), $sql );
+}
 Assert::same( array(), $params );
 
 

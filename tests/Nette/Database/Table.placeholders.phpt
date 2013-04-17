@@ -32,6 +32,9 @@ switch ($driverName) {
 	case 'pgsql':
 		$literal = new SqlLiteral('extract(year from now())::int');
 		break;
+	case 'sqlite':
+		$literal = new SqlLiteral("cast(strftime('%Y', date('now')) as integer)");
+		break;
 	case 'sqlsrv':
 		$literal = new SqlLiteral('year(cast(current_timestamp as datetime))');
 		break;
