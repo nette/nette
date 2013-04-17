@@ -23,14 +23,7 @@ $connection->setDatabaseReflection(new Nette\Database\Reflection\DiscoveredRefle
 
 // Testing Selection caching
 $bookSelection = $connection->table('book')->wherePrimary(2);
-switch ($driverName) {
-	case 'mysql':
-		Assert::same('SELECT * FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
-		break;
-	case 'pgsql':
-		Assert::same('SELECT * FROM "book" WHERE ("id" = ?)', $bookSelection->getSql());
-		break;
-}
+Assert::same(reformat('SELECT * FROM [book] WHERE ([id] = ?)'), $bookSelection->getSql());
 
 
 $book = $bookSelection->fetch();
@@ -38,37 +31,16 @@ $book->title;
 $book->translator;
 $bookSelection->__destruct();
 $bookSelection = $connection->table('book')->wherePrimary(2);
-switch ($driverName) {
-	case 'mysql':
-		Assert::same('SELECT `id`, `title`, `translator_id` FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
-		break;
-	case 'pgsql':
-		Assert::same('SELECT "id", "title", "translator_id" FROM "book" WHERE ("id" = ?)', $bookSelection->getSql());
-		break;
-}
+Assert::same(reformat('SELECT [id], [title], [translator_id] FROM [book] WHERE ([id] = ?)'), $bookSelection->getSql());
 
 
 $book = $bookSelection->fetch();
 $book->author_id;
-switch ($driverName) {
-	case 'mysql':
-		Assert::same('SELECT * FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
-		break;
-	case 'pgsql':
-		Assert::same('SELECT * FROM "book" WHERE ("id" = ?)', $bookSelection->getSql());
-		break;
-}
+Assert::same(reformat('SELECT * FROM [book] WHERE ([id] = ?)'), $bookSelection->getSql());
 
 $bookSelection->__destruct();
 $bookSelection = $connection->table('book')->wherePrimary(2);
-switch ($driverName) {
-	case 'mysql':
-		Assert::same('SELECT `id`, `title`, `translator_id`, `author_id` FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
-		break;
-	case 'pgsql':
-		Assert::same('SELECT "id", "title", "translator_id", "author_id" FROM "book" WHERE ("id" = ?)', $bookSelection->getSql());
-		break;
-}
+Assert::same(reformat('SELECT [id], [title], [translator_id], [author_id] FROM [book] WHERE ([id] = ?)'), $bookSelection->getSql());
 
 
 

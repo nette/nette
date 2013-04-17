@@ -82,6 +82,8 @@ $expectedColumns = array(
 );
 
 switch ($driverName) {
+	case 'mysql':
+		break;
 	case 'pgsql':
 		$expectedColumns[0]['nativetype'] = 'INT4';
 		$expectedColumns[0]['default'] = "nextval('author_id_seq'::regclass)";
@@ -89,6 +91,8 @@ switch ($driverName) {
 		$expectedColumns[1]['size'] = NULL;
 		$expectedColumns[2]['size'] = NULL;
 		break;
+	default:
+		Assert::fail("Unsupported driver $driverName");
 }
 
 Assert::same($expectedColumns, $columns);
@@ -98,7 +102,7 @@ Assert::same($expectedColumns, $columns);
 $indexes = $driver->getIndexes('book_tag');
 switch ($driverName) {
 	case 'pgsql':
-		$expectedIndexes = array(
+		Assert::same( array(
 			array(
 				'name' => 'book_tag_pkey',
 				'unique' => TRUE,
@@ -108,11 +112,10 @@ switch ($driverName) {
 					'tag_id',
 				),
 			),
-		);
+		), $indexes);
 		break;
 	case 'mysql':
-	default:
-		$expectedIndexes = array(
+		Assert::same( array(
 			array(
 				'name' => 'PRIMARY',
 				'unique' => TRUE,
@@ -130,11 +133,11 @@ switch ($driverName) {
 					'tag_id',
 				),
 			),
-		);
+		), $indexes);
 		break;
+	default:
+		Assert::fail("Unsupported driver $driverName");
 }
-
-Assert::same($expectedIndexes, $indexes);
 
 
 

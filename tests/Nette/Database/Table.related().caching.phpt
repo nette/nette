@@ -48,7 +48,7 @@ foreach ($author->related('book')->limit(2) as $book) {
 }
 sort($translators);
 
-Assert::equal(array(
+Assert::same(array(
 	'David Grudl',
 	'Jakub Vrana',
 ), $translators);

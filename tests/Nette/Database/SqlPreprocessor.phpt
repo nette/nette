@@ -51,11 +51,7 @@ list($sql, $params) = $preprocessor->process('INSERT INTO author', array(array(
 	array('name' => 'Catelyn Stark', 'born' => new DateTime('2011-11-11')),
 )));
 
-if ($driverName === 'pgsql') {
-	Assert::same( "INSERT INTO author (\"name\", \"born\") VALUES ('Catelyn Stark', '2011-11-11 00:00:00')", $sql );
-} elseif ($driverName === 'mysql') {
-	Assert::same( "INSERT INTO author (`name`, `born`) VALUES ('Catelyn Stark', '2011-11-11 00:00:00')", $sql );
-}
+Assert::same( reformat("INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00')"), $sql );
 Assert::same( array(), $params );
 
 
@@ -65,11 +61,7 @@ list($sql, $params) = $preprocessor->process('INSERT INTO author', array(array(
 	array('name' => 'Sansa Stark', 'born' => new DateTime('2021-11-11'))
 )));
 
-if ($driverName === 'pgsql') {
-	Assert::same( "INSERT INTO author (\"name\", \"born\") VALUES ('Catelyn Stark', '2011-11-11 00:00:00'), ('Sansa Stark', '2021-11-11 00:00:00')", $sql );
-} elseif ($driverName === 'mysql') {
-	Assert::same( "INSERT INTO author (`name`, `born`) VALUES ('Catelyn Stark', '2011-11-11 00:00:00'), ('Sansa Stark', '2021-11-11 00:00:00')", $sql );
-}
+Assert::same( reformat("INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00'), ('Sansa Stark', '2021-11-11 00:00:00')"), $sql );
 Assert::same( array(), $params );
 
 
@@ -78,11 +70,7 @@ list($sql, $params) = $preprocessor->process('UPDATE author SET ?', array(
 	array('id' => 12, 'name' => 'John Doe'),
 ));
 
-if ($driverName === 'pgsql') {
-	Assert::same( "UPDATE author SET \"id\"=12, \"name\"='John Doe'", $sql );
-} elseif ($driverName === 'mysql') {
-	Assert::same( "UPDATE author SET `id`=12, `name`='John Doe'", $sql );
-}
+Assert::same( reformat("UPDATE author SET [id]=12, [name]='John Doe'"), $sql );
 Assert::same( array(), $params );
 
 
@@ -92,9 +80,5 @@ list($sql, $params) = $preprocessor->process('INSERT INTO author ? ON DUPLICATE 
 	array('web' => 'http://nette.org', 'name' => 'Dave Lister'),
 ));
 
-if ($driverName === 'pgsql') {
-	Assert::same( "INSERT INTO author (\"id\", \"name\") VALUES (12, 'John Doe') ON DUPLICATE KEY UPDATE \"web\"='http://nette.org', \"name\"='Dave Lister'", $sql );
-} elseif ($driverName === 'mysql') {
-	Assert::same( "INSERT INTO author (`id`, `name`) VALUES (12, 'John Doe') ON DUPLICATE KEY UPDATE `web`='http://nette.org', `name`='Dave Lister'", $sql );
-}
+Assert::same( reformat("INSERT INTO author ([id], [name]) VALUES (12, 'John Doe') ON DUPLICATE KEY UPDATE [web]='http://nette.org', [name]='Dave Lister'"), $sql );
 Assert::same( array(), $params );
