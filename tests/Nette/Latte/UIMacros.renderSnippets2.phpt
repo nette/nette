@@ -72,9 +72,7 @@ class TestPresenter extends Nette\Application\UI\Presenter
 }
 
 
-$control = new TestPresenter(new Nette\DI\Container(array(
-	'productionMode' => true,
-)));
+$control = new TestPresenter;
 $control->snippetMode = true;
 
 

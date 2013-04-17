@@ -88,6 +88,4 @@ $connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory(
 ));
 
 $books = $connection->table('book')->select('book.*, author.name, translator.name');
-foreach ($books as $book) {
-	dump($book);
-}
+iterator_to_array($books);
