@@ -220,7 +220,9 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 */
 	final public function getParameters()
 	{
-		return $this->params;
+		return array_map(function($value) {
+			return $value;
+		}, $this->params);
 	}
 
 
