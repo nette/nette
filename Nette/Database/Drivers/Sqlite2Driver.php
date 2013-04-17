@@ -34,23 +34,6 @@ class Sqlite2Driver extends SqliteDriver
 
 
 	/**
-	 * Normalizes result row.
-	 */
-	public function normalizeRow($row)
-	{
-		foreach ($row as $key => $value) {
-			unset($row[$key]);
-			if ($key[0] === '[' || $key[0] === '"') {
-				$key = substr($key, 1, -1);
-			}
-			$row[$key] = $value;
-		}
-		return $row;
-	}
-
-
-
-	/**
 	 * Returns metadata for all foreign keys in a table.
 	 */
 	public function getForeignKeys($table)
