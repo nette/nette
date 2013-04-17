@@ -40,9 +40,11 @@ CREATE TABLE book (
 	author_id int NOT NULL,
 	translator_id int,
 	title varchar(50) NOT NULL,
+	next_volume int,
 	PRIMARY KEY (id),
 	CONSTRAINT book_author FOREIGN KEY (author_id) REFERENCES author (id),
-	CONSTRAINT book_translator FOREIGN KEY (translator_id) REFERENCES author (id)
+	CONSTRAINT book_translator FOREIGN KEY (translator_id) REFERENCES author (id),
+	CONSTRAINT book_volume FOREIGN KEY (next_volume) REFERENCES book (id)
 );
 
 CREATE INDEX book_title ON book (title);
