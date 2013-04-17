@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\ComponentModel\Container component named factory.
+ * Test: Nette\ComponentModel\Container component named factory 4.
  *
  * @author     David Grudl
  * @package    Nette\ComponentModel
@@ -18,9 +18,9 @@ require __DIR__ . '/../bootstrap.php';
 class TestClass extends Container
 {
 
-	public function createComponentB()
+	public function createComponentB($name)
 	{
-		return new self();
+		return new self;
 	}
 
 }
@@ -29,9 +29,14 @@ class TestClass extends Container
 $a = new TestClass;
 $b = $a->getComponent('b');
 
+Assert::same( 'b', $b->name );
 Assert::same( 1, count($a->getComponents()) );
 
 
-$a->removeComponent($b);
+Assert::exception(function() use ($a) {
+	$a->getComponent('B')->name;
+}, 'InvalidArgumentException', "Component with name 'B' does not exist.");
 
+
+$a->removeComponent($b);
 Assert::same( 0, count($a->getComponents()) );
