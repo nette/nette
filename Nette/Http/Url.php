@@ -342,7 +342,12 @@ class Url extends Nette\FreezableObject
 	 */
 	public function getAbsoluteUrl()
 	{
-		return $this->scheme . '://' . $this->getAuthority() . $this->path
+		$url = '//';
+		if($this->scheme != '') {
+			$url = $this->scheme . '://';
+		}
+
+		return  $url . $this->getAuthority() . $this->path
 			. ($this->query === '' ? '' : '?' . $this->query)
 			. ($this->fragment === '' ? '' : '#' . $this->fragment);
 	}
