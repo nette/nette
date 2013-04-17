@@ -98,25 +98,25 @@ $configurator->setTempDirectory(TEMP_DIR);
 $container = $configurator->addConfig('files/config.generatedFactory.neon')
 	->createContainer();
 
-Assert::true( $container->lorem instanceof ILoremFactory );
-$lorem = $container->lorem->create();
+Assert::true( $container->getService('lorem') instanceof ILoremFactory );
+$lorem = $container->getService('lorem')->create();
 Assert::true( $lorem instanceof Lorem );
 Assert::true( $lorem->ipsum instanceof Ipsum );
-Assert::same( $container->ipsum, $lorem->ipsum );
+Assert::same( $container->getService('ipsum'), $lorem->ipsum );
 
 
-Assert::true( $container->article instanceof IArticleFactory );
-$article = $container->article->create('nemam');
+Assert::true( $container->getService('article') instanceof IArticleFactory );
+$article = $container->getService('article')->create('nemam');
 Assert::true( $article instanceof Article );
 Assert::same( 'nemam', $article->title );
 
 
-Assert::true($container->foo instanceof IFooFactory);
-$foo = $container->foo->create($container->baz);
+Assert::true($container->getService('foo') instanceof IFooFactory);
+$foo = $container->getService('foo')->create($container->getService('baz'));
 Assert::true($foo instanceof Foo);
 Assert::true($foo->bar instanceof Bar);
-Assert::same($container->bar, $foo->bar);
+Assert::same($container->getService('bar'), $foo->bar);
 Assert::true($foo->baz instanceof Baz);
-Assert::same($container->baz, $foo->baz);
+Assert::same($container->getService('baz'), $foo->baz);
 
 Assert::true($container->getByType('ILoremFactory') instanceof ILoremFactory);

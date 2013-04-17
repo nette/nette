@@ -32,17 +32,17 @@ $configurator->setTempDirectory(TEMP_DIR);
 $container = $configurator->addConfig('files/config.generatedAccessor.neon')
 	->createContainer();
 
-Assert::true( $container->lorem instanceof Lorem );
-Assert::true( $container->lorem !== $container->lorem2 );
+Assert::true( $container->getService('lorem') instanceof Lorem );
+Assert::true( $container->getService('lorem') !== $container->getService('lorem2') );
 
-Assert::true( $container->one instanceof ILoremAccessor );
-Assert::true( $container->one->get() === $container->lorem );
+Assert::true( $container->getService('one') instanceof ILoremAccessor );
+Assert::true( $container->getService('one')->get() === $container->getService('lorem') );
 
-Assert::true( $container->two instanceof ILoremAccessor );
-Assert::true( $container->two->get() === $container->lorem );
+Assert::true( $container->getService('two') instanceof ILoremAccessor );
+Assert::true( $container->getService('two')->get() === $container->getService('lorem') );
 
-Assert::true( $container->three instanceof ILoremAccessor );
-Assert::true( $container->three->get() === $container->lorem2 );
+Assert::true( $container->getService('three') instanceof ILoremAccessor );
+Assert::true( $container->getService('three')->get() === $container->getService('lorem2') );
 
-Assert::true( $container->four instanceof ILoremAccessor );
-Assert::true( $container->four->get() === $container->lorem );
+Assert::true( $container->getService('four') instanceof ILoremAccessor );
+Assert::true( $container->getService('four')->get() === $container->getService('lorem') );

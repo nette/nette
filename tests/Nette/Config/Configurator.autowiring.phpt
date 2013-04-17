@@ -50,7 +50,7 @@ $configurator->setTempDirectory(TEMP_DIR);
 $container = $configurator->addConfig('files/config.autowiring.neon')
 	->createContainer();
 
-Assert::true( $container->model instanceof Model );
+Assert::true( $container->getService('model') instanceof Model );
 
 Assert::same(array(
 	'Model::test',

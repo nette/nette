@@ -208,7 +208,7 @@ final class Environment
 	public static function __callStatic($name, $args)
 	{
 		if (!$args && strncasecmp($name, 'get', 3) === 0) {
-			return self::getContext()->getService(lcfirst(substr($name, 3)));
+			return self::getService(lcfirst(substr($name, 3)));
 		} else {
 			throw new MemberAccessException("Call to undefined static method Nette\\Environment::$name().");
 		}
@@ -286,7 +286,7 @@ final class Environment
 	 */
 	public static function getCache($namespace = '')
 	{
-		return new Caching\Cache(self::getContext()->cacheStorage, $namespace);
+		return new Caching\Cache(self::getService('cacheStorage'), $namespace);
 	}
 
 
@@ -299,8 +299,8 @@ final class Environment
 	public static function getSession($namespace = NULL)
 	{
 		return $namespace === NULL
-			? self::getContext()->session
-			: self::getContext()->session->getSection($namespace);
+			? self::getService('session')
+			: self::getService('session')->getSection($namespace);
 	}
 
 

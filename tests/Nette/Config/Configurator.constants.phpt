@@ -34,10 +34,10 @@ $configurator->setTempDirectory(TEMP_DIR);
 $container = $configurator->addConfig(__DIR__ . '/files/config.constants.neon', Configurator::NONE)
 	->createContainer();
 
-Assert::same( "one", $container->ipsum->arg );
-Assert::same( Lorem::DOLOR_SIT, $container->sit->arg );
-Assert::same( "MY_FAILING_CONSTANT_TEST", $container->consectetur->arg );
+Assert::same( "one", $container->getService('ipsum')->arg );
+Assert::same( Lorem::DOLOR_SIT, $container->getService('sit')->arg );
+Assert::same( "MY_FAILING_CONSTANT_TEST", $container->getService('consectetur')->arg );
 
 Assert::error(function () use ($container) {
-	$container->amet->arg;
+	$container->getService('amet')->arg;
 }, E_NOTICE, "Use of undefined constant MY_FAILING_CONSTANT_TEST - assumed 'MY_FAILING_CONSTANT_TEST'");
