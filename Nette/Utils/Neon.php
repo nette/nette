@@ -31,20 +31,18 @@ class Neon extends Nette\Object
 			"(?: \\\\. | [^"\\\\\n] )*"
 		', // string
 		'
-			-(?= \s | $ ) |
-			:(?= [\s,\]})] | $ ) |
-			[,=[\]{}()]
-		', // symbol
-		'?:\#.*', // comment
-		'\n[\t\ ]*', // new line + indent
-		'
-			[^#"\',=[\]{}()\x00-\x20!`]
+			(?: [^#"\',:=[\]{}()\x00-\x20!`-] | [:-][^"\',\]})\s] )
 			(?:
 				[^,:=\]})(\x00-\x20]+ |
 				:(?! [\s,\]})] | $ ) |
 				[\ \t]+ [^#,:=\]})(\x00-\x20]
 			)*
 		', // literal / boolean / integer / float
+		'
+			[,:=[\]{}()-]
+		', // symbol
+		'?:\#.*', // comment
+		'\n[\t\ ]*', // new line + indent
 		'?:[\t\ ]+', // whitespace
 	);
 
@@ -111,7 +109,7 @@ class Neon extends Nette\Object
 
 		} elseif (is_string($var) && !is_numeric($var)
 			&& !preg_match('~[\x00-\x1F]|^\d{4}|^(true|false|yes|no|on|off|null)\z~i', $var)
-			&& preg_match('~^' . self::$patterns[4] . '\z~x', $var)
+			&& preg_match('~^' . self::$patterns[1] . '\z~x', $var) // 1 = literals
 		) {
 			return $var;
 
