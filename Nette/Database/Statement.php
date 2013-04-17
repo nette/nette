@@ -57,6 +57,36 @@ class Statement extends \PDOStatement
 
 
 	/**
+	 * @return string
+	 */
+	public function getQueryString()
+	{
+		return $this->queryString;
+	}
+
+
+
+	/**
+	 * @return int
+	 */
+	public function getColumnCount()
+	{
+		return $this->columnCount();
+	}
+
+
+
+	/**
+	 * @return int
+	 */
+	public function getRowCount()
+	{
+		return $this->rowCount();
+	}
+
+
+
+	/**
 	 * Executes statement.
 	 * @param  array
 	 * @return Statement  provides a fluent interface
