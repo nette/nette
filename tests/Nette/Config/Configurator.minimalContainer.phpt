@@ -39,19 +39,19 @@ Assert::same( array(
 	'hello' => 'world',
 ), $container->parameters );
 
-Assert::true( $container->nette->cacheJournal instanceof Nette\Caching\Storages\FileJournal );
-Assert::true( $container->cacheStorage instanceof Nette\Caching\Storages\FileStorage );
-Assert::true( $container->nette->templateCacheStorage instanceof Nette\Caching\Storages\PhpFileStorage );
-Assert::true( $container->httpRequest instanceof Nette\Http\Request );
-Assert::true( $container->httpResponse instanceof Nette\Http\Response );
-Assert::true( $container->nette->httpContext instanceof Nette\Http\Context );
-Assert::true( $container->session instanceof Nette\Http\Session );
-Assert::true( $container->user instanceof Nette\Security\User );
-Assert::true( $container->nette->userStorage instanceof Nette\Http\UserStorage );
-Assert::true( $container->application instanceof Nette\Application\Application );
-Assert::true( $container->router instanceof Nette\Application\Routers\RouteList );
-Assert::true( $container->nette->presenterFactory instanceof Nette\Application\PresenterFactory );
-Assert::true( $container->nette->mailer instanceof Nette\Mail\SendmailMailer );
+Assert::true( $container->getService('nette.cacheJournal') instanceof Nette\Caching\Storages\FileJournal );
+Assert::true( $container->getService('cacheStorage') instanceof Nette\Caching\Storages\FileStorage );
+Assert::true( $container->getService('nette.templateCacheStorage') instanceof Nette\Caching\Storages\PhpFileStorage );
+Assert::true( $container->getService('httpRequest') instanceof Nette\Http\Request );
+Assert::true( $container->getService('httpResponse') instanceof Nette\Http\Response );
+Assert::true( $container->getService('nette.httpContext') instanceof Nette\Http\Context );
+Assert::true( $container->getService('session') instanceof Nette\Http\Session );
+Assert::true( $container->getService('user') instanceof Nette\Security\User );
+Assert::true( $container->getService('nette.userStorage') instanceof Nette\Http\UserStorage );
+Assert::true( $container->getService('application') instanceof Nette\Application\Application );
+Assert::true( $container->getService('router') instanceof Nette\Application\Routers\RouteList );
+Assert::true( $container->getService('nette.presenterFactory') instanceof Nette\Application\PresenterFactory );
+Assert::true( $container->getService('nette.mailer') instanceof Nette\Mail\SendmailMailer );
 
 Assert::true( $container->nette->createCache() instanceof Nette\Caching\Cache );
 Assert::same( 'nm', $container->nette->createCache('nm')->getNamespace() );

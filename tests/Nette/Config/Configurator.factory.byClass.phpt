@@ -35,9 +35,9 @@ $configurator->setTempDirectory(TEMP_DIR);
 $container = $configurator->addConfig('files/config.factory.byClass.neon', Configurator::NONE)
 	->createContainer();
 
-Assert::true( $container->one instanceof Lorem );
-Assert::true( $container->two instanceof Ipsum );
-Assert::true( $container->three instanceof Lorem );
-Assert::same( $container->one, $container->three );
-Assert::true( $container->four instanceof Lorem );
-Assert::same( $container->one, $container->four );
+Assert::true( $container->getService('one') instanceof Lorem );
+Assert::true( $container->getService('two') instanceof Ipsum );
+Assert::true( $container->getService('three') instanceof Lorem );
+Assert::same( $container->getService('one'), $container->getService('three') );
+Assert::true( $container->getService('four') instanceof Lorem );
+Assert::same( $container->getService('one'), $container->getService('four') );

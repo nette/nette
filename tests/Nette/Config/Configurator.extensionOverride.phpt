@@ -125,109 +125,109 @@ $configurator->onCompile[] = function(Configurator $configurator, Compiler $comp
 $container = $configurator->addConfig(__DIR__ . '/files/config.extensionOverride.neon', Configurator::NONE)
 	->createContainer();
 
-Assert::true( $container->one1 instanceof Ipsum );
+Assert::true( $container->getService('one1') instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct ',
 ), Notes::fetch());
 
-Assert::true( $container->one2 instanceof Ipsum );
+Assert::true( $container->getService('one2') instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
 ), Notes::fetch());
 
-Assert::true( $container->one3 instanceof Ipsum );
+Assert::true( $container->getService('one3') instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
 ), Notes::fetch());
 
-Assert::true( $container->one4 instanceof Lorem );
+Assert::true( $container->getService('one4') instanceof Lorem );
 Assert::same(array(
 	'Lorem::__construct 2',
 ), Notes::fetch());
 
-Assert::true( $container->one5 instanceof Ipsum );
+Assert::true( $container->getService('one5') instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct ',
 ), Notes::fetch());
 
-Assert::true( $container->one6 instanceof Ipsum );
+Assert::true( $container->getService('one6') instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
 ), Notes::fetch());
 
-Assert::true( $container->one7 instanceof Ipsum );
+Assert::true( $container->getService('one7') instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
 ), Notes::fetch());
 
 
-Assert::true( $container->two1 instanceof Ipsum );
+Assert::true( $container->getService('two1') instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct ',
 ), Notes::fetch());
 
-Assert::true( $container->two2 instanceof Ipsum );
+Assert::true( $container->getService('two2') instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
 ), Notes::fetch());
 
-Assert::true( $container->two3 instanceof Ipsum );
+Assert::true( $container->getService('two3') instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
 ), Notes::fetch());
 
-Assert::true( $container->two4 instanceof Lorem );
+Assert::true( $container->getService('two4') instanceof Lorem );
 Assert::same(array(
 	'Lorem::__construct 2',
 ), Notes::fetch());
 
-Assert::true( $container->two5 instanceof Ipsum );
+Assert::true( $container->getService('two5') instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct ',
 ), Notes::fetch());
 
-Assert::true( $container->two6 instanceof Ipsum );
+Assert::true( $container->getService('two6') instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
 ), Notes::fetch());
 
-Assert::true( $container->two7 instanceof Ipsum );
+Assert::true( $container->getService('two7') instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
 ), Notes::fetch());
 
 
-Assert::true( $container->three1 instanceof Ipsum );
+Assert::true( $container->getService('three1') instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct ',
 ), Notes::fetch());
 
-Assert::true( $container->three2 instanceof Ipsum );
+Assert::true( $container->getService('three2') instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
 ), Notes::fetch());
 
-Assert::true( $container->three3 instanceof Ipsum );
+Assert::true( $container->getService('three3') instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
 ), Notes::fetch());
 
-Assert::true( $container->three4 instanceof Lorem );
+Assert::true( $container->getService('three4') instanceof Lorem );
 Assert::same(array(
 	'Lorem::__construct 2',
 ), Notes::fetch());
 
-Assert::true( $container->three5 instanceof Ipsum );
+Assert::true( $container->getService('three5') instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct ',
 ), Notes::fetch());
 
-Assert::true( $container->three6 instanceof Ipsum );
+Assert::true( $container->getService('three6') instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
 ), Notes::fetch());
 
-Assert::true( $container->three7 instanceof Ipsum );
+Assert::true( $container->getService('three7') instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
 ), Notes::fetch());

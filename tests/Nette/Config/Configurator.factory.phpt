@@ -43,41 +43,41 @@ $configurator->setTempDirectory(TEMP_DIR);
 $container = $configurator->addConfig('files/config.factory.neon', Configurator::NONE)
 	->createContainer();
 
-Assert::true( $container->one instanceof Ipsum );
+Assert::true( $container->getService('one') instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 1',
 ), Notes::fetch());
 
-Assert::true( $container->two instanceof Ipsum );
+Assert::true( $container->getService('two') instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 1',
 ), Notes::fetch());
 
-Assert::true( $container->three instanceof Lorem );
+Assert::true( $container->getService('three') instanceof Lorem );
 Assert::same(array(
 	'Factory::createLorem 1',
 ), Notes::fetch());
 
-Assert::true( $container->four instanceof Lorem );
+Assert::true( $container->getService('four') instanceof Lorem );
 Assert::same(array(
 	'Factory::createLorem 1',
 ), Notes::fetch());
 
-Assert::true( $container->five instanceof Lorem );
+Assert::true( $container->getService('five') instanceof Lorem );
 Assert::same(array(
 	'Factory::createLorem 1',
 ), Notes::fetch());
 
-Assert::true( $container->six instanceof Lorem );
+Assert::true( $container->getService('six') instanceof Lorem );
 Assert::same(array(
 	'Factory::createLorem 1',
 ), Notes::fetch());
 
-Assert::true( $container->seven instanceof Lorem );
+Assert::true( $container->getService('seven') instanceof Lorem );
 
-Assert::true( $container->eight instanceof Lorem );
+Assert::true( $container->getService('eight') instanceof Lorem );
 
-Assert::true( $container->alias instanceof Ipsum );
-Assert::same( $container->one, $container->alias );
+Assert::true( $container->getService('alias') instanceof Ipsum );
+Assert::same( $container->getService('one'), $container->getService('alias') );
 
 Assert::true( $container->getByType('stdClass') instanceof stdClass );

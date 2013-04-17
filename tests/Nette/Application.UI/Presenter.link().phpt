@@ -165,10 +165,10 @@ $container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->crea
 
 $url = new Http\UrlScript('http://localhost/index.php');
 $url->setScriptPath('/index.php');
-unset($container->httpRequest);
-$container->httpRequest = new Http\Request($url);
+$container->removeService('httpRequest');
+$container->addService('httpRequest', new Http\Request($url));
 
-$application = $container->application;
+$application = $container->getService('application');
 $application->router[] = new Application\Routers\SimpleRouter();
 
 $request = new Application\Request('Test', Http\Request::GET, array());

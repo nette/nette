@@ -73,7 +73,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 		$template->control = $template->_control = $this;
 		$template->presenter = $template->_presenter = $presenter;
 		if ($presenter instanceof Presenter) {
-			$template->setCacheStorage($presenter->getContext()->nette->templateCacheStorage);
+			$template->setCacheStorage($presenter->getContext()->getService('nette.templateCacheStorage'));
 			$template->user = $presenter->getUser();
 			$template->netteHttpResponse = $presenter->getHttpResponse();
 			$template->netteCacheStorage = $presenter->getContext()->getByType('Nette\Caching\IStorage');

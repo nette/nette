@@ -54,8 +54,8 @@ Assert::same(array(
 	'DatabaseExtension::afterCompile',
 ), Notes::fetch());
 
-Assert::true( $container->database->foo instanceof stdClass );
-Assert::same( $container->database->foo, $container->alias );
+Assert::true( $container->getService('database.foo') instanceof stdClass );
+Assert::same( $container->getService('database.foo'), $container->getService('alias') );
 
 
 Assert::same( 'database.', $extension->prefix('') );

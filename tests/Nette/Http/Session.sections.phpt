@@ -21,8 +21,8 @@ ini_set('session.save_path', TEMP_DIR);
 ob_start();
 
 $container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
+$session = $container->getService('session');
 
-$session = $container->session;
 Assert::false( $session->hasSection('trees'), 'hasSection() should have returned FALSE for a section with no keys set' );
 
 $section = $session->getSection('trees');

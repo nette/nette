@@ -327,9 +327,9 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		}
 
 		if ($config['session']['autoStart'] === 'smart') {
-			$initialize->addBody('$this->session->exists() && $this->session->start();');
+			$initialize->addBody('$this->getService("session")->exists() && $this->getService("session")->start();');
 		} elseif ($config['session']['autoStart']) {
-			$initialize->addBody('$this->session->start();');
+			$initialize->addBody('$this->getService("session")->start();');
 		}
 
 		if (empty($config['xhtml'])) {

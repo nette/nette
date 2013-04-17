@@ -61,7 +61,7 @@ $container = $configurator->addConfig('files/config.setup.neon', Configurator::N
 Assert::same(array(
 ), Notes::fetch());
 
-Assert::true( $container->lorem instanceof Lorem );
+Assert::true( $container->getService('lorem') instanceof Lorem );
 
 Assert::same(array(
 	'Factory::createLorem 1',
@@ -73,6 +73,6 @@ Assert::same(array(
 	'test 7',
 ), Notes::fetch());
 
-Assert::same( 8, $container->lorem->test );
+Assert::same( 8, $container->getService('lorem')->test );
 Assert::same( 9, Ipsum::$staticTest );
-Assert::equal( new Lorem, $container->ipsum->test );
+Assert::equal( new Lorem, $container->getService('ipsum')->test );

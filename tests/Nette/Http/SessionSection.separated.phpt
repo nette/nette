@@ -18,8 +18,8 @@ ini_set('session.save_path', TEMP_DIR);
 
 
 $container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
+$session = $container->getService('session');
 
-$session = $container->session;
 $namespace1 = $session->getSection('namespace1');
 $namespace1b = $session->getSection('namespace1');
 $namespace2 = $session->getSection('namespace2');
