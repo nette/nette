@@ -1266,9 +1266,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 		$selfParams = array();
 
 		$params = $this->request->getParameters();
-		if ($this->isAjax()) {
-			$params += $this->request->getPost();
-		}
 
 		foreach ($params as $key => $value) {
 			if (!preg_match('#^((?:[a-z0-9_]+-)*)((?!\d+\z)[a-z0-9_]+)\z#i', $key, $matches)) {
