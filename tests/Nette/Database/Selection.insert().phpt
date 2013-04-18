@@ -54,3 +54,20 @@ if ($driverName !== 'sqlsrv') {
 		));
 	}, '\PDOException');
 }
+
+
+
+// sqlite does not support inset ... select
+if ($driverName !== 'sqlite') {
+	if ($driverName === 'pgsql') {
+		$connection->table('book')->insert(
+			$connection->table('author')->select('nextval(?), id, NULL, ? || name, NULL', 'book_id_seq', 'Biography: ')
+		);
+	} else {
+		$connection->table('book')->insert(
+			$connection->table('author')->select('NULL, id, NULL, CONCAT(?, name), NULL',  'Biography: ')
+		);
+	}
+
+	Assert::equal(4, $connection->table('book')->where('title LIKE', "Biography%")->count('*'));
+}
