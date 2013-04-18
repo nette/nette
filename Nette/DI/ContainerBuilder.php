@@ -266,7 +266,8 @@ class ContainerBuilder extends Nette\Object
 
 		// check if services are instantiable
 		foreach ($this->definitions as $name => $def) {
-			$factory = $this->normalizeEntity($def->factory->entity);
+			$factory = $def->factory->entity = $this->normalizeEntity($def->factory->entity);
+
 			if (is_string($factory) && preg_match('#^[\w\\\\]+\z#', $factory) && $factory !== self::THIS_SERVICE) {
 				if (!class_exists($factory) || !Reflection\ClassType::from($factory)->isInstantiable()) {
 					throw new Nette\InvalidStateException("Class $factory used in service '$name' has not been found or is not instantiable.");
@@ -313,7 +314,7 @@ class ContainerBuilder extends Nette\Object
 		$recursive[$name] = TRUE;
 
 		$def = $this->definitions[$name];
-		$factory = $this->normalizeEntity($def->factory->entity);
+		$factory = $def->factory->entity;
 
 		if ($def->class) {
 			return $def->class;
@@ -464,8 +465,7 @@ class ContainerBuilder extends Nette\Object
 		$code = '$service = ' . $this->formatStatement($def->factory) . ";\n";
 		$this->current = $name;
 
-		$entity = $this->normalizeEntity($def->factory->entity);
-		if ($def->class && $def->class !== $entity && !$this->getServiceName($entity)) {
+		if ($def->class && $def->class !== $def->factory->entity && !$this->getServiceName($def->factory->entity)) {
 			$code .= PhpHelpers::formatArgs("if (!\$service instanceof $def->class) {\n"
 				. "\tthrow new Nette\\UnexpectedValueException(?);\n}\n",
 				array("Unable to create service '$name', value returned by factory is not $def->class type.")
