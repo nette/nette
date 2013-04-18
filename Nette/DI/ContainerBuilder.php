@@ -131,6 +131,10 @@ class ContainerBuilder extends Nette\Object
 	 */
 	public function getByType($class)
 	{
+		if ($this->current !== NULL && Reflection\ClassType::from($this->definitions[$this->current]->class)->is($class)) {
+			return $this->current;
+		}
+
 		$lower = ltrim(strtolower($class), '\\');
 		if (!isset($this->classes[$lower])) {
 			return;
