@@ -275,6 +275,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 					->setClass('Nette\Database\Diagnostics\ConnectionPanel')
 					->setAutowired(FALSE)
 					->addSetup('$explain', !empty($info['explain']))
+					->addSetup('$name', $name)
 					->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array('@self'));
 
 				$connection->addSetup('$service->onQuery[] = ?', array(array($panel, 'logQuery')));
