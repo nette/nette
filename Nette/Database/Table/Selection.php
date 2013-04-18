@@ -793,13 +793,13 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	 * Returns referenced row.
 	 * @param  string
 	 * @param  string
-	 * @param  bool  checks if rows contains the same primary value relations
+	 * @param  mixed   primary key to check for $table and $column references
 	 * @return Selection or array() if the row does not exist
 	 */
-	public function getReferencedTable($table, $column, $checkReferenced = FALSE)
+	public function getReferencedTable($table, $column, $checkPrimaryKey = NULL)
 	{
 		$referenced = & $this->refCache['referenced'][$this->getSpecificCacheKey()]["$table.$column"];
-		if ($referenced === NULL || $checkReferenced || $this->checkReferenced) {
+		if ($referenced === NULL || !isset($referenced[$checkPrimaryKey]) || $this->checkReferenced) {
 			$this->execute();
 			$this->checkReferenced = FALSE;
 			$keys = array();

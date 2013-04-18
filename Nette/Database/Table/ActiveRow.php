@@ -37,6 +37,9 @@ class ActiveRow implements \IteratorAggregate, IRow
 	/** @var array of new values {@see ActiveRow::update()} */
 	private $modified = array();
 
+	/** @var bool */
+	private $isModified = FALSE;
+
 
 
 	public function __construct(array $data, Selection $table)
@@ -187,6 +190,7 @@ class ActiveRow implements \IteratorAggregate, IRow
 		}
 		$this->data = $data + $this->data;
 		$this->modified = $data + $this->modified;
+		$this->isModified = TRUE;
 		return $this->table->getConnection()
 			->table($this->table->getName())
 			->wherePrimary($this->getPrimary())
@@ -361,12 +365,8 @@ class ActiveRow implements \IteratorAggregate, IRow
 			$value = $this->data[$column];
 			$value = $value instanceof ActiveRow ? $value->getPrimary() : $value;
 
-			$referenced = $this->table->getReferencedTable($table, $column, !empty($this->modified[$column]));
+			$referenced = $this->table->getReferencedTable($table, $column, $this->isModified ? $value : NULL);
 			$referenced = isset($referenced[$value]) ? $referenced[$value] : NULL; // referenced row may not exist
-
-			if (!empty($this->modified[$column])) { // cause saving changed column and prevent regenerating referenced table for $column
-				$this->modified[$column] = 0; // 0 fails on empty, pass on isset
-			}
 
 			return $referenced;
 		}
