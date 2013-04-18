@@ -110,7 +110,6 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 	{
 		$this->disabled = TRUE;
 		$s = '';
-		$h = 'htmlSpecialChars';
 		foreach ($this->queries as $i => $query) {
 			list($connection, $sql, $params, $source, $time, $rows, $error) = $query;
 
@@ -124,7 +123,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 
 			$s .= '<tr><td>';
 			if ($error) {
-				$s .= "<span title=\"{$h($error)}\">ERROR</span>";
+				$s .= '<span title="' . htmlSpecialChars($error) . '">ERROR</span>';
 			} elseif ($time !== NULL) {
 				$s .= sprintf('%0.3f', $time * 1000);
 			}
@@ -138,13 +137,13 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 			if ($explain) {
 				$s .= "<table id='nette-DbConnectionPanel-row-$counter' class='nette-collapsed'><tr>";
 				foreach ($explain[0] as $col => $foo) {
-					$s .= "<th>{$h($col)}</th>";
+					$s .= '<th>' . htmlSpecialChars($col) . '</th>';
 				}
 				$s .= "</tr>";
 				foreach ($explain as $row) {
 					$s .= "<tr>";
 					foreach ($row as $col) {
-						$s .= "<td>{$h($col)}</td>";
+						$s .= '<td>' . htmlSpecialChars($col) . '</td>';
 					}
 					$s .= "</tr>";
 				}
@@ -160,7 +159,8 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 		return empty($this->queries) ? '' :
 			'<style class="nette-debug"> #nette-debug td.nette-DbConnectionPanel-sql { background: white !important }
 			#nette-debug .nette-DbConnectionPanel-source { color: #BBB !important } </style>
-			<h1>Queries: ' . count($this->queries) . ($this->totalTime ? ', time: ' . sprintf('%0.3f', $this->totalTime * 1000) . ' ms' : '') . '</h1>
+			<h1 title="' . htmlSpecialChars($connection->getDsn()) . '">Queries: ' . count($this->queries)
+			. ($this->totalTime ? ', time: ' . sprintf('%0.3f', $this->totalTime * 1000) . ' ms' : '') . ', ' . htmlSpecialChars($this->name) . '</h1>
 			<div class="nette-inner nette-DbConnectionPanel">
 			<table>
 				<tr><th>Time&nbsp;ms</th><th>SQL Query</th><th>Rows</th></tr>' . $s . '

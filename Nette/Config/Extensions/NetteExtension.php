@@ -346,7 +346,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 				));
 
 			if ($container->parameters['debugMode'] && $info['debugger']) {
-				$connection->addSetup('Nette\Database\Helpers::createDebugPanel', array($connection, !empty($info['explain'])));
+				$connection->addSetup('Nette\Database\Helpers::createDebugPanel', array($connection, !empty($info['explain']), $name));
 			}
 		}
 	}
