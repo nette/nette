@@ -738,17 +738,39 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 		$return = $this->connection->query($this->sqlBuilder->buildInsertQuery(), $data);
 		$this->checkReferenced = TRUE;
 
-		if (!is_array($data)) {
+		if ($data instanceof Nette\Database\SqlLiteral) {
 			return $return->getRowCount();
 		}
 
-		if (!is_array($this->primary) && !isset($data[$this->primary]) && ($id = $this->connection->getInsertId($this->getPrimarySequence()))) {
-			$data[$this->primary] = $id;
+		$primaryKey = $this->connection->getInsertId($this->getPrimarySequence());
+		if (!$primaryKey) {
+			$primaryKey = array();
+			foreach ((array) $this->getPrimary() as $key) {
+				if (!isset($data[$key])) {
+					return $data;
+				}
+
+				$primaryKey[$key] = $data[$key];
+			}
+			if (count($primaryKey) === 1) {
+				$primaryKey = reset($primaryKey);
+			}
 		}
 
-		$row = $this->createRow($data);
-		if ($signature = $row->getSignature(FALSE)) {
-			$this->rows[$signature] = $row;
+		$row = $this->connection->table($this->name)
+			->select('*')
+			->wherePrimary($primaryKey)
+			->fetch();
+
+		$this->loadRefCache();
+		if ($this->rows !== NULL) {
+			if ($signature = $row->getSignature(FALSE)) {
+				$this->rows[$signature] = $row;
+				$this->data[$signature] = $row;
+			} else {
+				$this->rows[] = $row;
+				$this->data[] = $row;
+			}
 		}
 
 		return $row;

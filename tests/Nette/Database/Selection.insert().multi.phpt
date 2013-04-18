@@ -15,6 +15,10 @@ if ($driverName === 'sqlite') {
 	Tester\Helpers::skip('Sqlite does not support multi-inserts.');
 }
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
+$connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory(
+	$connection,
+	new Nette\Database\Reflection\DiscoveredReflection($connection)
+));
 
 
 
