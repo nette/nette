@@ -723,13 +723,13 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 	/**
 	 * Inserts row in a table.
-	 * @param  mixed array($column => $value)|Traversable for single row insert or Selection|string for INSERT ... SELECT
+	 * @param  mixed array($column => $value)|Traversable for single row insert or Selection for INSERT ... SELECT
 	 * @return IRow or FALSE in case of an error or number of affected rows for INSERT ... SELECT
 	 */
 	public function insert($data)
 	{
 		if ($data instanceof Selection) {
-			$data = $data->getSql();
+			$data = new Nette\Database\SqlLiteral('(' . $data->getSql() . ')', $data->getSqlBuilder()->getParameters());
 
 		} elseif ($data instanceof \Traversable) {
 			$data = iterator_to_array($data);
@@ -743,8 +743,9 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 		}
 
 		$primaryKey = $this->connection->getInsertId($this->getPrimarySequence());
-		if (!$primaryKey) {
+		if (is_array($this->getPrimary())) {
 			$primaryKey = array();
+
 			foreach ((array) $this->getPrimary() as $key) {
 				if (!isset($data[$key])) {
 					return $data;
