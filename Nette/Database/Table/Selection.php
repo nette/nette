@@ -48,10 +48,10 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	/** @var string|bool primary column sequence name, FALSE for autodetection */
 	protected $primarySequence = FALSE;
 
-	/** @var ActiveRow[] data read from database in [primary key => ActiveRow] format */
+	/** @var IRow[] data read from database in [primary key => IRow] format */
 	protected $rows;
 
-	/** @var ActiveRow[] modifiable data in [primary key => ActiveRow] format */
+	/** @var IRow[] modifiable data in [primary key => IRow] format */
 	protected $data;
 
 	/** @var bool */
@@ -66,7 +66,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	/** @var string */
 	protected $specificCacheKey;
 
-	/** @var array of [conditions => [key => ActiveRow]]; used by GroupedSelection */
+	/** @var array of [conditions => [key => IRow]]; used by GroupedSelection */
 	protected $aggregation = array();
 
 	/** @var array of touched columns */
@@ -245,7 +245,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	/**
 	 * Returns row specified by primary key.
 	 * @param  mixed primary key
-	 * @return ActiveRow or FALSE if there is no such row
+	 * @return IRow or FALSE if there is no such row
 	 */
 	public function get($key)
 	{
@@ -724,7 +724,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	/**
 	 * Inserts row in a table.
 	 * @param  mixed array($column => $value)|Traversable for single row insert or Selection|string for INSERT ... SELECT
-	 * @return ActiveRow or FALSE in case of an error or number of affected rows for INSERT ... SELECT
+	 * @return IRow or FALSE in case of an error or number of affected rows for INSERT ... SELECT
 	 */
 	public function insert($data)
 	{
@@ -901,7 +901,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 
 
-	/** @return ActiveRow */
+	/** @return IRow */
 	public function current()
 	{
 		if (($key = current($this->keys)) !== FALSE) {
@@ -944,7 +944,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	/**
 	 * Mimic row.
 	 * @param  string row ID
-	 * @param  ActiveRow
+	 * @param  IRow
 	 * @return NULL
 	 */
 	public function offsetSet($key, $value)
@@ -958,7 +958,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	/**
 	 * Returns specified row.
 	 * @param  string row ID
-	 * @return ActiveRow or NULL if there is no such row
+	 * @return IRow or NULL if there is no such row
 	 */
 	public function offsetGet($key)
 	{

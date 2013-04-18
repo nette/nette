@@ -16,7 +16,7 @@ use Nette\Database;
 
 
 /**
- * Container of database result fetched into ActiveRow objects.
+ * Container of database result fetched into IRow objects.
  *
  * @author     Jan Skrasek
  *

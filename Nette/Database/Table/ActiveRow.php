@@ -140,7 +140,7 @@ class ActiveRow implements \IteratorAggregate, IRow
 	 * Returns referenced row.
 	 * @param  string
 	 * @param  string
-	 * @return ActiveRow or NULL if the row does not exist
+	 * @return IRow or NULL if the row does not exist
 	 */
 	public function ref($key, $throughColumn = NULL)
 	{
