@@ -27,6 +27,9 @@ class GroupedSelection extends Selection
 	/** @var Selection referenced table */
 	protected $refTable;
 
+	/** @var  mixed current assigned referencing array */
+	protected $refCacheCurrent;
+
 	/** @var string grouping column name */
 	protected $column;
 
@@ -148,17 +151,10 @@ class GroupedSelection extends Selection
 			return;
 		}
 
-		$hash = $this->getSpecificCacheKey();
 		$accessedColumns = $this->accessedColumns;
+		$this->loadRefCache();
 
-		$referencing = & $this->refCache['referencing'][$this->getGeneralCacheKey()];
-		$this->observeCache      = & $referencing['observeCache'];
-		$this->accessedColumns   = & $referencing[$hash]['accessed'];
-		$this->specificCacheKey  = & $referencing[$hash]['specificCacheKey'];
-		$this->rows              = & $referencing[$hash]['rows'];
-		$data                    = & $referencing[$hash]['data'];
-
-		if ($data === NULL) {
+		if (!isset($this->refCacheCurrent['data'])) {
 			// we have not fetched any data yet => init accessedColumns by cached accessedColumns
 			$this->accessedColumns = $accessedColumns;
 
@@ -183,10 +179,12 @@ class GroupedSelection extends Selection
 				$skip++;
 				unset($ref, $skip);
 			}
+
+			$this->refCacheCurrent['data'] = $data;
+			$this->data = & $this->refCacheCurrent['data'][$this->active];
 		}
 
 		$this->observeCache = $this;
-		$this->data = & $data[$this->active];
 		if ($this->data === NULL) {
 			$this->data = array();
 		} else {
@@ -209,6 +207,23 @@ class GroupedSelection extends Selection
 		}
 
 		return $refObj;
+	}
+
+
+
+	protected function loadRefCache()
+	{
+		$hash = $this->getSpecificCacheKey();
+		$referencing = & $this->refCache['referencing'][$this->getGeneralCacheKey()];
+		$this->observeCache      = & $referencing['observeCache'];
+		$this->refCacheCurrent   = & $referencing[$hash];
+		$this->accessedColumns   = & $referencing[$hash]['accessed'];
+		$this->specificCacheKey  = & $referencing[$hash]['specificCacheKey'];
+		$this->rows              = & $referencing[$hash]['rows'];
+
+		if (isset($referencing[$hash]['data'][$this->active])) {
+			$this->data = & $referencing[$hash]['data'][$this->active];
+		}
 	}
 
 

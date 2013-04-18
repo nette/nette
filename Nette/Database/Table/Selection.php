@@ -622,6 +622,15 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 
 	/**
+	 * Loads refCache references
+	 */
+	protected function loadRefCache()
+	{
+	}
+
+
+
+	/**
 	 * Returns general cache key indenpendent on query parameters or sql limit
 	 * Used e.g. for previously accessed columns caching
 	 * @return string
