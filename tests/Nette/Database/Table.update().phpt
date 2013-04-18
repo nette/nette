@@ -12,6 +12,10 @@
 require __DIR__ . '/connect.inc.php'; // create $connection
 
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
+$connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory(
+	$connection,
+	new Nette\Database\Reflection\DiscoveredReflection($connection)
+));
 
 
 
@@ -48,6 +52,12 @@ $book2->update(array(
 
 Assert::same('Jakub Vrana', $book2->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11))
 
+$book2->update(array(
+	'author_id' => new Nette\Database\SqlLiteral('10 + 3'),
+));  // UPDATE `book` SET `author_id`=13 WHERE (`id` = '5')
+
+Assert::same('Geek', $book2->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (13))
+Assert::same(13, $book2->author_id);
 
 
 

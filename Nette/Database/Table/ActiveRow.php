@@ -178,7 +178,7 @@ class ActiveRow implements \IteratorAggregate, IRow
 	/**
 	 * Updates row.
 	 * @param  array|\Traversable (column => value)
-	 * @return int number of affected rows or FALSE in case of an error
+	 * @return bool
 	 */
 	public function update($data)
 	{
@@ -190,11 +190,23 @@ class ActiveRow implements \IteratorAggregate, IRow
 		}
 		$this->data = $data + $this->data;
 		$this->modified = $data + $this->modified;
-		$this->isModified = TRUE;
-		return $this->table->getConnection()
+
+		$selection = $this->table->getConnection()
 			->table($this->table->getName())
-			->wherePrimary($this->getPrimary())
-			->update($data);
+			->wherePrimary($this->getPrimary());
+
+		if ($selection->update($data)) {
+			$this->isModified = TRUE;
+			$selection->select('*');
+			if (($row = $selection->fetch()) === FALSE) {
+				throw new Nette\InvalidStateException('Database refetch failed; row does not exist!');
+			}
+			$this->data = $row->data;
+			$this->modified = array();
+			return TRUE;
+		} else {
+			return FALSE;
+		}
 	}
 
 
