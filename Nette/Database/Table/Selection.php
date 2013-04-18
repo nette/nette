@@ -839,7 +839,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 					continue;
 				}
 
-				$key = $row[$column] instanceof ActiveRow ? $row[$column]->getPrimary() : $row[$column];
+				$key = $row[$column];
 				$keys[$key] = TRUE;
 			}
 
