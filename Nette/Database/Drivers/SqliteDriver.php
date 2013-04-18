@@ -274,7 +274,7 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	 */
 	public function isSupported($item)
 	{
-		return FALSE;
+		return $item === self::MULTI_INSERT_AS_SELECT;
 	}
 
 }

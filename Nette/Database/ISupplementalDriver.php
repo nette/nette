@@ -23,7 +23,8 @@ use Nette;
 interface ISupplementalDriver
 {
 	const SUPPORT_SEQUENCE = 'sequence',
-		SUPPORT_SELECT_UNGROUPED_COLUMNS = 'ungrouped_cols';
+		SUPPORT_SELECT_UNGROUPED_COLUMNS = 'ungrouped_cols',
+		MULTI_INSERT_AS_SELECT = 'insert_as_select';
 
 	/**
 	 * Delimites identifier for use in a SQL statement.
