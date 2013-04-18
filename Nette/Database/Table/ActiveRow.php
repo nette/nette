@@ -354,12 +354,8 @@ class ActiveRow implements \IteratorAggregate, IRow
 		$this->accessColumn($column);
 		if (array_key_exists($column, $this->data)) {
 			$value = $this->data[$column];
-			$value = $value instanceof ActiveRow ? $value->getPrimary() : $value;
-
 			$referenced = $this->table->getReferencedTable($table, $column, $this->isModified ? $value : NULL);
-			$referenced = isset($referenced[$value]) ? $referenced[$value] : NULL; // referenced row may not exist
-
-			return $referenced;
+			return isset($referenced[$value]) ? $referenced[$value] : NULL; // referenced row may not exist
 		}
 
 		return FALSE;
