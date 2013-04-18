@@ -134,7 +134,7 @@ class SqlPreprocessor extends Nette\Object
 		} elseif ($value === NULL) {
 			return 'NULL';
 
-		} elseif ($value instanceof Table\ActiveRow) {
+		} elseif ($value instanceof Table\IRow) {
 			return $value->getPrimary();
 
 		} elseif (is_array($value) || $value instanceof \Traversable) {
