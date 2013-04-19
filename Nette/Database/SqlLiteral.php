@@ -24,10 +24,10 @@ use Nette;
 class SqlLiteral extends Nette\Object
 {
 	/** @var string */
-	private $value = '';
+	private $value;
 
 	/** @var array */
-	private $parameters = array();
+	private $parameters;
 
 
 

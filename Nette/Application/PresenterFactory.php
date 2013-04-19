@@ -179,7 +179,7 @@ class PresenterFactory implements IPresenterFactory
 		/*5.2*return strtr(substr($class, 0, -9), '_', ':');*/
 		foreach ($this->mapping as $module => $mapping) {
 			$mapping = str_replace(array('\\', '*'), array('\\\\', '(\w+)'), $mapping);
-			if (preg_match("#^\\\\?$mapping[0]((?:$mapping[1])*)$mapping[2]\z#i", $class, $matches)) {
+			if (preg_match("#^\\\\?$mapping[0]((?:$mapping[1])*)$mapping[2]\\z#i", $class, $matches)) {
 				return ($module === '*' ? '' : $module . ':')
 					. preg_replace("#$mapping[1]#iA", '$1:', $matches[1]) . $matches[3];
 			}
