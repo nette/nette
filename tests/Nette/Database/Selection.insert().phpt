@@ -56,17 +56,21 @@ if ($driverName !== 'sqlsrv') {
 
 
 
-// sqlite does not support inset ... select
-if ($driverName !== 'sqlite') {
-	if ($driverName === 'pgsql') {
-		$connection->table('book')->insert(
-			$connection->table('author')->select('nextval(?), id, NULL, ? || name, NULL', 'book_id_seq', 'Biography: ')
-		);
-	} else {
-		$connection->table('book')->insert(
-			$connection->table('author')->select('NULL, id, NULL, CONCAT(?, name), NULL',  'Biography: ')
-		);
-	}
-
-	Assert::equal(4, $connection->table('book')->where('title LIKE', "Biography%")->count('*'));
+switch ($driverName) {
+	case 'mysql':
+		$selection = $connection->table('author')->select('NULL, id, NULL, CONCAT(?, name), NULL',  'Biography: ');
+		break;
+	case 'pgsql':
+		$selection = $connection->table('author')->select('nextval(?), id, NULL, ? || name, NULL', 'book_id_seq', 'Biography: ');
+		break;
+	case 'sqlite':
+		$selection = $connection->table('author')->select('NULL, id, NULL, ? || name, NULL', 'Biography: ');
+		break;
+	case 'sqlsrv':
+		$selection = $connection->table('author')->select('id, NULL, CONCAT(?, name), NULL', 'Biography: ');
+		break;
+	default:
+		Assert::fail("Unsupported driver $driverName");
 }
+$connection->table('book')->insert($selection);
+Assert::equal(4, $connection->table('book')->where('title LIKE', "Biography%")->count('*'));
