@@ -729,7 +729,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	public function insert($data)
 	{
 		if ($data instanceof Selection) {
-			$data = new Nette\Database\SqlLiteral('(' . $data->getSql() . ')', $data->getSqlBuilder()->getParameters());
+			$data = new Nette\Database\SqlLiteral($data->getSql(), $data->getSqlBuilder()->getParameters());
 
 		} elseif ($data instanceof \Traversable) {
 			$data = iterator_to_array($data);
