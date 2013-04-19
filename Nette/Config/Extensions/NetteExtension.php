@@ -430,6 +430,17 @@ class NetteExtension extends Nette\Config\CompilerExtension
 				$initialize->addBody('$this->getService(?);', array($name));
 			}
 		}
+
+		if (!empty($config['container']['accessors'])) {
+			$definitions = $container->definitions;
+			ksort($definitions);
+			foreach ($definitions as $name => $def) {
+				if ($def->shared && Nette\PhpGenerator\Helpers::isIdentifier($name)) {
+					$type = $def->implement ?: $def->class;
+					$class->addDocument("@property $type \$$name");
+				}
+			}
+		}
 	}
 
 
