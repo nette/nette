@@ -72,7 +72,7 @@ class Container extends Nette\FreezableObject
 	{
 		$this->updating();
 		if (!is_string($name) || !$name) {
-			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
+			throw new Nette\InvalidArgumentException('Service name must be a non-empty string, ' . gettype($name) . ' given.');
 		}
 
 		if (isset($this->registry[$name])) {
@@ -120,8 +120,8 @@ class Container extends Nette\FreezableObject
 			return $this->registry[$name];
 
 		} elseif (isset($this->creating[$name])) {
-			throw new Nette\InvalidStateException("Circular reference detected for services: "
-				. implode(', ', array_keys($this->creating)) . ".");
+			throw new Nette\InvalidStateException('Circular reference detected for services: '
+				. implode(', ', array_keys($this->creating)) . '.');
 		}
 
 		if (isset($this->factories[$name])) {
@@ -139,8 +139,8 @@ class Container extends Nette\FreezableObject
 				throw new Nette\InvalidStateException("Unable to create service '$name', factory '$factory' is not callable.");
 
 			} else {
-				$this->creating[$name] = TRUE;
-				try {
+			$this->creating[$name] = TRUE;
+			try {
 					$service = $factory/*5.2*->invoke*/($this);
 				} catch (\Exception $e) {}
 			}
@@ -275,7 +275,7 @@ class Container extends Nette\FreezableObject
 	public function callInjects($service)
 	{
 		if (!is_object($service)) {
-			throw new Nette\InvalidArgumentException("Service must be object, " . gettype($service) . " given.");
+			throw new Nette\InvalidArgumentException('Service must be object, ' . gettype($service) . ' given.');
 		}
 
 		foreach (array_reverse(get_class_methods($service)) as $method) {
@@ -328,10 +328,8 @@ class Container extends Nette\FreezableObject
 	 */
 	public function &__get($name)
 	{
-		if (!isset($this->registry[$name])) {
-			$this->getService($name);
-		}
-		return $this->registry[$name];
+		$tmp = $this->getService($name);
+		return $tmp;
 	}
 
 
