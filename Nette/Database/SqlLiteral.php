@@ -39,6 +39,13 @@ class SqlLiteral extends Nette\Object
 
 
 
+	public function setParameters(array $parameters)
+	{
+		$this->parameters = $parameters;
+	}
+
+
+
 	/**
 	 * @return array
 	 */

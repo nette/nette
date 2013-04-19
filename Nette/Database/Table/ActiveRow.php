@@ -34,8 +34,8 @@ class ActiveRow implements \IteratorAggregate, IRow
 	/** @var bool */
 	private $dataRefreshed = FALSE;
 
-	/** @var array of new values {@see ActiveRow::update()} */
-	private $modified = array();
+	/** @var bool */
+	private $isModified = FALSE;
 
 
 
@@ -140,7 +140,7 @@ class ActiveRow implements \IteratorAggregate, IRow
 	 * Returns referenced row.
 	 * @param  string
 	 * @param  string
-	 * @return ActiveRow or NULL if the row does not exist
+	 * @return IRow or NULL if the row does not exist
 	 */
 	public function ref($key, $throughColumn = NULL)
 	{
@@ -175,22 +175,25 @@ class ActiveRow implements \IteratorAggregate, IRow
 	/**
 	 * Updates row.
 	 * @param  array|\Traversable (column => value)
-	 * @return int number of affected rows or FALSE in case of an error
+	 * @return bool
 	 */
 	public function update($data)
 	{
-		if ($data instanceof \Traversable) {
-			$data = iterator_to_array($data);
-		}
-		if ($data === NULL) {
-			$data = $this->modified;
-		}
-		$this->data = $data + $this->data;
-		$this->modified = $data + $this->modified;
-		return $this->table->getConnection()
+		$selection = $this->table->getConnection()
 			->table($this->table->getName())
-			->wherePrimary($this->getPrimary())
-			->update($data);
+			->wherePrimary($this->getPrimary());
+
+		if ($selection->update($data)) {
+			$this->isModified = TRUE;
+			$selection->select('*');
+			if (($row = $selection->fetch()) === FALSE) {
+				throw new \RuntimeException('Database refetch failed; row does not exist!');
+			}
+			$this->data = $row->data;
+			return TRUE;
+		} else {
+			return FALSE;
+		}
 	}
 
 
@@ -282,9 +285,7 @@ class ActiveRow implements \IteratorAggregate, IRow
 
 	public function __set($key, $value)
 	{
-		trigger_error('Changing properties of ActiveRow is deprecated; use update() instead.', E_USER_DEPRECATED);
-		$this->data[$key] = $value;
-		$this->modified[$key] = $value;
+		throw new \LogicException('ActiveRow is read-only; use update() method instead.');
 	}
 
 
@@ -325,19 +326,13 @@ class ActiveRow implements \IteratorAggregate, IRow
 
 	public function __unset($key)
 	{
-		trigger_error('Unsetting properties of ActiveRow is deprecated.', E_USER_DEPRECATED);
-		unset($this->data[$key]);
-		unset($this->modified[$key]);
+		throw new \LogicException('ActiveRow is read-only.');
 	}
 
 
 
 	protected function accessColumn($key, $selectColumn = TRUE)
 	{
-		if (isset($this->modified[$key])) {
-			return;
-		}
-
 		$this->table->accessColumn($key, $selectColumn);
 		if ($this->table->getDataRefreshed() && !$this->dataRefreshed) {
 			$this->data = $this->table[$this->getSignature()]->data;
@@ -359,16 +354,8 @@ class ActiveRow implements \IteratorAggregate, IRow
 		$this->accessColumn($column);
 		if (array_key_exists($column, $this->data)) {
 			$value = $this->data[$column];
-			$value = $value instanceof ActiveRow ? $value->getPrimary() : $value;
-
-			$referenced = $this->table->getReferencedTable($table, $column, !empty($this->modified[$column]));
-			$referenced = isset($referenced[$value]) ? $referenced[$value] : NULL; // referenced row may not exist
-
-			if (!empty($this->modified[$column])) { // cause saving changed column and prevent regenerating referenced table for $column
-				$this->modified[$column] = 0; // 0 fails on empty, pass on isset
-			}
-
-			return $referenced;
+			$referenced = $this->table->getReferencedTable($table, $column, $this->isModified ? $value : NULL);
+			return isset($referenced[$value]) ? $referenced[$value] : NULL; // referenced row may not exist
 		}
 
 		return FALSE;

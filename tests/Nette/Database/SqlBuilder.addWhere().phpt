@@ -150,8 +150,9 @@ $e = Assert::exception(function() use ($connection) {
 	$books->fetch();
 }, 'Nette\InvalidArgumentException', 'Selection argument must have defined a select column.');
 
-Assert::same('LogicException', get_class($e->getPrevious()));
-Assert::same('Table "book_tag" does not have a primary key.', $e->getPrevious()->getMessage());
+Assert::exception(function() use ($e) {
+	throw $e->getPrevious();
+}, 'LogicException', 'Table "book_tag" does not have a primary key.');
 
 
 Assert::exception(function() use ($connection, $reflection) {

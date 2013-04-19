@@ -48,10 +48,10 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	/** @var string|bool primary column sequence name, FALSE for autodetection */
 	protected $primarySequence = FALSE;
 
-	/** @var ActiveRow[] data read from database in [primary key => ActiveRow] format */
+	/** @var IRow[] data read from database in [primary key => IRow] format */
 	protected $rows;
 
-	/** @var ActiveRow[] modifiable data in [primary key => ActiveRow] format */
+	/** @var IRow[] modifiable data in [primary key => IRow] format */
 	protected $data;
 
 	/** @var bool */
@@ -66,7 +66,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	/** @var string */
 	protected $specificCacheKey;
 
-	/** @var array of [conditions => [key => ActiveRow]]; used by GroupedSelection */
+	/** @var array of [conditions => [key => IRow]]; used by GroupedSelection */
 	protected $aggregation = array();
 
 	/** @var array of touched columns */
@@ -245,7 +245,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	/**
 	 * Returns row specified by primary key.
 	 * @param  mixed primary key
-	 * @return ActiveRow or FALSE if there is no such row
+	 * @return IRow or FALSE if there is no such row
 	 */
 	public function get($key)
 	{
@@ -622,6 +622,15 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 
 	/**
+	 * Loads refCache references
+	 */
+	protected function loadRefCache()
+	{
+	}
+
+
+
+	/**
 	 * Returns general cache key indenpendent on query parameters or sql limit
 	 * Used e.g. for previously accessed columns caching
 	 * @return string
@@ -714,13 +723,15 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 	/**
 	 * Inserts row in a table.
-	 * @param  mixed array($column => $value)|Traversable for single row insert or Selection|string for INSERT ... SELECT
-	 * @return ActiveRow or FALSE in case of an error or number of affected rows for INSERT ... SELECT
+	 * @param  mixed array($column => $value)|Traversable for single row insert or Selection for INSERT ... SELECT
+	 * @return IRow or FALSE in case of an error or number of affected rows for INSERT ... SELECT
 	 */
 	public function insert($data)
 	{
 		if ($data instanceof Selection) {
-			$data = $data->getSql();
+			$parameters = $data->getSqlBuilder()->getParameters();
+			$data = new Nette\Database\SqlLiteral('(' . $data->getSql() . ')');
+			$data->setParameters($parameters);
 
 		} elseif ($data instanceof \Traversable) {
 			$data = iterator_to_array($data);
@@ -729,17 +740,40 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 		$return = $this->connection->query($this->sqlBuilder->buildInsertQuery(), $data);
 		$this->checkReferenced = TRUE;
 
-		if (!is_array($data)) {
+		if ($data instanceof Nette\Database\SqlLiteral) {
 			return $return->getRowCount();
 		}
 
-		if (!is_array($this->primary) && !isset($data[$this->primary]) && ($id = $this->connection->getInsertId($this->getPrimarySequence()))) {
-			$data[$this->primary] = $id;
+		$primaryKey = $this->connection->getInsertId($this->getPrimarySequence());
+		if (is_array($this->getPrimary())) {
+			$primaryKey = array();
+
+			foreach ((array) $this->getPrimary() as $key) {
+				if (!isset($data[$key])) {
+					return $data;
+				}
+
+				$primaryKey[$key] = $data[$key];
+			}
+			if (count($primaryKey) === 1) {
+				$primaryKey = reset($primaryKey);
+			}
 		}
 
-		$row = $this->createRow($data);
-		if ($signature = $row->getSignature(FALSE)) {
-			$this->rows[$signature] = $row;
+		$row = $this->connection->table($this->name)
+			->select('*')
+			->wherePrimary($primaryKey)
+			->fetch();
+
+		$this->loadRefCache();
+		if ($this->rows !== NULL) {
+			if ($signature = $row->getSignature(FALSE)) {
+				$this->rows[$signature] = $row;
+				$this->data[$signature] = $row;
+			} else {
+				$this->rows[] = $row;
+				$this->data[] = $row;
+			}
 		}
 
 		return $row;
@@ -793,13 +827,13 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	 * Returns referenced row.
 	 * @param  string
 	 * @param  string
-	 * @param  bool  checks if rows contains the same primary value relations
+	 * @param  mixed   primary key to check for $table and $column references
 	 * @return Selection or array() if the row does not exist
 	 */
-	public function getReferencedTable($table, $column, $checkReferenced = FALSE)
+	public function getReferencedTable($table, $column, $checkPrimaryKey = NULL)
 	{
 		$referenced = & $this->refCache['referenced'][$this->getSpecificCacheKey()]["$table.$column"];
-		if ($referenced === NULL || $checkReferenced || $this->checkReferenced) {
+		if ($referenced === NULL || !isset($referenced[$checkPrimaryKey]) || $this->checkReferenced) {
 			$this->execute();
 			$this->checkReferenced = FALSE;
 			$keys = array();
@@ -808,7 +842,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 					continue;
 				}
 
-				$key = $row[$column] instanceof ActiveRow ? $row[$column]->getPrimary() : $row[$column];
+				$key = $row[$column];
 				$keys[$key] = TRUE;
 			}
 
@@ -870,7 +904,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 
 
-	/** @return ActiveRow */
+	/** @return IRow */
 	public function current()
 	{
 		if (($key = current($this->keys)) !== FALSE) {
@@ -913,7 +947,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	/**
 	 * Mimic row.
 	 * @param  string row ID
-	 * @param  ActiveRow
+	 * @param  IRow
 	 * @return NULL
 	 */
 	public function offsetSet($key, $value)
@@ -927,7 +961,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	/**
 	 * Returns specified row.
 	 * @param  string row ID
-	 * @return ActiveRow or NULL if there is no such row
+	 * @return IRow or NULL if there is no such row
 	 */
 	public function offsetGet($key)
 	{
