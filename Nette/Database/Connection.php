@@ -256,6 +256,17 @@ class Connection extends Nette\Object
 
 
 
+	/**
+	 * @return SqlLiteral
+	 */
+	public static function literal($value)
+	{
+		$args = func_get_args();
+		return new SqlLiteral(array_shift($args), $args);
+	}
+
+
+
 	/********************* Selection ****************d*g**/
 
 
