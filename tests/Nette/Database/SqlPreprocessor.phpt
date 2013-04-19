@@ -78,12 +78,12 @@ Assert::exception(function() use ($preprocessor) {
 
 
 // SqlLiteral
-list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE id =', new SqlLiteral('? OR id = ?', 11, 12) ));
+list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE id =', new SqlLiteral('? OR id = ?', array(11, 12)) ));
 Assert::same( 'SELECT id FROM author WHERE id = ? OR id = ?', $sql );
 Assert::same( array(11, 12), $params );
 
 
-list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE', new SqlLiteral('id=11'), 'OR', new SqlLiteral('id=?', 12)));
+list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE', new SqlLiteral('id=11'), 'OR', new SqlLiteral('id=?', array(12))));
 Assert::same( 'SELECT id FROM author WHERE id=11 OR id=?', $sql );
 Assert::same( array(12), $params );
 
@@ -131,7 +131,7 @@ Assert::same( array(), $params );
 
 // update
 list($sql, $params) = $preprocessor->process(array('UPDATE author SET ?',
-	array('id' => 12, 'name' => new SqlLiteral('UPPER(?)', 'John Doe')),
+	array('id' => 12, 'name' => new SqlLiteral('UPPER(?)', array('John Doe'))),
 ));
 
 Assert::same( reformat("UPDATE author SET [id]=12, [name]=UPPER(?)"), $sql );
