@@ -161,7 +161,7 @@ final class Helpers
 
 			} elseif (!class_exists($type) && !interface_exists($type)) {
 				if ($type[0] !== '\\') {
-					$type = $class->getNamespaceName() . '\\' . $type;
+					$type = $property->getDeclaringClass()->getNamespaceName() . '\\' . $type;
 				}
 				if (!class_exists($type) && !interface_exists($type)) {
 					throw new Nette\InvalidStateException("Please use a fully qualified name of class/interface in @var annotation at $property property. Class '$type' cannot be found.");
