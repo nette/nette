@@ -20,7 +20,7 @@ use Nette\Database\Table\SqlBuilder;
 
 
 $reflection = new DiscoveredReflection($connection);
-$connection->setSelectionFactory(new Nette\Database\SelectionFactory($connection, $reflection));
+$dao = new Nette\Database\SelectionFactory($connection, $reflection);
 $sqlBuilder = array();
 
 // test paramateres with NULL
@@ -30,15 +30,15 @@ $sqlBuilder[0]->addWhere('id ? OR id ?', array(1, NULL)); // duplicit condition
 
 // test Selection as a parameter
 $sqlBuilder[1] = new SqlBuilder('book', $connection, $reflection);
-$sqlBuilder[1]->addWhere('id', $connection->table('book'));
+$sqlBuilder[1]->addWhere('id', $dao->table('book'));
 
 // test Selection with column as a parameter
 $sqlBuilder[2] = new SqlBuilder('book', $connection, $reflection);
-$sqlBuilder[2]->addWhere('id', $connection->table('book')->select('id'));
+$sqlBuilder[2]->addWhere('id', $dao->table('book')->select('id'));
 
 // test multiple placeholder parameter
 $sqlBuilder[3] = new SqlBuilder('book', $connection, $reflection);
-$sqlBuilder[3]->addWhere('id ? OR id ?', NULL, $connection->table('book'));
+$sqlBuilder[3]->addWhere('id ? OR id ?', NULL, $dao->table('book'));
 
 // test SqlLiteral
 $sqlBuilder[4] = new SqlBuilder('book', $connection, $reflection);
@@ -83,7 +83,7 @@ $sqlBuilder[9]->addWhere("\ncol1 ?\nOR col2 ?\n", 1, 1);
 // tests NOT
 $sqlBuilder[10] = new SqlBuilder('book', $connection, $reflection);
 $sqlBuilder[10]->addWhere('id NOT', array(1, 2));
-$sqlBuilder[10]->addWhere('id NOT', $connection->table('book')->select('id'));
+$sqlBuilder[10]->addWhere('id NOT', $dao->table('book')->select('id'));
 
 Assert::same(reformat('SELECT * FROM [book] WHERE ([id] = ? OR [id] IS NULL)'), $sqlBuilder[0]->buildSelectQuery());
 Assert::same(reformat('SELECT * FROM [book] WHERE ([id] IN (?))'), $sqlBuilder[4]->buildSelectQuery());
@@ -115,14 +115,14 @@ switch ($driverName) {
 
 
 
-$books = $connection->table('book')->where('id',
-	$connection->table('book_tag')->select('book_id')->where('tag_id', 21)
+$books = $dao->table('book')->where('id',
+	$dao->table('book_tag')->select('book_id')->where('tag_id', 21)
 );
 Assert::same(3, $books->count());
 
-Assert::exception(function() use ($connection) {
-	$connection->table('book')->where('id',
-		$connection->table('book_tag')->where('tag_id', 21)
+Assert::exception(function() use ($dao) {
+	$dao->table('book')->where('id',
+		$dao->table('book_tag')->where('tag_id', 21)
 	);
 }, 'Nette\InvalidArgumentException', 'Selection argument must have defined a select column.');
 
@@ -156,11 +156,11 @@ switch ($driverName) {
 }
 
 $reflection = new DiscoveredReflection($connection);
-$connection->setSelectionFactory(new Nette\Database\SelectionFactory($connection, $reflection));
+$dao = new Nette\Database\SelectionFactory($connection, $reflection);
 
-$e = Assert::exception(function() use ($connection) {
-	$books = $connection->table('book')->where('id',
-		$connection->table('book_tag')->where('tag_id', 21)
+$e = Assert::exception(function() use ($dao) {
+	$books = $dao->table('book')->where('id',
+		$dao->table('book_tag')->where('tag_id', 21)
 	);
 	$books->fetch();
 }, 'Nette\InvalidArgumentException', 'Selection argument must have defined a select column.');

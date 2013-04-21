@@ -15,7 +15,7 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName
 
 
 
-$apps = $connection->table('book')->order('title')->fetchPairs('id', 'title');  // SELECT * FROM `book` ORDER BY `title`
+$apps = $dao->table('book')->order('title')->fetchPairs('id', 'title');  // SELECT * FROM `book` ORDER BY `title`
 Assert::same(array(
 	1 => '1001 tipu a triku pro PHP',
 	4 => 'Dibi',
@@ -25,7 +25,7 @@ Assert::same(array(
 
 
 
-$ids = $connection->table('book')->order('id')->fetchPairs('id', 'id');  // SELECT * FROM `book` ORDER BY `id`
+$ids = $dao->table('book')->order('id')->fetchPairs('id', 'id');  // SELECT * FROM `book` ORDER BY `id`
 Assert::same(array(
 	1 => 1,
 	2 => 2,
@@ -35,9 +35,9 @@ Assert::same(array(
 
 
 
-$connection->table('author')->get(11)->update(array('born' => new DateTime('2002-02-20')));
-$connection->table('author')->get(12)->update(array('born' => new DateTime('2002-02-02')));
-$list = $connection->table('author')->where('born IS NOT NULL')->order('born')->fetchPairs('born', 'name');
+$dao->table('author')->get(11)->update(array('born' => new DateTime('2002-02-20')));
+$dao->table('author')->get(12)->update(array('born' => new DateTime('2002-02-02')));
+$list = $dao->table('author')->where('born IS NOT NULL')->order('born')->fetchPairs('born', 'name');
 Assert::same(array(
 	'2002-02-02 00:00:00' => 'David Grudl',
 	'2002-02-20 00:00:00' => 'Jakub Vrana',

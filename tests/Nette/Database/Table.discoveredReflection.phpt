@@ -12,15 +12,15 @@
 require __DIR__ . '/connect.inc.php'; // create $connection
 
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
-$connection->setSelectionFactory(new Nette\Database\SelectionFactory(
+$dao = new Nette\Database\SelectionFactory(
 	$connection,
 	new Nette\Database\Reflection\DiscoveredReflection($connection)
-));
+);
 
 
 
 $appTags = array();
-foreach ($connection->table('book') as $book) {
+foreach ($dao->table('book') as $book) {
 	$appTags[$book->title] = array(
 		'author' => $book->author->name,
 		'tags' => array(),
@@ -53,7 +53,7 @@ Assert::same(array(
 
 
 $books = array();
-foreach ($connection->table('author') as $author) {
+foreach ($dao->table('author') as $author) {
 	foreach ($author->related('book') as $book) {
 		$books[$book->title] = $author->name;
 	}
@@ -68,12 +68,12 @@ Assert::same(array(
 
 
 
-$book = $connection->table('book')->get(1);
+$book = $dao->table('book')->get(1);
 Assert::same('Jakub Vrana', $book->translator->name);
 
 
 
-$book = $connection->table('book')->get(2);
+$book = $dao->table('book')->get(2);
 Assert::true(isset($book->author_id));
 Assert::false(empty($book->author_id));
 
@@ -95,7 +95,7 @@ if (
 ) {
 	// tests case-insensitive reflection
 	$books = array();
-	foreach ($connection->table('Author') as $author) {
+	foreach ($dao->table('Author') as $author) {
 		foreach ($author->related('book') as $book) {
 			$books[$book->title] = $author->name;
 		}
@@ -111,7 +111,7 @@ if (
 
 
 
-$count = $connection->table('book')->where('translator.name LIKE ?', '%David%')->count();
+$count = $dao->table('book')->where('translator.name LIKE ?', '%David%')->count();
 Assert::same(2, $count);
-$count = $connection->table('book')->where('author.name LIKE ?', '%David%')->count();
+$count = $dao->table('book')->where('author.name LIKE ?', '%David%')->count();
 Assert::same(2, $count);

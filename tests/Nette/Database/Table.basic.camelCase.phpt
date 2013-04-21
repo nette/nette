@@ -12,15 +12,15 @@
 require __DIR__ . '/connect.inc.php'; // create $connection
 
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test2.sql");
-$connection->setSelectionFactory(new Nette\Database\SelectionFactory(
+$dao = new Nette\Database\SelectionFactory(
 	$connection,
 	new Nette\Database\Reflection\DiscoveredReflection($connection)
-));
+);
 
 
 
 $titles = array();
-foreach ($connection->table('nUsers')->order('nUserId') as $user) {
+foreach ($dao->table('nUsers')->order('nUserId') as $user) {
 	foreach ($user->related('nUsers_nTopics')->order('nTopicId') as $userTopic) {
 		$titles[$userTopic->nTopic->title] = $user->name;
 	}

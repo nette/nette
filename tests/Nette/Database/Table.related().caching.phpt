@@ -14,7 +14,7 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName
 
 
 
-$books = $connection->table('book');
+$books = $dao->table('book');
 foreach ($books as $book) {
 	foreach ($book->related('book_tag') as $bookTag) {
 		$bookTag->tag;
@@ -36,7 +36,7 @@ Assert::same(array(
 ), $tags);
 
 $connection->query('UPDATE book SET translator_id = 12 WHERE id = 2');
-$author = $connection->table('author')->get(11);
+$author = $dao->table('author')->get(11);
 
 foreach ($author->related('book')->limit(1) as $book) {
 	$book->ref('author', 'translator_id')->name;

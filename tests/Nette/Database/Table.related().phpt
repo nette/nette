@@ -17,7 +17,7 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName
 
 $books1 = $books2 = $books3 = array();
 
-foreach ($connection->table('author') as $author) {  // SELECT * FROM `author`
+foreach ($dao->table('author') as $author) {  // SELECT * FROM `author`
 	foreach ($author->related('book', 'translator_id') as $book) {  // SELECT * FROM `book` WHERE (`book`.`translator_id` IN (11, 12, 13))
 		$books1[$book->title] = $author->name;
 	}
@@ -50,7 +50,7 @@ Assert::same($expectBooks, $books3);
 
 
 $tagsAuthors = array();
-foreach ($connection->table('tag') as $tag) {
+foreach ($dao->table('tag') as $tag) {
 
 	$book_tags = $tag->related('book_tag')->group('book_tag.tag_id, book.author_id, book.author.name')->select('book.author_id')->order('book.author.name');
 	foreach ($book_tags as $book_tag) {
@@ -76,7 +76,7 @@ Assert::same(array(
 
 
 $counts1 = $counts2 = array();
-foreach($connection->table('author')->order('id') as $author) {
+foreach($dao->table('author')->order('id') as $author) {
 	$counts1[] = $author->related('book.author_id')->count('id');
 	$counts2[] = $author->related('book.author_id')->where('translator_id', NULL)->count('id');
 }
@@ -86,7 +86,7 @@ Assert::same(array(1, 0, 0), $counts2);
 
 
 
-$author = $connection->table('author')->get(11);
+$author = $dao->table('author')->get(11);
 $books  = $author->related('book')->where('translator_id', 11);
 Assert::same('1001 tipu a triku pro PHP', $books->fetch()->title);
 Assert::false($books->fetch());

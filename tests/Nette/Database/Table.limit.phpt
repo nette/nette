@@ -16,12 +16,12 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName
 
 
 
-$count = $connection->table('author')->limit(2)->count();
+$count = $dao->table('author')->limit(2)->count();
 Assert::equal(2, $count);
 
 
 
-$authors = $connection->table('author')->order('name')->limit(2);
+$authors = $dao->table('author')->order('name')->limit(2);
 $names = array();
 foreach ($authors as $user) {
 	$names[] = $user->name;

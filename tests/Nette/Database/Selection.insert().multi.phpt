@@ -12,14 +12,14 @@
 require __DIR__ . '/connect.inc.php'; // create $connection
 
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
-$connection->setSelectionFactory(new Nette\Database\SelectionFactory(
+$dao = new Nette\Database\SelectionFactory(
 	$connection,
 	new Nette\Database\Reflection\DiscoveredReflection($connection)
-));
+);
 
 
 
-$connection->table('author')->insert(array(
+$dao->table('author')->insert(array(
 	array(
 		'name' => 'Catelyn Stark',
 		'web' => 'http://example.com',
@@ -34,8 +34,8 @@ $connection->table('author')->insert(array(
 
 
 
-$connection->table('book_tag')->where('book_id', 1)->delete();  // DELETE FROM `book_tag` WHERE (`book_id` = ?)
-$connection->table('book')->get(1)->related('book_tag')->insert(array(  // SELECT * FROM `book` WHERE (`id` = ?)
+$dao->table('book_tag')->where('book_id', 1)->delete();  // DELETE FROM `book_tag` WHERE (`book_id` = ?)
+$dao->table('book')->get(1)->related('book_tag')->insert(array(  // SELECT * FROM `book` WHERE (`id` = ?)
 	array('tag_id' => 21),
 	array('tag_id' => 22),
 	array('tag_id' => 23),

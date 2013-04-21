@@ -29,6 +29,7 @@ if (strpos($options['dsn'], 'sqlite::memory:') === FALSE) {
 	Tester\Helpers::lock($options['dsn'], dirname(TEMP_DIR));
 }
 $driverName = $connection->getPdo()->getAttribute(PDO::ATTR_DRIVER_NAME);
+$dao = new Nette\Database\SelectionFactory($connection);
 
 
 /** Replaces [] with driver-specific quotes */

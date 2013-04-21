@@ -20,7 +20,7 @@ use Nette\Database\Table\SqlBuilder;
 
 
 $reflection = new DiscoveredReflection($connection);
-$connection->setSelectionFactory(new Nette\Database\SelectionFactory($connection, $reflection));
+$dao = new Nette\Database\SelectionFactory($connection, $reflection);
 
 
 
@@ -42,7 +42,7 @@ switch ($driverName) {
 		Assert::fail("Unsupported driver $driverName");
 }
 
-$selection = $connection
+$selection = $dao
 	->table('book')
 	->select('? AS col1', 'hi there!')
 	->select('? AS col2', $literal);
@@ -54,7 +54,7 @@ Assert::same((int) date('Y'), $row['col2']);
 
 
 $bookTagsCount = array();
-$books = $connection
+$books = $dao
 	->table('book')
 	->select('book.title, COUNT(DISTINCT :book_tag.tag_id) AS tagsCount')
 	->group('book.title')
@@ -74,7 +74,7 @@ Assert::same(array(
 
 if ($driverName === 'mysql') {
 	$authors = array();
-	$selection = $connection->table('author')->order('FIELD(name, ?)', array('Jakub Vrana', 'David Grudl', 'Geek'));
+	$selection = $dao->table('author')->order('FIELD(name, ?)', array('Jakub Vrana', 'David Grudl', 'Geek'));
 	foreach ($selection as $author) {
 		$authors[] = $author->name;
 	}
