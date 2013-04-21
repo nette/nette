@@ -74,3 +74,17 @@ switch ($driverName) {
 }
 $connection->table('book')->insert($selection);
 Assert::equal(4, $connection->table('book')->where('title LIKE', "Biography%")->count('*'));
+
+
+
+// Insert into table without primary key
+$connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory(
+	$connection,
+	new Nette\Database\Reflection\DiscoveredReflection($connection)
+));
+
+$inserted = $connection->table('note')->insert(array(
+	'book_id' => 1,
+	'note' => 'Good one!',
+));
+Assert::equal(1, $inserted);

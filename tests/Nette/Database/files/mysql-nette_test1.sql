@@ -82,4 +82,11 @@ INSERT INTO book_tag_alt (book_id, tag_id, state) VALUES (3, 22, 'private');
 INSERT INTO book_tag_alt (book_id, tag_id, state) VALUES (3, 23, 'private');
 INSERT INTO book_tag_alt (book_id, tag_id, state) VALUES (3, 24, 'public');
 
+DROP TABLE IF EXISTS note;
+CREATE TABLE note (
+	book_id int NOT NULL,
+	note varchar(100),
+	CONSTRAINT note_book FOREIGN KEY (book_id) REFERENCES book (id)
+);
+
 SET FOREIGN_KEY_CHECKS = 1;

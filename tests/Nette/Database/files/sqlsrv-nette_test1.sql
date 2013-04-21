@@ -1,3 +1,4 @@
+IF OBJECT_ID('note', 'U') IS NOT NULL DROP TABLE note;
 IF OBJECT_ID('book_tag_alt', 'U') IS NOT NULL DROP TABLE book_tag_alt;
 IF OBJECT_ID('book_tag', 'U') IS NOT NULL DROP TABLE book_tag;
 IF OBJECT_ID('book', 'U') IS NOT NULL DROP TABLE book;
@@ -90,3 +91,11 @@ INSERT INTO book_tag_alt (book_id, tag_id, state) VALUES
 (3, 22, 'private'),
 (3, 23, 'private'),
 (3, 24, 'public');
+
+
+
+CREATE TABLE note (
+	book_id int NOT NULL,
+	note varchar(100),
+	CONSTRAINT note_book FOREIGN KEY (book_id) REFERENCES book (id)
+);
