@@ -105,33 +105,14 @@ class Container extends Nette\Object
 	 * Gets the service object by name.
 	 * @param  string
 	 * @return object
+	 * @throws MissingServiceException
 	 */
 	public function getService($name)
 	{
-		if (isset($this->registry[$name])) {
-			return $this->registry[$name];
-
-		} elseif (isset($this->creating[$name])) {
-			throw new Nette\InvalidStateException('Circular reference detected for services: '
-				. implode(', ', array_keys($this->creating)) . '.');
-
-		} elseif (method_exists($this, $method = Container::getMethodName($name)) && $this->getReflection()->getMethod($method)->getName() === $method) {
-			$this->creating[$name] = TRUE;
-			try {
-				$service = $this->$method();
-			} catch (\Exception $e) {
-				unset($this->creating[$name]);
-				throw $e;
-			}
-			unset($this->creating[$name]);
-			if (!is_object($service)) {
-				throw new Nette\UnexpectedValueException("Unable to create service '$name', value returned by method $method() is not object.");
-			}
-			return $this->registry[$name] = $service;
-
-		} else {
-			throw new MissingServiceException("Service '$name' not found.");
+		if (!isset($this->registry[$name])) {
+			$this->registry[$name] = $this->createService($name);
 		}
+		return $this->registry[$name];
 	}
 
 
@@ -160,6 +141,41 @@ class Container extends Nette\Object
 			throw new MissingServiceException("Service '$name' not found.");
 		}
 		return isset($this->registry[$name]);
+	}
+
+
+
+	/**
+	 * Creates new instance of the service.
+	 * @param  string service name
+	 * @return object
+	 * @throws MissingServiceException
+	 */
+	public function createService($name)
+	{
+		$method = Container::getMethodName($name);
+		if (isset($this->creating[$name])) {
+			throw new Nette\InvalidStateException("Circular reference detected for services: "
+				. implode(', ', array_keys($this->creating)) . ".");
+
+		} elseif (!method_exists($this, $method) || $this->getReflection()->getMethod($method)->getName() !== $method) {
+			throw new MissingServiceException("Service '$name' not found.");
+		}
+
+		$this->creating[$name] = TRUE;
+		try {
+			$service = $this->$method();
+		} catch (\Exception $e) {
+			unset($this->creating[$name]);
+			throw $e;
+		}
+		unset($this->creating[$name]);
+
+		if (!is_object($service)) {
+			throw new Nette\UnexpectedValueException("Unable to create service '$name', value returned by method $method() is not object.");
+		}
+
+		return $service;
 	}
 
 

@@ -441,7 +441,6 @@ class ContainerBuilder extends Nette\Object
 				}
 				$method = $containerClass->addMethod($methodName)
 					->addDocument("@return " . ($def->implement ?: $def->class))
-					->setVisibility($def->shared ? 'protected' : 'public')
 					->setBody($name === self::THIS_CONTAINER ? 'return $this;' : $this->generateService($name))
 					->setParameters($def->implement ? array() : $this->convertParameters($def->parameters));
 			} catch (\Exception $e) {
