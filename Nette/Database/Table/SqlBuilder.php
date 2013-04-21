@@ -267,7 +267,29 @@ class SqlBuilder extends Nette\Object
 
 				if ($arg !== NULL) {
 					if (!$arg) {
-						$replace = $match[2][0] . '(NULL)';
+						$placholderPosition = $match[1][1] + strlen($match[1][0]);
+						$conditionPrefix = substr($condition, 0, $placholderPosition);
+						$conditionSuffix = substr($condition, $placholderPosition);
+						$conditionPrefix = preg_replace('#(?!OR|AND)([^\(]*)(NOT\s*)([^\(]*)$#s', '\1\3', $conditionPrefix, 1, $notCount);
+						if ($notCount) {
+							$match[1][1] -= strpos($match[1][0], 'NOT') !== FALSE ? 0 : $placholderPosition - strlen($conditionPrefix);
+							if (!isset($addedParentheses)) {
+								$addedParentheses = TRUE;
+								$conditionPrefixLen = strlen($conditionPrefix);
+								list($conditionPrefix, $conditionSuffix) = str_replace(array('(', ')'), array('((', '))'), array($conditionPrefix, $conditionSuffix));
+								list($conditionPrefix, $conditionSuffix) = preg_replace('#\s*(AND|OR)\s*#', ') \1 (', array($conditionPrefix, $conditionSuffix), -1, $andCount);
+								$condition = $conditionPrefix . $conditionSuffix;
+								if ($andCount) {
+									$match[1][1] += strlen($conditionPrefix) - $conditionPrefixLen + 1;
+									$condition = "($condition)";
+								}
+								$match[1][0] = '?';
+							}
+							$replace = 'IS NULL OR TRUE';
+						} else {
+							$replace = 'IS NULL AND FALSE';
+						}
+						$arg = NULL;
 					} else {
 						$replace = $match[2][0] . '(?)';
 						$this->parameters['where'][] = $arg;
