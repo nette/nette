@@ -89,7 +89,10 @@ class SqlsrvDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	public function applyLimit(&$sql, $limit, $offset)
 	{
 		if ($limit >= 0) {
-			$sql = 'SELECT TOP ' . (int) $limit . ' * FROM (' . $sql . ') t';
+			$sql = preg_replace('#^\s*SELECT#i', 'SELECT TOP ' . (int) $limit, $sql, 1, $replaceCount);
+			if ($replaceCount === 0) {
+				throw new Nette\InvalidArgumentException('SQL query must start with SELECT clause.');
+			}
 		}
 
 		if ($offset) {
