@@ -50,7 +50,7 @@ class SqlPreprocessor extends Nette\Object
 		$this->connection = $connection;
 		$this->driver = $connection->getSupplementalDriver();
 		$this->arrayModes = array(
-			'INSERT' => $this->driver->isSupported(ISupplementalDriver::MULTI_INSERT_AS_SELECT) ? 'select' : 'values',
+			'INSERT' => $this->driver->isSupported(ISupplementalDriver::SUPPORT_MULTI_INSERT_AS_SELECT) ? 'select' : 'values',
 			'REPLACE' => 'values',
 			'UPDATE' => 'assoc',
 			'WHERE' => 'and',
