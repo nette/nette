@@ -6,7 +6,8 @@ USE nette_test;
 
 SET FOREIGN_KEY_CHECKS = 0;
 
-DROP TABLE IF EXISTS author;
+
+
 CREATE TABLE author (
 	id int NOT NULL AUTO_INCREMENT,
 	name varchar(30) NOT NULL,
@@ -19,7 +20,8 @@ INSERT INTO author (id, name, web, born) VALUES (11, 'Jakub Vrana', 'http://www.
 INSERT INTO author (id, name, web, born) VALUES (12, 'David Grudl', 'http://davidgrudl.com/', NULL);
 INSERT INTO author (id, name, web, born) VALUES (13, 'Geek', 'http://example.com', NULL);
 
-DROP TABLE IF EXISTS tag;
+
+
 CREATE TABLE tag (
 	id int NOT NULL AUTO_INCREMENT,
 	name varchar(20) NOT NULL,
@@ -31,7 +33,8 @@ INSERT INTO tag (id, name) VALUES (22, 'MySQL');
 INSERT INTO tag (id, name) VALUES (23, 'JavaScript');
 INSERT INTO tag (id, name) VALUES (24, 'Neon');
 
-DROP TABLE IF EXISTS book;
+
+
 CREATE TABLE book (
 	id int NOT NULL AUTO_INCREMENT,
 	author_id int NOT NULL,
@@ -51,7 +54,8 @@ INSERT INTO book (id, author_id, translator_id, title) VALUES (2, 11, NULL, 'JUS
 INSERT INTO book (id, author_id, translator_id, title) VALUES (3, 12, 12, 'Nette');
 INSERT INTO book (id, author_id, translator_id, title) VALUES (4, 12, 12, 'Dibi');
 
-DROP TABLE IF EXISTS book_tag;
+
+
 CREATE TABLE book_tag (
 	book_id int NOT NULL,
 	tag_id int NOT NULL,
@@ -67,7 +71,8 @@ INSERT INTO book_tag (book_id, tag_id) VALUES (1, 22);
 INSERT INTO book_tag (book_id, tag_id) VALUES (4, 22);
 INSERT INTO book_tag (book_id, tag_id) VALUES (2, 23);
 
-DROP TABLE IF EXISTS book_tag_alt;
+
+
 CREATE TABLE book_tag_alt (
 	book_id int NOT NULL,
 	tag_id int NOT NULL,
@@ -82,7 +87,8 @@ INSERT INTO book_tag_alt (book_id, tag_id, state) VALUES (3, 22, 'private');
 INSERT INTO book_tag_alt (book_id, tag_id, state) VALUES (3, 23, 'private');
 INSERT INTO book_tag_alt (book_id, tag_id, state) VALUES (3, 24, 'public');
 
-DROP TABLE IF EXISTS note;
+
+
 CREATE TABLE note (
 	book_id int NOT NULL,
 	note varchar(100),

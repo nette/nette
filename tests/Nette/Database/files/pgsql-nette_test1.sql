@@ -15,6 +15,8 @@ INSERT INTO author (id, name, web, born) VALUES (12, 'David Grudl', 'http://davi
 INSERT INTO author (id, name, web, born) VALUES (13, 'Geek', 'http://example.com', NULL);
 SELECT setval('author_id_seq', 13, TRUE);
 
+
+
 CREATE TABLE tag (
 	id serial NOT NULL,
 	name varchar(20) NOT NULL,
@@ -26,6 +28,8 @@ INSERT INTO tag (id, name) VALUES (22, 'MySQL');
 INSERT INTO tag (id, name) VALUES (23, 'JavaScript');
 INSERT INTO tag (id, name) VALUES (24, 'Neon');
 SELECT setval('tag_id_seq', 24, TRUE);
+
+
 
 CREATE TABLE book (
 	id serial NOT NULL,
@@ -40,6 +44,8 @@ CREATE TABLE book (
 );
 
 CREATE INDEX book_title ON book (title);
+
+
 
 INSERT INTO book (id, author_id, translator_id, title) VALUES (1, 11, 11, '1001 tipu a triku pro PHP');
 INSERT INTO book (id, author_id, translator_id, title) VALUES (2, 11, NULL, 'JUSH');
@@ -62,6 +68,8 @@ INSERT INTO book_tag (book_id, tag_id) VALUES (1, 22);
 INSERT INTO book_tag (book_id, tag_id) VALUES (4, 22);
 INSERT INTO book_tag (book_id, tag_id) VALUES (2, 23);
 
+
+
 CREATE TABLE book_tag_alt (
 	book_id int NOT NULL,
 	tag_id int NOT NULL,
@@ -75,6 +83,8 @@ INSERT INTO book_tag_alt (book_id, tag_id, state) VALUES (3, 21, 'public');
 INSERT INTO book_tag_alt (book_id, tag_id, state) VALUES (3, 22, 'private');
 INSERT INTO book_tag_alt (book_id, tag_id, state) VALUES (3, 23, 'private');
 INSERT INTO book_tag_alt (book_id, tag_id, state) VALUES (3, 24, 'public');
+
+
 
 CREATE TABLE note (
 	book_id int NOT NULL,
