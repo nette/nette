@@ -32,9 +32,6 @@ class SqlBuilder extends Nette\Object
 	private $driver;
 
 	/** @var string */
-	private $driverName;
-
-	/** @var string */
 	protected $tableName;
 
 	/** @var IReflection */
@@ -83,7 +80,6 @@ class SqlBuilder extends Nette\Object
 		$this->tableName = $tableName;
 		$this->databaseReflection = $reflection;
 		$this->driver = $connection->getSupplementalDriver();
-		$this->driverName = $connection->getPdo()->getAttribute(\PDO::ATTR_DRIVER_NAME);
 		$this->delimitedTable = $this->tryDelimite($tableName);
 	}
 
@@ -263,7 +259,7 @@ class SqlBuilder extends Nette\Object
 						}
 					}
 
-					if ($this->driverName !== 'mysql') {
+					if ($this->driver->isSupported(ISupplementalDriver::SUPPORT_SUBSELECT)) {
 						$arg = NULL;
 						$replace = $match[2][0] . '(' . $clone->getSql() . ')';
 						$this->parameters['where'] = array_merge($this->parameters['where'], $clone->getSqlBuilder()->parameters['where']);
