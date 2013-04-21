@@ -280,7 +280,7 @@ class SqlsrvDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	 */
 	public function isSupported($item)
 	{
-		return FALSE;
+		return $item === self::SUPPORT_SUBSELECT;
 	}
 
 }

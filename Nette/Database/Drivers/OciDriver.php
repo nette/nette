@@ -179,7 +179,7 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	 */
 	public function isSupported($item)
 	{
-		return $item === self::SUPPORT_SEQUENCE;
+		return $item === self::SUPPORT_SEQUENCE || $item === self::SUPPORT_SUBSELECT;
 	}
 
 }
