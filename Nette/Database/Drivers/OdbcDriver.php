@@ -164,7 +164,7 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	 */
 	public function isSupported($item)
 	{
-		return FALSE;
+		return $item === self::SUPPORT_SUBSELECT;
 	}
 
 }

@@ -165,7 +165,7 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function isSupported($item)
 	{
-		return FALSE;
+		return $item === self::SUPPORT_SUBSELECT;
 	}
 
 }

@@ -24,7 +24,8 @@ interface ISupplementalDriver
 {
 	const SUPPORT_SEQUENCE = 'sequence',
 		SUPPORT_SELECT_UNGROUPED_COLUMNS = 'ungrouped_cols',
-		SUPPORT_MULTI_INSERT_AS_SELECT = 'insert_as_select';
+		SUPPORT_MULTI_INSERT_AS_SELECT = 'insert_as_select',
+		SUPPORT_SUBSELECT = 'subselect';
 
 	/**
 	 * Delimites identifier for use in a SQL statement.
