@@ -49,22 +49,22 @@ class CacheMock implements Nette\Caching\IStorage
 }
 
 $cacheStorage = new CacheMock;
-$connection->setSelectionFactory(new Nette\Database\SelectionFactory(
+$dao = new Nette\Database\SelectionFactory(
 	$connection,
 	new Nette\Database\Reflection\DiscoveredReflection($connection, new Nette\Caching\Storages\MemoryStorage),
 	$cacheStorage
-));
+);
 
 
 
 $queries = 0;
-$connection->onQuery[] = function($connection, ResultSet $result) use (& $queries) {
+$connection->onQuery[] = function($dao, ResultSet $result) use (& $queries) {
 	if (!preg_match('#SHOW|CONSTRAINT_NAME|pg_catalog|sys\.|SET|PRAGMA|FROM sqlite_#i', $result->queryString)) {
 		$queries++;
 	}
 };
 
-$authors = $connection->table('author');
+$authors = $dao->table('author');
 $stack = array();
 foreach ($authors as $author) {
 	foreach ($stack[] = $author->related('book') as $book) {

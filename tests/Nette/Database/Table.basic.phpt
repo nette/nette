@@ -15,19 +15,19 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName
 
 
 
-$book = $connection->table('book')->where('id = ?', 1)->select('id, title')->fetch()->toArray();  // SELECT `id`, `title` FROM `book` WHERE (`id` = ?)
+$book = $dao->table('book')->where('id = ?', 1)->select('id, title')->fetch()->toArray();  // SELECT `id`, `title` FROM `book` WHERE (`id` = ?)
 Assert::same(array(
 	'id' => 1,
 	'title' => '1001 tipu a triku pro PHP',
 ), $book);
 
-$book = $connection->table('book')->select('id, title')->where('id = ?', 1)->fetch()->toArray();  // SELECT `id`, `title` FROM `book` WHERE (`id` = ?)
+$book = $dao->table('book')->select('id, title')->where('id = ?', 1)->fetch()->toArray();  // SELECT `id`, `title` FROM `book` WHERE (`id` = ?)
 Assert::same(array(
 	'id' => 1,
 	'title' => '1001 tipu a triku pro PHP',
 ), $book);
 
-$book = $connection->table('book')->get(1);
+$book = $dao->table('book')->get(1);
 Assert::exception(function() use ($book) {
 	$book->unknown_column;
 }, 'Nette\MemberAccessException', 'Cannot read an undeclared column "unknown_column".');
@@ -35,7 +35,7 @@ Assert::exception(function() use ($book) {
 
 
 $bookTags = array();
-foreach ($connection->table('book') as $book) {  // SELECT * FROM `book`
+foreach ($dao->table('book') as $book) {  // SELECT * FROM `book`
 	$bookTags[$book->title] = array(
 		'author' => $book->author->name,  // SELECT * FROM `author` WHERE (`author`.`id` IN (11, 12))
 		'tags' => array(),
@@ -67,12 +67,12 @@ Assert::same(array(
 
 
 
-$connection->setSelectionFactory(new Nette\Database\SelectionFactory(
+$dao = new Nette\Database\SelectionFactory(
 	$connection,
 	new Nette\Database\Reflection\DiscoveredReflection($connection)
-));
+);
 
-$book = $connection->table('book')->get(1);
+$book = $dao->table('book')->get(1);
 Assert::exception(function() use ($book) {
 	$book->test;
 }, 'Nette\MemberAccessException', 'Cannot read an undeclared column "test".');
