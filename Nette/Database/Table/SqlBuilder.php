@@ -98,6 +98,9 @@ class SqlBuilder extends Nette\Object
 
 	public function buildUpdateQuery()
 	{
+		if ($this->limit !== NULL || $this->offset) {
+			throw new Nette\NotSupportedException('LIMIT clause is not supported in UPDATE query.');
+		}
 		return $this->tryDelimite("UPDATE {$this->tableName} SET ?" . $this->buildConditions());
 	}
 
@@ -105,6 +108,9 @@ class SqlBuilder extends Nette\Object
 
 	public function buildDeleteQuery()
 	{
+		if ($this->limit !== NULL || $this->offset) {
+			throw new Nette\NotSupportedException('LIMIT clause is not supported in DELETE query.');
+		}
 		return $this->tryDelimite("DELETE FROM {$this->tableName}" . $this->buildConditions());
 	}
 
