@@ -85,11 +85,14 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	public function applyLimit(&$sql, $limit, $offset)
 	{
 		if ($limit >= 0) {
-			$sql = 'SELECT TOP ' . (int) $limit . ' * FROM (' . $sql . ')';
+			$sql = preg_replace('#^\s*(SELECT|UPDATE|DELETE)#i', '$0 TOP ' . (int) $limit, $sql, 1, $count);
+			if (!$count) {
+				throw new Nette\InvalidArgumentException('SQL query must begin with SELECT, UPDATE or DELETE command.');
+			}
 		}
 
 		if ($offset) {
-			throw new Nette\InvalidArgumentException('Offset is not implemented in driver odbc.');
+			throw new Nette\NotSupportedException('Offset is not supported by this database.');
 		}
 	}
 

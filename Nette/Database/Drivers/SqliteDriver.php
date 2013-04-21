@@ -90,7 +90,7 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	public function applyLimit(&$sql, $limit, $offset)
 	{
 		if ($limit >= 0 || $offset > 0) {
-			$sql .= ' LIMIT ' . $limit . ($offset > 0 ? ' OFFSET ' . (int) $offset : '');
+			$sql .= ' LIMIT ' . (int) $limit . ($offset > 0 ? ' OFFSET ' . (int) $offset : '');
 		}
 	}
 
