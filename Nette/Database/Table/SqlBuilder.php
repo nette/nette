@@ -98,14 +98,20 @@ class SqlBuilder extends Nette\Object
 
 	public function buildUpdateQuery()
 	{
-		return $this->tryDelimite("UPDATE{$this->buildTopClause()} {$this->tableName} SET ?" . $this->buildConditions());
+		if ($this->limit !== NULL) {
+			throw new Nette\NotSupportedException('LIMIT clause is not supported in UPDATE query.');
+		}
+		return $this->tryDelimite("UPDATE {$this->tableName} SET ?" . $this->buildConditions());
 	}
 
 
 
 	public function buildDeleteQuery()
 	{
-		return $this->tryDelimite("DELETE{$this->buildTopClause()} FROM {$this->tableName}" . $this->buildConditions());
+		if ($this->limit !== NULL) {
+			throw new Nette\NotSupportedException('LIMIT clause is not supported in DELETE query.');
+		}
+		return $this->tryDelimite("DELETE FROM {$this->tableName}" . $this->buildConditions());
 	}
 
 
@@ -148,6 +154,10 @@ class SqlBuilder extends Nette\Object
 
 		$queryJoins = $this->buildQueryJoins($joins);
 		$query = "{$querySelect} FROM {$this->tableName}{$queryJoins}{$queryCondition}{$queryEnd}";
+
+		if ($this->limit !== NULL) {
+			$this->driver->applyLimit($query, $this->limit, $this->offset);
+		}
 
 		return $this->tryDelimite($query);
 	}
@@ -380,7 +390,7 @@ class SqlBuilder extends Nette\Object
 
 	protected function buildSelect(array $columns)
 	{
-		return "SELECT{$this->buildTopClause()} " . implode(', ', $columns);
+		return 'SELECT ' . implode(', ', $columns);
 	}
 
 
@@ -459,12 +469,8 @@ class SqlBuilder extends Nette\Object
 	protected function buildConditions()
 	{
 		$return = '';
-		$where = $this->where;
-		if ($this->limit !== NULL && $this->driverName === 'oci') {
-			$where[] = ($this->offset ? "rownum > $this->offset AND " : '') . 'rownum <= ' . ($this->limit + $this->offset);
-		}
-		if ($where) {
-			$return .= ' WHERE (' . implode(') AND (', $where) . ')';
+		if ($this->where) {
+			$return .= ' WHERE (' . implode(') AND (', $this->where) . ')';
 		}
 
 		return $return;
@@ -484,23 +490,7 @@ class SqlBuilder extends Nette\Object
 		if ($this->order) {
 			$return .= ' ORDER BY ' . implode(', ', $this->order);
 		}
-		if ($this->limit !== NULL && !in_array($this->driverName, array('oci', 'dblib', 'sqlsrv'), TRUE)) {
-			$return .= " LIMIT $this->limit";
-			if ($this->offset !== NULL) {
-				$return .= " OFFSET $this->offset";
-			}
-		}
 		return $return;
-	}
-
-
-
-	protected function buildTopClause()
-	{
-		if ($this->limit !== NULL && in_array($this->driverName, array('dblib', 'sqlsrv'), TRUE)) {
-			return " TOP ($this->limit)"; //! offset is not supported
-		}
-		return '';
 	}
 
 
