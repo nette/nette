@@ -70,7 +70,7 @@ Nette.getValue = function(elem) {
  * Validates form element against given rules.
  */
 Nette.validateControl = function(elem, rules, onlyCheck) {
-	rules = rules || eval('[' + (elem.getAttribute('data-nette-rules') || '') + ']');
+	rules = rules || Nette.parseRules(elem);
 	for (var id = 0, len = rules.length; id < len; id++) {
 		var rule = rules[id], op = rule.op.match(/(~)?([^?]+)/);
 		rule.neg = op[1];
@@ -270,7 +270,7 @@ Nette.toggleForm = function(form, firsttime) {
  * Process toggles on form element.
  */
 Nette.toggleControl = function(elem, rules, topSuccess, firsttime) {
-	rules = rules || eval('[' + (elem.getAttribute('data-nette-rules') || '') + ']');
+	rules = rules || Nette.parseRules(elem);
 	var has = false, __hasProp = Object.prototype.hasOwnProperty, handler = function() {
 		Nette.toggleForm(elem.form);
 	};
@@ -317,6 +317,17 @@ Nette.toggleControl = function(elem, rules, topSuccess, firsttime) {
 		}
 	}
 	return has;
+};
+
+
+Nette.parseRules = function (elem) {
+	var rules = elem.getAttribute('data-nette-rules') || '[]';
+
+	if (rules.substr(0, 1) !== '[') {
+		return eval('[' + rules + ']'); // backward compatibility
+	}
+
+	return window.JSON && window.JSON.parse ? JSON.parse(rules) : eval(rules);
 };
 
 
