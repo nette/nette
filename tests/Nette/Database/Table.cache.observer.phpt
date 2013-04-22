@@ -49,7 +49,7 @@ class CacheMock implements Nette\Caching\IStorage
 }
 
 $cacheStorage = new CacheMock;
-$connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory(
+$connection->setSelectionFactory(new Nette\Database\SelectionFactory(
 	$connection,
 	new Nette\Database\Reflection\DiscoveredReflection($connection, new Nette\Caching\Storages\MemoryStorage),
 	$cacheStorage

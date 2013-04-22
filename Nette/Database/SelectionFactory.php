@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Database\Table;
+namespace Nette\Database;
 
 use Nette;
 
@@ -22,29 +22,29 @@ use Nette;
  */
 class SelectionFactory extends Nette\Object
 {
-	/** @var Nette\Database\Connection */
+	/** @var Connection */
 	private $connection;
 
-	/** @var Nette\Database\IReflection */
+	/** @var IReflection */
 	private $reflection;
 
 	/** @var Nette\Caching\IStorage */
 	private $cacheStorage;
 
 
-	public function __construct(Nette\Database\Connection $connection, Nette\Database\IReflection $reflection = NULL, Nette\Caching\IStorage $cacheStorage = NULL)
+	public function __construct(Connection $connection, IReflection $reflection = NULL, Nette\Caching\IStorage $cacheStorage = NULL)
 	{
 		$this->connection = $connection;
-		$this->reflection = $reflection ?: new Nette\Database\Reflection\ConventionalReflection;
+		$this->reflection = $reflection ?: new Reflection\ConventionalReflection;
 		$this->cacheStorage = $cacheStorage;
 	}
 
 
 
-	/** @return Selection */
-	public function create($table)
+	/** @return Nette\Database\Table\Selection */
+	public function table($table)
 	{
-		return new Selection($this->connection, $table, $this->reflection, $this->cacheStorage);
+		return new Table\Selection($this->connection, $table, $this->reflection, $this->cacheStorage);
 	}
 
 }

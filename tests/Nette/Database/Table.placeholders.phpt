@@ -20,7 +20,7 @@ use Nette\Database\Table\SqlBuilder;
 
 
 $reflection = new DiscoveredReflection($connection);
-$connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory($connection, $reflection));
+$connection->setSelectionFactory(new Nette\Database\SelectionFactory($connection, $reflection));
 
 
 

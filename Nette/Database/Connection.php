@@ -40,7 +40,7 @@ class Connection extends Nette\Object
 	/** @var SqlPreprocessor */
 	private $preprocessor;
 
-	/** @var Table\SelectionFactory */
+	/** @var SelectionFactory */
 	private $selectionFactory;
 
 	/** @var PDO */
@@ -272,16 +272,16 @@ class Connection extends Nette\Object
 
 
 	/**
-	 * Creates selector for table.
+	 * Creates selector for table. Shortcut for SelectionFactory::table()
 	 * @param  string
 	 * @return Nette\Database\Table\Selection
 	 */
 	public function table($table)
 	{
 		if (!$this->selectionFactory) {
-			$this->selectionFactory = new Table\SelectionFactory($this);
+			$this->selectionFactory = new SelectionFactory($this);
 		}
-		return $this->selectionFactory->create($table);
+		return $this->selectionFactory->table($table);
 	}
 
 
@@ -289,7 +289,7 @@ class Connection extends Nette\Object
 	/**
 	 * @return Connection   provides a fluent interface
 	 */
-	public function setSelectionFactory(Table\SelectionFactory $selectionFactory)
+	public function setSelectionFactory(SelectionFactory $selectionFactory)
 	{
 		$this->selectionFactory = $selectionFactory;
 		return $this;
