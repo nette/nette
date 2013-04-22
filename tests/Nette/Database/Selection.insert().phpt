@@ -78,7 +78,7 @@ Assert::equal(4, $connection->table('book')->where('title LIKE', "Biography%")->
 
 
 // Insert into table without primary key
-$connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory(
+$connection->setSelectionFactory(new Nette\Database\SelectionFactory(
 	$connection,
 	new Nette\Database\Reflection\DiscoveredReflection($connection)
 ));

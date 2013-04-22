@@ -20,7 +20,7 @@ use Nette\Database\Table\SqlBuilder;
 
 
 $reflection = new DiscoveredReflection($connection);
-$connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory($connection, $reflection));
+$connection->setSelectionFactory(new Nette\Database\SelectionFactory($connection, $reflection));
 $sqlBuilder = array();
 
 // test paramateres with NULL
@@ -156,7 +156,7 @@ switch ($driverName) {
 }
 
 $reflection = new DiscoveredReflection($connection);
-$connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory($connection, $reflection));
+$connection->setSelectionFactory(new Nette\Database\SelectionFactory($connection, $reflection));
 
 $e = Assert::exception(function() use ($connection) {
 	$books = $connection->table('book')->where('id',

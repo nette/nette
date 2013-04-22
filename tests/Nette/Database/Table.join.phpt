@@ -56,7 +56,7 @@ Assert::same(2, $connection->table('author')->where('author_id', 11)->count(':bo
 
 
 
-$connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory(
+$connection->setSelectionFactory(new Nette\Database\SelectionFactory(
 	$connection,
 	new Nette\Database\Reflection\DiscoveredReflection($connection)
 ));

@@ -67,7 +67,7 @@ Assert::same(array(
 
 
 
-$connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory(
+$connection->setSelectionFactory(new Nette\Database\SelectionFactory(
 	$connection,
 	new Nette\Database\Reflection\DiscoveredReflection($connection)
 ));
