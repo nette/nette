@@ -70,7 +70,7 @@ Nette.getValue = function(elem) {
  * Validates form element against given rules.
  */
 Nette.validateControl = function(elem, rules, onlyCheck) {
-	rules = rules || eval('[' + (elem.getAttribute('data-nette-rules') || '') + ']');
+	rules = rules || Nette.parseJSON(elem.getAttribute('data-nette-rules'));
 	for (var id = 0, len = rules.length; id < len; id++) {
 		var rule = rules[id], op = rule.op.match(/(~)?([^?]+)/);
 		rule.neg = op[1];
@@ -110,7 +110,7 @@ Nette.validateControl = function(elem, rules, onlyCheck) {
 Nette.validateForm = function(sender) {
 	var form = sender.form || sender, scope = false;
 	if (form['nette-submittedBy'] && form['nette-submittedBy'].getAttribute('formnovalidate') !== null) {
-		var scopeArr = eval(form['nette-submittedBy'].getAttribute('data-nette-validation-scope') || '[]');
+		var scopeArr = Nette.parseJSON(form['nette-submittedBy'].getAttribute('data-nette-validation-scope'));
 		if (scopeArr.length) {
 			scope = new RegExp('^(' + scopeArr.join('-|') + '-)');
 		} else {
@@ -270,7 +270,7 @@ Nette.toggleForm = function(form, firsttime) {
  * Process toggles on form element.
  */
 Nette.toggleControl = function(elem, rules, topSuccess, firsttime) {
-	rules = rules || eval('[' + (elem.getAttribute('data-nette-rules') || '') + ']');
+	rules = rules || Nette.parseJSON(elem.getAttribute('data-nette-rules'));
 	var has = false, __hasProp = Object.prototype.hasOwnProperty, handler = function() {
 		Nette.toggleForm(elem.form);
 	};
@@ -317,6 +317,15 @@ Nette.toggleControl = function(elem, rules, topSuccess, firsttime) {
 		}
 	}
 	return has;
+};
+
+
+Nette.parseJSON = function(s) {
+	s = s || '[]';
+	if (s.substr(0, 3) === '{op') {
+		return eval('[' + s + ']'); // backward compatibility
+	}
+	return window.JSON && window.JSON.parse ? JSON.parse(s) : eval(s);
 };
 
 
