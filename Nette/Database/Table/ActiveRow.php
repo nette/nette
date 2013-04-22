@@ -179,8 +179,7 @@ class ActiveRow implements \IteratorAggregate, IRow
 	 */
 	public function update($data)
 	{
-		$selection = $this->table->getConnection()
-			->table($this->table->getName())
+		$selection = $this->table->createSelectionInstance()
 			->wherePrimary($this->getPrimary());
 
 		if ($selection->update($data)) {
@@ -204,8 +203,7 @@ class ActiveRow implements \IteratorAggregate, IRow
 	 */
 	public function delete()
 	{
-		$res = $this->table->getConnection()
-			->table($this->table->getName())
+		$res = $this->table->createSelectionInstance()
 			->wherePrimary($this->getPrimary())
 			->delete();
 

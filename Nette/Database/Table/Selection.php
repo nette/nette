@@ -572,7 +572,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 
 
-	protected function createSelectionInstance($table = NULL)
+	public function createSelectionInstance($table = NULL)
 	{
 		return new Selection($this->connection, $table ?: $this->name, $this->reflection, $this->cache ? $this->cache->getStorage() : NULL);
 	}
@@ -758,7 +758,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 			}
 		}
 
-		$row = $this->connection->table($this->name)
+		$row = $this->createSelectionInstance()
 			->select('*')
 			->wherePrimary($primaryKey)
 			->fetch();

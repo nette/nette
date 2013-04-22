@@ -486,12 +486,7 @@ class SqlBuilder extends Nette\Object
 
 	protected function buildConditions()
 	{
-		$return = '';
-		if ($this->where) {
-			$return .= ' WHERE (' . implode(') AND (', $this->where) . ')';
-		}
-
-		return $return;
+		return $this->where ? ' WHERE (' . implode(') AND (', $this->where) . ')' : '';
 	}
 
 
