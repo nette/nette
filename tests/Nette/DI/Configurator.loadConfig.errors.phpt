@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator and createContainer errors.
+ * Test: Nette\Configurator and createContainer errors.
  *
  * @author     David Grudl
  * @package    Nette\DI
  */
 
-use Nette\Config\Configurator;
+use Nette\Configurator;
 
 
 

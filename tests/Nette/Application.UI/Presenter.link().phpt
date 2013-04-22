@@ -161,7 +161,7 @@ class OtherPresenter extends TestPresenter
 }
 
 
-$container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
+$container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
 
 $url = new Http\UrlScript('http://localhost/index.php');
 $url->setScriptPath('/index.php');

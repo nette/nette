@@ -27,7 +27,7 @@ class NetteLoader extends AutoLoader
 
 	/** @var array */
 	public $renamed = array(
-		'Nette\Configurator' => 'Nette\Config\Configurator',
+		'Nette\Config\Configurator' => 'Nette\Configurator',
 		'Nette\Config\CompilerExtension' => 'Nette\DI\CompilerExtension',
 		'Nette\Http\User' => 'Nette\Security\User',
 		'Nette\Templating\DefaultHelpers' => 'Nette\Templating\Helpers',
@@ -53,6 +53,7 @@ class NetteLoader extends AutoLoader
 		'Nette\ArrayHash' => '/common/ArrayHash',
 		'Nette\ArrayList' => '/common/ArrayList',
 		'Nette\Callback' => '/common/Callback',
+		'Nette\Configurator' => '/common/Configurator',
 		'Nette\Database\Reflection\AmbiguousReferenceKeyException' => '/Database/Reflection/exceptions',
 		'Nette\Database\Reflection\MissingReferenceException' => '/Database/Reflection/exceptions',
 		'Nette\DI\MissingServiceException' => '/DI/exceptions',

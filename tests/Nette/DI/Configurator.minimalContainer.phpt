@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator and minimal container.
+ * Test: Nette\Configurator and minimal container.
  *
  * @author     David Grudl
  * @package    Nette\DI
  */
 
-use Nette\Config\Configurator;
+use Nette\Configurator;
 
 
 
