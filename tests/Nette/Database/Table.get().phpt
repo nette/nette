@@ -15,7 +15,7 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName
 
 
 
-$book = $connection->table('book')->get(1);  // SELECT * FROM `book` WHERE (`id` = ?)
+$book = $dao->table('book')->get(1);  // SELECT * FROM `book` WHERE (`id` = ?)
 
 Assert::same(array(
 	'id' => 1,

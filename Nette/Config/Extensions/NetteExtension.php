@@ -341,11 +341,15 @@ class NetteExtension extends Nette\Config\CompilerExtension
 				->setClass('Nette\Database\Connection', array($info['dsn'], $info['user'], $info['password'], $info['options']))
 				->setAutowired($info['autowired'])
 				->addSetup('setSelectionFactory', array(
-					new Nette\DI\Statement('Nette\Database\Table\SelectionFactory', array('@self', $reflection)),
+					new Nette\DI\Statement('Nette\Database\SelectionFactory', array('@self', $reflection)),
 				))
 				->addSetup('Nette\Diagnostics\Debugger::$blueScreen->addPanel(?)', array(
 					'Nette\Database\Diagnostics\ConnectionPanel::renderException'
 				));
+
+			$selectionFactory = $container->addDefinition($this->prefix("database.$name.selectionFactory"))
+				->setFactory(array($connection, 'getSelectionFactory'))
+				->setAutowired($info['autowired']);
 
 			if ($container->parameters['debugMode'] && $info['debugger']) {
 				$connection->addSetup('Nette\Database\Helpers::createDebugPanel', array($connection, !empty($info['explain']), $name));
