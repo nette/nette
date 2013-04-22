@@ -339,11 +339,12 @@ class ContainerBuilder extends Nette\Object
 			}
 			try {
 				$reflection = $factory->toReflection();
-				$def->class = preg_replace('#[|\s].*#', '', $reflection->getAnnotation('return'));
-				if ($def->class && !class_exists($def->class) && $def->class[0] !== '\\' && $reflection instanceof \ReflectionMethod) {
-					/**/$def->class = $reflection->getDeclaringClass()->getNamespaceName() . '\\' . $def->class;/**/
-				}
 			} catch (\ReflectionException $e) {
+				throw new Nette\InvalidStateException("Missing factory '$factory'.");
+			}
+			$def->class = preg_replace('#[|\s].*#', '', $reflection->getAnnotation('return'));
+			if ($def->class && !class_exists($def->class) && $def->class[0] !== '\\' && $reflection instanceof \ReflectionMethod) {
+				/**/$def->class = $reflection->getDeclaringClass()->getNamespaceName() . '\\' . $def->class;/**/
 			}
 
 		} elseif ($service = $this->getServiceName($factory)) { // alias or factory
