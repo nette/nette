@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Config;
+namespace Nette;
 
 use Nette,
 	Nette\DI;
@@ -24,7 +24,7 @@ use Nette,
  * @property   bool $debugMode
  * @property-write $tempDirectory
  */
-class Configurator extends Nette\Object
+class Configurator extends Object
 {
 	/** @deprecated */
 	const DEVELOPMENT = 'development',

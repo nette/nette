@@ -71,7 +71,7 @@ final class Environment
 	public static function isProduction()
 	{
 		if (self::$productionMode === NULL) {
-			self::$productionMode = !Nette\Config\Configurator::detectDebugMode();
+			self::$productionMode = !Nette\Configurator::detectDebugMode();
 		}
 		return self::$productionMode;
 	}
@@ -318,9 +318,9 @@ final class Environment
 	public static function loadConfig($file = NULL, $section = NULL)
 	{
 		if (self::$createdAt) {
-			throw new Nette\InvalidStateException('Nette\Config\Configurator has already been created automatically by Nette\Environment at ' . self::$createdAt);
+			throw new Nette\InvalidStateException('Nette\Configurator has already been created automatically by Nette\Environment at ' . self::$createdAt);
 		}
-		$configurator = new Nette\Config\Configurator;
+		$configurator = new Nette\Configurator;
 		$configurator
 			->setDebugMode(!self::isProduction())
 			->setTempDirectory(defined('TEMP_DIR') ? TEMP_DIR : '');

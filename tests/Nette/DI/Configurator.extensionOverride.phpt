@@ -7,7 +7,7 @@
  * @package    Nette\DI
  */
 
-use Nette\Config\Configurator,
+use Nette\Configurator,
 	Nette\DI\Compiler,
 	Nette\DI\ContainerBuilder;
 
