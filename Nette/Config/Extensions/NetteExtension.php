@@ -347,6 +347,10 @@ class NetteExtension extends Nette\Config\CompilerExtension
 					'Nette\Database\Diagnostics\ConnectionPanel::renderException'
 				));
 
+			$selectionFactory = $container->addDefinition($this->prefix("database.$name.selectionFactory"))
+				->setFactory(array($connection, 'getSelectionFactory'))
+				->setAutowired($info['autowired']);
+
 			if ($container->parameters['debugMode'] && $info['debugger']) {
 				$connection->addSetup('Nette\Database\Helpers::createDebugPanel', array($connection, !empty($info['explain']), $name));
 			}

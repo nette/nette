@@ -297,6 +297,16 @@ class Connection extends Nette\Object
 
 
 
+	/**
+	 * @return Nette\Database\SelectionFactory
+	 */
+	public function getSelectionFactory()
+	{
+		return $this->selectionFactory;
+	}
+
+
+
 	/** @deprecated */
 	function setDatabaseReflection()
 	{
