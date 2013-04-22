@@ -723,8 +723,8 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 	/**
 	 * Inserts row in a table.
-	 * @param  mixed array($column => $value)|Traversable for single row insert or Selection for INSERT ... SELECT
-	 * @return IRow or FALSE in case of an error or number of affected rows for INSERT ... SELECT
+	 * @param  array|\Traversable|Selection array($column => $value)|\Traversable|Selection for INSERT ... SELECT
+	 * @return IRow|int|bool Returns IRow or number of affected rows for Selection or table without primary key
 	 */
 	public function insert($data)
 	{
@@ -738,7 +738,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 		$return = $this->connection->query($this->sqlBuilder->buildInsertQuery(), $data);
 		$this->checkReferenced = TRUE;
 
-		if ($data instanceof Nette\Database\SqlLiteral) {
+		if ($data instanceof Nette\Database\SqlLiteral || $this->primary === NULL) {
 			return $return->getRowCount();
 		}
 
