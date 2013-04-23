@@ -150,7 +150,7 @@ class Container extends Nette\Object
 	 * @return object
 	 * @throws MissingServiceException
 	 */
-	public function createService($name)
+	public function createService($name, array $args = array())
 	{
 		$method = Container::getMethodName($name);
 		if (isset($this->creating[$name])) {
@@ -163,7 +163,7 @@ class Container extends Nette\Object
 
 		$this->creating[$name] = TRUE;
 		try {
-			$service = $this->$method();
+			$service = call_user_func_array(array($this, $method), $args);
 		} catch (\Exception $e) {
 			unset($this->creating[$name]);
 			throw $e;
