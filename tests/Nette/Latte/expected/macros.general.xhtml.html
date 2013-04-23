@@ -6,7 +6,7 @@
 	<li>Escaped expression: &lt;b&gt;hello&lt;/b&gt;</li>
 	<li>Non-escaped expression: <b>hello</b></li>
 	<li>Array access: Mary</li>
-	<li>Html: <div title="1/2&quot;"></div></li>
+	<li>Html: <div title='1/2"'></div></li>
 	<li>Translated: yraM</li>
 	<li>Translated string: joha</li>
 	<li>Non-escaped and translated: yraM</li>
@@ -20,7 +20,7 @@
 
 { test} {"test} {'test}
 
-<p title="&lt;i&gt;Hello&lt;/i&gt;"> </p>
+<p title="<i>Hello</i>"> </p>
 
 <p val = "a"> </p>
 
@@ -69,7 +69,7 @@ var prop = ["John","Mary","Paul","]]\x3E"];
 
 document.getElementById("some&<>\"'\/chars").style.backgroundColor = 'red';
 
-var html = "<div title=\"1\/2&quot;\"><\/div>";
+var html = "<div title='1\/2\"'><\/div>";
 -->
 </script>
 
@@ -90,8 +90,8 @@ var prop2 = ["John","Mary","Paul","]]\x3E"];
  "color:some\&amp;\&lt;\&gt;\&quot;\'\/chars;"
  rel="some&amp;&lt;&gt;&quot;'/chars"
  onblur="alert(&quot;some&amp;&lt;&gt;\&quot;'\/chars&quot;)"
- alt='&lt;div title=&quot;1/2&amp;quot;&quot;&gt;&lt;/div&gt;'
- onfocus="alert(&quot;&lt;div title=\&quot;1\/2&amp;quot;\&quot;&gt;&lt;\/div&gt;&quot;)"
+ alt='&lt;div title=&#039;1/2&quot;&#039;&gt;&lt;/div&gt;'
+ onfocus="alert(&quot;&lt;div title='1\/2\&quot;'&gt;&lt;\/div&gt;&quot;)"
 >click on me some&amp;&lt;&gt;"'/chars</p>
 
 
