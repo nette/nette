@@ -102,7 +102,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 	 */
 	public function templatePrepareFilters($template)
 	{
-		$template->registerFilter($this->getPresenter()->getContext()->createNette__Latte());
+		$template->registerFilter($this->getPresenter()->getContext()->createService('nette.latte'));
 	}
 
 

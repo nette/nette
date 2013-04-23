@@ -33,7 +33,7 @@ class NetteAccessor extends Nette\Object
 	public function __call($name, $args)
 	{
 		if (substr($name, 0, 6) === 'create') {
-			$method = $this->container->getMethodName('nette.' . substr($name, 6), FALSE);
+			$method = $this->container->getMethodName('nette.' . substr($name, 6));
 			trigger_error("Factory accessing via nette->$name() is deprecated, use $method().", E_USER_DEPRECATED);
 			return call_user_func_array(array($this->container, $method), $args);
 		}

@@ -44,7 +44,7 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 Assert::type( 'Service', $container->getService('one') );
-Assert::false( $container->hasService('two') );
-Assert::true( method_exists($container, 'createTwo') );
+Assert::true( $container->hasService('two') );
+Assert::true( method_exists($container, 'createServiceTwo') );
 Assert::type( 'stdClass', $container->getService('three') );
 Assert::same( 'hello', $container->getService('three')->foo );

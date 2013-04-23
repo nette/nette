@@ -355,10 +355,10 @@ class Container extends Nette\Object
 
 
 
-	public static function getMethodName($name, $isService = TRUE)
+	public static function getMethodName($name)
 	{
 		$uname = ucfirst($name);
-		return ($isService ? 'createService' : 'create') . ((string) $name === $uname ? '__' : '') . str_replace('.', '__', $uname);
+		return 'createService' . ((string) $name === $uname ? '__' : '') . str_replace('.', '__', $uname);
 	}
 
 }

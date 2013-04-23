@@ -54,9 +54,9 @@ Assert::type( 'Nette\Application\Routers\RouteList', $container->getService('rou
 Assert::type( 'Nette\Application\PresenterFactory', $container->getService('nette.presenterFactory') );
 Assert::type( 'Nette\Mail\SendmailMailer', $container->getService('nette.mailer') );
 
-Assert::type( 'Nette\Caching\Cache', $container->createNette__cache() );
-Assert::same( 'nm', $container->createNette__cache('nm')->getNamespace() );
-Assert::type( 'Nette\Forms\Form', $container->createNette__BasicForm() );
-Assert::type( 'Nette\Latte\Engine', $container->createNette__Latte() );
-Assert::type( 'Nette\Templating\FileTemplate', $container->createNette__Template() );
-Assert::type( 'Nette\Mail\Message', $container->createNette__Mail() );
+Assert::type( 'Nette\Caching\Cache', $container->createService('nette.cache') );
+Assert::same( 'nm', $container->createService('nette.cache', array('nm'))->getNamespace() );
+Assert::type( 'Nette\Forms\Form', $container->createService('nette.basicForm') );
+Assert::type( 'Nette\Latte\Engine', $container->createService('nette.latte') );
+Assert::type( 'Nette\Templating\FileTemplate', $container->createService('nette.template') );
+Assert::type( 'Nette\Mail\Message', $container->createService('nette.mail') );

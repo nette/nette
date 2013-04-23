@@ -429,7 +429,7 @@ class ContainerBuilder extends Nette\Object
 		foreach ($definitions as $name => $def) {
 			try {
 				$name = (string) $name;
-				$methodName = Container::getMethodName($name, $def->shared);
+				$methodName = Container::getMethodName($name);
 				if (!PhpHelpers::isIdentifier($methodName)) {
 					throw new ServiceCreationException('Name contains invalid characters.');
 				}
@@ -573,7 +573,7 @@ class ContainerBuilder extends Nette\Object
 			}
 			$rm = new Reflection\GlobalFunction(create_function(implode(', ', $params), ''));
 			$arguments = Helpers::autowireArguments($rm, $arguments, $this);
-			return $this->formatPhp('$this->?(?*)', array(Container::getMethodName($service, FALSE), $arguments));
+			return $this->formatPhp('$this->?(?*)', array(Container::getMethodName($service), $arguments));
 
 		} elseif ($entity === 'not') { // operator
 			return $this->formatPhp('!?', array($arguments[0]));
