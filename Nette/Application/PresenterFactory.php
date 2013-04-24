@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class PresenterFactory implements IPresenterFactory
+class PresenterFactory extends Nette\Object implements IPresenterFactory
 {
 	/** @var bool */
 	public $caseSensitive = FALSE;
