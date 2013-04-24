@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator: services by Class.
+ * Test: Nette\Config\Compiler: services by Class.
  *
  * @author     David Grudl
  * @package    Nette\Config
  */
 
-use Nette\Config\Configurator;
+use Nette\Config;
 
 
 
@@ -30,10 +30,17 @@ class Ipsum
 }
 
 
-$configurator = new Configurator;
-$configurator->setTempDirectory(TEMP_DIR);
-$container = $configurator->addConfig('files/config.factory.byClass.neon')
-	->createContainer();
+
+
+$loader = new Config\Loader;
+$compiler = new Config\Compiler;
+$code = $compiler->compile($loader->load('files/compiler.services.byClass.neon'), 'Container', 'Nette\DI\Container');
+
+file_put_contents(TEMP_DIR . '/code.php', "<?php\n\n$code");
+require TEMP_DIR . '/code.php';
+
+$container = new Container;
+
 
 Assert::true( $container->getService('one') instanceof Lorem );
 Assert::true( $container->getService('two') instanceof Ipsum );

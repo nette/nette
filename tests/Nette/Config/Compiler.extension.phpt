@@ -1,15 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator and user extension.
+ * Test: Nette\Config\Compiler and user extension.
  *
  * @author     David Grudl
  * @package    Nette\Config
  */
 
-use Nette\Config\Configurator,
-	Nette\Config\Compiler,
-	Nette\DI\ContainerBuilder;
+use Nette\Config;
 
 
 
@@ -39,14 +37,19 @@ class DatabaseExtension extends Nette\Config\CompilerExtension
 
 
 
-$configurator = new Configurator;
-$configurator->setTempDirectory(TEMP_DIR);
+
+
+$loader = new Config\Loader;
+$compiler = new Config\Compiler;
 $extension = new DatabaseExtension;
-$configurator->onCompile[] = function(Configurator $configurator, Compiler $compiler) use ($extension) {
-	$compiler->addExtension('database', $extension);
-};
-$container = $configurator->addConfig('files/config.extension.neon')
-	->createContainer();
+$compiler->addExtension('database', $extension);
+$code = $compiler->compile($loader->load('files/compiler.extension.neon'), 'Container', 'Nette\DI\Container');
+
+file_put_contents(TEMP_DIR . '/code.php', "<?php\n\n$code");
+require TEMP_DIR . '/code.php';
+
+$container = new Container;
+
 
 Assert::same(array(
 	'DatabaseExtension::loadConfiguration',

@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator and autowiring.
+ * Test: Nette\Config\Compiler and autowiring.
  *
  * @author     David Grudl
  * @package    Nette\Config
  */
 
-use Nette\Config\Configurator;
+use Nette\Config;
 
 
 
@@ -45,10 +45,17 @@ class Lorem
 }
 
 
-$configurator = new Configurator;
-$configurator->setTempDirectory(TEMP_DIR);
-$container = $configurator->addConfig('files/config.autowiring.neon')
-	->createContainer();
+
+
+$loader = new Config\Loader;
+$compiler = new Config\Compiler;
+$code = $compiler->compile($loader->load('files/compiler.services.autowiring.neon'), 'Container', 'Nette\DI\Container');
+
+file_put_contents(TEMP_DIR . '/code.php', "<?php\n\n$code");
+require TEMP_DIR . '/code.php';
+
+$container = new Container;
+
 
 Assert::true( $container->getService('model') instanceof Model );
 

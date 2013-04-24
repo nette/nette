@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Config\Loader: including files
+ * Test: Config\Loader: including files
  *
  * @author     David Grudl
  * @package    Nette\Config
@@ -27,5 +27,5 @@ Assert::exception(function() {
 
 Assert::exception(function() {
 	$config = new Config\Loader;
-	$config->load('files/config.sample.neon', 'unknown');
+	$config->load('files/neonAdapter.neon', 'unknown');
 }, 'Nette\Utils\AssertionException', "Missing section 'unknown' in file '%a%'.");

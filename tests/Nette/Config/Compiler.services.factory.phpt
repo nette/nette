@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator: services factories.
+ * Test: Nette\Config\Compiler: services factories.
  *
  * @author     David Grudl
  * @package    Nette\Config
  */
 
-use Nette\Config\Configurator;
+use Nette\Config;
 
 
 
@@ -38,10 +38,17 @@ class Ipsum
 }
 
 
-$configurator = new Configurator;
-$configurator->setTempDirectory(TEMP_DIR);
-$container = $configurator->addConfig('files/config.factory.neon')
-	->createContainer();
+
+
+$loader = new Config\Loader;
+$compiler = new Config\Compiler;
+$code = $compiler->compile($loader->load('files/compiler.services.factory.neon'), 'Container', 'Nette\DI\Container');
+
+file_put_contents(TEMP_DIR . '/code.php', "<?php\n\n$code");
+require TEMP_DIR . '/code.php';
+
+$container = new Container;
+
 
 Assert::true( $container->getService('one') instanceof Ipsum );
 Assert::same(array(

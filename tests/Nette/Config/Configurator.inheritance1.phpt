@@ -24,7 +24,7 @@ class MyApp extends Nette\Application\Application
 $configurator = new Configurator;
 $configurator->setDebugMode(FALSE);
 $configurator->setTempDirectory(TEMP_DIR);
-$container = $configurator->addConfig('files/config.inheritance1.neon')
+$container = $configurator->addConfig('files/configurator.inheritance1.neon')
 	->createContainer();
 
 

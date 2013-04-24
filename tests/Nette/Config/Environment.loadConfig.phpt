@@ -15,7 +15,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-Environment::loadConfig('files/config.old.ini', 'production');
+Environment::loadConfig('files/environment.ini', 'production');
 
 Assert::true( Environment::getRouter() instanceof Nette\Application\Routers\SimpleRouter );
 

@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator: services setup.
+ * Test: Nette\Config\Compiler: services setup.
  *
  * @author     David Grudl
  * @package    Nette\Config
  */
 
-use Nette\Config\Configurator;
+use Nette\Config;
 
 
 
@@ -53,10 +53,17 @@ function test($arg)
 }
 
 
-$configurator = new Configurator;
-$configurator->setTempDirectory(TEMP_DIR);
-$container = $configurator->addConfig('files/config.setup.neon')
-	->createContainer();
+
+
+$loader = new Config\Loader;
+$compiler = new Config\Compiler;
+$code = $compiler->compile($loader->load('files/compiler.services.setup.neon'), 'Container', 'Nette\DI\Container');
+
+file_put_contents(TEMP_DIR . '/code.php', "<?php\n\n$code");
+require TEMP_DIR . '/code.php';
+
+$container = new Container;
+
 
 Assert::same(array(
 ), Notes::fetch());

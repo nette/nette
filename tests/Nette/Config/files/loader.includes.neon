@@ -1,6 +1,6 @@
 common:
 	includes:
-		- config.child.ini
+		- loader.includes.child.ini
 
 	parameters:
 		scalar: 1
@@ -10,4 +10,4 @@ common:
 
 production < common:
 	includes:
-		- config.child.php
+		- loader.includes.child.php

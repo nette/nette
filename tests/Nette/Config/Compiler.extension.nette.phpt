@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator: services setup.
+ * Test: Nette\Config\Compiler: services setup.
  *
  * @author     David Grudl
  * @package    Nette\Config
  */
 
-use Nette\Config\Configurator;
+use Nette\Config;
 
 
 
@@ -42,10 +42,24 @@ class IpsumLoremMacros extends Nette\Latte\Macros\MacroSet
 }
 
 
-$configurator = new Configurator;
-$configurator->setTempDirectory(TEMP_DIR);
-$container = $configurator->addConfig('files/config.nette.neon')
-	->createContainer();
+
+
+$loader = new Config\Loader;
+$config = $loader->load('files/compiler.extension.nette.neon');
+$config['parameters']['debugMode'] = FALSE;
+$config['parameters']['productionMode'] = FALSE;
+$config['parameters']['tempDir'] = '';
+
+$compiler = new Config\Compiler;
+$compiler->addExtension('nette', new Nette\Config\Extensions\NetteExtension);
+$code = $compiler->compile($config, 'Container', 'Nette\DI\Container');
+
+
+file_put_contents(TEMP_DIR . '/code.php', "<?php\n\n$code");
+require TEMP_DIR . '/code.php';
+
+$container = new Container;
+
 
 Assert::true( $container->createNette__latte() instanceof Nette\Latte\Engine );
 

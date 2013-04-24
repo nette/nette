@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator: generated services accessors.
+ * Test: Nette\Config\Compiler: generated services accessors.
  *
  * @author     David Grudl
  * @package    Nette\Config
  */
 
-use Nette\Config\Configurator;
+use Nette\Config;
 
 
 
@@ -27,10 +27,17 @@ interface ILoremAccessor
 
 
 
-$configurator = new Configurator;
-$configurator->setTempDirectory(TEMP_DIR);
-$container = $configurator->addConfig('files/config.generatedAccessor.neon')
-	->createContainer();
+
+
+$loader = new Config\Loader;
+$compiler = new Config\Compiler;
+$code = $compiler->compile($loader->load('files/compiler.generatedAccessor.neon'), 'Container', 'Nette\DI\Container');
+
+file_put_contents(TEMP_DIR . '/code.php', "<?php\n\n$code");
+require TEMP_DIR . '/code.php';
+
+$container = new Container;
+
 
 Assert::true( $container->getService('lorem') instanceof Lorem );
 Assert::true( $container->getService('lorem') !== $container->getService('lorem2') );

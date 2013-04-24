@@ -18,7 +18,7 @@ define('TEMP_FILE', TEMP_DIR . '/cfg.php');
 
 // Load INI
 $config = new Config\Loader;
-$data = $config->load('files/config.sample.php');
+$data = $config->load('files/phpAdapter.php');
 Assert::same( array(
 	'webname' => 'the example',
 	'database' => array(

@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator: constants in config.
+ * Test: Nette\Config\Compiler: constants in config.
  *
  * @author     David Grudl
  * @package    Nette\Config
  */
 
-use Nette\Config\Configurator;
+use Nette\Config;
 
 
 
@@ -29,10 +29,18 @@ class Lorem
 
 define('MY_CONSTANT_TEST', "one");
 
-$configurator = new Configurator;
-$configurator->setTempDirectory(TEMP_DIR);
-$container = $configurator->addConfig(__DIR__ . '/files/config.constants.neon', Configurator::NONE)
-	->createContainer();
+
+
+$loader = new Config\Loader;
+$compiler = new Config\Compiler;
+$compiler->addExtension('constants', new Nette\Config\Extensions\ConstantsExtension);
+$code = $compiler->compile($loader->load('files/compiler.extension.constants.neon'), 'Container', 'Nette\DI\Container');
+
+file_put_contents(TEMP_DIR . '/code.php', "<?php\n\n$code");
+require TEMP_DIR . '/code.php';
+
+$container = new Container;
+
 
 Assert::same( "one", $container->getService('ipsum')->arg );
 Assert::same( Lorem::DOLOR_SIT, $container->getService('sit')->arg );

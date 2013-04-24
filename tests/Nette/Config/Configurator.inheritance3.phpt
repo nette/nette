@@ -18,7 +18,7 @@ require __DIR__ . '/../bootstrap.php';
 $configurator = new Configurator;
 $configurator->setDebugMode(FALSE);
 $configurator->setTempDirectory(TEMP_DIR);
-$container = $configurator->addConfig('files/config.inheritance3.neon')
+$container = $configurator->addConfig('files/configurator.inheritance3.neon')
 	->createContainer();
 
 

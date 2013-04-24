@@ -7,9 +7,7 @@
  * @package    Nette\Config
  */
 
-use Nette\Config\Configurator,
-	Nette\Config\Compiler,
-	Nette\DI\ContainerBuilder;
+use Nette\Config;
 
 
 
@@ -116,13 +114,19 @@ class FooExtension extends Nette\Config\CompilerExtension
 
 
 
-$configurator = new Configurator;
-$configurator->setTempDirectory(TEMP_DIR);
-$configurator->onCompile[] = function(Configurator $configurator, Compiler $compiler){
-	$compiler->addExtension('database', new FooExtension);
-};
-$container = $configurator->addConfig(__DIR__ . '/files/config.extensionOverride.neon')
-	->createContainer();
+
+
+$loader = new Config\Loader;
+$compiler = new Config\Compiler;
+$extension = new FooExtension;
+$compiler->addExtension('database', $extension);
+$code = $compiler->compile($loader->load('files/compiler.extensionOverride.neon'), 'Container', 'Nette\DI\Container');
+
+file_put_contents(TEMP_DIR . '/code.php', "<?php\n\n$code");
+require TEMP_DIR . '/code.php';
+
+$container = new Container;
+
 
 Assert::true( $container->getService('one1') instanceof Ipsum );
 Assert::same(array(
