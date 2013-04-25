@@ -34,7 +34,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		'application' => array(
 			'debugger' => TRUE,
 			'errorPresenter' => 'Nette:Error',
-			'catchExceptions' => '%productionMode%',
+			'catchExceptions' => NULL, // not %debugMode%
 			'mapping' => NULL
 		),
 		'routing' => array(
@@ -89,6 +89,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 	{
 		$container = $this->getContainerBuilder();
 		$config = $this->getConfig($this->defaults);
+		$config['application']['catchExceptions'] = !$container->parameters['debugMode'];
 
 		if (isset($config['xhtml'])) {
 			$config['latte']['xhtml'] = $config['xhtml'];
