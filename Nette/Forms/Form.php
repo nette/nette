@@ -239,6 +239,10 @@ class Form extends Container
 			$this->setCurrentGroup($group);
 		}
 
+		if($caption instanceof Html) {
+			$caption = $caption->__toString();
+		}
+
 		if (isset($this->groups[$caption])) {
 			return $this->groups[] = $group;
 		} else {
