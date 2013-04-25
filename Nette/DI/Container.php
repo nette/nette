@@ -23,18 +23,16 @@ use Nette;
 class Container extends Nette\Object
 {
 	const TAGS = 'tags';
+	const TYPES = 'types';
 
 	/** @var array  user parameters */
 	/*private*/public $parameters = array();
 
-	/** @var array */
-	public $classes = array();
-
 	/** @var array  storage for shared objects */
 	private $registry = array();
 
-	/** @var array */
-	public $meta = array();
+	/** @var array[] */
+	protected $meta = array();
 
 	/** @var array circular reference detector */
 	private $creating;
@@ -191,14 +189,14 @@ class Container extends Nette\Object
 	public function getByType($class, $need = TRUE)
 	{
 		$lower = ltrim(strtolower($class), '\\');
-		if (!isset($this->classes[$lower])) {
+		if (!isset($this->meta[self::TYPES][$lower])) {
 			if ($need) {
 				throw new MissingServiceException("Service of type $class not found.");
 			}
-		} elseif ($this->classes[$lower] === FALSE) {
+		} elseif (count($this->meta[self::TYPES][$lower]) > 1) {
 			throw new MissingServiceException("Multiple services of type $class found.");
 		} else {
-			return $this->getService($this->classes[$lower]);
+			return $this->getService($this->meta[self::TYPES][$lower][0]);
 		}
 	}
 
@@ -211,13 +209,7 @@ class Container extends Nette\Object
 	 */
 	public function findByTag($tag)
 	{
-		$found = array();
-		foreach ($this->meta as $name => $meta) {
-			if (isset($meta[self::TAGS][$tag])) {
-				$found[$name] = $meta[self::TAGS][$tag];
-			}
-		}
-		return $found;
+		return isset($this->meta[self::TAGS][$tag]) ? $this->meta[self::TAGS][$tag] : array();
 	}
 
 

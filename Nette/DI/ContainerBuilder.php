@@ -412,23 +412,17 @@ class ContainerBuilder extends Nette\Object
 		$containerClass->addMethod('__construct')
 			->addBody('parent::__construct(?);', array($this->parameters));
 
-		$prop = $containerClass->addProperty('classes', array());
-		foreach ($this->classes as $name => $foo) {
-			try {
-				$prop->value[$name] = $this->getByType($name);
-			} catch (ServiceCreationException $e) {
-				$prop->value[$name] = self::literal('FALSE, //' . strstr($e->getMessage(), ':'));
-			}
-		}
-
 		$definitions = $this->definitions;
 		ksort($definitions);
 
-		$meta = $containerClass->addProperty('meta', array());
+		$meta = $containerClass->addProperty('meta', array())
+			->setVisibility('protected')
+			->setValue(array(Container::TYPES => $this->classes));
+
 		foreach ($definitions as $name => $def) {
 			if ($def->shared) {
 				foreach ($def->tags as $tag => $value) {
-					$meta->value[$name][Container::TAGS][$tag] = $value;
+					$meta->value[Container::TAGS][$tag][$name] = $value;
 				}
 			}
 		}
