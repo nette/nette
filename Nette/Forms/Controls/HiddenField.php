@@ -25,6 +25,9 @@ class HiddenField extends BaseControl
 
 	public function __construct()
 	{
+		if (func_num_args()) {
+			throw new Nette\DeprecatedException('The "forced value" has been deprecated.');
+		}
 		parent::__construct();
 		$this->control->type = 'hidden';
 	}
