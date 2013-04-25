@@ -284,7 +284,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 
 			$text = $group->getOption('label');
 			if ($text instanceof Html) {
-				$s .= $text;
+				$s .= $this->getWrapper('group label')->add($text);
 
 			} elseif (is_string($text)) {
 				if ($translator !== NULL) {

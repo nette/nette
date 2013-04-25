@@ -240,7 +240,7 @@ class Form extends Container
 			$this->setCurrentGroup($group);
 		}
 
-		if (isset($this->groups[$caption])) {
+		if (!is_scalar($caption) || isset($this->groups[$caption])) {
 			return $this->groups[] = $group;
 		} else {
 			return $this->groups[$caption] = $group;
