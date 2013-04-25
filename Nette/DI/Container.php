@@ -62,12 +62,14 @@ class Container extends Nette\Object
 	 * Adds the service to the container.
 	 * @param  string
 	 * @param  object
-	 * @param  array   service meta information
 	 * @return Container  provides a fluent interface
 	 */
-	public function addService($name, $service, array $meta = NULL)
+	public function addService($name, $service)
 	{
-		if (!is_string($name) || !$name) {
+		if (func_num_args() > 2) {
+			throw new Nette\DeprecatedException('Parameter $meta has been removed.');
+
+		} elseif (!is_string($name) || !$name) {
 			throw new Nette\InvalidArgumentException('Service name must be a non-empty string, ' . gettype($name) . ' given.');
 
 		} elseif (isset($this->registry[$name])) {
@@ -83,7 +85,6 @@ class Container extends Nette\Object
 		}
 
 		$this->registry[$name] = $service;
-		$this->meta[$name] = $meta;
 		return $this;
 	}
 
@@ -96,7 +97,7 @@ class Container extends Nette\Object
 	 */
 	public function removeService($name)
 	{
-		unset($this->registry[$name], $this->meta[$name]);
+		unset($this->registry[$name]);
 	}
 
 
