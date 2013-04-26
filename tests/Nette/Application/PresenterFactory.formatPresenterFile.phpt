@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
+$container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
 
 $factory = new PresenterFactory('base', $container);
 

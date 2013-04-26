@@ -65,7 +65,7 @@ class Authorizator implements IAuthorizator
 
 
 
-$container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
+$container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
 
 $user = $container->getService('user');
 
