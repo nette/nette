@@ -51,10 +51,13 @@ $container = new Container;
 Assert::true( $container->getByType('service') instanceof Service );
 Assert::same( NULL, $container->getByType('unknown', FALSE) );
 
+Assert::same( array('one'), $container->findByType('service') );
+Assert::same( array(), $container->findByType('unknown') );
+
 Assert::exception(function() use ($container) {
 	$container->getByType('unknown');
 }, 'Nette\DI\MissingServiceException', 'Service of type unknown not found.');
 
 Assert::exception(function() use ($container) {
 	$container->getByType('Nette\Object');
-}, 'Nette\DI\MissingServiceException', 'Multiple services of type Nette\Object found.');
+}, 'Nette\DI\MissingServiceException', 'Multiple services of type Nette\Object found: one, two, container.');
