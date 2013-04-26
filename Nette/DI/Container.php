@@ -23,18 +23,16 @@ use Nette;
 class Container extends Nette\Object
 {
 	const TAGS = 'tags';
+	const TYPES = 'types';
 
 	/** @var array  user parameters */
 	/*private*/public $parameters = array();
 
-	/** @var array */
-	public $classes = array();
-
 	/** @var array  storage for shared objects */
 	private $registry = array();
 
-	/** @var array */
-	public $meta = array();
+	/** @var array[] */
+	protected $meta = array();
 
 	/** @var array circular reference detector */
 	private $creating;
@@ -62,12 +60,14 @@ class Container extends Nette\Object
 	 * Adds the service to the container.
 	 * @param  string
 	 * @param  object
-	 * @param  array   service meta information
 	 * @return Container  provides a fluent interface
 	 */
-	public function addService($name, $service, array $meta = NULL)
+	public function addService($name, $service)
 	{
-		if (!is_string($name) || !$name) {
+		if (func_num_args() > 2) {
+			throw new Nette\DeprecatedException('Parameter $meta has been removed.');
+
+		} elseif (!is_string($name) || !$name) {
 			throw new Nette\InvalidArgumentException('Service name must be a non-empty string, ' . gettype($name) . ' given.');
 
 		} elseif (isset($this->registry[$name])) {
@@ -83,7 +83,6 @@ class Container extends Nette\Object
 		}
 
 		$this->registry[$name] = $service;
-		$this->meta[$name] = $meta;
 		return $this;
 	}
 
@@ -96,7 +95,7 @@ class Container extends Nette\Object
 	 */
 	public function removeService($name)
 	{
-		unset($this->registry[$name], $this->meta[$name]);
+		unset($this->registry[$name]);
 	}
 
 
@@ -189,16 +188,29 @@ class Container extends Nette\Object
 	 */
 	public function getByType($class, $need = TRUE)
 	{
-		$lower = ltrim(strtolower($class), '\\');
-		if (!isset($this->classes[$lower])) {
+		$names = $this->findByType($class);
+		if (!$names) {
 			if ($need) {
 				throw new MissingServiceException("Service of type $class not found.");
 			}
-		} elseif ($this->classes[$lower] === FALSE) {
-			throw new MissingServiceException("Multiple services of type $class found.");
+		} elseif (count($names) > 1) {
+			throw new MissingServiceException("Multiple services of type $class found: " . implode(', ', $names) . '.');
 		} else {
-			return $this->getService($this->classes[$lower]);
+			return $this->getService($names[0]);
 		}
+	}
+
+
+
+	/**
+	 * Gets the service names of the specified type.
+	 * @param  string
+	 * @return string[]
+	 */
+	public function findByType($class)
+	{
+		$class = ltrim(strtolower($class), '\\');
+		return isset($this->meta[self::TYPES][$class]) ? $this->meta[self::TYPES][$class] : array();
 	}
 
 
@@ -210,13 +222,7 @@ class Container extends Nette\Object
 	 */
 	public function findByTag($tag)
 	{
-		$found = array();
-		foreach ($this->meta as $name => $meta) {
-			if (isset($meta[self::TAGS][$tag])) {
-				$found[$name] = $meta[self::TAGS][$tag];
-			}
-		}
-		return $found;
+		return isset($this->meta[self::TAGS][$tag]) ? $this->meta[self::TAGS][$tag] : array();
 	}
 
 
