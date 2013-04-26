@@ -78,9 +78,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	/** @var bool should instance observe accessed columns caching */
 	protected $observeCache = FALSE;
 
-	/** @var bool recheck referencing keys */
-	protected $checkReferenced = FALSE;
-
 	/** @var array of primary key values */
 	protected $keys = array();
 
@@ -736,7 +733,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 		}
 
 		$return = $this->connection->query($this->sqlBuilder->buildInsertQuery(), $data);
-		$this->checkReferenced = TRUE;
 
 		if ($data instanceof Nette\Database\SqlLiteral || $this->primary === NULL) {
 			return $return->getRowCount();
@@ -828,41 +824,32 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	 * @param  mixed   primary key to check for $table and $column references
 	 * @return Selection or array() if the row does not exist
 	 */
-	public function getReferencedTable($table, $column, $checkPrimaryKey = NULL)
+	public function getReferencedTable($table, $column, $checkPrimaryKey)
 	{
 		$referenced = & $this->refCache['referenced'][$this->getSpecificCacheKey()]["$table.$column"];
-		if ($referenced === NULL || !isset($referenced[$checkPrimaryKey]) || $this->checkReferenced) {
+		$selection = & $referenced['selection'];
+		$cacheKeys = & $referenced['cacheKeys'];
+		if ($selection === NULL || !isset($cacheKeys[$checkPrimaryKey])) {
 			$this->execute();
-			$this->checkReferenced = FALSE;
-			$keys = array();
+			$cacheKeys = array();
 			foreach ($this->rows as $row) {
 				if ($row[$column] === NULL) {
 					continue;
 				}
 
 				$key = $row[$column];
-				$keys[$key] = TRUE;
+				$cacheKeys[$key] = TRUE;
 			}
 
-			if ($referenced !== NULL) {
-				$a = array_keys($keys);
-				$b = array_keys($referenced->rows);
-				sort($a);
-				sort($b);
-				if ($a === $b) {
-					return $referenced;
-				}
-			}
-
-			if ($keys) {
-				$referenced = $this->createSelectionInstance($table);
-				$referenced->where($referenced->getPrimary(), array_keys($keys));
+			if ($cacheKeys) {
+				$selection = $this->createSelectionInstance($table);
+				$selection->where($selection->getPrimary(), array_keys($cacheKeys));
 			} else {
-				$referenced = array();
+				$selection = array();
 			}
 		}
 
-		return $referenced;
+		return $selection;
 	}
 
 
