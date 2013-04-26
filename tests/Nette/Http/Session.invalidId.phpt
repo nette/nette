@@ -18,7 +18,7 @@ require __DIR__ . '/../bootstrap.php';
 $_COOKIE['PHPSESSID'] = '#';
 
 
-$container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
+$container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
 $session = $container->getService('session');
 
 $session = $session->start();

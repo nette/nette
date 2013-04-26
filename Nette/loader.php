@@ -46,6 +46,7 @@ require_once __DIR__ . '/Loaders/NetteLoader.php';
 
 
 Nette\Loaders\NetteLoader::getInstance()->register();
+class_alias('Nette\Configurator', 'Nette\Config\Configurator');
 
 require_once __DIR__ . '/Diagnostics/Helpers.php';
 require_once __DIR__ . '/Diagnostics/shortcuts.php';

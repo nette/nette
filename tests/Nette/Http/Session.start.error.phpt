@@ -20,7 +20,7 @@ ini_set('session.save_path', ';;;');
 
 
 
-$container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
+$container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
 $session = $container->getService('session');
 
 Assert::exception(function() use ($session) {
