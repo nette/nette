@@ -46,7 +46,17 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 		if (isset($options['sqlmode'])) {
 			$connection->query("SET sql_mode='$options[sqlmode]'");
 		}
-		$connection->query("SET time_zone='" . date('P') . "'");
+		if (!isset($options['timezone']) || $options['timezone'] === 'auto') {
+			try {
+				$connection->query('SET time_zone=' . date_default_timezone_get());
+			} catch (\PDOException $e) {
+				throw new Nette\NotSupportedException('Named timezones are not supported. Set timezone in config (section nette.database) to either \'relative\' or custom value that is supported by the database.', NULL, $e);
+			}
+		} elseif ($options['timezone'] === 'relative') {
+			$connection->query("SET time_zone='" . date('P') . "'");
+		} elseif ($options['timezone'] !== FALSE) {
+			$connection->query('SET time_zone=' . $connection->quote($options['timezone']));
+		}
 	}
 
 
