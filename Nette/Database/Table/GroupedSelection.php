@@ -11,7 +11,10 @@
 
 namespace Nette\Database\Table;
 
-use Nette;
+use Nette,
+	Nette\Caching\IStorage,
+	Nette\Database\Connection,
+	Nette\Database\IReflection;
 
 
 /**
@@ -38,15 +41,18 @@ class GroupedSelection extends Selection
 
 	/**
 	 * Creates filtered and grouped table representation.
-	 * @param  Selection  $refTable
 	 * @param  string  database table name
 	 * @param  string  joining column
+	 * @param  Selection
+	 * @param  Connection
+	 * @param  IReflection
+	 * @param  ICacheStorage|NULL
 	 */
-	public function __construct(Selection $refTable, $table, $column)
+	public function __construct($table, $column, Selection $refTable, Connection $connection, IReflection $reflection, IStorage $cacheStorage = NULL)
 	{
 		$this->refTable = $refTable;
 		$this->column = $column;
-		parent::__construct($refTable->connection, $table, $refTable->reflection, $refTable->cache ? $refTable->cache->getStorage() : NULL);
+		parent::__construct($connection, $table, $reflection, $cacheStorage);
 	}
 
 

@@ -530,7 +530,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 	protected function createGroupedSelectionInstance($table, $column)
 	{
-		return new GroupedSelection($this, $table, $column);
+		return new GroupedSelection($table, $column, $this, $this->connection, $this->reflection, $this->cache ? $this->cache->getStorage() : NULL);
 	}
 
 
