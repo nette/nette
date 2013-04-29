@@ -26,7 +26,7 @@ use Nette,
  */
 class GroupedSelection extends Selection
 {
-	/** @var Selection referenced table */
+	/** @var BaseResultSet referenced table */
 	protected $refTable;
 
 	/** @var  mixed current assigned referencing array */
@@ -48,7 +48,7 @@ class GroupedSelection extends Selection
 	 * @param  IReflection
 	 * @param  ICacheStorage|NULL
 	 */
-	public function __construct($table, $column, Selection $refTable, Connection $connection, IReflection $reflection, IStorage $cacheStorage = NULL)
+	public function __construct($table, $column, BaseResultSet $refTable, Connection $connection, IReflection $reflection, IStorage $cacheStorage = NULL)
 	{
 		$this->refTable = $refTable;
 		$this->column = $column;
