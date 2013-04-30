@@ -239,7 +239,7 @@ class Form extends Container
 			$this->setCurrentGroup($group);
 		}
 
-		if($caption instanceof Html) {
+		if ($caption instanceof Nette\Utils\Html) {
 			$caption = $caption->__toString();
 		}
 
