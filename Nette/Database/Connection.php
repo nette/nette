@@ -46,6 +46,9 @@ class Connection extends Nette\Object
 	/** @var PDO */
 	private $pdo;
 
+	/** @var array of function(Connection $connection); Occurs after connection is established */
+	public $onConnect;
+
 	/** @var array of function(Connection $connection, ResultSet|Exception $result); Occurs after query is executed */
 	public $onQuery;
 
@@ -79,6 +82,7 @@ class Connection extends Nette\Object
 			: $this->options['driverClass'];
 		$this->driver = new $class($this, $this->options);
 		$this->preprocessor = new SqlPreprocessor($this);
+		$this->onConnect($this);
 	}
 
 
