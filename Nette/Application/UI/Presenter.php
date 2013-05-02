@@ -105,9 +105,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/** @var \SystemContainer|Nette\DI\Container */
 	private $context;
 
-	/** @var Nette\Application\Application */
-	private $application;
-
 	/** @var Nette\Http\IRequest */
 	private $httpRequest;
 
@@ -116,6 +113,12 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	/** @var Nette\Http\Session */
 	private $session;
+
+	/** @var Nette\Application\IPresenterFactory */
+	private $presenterFactory;
+
+	/** @var Nette\Application\IRouter */
+	private $router;
 
 	/** @var Nette\Security\User */
 	private $user;
@@ -764,15 +767,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		// note: createRequest supposes that saveState(), run() & tryCall() behaviour is final
 
-		// cached services for better performance
-		static $presenterFactory, $router, $refUrl;
-		if ($presenterFactory === NULL) {
-			$presenterFactory = $this->application->getPresenterFactory();
-			$router = $this->application->getRouter();
-			$refUrl = new Http\Url($this->httpRequest->getUrl());
-			$refUrl->setPath($this->httpRequest->getUrl()->getScriptPath());
-		}
-
 		$this->lastCreatedRequest = $this->lastCreatedRequestFlag = NULL;
 
 		// PARSE DESTINATION
@@ -845,7 +839,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 				}
 			}
 			try {
-				$presenterClass = $presenterFactory->getPresenterClass($presenter);
+				$presenterClass = $this->presenterFactory->getPresenterClass($presenter);
 			} catch (Application\InvalidPresenterException $e) {
 				throw new InvalidLinkException($e->getMessage(), NULL, $e);
 			}
@@ -966,7 +960,12 @@ abstract class Presenter extends Control implements Application\IPresenter
 		}
 
 		// CONSTRUCT URL
-		$url = $router->constructUrl($this->lastCreatedRequest, $refUrl);
+		static $refUrl;
+		if ($refUrl === NULL) {
+			$refUrl = new Http\Url($this->httpRequest->getUrl());
+			$refUrl->setPath($this->httpRequest->getUrl()->getScriptPath());
+		}
+		$url = $this->router->constructUrl($this->lastCreatedRequest, $refUrl);
 		if ($url === NULL) {
 			unset($args[self::ACTION_KEY]);
 			$params = urldecode(http_build_query($args, NULL, ', '));
@@ -1294,14 +1293,15 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/********************* services ****************d*g**/
 
 
-	public function injectPrimary(Nette\DI\Container $context, Application\Application $application, Http\IRequest $httpRequest, Http\IResponse $httpResponse, Http\Session $session, Nette\Security\User $user)
+	public function injectPrimary(Nette\DI\Container $context, Nette\Application\IPresenterFactory $presenterFactory, Nette\Application\IRouter $router, Http\IRequest $httpRequest, Http\IResponse $httpResponse, Http\Session $session, Nette\Security\User $user)
 	{
-		if ($this->application !== NULL) {
+		if ($this->presenterFactory !== NULL) {
 			throw new Nette\InvalidStateException("Method " . __METHOD__ . " is intended for initialization and should not be called more than once.");
 		}
 
 		$this->context = $context;
-		$this->application = $application;
+		$this->presenterFactory = $presenterFactory;
+		$this->router = $router;
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
 		$this->session = $session;
