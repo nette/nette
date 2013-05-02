@@ -108,9 +108,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/** @var Nette\Application\Application */
 	private $application;
 
-	/** @var Nette\Http\Context */
-	private $httpContext;
-
 	/** @var Nette\Http\IRequest */
 	private $httpRequest;
 
@@ -746,8 +743,8 @@ abstract class Presenter extends Control implements Application\IPresenter
 		if ($expire !== NULL) {
 			$this->httpResponse->setExpiration($expire);
 		}
-
-		if (!$this->httpContext->isModified($lastModified, $etag)) {
+		$helper = new Nette\Http\Context($this->httpRequest, $this->httpResponse);
+		if (!$helper->isModified($lastModified, $etag)) {
 			$this->terminate();
 		}
 	}
@@ -1297,7 +1294,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/********************* services ****************d*g**/
 
 
-	public function injectPrimary(Nette\DI\Container $context, Application\Application $application, Http\Context $httpContext, Http\IRequest $httpRequest, Http\IResponse $httpResponse, Http\Session $session, Nette\Security\User $user)
+	public function injectPrimary(Nette\DI\Container $context, Application\Application $application, Http\IRequest $httpRequest, Http\IResponse $httpResponse, Http\Session $session, Nette\Security\User $user)
 	{
 		if ($this->application !== NULL) {
 			throw new Nette\InvalidStateException("Method " . __METHOD__ . " is intended for initialization and should not be called more than once.");
@@ -1305,7 +1302,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 		$this->context = $context;
 		$this->application = $application;
-		$this->httpContext = $httpContext;
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
 		$this->session = $session;

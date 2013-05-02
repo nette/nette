@@ -88,11 +88,6 @@ class MockApplication extends Application\Application
 	public function __construct() {}
 }
 
-class MockHttpContext extends Http\Context
-{
-	public function __construct() {}
-}
-
 class MockHttpRequest extends Http\Request
 {
 	public function __construct() {}
@@ -101,7 +96,6 @@ class MockHttpRequest extends Http\Request
 
 $context = new DI\Container();
 $application = new MockApplication();
-$httpContext = new MockHttpContext();
 $httpRequest = new MockHttpRequest();
 $httpResponse = new Http\Response();
 $session = new MockSession();
@@ -110,7 +104,7 @@ $user = new MockUser();
 $applicationRequest = new Application\Request('', '', array());
 
 $presenter = new TestPresenter();
-$presenter->injectPrimary($context, $application, $httpContext, $httpRequest, $httpResponse, $session, $user);
+$presenter->injectPrimary($context, $application, $httpRequest, $httpResponse, $session, $user);
 $presenter->run($applicationRequest);
 
 $expiration = '+1 year';
