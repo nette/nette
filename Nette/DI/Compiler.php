@@ -201,12 +201,10 @@ class Compiler extends Nette\Object
 
 			if (($parent = Config\Helpers::takeParent($def)) && $parent !== $name) {
 				$container->removeDefinition($name);
-				$definition = $container->addDefinition($name);
-				if ($parent !== Config\Helpers::OVERWRITE) {
-					foreach ($container->getDefinition($parent) as $k => $v) {
-						$definition->$k = unserialize(serialize($v)); // deep clone
-					}
-				}
+				$definition = $container->addDefinition(
+					$name,
+					$parent === Config\Helpers::OVERWRITE ? NULL : unserialize(serialize($container->getDefinition($parent))) // deep clone
+				);
 			} elseif ($container->hasDefinition($name)) {
 				$definition = $container->getDefinition($name);
 				if ($definition->shared !== $shared) {

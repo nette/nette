@@ -56,7 +56,7 @@ class ContainerBuilder extends Nette\Object
 	 * @param  string
 	 * @return ServiceDefinition
 	 */
-	public function addDefinition($name)
+	public function addDefinition($name, ServiceDefinition $definition = NULL)
 	{
 		if (!is_string($name) || !$name) { // builder is not ready for falsy names such as '0'
 			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
@@ -64,7 +64,7 @@ class ContainerBuilder extends Nette\Object
 		} elseif (isset($this->definitions[$name])) {
 			throw new Nette\InvalidStateException("Service '$name' has already been added.");
 		}
-		return $this->definitions[$name] = new ServiceDefinition;
+		return $this->definitions[$name] = $definition ?: new ServiceDefinition;
 	}
 
 
