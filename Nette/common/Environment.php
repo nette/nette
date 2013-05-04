@@ -319,11 +319,13 @@ final class Environment
 	{
 		if (self::$createdAt) {
 			throw new Nette\InvalidStateException('Nette\Configurator has already been created automatically by Nette\Environment at ' . self::$createdAt);
+		} elseif (!defined('TEMP_DIR')) {
+			throw new Nette\InvalidStateException('Nette\Environment requires constant TEMP_DIR with path to temporary directory.');
 		}
 		$configurator = new Nette\Configurator;
 		$configurator
 			->setDebugMode(!self::isProduction())
-			->setTempDirectory(defined('TEMP_DIR') ? TEMP_DIR : '');
+			->setTempDirectory(TEMP_DIR);
 		if ($file) {
 			$configurator->addConfig($file, $section);
 		}
