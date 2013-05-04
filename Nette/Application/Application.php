@@ -128,7 +128,7 @@ class Application extends Nette\Object
 		try {
 			$name = $request->getPresenterName();
 			$this->presenterFactory->getPresenterClass($name);
-			$request->setPresenterName($name)->freeze();
+			$request->setPresenterName($name);
 		} catch (InvalidPresenterException $e) {
 			throw new BadRequestException($e->getMessage(), 0, $e);
 		}

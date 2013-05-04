@@ -47,7 +47,6 @@ class UrlScript extends Url
 	 */
 	public function setScriptPath($value)
 	{
-		$this->updating();
 		$this->scriptPath = (string) $value;
 		return $this;
 	}

@@ -68,7 +68,6 @@ class Request extends Nette\Object implements IRequest
 		$headers = NULL, $method = NULL, $remoteAddress = NULL, $remoteHost = NULL)
 	{
 		$this->url = $url;
-		$this->url->freeze();
 		if ($query === NULL) {
 			parse_str($url->query, $this->query);
 		} else {

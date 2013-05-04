@@ -51,7 +51,7 @@ use Nette;
  * @property-read string $baseUrl
  * @property-read string $relativeUrl
  */
-class Url extends Nette\FreezableObject
+class Url extends Nette\Object
 {
 	/** @var array */
 	public static $defaultPorts = array(
@@ -128,7 +128,6 @@ class Url extends Nette\FreezableObject
 	 */
 	public function setScheme($value)
 	{
-		$this->updating();
 		$this->scheme = (string) $value;
 		return $this;
 	}
@@ -153,7 +152,6 @@ class Url extends Nette\FreezableObject
 	 */
 	public function setUser($value)
 	{
-		$this->updating();
 		$this->user = (string) $value;
 		return $this;
 	}
@@ -178,7 +176,6 @@ class Url extends Nette\FreezableObject
 	 */
 	public function setPassword($value)
 	{
-		$this->updating();
 		$this->pass = (string) $value;
 		return $this;
 	}
@@ -203,7 +200,6 @@ class Url extends Nette\FreezableObject
 	 */
 	public function setHost($value)
 	{
-		$this->updating();
 		$this->host = (string) $value;
 		return $this;
 	}
@@ -228,7 +224,6 @@ class Url extends Nette\FreezableObject
 	 */
 	public function setPort($value)
 	{
-		$this->updating();
 		$this->port = (int) $value;
 		return $this;
 	}
@@ -253,7 +248,6 @@ class Url extends Nette\FreezableObject
 	 */
 	public function setPath($value)
 	{
-		$this->updating();
 		$this->path = (string) $value;
 		return $this;
 	}
@@ -278,7 +272,6 @@ class Url extends Nette\FreezableObject
 	 */
 	public function setQuery($value)
 	{
-		$this->updating();
 		$this->query = (string) (is_array($value) ? http_build_query($value, '', '&') : $value);
 		return $this;
 	}
@@ -292,7 +285,6 @@ class Url extends Nette\FreezableObject
 	 */
 	public function appendQuery($value)
 	{
-		$this->updating();
 		$value = (string) (is_array($value) ? http_build_query($value, '', '&') : $value);
 		$this->query .= ($this->query === '' || $value === '') ? $value : '&' . $value;
 		return $this;
@@ -318,7 +310,6 @@ class Url extends Nette\FreezableObject
 	 */
 	public function setFragment($value)
 	{
-		$this->updating();
 		$this->fragment = (string) $value;
 		return $this;
 	}
@@ -455,7 +446,6 @@ class Url extends Nette\FreezableObject
 	 */
 	public function canonicalize()
 	{
-		$this->updating();
 		$this->path = $this->path === '' ? '/' : self::unescape($this->path, '%/');
 		$this->host = strtolower(rawurldecode($this->host));
 		$this->query = self::unescape(strtr($this->query, '+', ' '), '%&;=+');
