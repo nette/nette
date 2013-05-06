@@ -46,7 +46,7 @@ use Nette,
 			<th>Name</th>
 			<th>Autowired</th>
 			<th>Service</th>
-			<th>Meta</th>
+			<th>Tags</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -64,7 +64,7 @@ use Nette,
 					<code><?php echo htmlSpecialChars($class) ?></code>
 				<?php endif ?>
 			</td>
-			<td><?php if (isset($container->meta[$name])) { echo Dumper::toHtml($container->meta[$name], array(Dumper::COLLAPSE => TRUE)); } ?></td>
+			<td><?php if (isset($tags[$name])) { echo Dumper::toHtml($tags[$name], array(Dumper::COLLAPSE => TRUE)); } ?></td>
 		</tr>
 		<?php endforeach ?>
 		</tbody>

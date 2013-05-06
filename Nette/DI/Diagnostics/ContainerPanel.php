@@ -72,6 +72,15 @@ class ContainerPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 		ksort($factories);
 		$container = $this->container;
 		$registry = $this->getContainerProperty('registry');
+		$tags = array();
+		$meta = $this->getContainerProperty('meta');
+		if (isset($meta[Container::TAGS])) {
+			foreach ($meta[Container::TAGS] as $tag => $tmp) {
+				foreach ($tmp as $service => $val) {
+					$tags[$service][$tag] = $val;
+				}
+			}
+		}
 
 		ob_start();
 		require __DIR__ . '/templates/ContainerPanel.panel.phtml';
