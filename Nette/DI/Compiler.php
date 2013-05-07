@@ -183,7 +183,8 @@ class Compiler extends Nette\Object
 		foreach ($all as $origName => $def) {
 			$shared = array_key_exists($origName, $services);
 			if ((string) (int) $origName === (string) $origName) {
-				$name = (string) (count($container->getDefinitions()) + 1);
+				$name = count($container->getDefinitions())
+					. preg_replace('#\W+#', '_', $def instanceof \stdClass ? ".$def->value" : (is_scalar($def) ? ".$def" : ''));
 			} elseif ($shared && array_key_exists($origName, $factories)) {
 				throw new ServiceCreationException("It is not allowed to use services and factories with the same name: '$origName'.");
 			} else {
