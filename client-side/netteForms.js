@@ -297,7 +297,7 @@ Nette.toggleControl = function(elem, rules, topSuccess, firsttime) {
 					for (var i = 0; i < el.length; i++) {
 						Nette.addEvent(el[i], 'click', handler);
 					}
-				} else if (el.nodeName.toLowerCase() === 'select') {
+				} else if (el.nodeName.toLowerCase() === 'select' || el.nodeName.toLowerCase() === 'input') {
 					Nette.addEvent(el, 'change', handler);
 				} else {
 					Nette.addEvent(el, 'click', handler);
