@@ -43,6 +43,7 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	{
 		parent::__construct($caption);
 		$this->control->type = 'submit';
+		$this->setOmitted(TRUE);
 	}
 
 
@@ -114,7 +115,7 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	 * Submitted validator: has been button pressed?
 	 * @return bool
 	 */
-	public static function validateSubmitted(Nette\Forms\ISubmitterControl $control)
+	public static function validateSubmitted(SubmitButton $control)
 	{
 		return $control->isSubmittedBy();
 	}
