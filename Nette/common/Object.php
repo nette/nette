@@ -70,6 +70,17 @@ abstract class Object
 
 
 	/**
+	 * Returns class name as a string.
+	 * @return string
+	 */
+	public /**/static/**/ function getClassName()
+	{
+		return /*5.2*get_class($this)*//**/get_called_class()/**/;
+	}
+
+
+
+	/**
 	 * Call to undefined method.
 	 * @param  string  method name
 	 * @param  array   arguments
