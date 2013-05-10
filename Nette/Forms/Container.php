@@ -36,7 +36,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	protected $currentGroup;
 
 	/** @var bool */
-	private $validated;
+	protected $validated;
 
 
 
