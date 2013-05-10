@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\ResultSet duplicated row
+ * Test: Nette\Database\ResultSet duplicated column
  *
  * @author     David Grudl
  * @package    Nette\Database
