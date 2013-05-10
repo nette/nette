@@ -406,15 +406,14 @@ class Form extends Container
 			return;
 
 		} elseif ($this->submittedBy instanceof ISubmitterControl) {
-			if (!$this->submittedBy->getValidationScope() || $this->isValid()) {
-				$this->submittedBy->click();
-				$valid = TRUE;
+			if ($this->isValid()) {
+				$this->submittedBy->onClick($this->submittedBy);
 			} else {
 				$this->submittedBy->onInvalidClick($this->submittedBy);
 			}
 		}
 
-		if (isset($valid) || $this->isValid()) {
+		if ($this->isValid()) {
 			$this->onSuccess($this);
 		} else {
 			$this->onError($this);
@@ -456,6 +455,16 @@ class Form extends Container
 
 
 	/********************* validation ****************d*g**/
+
+
+
+	public function validate(array $controls = NULL)
+	{
+		if ($controls === NULL && $this->submittedBy instanceof ISubmitterControl) {
+			$controls = $this->submittedBy->getValidationScope();
+		}
+		parent::validate($controls);
+	}
 
 
 

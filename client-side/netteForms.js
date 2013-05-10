@@ -108,14 +108,20 @@ Nette.validateControl = function(elem, rules, onlyCheck) {
  * Validates whole form.
  */
 Nette.validateForm = function(sender) {
-	var form = sender.form || sender;
+	var form = sender.form || sender, scope = false;
 	if (form['nette-submittedBy'] && form['nette-submittedBy'].getAttribute('formnovalidate') !== null) {
-		return true;
+		var scopeArr = eval(form['nette-submittedBy'].getAttribute('data-nette-validation-scope') || '[]');
+		if (scopeArr.length) {
+			scope = new RegExp('^(' + scopeArr.join('-|') + '-)');
+		} else {
+			return true;
+		}
 	}
 	for (var i = 0; i < form.elements.length; i++) {
 		var elem = form.elements[i];
 		if (!(elem.nodeName.toLowerCase() in {input: 1, select: 1, textarea: 1}) ||
 			(elem.type in {hidden: 1, submit: 1, image: 1, reset: 1}) ||
+			(scope && !elem.name.replace(/]\[|\[|]|$/g, '-').match(scope)) ||
 			elem.disabled || elem.readonly
 		) {
 			continue;
