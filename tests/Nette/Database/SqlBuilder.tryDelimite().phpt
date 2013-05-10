@@ -11,8 +11,6 @@
 
 require __DIR__ . '/connect.inc.php'; // create $connection
 
-Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
-
 
 
 $sqlBuilder = new Nette\Database\Table\SqlBuilder('book', $connection, new Nette\Database\Reflection\ConventionalReflection);
