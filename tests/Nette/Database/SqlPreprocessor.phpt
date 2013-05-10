@@ -13,8 +13,6 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 use Nette\Database\SqlLiteral;
 
 
-Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
-
 
 $preprocessor = new Nette\Database\SqlPreprocessor($connection);
 
