@@ -272,7 +272,16 @@ class Container extends Nette\Object
 			}
 		}
 
-		foreach (Helpers::getInjectProperties(Nette\Reflection\ClassType::from($service)) as $property => $type) {
+		$reflection = Nette\Reflection\ClassType::from($service);
+		$properties = Helpers::getInjectProperties($reflection, Nette\Reflection\Property::IS_PRIVATE | Nette\Reflection\Property::IS_PROTECTED);
+
+		foreach ($properties as $name => $type) {
+			$property = $reflection->getProperty($name);
+			$property->setAccessible(TRUE);
+			$property->setValue($service, $this->getByType($type));
+		}
+
+		foreach (Helpers::getInjectProperties($reflection) as $property => $type) {
 			$service->$property = $this->getByType($type);
 		}
 	}

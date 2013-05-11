@@ -148,10 +148,10 @@ final class Helpers
 	 * Generates list of properties with annotation @inject.
 	 * @return array
 	 */
-	public static function getInjectProperties(Nette\Reflection\ClassType $class)
+	public static function getInjectProperties(Nette\Reflection\ClassType $class, $visibility = Nette\Reflection\Property::IS_PUBLIC)
 	{
 		$res = array();
-		foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
+		foreach ($class->getProperties($visibility) as $property) {
 			$type = $property->getAnnotation('var');
 			if (!$property->getAnnotation('inject')) {
 				continue;
