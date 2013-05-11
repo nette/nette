@@ -97,6 +97,19 @@ abstract class TextBase extends BaseControl
 	}
 
 
+	/**
+	 * Adds input string filter for float numbers.
+	 * @return self
+	 */
+	public function addFloatFilter()
+	{
+		$this->addFilter(function($s) {
+			return str_replace(array(' ', ','), array('', '.'), $s);
+		});
+		return $this;
+	}
+
+
 	public function getControl()
 	{
 		$el = parent::getControl();
@@ -113,9 +126,7 @@ abstract class TextBase extends BaseControl
 	public function addRule($operation, $message = NULL, $arg = NULL)
 	{
 		if ($operation === Form::FLOAT) {
-			$this->addFilter(function($s) {
-				return str_replace(array(' ', ','), array('', '.'), $s);
-			});
+			$this->addFloatFilter();
 
 		} elseif ($operation === Form::URL) {
 			$this->addFilter(function($s) {
