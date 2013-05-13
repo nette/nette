@@ -535,6 +535,12 @@ class Compiler extends Nette\Object
 			$cdata = $this->htmlNode && in_array(strtolower($this->htmlNode->name), array('script', 'style'));
 			throw new CompileException("Unknown macro {{$name}}" . ($cdata ? " (in JavaScript or CSS, try to put a space after bracket.)" : ''));
 		}
+
+		$modifiers = preg_replace('#\|noescape\s?(?=\||\z)#i', '', $modifiers, -1, $noescape);
+		if (!$noescape && strpbrk($name, '=~%^&_')) {
+			$modifiers .= '|escape';
+		}
+
 		foreach (array_reverse($this->macros[$name]) as $macro) {
 			$node = new MacroNode($macro, $name, $args, $modifiers, $this->macroNode, $this->htmlNode, $nPrefix);
 			if ($macro->nodeOpened($node) !== FALSE) {
