@@ -247,9 +247,14 @@ class Compiler extends Nette\Object
 	{
 		$isRightmost = !isset($this->tokens[$this->position + 1])
 			|| substr($this->tokens[$this->position + 1]->text, 0, 1) === "\n";
-		$this->writeMacro($token->name, $token->value, $token->modifiers, $isRightmost && !$token->empty);
-		if ($token->empty) {
-			$this->writeMacro('/' . $token->name, NULL, NULL, $isRightmost);
+
+		if ($token->name[0] === '/') {
+			$this->closeMacro((string) substr($token->name, 1), $token->value, $token->modifiers, $isRightmost);
+		} else {
+			$this->openMacro($token->name, $token->value, $token->modifiers, $isRightmost && !$token->empty);
+			if ($token->empty) {
+				$this->closeMacro($token->name, NULL, NULL, $isRightmost);
+			}
 		}
 	}
 
@@ -383,45 +388,55 @@ class Compiler extends Nette\Object
 	 * @param  bool
 	 * @return MacroNode
 	 */
-	public function writeMacro($name, $args = NULL, $modifiers = NULL, $isRightmost = FALSE, $nPrefix = NULL)
+	public function openMacro($name, $args = NULL, $modifiers = NULL, $isRightmost = FALSE, $nPrefix = NULL)
 	{
-		if ($name[0] === '/') { // closing
-			$node = $this->macroNode;
-
-			if (!$node || ("/$node->name" !== $name && '/' !== $name) || $modifiers
-				|| ($args && $node->args && !Strings::startsWith("$node->args ", "$args "))
-			) {
-				$name .= $args ? ' ' : '';
-				throw new CompileException("Unexpected macro {{$name}{$args}{$modifiers}}"
-					. ($node ? ", expecting {/$node->name}" . ($args && $node->args ? " or eventually {/$node->name $node->args}" : '') : ''));
-			}
-
-			$this->macroNode = $node->parentNode;
-			if (!$node->args) {
-				$node->setArgs($args);
-			}
-
-			$isLeftmost = $node->content ? trim(substr($this->output, strrpos("\n$this->output", "\n"))) === '' : FALSE;
-
-			$node->closing = TRUE;
-			$node->macro->nodeClosed($node);
-
-			$this->output = & $node->saved[0];
-			$this->writeCode($node->openingCode, $this->output, $node->saved[1]);
-			$this->writeCode($node->closingCode, $node->content, $isRightmost, $isLeftmost);
-			$this->output .= $node->content;
-
-		} else { // opening
-			$node = $this->expandMacro($name, $args, $modifiers, $nPrefix);
-			if ($node->isEmpty) {
-				$this->writeCode($node->openingCode, $this->output, $isRightmost);
-
-			} else {
-				$this->macroNode = $node;
-				$node->saved = array(& $this->output, $isRightmost);
-				$this->output = & $node->content;
-			}
+		$node = $this->expandMacro($name, $args, $modifiers, $nPrefix);
+		if ($node->isEmpty) {
+			$this->writeCode($node->openingCode, $this->output, $isRightmost);
+		} else {
+			$this->macroNode = $node;
+			$node->saved = array(& $this->output, $isRightmost);
+			$this->output = & $node->content;
 		}
+		return $node;
+	}
+
+
+
+	/**
+	 * Generates code for {/macro ...} to the output.
+	 * @param  string
+	 * @param  string
+	 * @param  string
+	 * @param  bool
+	 * @return MacroNode
+	 */
+	public function closeMacro($name, $args = NULL, $modifiers = NULL, $isRightmost = FALSE)
+	{
+		$node = $this->macroNode;
+
+		if (!$node || ($node->name !== $name && '' !== $name) || $modifiers
+			|| ($args && $node->args && !Strings::startsWith("$node->args ", "$args "))
+		) {
+			$name .= $args ? ' ' : '';
+			throw new CompileException("Unexpected macro {/{$name}{$args}{$modifiers}}"
+				. ($node ? ", expecting {/$node->name}" . ($args && $node->args ? " or eventually {/$node->name $node->args}" : '') : ''));
+		}
+
+		$this->macroNode = $node->parentNode;
+		if (!$node->args) {
+			$node->setArgs($args);
+		}
+
+		$isLeftmost = $node->content ? trim(substr($this->output, strrpos("\n$this->output", "\n"))) === '' : FALSE;
+
+		$node->closing = TRUE;
+		$node->macro->nodeClosed($node);
+
+		$this->output = & $node->saved[0];
+		$this->writeCode($node->openingCode, $this->output, $node->saved[1]);
+		$this->writeCode($node->closingCode, $node->content, $isRightmost, $isLeftmost);
+		$this->output .= $node->content;
 		return $node;
 	}
 
@@ -458,9 +473,9 @@ class Compiler extends Nette\Object
 			$attrName = MacroNode::PREFIX_INNER . "-$name";
 			if (isset($attrs[$attrName])) {
 				if ($this->htmlNode->closing) {
-					$left[] = array("/$name", '', MacroNode::PREFIX_INNER);
+					$left[] = array(TRUE, $name, '', MacroNode::PREFIX_INNER);
 				} else {
-					array_unshift($right, array($name, $attrs[$attrName], MacroNode::PREFIX_INNER));
+					array_unshift($right, array(FALSE, $name, $attrs[$attrName], MacroNode::PREFIX_INNER));
 				}
 				unset($attrs[$attrName]);
 			}
@@ -469,8 +484,8 @@ class Compiler extends Nette\Object
 		foreach (array_reverse($this->macros) as $name => $foo) {
 			$attrName = MacroNode::PREFIX_TAG . "-$name";
 			if (isset($attrs[$attrName])) {
-				$left[] = array($name, $attrs[$attrName], MacroNode::PREFIX_TAG);
-				array_unshift($right, array("/$name", '', MacroNode::PREFIX_TAG));
+				$left[] = array(FALSE, $name, $attrs[$attrName], MacroNode::PREFIX_TAG);
+				array_unshift($right, array(TRUE, $name, '', MacroNode::PREFIX_TAG));
 				unset($attrs[$attrName]);
 			}
 		}
@@ -478,9 +493,9 @@ class Compiler extends Nette\Object
 		foreach ($this->macros as $name => $foo) {
 			if (isset($attrs[$name])) {
 				if ($this->htmlNode->closing) {
-					$right[] = array("/$name", '', MacroNode::PREFIX_NONE);
+					$right[] = array(TRUE, $name, '', MacroNode::PREFIX_NONE);
 				} else {
-					array_unshift($left, array($name, $attrs[$name], MacroNode::PREFIX_NONE));
+					array_unshift($left, array(FALSE, $name, $attrs[$name], MacroNode::PREFIX_NONE));
 				}
 				unset($attrs[$name]);
 			}
@@ -497,7 +512,7 @@ class Compiler extends Nette\Object
 		}
 
 		foreach ($left as $item) {
-			$node = $this->writeMacro($item[0], $item[1], NULL, NULL, $item[2]);
+			$node = $item[0] ? $this->closeMacro($item[1], $item[2]) : $this->openMacro($item[1], $item[2], NULL, NULL, $item[3]);
 			if ($node->closing || $node->isEmpty) {
 				$this->htmlNode->attrCode .= $node->attrCode;
 				if ($node->isEmpty) {
@@ -509,7 +524,7 @@ class Compiler extends Nette\Object
 		$this->output .= $code;
 
 		foreach ($right as $item) {
-			$node = $this->writeMacro($item[0], $item[1], NULL, NULL, $item[2]);
+			$node = $item[0] ? $this->closeMacro($item[1], $item[2]) : $this->openMacro($item[1], $item[2], NULL, NULL, $item[3]);
 			if ($node->closing) {
 				$this->htmlNode->attrCode .= $node->attrCode;
 			}

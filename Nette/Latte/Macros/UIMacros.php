@@ -91,7 +91,7 @@ class UIMacros extends MacroSet
 		// try close last block
 		$last = $this->getCompiler()->getMacroNode();
 		if ($last && ($last->name === 'block' || $last->name === '#')) {
-			$this->getCompiler()->writeMacro('/' . $last->name);
+			$this->getCompiler()->closeMacro($last->name);
 		}
 
 		$epilog = $prolog = array();
