@@ -72,6 +72,10 @@ final class ObjectMixin
 				throw new UnexpectedValueException("Property $class::$$name must be array or NULL, " . gettype($_this->$name) ." given.");
 			}
 
+		}  elseif ($cb = self::getExtensionMethod($class, $name)) { // extension methods
+			array_unshift($args, $_this);
+			return $cb->invokeArgs($args);
+
 		} elseif (isset($methods[$name])) { // magic @methods
 			list($op, $rp, $type) = $methods[$name];
 			if (!$rp) {
@@ -94,10 +98,6 @@ final class ObjectMixin
 				$rp->setValue($_this, $val);
 			}
 			return $_this;
-
-		} elseif ($cb = self::getExtensionMethod($class, $name)) { // extension methods
-			array_unshift($args, $_this);
-			return $cb->invokeArgs($args);
 
 		} else {
 			throw new MemberAccessException("Call to undefined method $class::$name().");
