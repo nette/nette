@@ -123,7 +123,7 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 	{
 		$node->tokenizer->reset();
 		$writer = Latte\PhpWriter::using($node, $this->compiler);
-		if (is_string($def)/*5.2* && substr($def, 0, 1) !== "\0"*/) {
+		if (is_string($def)) {
 			return $writer->write($def);
 		} else {
 			return Nette\Callback::create($def)->invoke($node, $writer);

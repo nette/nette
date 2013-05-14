@@ -190,8 +190,7 @@ final class SafeStream
 		fclose($this->handle);
 		fclose($this->tempHandle);
 
-		if ($this->writeError /*5.2*|| !(substr(PHP_OS, 0, 3) === 'WIN' ? unlink($this->file) : TRUE)*/
-			|| !rename($this->tempFile, $this->file) // try to rename temp file
+		if ($this->writeError || !rename($this->tempFile, $this->file) // try to rename temp file
 		) {
 			unlink($this->tempFile); // otherwise delete temp file
 			if ($this->deleteFile) {

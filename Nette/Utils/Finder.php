@@ -234,11 +234,7 @@ class Finder extends Nette\Object implements \IteratorAggregate
 	 */
 	private function buildIterator($path)
 	{
-		if (PHP_VERSION_ID < 50301) {
-			$iterator = new Nette\Utils\RecursiveDirectoryIteratorFixed($path);
-		} else {
-			$iterator = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
-		}
+		$iterator = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
 
 		if ($this->exclude) {
 			$filters = $this->exclude;
@@ -406,17 +402,4 @@ class Finder extends Nette\Object implements \IteratorAggregate
 		throw new Nette\InvalidArgumentException("Unknown operator $operator.");
 	}
 
-}
-
-
-
-if (PHP_VERSION_ID < 50301) {
-	/** @internal */
-	class RecursiveDirectoryIteratorFixed extends \RecursiveDirectoryIterator
-	{
-		function hasChildren()
-		{
-			return parent::hasChildren(TRUE);
-		}
-	}
 }

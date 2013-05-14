@@ -62,13 +62,13 @@ abstract class AutoLoader extends Nette\Object
 	 * @param  bool  prepend autoloader?
 	 * @return void
 	 */
-	public function register(/**/$prepend = FALSE/**/)
+	public function register($prepend = FALSE)
 	{
 		if (!function_exists('spl_autoload_register')) {
 			throw new Nette\NotSupportedException('spl_autoload does not exist in this PHP installation.');
 		}
 
-		spl_autoload_register(array($this, 'tryLoad')/**/, TRUE, (bool) $prepend/**/);
+		spl_autoload_register(array($this, 'tryLoad'), TRUE, (bool) $prepend);
 		self::$loaders[spl_object_hash($this)] = $this;
 	}
 

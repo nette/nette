@@ -160,7 +160,6 @@ class PresenterFactory extends Nette\Object implements IPresenterFactory
 	 */
 	public function formatPresenterClass($presenter)
 	{
-		/*5.2*return strtr($presenter, ':', '_') . 'Presenter';*/
 		$parts = explode(':', $presenter);
 		$mapping = isset($parts[1], $this->mapping[$parts[0]])
 			? $this->mapping[array_shift($parts)]
@@ -181,7 +180,6 @@ class PresenterFactory extends Nette\Object implements IPresenterFactory
 	 */
 	public function unformatPresenterClass($class)
 	{
-		/*5.2*return strtr(substr($class, 0, -9), '_', ':');*/
 		foreach ($this->mapping as $module => $mapping) {
 			$mapping = str_replace(array('\\', '*'), array('\\\\', '(\w+)'), $mapping);
 			if (preg_match("#^\\\\?$mapping[0]((?:$mapping[1])*)$mapping[2]\\z#i", $class, $matches)) {

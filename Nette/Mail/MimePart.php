@@ -348,44 +348,4 @@ class MimePart extends Nette\Object
 		return $o;
 	}
 
-
-
-	/**
-	 * Converts a 8 bit string to a quoted-printable string.
-	 * @param  string
-	 * @return string
-	 *//*5.2*
-	public static function encodeQuotedPrintable($s)
-	{
-		$range = '!"#$%&\'()*+,-./0123456789:;<>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}'; // \x21-\x7E without \x3D
-		$pos = 0;
-		$len = 0;
-		$o = '';
-		$size = strlen($s);
-		while ($pos < $size) {
-			if ($l = strspn($s, $range, $pos)) {
-				while ($len + $l > self::LINE_LENGTH - 1) { // 1 = length of suffix =
-					$lx = self::LINE_LENGTH - $len - 1;
-					$o .= substr($s, $pos, $lx) . '=' . self::EOL;
-					$pos += $lx;
-					$l -= $lx;
-					$len = 0;
-				}
-				$o .= substr($s, $pos, $l);
-				$len += $l;
-				$pos += $l;
-
-			} else {
-				$len += 3;
-				if ($len > self::LINE_LENGTH - 1) {
-					$o .= '=' . self::EOL;
-					$len = 3;
-				}
-				$o .= '=' . strtoupper(bin2hex($s[$pos]));
-				$pos++;
-			}
-		}
-		return rtrim($o, '=' . self::EOL);
-	}*/
-
 }

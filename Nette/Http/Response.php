@@ -334,11 +334,7 @@ final class Response extends Nette\Object implements IResponse
 		foreach (headers_list() as $header) {
 			if (preg_match('#^Set-Cookie: .+?=#', $header, $m)) {
 				$flatten[$m[0]] = $header;
-				if (PHP_VERSION_ID < 50300) { // multiple deleting due PHP bug #61605
-					header('Set-Cookie:');
-				} else {
-					header_remove('Set-Cookie');
-				}
+				header_remove('Set-Cookie');
 			}
 		}
 		foreach (array_values($flatten) as $key => $header) {

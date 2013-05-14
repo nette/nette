@@ -56,7 +56,7 @@ abstract class TextBase extends BaseControl
 	{
 		$value = $this->value;
 		foreach ($this->filters as $filter) {
-			$value = (string) $filter/*5.2*->invoke*/($value);
+			$value = (string) $filter($value);
 		}
 		return $value === $this->translate($this->emptyValue) ? '' : $value;
 	}

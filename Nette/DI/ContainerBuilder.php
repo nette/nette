@@ -344,7 +344,7 @@ class ContainerBuilder extends Nette\Object
 			}
 			$def->class = preg_replace('#[|\s].*#', '', $reflection->getAnnotation('return'));
 			if ($def->class && !class_exists($def->class) && $def->class[0] !== '\\' && $reflection instanceof \ReflectionMethod) {
-				/**/$def->class = $reflection->getDeclaringClass()->getNamespaceName() . '\\' . $def->class;/**/
+				$def->class = $reflection->getDeclaringClass()->getNamespaceName() . '\\' . $def->class;
 			}
 
 		} elseif ($service = $this->getServiceName($factory)) { // alias or factory
@@ -352,7 +352,6 @@ class ContainerBuilder extends Nette\Object
 				$def->autowired = FALSE;
 			}
 			if (Strings::contains($service, '\\')) { // @\Class
-				/*5.2* $service = ltrim($service, '\\');*/
 				return $def->class = $service;
 			}
 			if ($this->definitions[$service]->implement) {

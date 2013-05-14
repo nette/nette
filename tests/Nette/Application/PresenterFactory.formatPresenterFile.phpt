@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @package    Nette\Application
- * @phpversion 5.3
  */
 
 use Nette\Application\PresenterFactory;

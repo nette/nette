@@ -29,12 +29,10 @@ Assert::false( class_exists('ConditionalClass') );   // files/conditional.class.
 Assert::true( interface_exists('TestInterface') );   // file/interface.php
 if (PHP_VERSION_ID >= 50400) Assert::true( trait_exists('TestTrait') ); // file/trait.php
 
-/**/
 Assert::true( class_exists('TestClass') );           // files/namespaces1.php
 Assert::true( class_exists('MySpace1\TestClass1') ); // files/namespaces1.php
 Assert::true( class_exists('MySpace2\TestClass2') ); // files/namespaces2.php
 Assert::true( class_exists('MySpace3\TestClass3') ); // files/namespaces2.php
-/**/
 
 Assert::false( class_exists('Disallowed1') );   // files.robots\disallowed1\class.php
 Assert::false( class_exists('Disallowed2') );   // files.robots\disallowed2\class.php

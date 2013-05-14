@@ -74,10 +74,10 @@ class RobotLoader extends AutoLoader
 	 * @param  bool  prepend autoloader?
 	 * @return RobotLoader  provides a fluent interface
 	 */
-	public function register(/**/$prepend = FALSE/**/)
+	public function register($prepend = FALSE)
 	{
 		$this->classes = $this->getCache()->load($this->getKey(), new Nette\Callback($this, '_rebuildCallback'));
-		parent::register(/**/$prepend/**/);
+		parent::register($prepend);
 		return $this;
 	}
 
@@ -327,8 +327,6 @@ class RobotLoader extends AutoLoader
 	 */
 	private function scanPhp($code)
 	{
-		$T_NAMESPACE = PHP_VERSION_ID < 50300 ? -1 : T_NAMESPACE;
-		$T_NS_SEPARATOR = PHP_VERSION_ID < 50300 ? -1 : T_NS_SEPARATOR;
 		$T_TRAIT = PHP_VERSION_ID < 50400 ? -1 : T_TRAIT;
 
 		$expected = FALSE;
@@ -351,14 +349,14 @@ class RobotLoader extends AutoLoader
 				case T_WHITESPACE:
 					continue 2;
 
-				case $T_NS_SEPARATOR:
+				case T_NS_SEPARATOR:
 				case T_STRING:
 					if ($expected) {
 						$name .= $token[1];
 					}
 					continue 2;
 
-				case $T_NAMESPACE:
+				case T_NAMESPACE:
 				case T_CLASS:
 				case T_INTERFACE:
 				case $T_TRAIT:
@@ -381,7 +379,7 @@ class RobotLoader extends AutoLoader
 					}
 					break;
 
-				case $T_NAMESPACE:
+				case T_NAMESPACE:
 					$namespace = $name ? $name . '\\' : '';
 					$minLevel = $token === '{' ? 1 : 0;
 				}

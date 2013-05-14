@@ -96,7 +96,7 @@ class Session extends Nette\Object
 			unset($_COOKIE[session_name()]);
 		}
 
-		set_error_handler(function($severity, $message) use (& $error) { // session_start returns FALSE on failure since PHP 5.3.0.
+		set_error_handler(function($severity, $message) use (& $error) { // session_start returns FALSE on failure only sometimes
 			if (($severity & error_reporting()) === $severity) {
 				$error = $message;
 				restore_error_handler();

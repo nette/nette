@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @package    Nette\Reflection
- * @phpversion 5.3
  */
 
 use Nette\Reflection;

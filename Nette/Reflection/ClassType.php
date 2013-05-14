@@ -235,9 +235,9 @@ class ClassType extends \ReflectionClass
 	/**
 	 * @return ClassType
 	 */
-	public /**/static/**/ function getReflection()
+	public static function getReflection()
 	{
-		return new ClassType(/*5.2*$this*//**/get_called_class()/**/);
+		return new ClassType(get_called_class());
 	}
 
 

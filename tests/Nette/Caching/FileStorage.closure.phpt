@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @package    Nette\Caching
- * @phpversion 5.3
  */
 
 use Nette\Caching\Cache,
