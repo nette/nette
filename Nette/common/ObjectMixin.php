@@ -289,7 +289,7 @@ final class ObjectMixin
 				} elseif (!$type && preg_match('#@var[ \t]+(\S+)' . ($op === 'add' ? '\[\]#' : '#'), $rp->getDocComment(), $m)) {
 					$type = $m[1];
 				}
-				if ($rc->inNamespace() && preg_match('#^[A-Z]\w+(\[|\||\z)#', $type)) {
+				if (PHP_VERSION_ID >= 50300 && $rc->inNamespace() && preg_match('#^[A-Z]\w+(\[|\||\z)#', $type)) {
 					$type = $rc->getNamespaceName() . '\\' . $type;
 				}
 				$methods[$name] = array($op, $rp, $type);
