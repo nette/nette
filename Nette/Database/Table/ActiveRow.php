@@ -264,7 +264,7 @@ class ActiveRow implements \IteratorAggregate, IRow
 	 */
 	public function offsetExists($key)
 	{
-		return $this->__isset($key);
+		return array_key_exists($key, $this->data);
 	}
 
 
