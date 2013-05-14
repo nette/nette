@@ -201,7 +201,7 @@ class SelectBox extends BaseControl
 		if ($this->prompt !== FALSE) {
 			$control->add($this->prompt instanceof Nette\Utils\Html
 				? $this->prompt->value('')
-				: (string) $option->value('')->setText((string) $this->translate($this->prompt))
+				: (string) $option->value('')->setText($this->translate($this->prompt))
 			);
 		}
 
@@ -218,7 +218,7 @@ class SelectBox extends BaseControl
 					$dest->add((string) $value2->selected(isset($selected[$key2])));
 
 				} else {
-					$value2 = (string) $this->translate($value2);
+					$value2 = $this->translate($value2);
 					$dest->add((string) $option->value($key2)
 						->selected(isset($selected[$key2]))
 						->setText($value2));
