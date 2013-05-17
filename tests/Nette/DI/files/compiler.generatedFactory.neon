@@ -3,7 +3,6 @@ services:
 	bar: Bar
 	baz: Baz
 
-factories:
 	lorem: \ILoremFactory(Lorem)
 
 	article:

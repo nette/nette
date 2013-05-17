@@ -42,5 +42,4 @@ services:
 	stdClass: stdClass
 
 
-factories:
 	factory: Lorem

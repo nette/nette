@@ -5,7 +5,6 @@ services:
 		class: Lorem
 		autowired: no
 
-factories:
 	one: ILoremAccessor
 	two: ILoremAccessor()
 	three: ILoremAccessor(@lorem2)

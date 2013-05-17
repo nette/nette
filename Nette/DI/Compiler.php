@@ -167,11 +167,10 @@ class Compiler extends Nette\Object
 		});
 
 		foreach ($all as $origName => $def) {
-			$shared = array_key_exists($origName, $services);
 			if ((string) (int) $origName === (string) $origName) {
 				$name = count($builder->getDefinitions())
 					. preg_replace('#\W+#', '_', $def instanceof \stdClass ? ".$def->value" : (is_scalar($def) ? ".$def" : ''));
-			} elseif ($shared && array_key_exists($origName, $factories)) {
+			} elseif (array_key_exists($origName, $services) && array_key_exists($origName, $factories)) {
 				throw new ServiceCreationException("It is not allowed to use services and factories with the same name: '$origName'.");
 			} else {
 				$name = ($namespace ? $namespace . '.' : '') . strtr($origName, '\\', '_');
@@ -194,14 +193,12 @@ class Compiler extends Nette\Object
 				);
 			} elseif ($builder->hasDefinition($name)) {
 				$definition = $builder->getDefinition($name);
-				if (!($definition->shared === $shared || ($definition->implement !== NULL && $shared === FALSE))) {
-					throw new ServiceCreationException("It is not allowed to use services and factories with the same name: '$name'.");
-				}
 			} else {
 				$definition = $builder->addDefinition($name);
 			}
+
 			try {
-				static::parseService($definition, $def, $shared);
+				static::parseService($definition, $def);
 			} catch (\Exception $e) {
 				throw new ServiceCreationException("Service '$name': " . $e->getMessage(), NULL, $e);
 			}
@@ -222,15 +219,15 @@ class Compiler extends Nette\Object
 	 * Parses single service from configuration file.
 	 * @return void
 	 */
-	public static function parseService(ServiceDefinition $definition, $config, $shared = TRUE)
+	public static function parseService(ServiceDefinition $definition, $config)
 	{
 		if ($config === NULL) {
 			return;
 
-		} elseif (!$shared && is_string($config) && interface_exists($config)) {
+		} elseif (is_string($config) && interface_exists($config)) {
 			$config = array('class' => NULL, 'implement' => $config);
 
-		} elseif (!$shared && $config instanceof \stdClass && interface_exists($config->value)) {
+		} elseif ($config instanceof \stdClass && interface_exists($config->value)) {
 			$config = array('class' => NULL, 'implement' => $config->value, 'factory' => array_shift($config->attributes));
 
 		} elseif (!is_array($config)) {
@@ -242,10 +239,7 @@ class Compiler extends Nette\Object
 			unset($config['factory']);
 		};
 
-		$known = $shared
-			? array('class', 'create', 'arguments', 'setup', 'autowired', 'inject', 'run', 'tags')
-			: array('class', 'create', 'arguments', 'setup', 'autowired', 'inject', 'parameters', 'implement');
-
+		$known = array('class', 'create', 'arguments', 'setup', 'autowired', 'inject', 'parameters', 'implement', 'run', 'tags');
 		if ($error = array_diff(array_keys($config), $known)) {
 			throw new Nette\InvalidStateException("Unknown or deprecated key '" . implode("', '", $error) . "' in definition of service.");
 		}
@@ -296,7 +290,6 @@ class Compiler extends Nette\Object
 			}
 		}
 
-		$definition->setShared($shared);
 		if (isset($config['parameters'])) {
 			Validators::assertField($config, 'parameters', 'array');
 			$definition->setParameters($config['parameters']);
