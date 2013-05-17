@@ -64,11 +64,11 @@ $container = new Container;
 
 
 $foo = $container->getService('foo');
-Assert::true( $foo instanceof Foo );
+Assert::type( 'Foo', $foo );
 Assert::null( $foo->arg );
 
-Assert::true( $container->getService('m1') instanceof M1 );
+Assert::type( 'M1', $container->getService('m1') );
 Assert::same( $foo->arg, $container->getService('m1') );
 
-Assert::true( $container->getService('m2') instanceof M2 );
+Assert::type( 'M2', $container->getService('m2') );
 Assert::same( $foo->arg, $container->getService('m2') );

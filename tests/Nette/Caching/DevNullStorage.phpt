@@ -33,7 +33,7 @@ $cache[$key] = $value;
 
 Assert::false( isset($cache[$key]), 'Is cached?' );
 
-Assert::false( $cache[$key] === $value, 'Is cache ok?' );
+Assert::notSame( $cache[$key], $value, 'Is cache ok?' );
 
 
 // Removing from cache using unset()...

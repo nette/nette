@@ -89,9 +89,9 @@ Assert::same( '1', $request->getCookie(INVALID) );
 Assert::same( '1', $request->getCookie(CONTROL_CHARACTERS) );
 Assert::same( '1', $request->cookies['array'][INVALID] );
 
-Assert::true( $request->getFile(INVALID) instanceof Http\FileUpload );
-Assert::true( $request->getFile(CONTROL_CHARACTERS) instanceof Http\FileUpload );
-Assert::true( $request->files['file1'] instanceof Http\FileUpload );
+Assert::type( 'Nette\Http\FileUpload', $request->getFile(INVALID) );
+Assert::type( 'Nette\Http\FileUpload', $request->getFile(CONTROL_CHARACTERS) );
+Assert::type( 'Nette\Http\FileUpload', $request->files['file1'] );
 
 
 // filtered data
@@ -119,5 +119,5 @@ Assert::false( isset($request->cookies['array'][INVALID]) );
 
 Assert::null( $request->getFile(INVALID) );
 Assert::null( $request->getFile(CONTROL_CHARACTERS) );
-Assert::true( $request->files['file1'] instanceof Http\FileUpload );
+Assert::type( 'Nette\Http\FileUpload', $request->files['file1'] );
 Assert::same( "v\xc5\xbe", $request->files['file1']->name );

@@ -46,7 +46,7 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 $test = $container->createInstance('Test');
-Assert::true( $test instanceof Test );
+Assert::type( 'Test', $test );
 Assert::same( $container, $test->container );
 Assert::same( FALSE, $container->callMethod(array($test, 'method')) );
 Assert::same( TRUE, $container->callMethod(array($test, 'method'), array((object) array('prop' => TRUE))) );

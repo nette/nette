@@ -16,7 +16,7 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName
 
 // fetch
 $row = $connection->fetch('SELECT name, id FROM author WHERE id = ?', 11);
-Assert::true($row instanceof Nette\Database\Row);
+Assert::type( 'Nette\Database\Row', $row );
 Assert::equal(Nette\Database\Row::from(array(
 	'name' => 'Jakub Vrana',
 	'id' => 11,

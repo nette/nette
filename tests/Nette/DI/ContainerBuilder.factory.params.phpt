@@ -51,11 +51,11 @@ require TEMP_DIR . '/code.php';
 
 $container = new Container;
 
-Assert::true( $container->getService('one') instanceof StdClassFactory );
-Assert::true( $container->getService('two') instanceof StdClassFactory );
+Assert::type( 'StdClassFactory', $container->getService('one') );
+Assert::type( 'StdClassFactory', $container->getService('two') );
 
-Assert::true( $container->getService('four') instanceof stdClass );
+Assert::type( 'stdClass', $container->getService('four') );
 Assert::same( $container->getService('four')->a, $container->getService('three') );
 
-Assert::true( $container->getService('five') instanceof stdClass );
+Assert::type( 'stdClass', $container->getService('five') );
 Assert::same( $container->getService('five')->a, $container->getService('three') );

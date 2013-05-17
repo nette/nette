@@ -28,10 +28,10 @@ $container = $configurator->addConfig('files/configurator.inheritance2.neon')
 	->createContainer();
 
 
-Assert::true( $container->getService('application') instanceof MyApp );
+Assert::type( 'MyApp', $container->getService('application') );
 Assert::null( $container->getService('application')->catchExceptions );
 Assert::same( 'Error', $container->getService('application')->errorPresenter );
 
-Assert::true( $container->getService('app2') instanceof MyApp );
+Assert::type( 'MyApp', $container->getService('app2') );
 Assert::null( $container->getService('app2')->catchExceptions );
 Assert::null( $container->getService('app2')->errorPresenter );

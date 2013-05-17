@@ -46,7 +46,7 @@ Assert::error(function () use ($container) {
 }, E_USER_DEPRECATED, 'Passing factories to Nette\DI\Container::addService() is deprecated; pass the object itself.');
 
 Assert::true( $container->hasService('three') );
-Assert::true( $container->getService('three') instanceof Service );
+Assert::type( 'Service', $container->getService('three') );
 Assert::same( $container->getService('three'), $container->getService('three') ); // shared
 
 
@@ -54,31 +54,27 @@ Assert::same( $container->getService('three'), $container->getService('three') )
 @$container->addService('factory1', 'Service::create'); // triggers E_USER_DEPRECATED
 Assert::true( $container->hasService('factory1') );
 Assert::true( $container->isCreated('factory1') );
-Assert::true( $container->getService('factory1') instanceof Service );
+Assert::type( 'Service', $container->getService('factory1') );
 
 
 // factory (deprecated)
 @$container->addService('factory2', array('Service', 'create'));
 Assert::true( $container->hasService('factory2') );
 Assert::true( $container->isCreated('factory2') );
-Assert::true( $container->getService('factory2') instanceof Service );
+Assert::type( 'Service', $container->getService('factory2') );
 
 
 // closure factory (deprecated)
 @$container->addService('factory3', function($container){ // triggers E_USER_DEPRECATED
-	Assert::true( $container instanceof Container );
+	Assert::type( 'Nette\DI\Container', $container );
 	return new Service;
 });
 Assert::true( $container->hasService('factory3') );
 Assert::true( $container->isCreated('factory3') );
-Assert::true( $container->getService('factory3') instanceof Service );
+Assert::type( 'Service', $container->getService('factory3') );
 
 
 // bad factory (deprecated)
-try {
+Assert::exception(function() use ($container) {
 	@$container->addService('five', function($container){}); // triggers E_USER_DEPRECATED
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::true($e instanceof Nette\InvalidArgumentException);
-	Assert::match('Service must be a object, NULL given.', $e->getMessage());
-}
+}, 'Nette\InvalidArgumentException', 'Service must be a object, NULL given.');

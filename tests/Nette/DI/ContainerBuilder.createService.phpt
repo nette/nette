@@ -31,10 +31,10 @@ $one = $container->getService('one');
 $a = $container->createService('one');
 $b = $container->createService('one');
 
-Assert::true( $one instanceof stdClass );
-Assert::true( $a instanceof stdClass );
-Assert::true( $b instanceof stdClass );
+Assert::type( 'stdClass', $one );
+Assert::type( 'stdClass', $a );
+Assert::type( 'stdClass', $b );
 
-Assert::false( $one === $a );
-Assert::false( $one === $b );
-Assert::false( $a === $b );
+Assert::notSame( $one, $a );
+Assert::notSame( $one, $b );
+Assert::notSame( $a, $b );

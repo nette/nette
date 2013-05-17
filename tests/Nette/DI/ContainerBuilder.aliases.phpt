@@ -69,19 +69,19 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 
-Assert::true( $container->getService('service') instanceof Service );
-Assert::true( $container->getService('aliasedService') instanceof Service );
-Assert::true( $container->getService('aliasedServiceViaClass') instanceof Service );
+Assert::type( 'Service', $container->getService('service') );
+Assert::type( 'Service', $container->getService('aliasedService') );
+Assert::type( 'Service', $container->getService('aliasedServiceViaClass') );
 
-Assert::true( $container->getService('serviceFactory') instanceof ServiceFactory );
-Assert::true( $container->getService('serviceFactoryViaClass') instanceof ServiceFactory2 );
+Assert::type( 'ServiceFactory', $container->getService('serviceFactory') );
+Assert::type( 'ServiceFactory2', $container->getService('serviceFactoryViaClass') );
 
-Assert::true( $container->getService('aliasedFactory') instanceof ServiceFactory );
-Assert::true( $container->getService('aliasedFactoryViaClass') instanceof ServiceFactory );
-Assert::true( $container->getService('aliasForFactory') instanceof ServiceFactory );
-Assert::true( $container->getService('aliasForFactoryViaClass') instanceof ServiceFactory );
+Assert::type( 'ServiceFactory', $container->getService('aliasedFactory') );
+Assert::type( 'ServiceFactory', $container->getService('aliasedFactoryViaClass') );
+Assert::type( 'ServiceFactory', $container->getService('aliasForFactory') );
+Assert::type( 'ServiceFactory', $container->getService('aliasForFactoryViaClass') );
 
 // autowiring test
-Assert::true( $container->getByType('Service') instanceof Service );
-Assert::true( $container->getByType('ServiceFactory') instanceof ServiceFactory );
-Assert::true( $container->getByType('ServiceFactory2') instanceof ServiceFactory2 );
+Assert::type( 'Service', $container->getByType('Service') );
+Assert::type( 'ServiceFactory', $container->getByType('ServiceFactory') );
+Assert::type( 'ServiceFactory2', $container->getByType('ServiceFactory2') );

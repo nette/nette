@@ -60,7 +60,7 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 
-Assert::true( $container->createNette__latte() instanceof Nette\Latte\Engine );
+Assert::type( 'Nette\Latte\Engine', $container->createNette__latte() );
 
 Assert::same(array(
 	'LoremIpsumMacros',

@@ -70,9 +70,9 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 $factory = $container->getService('factory');
-Assert::true( $factory instanceof Factory );
+Assert::type( 'Factory', $factory );
 
-Assert::true( $container->getService('two') instanceof stdClass );
+Assert::type( 'stdClass', $container->getService('two') );
 Assert::same(array(
 	array('create', array($factory)),
 	array('create', array($factory)),
@@ -80,15 +80,15 @@ Assert::same(array(
 
 Factory::$methods = NULL;
 
-Assert::true( $container->getService('three') instanceof stdClass );
+Assert::type( 'stdClass', $container->getService('three') );
 Assert::same(array(
 	array('create', array($factory)),
 ), Factory::$methods);
 
 $annotatedFactory = $container->getService('annotatedFactory');
-Assert::true( $annotatedFactory instanceof AnnotatedFactory );
+Assert::type( 'AnnotatedFactory', $annotatedFactory );
 
-Assert::true( $container->getService('four') instanceof stdClass );
+Assert::type( 'stdClass', $container->getService('four') );
 Assert::same(array(
 	array('create', array()),
 ), $annotatedFactory->methods);

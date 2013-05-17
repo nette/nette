@@ -57,7 +57,7 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 
-Assert::true( $container->getService('model') instanceof Model );
+Assert::type( 'Model', $container->getService('model') );
 
 Assert::same(array(
 	'Model::test',

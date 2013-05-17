@@ -19,21 +19,25 @@ class Factory
 {
 	static function createLorem($arg)
 	{
-		Notes::add(__METHOD__ . ' ' . $arg);
-		return new Lorem;
+		return new Lorem(__METHOD__ . ' ' . $arg);
 	}
 }
 
 
 class Lorem
 {
+	function __construct($arg = NULL)
+	{
+		$this->arg = $arg;
+	}
+
 }
 
 class Ipsum
 {
 	function __construct($arg)
 	{
-		Notes::add(__METHOD__ . ' ' . $arg);
+		$this->arg = $arg;
 	}
 }
 
@@ -50,41 +54,29 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 
-Assert::true( $container->getService('one') instanceof Ipsum );
-Assert::same(array(
-	'Ipsum::__construct 1',
-), Notes::fetch());
+Assert::type( 'Ipsum', $container->getService('one') );
+Assert::same( 1, $container->getService('one')->arg );
 
-Assert::true( $container->getService('two') instanceof Ipsum );
-Assert::same(array(
-	'Ipsum::__construct 1',
-), Notes::fetch());
+Assert::type( 'Ipsum', $container->getService('two') );
+Assert::same( 1, $container->getService('two')->arg );
 
-Assert::true( $container->getService('three') instanceof Lorem );
-Assert::same(array(
-	'Factory::createLorem 1',
-), Notes::fetch());
+Assert::type( 'Lorem', $container->getService('three') );
+Assert::same( 'Factory::createLorem 1', $container->getService('three')->arg );
 
-Assert::true( $container->getService('four') instanceof Lorem );
-Assert::same(array(
-	'Factory::createLorem 1',
-), Notes::fetch());
+Assert::type( 'Lorem', $container->getService('four') );
+Assert::same( 'Factory::createLorem 1', $container->getService('four')->arg );
 
-Assert::true( $container->getService('five') instanceof Lorem );
-Assert::same(array(
-	'Factory::createLorem 1',
-), Notes::fetch());
+Assert::type( 'Lorem', $container->getService('five') );
+Assert::same( 'Factory::createLorem 1', $container->getService('five')->arg );
 
-Assert::true( $container->getService('six') instanceof Lorem );
-Assert::same(array(
-	'Factory::createLorem 1',
-), Notes::fetch());
+Assert::type( 'Lorem', $container->getService('six') );
+Assert::same( 'Factory::createLorem 1', $container->getService('six')->arg );
 
-Assert::true( $container->getService('seven') instanceof Lorem );
+Assert::type( 'Lorem', $container->getService('seven') );
 
-Assert::true( $container->getService('eight') instanceof Lorem );
+Assert::type( 'Lorem', $container->getService('eight') );
 
-Assert::true( $container->getService('alias') instanceof Ipsum );
+Assert::type( 'Ipsum', $container->getService('alias') );
 Assert::same( $container->getService('one'), $container->getService('alias') );
 
-Assert::true( $container->getByType('stdClass') instanceof stdClass );
+Assert::type( 'stdClass', $container->getByType('stdClass') );

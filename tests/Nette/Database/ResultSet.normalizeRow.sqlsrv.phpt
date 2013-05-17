@@ -131,13 +131,13 @@ function isTimestamp($str) {
 }
 
 $row = (array) $connection->query('SELECT [datetimeoffset], CAST([sql_variant] AS int) AS [sql_variant], [timestamp] FROM types2 WHERE id = 1')->fetch();
-Assert::true($row['datetimeoffset'] instanceof Nette\DateTime);
+Assert::type( 'Nette\DateTime', $row['datetimeoffset'] );
 Assert::same($row['datetimeoffset']->format('Y-m-d H:i:s P'), '2012-10-13 10:10:10 +02:00');
 Assert::same($row['sql_variant'], 123456);
 Assert::true(isTimestamp($row['timestamp']));
 
 $row = (array) $connection->query('SELECT [datetimeoffset], CAST([sql_variant] AS varchar) AS [sql_variant], [timestamp] FROM types2 WHERE id = 2')->fetch();
-Assert::true($row['datetimeoffset'] instanceof Nette\DateTime);
+Assert::type( 'Nette\DateTime', $row['datetimeoffset'] );
 Assert::same($row['datetimeoffset']->format('Y-m-d H:i:s P'), '0001-01-01 00:00:00 +00:00');
 Assert::same($row['sql_variant'], 'abcd');
 Assert::true(isTimestamp($row['timestamp']));

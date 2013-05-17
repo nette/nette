@@ -22,7 +22,7 @@ $configurator->addParameters(array(
 ));
 $container = $configurator->createContainer();
 
-Assert::true( $container instanceof SystemContainer );
+Assert::type( 'SystemContainer', $container );
 
 Assert::same( array(
 	'appDir' => __DIR__,
@@ -40,23 +40,23 @@ Assert::same( array(
 	'hello' => 'world',
 ), $container->parameters );
 
-Assert::true( $container->getService('nette.cacheJournal') instanceof Nette\Caching\Storages\FileJournal );
-Assert::true( $container->getService('cacheStorage') instanceof Nette\Caching\Storages\FileStorage );
-Assert::true( $container->getService('nette.templateCacheStorage') instanceof Nette\Caching\Storages\PhpFileStorage );
-Assert::true( $container->getService('httpRequest') instanceof Nette\Http\Request );
-Assert::true( $container->getService('httpResponse') instanceof Nette\Http\Response );
-Assert::true( $container->getService('nette.httpContext') instanceof Nette\Http\Context );
-Assert::true( $container->getService('session') instanceof Nette\Http\Session );
-Assert::true( $container->getService('user') instanceof Nette\Security\User );
-Assert::true( $container->getService('nette.userStorage') instanceof Nette\Http\UserStorage );
-Assert::true( $container->getService('application') instanceof Nette\Application\Application );
-Assert::true( $container->getService('router') instanceof Nette\Application\Routers\RouteList );
-Assert::true( $container->getService('nette.presenterFactory') instanceof Nette\Application\PresenterFactory );
-Assert::true( $container->getService('nette.mailer') instanceof Nette\Mail\SendmailMailer );
+Assert::type( 'Nette\Caching\Storages\FileJournal', $container->getService('nette.cacheJournal') );
+Assert::type( 'Nette\Caching\Storages\FileStorage', $container->getService('cacheStorage') );
+Assert::type( 'Nette\Caching\Storages\PhpFileStorage', $container->getService('nette.templateCacheStorage') );
+Assert::type( 'Nette\Http\Request', $container->getService('httpRequest') );
+Assert::type( 'Nette\Http\Response', $container->getService('httpResponse') );
+Assert::type( 'Nette\Http\Context', $container->getService('nette.httpContext') );
+Assert::type( 'Nette\Http\Session', $container->getService('session') );
+Assert::type( 'Nette\Security\User', $container->getService('user') );
+Assert::type( 'Nette\Http\UserStorage', $container->getService('nette.userStorage') );
+Assert::type( 'Nette\Application\Application', $container->getService('application') );
+Assert::type( 'Nette\Application\Routers\RouteList', $container->getService('router') );
+Assert::type( 'Nette\Application\PresenterFactory', $container->getService('nette.presenterFactory') );
+Assert::type( 'Nette\Mail\SendmailMailer', $container->getService('nette.mailer') );
 
-Assert::true( $container->createNette__cache() instanceof Nette\Caching\Cache );
+Assert::type( 'Nette\Caching\Cache', $container->createNette__cache() );
 Assert::same( 'nm', $container->createNette__cache('nm')->getNamespace() );
-Assert::true( $container->createNette__BasicForm() instanceof Nette\Forms\Form );
-Assert::true( $container->createNette__Latte() instanceof Nette\Latte\Engine );
-Assert::true( $container->createNette__Template() instanceof Nette\Templating\FileTemplate );
-Assert::true( $container->createNette__Mail() instanceof Nette\Mail\Message );
+Assert::type( 'Nette\Forms\Form', $container->createNette__BasicForm() );
+Assert::type( 'Nette\Latte\Engine', $container->createNette__Latte() );
+Assert::type( 'Nette\Templating\FileTemplate', $container->createNette__Template() );
+Assert::type( 'Nette\Mail\Message', $container->createNette__Mail() );

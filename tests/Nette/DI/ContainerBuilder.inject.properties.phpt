@@ -48,7 +48,7 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 $test = $container->getService('test');
-Assert::true( $test instanceof Test1 );
-Assert::true( $test->varA instanceof stdClass );
-Assert::true( $test->varB instanceof stdClass );
+Assert::type( 'Test1', $test );
+Assert::type( 'stdClass', $test->varA );
+Assert::type( 'stdClass', $test->varB );
 Assert::true( $test->varX === 123 );

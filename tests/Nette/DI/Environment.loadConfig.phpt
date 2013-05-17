@@ -17,7 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 
 Environment::loadConfig('files/environment.ini', 'production');
 
-Assert::true( Environment::getRouter() instanceof Nette\Application\Routers\SimpleRouter );
+Assert::type( 'Nette\Application\Routers\SimpleRouter', Environment::getRouter() );
 
 Assert::same( 'hello world', Environment::getVariable('foo') );
 

@@ -39,17 +39,17 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 
-Assert::true( $container->getService('lorem') instanceof Lorem );
+Assert::type( 'Lorem', $container->getService('lorem') );
 Assert::true( $container->getService('lorem') !== $container->getService('lorem2') );
 
-Assert::true( $container->getService('one') instanceof ILoremAccessor );
+Assert::type( 'ILoremAccessor', $container->getService('one') );
 Assert::true( $container->getService('one')->get() === $container->getService('lorem') );
 
-Assert::true( $container->getService('two') instanceof ILoremAccessor );
+Assert::type( 'ILoremAccessor', $container->getService('two') );
 Assert::true( $container->getService('two')->get() === $container->getService('lorem') );
 
-Assert::true( $container->getService('three') instanceof ILoremAccessor );
+Assert::type( 'ILoremAccessor', $container->getService('three') );
 Assert::true( $container->getService('three')->get() === $container->getService('lorem2') );
 
-Assert::true( $container->getService('four') instanceof ILoremAccessor );
+Assert::type( 'ILoremAccessor', $container->getService('four') );
 Assert::true( $container->getService('four')->get() === $container->getService('lorem') );

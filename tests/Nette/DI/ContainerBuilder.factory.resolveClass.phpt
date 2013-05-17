@@ -43,10 +43,10 @@ require TEMP_DIR . '/code.php';
 
 $container = new Container;
 
-Assert::true( $container->getService('one') instanceof StdClassFactory );
+Assert::type( 'StdClassFactory', $container->getService('one') );
 
-Assert::true( $container->getService('two') instanceof StdClassFactory );
-Assert::true( $container->getService('two')->create() instanceof StdClassFactory );
+Assert::type( 'StdClassFactory', $container->getService('two') );
+Assert::type( 'StdClassFactory', $container->getService('two')->create() );
 
-Assert::true( $container->getService('three') instanceof StdClassFactory );
-Assert::true( $container->getService('three')->create() instanceof stdClass );
+Assert::type( 'StdClassFactory', $container->getService('three') );
+Assert::type( 'stdClass', $container->getService('three')->create() );

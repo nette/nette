@@ -68,7 +68,7 @@ $container = new Container;
 Assert::same(array(
 ), Notes::fetch());
 
-Assert::true( $container->getService('lorem') instanceof Lorem );
+Assert::type( 'Lorem', $container->getService('lorem') );
 
 Assert::same(array(
 	'Factory::createLorem 1',

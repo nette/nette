@@ -29,4 +29,4 @@ $configurator->onCompile[] = function(Configurator $configurator, Nette\DI\Compi
 $container = $configurator->addConfig('files/compiler.extension.neon')
 	->createContainer();
 
-Assert::true( $container->getService('database.foo') instanceof stdClass );
+Assert::type( 'stdClass', $container->getService('database.foo') );

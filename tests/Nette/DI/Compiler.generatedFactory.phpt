@@ -105,25 +105,25 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 
-Assert::true( $container->getService('lorem') instanceof ILoremFactory );
+Assert::type( 'ILoremFactory', $container->getService('lorem') );
 $lorem = $container->getService('lorem')->create();
-Assert::true( $lorem instanceof Lorem );
-Assert::true( $lorem->ipsum instanceof Ipsum );
+Assert::type( 'Lorem', $lorem );
+Assert::type( 'Ipsum', $lorem->ipsum );
 Assert::same( $container->getService('ipsum'), $lorem->ipsum );
 
 
-Assert::true( $container->getService('article') instanceof IArticleFactory );
+Assert::type( 'IArticleFactory', $container->getService('article') );
 $article = $container->getService('article')->create('nemam');
-Assert::true( $article instanceof Article );
+Assert::type( 'Article', $article );
 Assert::same( 'nemam', $article->title );
 
 
-Assert::true($container->getService('foo') instanceof IFooFactory);
+Assert::type( 'IFooFactory', $container->getService('foo') );
 $foo = $container->getService('foo')->create($container->getService('baz'));
-Assert::true($foo instanceof Foo);
-Assert::true($foo->bar instanceof Bar);
+Assert::type( 'Foo', $foo );
+Assert::type( 'Bar', $foo->bar );
 Assert::same($container->getService('bar'), $foo->bar);
-Assert::true($foo->baz instanceof Baz);
+Assert::type( 'Baz', $foo->baz );
 Assert::same($container->getService('baz'), $foo->baz);
 
-Assert::true($container->getByType('ILoremFactory') instanceof ILoremFactory);
+Assert::type( 'ILoremFactory', $container->getByType('ILoremFactory') );

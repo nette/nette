@@ -23,11 +23,11 @@ $users = array(
 $authenticator = new SimpleAuthenticator($users);
 
 $identity = $authenticator->authenticate(array('john', 'password123!'));
-Assert::true($identity instanceof Nette\Security\IIdentity);
+Assert::type( 'Nette\Security\IIdentity', $identity );
 Assert::equal('john', $identity->getId());
 
 $identity = $authenticator->authenticate(array('admin', 'admin'));
-Assert::true($identity instanceof Nette\Security\IIdentity);
+Assert::type( 'Nette\Security\IIdentity', $identity );
 Assert::equal('admin', $identity->getId());
 
 Assert::exception(function() use ($authenticator) {

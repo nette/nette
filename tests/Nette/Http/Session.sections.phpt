@@ -32,4 +32,4 @@ $section->hello = 'world';
 Assert::true( $session->hasSection('trees'), 'hasSection() should have returned TRUE for a section with keys set' );
 
 $section = $session->getSection('default');
-Assert::true( $section instanceof SessionSection );
+Assert::type( 'Nette\Http\SessionSection', $section );
