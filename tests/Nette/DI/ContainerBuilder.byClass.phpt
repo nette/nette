@@ -45,9 +45,9 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 
-Assert::true( $container->getService('one') instanceof Service );
+Assert::type( 'Service', $container->getService('one') );
 
-Assert::true( $container->getService('two') instanceof Service );
+Assert::type( 'Service', $container->getService('two') );
 
 Assert::same(array(
 	'Service::create Service',

@@ -16,7 +16,7 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nett
 
 // fetch
 $row = $connection->fetch('SELECT name, id FROM author WHERE id = ?', 11);
-Assert::true($row instanceof Nette\Database\Row);
+Assert::type( 'Nette\Database\Row', $row );
 Assert::same(array(
 	'name' => 'Jakub Vrana',
 	'id' => 11,
@@ -38,7 +38,7 @@ Assert::same(array(
 // fetchAll
 $arr = $connection->fetchAll('SELECT name, id FROM author WHERE id < ? ORDER BY id', 13);
 foreach ($arr as &$row) {
-	Assert::true($row instanceof Nette\Database\Row);
+	Assert::type( 'Nette\Database\Row', $row );
 	$row = (array) $row;
 }
 Assert::equal(array(

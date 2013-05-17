@@ -25,5 +25,5 @@ Assert::exception(function() use ($configurator) {
 $configurator->setTempDirectory(TEMP_DIR);
 $loader = $configurator->createRobotLoader();
 
-Assert::true( $loader instanceof Nette\Loaders\RobotLoader );
-Assert::true( $loader->getCacheStorage() instanceof Nette\Caching\Storages\FileStorage );
+Assert::type( 'Nette\Loaders\RobotLoader', $loader );
+Assert::type( 'Nette\Caching\Storages\FileStorage', $loader->getCacheStorage() );

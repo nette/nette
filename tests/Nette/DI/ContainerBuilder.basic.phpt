@@ -70,7 +70,7 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 
-Assert::true( $container->getService('one') instanceof Service );
+Assert::type( 'Service', $container->getService('one') );
 Assert::false( $container->hasService('One') );
 Assert::false( $container->hasService('oNe') );
 
@@ -78,12 +78,12 @@ Assert::same( array(
 	array('__construct', array())
 ), $container->getService('one')->methods );
 
-Assert::true( $container->getService('three') instanceof Service );
+Assert::type( 'Service', $container->getService('three') );
 Assert::same( array(
 	array('__construct', array('a', 'b'))
 ), $container->getService('three')->methods );
 
-Assert::true( $container->getService('four') instanceof Service );
+Assert::type( 'Service', $container->getService('four') );
 Assert::same( array(
 	array('__construct', array('a', 'b')),
 	array('methodA', array('a', 'b')),
@@ -92,18 +92,18 @@ Assert::same( array(
 	array('methodD', array($container->getService('one'))),
 ), $container->getService('four')->methods );
 
-Assert::true( $container->getService('five') instanceof Service );
+Assert::type( 'Service', $container->getService('five') );
 Assert::same( array(
 	array('__construct', array(array()))
 ), $container->getService('five')->methods );
 
-Assert::true( $container->getService('six') instanceof Service );
+Assert::type( 'Service', $container->getService('six') );
 Assert::same( array(
 	array('__construct', array(array('a', 'b'))),
 	array('methodA', array('a', 'b')),
 ), $container->getService('six')->methods );
 
-Assert::true( $container->getService('seven') instanceof Service );
+Assert::type( 'Service', $container->getService('seven') );
 Assert::same( array(
 	array('__construct', array(array('a', 'b'))),
 	array('methodA', array('a', 'b')),

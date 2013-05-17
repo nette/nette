@@ -22,34 +22,34 @@ $value = range("\x00", "\xFF");
 
 $cache = new Cache(new FileStorage(TEMP_DIR));
 
-Assert::false( isset($cache[$key]), 'Is cached?' );
+Assert::false( isset($cache[$key]) );
 
-Assert::null( $cache[$key], 'Cache content' );
+Assert::null( $cache[$key] );
 
 
 // Writing cache...
 $cache[$key] = $value;
 
-Assert::true( isset($cache[$key]), 'Is cached?' );
+Assert::true( isset($cache[$key]) );
 
-Assert::true( $cache[$key] === $value, 'Is cache ok?' );
+Assert::same( $cache[$key], $value );
 
 
 // Removing from cache using unset()...
 unset($cache[$key]);
 
-Assert::false( isset($cache[$key]), 'Is cached?' );
+Assert::false( isset($cache[$key]) );
 
 
 // Removing from cache using set NULL...
 $cache[$key] = $value;
 $cache[$key] = NULL;
 
-Assert::false( isset($cache[$key]), 'Is cached?' );
+Assert::false( isset($cache[$key]) );
 
 
 
 // Writing cache...
 $cache->save($key, $value);
 
-Assert::true( $cache->load($key) === $value, 'Is cache ok?' );
+Assert::same( $cache->load($key), $value );

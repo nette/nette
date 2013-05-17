@@ -40,5 +40,5 @@ Assert::same( 'Nette\Caching\Cache', get_class(Environment::getCache('my')) );
 
 
 // Modes
-Assert::false( Environment::isConsole(), 'Is console?' );
-Assert::true( Environment::isProduction(), 'Is production mode?' );
+Assert::false( Environment::isConsole() ); // Is console?
+Assert::true( Environment::isProduction() ); // Is production mode?

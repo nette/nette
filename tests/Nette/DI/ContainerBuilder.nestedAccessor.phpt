@@ -30,6 +30,6 @@ require TEMP_DIR . '/code.php';
 
 $container = new Container;
 
-Assert::true( $container->nested->one instanceof stdClass );
+Assert::type( 'stdClass', $container->nested->one );
 
 Assert::false( isset($container->nested_one) );

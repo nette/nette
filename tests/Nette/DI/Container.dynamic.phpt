@@ -40,19 +40,19 @@ Assert::same( $two, $container->getService('two') );
 $builder = $container->addService('three', 'Service');
 
 Assert::true( $container->hasService('three') );
-Assert::true( $container->getService('three') instanceof Service );
+Assert::type( 'Service', $container->getService('three') );
 Assert::same( $container->getService('three'), $container->getService('three') ); // shared
 
 
 // factory
 $container->addService('four', function($container){
-	Assert::true( $container instanceof Container );
+	Assert::type( 'Nette\DI\Container', $container );
 	return new Service;
 });
 
 Assert::true( $container->hasService('four') );
 Assert::false( $container->isCreated('four') );
-Assert::true( $container->getService('four') instanceof Service );
+Assert::type( 'Service', $container->getService('four') );
 Assert::true( $container->isCreated('four') );
 Assert::same( $container->getService('four'), $container->getService('four') ); // shared
 
@@ -63,6 +63,6 @@ try {
 	$container->getService('five');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::true($e instanceof Nette\UnexpectedValueException);
+	Assert::type( 'Nette\UnexpectedValueException', $e );
 	Assert::match("Unable to create service 'five', value returned by factory '%a%' is not object.", $e->getMessage());
 }

@@ -15,7 +15,7 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nett
 
 
 $res = $connection->query('SELECT id FROM author WHERE id = ?', 11);
-Assert::true($res instanceof Nette\Database\Statement);
+Assert::type( 'Nette\Database\Statement', $res );
 Assert::same( 'SELECT id FROM author WHERE id = ?', $res->getQueryString() );
 
 

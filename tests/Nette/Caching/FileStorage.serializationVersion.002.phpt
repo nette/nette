@@ -34,4 +34,4 @@ class Foo
 
 // Changed @serializationVersion
 
-Assert::false( isset($cache[$key]), 'Is cached?' );
+Assert::false( isset($cache[$key]) );

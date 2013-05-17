@@ -36,10 +36,10 @@ Assert::true( isset($container->three) );
 Assert::false( isset($container->undefined) );
 
 Assert::same( $one, $container->one );
-Assert::true( $container->two instanceof Service );
+Assert::type( 'Service', $container->two );
 Assert::same( $container->two, $container->getService('two') );
-/**/Assert::true( $container->three instanceof \Closure );/**/
-/*5.2*Assert::true( $container->three instanceof Nette\Callback );*/
+/**/Assert::type( '\Closure', $container->three );/**/
+/*5.2*Assert::type( 'Nette\Callback', $container->three );*/
 
 Assert::true( isset($container->one) );
 Assert::true( isset($container->two) );

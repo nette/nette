@@ -37,5 +37,5 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 
-Assert::true( $container->getByType('Service') instanceof Service );
-Assert::true( $container->getByType('stdClass') instanceof stdClass );
+Assert::type( 'Service', $container->getByType('Service') );
+Assert::type( 'stdClass', $container->getByType('stdClass') );

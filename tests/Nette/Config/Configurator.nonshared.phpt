@@ -42,5 +42,5 @@ Assert::same( 'bar', $params->getName() );
 Assert::false( $params->getDefaultValue() );
 
 Assert::true( $container->hasService('loremFactory') );
-Assert::true( $container->loremFactory instanceof Nette\Callback );
+Assert::type( 'Nette\Callback', $container->loremFactory );
 Assert::same( array($container, 'createLorem'), $container->loremFactory->native );

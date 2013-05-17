@@ -65,11 +65,11 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 
-Assert::true( $container->getService('one') instanceof Service );
+Assert::type( 'Service', $container->getService('one') );
 Assert::same( array('a', 'b'), $container->getService('one')->args );
 Assert::same( array(array('methodA', array('a', 'b'))), $container->getService('one')->methods );
 
-Assert::true( $container->getService('two') instanceof Service );
+Assert::type( 'Service', $container->getService('two') );
 Assert::same( array(array(1 => 'a', $container->getService('one'))), $container->getService('two')->args );
 
-Assert::true( $container->getService('three') instanceof Service );
+Assert::type( 'Service', $container->getService('three') );

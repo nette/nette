@@ -55,7 +55,7 @@ Assert::same( array(
 ), Neon::decode("{a,\nb\nc: 1,\nd: 1,\n\ne: 1\nf:\n}") );
 
 
-Assert::true( Neon::decode('@item(a, b)') instanceof Nette\Utils\NeonEntity );
+Assert::type( 'Nette\Utils\NeonEntity', Neon::decode('@item(a, b)') );
 
 
 Assert::same( array(

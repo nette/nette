@@ -22,4 +22,4 @@ $container = $configurator->addConfig('files/config.inheritance4.neon', Configur
 	->createContainer();
 
 
-Assert::true( $container->getService('application') instanceof Nette\Application\Application );
+Assert::type( 'Nette\Application\Application', $container->getService('application') );
