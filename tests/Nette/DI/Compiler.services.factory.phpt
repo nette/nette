@@ -72,7 +72,29 @@ Assert::type( 'Lorem', $container->getService('seven') );
 
 Assert::type( 'Lorem', $container->getService('eight') );
 
-Assert::type( 'Ipsum', $container->getService('alias') );
-Assert::same( $container->getService('one'), $container->getService('alias') );
+Assert::type( 'Ipsum', $container->getService('referencedService') );
+Assert::same( $container->getService('one'), $container->getService('referencedService') );
+
+Assert::type( 'Ipsum', $container->getService('referencedServiceWithSetup') );
+Assert::notSame( $container->getService('one'), $container->getService('referencedServiceWithSetup') );
+
+Assert::type( 'Ipsum', $container->getService('calledService') );
+Assert::same( $container->getService('one'), $container->getService('calledService') ); // called without arguments is reference
+
+Assert::type( 'Ipsum', $container->getService('calledServiceWithArgs') );
+Assert::notSame( $container->getService('one'), $container->getService('calledServiceWithArgs') );
 
 Assert::type( 'stdClass', $container->getByType('stdClass') );
+
+
+Assert::type( 'Ipsum', $container->getService('serviceAsParam') );
+Assert::type( 'Ipsum', $container->getService('serviceAsParam')->arg );
+Assert::same( $container->getService('one'), $container->getService('serviceAsParam')->arg );
+
+Assert::type( 'Ipsum', $container->getService('calledServiceAsParam') );
+Assert::type( 'Ipsum', $container->getService('calledServiceAsParam')->arg );
+Assert::notSame( $container->getService('one'), $container->getService('calledServiceAsParam')->arg );
+
+Assert::type( 'Ipsum', $container->getService('calledServiceWithArgsAsParam') );
+Assert::type( 'Ipsum', $container->getService('calledServiceWithArgsAsParam')->arg );
+Assert::notSame( $container->getService('one'), $container->getService('calledServiceWithArgsAsParam')->arg );

@@ -45,6 +45,8 @@ Assert::type( 'StdClassFactory', $container->getService('one') );
 
 Assert::type( 'StdClassFactory', $container->getService('two') );
 Assert::type( 'StdClassFactory', $container->getService('two')->create() );
+Assert::notSame( $container->getService('two')->create(), $container->getService('two')->create() );
 
 Assert::type( 'StdClassFactory', $container->getService('three') );
 Assert::type( 'stdClass', $container->getService('three')->create() );
+Assert::notSame( $container->getService('three')->create(), $container->getService('three')->create() );

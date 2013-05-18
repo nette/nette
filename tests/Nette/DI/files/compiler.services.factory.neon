@@ -2,7 +2,18 @@ parameters:
 	class: Ipsum
 
 services:
-	alias: @one
+	referencedService: @one
+
+	referencedServiceWithSetup:
+		factory: @one
+		setup:
+			- $x(10)
+
+	serviceAsParam: Ipsum(@one)
+	calledService: @one()
+	calledServiceWithArgs: @one(1)
+	calledServiceAsParam: Ipsum(@one())
+	calledServiceWithArgsAsParam: Ipsum(@one(1))
 
 	one:
 		class: %class%

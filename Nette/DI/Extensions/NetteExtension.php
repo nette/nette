@@ -253,7 +253,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			->setClass('Nette\Mail\Message')
 			->addSetup('::trigger_error', array('Service nette.mail is deprecated.', E_USER_DEPRECATED))
 			->addSetup('setMailer')
-			->setShared(FALSE);
+			->setAutowired(FALSE);
 	}
 
 
@@ -262,7 +262,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		$container->addDefinition($this->prefix('basicForm'))
 			->setClass('Nette\Forms\Form')
 			->addSetup('::trigger_error', array('Service nette.basicForm is deprecated.', E_USER_DEPRECATED))
-			->setShared(FALSE);
+			->setAutowired(FALSE);
 	}
 
 
@@ -270,7 +270,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	{
 		$latte = $container->addDefinition($this->prefix('latte'))
 			->setClass('Nette\Latte\Engine')
-			->setShared(FALSE);
+			->setAutowired(FALSE);
 
 		if ($config['xhtml']) {
 			$latte->addSetup('$service->getCompiler()->defaultContentType = ?', array(Nette\Latte\Compiler::CONTENT_XHTML));
@@ -280,7 +280,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			->setClass('Nette\Templating\FileTemplate')
 			->addSetup('registerFilter', array($latte))
 			->addSetup('registerHelperLoader', array('Nette\Templating\Helpers::loader'))
-			->setShared(FALSE);
+			->setAutowired(FALSE);
 
 		foreach ($config['macros'] as $macro) {
 			if (strpos($macro, '::') === FALSE && class_exists($macro)) {
@@ -428,7 +428,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			$definitions = $container->definitions;
 			ksort($definitions);
 			foreach ($definitions as $name => $def) {
-				if ($def->shared && Nette\PhpGenerator\Helpers::isIdentifier($name)) {
+				if (Nette\PhpGenerator\Helpers::isIdentifier($name)) {
 					$type = $def->implement ?: $def->class;
 					$class->addDocument("@property $type \$$name");
 				}

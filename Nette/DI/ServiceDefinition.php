@@ -109,6 +109,7 @@ class ServiceDefinition extends Nette\Object
 	}
 
 
+	/** @deprecated */
 	public function setShared($on)
 	{
 		$this->shared = (bool) $on;

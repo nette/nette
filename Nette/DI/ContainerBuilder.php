@@ -149,7 +149,7 @@ class ContainerBuilder extends Nette\Object
 	{
 		$found = array();
 		foreach ($this->definitions as $name => $def) {
-			if (isset($def->tags[$tag]) && $def->shared) {
+			if (isset($def->tags[$tag])) {
 				$found[$name] = $def->tags[$tag];
 			}
 		}
@@ -403,10 +403,8 @@ class ContainerBuilder extends Nette\Object
 			->setValue(array(Container::TYPES => $this->classes));
 
 		foreach ($definitions as $name => $def) {
-			if ($def->shared) {
-				foreach ($def->tags as $tag => $value) {
-					$meta->value[Container::TAGS][$tag][$name] = $value;
-				}
+			foreach ($def->tags as $tag => $value) {
+				$meta->value[Container::TAGS][$tag][$name] = $value;
 			}
 		}
 
@@ -438,10 +436,16 @@ class ContainerBuilder extends Nette\Object
 	{
 		$this->currentService = NULL;
 		$def = $this->definitions[$name];
-		$code = '$service = ' . $this->formatStatement($def->factory) . ";\n";
+
+		$serviceRef = $this->getServiceName($def->factory->entity);
+		$factory = $serviceRef && !$def->factory->arguments && !$def->setup && $def->implementType !== 'create'
+			? new Statement(array('@' . ContainerBuilder::THIS_CONTAINER, 'getService'), array($serviceRef))
+			: $def->factory;
+
+		$code = '$service = ' . $this->formatStatement($factory) . ";\n";
 		$this->currentService = $name;
 
-		if ($def->class && $def->class !== $def->factory->entity && !$this->getServiceName($def->factory->entity)) {
+		if ($def->class && $def->class !== $def->factory->entity && !$serviceRef) {
 			$code .= PhpHelpers::formatArgs("if (!\$service instanceof $def->class) {\n"
 				. "\tthrow new Nette\\UnexpectedValueException(?);\n}\n",
 				array("Unable to create service '$name', value returned by factory is not $def->class type.")
@@ -541,13 +545,7 @@ class ContainerBuilder extends Nette\Object
 		if (is_string($entity) && Strings::contains($entity, '?')) { // PHP literal
 			return $this->formatPhp($entity, $arguments);
 
-		} elseif ($service = $this->getServiceName($entity)) { // factory calling or service retrieving
-			if ($this->definitions[$service]->shared) {
-				if ($arguments) {
-					throw new ServiceCreationException("Unable to call service '$entity'.");
-				}
-				return $this->formatPhp('$this->getService(?)', array($service));
-			}
+		} elseif ($service = $this->getServiceName($entity)) { // factory calling
 			$params = array();
 			foreach ($this->definitions[$service]->parameters as $k => $v) {
 				$params[] = preg_replace('#\w+\z#', '\$$0', (is_int($k) ? $v : $k)) . (is_int($k) ? '' : ' = ' . PhpHelpers::dump($v));
@@ -631,7 +629,7 @@ class ContainerBuilder extends Nette\Object
 					} elseif ($name === $that->currentService) {
 						$val = '$service';
 					} else {
-						$val = $that->formatStatement(new Statement('@' . $name));
+						$val = $that->formatStatement(new Statement(array('@' . ContainerBuilder::THIS_CONTAINER, 'getService'), array($name)));
 					}
 					$val .= (isset($pair[1]) ? PhpHelpers::formatArgs('->?', array($pair[1])) : '');
 				}

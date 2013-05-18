@@ -22,10 +22,6 @@ $builder->addDefinition('two')
 $builder->addDefinition('three')
 	->setClass('stdClass')
 	->addTag('component');
-$builder->addDefinition('four')
-	->setClass('stdClass')
-	->addTag('component')
-	->setParameters(array()); // shared = FALSE
 $builder->addDefinition('five')
 	->setClass('stdClass')
 	->addTag('debugPanel', array(1, 2, 3))
