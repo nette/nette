@@ -14,6 +14,11 @@ use Nette\Forms\Form;
 require __DIR__ . '/../bootstrap.php';
 
 
+$datasets = array(
+	array(11, array('Value 11 is not allowed!')),
+	array(22, array()),
+	array(1, array('Value 22 is required!')),
+);
 
 function myValidator1($item, $arg)
 {
@@ -21,9 +26,13 @@ function myValidator1($item, $arg)
 }
 
 
-$form = new Form();
-$form->addText('name', 'Text:', 10)
-	->addRule('myValidator1', 'Value %d is not allowed!', 11)
-	->addRule(~'myValidator1', 'Value %d is required!', 22);
+foreach ($datasets as $case) {
 
-// TODO: add assert
+	$form = new Form();
+	$control = $form->addText('value', 'Value:', 10)
+		->addRule('myValidator1', 'Value %d is not allowed!', 11)
+		->addRule(~'myValidator1', 'Value %d is required!', 22);
+
+	$control->setValue($case[0])->validate();
+	Assert::same($case[1], $control->getErrors());
+}

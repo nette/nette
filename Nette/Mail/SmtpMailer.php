@@ -43,6 +43,9 @@ class SmtpMailer extends Nette\Object implements IMailer
 	/** @var int */
 	private $timeout;
 
+	/** @var bool */
+	private $persistent;
+
 
 
 	public function __construct(array $options = array())
@@ -61,6 +64,7 @@ class SmtpMailer extends Nette\Object implements IMailer
 		if (!$this->port) {
 			$this->port = $this->secure === 'ssl' ? 465 : 25;
 		}
+		$this->persistent = !empty($options['persistent']);
 	}
 
 
@@ -73,32 +77,42 @@ class SmtpMailer extends Nette\Object implements IMailer
 	{
 		$mail = clone $mail;
 
-		$this->connect();
+		try {
+			if (!$this->connection) {
+				$this->connect();
+			}
 
-		$from = $mail->getHeader('From');
-		if ($from) {
-			$from = array_keys($from);
-			$this->write("MAIL FROM:<$from[0]>", 250);
+			$from = $mail->getHeader('From');
+			if ($from) {
+				$from = array_keys($from);
+				$this->write("MAIL FROM:<$from[0]>", 250);
+			}
+
+			foreach (array_merge(
+				(array) $mail->getHeader('To'),
+				(array) $mail->getHeader('Cc'),
+				(array) $mail->getHeader('Bcc')
+			) as $email => $name) {
+				$this->write("RCPT TO:<$email>", array(250, 251));
+			}
+
+			$mail->setHeader('Bcc', NULL);
+			$data = $mail->generateMessage();
+			$this->write('DATA', 354);
+			$data = preg_replace('#^\.#m', '..', $data);
+			$this->write($data);
+			$this->write('.', 250);
+
+			if (!$this->persistent) {
+				$this->write('QUIT', 221);
+				$this->disconnect();
+			}
+		} catch (SmtpException $e) {
+			if ($this->connection) {
+				$this->disconnect();
+			}
+			throw $e;
 		}
-
-		foreach (array_merge(
-			(array) $mail->getHeader('To'),
-			(array) $mail->getHeader('Cc'),
-			(array) $mail->getHeader('Bcc')
-		) as $email => $name) {
-			$this->write("RCPT TO:<$email>", array(250, 251));
-		}
-
-		$mail->setHeader('Bcc', NULL);
-		$data = $mail->generateMessage();
-		$this->write('DATA', 354);
-		$data = preg_replace('#^\.#m', '..', $data);
-		$this->write($data);
-		$this->write('.', 250);
-
-		$this->write('QUIT', 221);
-
-		$this->disconnect();
 	}
 
 
@@ -107,7 +121,7 @@ class SmtpMailer extends Nette\Object implements IMailer
 	 * Connects and authenticates to SMTP server.
 	 * @return void
 	 */
-	private function connect()
+	protected function connect()
 	{
 		$this->connection = @fsockopen( // intentionally @
 			($this->secure === 'ssl' ? 'ssl://' : '') . $this->host,
@@ -146,7 +160,7 @@ class SmtpMailer extends Nette\Object implements IMailer
 	 * Disconnects from SMTP server.
 	 * @return void
 	 */
-	private function disconnect()
+	protected function disconnect()
 	{
 		fclose($this->connection);
 		$this->connection = NULL;
@@ -161,7 +175,7 @@ class SmtpMailer extends Nette\Object implements IMailer
 	 * @param  string  error message
 	 * @return void
 	 */
-	private function write($line, $expectedCode = NULL, $message = NULL)
+	protected function write($line, $expectedCode = NULL, $message = NULL)
 	{
 		fwrite($this->connection, $line . Message::EOL);
 		if ($expectedCode && !in_array((int) $this->read(), (array) $expectedCode)) {
@@ -175,7 +189,7 @@ class SmtpMailer extends Nette\Object implements IMailer
 	 * Reads response from server.
 	 * @return string
 	 */
-	private function read()
+	protected function read()
 	{
 		$s = '';
 		while (($line = fgets($this->connection, 1e3)) != NULL) { // intentionally ==

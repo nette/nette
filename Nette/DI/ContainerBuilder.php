@@ -46,6 +46,9 @@ class ContainerBuilder extends Nette\Object
 	/** @var Nette\PhpGenerator\ClassType[] */
 	private $generatedClasses = array();
 
+	/** @var string */
+	/*private in 5.4*/public $current;
+
 
 
 	/**
@@ -53,7 +56,7 @@ class ContainerBuilder extends Nette\Object
 	 * @param  string
 	 * @return ServiceDefinition
 	 */
-	public function addDefinition($name)
+	public function addDefinition($name, ServiceDefinition $definition = NULL)
 	{
 		if (!is_string($name) || !$name) { // builder is not ready for falsy names such as '0'
 			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
@@ -61,7 +64,7 @@ class ContainerBuilder extends Nette\Object
 		} elseif (isset($this->definitions[$name])) {
 			throw new Nette\InvalidStateException("Service '$name' has already been added.");
 		}
-		return $this->definitions[$name] = new ServiceDefinition;
+		return $this->definitions[$name] = $definition ?: new ServiceDefinition;
 	}
 
 
@@ -128,6 +131,10 @@ class ContainerBuilder extends Nette\Object
 	 */
 	public function getByType($class)
 	{
+		if ($this->current !== NULL && Reflection\ClassType::from($this->definitions[$this->current]->class)->is($class)) {
+			return $this->current;
+		}
+
 		$lower = ltrim(strtolower($class), '\\');
 		if (!isset($this->classes[$lower])) {
 			return;
@@ -199,26 +206,26 @@ class ContainerBuilder extends Nette\Object
 			}
 
 			if (!interface_exists($def->implement)) {
-				throw new Nette\InvalidStateException("Interface $def->implement has not been found.");
+				throw new ServiceCreationException("Interface $def->implement has not been found.");
 			}
 			$rc = Reflection\ClassType::from($def->implement);
 			$method = $rc->hasMethod('create') ? $rc->getMethod('create') : ($rc->hasMethod('get') ? $rc->getMethod('get') : NULL);
 			if (count($rc->getMethods()) !== 1 || !$method || $method->isStatic()) {
-				throw new Nette\InvalidStateException("Interface $def->implement must have just one non-static method create() or get().");
+				throw new ServiceCreationException("Interface $def->implement must have just one non-static method create() or get().");
 			}
 			$def->implement = $rc->getName();
 
 			if (!$def->class && empty($def->factory->entity)) {
 				$returnType = $method->getAnnotation('return');
 				if (!$returnType) {
-					throw new Nette\InvalidStateException("Method $method has not @return annotation.");
+					throw new ServiceCreationException("Method $method has not @return annotation.");
 				}
 				if (!class_exists($returnType)) {
 					if ($returnType[0] !== '\\') {
 						$returnType = $rc->getNamespaceName() . '\\' . $returnType;
 					}
 					if (!class_exists($returnType)) {
-						throw new Nette\InvalidStateException("Please use a fully qualified name of class in @return annotation at $method method. Class '$returnType' cannot be found.");
+						throw new ServiceCreationException("Please use a fully qualified name of class in @return annotation at $method method. Class '$returnType' cannot be found.");
 					}
 				}
 				$def->setClass($returnType);
@@ -226,12 +233,12 @@ class ContainerBuilder extends Nette\Object
 
 			if ($method->getName() === 'get') {
 				if ($method->getParameters()) {
-					throw new Nette\InvalidStateException("Method $method must have no arguments.");
+					throw new ServiceCreationException("Method $method must have no arguments.");
 				}
 				if (empty($def->factory->entity)) {
 					$def->setFactory('@\\' . ltrim($def->class, '\\'));
 				} elseif (!$this->getServiceName($def->factory->entity)) {
-					throw new Nette\InvalidStateException("Invalid factory in service '$name' definition.");
+					throw new ServiceCreationException("Invalid factory in service '$name' definition.");
 				}
 			}
 
@@ -259,10 +266,11 @@ class ContainerBuilder extends Nette\Object
 
 		// check if services are instantiable
 		foreach ($this->definitions as $name => $def) {
-			$factory = $this->normalizeEntity($def->factory->entity);
+			$factory = $def->factory->entity = $this->normalizeEntity($def->factory->entity);
+
 			if (is_string($factory) && preg_match('#^[\w\\\\]+\z#', $factory) && $factory !== self::THIS_SERVICE) {
 				if (!class_exists($factory) || !Reflection\ClassType::from($factory)->isInstantiable()) {
-					throw new Nette\InvalidStateException("Class $factory used in service '$name' has not been found or is not instantiable.");
+					throw new ServiceCreationException("Class $factory used in service '$name' has not been found or is not instantiable.");
 				}
 			}
 		}
@@ -274,7 +282,7 @@ class ContainerBuilder extends Nette\Object
 			if (!$def->class) {
 				continue;
 			} elseif (!class_exists($def->class) && !interface_exists($def->class)) {
-				throw new Nette\InvalidStateException("Class or interface $def->class used in service '$name' has not been found.");
+				throw new ServiceCreationException("Class or interface $def->class used in service '$name' has not been found.");
 			} else {
 				$def->class = Reflection\ClassType::from($def->class)->getName();
 			}
@@ -301,12 +309,12 @@ class ContainerBuilder extends Nette\Object
 	private function resolveClass($name, $recursive = array())
 	{
 		if (isset($recursive[$name])) {
-			throw new Nette\InvalidArgumentException('Circular reference detected for services: ' . implode(', ', array_keys($recursive)) . '.');
+			throw new ServiceCreationException('Circular reference detected for services: ' . implode(', ', array_keys($recursive)) . '.');
 		}
 		$recursive[$name] = TRUE;
 
 		$def = $this->definitions[$name];
-		$factory = $this->normalizeEntity($def->factory->entity);
+		$factory = $def->factory->entity;
 
 		if ($def->class) {
 			return $def->class;
@@ -327,15 +335,16 @@ class ContainerBuilder extends Nette\Object
 			}
 			$factory = new Nette\Callback($factory);
 			if (!$factory->isCallable()) {
-				throw new Nette\InvalidStateException("Factory '$factory' is not callable.");
+				throw new ServiceCreationException("Factory '$factory' is not callable.");
 			}
 			try {
 				$reflection = $factory->toReflection();
-				$def->class = preg_replace('#[|\s].*#', '', $reflection->getAnnotation('return'));
-				if ($def->class && !class_exists($def->class) && $def->class[0] !== '\\' && $reflection instanceof \ReflectionMethod) {
-					/**/$def->class = $reflection->getDeclaringClass()->getNamespaceName() . '\\' . $def->class;/**/
-				}
 			} catch (\ReflectionException $e) {
+				throw new ServiceCreationException("Missing factory '$factory'.");
+			}
+			$def->class = preg_replace('#[|\s].*#', '', $reflection->getAnnotation('return'));
+			if ($def->class && !class_exists($def->class) && $def->class[0] !== '\\' && $reflection instanceof \ReflectionMethod) {
+				$def->class = $reflection->getDeclaringClass()->getNamespaceName() . '\\' . $def->class;
 			}
 
 		} elseif ($service = $this->getServiceName($factory)) { // alias or factory
@@ -343,7 +352,6 @@ class ContainerBuilder extends Nette\Object
 				$def->autowired = FALSE;
 			}
 			if (Strings::contains($service, '\\')) { // @\Class
-				/*5.2* $service = ltrim($service, '\\');*/
 				return $def->class = $service;
 			}
 			if ($this->definitions[$service]->implement) {
@@ -403,23 +411,17 @@ class ContainerBuilder extends Nette\Object
 		$containerClass->addMethod('__construct')
 			->addBody('parent::__construct(?);', array($this->parameters));
 
-		$prop = $containerClass->addProperty('classes', array());
-		foreach ($this->classes as $name => $foo) {
-			try {
-				$prop->value[$name] = $this->getByType($name);
-			} catch (ServiceCreationException $e) {
-				$prop->value[$name] = self::literal('FALSE, //' . strstr($e->getMessage(), ':'));
-			}
-		}
-
 		$definitions = $this->definitions;
 		ksort($definitions);
 
-		$meta = $containerClass->addProperty('meta', array());
+		$meta = $containerClass->addProperty('meta', array())
+			->setVisibility('protected')
+			->setValue(array(Container::TYPES => $this->classes));
+
 		foreach ($definitions as $name => $def) {
 			if ($def->shared) {
 				foreach ($def->tags as $tag => $value) {
-					$meta->value[$name][Container::TAGS][$tag] = $value;
+					$meta->value[Container::TAGS][$tag][$name] = $value;
 				}
 			}
 		}
@@ -427,13 +429,12 @@ class ContainerBuilder extends Nette\Object
 		foreach ($definitions as $name => $def) {
 			try {
 				$name = (string) $name;
-				$methodName = Container::getMethodName($name, $def->shared);
+				$methodName = Container::getMethodName($name);
 				if (!PhpHelpers::isIdentifier($methodName)) {
 					throw new ServiceCreationException('Name contains invalid characters.');
 				}
 				$method = $containerClass->addMethod($methodName)
 					->addDocument("@return " . ($def->implement ?: $def->class))
-					->setVisibility($def->shared ? 'protected' : 'public')
 					->setBody($name === self::THIS_CONTAINER ? 'return $this;' : $this->generateService($name))
 					->setParameters($def->implement ? array() : $this->convertParameters($def->parameters));
 			} catch (\Exception $e) {
@@ -452,11 +453,12 @@ class ContainerBuilder extends Nette\Object
 	 */
 	private function generateService($name)
 	{
+		$this->current = NULL;
 		$def = $this->definitions[$name];
 		$code = '$service = ' . $this->formatStatement($def->factory) . ";\n";
+		$this->current = $name;
 
-		$entity = $this->normalizeEntity($def->factory->entity);
-		if ($def->class && $def->class !== $entity && !$this->getServiceName($entity)) {
+		if ($def->class && $def->class !== $def->factory->entity && !$this->getServiceName($def->factory->entity)) {
 			$code .= PhpHelpers::formatArgs("if (!\$service instanceof $def->class) {\n"
 				. "\tthrow new Nette\\UnexpectedValueException(?);\n}\n",
 				array("Unable to create service '$name', value returned by factory is not $def->class type.")
@@ -491,7 +493,7 @@ class ContainerBuilder extends Nette\Object
 			if (is_string($setup->entity) && strpbrk($setup->entity, ':@?') === FALSE) { // auto-prepend @self
 				$setup->entity = array('@self', $setup->entity);
 			}
-			$code .= $this->formatStatement($setup, $name) . ";\n";
+			$code .= $this->formatStatement($setup) . ";\n";
 		}
 
 		$code .= 'return $service;';
@@ -550,13 +552,13 @@ class ContainerBuilder extends Nette\Object
 	 * @return string
 	 * @internal
 	 */
-	public function formatStatement(Statement $statement, $self = NULL)
+	public function formatStatement(Statement $statement)
 	{
 		$entity = $this->normalizeEntity($statement->entity);
 		$arguments = $statement->arguments;
 
 		if (is_string($entity) && Strings::contains($entity, '?')) { // PHP literal
-			return $this->formatPhp($entity, $arguments, $self);
+			return $this->formatPhp($entity, $arguments);
 
 		} elseif ($service = $this->getServiceName($entity)) { // factory calling or service retrieving
 			if ($this->definitions[$service]->shared) {
@@ -571,7 +573,7 @@ class ContainerBuilder extends Nette\Object
 			}
 			$rm = new Reflection\GlobalFunction(create_function(implode(', ', $params), ''));
 			$arguments = Helpers::autowireArguments($rm, $arguments, $this);
-			return $this->formatPhp('$this->?(?*)', array(Container::getMethodName($service, FALSE), $arguments), $self);
+			return $this->formatPhp('$this->?(?*)', array(Container::getMethodName($service), $arguments));
 
 		} elseif ($entity === 'not') { // operator
 			return $this->formatPhp('!?', array($arguments[0]));
@@ -583,23 +585,23 @@ class ContainerBuilder extends Nette\Object
 			} elseif ($arguments) {
 				throw new ServiceCreationException("Unable to pass arguments, class $entity has no constructor.");
 			}
-			return $this->formatPhp("new $entity" . ($arguments ? '(?*)' : ''), array($arguments), $self);
+			return $this->formatPhp("new $entity" . ($arguments ? '(?*)' : ''), array($arguments));
 
 		} elseif (!Nette\Utils\Arrays::isList($entity) || count($entity) !== 2) {
-			throw new Nette\InvalidStateException("Expected class, method or property, " . PhpHelpers::dump($entity) . " given.");
+			throw new ServiceCreationException("Expected class, method or property, " . PhpHelpers::dump($entity) . " given.");
 
 		} elseif ($entity[0] === '') { // globalFunc
-			return $this->formatPhp("$entity[1](?*)", array($arguments), $self);
+			return $this->formatPhp("$entity[1](?*)", array($arguments));
 
 		} elseif (Strings::contains($entity[1], '$')) { // property setter
 			Validators::assert($arguments, 'list:1', "setup arguments for '" . Nette\Callback::create($entity) . "'");
-			if ($this->getServiceName($entity[0], $self)) {
-				return $this->formatPhp('?->? = ?', array($entity[0], substr($entity[1], 1), $arguments[0]), $self);
+			if ($this->getServiceName($entity[0])) {
+				return $this->formatPhp('?->? = ?', array($entity[0], substr($entity[1], 1), $arguments[0]));
 			} else {
-				return $this->formatPhp($entity[0] . '::$? = ?', array(substr($entity[1], 1), $arguments[0]), $self);
+				return $this->formatPhp($entity[0] . '::$? = ?', array(substr($entity[1], 1), $arguments[0]));
 			}
 
-		} elseif ($service = $this->getServiceName($entity[0], $self)) { // service method
+		} elseif ($service = $this->getServiceName($entity[0])) { // service method
 			$class = $this->definitions[$service]->implement;
 			if (!$class || !method_exists($class, $entity[1])) {
 				$class = $this->definitions[$service]->class;
@@ -607,11 +609,11 @@ class ContainerBuilder extends Nette\Object
 			if ($class) {
 				$arguments = $this->autowireArguments($class, $entity[1], $arguments);
 			}
-			return $this->formatPhp('?->?(?*)', array($entity[0], $entity[1], $arguments), $self);
+			return $this->formatPhp('?->?(?*)', array($entity[0], $entity[1], $arguments));
 
 		} else { // static method
 			$arguments = $this->autowireArguments($entity[0], $entity[1], $arguments);
-			return $this->formatPhp("$entity[0]::$entity[1](?*)", array($arguments), $self);
+			return $this->formatPhp("$entity[0]::$entity[1](?*)", array($arguments));
 		}
 	}
 
@@ -621,20 +623,20 @@ class ContainerBuilder extends Nette\Object
 	 * Formats PHP statement.
 	 * @return string
 	 */
-	public function formatPhp($statement, $args, $self = NULL)
+	public function formatPhp($statement, $args)
 	{
 		$that = $this;
-		array_walk_recursive($args, function(&$val) use ($self, $that) {
+		array_walk_recursive($args, function(&$val) use ($that) {
 			list($val) = $that->normalizeEntity(array($val));
 
 			if ($val instanceof Statement) {
-				$val = ContainerBuilder::literal($that->formatStatement($val, $self));
+				$val = ContainerBuilder::literal($that->formatStatement($val));
 
 			} elseif ($val === '@' . ContainerBuilder::THIS_CONTAINER) {
 				$val = ContainerBuilder::literal('$this');
 
-			} elseif ($service = $that->getServiceName($val, $self)) {
-				$val = $service === $self ? '$service' : $that->formatStatement(new Statement($val));
+			} elseif ($service = $that->getServiceName($val)) {
+				$val = $service === $that->current ? '$service' : $that->formatStatement(new Statement($val));
 				$val = ContainerBuilder::literal($val);
 
 			} elseif (is_string($val) && preg_match('#^[\w\\\\]*::[A-Z][A-Z0-9_]*\z#', $val, $m)) {
@@ -694,14 +696,14 @@ class ContainerBuilder extends Nette\Object
 	 * Converts @service or @\Class -> service name and checks its existence.
 	 * @return string  of FALSE, if argument is not service name
 	 */
-	public function getServiceName($arg, $self = NULL)
+	public function getServiceName($arg)
 	{
 		if (!is_string($arg) || !preg_match('#^@[\w\\\\.].*\z#', $arg)) {
 			return FALSE;
 		}
 		$service = substr($arg, 1);
 		if ($service === self::THIS_SERVICE) {
-			$service = $self;
+			$service = $this->current;
 		}
 		if (Strings::contains($service, '\\')) {
 			if ($this->classes === FALSE) { // may be disabled by prepareClassList

@@ -104,7 +104,7 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	/**
 	 * Normalizes result row.
 	 */
-	public function normalizeRow($row, $statement)
+	public function normalizeRow($row)
 	{
 		return $row;
 	}
@@ -165,11 +165,21 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 
 
 	/**
+	 * Returns associative array of detected types (IReflection::FIELD_*) in result set.
+	 */
+	public function getColumnTypes(\PDOStatement $statement)
+	{
+		return Nette\Database\Helpers::detectTypes($statement);
+	}
+
+
+
+	/**
 	 * @return bool
 	 */
 	public function isSupported($item)
 	{
-		return $item === self::SUPPORT_COLUMNS_META || $item === self::SUPPORT_SEQUENCE;
+		return $item === self::SUPPORT_SEQUENCE || $item === self::SUPPORT_SUBSELECT;
 	}
 
 }

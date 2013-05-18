@@ -30,4 +30,4 @@ $cache->save($key, $value, array(
 	Cache::CONSTS => 'ANY_CONST',
 ));
 
-Assert::true( isset($cache[$key]), 'Is cached?' );
+Assert::true( isset($cache[$key]) );

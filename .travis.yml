@@ -8,17 +8,17 @@ matrix:
     allow_failures:
         - php: 5.5
 
-script: "VERBOSE=true ./tests/run-tests.sh -s tests/"
+script: VERBOSE=true ./tests/run-tests.sh -s tests/
 
 #services:
-#  - memcached
+#    - memcached
 
 before_script:
-# Install Nette Tester
-  - composer install --no-interaction --dev
+    # Install Nette Tester
+    - composer install --no-interaction --dev
 
-# Create databases.ini
-  - cp ./tests/Nette/Database/databases.sample.ini ./tests/Nette/Database/databases.ini
+    # Create databases.ini
+    - cp ./tests/Nette/Database/databases.sample.ini ./tests/Nette/Database/databases.ini
 
-# Create Postgre database
-  - psql -c 'CREATE DATABASE nette_test' -U postgres
+    # Create Postgre database
+    - psql -c 'CREATE DATABASE nette_test' -U postgres

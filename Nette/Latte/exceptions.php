@@ -25,4 +25,4 @@ class CompileException extends Nette\Templating\FilterException
 }
 
 
-/**/class_alias('Nette\Latte\CompileException', 'Nette\Latte\ParseException');/**/
+class_alias('Nette\Latte\CompileException', 'Nette\Latte\ParseException');

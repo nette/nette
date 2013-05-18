@@ -39,7 +39,7 @@ class Helpers
 	private static function _dump(&$var, $level = 0)
 	{
 		if ($var instanceof PhpLiteral) {
-			return $var->value;
+			return (string) $var;
 
 		} elseif (is_float($var)) {
 			$var = var_export($var, TRUE);
@@ -77,19 +77,21 @@ class Helpers
 				throw new Nette\InvalidArgumentException('Nesting level too deep or recursive dependency.');
 
 			} else {
-				$out = "\n";
+				$out = '';
+				$outAlt = "\n$space";
 				$var[$marker] = TRUE;
 				$counter = 0;
 				foreach ($var as $k => &$v) {
 					if ($k !== $marker) {
-						$out .= "$space\t" . ($k === $counter ? '' : self::_dump($k, $level + 1) . " => ") . self::_dump($v, $level + 1) . ",\n";
+						$item = ($k === $counter ? '' : self::_dump($k, $level + 1) . ' => ') . self::_dump($v, $level + 1);
 						$counter = is_int($k) ? max($k + 1, $counter) : $counter;
+						$out .= ($out === '' ? '' : ', ') . $item;
+						$outAlt .= "\t$item,\n$space";
 					}
 				}
 				unset($var[$marker]);
-				$out .= $space;
 			}
-			return "array($out)";
+			return 'array(' . (strpos($out, "\n") === FALSE && strlen($out) < 40 ? $out : $outAlt) . ')';
 
 		} elseif (is_object($var)) {
 			$arr = (array) $var;

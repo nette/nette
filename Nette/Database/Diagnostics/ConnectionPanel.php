@@ -51,13 +51,13 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 
 
 
-	public function logQuery(Nette\Database\Statement $result, array $params = NULL)
+	public function logQuery(Nette\Database\Connection $connection, $result)
 	{
 		if ($this->disabled) {
 			return;
 		}
 		$source = NULL;
-		foreach (debug_backtrace(FALSE) as $row) {
+		foreach ($result instanceof \PDOException ? $result->getTrace() : debug_backtrace(FALSE) as $row) {
 			if (isset($row['file']) && is_file($row['file']) && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) !== 0) {
 				if (isset($row['function']) && strpos($row['function'], 'call_user_func') === 0) continue;
 				if (isset($row['class']) && is_subclass_of($row['class'], '\\Nette\\Database\\Connection')) continue;
@@ -65,8 +65,13 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 				break;
 			}
 		}
-		$this->totalTime += $result->getTime();
-		$this->queries[] = array($result->queryString, $params, $result->getTime(), $result->getRowCount(), $result->getConnection(), $source);
+		if ($result instanceof Nette\Database\ResultSet) {
+			$this->totalTime += $result->getTime();
+			$this->queries[] = array($connection, $result->getQueryString(), $result->getParameters(), $source, $result->getTime(), $result->getRowCount(), NULL);
+
+		} elseif ($result instanceof \PDOException) {
+			$this->queries[] = array($connection, $result->queryString, NULL, $source, NULL, NULL, $result->getMessage());
+		}
 	}
 
 
@@ -105,19 +110,23 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 	{
 		$this->disabled = TRUE;
 		$s = '';
-		$h = 'htmlSpecialChars';
 		foreach ($this->queries as $i => $query) {
-			list($sql, $params, $time, $rows, $connection, $source) = $query;
+			list($connection, $sql, $params, $source, $time, $rows, $error) = $query;
 
 			$explain = NULL; // EXPLAIN is called here to work SELECT FOUND_ROWS()
-			if ($this->explain && preg_match('#\s*\(?\s*SELECT\s#iA', $sql)) {
+			if (!$error && $this->explain && preg_match('#\s*\(?\s*SELECT\s#iA', $sql)) {
 				try {
 					$cmd = is_string($this->explain) ? $this->explain : 'EXPLAIN';
 					$explain = $connection->queryArgs("$cmd $sql", $params)->fetchAll();
 				} catch (\PDOException $e) {}
 			}
 
-			$s .= '<tr><td>' . sprintf('%0.3f', $time * 1000);
+			$s .= '<tr><td>';
+			if ($error) {
+				$s .= '<span title="' . htmlSpecialChars($error) . '">ERROR</span>';
+			} elseif ($time !== NULL) {
+				$s .= sprintf('%0.3f', $time * 1000);
+			}
 			if ($explain) {
 				static $counter;
 				$counter++;
@@ -128,13 +137,13 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 			if ($explain) {
 				$s .= "<table id='nette-DbConnectionPanel-row-$counter' class='nette-collapsed'><tr>";
 				foreach ($explain[0] as $col => $foo) {
-					$s .= "<th>{$h($col)}</th>";
+					$s .= '<th>' . htmlSpecialChars($col) . '</th>';
 				}
 				$s .= "</tr>";
 				foreach ($explain as $row) {
 					$s .= "<tr>";
 					foreach ($row as $col) {
-						$s .= "<td>{$h($col)}</td>";
+						$s .= '<td>' . htmlSpecialChars($col) . '</td>';
 					}
 					$s .= "</tr>";
 				}
@@ -150,7 +159,8 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 		return empty($this->queries) ? '' :
 			'<style class="nette-debug"> #nette-debug td.nette-DbConnectionPanel-sql { background: white !important }
 			#nette-debug .nette-DbConnectionPanel-source { color: #BBB !important } </style>
-			<h1>Queries: ' . count($this->queries) . ($this->totalTime ? ', time: ' . sprintf('%0.3f', $this->totalTime * 1000) . ' ms' : '') . '</h1>
+			<h1 title="' . htmlSpecialChars($connection->getDsn()) . '">Queries: ' . count($this->queries)
+			. ($this->totalTime ? ', time: ' . sprintf('%0.3f', $this->totalTime * 1000) . ' ms' : '') . ', ' . htmlSpecialChars($this->name) . '</h1>
 			<div class="nette-inner nette-DbConnectionPanel">
 			<table>
 				<tr><th>Time&nbsp;ms</th><th>SQL Query</th><th>Rows</th></tr>' . $s . '

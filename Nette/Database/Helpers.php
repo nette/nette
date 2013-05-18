@@ -44,15 +44,15 @@ class Helpers
 	 * Displays complete result set as HTML table for debug purposes.
 	 * @return void
 	 */
-	public static function dumpResult(Statement $statement)
+	public static function dumpResult(ResultSet $result)
 	{
-		echo "\n<table class=\"dump\">\n<caption>" . htmlSpecialChars($statement->queryString) . "</caption>\n";
-		if (!$statement->getColumnCount()) {
-			echo "\t<tr>\n\t\t<th>Affected rows:</th>\n\t\t<td>", $statement->getRowCount(), "</td>\n\t</tr>\n</table>\n";
+		echo "\n<table class=\"dump\">\n<caption>" . htmlSpecialChars($result->getQueryString()) . "</caption>\n";
+		if (!$result->getColumnCount()) {
+			echo "\t<tr>\n\t\t<th>Affected rows:</th>\n\t\t<td>", $result->getRowCount(), "</td>\n\t</tr>\n</table>\n";
 			return;
 		}
 		$i = 0;
-		foreach ($statement as $row) {
+		foreach ($result as $row) {
 			if ($i === 0) {
 				echo "<thead>\n\t<tr>\n\t\t<th>#row</th>\n";
 				foreach ($row as $col => $foo) {
@@ -146,7 +146,26 @@ class Helpers
 
 
 	/**
-	 * Heuristic type detection.
+	 * Common column type detection.
+	 * @return array
+	 */
+	public static function detectTypes(\PDOStatement $statement)
+	{
+		$types = array();
+		$count = $statement->columnCount(); // driver must be meta-aware, see PHP bugs #53782, #54695
+		for ($col = 0; $col < $count; $col++) {
+			$meta = $statement->getColumnMeta($col);
+			if (isset($meta['native_type'])) {
+				$types[$meta['name']] = self::detectType($meta['native_type']);
+			}
+		}
+		return $types;
+	}
+
+
+
+	/**
+	 * Heuristic column type detection.
 	 * @param  string
 	 * @return string
 	 * @internal
@@ -201,10 +220,11 @@ class Helpers
 
 
 
-	public static function createDebugPanel($connection, $explain = TRUE)
+	public static function createDebugPanel($connection, $explain = TRUE, $name = NULL)
 	{
 		$panel = new Nette\Database\Diagnostics\ConnectionPanel($connection);
 		$panel->explain = $explain;
+		$panel->name = $name;
 		Nette\Diagnostics\Debugger::$bar->addPanel($panel);
 		return $panel;
 	}

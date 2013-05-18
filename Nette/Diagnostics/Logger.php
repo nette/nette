@@ -37,7 +37,7 @@ class Logger extends Nette\Object
 	/** @var string name of the directory where errors should be logged; FALSE means that logging is disabled */
 	public $directory;
 
-	/** @var string email to sent error notifications */
+	/** @var string|array email or emails to which send error notifications */
 	public $email;
 
 
@@ -48,7 +48,7 @@ class Logger extends Nette\Object
 	 * @param  int     one of constant INFO, WARNING, ERROR (sends email), CRITICAL (sends email)
 	 * @return bool    was successful?
 	 */
-	public function log($message, $priority = self::INFO)
+	public function log($message, $priority = NULL)
 	{
 		if (!is_dir($this->directory)) {
 			throw new Nette\DirectoryNotFoundException("Directory '$this->directory' is not found or is not directory.");
@@ -57,13 +57,14 @@ class Logger extends Nette\Object
 		if (is_array($message)) {
 			$message = implode(' ', $message);
 		}
-		$res = error_log(trim($message) . PHP_EOL, 3, $this->directory . '/' . strtolower($priority) . '.log');
+		$message = preg_replace('#\s*\r?\n\s*#', ' ', trim($message));
+		$res = error_log($message . PHP_EOL, 3, $this->directory . '/' . strtolower($priority ?: self::INFO) . '.log');
 
 		if (($priority === self::ERROR || $priority === self::CRITICAL) && $this->email && $this->mailer
 			&& @filemtime($this->directory . '/email-sent') + self::$emailSnooze < time() // @ - file may not exist
 			&& @file_put_contents($this->directory . '/email-sent', 'sent') // @ - file may not be writable
 		) {
-			Nette\Callback::create($this->mailer)->invoke($message, $this->email);
+			Nette\Callback::create($this->mailer)->invoke($message, implode(', ', (array) $this->email));
 		}
 		return $res;
 	}

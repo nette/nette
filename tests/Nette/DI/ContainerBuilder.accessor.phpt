@@ -68,13 +68,13 @@ require TEMP_DIR . '/code.php';
 
 $container = new Container;
 
-Assert::true( $container->getService('one') instanceof StdClassAccessor );
-Assert::true( $container->getService('one')->get() === $container->getService('service') );
+Assert::type( 'StdClassAccessor', $container->getService('one') );
+Assert::same( $container->getService('one')->get(), $container->getService('service') );
 
-Assert::true( $container->getService('two') instanceof AnnotatedAccessor );
-Assert::true( $container->getService('two')->get() === $container->getService('service') );
+Assert::type( 'AnnotatedAccessor', $container->getService('two') );
+Assert::same( $container->getService('two')->get(), $container->getService('service') );
 
-Assert::true( $container->getService('three') instanceof StdClassAccessor );
-Assert::true( $container->getService('three')->get() === $container->getService('service2') );
+Assert::type( 'StdClassAccessor', $container->getService('three') );
+Assert::same( $container->getService('three')->get(), $container->getService('service2') );
 
-Assert::true( $container->getService('four') instanceof AccessorReceiver );
+Assert::type( 'AccessorReceiver', $container->getService('four') );

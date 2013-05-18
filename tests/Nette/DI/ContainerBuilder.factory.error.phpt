@@ -20,7 +20,7 @@ interface Bad1
 	static function create();
 }
 
-Assert::throws(function() {
+Assert::exception(function() {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setImplement('Bad1')->setFactory('stdClass');
 	$builder->generateClasses();
@@ -33,7 +33,7 @@ interface Bad2
 	function createx();
 }
 
-Assert::throws(function() {
+Assert::exception(function() {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setImplement('Bad2')->setFactory('stdClass');
 	$builder->generateClasses();
@@ -47,7 +47,7 @@ interface Bad3
 	function create();
 }
 
-Assert::throws(function() {
+Assert::exception(function() {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setImplement('Bad3')->setFactory('stdClass');
 	$builder->generateClasses();
@@ -60,7 +60,7 @@ interface Bad4
 	function create();
 }
 
-Assert::throws(function() {
+Assert::exception(function() {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setImplement('Bad4');
 	$builder->generateClasses();
@@ -73,7 +73,7 @@ interface Bad5
 	function get($arg);
 }
 
-Assert::throws(function() {
+Assert::exception(function() {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setImplement('Bad5')->setFactory('stdClass');
 	$builder->generateClasses();

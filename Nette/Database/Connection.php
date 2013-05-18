@@ -28,8 +28,11 @@ use Nette,
  */
 class Connection extends Nette\Object
 {
-	/** @var string */
-	private $dsn;
+	/** @var array */
+	private $params;
+
+	/** @var array */
+	private $options;
 
 	/** @var ISupplementalDriver */
 	private $driver;
@@ -37,30 +40,49 @@ class Connection extends Nette\Object
 	/** @var SqlPreprocessor */
 	private $preprocessor;
 
-	/** @var Table\SelectionFactory */
+	/** @var SelectionFactory */
 	private $selectionFactory;
 
 	/** @var PDO */
 	private $pdo;
 
-	/** @var array of function(Statement $result, $params); Occurs after query is executed */
+	/** @var array of function(Connection $connection); Occurs after connection is established */
+	public $onConnect;
+
+	/** @var array of function(Connection $connection, ResultSet|Exception $result); Occurs after query is executed */
 	public $onQuery;
 
 
 
 	public function __construct($dsn, $user = NULL, $password = NULL, array $options = NULL)
 	{
-		$this->pdo = new PDO($this->dsn = $dsn, $user, $password, $options);
-		$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
 		if (func_num_args() > 4) { // compatiblity
 			$options['driverClass'] = func_get_arg(4);
 		}
-		$driverClass = empty($options['driverClass'])
+		$this->params = array($dsn, $user, $password);
+		$this->options = (array) $options;
+
+		if (empty($options['lazy'])) {
+			$this->connect();
+		}
+	}
+
+
+
+	private function connect()
+	{
+		if ($this->pdo) {
+			return;
+		}
+		$this->pdo = new PDO($this->params[0], $this->params[1], $this->params[2], $this->options);
+		$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+		$class = empty($this->options['driverClass'])
 			? 'Nette\Database\Drivers\\' . ucfirst(str_replace('sql', 'Sql', $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver'
-			: $options['driverClass'];
-		$this->driver = new $driverClass($this, (array) $options);
+			: $this->options['driverClass'];
+		$this->driver = new $class($this, $this->options);
 		$this->preprocessor = new SqlPreprocessor($this);
+		$this->onConnect($this);
 	}
 
 
@@ -68,7 +90,7 @@ class Connection extends Nette\Object
 	/** @return string */
 	public function getDsn()
 	{
-		return $this->dsn;
+		return $this->params[0];
 	}
 
 
@@ -76,6 +98,7 @@ class Connection extends Nette\Object
 	/** @return PDO */
 	public function getPdo()
 	{
+		$this->connect();
 		return $this->pdo;
 	}
 
@@ -84,31 +107,32 @@ class Connection extends Nette\Object
 	/** @return ISupplementalDriver */
 	public function getSupplementalDriver()
 	{
+		$this->connect();
 		return $this->driver;
 	}
 
 
 
-	/** @return bool */
+	/** @return void */
 	public function beginTransaction()
 	{
-		return $this->pdo->beginTransaction();
+		$this->queryArgs('::beginTransaction', array());
 	}
 
 
 
-	/** @return bool */
+	/** @return void */
 	public function commit()
 	{
-		return $this->pdo->commit();
+		$this->queryArgs('::commit', array());
 	}
 
 
 
-	/** @return bool */
+	/** @return void */
 	public function rollBack()
 	{
-		return $this->pdo->rollBack();
+		$this->queryArgs('::rollBack', array());
 	}
 
 
@@ -119,7 +143,7 @@ class Connection extends Nette\Object
 	 */
 	public function getInsertId($name = NULL)
 	{
-		return $this->pdo->lastInsertId($name);
+		return $this->getPdo()->lastInsertId($name);
 	}
 
 
@@ -131,7 +155,7 @@ class Connection extends Nette\Object
 	 */
 	public function quote($string, $type = PDO::PARAM_STR)
 	{
-		return $this->pdo->quote($string, $type);
+		return $this->getPdo()->quote($string, $type);
 	}
 
 
@@ -140,7 +164,7 @@ class Connection extends Nette\Object
 	 * Generates and executes SQL query.
 	 * @param  string  statement
 	 * @param  mixed   [parameters, ...]
-	 * @return Statement
+	 * @return ResultSet
 	 */
 	public function query($statement)
 	{
@@ -153,15 +177,25 @@ class Connection extends Nette\Object
 	/**
 	 * @param  string  statement
 	 * @param  array
-	 * @return Statement
+	 * @return ResultSet
 	 */
 	public function queryArgs($statement, array $params)
 	{
+		$this->connect();
 		if ($params) {
-			list($statement, $params) = $this->preprocessor->process($statement, $params);
+			array_unshift($params, $statement);
+			list($statement, $params) = $this->preprocessor->process($params);
 		}
 
-		return new Statement($this, $statement, $params);
+		try {
+			$result = new ResultSet($this, $statement, $params);
+		} catch (\PDOException $e) {
+			$e->queryString = $statement;
+			$this->onQuery($this, $e);
+			throw $e;
+		}
+		$this->onQuery($this, $result);
+		return $result;
 	}
 
 
@@ -185,15 +219,15 @@ class Connection extends Nette\Object
 
 
 	/**
-	 * Shortcut for query()->fetchColumn()
+	 * Shortcut for query()->fetchField()
 	 * @param  string  statement
 	 * @param  mixed   [parameters, ...]
 	 * @return mixed
 	 */
-	public function fetchColumn($args)
+	public function fetchField($args)
 	{
 		$args = func_get_args();
-		return $this->queryArgs(array_shift($args), $args)->fetchColumn();
+		return $this->queryArgs(array_shift($args), $args)->fetchField();
 	}
 
 
@@ -207,7 +241,7 @@ class Connection extends Nette\Object
 	public function fetchPairs($args)
 	{
 		$args = func_get_args();
-		return $this->queryArgs(array_shift($args), $args)->fetchPairs();
+		return $this->queryArgs(array_shift($args), $args)->fetchPairs(0, 1);
 	}
 
 
@@ -226,21 +260,32 @@ class Connection extends Nette\Object
 
 
 
+	/**
+	 * @return SqlLiteral
+	 */
+	public static function literal($value)
+	{
+		$args = func_get_args();
+		return new SqlLiteral(array_shift($args), $args);
+	}
+
+
+
 	/********************* Selection ****************d*g**/
 
 
 
 	/**
-	 * Creates selector for table.
+	 * Creates selector for table. Shortcut for SelectionFactory::table()
 	 * @param  string
 	 * @return Nette\Database\Table\Selection
 	 */
 	public function table($table)
 	{
 		if (!$this->selectionFactory) {
-			$this->selectionFactory = new Table\SelectionFactory($this);
+			$this->selectionFactory = new SelectionFactory($this);
 		}
-		return $this->selectionFactory->create($table);
+		return $this->selectionFactory->table($table);
 	}
 
 
@@ -248,10 +293,20 @@ class Connection extends Nette\Object
 	/**
 	 * @return Connection   provides a fluent interface
 	 */
-	public function setSelectionFactory(Table\SelectionFactory $selectionFactory)
+	public function setSelectionFactory(SelectionFactory $selectionFactory)
 	{
 		$this->selectionFactory = $selectionFactory;
 		return $this;
+	}
+
+
+
+	/**
+	 * @return Nette\Database\SelectionFactory
+	 */
+	public function getSelectionFactory()
+	{
+		return $this->selectionFactory;
 	}
 
 

@@ -234,7 +234,7 @@ class SelectBox extends BaseControl
 	 * Checks if a valid option was selected.
 	 * @return bool
 	 */
-	public static function validateSelectBoxValid(Nette\Forms\IControl $control)
+	public static function validateSelectBoxValid(SelectBox $control)
 	{
 		return $control->prompt !== FALSE || $control->getValue() !== NULL;
 	}

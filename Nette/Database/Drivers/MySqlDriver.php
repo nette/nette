@@ -46,7 +46,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 		if (isset($options['sqlmode'])) {
 			$connection->query("SET sql_mode='$options[sqlmode]'");
 		}
-		$connection->query("SET time_zone='" . date('P') . "'");
 	}
 
 
@@ -114,7 +113,7 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	/**
 	 * Normalizes result row.
 	 */
-	public function normalizeRow($row, $statement)
+	public function normalizeRow($row)
 	{
 		return $row;
 	}
@@ -223,11 +222,21 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 
 
 	/**
+	 * Returns associative array of detected types (IReflection::FIELD_*) in result set.
+	 */
+	public function getColumnTypes(\PDOStatement $statement)
+	{
+		return Nette\Database\Helpers::detectTypes($statement);
+	}
+
+
+
+	/**
 	 * @return bool
 	 */
 	public function isSupported($item)
 	{
-		return $item === self::SUPPORT_COLUMNS_META || $item === self::SUPPORT_SELECT_UNGROUPED_COLUMNS;
+		return $item === self::SUPPORT_SELECT_UNGROUPED_COLUMNS;
 	}
 
 }

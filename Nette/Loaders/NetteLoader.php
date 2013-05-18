@@ -27,7 +27,8 @@ class NetteLoader extends AutoLoader
 
 	/** @var array */
 	public $renamed = array(
-		'Nette\Configurator' => 'Nette\Config\Configurator',
+		'Nette\Config\Configurator' => 'Nette\Configurator',
+		'Nette\Config\CompilerExtension' => 'Nette\DI\CompilerExtension',
 		'Nette\Http\User' => 'Nette\Security\User',
 		'Nette\Templating\DefaultHelpers' => 'Nette\Templating\Helpers',
 		'Nette\Latte\ParseException' => 'Nette\Latte\CompileException',
@@ -52,6 +53,7 @@ class NetteLoader extends AutoLoader
 		'Nette\ArrayHash' => '/common/ArrayHash',
 		'Nette\ArrayList' => '/common/ArrayList',
 		'Nette\Callback' => '/common/Callback',
+		'Nette\Configurator' => '/common/Configurator',
 		'Nette\Database\Reflection\AmbiguousReferenceKeyException' => '/Database/Reflection/exceptions',
 		'Nette\Database\Reflection\MissingReferenceException' => '/Database/Reflection/exceptions',
 		'Nette\DI\MissingServiceException' => '/DI/exceptions',
@@ -112,18 +114,18 @@ class NetteLoader extends AutoLoader
 	public function tryLoad($type)
 	{
 		$type = ltrim($type, '\\');
-		/**/if (isset($this->renamed[$type])) {
+		if (isset($this->renamed[$type])) {
 			class_alias($this->renamed[$type], $type);
 			trigger_error("Class $type has been renamed to {$this->renamed[$type]}.", E_USER_WARNING);
 
-		} else/**/if (isset($this->list[$type])) {
+		} elseif (isset($this->list[$type])) {
 			Nette\Utils\LimitedScope::load(NETTE_DIR . $this->list[$type] . '.php', TRUE);
 			self::$count++;
 
-		}/**/ elseif (substr($type, 0, 6) === 'Nette\\' && is_file($file = NETTE_DIR . strtr(substr($type, 5), '\\', '/') . '.php')) {
+		} elseif (substr($type, 0, 6) === 'Nette\\' && is_file($file = NETTE_DIR . strtr(substr($type, 5), '\\', '/') . '.php')) {
 			Nette\Utils\LimitedScope::load($file, TRUE);
 			self::$count++;
-		}/**/
+		}
 	}
 
 }

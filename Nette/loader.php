@@ -14,16 +14,10 @@
 /**
  * Check and reset PHP configuration.
  */
-/*5.2*
-if (!defined('PHP_VERSION_ID')) {
-	$tmp = explode('.', PHP_VERSION);
-	define('PHP_VERSION_ID', ($tmp[0] * 10000 + $tmp[1] * 100 + $tmp[2]));
+if (PHP_VERSION_ID < 50301) {
+	throw new Exception('Nette Framework requires PHP 5.3.1 or newer.');
 }
 
-if (PHP_VERSION_ID < 50200) {
-	throw new Exception('Nette Framework requires PHP 5.2.0 or newer.');
-}
-*/
 @header('Content-Type: text/html; charset=utf-8'); // @ - headers may be sent
 
 
@@ -34,7 +28,6 @@ if (PHP_VERSION_ID < 50200) {
 define('NETTE', TRUE);
 define('NETTE_DIR', __DIR__);
 define('NETTE_VERSION_ID', 20100); // v2.1.0
-define('NETTE_PACKAGE', '5.3');
 
 
 
@@ -53,6 +46,7 @@ require_once __DIR__ . '/Utils/Html.php';
 Nette\Diagnostics\Debugger::_init();
 
 Nette\Utils\SafeStream::register();
+class_alias('Nette\Configurator', 'Nette\Config\Configurator');
 
 
 

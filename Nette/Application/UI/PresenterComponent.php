@@ -120,9 +120,9 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 * Access to reflection.
 	 * @return PresenterComponentReflection
 	 */
-	public /**/static/**/ function getReflection()
+	public static function getReflection()
 	{
-		return new PresenterComponentReflection(/*5.2*$this*//**/get_called_class()/**/);
+		return new PresenterComponentReflection(get_called_class());
 	}
 
 
@@ -145,9 +145,9 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 				if (!$reflection->convertType($params[$name], $type)) {
 					throw new Nette\Application\BadRequestException("Invalid value for persistent parameter '$name' in '{$this->getName()}', expected " . ($type === 'NULL' ? 'scalar' : $type) . ".");
 				}
-				$this->$name = & $params[$name];
+				$this->$name = $params[$name];
 			} else {
-				$params[$name] = & $this->$name;
+				$params[$name] = $this->$name;
 			}
 		}
 		$this->params = $params;
@@ -254,7 +254,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 */
 	public static function getPersistentParams()
 	{
-		$rc = new Nette\Reflection\ClassType(/*5.2*func_get_arg(0)*//**/get_called_class()/**/);
+		$rc = new Nette\Reflection\ClassType(get_called_class());
 		$params = array();
 		foreach ($rc->getProperties(\ReflectionProperty::IS_PUBLIC) as $rp) {
 			if (!$rp->isStatic() && $rp->hasAnnotation('persistent')) {
@@ -291,7 +291,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 * @param  string
 	 * @return string
 	 */
-	public function formatSignalMethod($signal)
+	public static function formatSignalMethod($signal)
 	{
 		return $signal == NULL ? NULL : 'handle' . $signal; // intentionally ==
 	}

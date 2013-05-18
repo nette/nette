@@ -88,10 +88,10 @@ $_FILES = array(
 $factory = new Http\RequestFactory;
 $request = $factory->createHttpRequest();
 
-Assert::true( $request->files['file1'] instanceof Http\FileUpload );
-Assert::true( $request->files['file2'][2] instanceof Http\FileUpload );
-Assert::true( $request->files['file3']['y']['z'] instanceof Http\FileUpload );
-Assert::true( $request->files['file3'][1] instanceof Http\FileUpload );
+Assert::type( 'Nette\Http\FileUpload', $request->files['file1'] );
+Assert::type( 'Nette\Http\FileUpload', $request->files['file2'][2] );
+Assert::type( 'Nette\Http\FileUpload', $request->files['file3']['y']['z'] );
+Assert::type( 'Nette\Http\FileUpload', $request->files['file3'][1] );
 
 Assert::false( isset($request->files['file0']) );
 Assert::true( isset($request->files['file1']) );

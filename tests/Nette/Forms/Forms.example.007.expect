@@ -5,11 +5,11 @@
 		<table>
 		<tr class="required">
 			<th><label class="required" for="frm-name">Your name:</label></th>
-			<td><input type="text" class="text" name="name" id="frm-name" required="required" data-nette-rules="{op:':filled',msg:'Enter your name'}" value="John Doe " cols="35" /></td>
+			<td><input type="text" class="text" name="name" id="frm-name" required="required" data-nette-rules='[{"op":":filled","msg":"Enter your name"}]' value="John Doe " cols="35" /></td>
 		</tr>
 		<tr class="required">
 			<th><label class="required" for="frm-age">Your age:</label></th>
-			<td><input type="text" class="text" name="age" id="frm-age" required="required" data-nette-rules="{op:':filled',msg:'Enter your age'},{op:':integer',msg:'Age must be numeric value'},{op:':range',msg:'Age must be in range from 10 to 100',arg:[10,100]}" value="  12 " cols="5" /></td>
+			<td><input type="text" class="text" name="age" id="frm-age" required="required" data-nette-rules='[{"op":":filled","msg":"Enter your age"},{"op":":integer","msg":"Age must be numeric value"},{"op":":range","msg":"Age must be in range from 10 to 100","arg":[10,100]}]' value="  12 " cols="5" /></td>
 		</tr>
 		<tr>
 			<th><label>Your gender:</label></th>
@@ -17,7 +17,7 @@
 		</tr>
 		<tr>
 			<th><label for="frm-email">Email:</label></th>
-			<td><input type="text" class="text" name="email" id="frm-email" data-nette-rules="{op:':filled',rules:[{op:':email',msg:'Incorrect email address'}],control:'email'}" data-nette-empty-value="&#64;" value="&#64;" cols="35" /></td>
+			<td><input type="text" class="text" name="email" id="frm-email" data-nette-rules='[{"op":":filled","rules":[{"op":":email","msg":"Incorrect email address"}],"control":"email"}]' data-nette-empty-value="&#64;" value="&#64;" cols="35" /></td>
 		</tr>
 		</table>
 	</fieldset>
@@ -26,7 +26,7 @@
 	<fieldset>
 		<legend>Shipping address</legend>
 
-		<p><input type="checkbox" name="send" id="frm-send" data-nette-rules="{op:':equal',rules:[],control:'send',toggle:{sendBox:true},arg:true}" /><label for="frm-send">Ship to address</label></p>
+		<p><input type="checkbox" name="send" id="frm-send" data-nette-rules='[{"op":":equal","rules":[],"control":"send","toggle":{"sendBox":true},"arg":true}]' /><label for="frm-send">Ship to address</label></p>
 
 		<table id="sendBox">
 		<tr>
@@ -35,11 +35,11 @@
 		</tr>
 		<tr class="required">
 			<th><label for="frm-city">City:</label></th>
-			<td><input type="text" class="text" name="city" id="frm-city" data-nette-rules="{op:':equal',rules:[{op:':filled',msg:'Enter your shipping address'}],control:'send',arg:true}" value="" cols="35" /></td>
+			<td><input type="text" class="text" name="city" id="frm-city" data-nette-rules='[{"op":":equal","rules":[{"op":":filled","msg":"Enter your shipping address"}],"control":"send","arg":true}]' value="" cols="35" /></td>
 		</tr>
 		<tr class="required">
 			<th><label for="frm-country">Country:</label></th>
-			<td><select name="country" id="frm-country" data-nette-rules="{op:':equal',rules:[{op:':filled',msg:'Select your country'}],control:'send',arg:true}"><option value="">Select your country</option><optgroup label="Europe"><option value="CZ" selected="selected">Czech Republic</option><option value="SK">Slovakia</option><option value="GB">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US">United States</option><option value="?">other</option></select></td>
+			<td><select name="country" id="frm-country" data-nette-rules='[{"op":":equal","rules":[{"op":":filled","msg":"Select your country"}],"control":"send","arg":true}]'><option value="">Select your country</option><optgroup label="Europe"><option value="CZ" selected="selected">Czech Republic</option><option value="SK">Slovakia</option><option value="GB">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US">United States</option><option value="?">other</option></select></td>
 		</tr>
 		</table>
 	</fieldset>
@@ -51,11 +51,11 @@
 		<table>
 		<tr class="required">
 			<th><label class="required" for="frm-password">Choose password:</label></th>
-			<td><input type="password" class="text" name="password" id="frm-password" required="required" data-nette-rules="{op:':filled',msg:'Choose your password'},{op:':minLength',msg:'The password is too short: it must be at least 3 characters',arg:3}" cols="20" /></td>
+			<td><input type="password" class="text" name="password" id="frm-password" required="required" data-nette-rules='[{"op":":filled","msg":"Choose your password"},{"op":":minLength","msg":"The password is too short: it must be at least 3 characters","arg":3}]' cols="20" /></td>
 		</tr>
 		<tr class="required">
 			<th><label for="frm-password2">Reenter password:</label></th>
-			<td><input type="password" class="text" name="password2" id="frm-password2" data-nette-rules="{op:':valid',rules:[{op:':filled',msg:'Reenter your password'},{op:':equal',msg:'Passwords do not match',arg:{control:'password'}}],control:'password'}" cols="20" /></td>
+			<td><input type="password" class="text" name="password2" id="frm-password2" data-nette-rules='[{"op":":valid","rules":[{"op":":filled","msg":"Reenter your password"},{"op":":equal","msg":"Passwords do not match","arg":{"control":"password"}}],"control":"password"}]' cols="20" /></td>
 		</tr>
 		<tr>
 			<th><label for="frm-avatar">Picture:</label></th>

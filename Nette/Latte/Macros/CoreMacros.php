@@ -60,8 +60,8 @@ class CoreMacros extends MacroSet
 		$me->addMacro('foreach', '', array($me, 'macroEndForeach'));
 		$me->addMacro('for', 'for (%node.args):', 'endfor');
 		$me->addMacro('while', 'while (%node.args):', 'endwhile');
-		$me->addMacro('continueIf', 'if (%node.args) continue');
-		$me->addMacro('breakIf', 'if (%node.args) break');
+		$me->addMacro('continueIf', array($me, 'macroBreakContinueIf'));
+		$me->addMacro('breakIf', array($me, 'macroBreakContinueIf'));
 		$me->addMacro('first', 'if ($iterator->isFirst(%node.args)):', 'endif');
 		$me->addMacro('last', 'if ($iterator->isLast(%node.args)):', 'endif');
 		$me->addMacro('sep', 'if (!$iterator->isLast(%node.args)):', 'endif');
@@ -244,6 +244,21 @@ class CoreMacros extends MacroSet
 			$node->openingCode = '<?php $iterations = 0; foreach (' . $writer->formatArgs() . '): ?>';
 			$node->closingCode = '<?php $iterations++; endforeach ?>';
 		}
+	}
+
+
+
+	/**
+	 * {breakIf ...}
+	 * {continueIf ...}
+	 */
+	public function macroBreakContinueIf(MacroNode $node, PhpWriter $writer)
+	{
+		$cmd = str_replace('If', '', $node->name);
+		if ($node->parentNode && $node->parentNode->htmlNode) {
+			return $writer->write("if (%node.args) { echo \"</{$node->parentNode->htmlNode->name}>\\n\"; $cmd; }");
+		}
+		return $writer->write("if (%node.args) $cmd");
 	}
 
 

@@ -33,7 +33,7 @@ $cache->save($key, $value, array(
 	Cache::CALLBACKS => array(array('dependency', 1)),
 ));
 
-Assert::true( isset($cache[$key]), 'Is cached?' );
+Assert::true( isset($cache[$key]) );
 
 
 
@@ -42,4 +42,4 @@ $cache->save($key, $value, array(
 	Cache::CALLBACKS => array(array('dependency', 0)),
 ));
 
-Assert::false( isset($cache[$key]), 'Is cached?' );
+Assert::false( isset($cache[$key]) );

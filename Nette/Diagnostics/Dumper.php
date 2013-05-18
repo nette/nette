@@ -120,7 +120,7 @@ class Dumper
 	private static function dumpVar(&$var, array $options, $level = 0)
 	{
 		if (method_exists(__CLASS__, $m = 'dump' . gettype($var))) {
-			return /**/self::$m($var, $options, $level);/**//*5.2*call_user_func_array(array(__CLASS__, $m), array(&$var, $options, $level));*/
+			return self::$m($var, $options, $level);
 		} else {
 			return "<span>unknown type</span>\n";
 		}
@@ -216,7 +216,7 @@ class Dumper
 		} elseif ($var instanceof \SplObjectStorage) {
 			$fields = array();
 			foreach (clone $var as $obj) {
-				$fields[] = array('object' => $obj/**/, 'data' => $var[$obj]/**/);
+				$fields[] = array('object' => $obj, 'data' => $var[$obj]);
 			}
 		} else {
 			$fields = (array) $var;

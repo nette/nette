@@ -180,7 +180,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 				continue;
 			}
 
-			$success = ($rule->isNegative xor $this->getCallback($rule)->invoke($rule->control, $rule->arg));
+			$success = $this->validateRule($rule);
 
 			if ($rule->type === Rule::CONDITION && $success) {
 				if ($tmp = $rule->subRules->validate()) {
@@ -199,6 +199,17 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 
 
 	/**
+	 * Validates single rule.
+	 * @return bool
+	 */
+	public static function validateRule(Rule $rule)
+	{
+		return $rule->isNegative xor static::getCallback($rule)->invoke($rule->control, $rule->arg);
+	}
+
+
+
+	/**
 	 * Iterates over ruleset.
 	 * @return \ArrayIterator
 	 */
@@ -210,11 +221,21 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 
 
 	/**
+	 * @param  bool
 	 * @return array
 	 */
-	final public function getToggles()
+	public function getToggles($actual = FALSE)
 	{
-		return $this->toggles;
+		$toggles = $this->toggles;
+		foreach ($actual ? $this->rules : array() as $rule) {
+			if ($rule->type === Rule::CONDITION) {
+	    		$success = static::validateRule($rule);
+    			foreach ($rule->subRules->getToggles(TRUE) as $id => $hide) {
+    				$toggles[$id] = empty($toggles[$id]) ? ($success && $hide) : TRUE;
+    			}
+			}
+		}
+		return $toggles;
 	}
 
 
@@ -239,7 +260,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 
 
 
-	private function getCallback($rule)
+	private static function getCallback($rule)
 	{
 		$op = $rule->operation;
 		if (is_string($op) && strncmp($op, ':', 1) === 0) {

@@ -31,11 +31,11 @@ $cache->save($key, $value, array(
 // Sleeping 1 second
 sleep(1);
 clearstatcache();
-Assert::true( isset($cache[$key]), 'Is cached?' );
+Assert::true( isset($cache[$key]) );
 
 
 
 // Sleeping 3 seconds
 sleep(3);
 clearstatcache();
-Assert::false( isset($cache[$key]), 'Is cached?' );
+Assert::false( isset($cache[$key]) );

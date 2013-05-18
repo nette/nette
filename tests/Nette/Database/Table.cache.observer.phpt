@@ -8,11 +8,11 @@
  * @dataProvider? databases.ini
  */
 
-use Nette\Database\Statement;
+use Nette\Database\ResultSet;
 
 require __DIR__ . '/connect.inc.php'; // create $connection
 
-Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nette_test1.sql");
+Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
 
 class CacheMock implements Nette\Caching\IStorage
 {
@@ -23,11 +23,9 @@ class CacheMock implements Nette\Caching\IStorage
 	{
 		$key = substr($key, strpos($key, "\x00") + 1);
 		switch ($key) {
-			case "aad5184d8c52b773bd73b5c7c5c819c9":
-				// authors
+			case "aad5184d8c52b773bd73b5c7c5c819c9": // authors
 				return array('id' => TRUE);
-			case "d7dc896279409ab73e6742c667cf8dc1":
-				// book
+			case "d7dc896279409ab73e6742c667cf8dc1": // book
 				return $this->defaultBook;
 		}
 	}
@@ -51,21 +49,22 @@ class CacheMock implements Nette\Caching\IStorage
 }
 
 $cacheStorage = new CacheMock;
-$connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory(
+$dao = new Nette\Database\SelectionFactory(
 	$connection,
 	new Nette\Database\Reflection\DiscoveredReflection($connection, new Nette\Caching\Storages\MemoryStorage),
 	$cacheStorage
-));
+);
 
 
 
 $queries = 0;
-$connection->onQuery[] = function(Statement $query) use (& $queries) {
-	if (preg_match('#SHOW|CONSTRAINT_NAME|pg_catalog#i', $query->queryString)) return;
-	$queries++;
+$connection->onQuery[] = function($dao, ResultSet $result) use (& $queries) {
+	if (!preg_match('#SHOW|CONSTRAINT_NAME|pg_catalog|sys\.|SET|PRAGMA|FROM sqlite_#i', $result->queryString)) {
+		$queries++;
+	}
 };
 
-$authors = $connection->table('author');
+$authors = $dao->table('author');
 $stack = array();
 foreach ($authors as $author) {
 	foreach ($stack[] = $author->related('book') as $book) {
@@ -77,5 +76,5 @@ unset($book, $author);
 foreach ($stack as $selection) $selection->__destruct();
 $authors->__destruct();
 
-Assert::equal(1, $cacheStorage->writes);
-Assert::equal(3, $queries);
+Assert::same(1, $cacheStorage->writes);
+Assert::same(3, $queries);

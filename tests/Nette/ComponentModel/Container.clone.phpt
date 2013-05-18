@@ -51,9 +51,7 @@ class TestClass extends Container implements ArrayAccess
 }
 
 
-/**/Object::extensionMethod('Nette\\ComponentModel\\IContainer::export', function($thisObj)/**/
-/*5.2* function IComponentContainer_prototype_export($thisObj)*/
-{
+Object::extensionMethod('Nette\\ComponentModel\\IContainer::export', function($thisObj) {
 	$res = array("({$thisObj->reflection->name})" => $thisObj->name);
 	if ($thisObj instanceof IContainer) {
 		foreach ($thisObj->getComponents() as $name => $obj) {
@@ -61,7 +59,7 @@ class TestClass extends Container implements ArrayAccess
 		}
 	}
 	return $res;
-}/**/);/**/
+});
 
 
 class A extends TestClass {}

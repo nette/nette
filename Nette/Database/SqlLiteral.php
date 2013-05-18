@@ -24,17 +24,17 @@ use Nette;
 class SqlLiteral extends Nette\Object
 {
 	/** @var string */
-	private $value = '';
+	private $value;
 
 	/** @var array */
-	private $parameters = array();
+	private $parameters;
 
 
 
-	public function __construct($value)
+	public function __construct($value, array $parameters = array())
 	{
 		$this->value = (string) $value;
-		$this->parameters = array_slice(func_get_args(), 1);
+		$this->parameters = $parameters;
 	}
 
 

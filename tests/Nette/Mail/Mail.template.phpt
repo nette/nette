@@ -22,9 +22,10 @@ require __DIR__ . '/Mail.inc';
 $mail = new Message();
 $mail->addTo('Lady Jane <jane@example.com>');
 
-$mail->htmlBody = new FileTemplate;
-$mail->htmlBody->setFile('files/template.phtml');
-$mail->htmlBody->registerFilter(new Latte\Engine);
+$template = new FileTemplate;
+$template->setFile('files/template.phtml');
+$template->registerFilter(new Latte\Engine);
+$mail->htmlBody = $template;
 
 $mailer = new TestMailer();
 $mailer->send($mail);

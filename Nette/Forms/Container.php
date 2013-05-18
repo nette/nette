@@ -29,7 +29,7 @@ use Nette;
  */
 class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 {
-	/** @var array of function(Form $sender); Occurs when the form is validated */
+	/** @var array of function(Container $sender); Occurs when the form is validated */
 	public $onValidate;
 
 	/** @var ControlGroup */
@@ -108,7 +108,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	{
 		$values = $asArray ? array() : new Nette\ArrayHash;
 		foreach ($this->getComponents() as $name => $control) {
-			if ($control instanceof IControl && !$control->isDisabled() && !$control->isOmitted() && !$control instanceof ISubmitterControl) {
+			if ($control instanceof IControl && !$control->isDisabled() && !$control->isOmitted()) {
 				$values[$name] = $control->getValue();
 
 			} elseif ($control instanceof Container) {
@@ -140,11 +140,12 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 
 	/**
 	 * Performs the server side validation.
+	 * @param  IControl[]
 	 * @return void
 	 */
-	public function validate()
+	public function validate(array $controls = NULL)
 	{
-		foreach ($this->getControls() as $control) {
+		foreach ($controls === NULL ? $this->getControls() : $controls as $control) {
 			$control->validate();
 		}
 		$this->onValidate($this);

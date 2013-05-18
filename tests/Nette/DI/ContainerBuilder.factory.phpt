@@ -55,14 +55,14 @@ require TEMP_DIR . '/code.php';
 
 $container = new Container;
 
-Assert::true( $container->getService('one') instanceof StdClassFactory );
-Assert::true( $container->getService('one')->create() instanceof stdClass );
-Assert::false( $container->getService('one')->create() === $container->getService('one')->create() );
+Assert::type( 'StdClassFactory', $container->getService('one') );
+Assert::type( 'stdClass', $container->getService('one')->create() );
+Assert::notSame( $container->getService('one')->create(), $container->getService('one')->create() );
 
-Assert::true( $container->getService('two') instanceof AnnotatedFactory );
-Assert::true( $container->getService('two')->create() instanceof stdClass );
-Assert::false( $container->getService('two')->create() === $container->getService('two')->create() );
+Assert::type( 'AnnotatedFactory', $container->getService('two') );
+Assert::type( 'stdClass', $container->getService('two')->create() );
+Assert::notSame( $container->getService('two')->create(), $container->getService('two')->create() );
 
-Assert::true( $container->getService('three') instanceof FactoryReceiver );
+Assert::type( 'FactoryReceiver', $container->getService('three') );
 
-Assert::true( $container->getService('four') instanceof FactoryReceiver );
+Assert::type( 'FactoryReceiver', $container->getService('four') );

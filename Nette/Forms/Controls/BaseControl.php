@@ -329,7 +329,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	public function setDefaultValue($value)
 	{
 		$form = $this->getForm(FALSE);
-		if (!$form || !$form->isAnchored() || !$form->isSubmitted()) {
+		if ($this->disabled || !$form || !$form->isAnchored() || !$form->isSubmitted()) {
 			$this->setValue($value);
 		}
 		return $this;
@@ -344,7 +344,10 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	public function loadHttpData()
 	{
 		$path = explode('[', strtr(str_replace(array('[]', ']'), '', $this->getHtmlName()), '.', '_'));
-		$this->setValue(Nette\Utils\Arrays::get($this->getForm()->getHttpData(), $path, NULL));
+		try {
+			$this->setValue(Nette\Utils\Arrays::get($this->getForm()->getHttpData(), $path, NULL));
+		} catch (\InvalidArgumentException $e) {
+		}
 	}
 
 
@@ -374,7 +377,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
-	 * Set control value omitted or not.
+	 * Sets whether control value is excluded from $form->getValues() result.
 	 * @param  bool
 	 * @return BaseControl  provides a fluent interface
 	 */
@@ -387,7 +390,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
-	 * Is control value omitted from output?
+	 * Is control value excluded from $form->getValues() result?
 	 * @return bool
 	 */
 	public function isOmitted()
@@ -420,10 +423,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 		}
 
 		$rules = self::exportRules($this->rules);
-		$rules = substr(Nette\Utils\Json::encode($rules), 1, -1);
-		$rules = preg_replace('#"([a-z0-9_]+)":#i', '$1:', $rules);
-		$rules = preg_replace('#(?<!\\\\)"(?!:[^a-z])([^\\\\\',]*)"#i', "'$1'", $rules);
-		$control->data('nette-rules', $rules ? $rules : NULL);
+		$control->data('nette-rules', $rules ? Nette\Utils\Json::encode($rules) : NULL);
 
 		return $control;
 	}
@@ -611,7 +611,10 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	public function validate()
 	{
-		$this->errors = $this->rules->validate();
+		$this->cleanErrors();
+		foreach ($this->rules->validate() as $error) {
+			$this->addError($error);
+		}
 	}
 
 

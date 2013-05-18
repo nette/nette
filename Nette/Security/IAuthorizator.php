@@ -40,6 +40,6 @@ interface IAuthorizator
 	 * @param  string  privilege
 	 * @return bool
 	 */
-	function isAllowed($role/*5.2* = self::ALL*/, $resource/*5.2* = self::ALL*/, $privilege/*5.2* = self::ALL*/);
+	function isAllowed($role, $resource, $privilege);
 
 }

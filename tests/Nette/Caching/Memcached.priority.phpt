@@ -46,7 +46,7 @@ $cache->clean(array(
 	Cache::PRIORITY => '200',
 ));
 
-Assert::false( isset($cache['nette-priority-key1']), 'Is cached nette-priority-key1?' );
-Assert::false( isset($cache['nette-priority-key2']), 'Is cached nette-priority-key2?' );
-Assert::true( isset($cache['nette-priority-key3']), 'Is cached nette-priority-key3?' );
-Assert::true( isset($cache['nette-priority-key4']), 'Is cached nette-priority-key4?' );
+Assert::false( isset($cache['nette-priority-key1']) );
+Assert::false( isset($cache['nette-priority-key2']) );
+Assert::true( isset($cache['nette-priority-key3']) );
+Assert::true( isset($cache['nette-priority-key4']) );

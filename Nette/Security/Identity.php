@@ -26,7 +26,7 @@ use Nette;
  * @property   array $roles
  * @property-read array $data
  */
-class Identity extends Nette\FreezableObject implements IIdentity
+class Identity extends Nette\Object implements IIdentity
 {
 	/** @var mixed */
 	private $id;
@@ -59,7 +59,6 @@ class Identity extends Nette\FreezableObject implements IIdentity
 	 */
 	public function setId($id)
 	{
-		$this->updating();
 		$this->id = is_numeric($id) ? 1 * $id : $id;
 		return $this;
 	}
@@ -84,7 +83,6 @@ class Identity extends Nette\FreezableObject implements IIdentity
 	 */
 	public function setRoles(array $roles)
 	{
-		$this->updating();
 		$this->roles = $roles;
 		return $this;
 	}
@@ -121,7 +119,6 @@ class Identity extends Nette\FreezableObject implements IIdentity
 	 */
 	public function __set($key, $value)
 	{
-		$this->updating();
 		if (parent::__isset($key)) {
 			parent::__set($key, $value);
 

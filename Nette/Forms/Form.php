@@ -40,8 +40,8 @@ class Form extends Container
 		FILLED = ':filled',
 		VALID = ':valid';
 
-	// CSRF protection
-	const PROTECTION = 'Nette\Forms\Controls\HiddenField::validateEqual';
+	/** @deprecated CSRF protection */
+	const PROTECTION = Controls\CsrfProtection::PROTECTION;
 
 	// button
 	const SUBMITTED = ':submitted';
@@ -107,6 +107,8 @@ class Form extends Container
 	/** @var array */
 	private $errors = array();
 
+	/** @var Nette\Http\IRequest  used only by standalone form */
+	public $httpRequest;
 
 
 	/**
@@ -122,8 +124,8 @@ class Form extends Container
 
 		$this->monitor(__CLASS__);
 		if ($name !== NULL) {
-			$tracker = new Controls\HiddenField($name);
-			$tracker->setOmitted()->unmonitor(__CLASS__);
+			$tracker = new Controls\HiddenField;
+			$tracker->setValue($name)->setOmitted()->unmonitor(__CLASS__);
 			$this[self::TRACKER_ID] = $tracker;
 		}
 		parent::__construct(NULL, $name);
@@ -212,20 +214,11 @@ class Form extends Container
 	 * Cross-Site Request Forgery (CSRF) form protection.
 	 * @param  string
 	 * @param  int
-	 * @return void
+	 * @return Controls\CsrfProtection
 	 */
 	public function addProtection($message = NULL, $timeout = NULL)
 	{
-		$session = $this->getSession()->getSection('Nette.Forms.Form/CSRF');
-		$key = "key$timeout";
-		if (isset($session->$key)) {
-			$token = $session->$key;
-		} else {
-			$session->$key = $token = Nette\Utils\Strings::random();
-		}
-		$session->setExpiration($timeout, $key);
-		$this[self::PROTECTOR_ID] = new Controls\HiddenField($token);
-		$this[self::PROTECTOR_ID]->setOmitted()->addRule(self::PROTECTION, $message, $token);
+		return $this[self::PROTECTOR_ID] = new Controls\CsrfProtection($message, $timeout);
 	}
 
 
@@ -413,15 +406,14 @@ class Form extends Container
 			return;
 
 		} elseif ($this->submittedBy instanceof ISubmitterControl) {
-			if (!$this->submittedBy->getValidationScope() || $this->isValid()) {
-				$this->submittedBy->click();
-				$valid = TRUE;
+			if ($this->isValid()) {
+				$this->submittedBy->onClick($this->submittedBy);
 			} else {
 				$this->submittedBy->onInvalidClick($this->submittedBy);
 			}
 		}
 
-		if (isset($valid) || $this->isValid()) {
+		if ($this->isValid()) {
 			$this->onSuccess($this);
 		} else {
 			$this->onError($this);
@@ -463,6 +455,16 @@ class Form extends Container
 
 
 	/********************* validation ****************d*g**/
+
+
+
+	public function validate(array $controls = NULL)
+	{
+		if ($controls === NULL && $this->submittedBy instanceof ISubmitterControl) {
+			$controls = $this->submittedBy->getValidationScope();
+		}
+		parent::validate($controls);
+	}
 
 
 
@@ -602,19 +604,30 @@ class Form extends Container
 	/**
 	 * @return Nette\Http\IRequest
 	 */
-	protected function getHttpRequest()
+	private function getHttpRequest()
 	{
-		return Nette\Environment::getHttpRequest();
+		if (!$this->httpRequest) {
+			$factory = new Nette\Http\RequestFactory;
+			$factory->setEncoding('UTF-8');
+			$this->httpRequest = $factory->createHttpRequest();
+		}
+		return $this->httpRequest;
 	}
 
 
 
 	/**
-	 * @return Nette\Http\Session
+	 * @return array
 	 */
-	protected function getSession()
+	public function getToggles()
 	{
-		return Nette\Environment::getSession();
+		$toggles = array();
+		foreach ($this->getControls() as $control) {
+			foreach ($control->getRules()->getToggles(TRUE) as $id => $hide) {
+   				$toggles[$id] = empty($toggles[$id]) ? $hide : TRUE;
+			}
+		}
+		return $toggles;
 	}
 
 }

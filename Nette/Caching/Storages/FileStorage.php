@@ -348,7 +348,6 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 			$meta = stream_get_contents($handle, $size, self::META_HEADER_LEN);
 			$meta = @unserialize($meta); // intentionally @
 			if (is_array($meta)) {
-				fseek($handle, $size + self::META_HEADER_LEN); // needed by PHP < 5.2.6
 				$meta[self::FILE] = $file;
 				$meta[self::HANDLE] = $handle;
 				return $meta;

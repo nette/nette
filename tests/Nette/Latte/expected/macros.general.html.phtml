@@ -278,4 +278,15 @@ bold<?php if (array_pop($_l->ifs)): ?></b>
 <?php $iterations = 0; foreach (array(0) as $foo): if (1): $iterations = 0; foreach (array(1) as $foo): if ($_l->ifs[] = (0)): ?>
 <span><?php endif ;$iterations++; endforeach ;$iterations = 0; foreach (array(2) as $foo): if (2): ?>
 Hello<?php endif ;$iterations++; endforeach ;$iterations = 0; foreach (array(1) as $foo): if (array_pop($_l->ifs)): ?></span>
-<?php endif ;$iterations++; endforeach ;endif ;$iterations++; endforeach ;
+<?php endif ;$iterations++; endforeach ;endif ;$iterations++; endforeach ?>
+
+
+<ul title="foreach break">
+<?php $iterations = 0; foreach ($people as $person): ?>	<li><?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (TRUE) { echo "</li>\n"; break; } ?></li>
+<?php $iterations++; endforeach ?>
+</ul>
+
+<ul title="foreach continue">
+<?php $iterations = 0; foreach ($people as $person): ?>	<li><?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (TRUE) { echo "</li>\n"; continue; } ?></li>
+<?php $iterations++; endforeach ?>
+</ul>

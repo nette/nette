@@ -31,8 +31,8 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	/** @var array of function(SubmitButton $sender); Occurs when the button is clicked and form is not validated */
 	public $onInvalidClick;
 
-	/** @var mixed */
-	private $validationScope = TRUE;
+	/** @var array */
+	private $validationScope;
 
 
 
@@ -43,6 +43,7 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	{
 		parent::__construct($caption);
 		$this->control->type = 'submit';
+		$this->setOmitted(TRUE);
 	}
 
 
@@ -75,14 +76,26 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 
 	/**
 	 * Sets the validation scope. Clicking the button validates only the controls within the specified scope.
-	 * @param  mixed
 	 * @return SubmitButton  provides a fluent interface
 	 */
-	public function setValidationScope($scope)
+	public function setValidationScope(/*array*/$scope = NULL)
 	{
-		// TODO: implement groups
-		$this->validationScope = (bool) $scope;
-		$this->control->formnovalidate = !$this->validationScope;
+		$htmlNames = array();
+		if ($scope === NULL || $scope === TRUE) {
+			$this->validationScope = NULL;
+		} else {
+			$this->validationScope = array();
+			foreach ($scope ?: array() as $control) {
+				if (!$control instanceof Nette\Forms\Container && !$control instanceof Nette\Forms\IControl) {
+					throw new Nette\InvalidArgumentException('Validation scope accepts only Nette\Forms\Container or Nette\Forms\IControl instances.');
+				}
+				$this->validationScope[] = $control;
+				$htmlNames[] = $control->lookupPath('Nette\Forms\Form');
+			}
+		}
+
+		$this->control->formnovalidate = $this->validationScope !== NULL;
+		$this->control->data['nette-validation-scope'] = $htmlNames ? json_encode($htmlNames) : NULL;
 		return $this;
 	}
 
@@ -90,7 +103,7 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 
 	/**
 	 * Gets the validation scope.
-	 * @return mixed
+	 * @return array|NULL
 	 */
 	final public function getValidationScope()
 	{
@@ -114,7 +127,7 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	 * Submitted validator: has been button pressed?
 	 * @return bool
 	 */
-	public static function validateSubmitted(Nette\Forms\ISubmitterControl $control)
+	public static function validateSubmitted(SubmitButton $control)
 	{
 		return $control->isSubmittedBy();
 	}

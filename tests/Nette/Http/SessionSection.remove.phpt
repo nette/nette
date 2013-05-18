@@ -17,9 +17,9 @@ require __DIR__ . '/../bootstrap.php';
 ini_set('session.save_path', TEMP_DIR);
 
 
-$container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
+$container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
+$session = $container->getService('session');
 
-$session = $container->session;
 $namespace = $session->getSection('three');
 $namespace->a = 'apple';
 $namespace->p = 'papaya';

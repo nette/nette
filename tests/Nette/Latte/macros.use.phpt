@@ -26,11 +26,6 @@ class MyMacros extends Latte\Macros\MacroSet
 		parent::__construct($compiler);
 		$this->addMacro('my', 'echo "ok"');
 	}
-
-	/*5.2*static function install(Nette\Latte\Compiler $compiler)
-	{
-		return new self($compiler);
-	}*/
 }
 
 

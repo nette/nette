@@ -44,6 +44,7 @@ class Validators extends Nette\Object
 		'url' => array(__CLASS__, 'isUrl'),
 		'none' => array(__CLASS__, 'isNone'),
 		'type' => array(__CLASS__, 'isType'),
+		'identifier' => array('Nette\PhpGenerator\Helpers', 'isIdentifier'),
 		'pattern' => NULL,
 		'alnum' => 'ctype_alnum',
 		'alpha' => 'ctype_alpha',
@@ -270,7 +271,7 @@ class Validators extends Nette\Object
 		$alpha = "a-z\x80-\xFF";
 		$domain = "[0-9$alpha](?:[-0-9$alpha]{0,61}[0-9$alpha])?";
 		$topDomain = "[$alpha][-0-9$alpha]{0,17}[$alpha]";
-		return (bool) preg_match("(^https?://(?:(?:$domain\\.)*$topDomain|\\d{1,3}\.\\d{1,3}\.\\d{1,3}\.\\d{1,3})(:\\d{1,5})?(/\\S*)?\\z)i", $value);
+		return (bool) preg_match("(^https?://(?:(?:$domain\\.)*$topDomain|\\d{1,3}\.\\d{1,3}\.\\d{1,3}\.\\d{1,3}|\[[0-9a-f:]{3,39}\])(:\\d{1,5})?(/\\S*)?\\z)i", $value);
 	}
 
 

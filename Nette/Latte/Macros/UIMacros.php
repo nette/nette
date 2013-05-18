@@ -91,7 +91,7 @@ class UIMacros extends MacroSet
 		// try close last block
 		$last = $this->getCompiler()->getMacroNode();
 		if ($last && ($last->name === 'block' || $last->name === '#')) {
-			$this->getCompiler()->writeMacro('/' . $last->name);
+			$this->getCompiler()->closeMacro($last->name);
 		}
 
 		$epilog = $prolog = array();
@@ -102,8 +102,7 @@ class UIMacros extends MacroSet
 				$snippet = $name[0] === '_';
 				$prolog[] = "//\n// block $name\n//\n"
 					. "if (!function_exists(\$_l->blocks[" . var_export($name, TRUE) . "][] = '$func')) { "
-					. "function $func(\$_l, \$_args) { "
-					. (PHP_VERSION_ID > 50208 ? 'extract($_args)' : 'foreach ($_args as $__k => $__v) $$__k = $__v') // PHP bug #46873
+					. "function $func(\$_l, \$_args) { extract(\$_args)"
 					. ($snippet ? '; $_control->validateControl(' . var_export(substr($name, 1), TRUE) . ')' : '')
 					. "\n?>$code<?php\n}}";
 			}
@@ -194,13 +193,13 @@ if (!empty($_control->snippetMode)) {
 	public function macroExtends(MacroNode $node, PhpWriter $writer)
 	{
 		if (!$node->args) {
-			throw new CompileException("Missing destination in {extends}");
+			throw new CompileException('Missing destination in {' . $node->name . '}');
 		}
 		if (!empty($node->parentNode)) {
-			throw new CompileException("{extends} must be placed outside any macro.");
+			throw new CompileException('{' . $node->name . '} must be placed outside any macro.');
 		}
 		if ($this->extends !== NULL) {
-			throw new CompileException("Multiple {extends} declarations are not allowed.");
+			throw new CompileException('Multiple {' . $node->name . '} declarations are not allowed.');
 		}
 		if ($node->args === 'none') {
 			$this->extends = 'FALSE';
@@ -259,8 +258,7 @@ if (!empty($_control->snippetMode)) {
 				$func = '_lb' . substr(md5($this->getCompiler()->getTemplateId() . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
 				return "\n\n//\n// block $name\n//\n"
 					. "if (!function_exists(\$_l->blocks[$fname]['{$this->getCompiler()->getTemplateId()}'] = '$func')) { "
-					. "function $func(\$_l, \$_args) { "
-					. (PHP_VERSION_ID > 50208 ? 'extract($_args)' : 'foreach ($_args as $__k => $__v) $$__k = $__v'); // PHP bug #46873
+					. "function $func(\$_l, \$_args) { extract(\$_args)";
 			}
 		}
 

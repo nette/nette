@@ -24,7 +24,7 @@ Assert::exception(function() use ($container, $service) {
 
 Assert::exception(function() use ($container) {
 	$container->addService('one', NULL);
-}, 'Nette\InvalidArgumentException', 'Invalid callback.');
+}, 'Nette\InvalidArgumentException', 'Service must be a object, NULL given.');
 
 Assert::exception(function() use ($container) {
 	$container->getService('one');
@@ -33,9 +33,4 @@ Assert::exception(function() use ($container) {
 Assert::exception(function() use ($container, $service) {
 	$container->addService('one', $service);
 	$container->addService('one', $service);
-}, 'Nette\InvalidStateException', "Service 'one' has already been registered.");
-
-Assert::exception(function() use ($container, $service) {
-	$container->freeze();
-	$container->addService('two', $service);
-}, 'Nette\InvalidStateException', 'Cannot modify a frozen object Nette\DI\Container.');
+}, 'Nette\InvalidStateException', "Service 'one' already exists.");

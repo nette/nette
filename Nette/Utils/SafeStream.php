@@ -122,7 +122,7 @@ final class SafeStream
 		if ($mode === 'r+' || $mode[0] === 'a' || $mode[0] === 'c') {
 			$stat = fstat($this->handle);
 			fseek($this->handle, 0);
-			if ($stat['size'] !== 0 && stream_copy_to_stream($this->handle, $this->tempHandle) !== $stat['size']) {
+			if (stream_copy_to_stream($this->handle, $this->tempHandle) !== $stat['size']) {
 				$this->clean();
 				return FALSE;
 			}
@@ -190,9 +190,7 @@ final class SafeStream
 		fclose($this->handle);
 		fclose($this->tempHandle);
 
-		if ($this->writeError /*5.2*|| !(substr(PHP_OS, 0, 3) === 'WIN' ? unlink($this->file) : TRUE)*/
-			|| !rename($this->tempFile, $this->file) // try to rename temp file
-		) {
+		if ($this->writeError || !rename($this->tempFile, $this->file)) { // try to rename temp file
 			unlink($this->tempFile); // otherwise delete temp file
 			if ($this->deleteFile) {
 				unlink($this->file);

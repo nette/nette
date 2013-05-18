@@ -30,4 +30,4 @@ class Foo
 // Writing cache...
 $cache->save($key, new Foo);
 
-Assert::true( isset($cache[$key]), 'Is cached?' );
+Assert::true( isset($cache[$key]) );

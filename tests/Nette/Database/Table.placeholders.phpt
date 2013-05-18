@@ -10,7 +10,7 @@
 
 require __DIR__ . '/connect.inc.php'; // create $connection
 
-Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nette_test1.sql");
+Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
 
 use Tester\Assert;
 use Nette\Database\SqlLiteral;
@@ -20,10 +20,11 @@ use Nette\Database\Table\SqlBuilder;
 
 
 $reflection = new DiscoveredReflection($connection);
-$connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory($connection, $reflection));
+$dao = new Nette\Database\SelectionFactory($connection, $reflection);
 
 
 
+// Leave literals lower-cased, also not-delimiting them is tested.
 switch ($driverName) {
 	case 'mysql':
 		$literal = new SqlLiteral('year(now())');
@@ -31,9 +32,17 @@ switch ($driverName) {
 	case 'pgsql':
 		$literal = new SqlLiteral('extract(year from now())::int');
 		break;
+	case 'sqlite':
+		$literal = new SqlLiteral("cast(strftime('%Y', date('now')) as integer)");
+		break;
+	case 'sqlsrv':
+		$literal = new SqlLiteral('year(cast(current_timestamp as datetime))');
+		break;
+	default:
+		Assert::fail("Unsupported driver $driverName");
 }
 
-$selection = $connection
+$selection = $dao
 	->table('book')
 	->select('? AS col1', 'hi there!')
 	->select('? AS col2', $literal);
@@ -45,7 +54,7 @@ Assert::same((int) date('Y'), $row['col2']);
 
 
 $bookTagsCount = array();
-$books = $connection
+$books = $dao
 	->table('book')
 	->select('book.title, COUNT(DISTINCT :book_tag.tag_id) AS tagsCount')
 	->group('book.title')
@@ -65,10 +74,10 @@ Assert::same(array(
 
 if ($driverName === 'mysql') {
 	$authors = array();
-	$selection = $connection->table('author')->order('FIELD(name, ?)', array('Jakub Vrana', 'David Grudl', 'Geek'));
+	$selection = $dao->table('author')->order('FIELD(name, ?)', array('Jakub Vrana', 'David Grudl', 'Geek'));
 	foreach ($selection as $author) {
 		$authors[] = $author->name;
 	}
 
-	Assert::equal(array('Jakub Vrana', 'David Grudl', 'Geek'), $authors);
+	Assert::same(array('Jakub Vrana', 'David Grudl', 'Geek'), $authors);
 }

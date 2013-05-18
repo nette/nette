@@ -26,7 +26,7 @@ use Nette;
  * @property   array $files
  * @property   string $method
  */
-final class Request extends Nette\FreezableObject
+final class Request extends Nette\Object
 {
 	/** method */
 	const FORWARD = 'FORWARD';
@@ -84,7 +84,6 @@ final class Request extends Nette\FreezableObject
 	 */
 	public function setPresenterName($name)
 	{
-		$this->updating();
 		$this->name = $name;
 		return $this;
 	}
@@ -108,7 +107,6 @@ final class Request extends Nette\FreezableObject
 	 */
 	public function setParameters(array $params)
 	{
-		$this->updating();
 		$this->params = $params;
 		return $this;
 	}
@@ -132,7 +130,6 @@ final class Request extends Nette\FreezableObject
 	 */
 	public function setPost(array $params)
 	{
-		$this->updating();
 		$this->post = $params;
 		return $this;
 	}
@@ -156,7 +153,6 @@ final class Request extends Nette\FreezableObject
 	 */
 	public function setFiles(array $files)
 	{
-		$this->updating();
 		$this->files = $files;
 		return $this;
 	}
@@ -229,7 +225,6 @@ final class Request extends Nette\FreezableObject
 	 */
 	public function setFlag($flag, $value = TRUE)
 	{
-		$this->updating();
 		$this->flags[$flag] = (bool) $value;
 		return $this;
 	}

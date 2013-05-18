@@ -94,7 +94,7 @@ final class Debugger
 	/** @var string name of the directory where errors should be logged; FALSE means that logging is disabled */
 	public static $logDirectory;
 
-	/** @var string email to sent error notifications */
+	/** @var string|array email(s) to which send error notifications */
 	public static $email;
 
 	/** @deprecated */
@@ -248,7 +248,7 @@ final class Debugger
 		}
 
 		if ($email) {
-			if (!is_string($email)) {
+			if (!is_string($email) && !is_array($email)) {
 				echo __METHOD__ . "() error: Email address must be a string.\n";
 				exit(254);
 			}
@@ -299,12 +299,12 @@ final class Debugger
 					? 'Fatal error: ' . $exception->getMessage()
 					: get_class($exception) . ": " . $exception->getMessage())
 					. " in " . $exception->getFile() . ":" . $exception->getLine();
-				$exception = /*5.2*(method_exists($exception, 'getPrevious') ? */$exception->getPrevious()/*5.2* : (isset($exception->previous) ? $exception->previous : NULL))*/;
+				$exception = $exception->getPrevious();
 			}
 			$exception = $message;
 			$message = implode($tmp, "\ncaused by ");
 
-			$hash = md5(preg_replace('~(Resource id #)\d+~', '$1', $exception /*5.2*. (method_exists($exception, 'getPrevious') ? $exception->getPrevious() : (isset($exception->previous) ? $exception->previous : ''))*/));
+			$hash = md5(preg_replace('~(Resource id #)\d+~', '$1', $exception));
 			$exceptionFilename = "exception-" . @date('Y-m-d-H-i-s') . "-$hash.html";
 			foreach (new \DirectoryIterator(self::$logDirectory) as $entry) {
 				if (strpos($entry, $hash)) {
@@ -362,7 +362,7 @@ final class Debugger
 		$error = error_get_last();
 		if (isset($types[$error['type']])) {
 			$exception = new Nette\FatalErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'], NULL);
-			if (PHP_VERSION_ID >= 50300 && function_exists('xdebug_get_function_stack')) {
+			if (function_exists('xdebug_get_function_stack')) {
 				$stack = array();
 				foreach (array_slice(array_reverse(xdebug_get_function_stack()), 1, -1) as $row) {
 					$frame = array(
@@ -400,7 +400,7 @@ final class Debugger
 	 */
 	public static function _exceptionHandler(\Exception $exception)
 	{
-		if (!headers_sent()) { // for PHP < 5.2.4
+		if (!headers_sent()) {
 			$protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
 			header($protocol . ' 500', TRUE, 500);
 		}
@@ -501,13 +501,9 @@ final class Debugger
 			E_NOTICE => 'Notice',
 			E_USER_NOTICE => 'Notice',
 			E_STRICT => 'Strict standards',
+			E_DEPRECATED => 'Deprecated',
+			E_USER_DEPRECATED => 'Deprecated',
 		);
-		if (PHP_VERSION_ID >= 50300) {
-			$types += array(
-				E_DEPRECATED => 'Deprecated',
-				E_USER_DEPRECATED => 'Deprecated',
-			);
-		}
 
 		$message = 'PHP ' . (isset($types[$severity]) ? $types[$severity] : 'Unknown error') . ": $message";
 		$count = & self::$errorPanel->data["$message|$file|$line"];
@@ -658,7 +654,6 @@ final class Debugger
 
 
 
-	/** @deprecated */
 	public static function addPanel(IBarPanel $panel, $id = NULL)
 	{
 		return self::$bar->addPanel($panel, $id);
