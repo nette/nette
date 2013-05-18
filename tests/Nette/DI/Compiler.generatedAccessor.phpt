@@ -40,16 +40,16 @@ $container = new Container;
 
 
 Assert::type( 'Lorem', $container->getService('lorem') );
-Assert::true( $container->getService('lorem') !== $container->getService('lorem2') );
+Assert::notSame( $container->getService('lorem'), $container->getService('lorem2') );
 
 Assert::type( 'ILoremAccessor', $container->getService('one') );
-Assert::true( $container->getService('one')->get() === $container->getService('lorem') );
+Assert::same( $container->getService('one')->get(), $container->getService('lorem') );
 
 Assert::type( 'ILoremAccessor', $container->getService('two') );
-Assert::true( $container->getService('two')->get() === $container->getService('lorem') );
+Assert::same( $container->getService('two')->get(), $container->getService('lorem') );
 
 Assert::type( 'ILoremAccessor', $container->getService('three') );
-Assert::true( $container->getService('three')->get() === $container->getService('lorem2') );
+Assert::same( $container->getService('three')->get(), $container->getService('lorem2') );
 
 Assert::type( 'ILoremAccessor', $container->getService('four') );
-Assert::true( $container->getService('four')->get() === $container->getService('lorem') );
+Assert::same( $container->getService('four')->get(), $container->getService('lorem') );

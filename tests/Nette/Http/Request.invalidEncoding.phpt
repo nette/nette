@@ -71,20 +71,20 @@ $_FILES = array(
 $factory = new Http\RequestFactory;
 $request = $factory->createHttpRequest();
 
-Assert::true( $request->getQuery('invalid') === INVALID );
-Assert::true( $request->getQuery('control') === CONTROL_CHARACTERS );
+Assert::same( $request->getQuery('invalid'), INVALID );
+Assert::same( $request->getQuery('control'), CONTROL_CHARACTERS );
 Assert::same( '1', $request->getQuery(INVALID) );
 Assert::same( '1', $request->getQuery(CONTROL_CHARACTERS) );
 Assert::same( '1', $request->query['array'][INVALID] );
 
-Assert::true( $request->getPost('invalid') === INVALID );
-Assert::true( $request->getPost('control') === CONTROL_CHARACTERS );
+Assert::same( $request->getPost('invalid'), INVALID );
+Assert::same( $request->getPost('control'), CONTROL_CHARACTERS );
 Assert::same( '1', $request->getPost(INVALID) );
 Assert::same( '1', $request->getPost(CONTROL_CHARACTERS) );
 Assert::same( '1', $request->post['array'][INVALID] );
 
-Assert::true( $request->getCookie('invalid') === INVALID );
-Assert::true( $request->getCookie('control') === CONTROL_CHARACTERS );
+Assert::same( $request->getCookie('invalid'), INVALID );
+Assert::same( $request->getCookie('control'), CONTROL_CHARACTERS );
 Assert::same( '1', $request->getCookie(INVALID) );
 Assert::same( '1', $request->getCookie(CONTROL_CHARACTERS) );
 Assert::same( '1', $request->cookies['array'][INVALID] );

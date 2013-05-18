@@ -70,7 +70,7 @@ Assert::same( array(
 
 
 
-Assert::same( 2, $list->count(), 'count:' );
+Assert::same( 2, $list->count() );
 Assert::same( 2, count($list) );
 
 

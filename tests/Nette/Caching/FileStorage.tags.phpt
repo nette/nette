@@ -42,7 +42,7 @@ $cache->clean(array(
 	Cache::TAGS => 'one',
 ));
 
-Assert::false( isset($cache['key1']), 'Is cached key1?' );
-Assert::false( isset($cache['key2']), 'Is cached key2?' );
-Assert::true( isset($cache['key3']), 'Is cached key3?' );
-Assert::true( isset($cache['key4']), 'Is cached key4?' );
+Assert::false( isset($cache['key1']) );
+Assert::false( isset($cache['key2']) );
+Assert::true( isset($cache['key3']) );
+Assert::true( isset($cache['key4']) );

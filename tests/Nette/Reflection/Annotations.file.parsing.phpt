@@ -47,7 +47,7 @@ Assert::same( array(
 	'var' => array('e'),
 ), AnnotationsParser::getAll($rc->getProperty('e')), '$e' );
 
-Assert::same( array(), AnnotationsParser::getAll($rc->getProperty('f')), '$f' );
+Assert::same( array(), AnnotationsParser::getAll($rc->getProperty('f')) );
 
 // Nette\Reflection\AnnotationsParser::getAll($rc->getProperty('g')), '$g' ); // ignore due PHP bug #50174
 Assert::same( array(
@@ -70,7 +70,7 @@ Assert::same( array(
 	'return' => array('e'),
 ), AnnotationsParser::getAll($rc->getMethod('e')), 'e()' );
 
-Assert::same( array(), AnnotationsParser::getAll($rc->getMethod('f')), 'f()' );
+Assert::same( array(), AnnotationsParser::getAll($rc->getMethod('f')) );
 
 Assert::same( array(
 	'return' => array('g'),

@@ -69,12 +69,12 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 Assert::type( 'StdClassAccessor', $container->getService('one') );
-Assert::true( $container->getService('one')->get() === $container->getService('service') );
+Assert::same( $container->getService('one')->get(), $container->getService('service') );
 
 Assert::type( 'AnnotatedAccessor', $container->getService('two') );
-Assert::true( $container->getService('two')->get() === $container->getService('service') );
+Assert::same( $container->getService('two')->get(), $container->getService('service') );
 
 Assert::type( 'StdClassAccessor', $container->getService('three') );
-Assert::true( $container->getService('three')->get() === $container->getService('service2') );
+Assert::same( $container->getService('three')->get(), $container->getService('service2') );
 
 Assert::type( 'AccessorReceiver', $container->getService('four') );

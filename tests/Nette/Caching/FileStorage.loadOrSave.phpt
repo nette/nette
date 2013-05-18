@@ -22,7 +22,7 @@ $value = range("\x00", "\xFF");
 
 $cache = new Cache(new FileStorage(TEMP_DIR));
 
-Assert::false( isset($cache[$key]), 'Is cached?' );
+Assert::false( isset($cache[$key]) );
 
 
 // Writing cache using Closure...
@@ -33,11 +33,11 @@ $res = $cache->load($key, function(& $dp) use ($value) {
 	return $value;
 });
 
-Assert::true( $res === $value, 'Is result ok?' );
+Assert::same( $res, $value );
 
-Assert::true( $cache->load($key) === $value, 'Is cache ok?' );
+Assert::same( $cache->load($key), $value );
 
 // Sleeping 3 seconds
 sleep(3);
 clearstatcache();
-Assert::false( isset($cache[$key]), 'Is cached?' );
+Assert::false( isset($cache[$key]) );

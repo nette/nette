@@ -22,5 +22,5 @@ $session = $container->getService('session');
 
 $namespace = $session->getSection('one');
 Assert::false( isset($namespace->undefined) );
-Assert::null( $namespace->undefined, 'Getting value of non-existent key' );
+Assert::null( $namespace->undefined ); // Getting value of non-existent key
 Assert::same( '', http_build_query($namespace->getIterator()) );

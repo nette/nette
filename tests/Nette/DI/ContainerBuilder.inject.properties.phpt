@@ -51,4 +51,4 @@ $test = $container->getService('test');
 Assert::type( 'Test1', $test );
 Assert::type( 'stdClass', $test->varA );
 Assert::type( 'stdClass', $test->varB );
-Assert::true( $test->varX === 123 );
+Assert::same( $test->varX, 123 );

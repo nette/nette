@@ -39,11 +39,11 @@ for ($i = 0; $i < 5; $i++) {
 	// Sleeping 1 second
 	sleep(1);
 
-	Assert::true( isset($cache[$key]), 'Is cached?' );
+	Assert::true( isset($cache[$key]) );
 
 }
 
 // Sleeping few seconds...
 sleep(5);
 
-Assert::false( isset($cache[$key]), 'Is cached?' );
+Assert::false( isset($cache[$key]) );

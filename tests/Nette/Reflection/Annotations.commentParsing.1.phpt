@@ -57,18 +57,18 @@ Assert::same( 'true or false',  $tmp['title'][1]->mode );
 Assert::same( 'Three (Four)',  $tmp['title'][2]->value );
 Assert::same( 'false',  $tmp['title'][2]->mode );
 Assert::same( 'item 1',  $tmp['components'][0] );
-Assert::true( $tmp['persistent'][0], 'persistent' );
+Assert::true( $tmp['persistent'][0] );
 Assert::false( $tmp['persistent'][1] );
 Assert::null( $tmp['persistent'][2] );
-Assert::true( $tmp['author'][0], 'author' );
+Assert::true( $tmp['author'][0] );
 Assert::false( $tmp['author'][1] );
 Assert::null( $tmp['author'][2] );
 Assert::true( $tmp['author'][3] );
 Assert::same( 'John Doe',  $tmp['author'][4] );
 Assert::true( $tmp['renderable'][0] );
 
-Assert::true( $tmp === $rc->getAnnotations(), 'cache test' );
-Assert::true( $tmp !== Reflection\ClassType::from('ReflectionClass')->getAnnotations(), 'cache test' );
+Assert::same( $tmp, $rc->getAnnotations() );
+Assert::notSame( $tmp, Reflection\ClassType::from('ReflectionClass')->getAnnotations() );
 
 Assert::true( $rc->hasAnnotation('title'), "has('title')' );
 Assert::same( 'Three (Four)",  $rc->getAnnotation('title')->value );
