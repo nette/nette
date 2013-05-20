@@ -26,7 +26,7 @@ $dao = new Nette\Database\SelectionFactory(
 
 // Testing Selection caching
 $bookSelection = $dao->table('book')->wherePrimary(2);
-Assert::same(reformat('SELECT * FROM [book] WHERE ([id] = ?)'), $bookSelection->getSql());
+Assert::same(reformat('SELECT * FROM [book] WHERE ([book].[id] = ?)'), $bookSelection->getSql());
 
 
 $book = $bookSelection->fetch();
@@ -34,16 +34,16 @@ $book->title;
 $book->translator;
 $bookSelection->__destruct();
 $bookSelection = $dao->table('book')->wherePrimary(2);
-Assert::same(reformat('SELECT [id], [title], [translator_id] FROM [book] WHERE ([id] = ?)'), $bookSelection->getSql());
+Assert::same(reformat('SELECT [id], [title], [translator_id] FROM [book] WHERE ([book].[id] = ?)'), $bookSelection->getSql());
 
 
 $book = $bookSelection->fetch();
 $book->author_id;
-Assert::same(reformat('SELECT * FROM [book] WHERE ([id] = ?)'), $bookSelection->getSql());
+Assert::same(reformat('SELECT * FROM [book] WHERE ([book].[id] = ?)'), $bookSelection->getSql());
 
 $bookSelection->__destruct();
 $bookSelection = $dao->table('book')->wherePrimary(2);
-Assert::same(reformat('SELECT [id], [title], [translator_id], [author_id] FROM [book] WHERE ([id] = ?)'), $bookSelection->getSql());
+Assert::same(reformat('SELECT [id], [title], [translator_id], [author_id] FROM [book] WHERE ([book].[id] = ?)'), $bookSelection->getSql());
 
 
 

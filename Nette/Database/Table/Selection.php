@@ -327,12 +327,12 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	{
 		if (is_array($this->primary) && Nette\Utils\Validators::isList($key)) {
 			foreach ($this->primary as $i => $primary) {
-				$this->where($primary, $key[$i]);
+				$this->where($this->name . '.' . $primary, $key[$i]);
 			}
 		} elseif (is_array($key)) { // key contains column names
 			$this->where($key);
 		} else {
-			$this->where($this->getPrimary(), $key);
+			$this->where($this->name . '.' . $this->getPrimary(), $key);
 		}
 
 		return $this;
