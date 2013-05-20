@@ -65,7 +65,7 @@ final class Debugger
 		PRODUCTION = TRUE,
 		DETECT = NULL;
 
-	/** @var BlueScreen */
+	/** @deprecated @var BlueScreen*/
 	public static $blueScreen;
 
 	/** @var bool|int determines whether any error will cause immediate death; if integer that it's matched against error severity */
@@ -104,10 +104,10 @@ final class Debugger
 
 	/********************* logging ****************d*g**/
 
-	/** @var Logger */
+	/** @deprecated @var Logger */
 	public static $logger;
 
-	/** @var FireLogger */
+	/** @deprecated @var FireLogger */
 	public static $fireLogger;
 
 	/** @var string name of the directory where errors should be logged; FALSE means that logging is disabled */
@@ -131,14 +131,8 @@ final class Debugger
 
 	/********************* debug bar ****************d*g**/
 
-	/** @var Bar */
+	/** @deprecated @var Bar */
 	public static $bar;
-
-	/** @var DefaultBarPanel */
-	private static $errorPanel;
-
-	/** @var DefaultBarPanel */
-	private static $dumpPanel;
 
 
 
@@ -205,8 +199,8 @@ final class Debugger
 		self::$bar = new Bar;
 		self::$bar->addPanel(new DefaultBarPanel('time'));
 		self::$bar->addPanel(new DefaultBarPanel('memory'));
-		self::$bar->addPanel(self::$errorPanel = new DefaultBarPanel('errors')); // filled by _errorHandler()
-		self::$bar->addPanel(self::$dumpPanel = new DefaultBarPanel('dumps')); // filled by barDump()
+		self::$bar->addPanel(new DefaultBarPanel('errors'), __CLASS__ . ':errors'); // filled by _errorHandler()
+		self::$bar->addPanel(new DefaultBarPanel('dumps'), __CLASS__ . ':dumps'); // filled by barDump()
 	}
 
 
@@ -283,6 +277,56 @@ final class Debugger
 
 
 	/**
+	 * @return BlueScreen
+	 */
+	public static function getBlueScreen()
+	{
+		return self::$blueScreen;
+	}
+
+
+
+	/**
+	 * @return Bar
+	 */
+	public static function getBar()
+	{
+		return self::$bar;
+	}
+
+
+
+	/**
+	 * @return void
+	 */
+	public static function setLogger($logger)
+	{
+		self::$logger = $logger;
+	}
+
+
+
+	/**
+	 * @return Logger
+	 */
+	public static function getLogger()
+	{
+		return self::$logger;
+	}
+
+
+
+	/**
+	 * @return FireLogger
+	 */
+	public static function getFireLogger()
+	{
+		return self::$fireLogger;
+	}
+
+
+
+	/**
 	 * Is Debug enabled?
 	 * @return bool
 	 */
@@ -339,14 +383,14 @@ final class Debugger
 			if (empty($saved) && $logHandle = @fopen($exceptionFilename, 'w')) {
 				ob_start(); // double buffer prevents sending HTTP headers in some PHP
 				ob_start(function($buffer) use ($logHandle) { fwrite($logHandle, $buffer); }, 4096);
-				self::$blueScreen->render($exception);
+				self::getBlueScreen()->render($exception);
 				ob_end_flush();
 				ob_end_clean();
 				fclose($logHandle);
 			}
 		}
 
-		self::$logger->log(array(
+		self::getLogger()->log(array(
 			@date('[Y-m-d H-i-s]'),
 			trim($message),
 			self::$source ? ' @  ' . self::$source : NULL,
@@ -374,8 +418,8 @@ final class Debugger
 			self::_exceptionHandler(Helpers::fixStack(new Nette\FatalErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'], NULL)));
 		}
 
-		if (!connection_aborted() && self::$bar && !self::$productionMode && self::isHtmlMode()) {
-			self::$bar->render();
+		if (!connection_aborted() && !self::$productionMode && self::isHtmlMode()) {
+			self::getBar()->render();
 		}
 	}
 
@@ -412,10 +456,8 @@ final class Debugger
 
 			} else {
 				if (!connection_aborted() && self::isHtmlMode()) {
-					self::$blueScreen->render($exception);
-					if (self::$bar) {
-						self::$bar->render();
-					}
+					self::getBlueScreen()->render($exception);
+					self::getBar()->render();
 
 				} elseif (connection_aborted() || !self::fireLog($exception)) {
 					$file = self::log($exception, self::ERROR);
@@ -485,7 +527,7 @@ final class Debugger
 		}
 
 		$message = 'PHP ' . (isset(self::$errorTypes[$severity]) ? self::$errorTypes[$severity] : 'Unknown error') . ": $message";
-		$count = & self::$errorPanel->data["$message|$file|$line"];
+		$count = & self::getBar()->getPanel(__CLASS__ . ':errors')->data["$message|$file|$line"];
 
 		if ($count++) { // repeated error
 			return NULL;
@@ -495,8 +537,8 @@ final class Debugger
 			return NULL;
 
 		} else {
-			$ok = self::fireLog(new \ErrorException($message, 0, $severity, $file, $line));
-			return !self::isHtmlMode() || (!self::$bar && !$ok) ? FALSE : NULL;
+			self::fireLog(new \ErrorException($message, 0, $severity, $file, $line));
+			return self::isHtmlMode() ? NULL : FALSE;
 		}
 
 		return FALSE; // call normal error handler
@@ -604,7 +646,7 @@ final class Debugger
 			foreach ((is_array($var) ? $var : array('' => $var)) as $key => $val) {
 				$dump[$key] = Dumper::toHtml($val);
 			}
-			self::$dumpPanel->data[] = array('title' => $title, 'dump' => $dump);
+			self::getBar()->getPanel(__CLASS__ . ':dumps')->data[] = array('title' => $title, 'dump' => $dump);
 		}
 		return $var;
 	}
@@ -619,7 +661,7 @@ final class Debugger
 	public static function fireLog($message)
 	{
 		if (!self::$productionMode) {
-			return self::$fireLogger->log($message);
+			return self::getFireLogger()->log($message);
 		}
 	}
 
@@ -636,7 +678,7 @@ final class Debugger
 
 	public static function addPanel(IBarPanel $panel, $id = NULL)
 	{
-		return self::$bar->addPanel($panel, $id);
+		return self::getBar()->addPanel($panel, $id);
 	}
 
 }

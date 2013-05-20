@@ -162,7 +162,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		}
 
 		if ($container->parameters['debugMode'] && $config['debugger']) {
-			$session->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array(
+			$session->addSetup('Nette\Diagnostics\Debugger::getBar()->addPanel(?)', array(
 				new Nette\DI\Statement('Nette\Http\Diagnostics\SessionPanel')
 			));
 		}
@@ -184,7 +184,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			->setClass('Nette\Security\User');
 
 		if ($container->parameters['debugMode'] && $config['debugger']) {
-			$user->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array(
+			$user->addSetup('Nette\Diagnostics\Debugger::getBar()->addPanel(?)', array(
 				new Nette\DI\Statement('Nette\Security\Diagnostics\UserPanel')
 			));
 		}
@@ -241,7 +241,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		}
 
 		if ($container->parameters['debugMode'] && $config['debugger']) {
-			$container->getDefinition('application')->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array(
+			$container->getDefinition('application')->addSetup('Nette\Diagnostics\Debugger::getBar()->addPanel(?)', array(
 				new Nette\DI\Statement('Nette\Application\Diagnostics\RoutingPanel')
 			));
 		}
@@ -344,7 +344,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 				->addSetup('setSelectionFactory', array(
 					new Nette\DI\Statement('Nette\Database\SelectionFactory', array('@self', $reflection)),
 				))
-				->addSetup('Nette\Diagnostics\Debugger::$blueScreen->addPanel(?)', array(
+				->addSetup('Nette\Diagnostics\Debugger::getBlueScreen()->addPanel(?)', array(
 					'Nette\Database\Diagnostics\ConnectionPanel::renderException'
 				));
 
@@ -390,14 +390,14 @@ class NetteExtension extends Nette\DI\CompilerExtension
 
 			foreach ((array) $config['debugger']['bar'] as $item) {
 				$initialize->addBody($container->formatPhp(
-					'Nette\Diagnostics\Debugger::$bar->addPanel(?);',
+					'Nette\Diagnostics\Debugger::getBar()->addPanel(?);',
 					Nette\DI\Compiler::filterArguments(array(is_string($item) ? new Nette\DI\Statement($item) : $item))
 				));
 			}
 
 			foreach ((array) $config['debugger']['blueScreen'] as $item) {
 				$initialize->addBody($container->formatPhp(
-					'Nette\Diagnostics\Debugger::$blueScreen->addPanel(?);',
+					'Nette\Diagnostics\Debugger::getBlueScreen()->addPanel(?);',
 					Nette\DI\Compiler::filterArguments(array($item))
 				));
 			}

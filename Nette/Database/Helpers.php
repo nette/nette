@@ -225,7 +225,7 @@ class Helpers
 		$panel = new Nette\Database\Diagnostics\ConnectionPanel($connection);
 		$panel->explain = $explain;
 		$panel->name = $name;
-		Nette\Diagnostics\Debugger::$bar->addPanel($panel);
+		Nette\Diagnostics\Debugger::getBar()->addPanel($panel);
 		return $panel;
 	}
 
