@@ -275,13 +275,10 @@ class Connection extends Nette\Object
 
 
 
-	/**
-	 * Creates selector for table. Shortcut for SelectionFactory::table()
-	 * @param  string
-	 * @return Nette\Database\Table\Selection
-	 */
+	/** @deprecated */
 	public function table($table)
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use SelectionFactory::table() instead.', E_USER_DEPRECATED);
 		if (!$this->selectionFactory) {
 			$this->selectionFactory = new SelectionFactory($this);
 		}
@@ -290,9 +287,7 @@ class Connection extends Nette\Object
 
 
 
-	/**
-	 * @return Connection   provides a fluent interface
-	 */
+	/** @deprecated */
 	public function setSelectionFactory(SelectionFactory $selectionFactory)
 	{
 		$this->selectionFactory = $selectionFactory;
@@ -301,11 +296,10 @@ class Connection extends Nette\Object
 
 
 
-	/**
-	 * @return Nette\Database\SelectionFactory
-	 */
+	/** @deprecated */
 	public function getSelectionFactory()
 	{
+		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
 		return $this->selectionFactory;
 	}
 
