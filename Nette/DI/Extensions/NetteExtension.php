@@ -349,6 +349,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 				));
 
 			$selectionFactory = $container->addDefinition($this->prefix("database.$name.selectionFactory"))
+				->setClass('Nette\Database\SelectionFactory')
 				->setFactory(array($connection, 'getSelectionFactory'))
 				->setAutowired($info['autowired']);
 
