@@ -478,7 +478,9 @@ class SqlBuilder extends Nette\Object
 	protected function tryDelimite($s)
 	{
 		$driver = $this->driver;
-		return preg_replace_callback('#(?<=[^\w`"\[]|^)[a-z_][a-z0-9_]*(?=[^\w`"(\]]|\z)#i', function($m) use ($driver) {
+		$lDelimiter = preg_quote($driver::LEFT_DELIMITER, '#');
+		$rDelimiter = preg_quote($driver::RIGHT_DELIMITER, '#');
+		return preg_replace_callback('#(?<=[^\w' . $lDelimiter . ']|^)[a-z_][a-z0-9_]*(?=[^\w(' . $rDelimiter . ']|\z)#i', function($m) use ($driver) {
 			return strtoupper($m[0]) === $m[0] ? $m[0] : $driver->delimite($m[0]);
 		}, $s);
 	}

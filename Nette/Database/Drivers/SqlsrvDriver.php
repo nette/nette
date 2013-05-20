@@ -22,6 +22,9 @@ use Nette;
  */
 class SqlsrvDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
 {
+	const LEFT_DELIMITER = '[';
+	const RIGHT_DELIMITER = ']';
+
 	/** @var Nette\Database\Connection */
 	private $connection;
 
