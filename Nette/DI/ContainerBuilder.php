@@ -203,6 +203,7 @@ class ContainerBuilder extends Nette\Object
 				throw new ServiceCreationException("Interface $def->implement must have just one non-static method create() or get().");
 			}
 			$def->implement = $rc->getName();
+			$def->implementType = $rc->hasMethod('create') ? 'create' : 'get';
 
 			if (!$def->class && empty($def->factory->entity)) {
 				$returnType = $method->getAnnotation('return');
@@ -497,7 +498,7 @@ class ContainerBuilder extends Nette\Object
 			->addParameter('container')
 				->setTypeHint('Nette\DI\Container');
 
-		$factoryClass->addMethod(Reflection\ClassType::from($def->implement)->hasMethod('get') ? 'get' : 'create')
+		$factoryClass->addMethod($def->implementType)
 			->setParameters($this->convertParameters($def->parameters))
 			->setBody(str_replace('$this', '$this->container', $code));
 
@@ -625,10 +626,14 @@ class ContainerBuilder extends Nette\Object
 				if (isset($pair[1]) && preg_match('#^[A-Z][A-Z0-9_]*\z#', $pair[1], $m)) {
 					$val = $that->definitions[$name]->class . '::' . $pair[1];
 				} else {
-					$val = ($name === ContainerBuilder::THIS_CONTAINER
-						? '$this'
-						: ($name === $that->currentService ? '$service' : $that->formatStatement(new Statement("@$name"))))
-						. (isset($pair[1]) ? PhpHelpers::formatArgs('->?', array($pair[1])) : '');
+					if ($name === ContainerBuilder::THIS_CONTAINER) {
+						$val = '$this';
+					} elseif ($name === $that->currentService) {
+						$val = '$service';
+					} else {
+						$val = $that->formatStatement(new Statement('@' . $name));
+					}
+					$val .= (isset($pair[1]) ? PhpHelpers::formatArgs('->?', array($pair[1])) : '');
 				}
 				$val = ContainerBuilder::literal($val);
 			}

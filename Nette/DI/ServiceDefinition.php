@@ -48,6 +48,9 @@ class ServiceDefinition extends Nette\Object
 	/** @var string  interface name */
 	public $implement;
 
+	/** @internal @var string  create | get */
+	public $implementType;
+
 
 	public function setClass($class, array $args = array())
 	{
