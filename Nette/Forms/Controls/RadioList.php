@@ -152,11 +152,29 @@ class RadioList extends BaseControl
 		$value = $this->value === NULL ? NULL : (string) $this->getValue();
 		$control = parent::getControl();
 
-		if ($key !== NULL) {
-			$control->id .= '-' . $key;
+		if ($key !== NULL) {                    
+                        $label = $this->getLabel();
+			$label->for = $control->id .= '-' . $key;                        
 			$control->checked = (string) $key === $value;
 			$control->value = $key;
-			return $control;
+
+                        $counter=-1;
+                        
+                        foreach ($this->items as $k => $val) {
+                            $counter++;
+                            
+                            if ((string) $key !== (string) $counter) {
+                                continue;
+                            }
+                            if ($val instanceof Html) {
+                                $label->setHtml($val);
+                            } 
+                            else {
+                                $label->setText($this->translate((string) $val));
+                            }                            
+                            return array($control, $label);
+                        }
+                                                           
 		}
 
 		$id = $control->id;
