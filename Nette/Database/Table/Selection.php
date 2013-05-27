@@ -326,10 +326,14 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	public function wherePrimary($key)
 	{
 		if (is_array($this->primary) && Nette\Utils\Validators::isList($key)) {
-			foreach ($this->primary as $i => $primary) {
-				$this->where($this->name . '.' . $primary, $key[$i]);
+			if (isset($key[0]) && is_array($key[0])) {
+				$this->where($this->primary, $key);
+			} else {
+				foreach ($this->primary as $i => $primary) {
+					$this->where($this->name . '.' . $primary, $key[$i]);
+				}
 			}
-		} elseif (is_array($key)) { // key contains column names
+		} elseif (is_array($key) && !Nette\Utils\Validators::isList($key)) { // key contains column names
 			$this->where($key);
 		} else {
 			$this->where($this->name . '.' . $this->getPrimary(), $key);
@@ -349,12 +353,12 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	 */
 	public function where($condition, $parameters = array())
 	{
-		if (is_array($condition)) { // where(array('column1' => 1, 'column2 > ?' => 2))
+		if (is_array($condition) && $parameters === array()) { // where(array('column1' => 1, 'column2 > ?' => 2))
 			foreach ($condition as $key => $val) {
 				if (is_int($key)) {
-					$this->where($val);	// where('full condition')
+					$this->where($val); // where('full condition')
 				} else {
-					$this->where($key, $val);	// where('column', 1)
+					$this->where($key, $val); // where('column', 1)
 				}
 			}
 			return $this;
