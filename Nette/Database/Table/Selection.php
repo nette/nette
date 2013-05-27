@@ -64,6 +64,9 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	protected $refCache;
 
 	/** @var string */
+	protected $generalCacheKey;
+
+	/** @var string */
 	protected $specificCacheKey;
 
 	/** @var array of [conditions => [key => IRow]]; used by GroupedSelection */
@@ -532,6 +535,10 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 		$this->observeCache = $this;
 
+		if ($this->primary === NULL && $this->sqlBuilder->getSelect() === NULL) {
+			throw new Nette\InvalidStateException('Table with no primary key requires an explicit select clause.');
+		}
+
 		try {
 			$result = $this->query($this->getSql());
 
@@ -600,6 +607,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 		$this->rows = NULL;
 		$this->specificCacheKey = NULL;
+		$this->generalCacheKey = NULL;
 	}
 
 
@@ -641,7 +649,11 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	 */
 	protected function getGeneralCacheKey()
 	{
-		return md5(serialize(array(__CLASS__, $this->name, $this->sqlBuilder->getConditions())));
+		if ($this->generalCacheKey) {
+			return $this->generalCacheKey;
+		}
+
+		return $this->generalCacheKey = md5(serialize(array(__CLASS__, $this->name, $this->sqlBuilder->getConditions())));
 	}
 
 
@@ -681,8 +693,21 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 		}
 
 		if ($selectColumn && !$this->sqlBuilder->getSelect() && $this->previousAccessedColumns && ($key === NULL || !isset($this->previousAccessedColumns[$key]))) {
+			if ($this->sqlBuilder->getLimit()) {
+				$generalCacheKey = $this->generalCacheKey;
+				$primaries = array();
+				foreach ((array) $this->rows as $row) {
+					$primary = $row->getPrimary();
+					$primaries[] = is_array($primary) ? array_values($primary) : $primary;
+				}
+			}
 			$this->previousAccessedColumns = array();
 			$this->emptyResultSet(FALSE);
+			if ($this->sqlBuilder->getLimit()) {
+				$this->sqlBuilder->setLimit(NULL, NULL);
+				$this->wherePrimary($primaries);
+				$this->generalCacheKey = $generalCacheKey;
+			}
 			$this->dataRefreshed = TRUE;
 
 			if ($key === NULL) {
