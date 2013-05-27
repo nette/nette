@@ -358,10 +358,10 @@ Nette.initForm = function(form) {
 
 	Nette.addEvent(form, 'submit', function(e) {
 		if (!Nette.validateForm(form)) {
-			e = e || event;
-			e.cancelBubble = true;
-			if (e.stopPropagation) {
+			if (e && e.stopPropagation) {
 				e.stopPropagation();
+			} else if (window.event) {
+				event.cancelBubble = true;
 			}
 			return false;
 		}
