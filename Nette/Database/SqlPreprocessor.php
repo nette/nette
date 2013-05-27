@@ -149,7 +149,11 @@ class SqlPreprocessor extends Nette\Object
 
 			if (isset($value[0])) { // non-associative; value, value, value
 				foreach ($value as $v) {
-					$vx[] = $this->formatValue($v);
+					if (is_array($v) && isset($v[0])) { // no-associative; (value), (value), (value)
+						$vx[] = '(' . $this->formatValue($v) . ')';
+					} else {
+						$vx[] = $this->formatValue($v);
+					}
 				}
 				if ($this->arrayMode === 'union') {
 					return implode(' ', $vx);
