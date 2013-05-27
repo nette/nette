@@ -364,10 +364,8 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 			return $this;
 		}
 
-		if (call_user_func_array(array($this->sqlBuilder, 'addWhere'), func_get_args())) {
-			$this->emptyResultSet();
-		}
-
+		$this->emptyResultSet();
+		call_user_func_array(array($this->sqlBuilder, 'addWhere'), func_get_args());
 		return $this;
 	}
 
@@ -594,8 +592,12 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 
 
-	protected function emptyResultSet()
+	protected function emptyResultSet($saveCache = TRUE)
 	{
+		if ($this->rows !== NULL && $saveCache) {
+			$this->saveCacheState();
+		}
+
 		$this->rows = NULL;
 		$this->specificCacheKey = NULL;
 	}
@@ -606,6 +608,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	{
 		if ($this->observeCache === $this && $this->cache && !$this->sqlBuilder->getSelect() && $this->accessedColumns !== $this->previousAccessedColumns) {
 			$this->cache->save($this->getGeneralCacheKey(), $this->accessedColumns);
+			$this->previousAccessedColumns = NULL;
 		}
 	}
 
@@ -679,7 +682,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 		if ($selectColumn && !$this->sqlBuilder->getSelect() && $this->previousAccessedColumns && ($key === NULL || !isset($this->previousAccessedColumns[$key]))) {
 			$this->previousAccessedColumns = array();
-			$this->emptyResultSet();
+			$this->emptyResultSet(FALSE);
 			$this->dataRefreshed = TRUE;
 
 			if ($key === NULL) {
