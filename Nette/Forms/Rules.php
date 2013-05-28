@@ -27,7 +27,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 
 	/** @var array */
 	public static $defaultMessages = array(
-		Form::PROTECTION => 'Please submit this form again (security token has expired).',
 		Form::EQUAL => 'Please enter %s.',
 		Form::FILLED => 'Please complete mandatory field.',
 		Form::MIN_LENGTH => 'Please enter a value of at least %d characters.',
@@ -40,7 +39,8 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 		Form::RANGE => 'Please enter a value between %d and %d.',
 		Form::MAX_FILE_SIZE => 'The size of the uploaded file can be up to %d bytes.',
 		Form::IMAGE => 'The uploaded file must be image in format JPEG, GIF or PNG.',
-		Nette\Forms\Controls\SelectBox::VALID => 'Please select a valid option.',
+		Controls\CsrfProtection::PROTECTION => 'Please submit this form again (security token has expired).',
+		Controls\SelectBox::VALID => 'Please select a valid option.',
 	);
 
 	/** @var Rule[] */
