@@ -45,8 +45,8 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 		META_CALLBACKS = 'callbacks'; // array of callbacks (function, args)
 
 	/** additional cache structure */
-	const FILE = 'file',
-		HANDLE = 'handle';
+	const FILE = 'file';
+	const HANDLE = 'handle';
 
 
 	/** @var float  probability that the clean() routine is started */

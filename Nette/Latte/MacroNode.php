@@ -22,9 +22,9 @@ use Nette;
  */
 class MacroNode extends Nette\Object
 {
-	const PREFIX_INNER = 'inner',
-		PREFIX_TAG = 'tag',
-		PREFIX_NONE = 'none';
+	const PREFIX_INNER = 'inner';
+	const PREFIX_TAG = 'tag';
+	const PREFIX_NONE = 'none';
 
 	/** @var IMacro */
 	public $macro;

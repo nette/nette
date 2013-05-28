@@ -23,9 +23,9 @@ use Nette;
 interface IUserStorage
 {
 	/** Log-out reason {@link IUserStorage::getLogoutReason()} */
-	const MANUAL = 1,
-		INACTIVITY = 2,
-		BROWSER_CLOSED = 4;
+	const MANUAL = 1;
+	const INACTIVITY = 2;
+	const BROWSER_CLOSED = 4;
 
 	/** Log-out behavior */
 	const CLEAR_IDENTITY = 8;

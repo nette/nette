@@ -22,12 +22,12 @@ use Nette;
  */
 class Token extends Nette\Object
 {
-	const TEXT = 'text',
-		MACRO_TAG = 'macroTag', // latte macro tag
-		HTML_TAG_BEGIN = 'htmlTagBegin', // begin of HTML tag or comment
-		HTML_TAG_END = 'htmlTagEnd', // end of HTML tag or comment
-		HTML_ATTRIBUTE = 'htmlAttribute',
-		COMMENT = 'comment'; // latte comment
+	const TEXT = 'text';
+	const MACRO_TAG = 'macroTag'; // latte macro tag
+	const HTML_TAG_BEGIN = 'htmlTagBegin'; // begin of HTML tag or comment
+	const HTML_TAG_END = 'htmlTagEnd'; // end of HTML tag or comment
+	const HTML_ATTRIBUTE = 'htmlAttribute';
+	const COMMENT = 'comment'; // latte comment
 
 	/** @var string  token type [TEXT | MACRO_TAG | HTML_TAG_BEGIN | HTML_TAG_END | HTML_ATTRIBUTE | COMMENT] */
 	public $type;

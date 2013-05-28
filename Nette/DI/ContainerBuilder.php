@@ -28,8 +28,8 @@ use Nette\PhpGenerator\Helpers as PhpHelpers;
  */
 class ContainerBuilder extends Nette\Object
 {
-	const THIS_SERVICE = 'self',
-		THIS_CONTAINER = 'container';
+	const THIS_SERVICE = 'self';
+	const THIS_CONTAINER = 'container';
 
 	/** @var array */
 	public $parameters = array();

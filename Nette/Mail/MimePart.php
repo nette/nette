@@ -29,10 +29,10 @@ use Nette\Utils\Strings;
 class MimePart extends Nette\Object
 {
 	/** encoding */
-	const ENCODING_BASE64 = 'base64',
-		ENCODING_7BIT = '7bit',
-		ENCODING_8BIT = '8bit',
-		ENCODING_QUOTED_PRINTABLE = 'quoted-printable';
+	const ENCODING_BASE64 = 'base64';
+	const ENCODING_7BIT = '7bit';
+	const ENCODING_8BIT = '8bit';
+	const ENCODING_QUOTED_PRINTABLE = 'quoted-printable';
 
 	/** @internal */
 	const EOL = "\r\n";
