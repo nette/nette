@@ -7,8 +7,8 @@
  * @package    Nette\Forms
  */
 
-use Nette\Forms\Controls\TextInput,
-	Nette\Forms\Controls\TextBase;
+use Nette\Forms\Controls\TextInput;
+use Nette\Forms\Controls\TextBase;
 
 
 

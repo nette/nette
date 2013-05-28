@@ -7,8 +7,8 @@
  * @package    Nette\Latte
  */
 
-use Nette\Latte\PhpWriter,
-	Nette\Latte\MacroTokenizer;
+use Nette\Latte\PhpWriter;
+use Nette\Latte\MacroTokenizer;
 
 
 

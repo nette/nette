@@ -11,10 +11,10 @@
 
 namespace Nette\Templating;
 
-use Nette,
-	Nette\Utils\Strings,
-	Nette\Forms\Form,
-	Nette\Utils\Html;
+use Nette;
+use Nette\Utils\Strings;
+use Nette\Forms\Form;
+use Nette\Utils\Html;
 
 
 

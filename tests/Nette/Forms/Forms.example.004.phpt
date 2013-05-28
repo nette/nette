@@ -7,8 +7,8 @@
  * @package    Nette\Forms
  */
 
-use Nette\Utils\Html,
-	Nette\Forms\Form;
+use Nette\Utils\Html;
+use Nette\Forms\Form;
 
 
 

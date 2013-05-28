@@ -7,8 +7,8 @@
  * @package    Nette\Http
  */
 
-use Nette\Http\Session,
-	Nette\Http\SessionSection;
+use Nette\Http\Session;
+use Nette\Http\SessionSection;
 
 
 

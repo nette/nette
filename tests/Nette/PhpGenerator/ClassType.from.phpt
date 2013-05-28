@@ -9,9 +9,9 @@
 
 namespace Abc;
 
-use Nette\PhpGenerator\ClassType,
-	Assert,
-	ReflectionClass;
+use Nette\PhpGenerator\ClassType;
+use Assert;
+use ReflectionClass;
 
 
 

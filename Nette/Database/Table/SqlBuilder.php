@@ -11,11 +11,11 @@
 
 namespace Nette\Database\Table;
 
-use Nette,
-	Nette\Database\Connection,
-	Nette\Database\IReflection,
-	Nette\Database\ISupplementalDriver,
-	Nette\Database\SqlLiteral;
+use Nette;
+use Nette\Database\Connection;
+use Nette\Database\IReflection;
+use Nette\Database\ISupplementalDriver;
+use Nette\Database\SqlLiteral;
 
 
 

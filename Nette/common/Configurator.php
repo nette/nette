@@ -11,8 +11,8 @@
 
 namespace Nette;
 
-use Nette,
-	Nette\DI;
+use Nette;
+use Nette\DI;
 
 
 

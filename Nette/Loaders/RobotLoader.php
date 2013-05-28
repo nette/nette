@@ -11,8 +11,8 @@
 
 namespace Nette\Loaders;
 
-use Nette,
-	Nette\Caching\Cache;
+use Nette;
+use Nette\Caching\Cache;
 
 
 

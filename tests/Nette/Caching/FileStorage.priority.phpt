@@ -7,9 +7,9 @@
  * @package    Nette\Caching
  */
 
-use Nette\Caching\Storages\FileStorage,
-	Nette\Caching\Storages\FileJournal,
-	Nette\Caching\Cache;
+use Nette\Caching\Storages\FileStorage;
+use Nette\Caching\Storages\FileJournal;
+use Nette\Caching\Cache;
 
 
 

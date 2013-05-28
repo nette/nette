@@ -11,8 +11,8 @@
 
 namespace Nette\DI;
 
-use Nette,
-	Nette\Utils\Validators;
+use Nette;
+use Nette\Utils\Validators;
 
 
 

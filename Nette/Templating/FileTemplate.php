@@ -11,8 +11,8 @@
 
 namespace Nette\Templating;
 
-use Nette,
-	Nette\Caching;
+use Nette;
+use Nette\Caching;
 
 
 

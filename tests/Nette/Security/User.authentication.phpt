@@ -7,8 +7,8 @@
  * @package    Nette\Http
  */
 
-use Nette\Security\IAuthenticator,
-	Nette\Security\Identity;
+use Nette\Security\IAuthenticator;
+use Nette\Security\Identity;
 
 
 

@@ -7,8 +7,8 @@
  * @package    Nette\Caching
  */
 
-use Nette\Caching\Cache,
-	Nette\Caching\Storages\PhpFileStorage;
+use Nette\Caching\Cache;
+use Nette\Caching\Storages\PhpFileStorage;
 
 
 

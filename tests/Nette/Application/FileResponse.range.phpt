@@ -7,8 +7,8 @@
  * @package    Nette\Config
  */
 
-use Nette\Application\Responses\FileResponse,
-	Nette\Http;
+use Nette\Application\Responses\FileResponse;
+use Nette\Http;
 
 
 
