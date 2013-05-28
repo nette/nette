@@ -24,9 +24,9 @@ use Nette;
 final class Environment
 {
 	/** environment name */
-	const DEVELOPMENT = 'development',
-		PRODUCTION = 'production',
-		CONSOLE = 'console';
+	const DEVELOPMENT = 'development';
+	const PRODUCTION = 'production';
+	const CONSOLE = 'console';
 
 	/** @var bool */
 	private static $productionMode;

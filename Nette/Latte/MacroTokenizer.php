@@ -22,15 +22,15 @@ use Nette;
  */
 class MacroTokenizer extends Nette\Utils\Tokenizer
 {
-	const T_WHITESPACE = 1,
-		T_COMMENT = 2,
-		T_SYMBOL = 3,
-		T_NUMBER = 4,
-		T_VARIABLE = 5,
-		T_STRING = 6,
-		T_CAST = 7,
-		T_KEYWORD = 8,
-		T_CHAR = 9;
+	const T_WHITESPACE = 1;
+	const T_COMMENT = 2;
+	const T_SYMBOL = 3;
+	const T_NUMBER = 4;
+	const T_VARIABLE = 5;
+	const T_STRING = 6;
+	const T_CAST = 7;
+	const T_KEYWORD = 8;
+	const T_CHAR = 9;
 
 
 

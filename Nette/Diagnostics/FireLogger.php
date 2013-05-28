@@ -23,11 +23,11 @@ use Nette;
  */
 class FireLogger extends Nette\Object
 {
-	const DEBUG = 'debug',
-		INFO = 'info',
-		WARNING = 'warning',
-		ERROR = 'error',
-		CRITICAL = 'critical';
+	const DEBUG = 'debug';
+	const INFO = 'info';
+	const WARNING = 'warning';
+	const ERROR = 'error';
+	const CRITICAL = 'critical';
 
 	private static $payload = array('logs' => array());
 

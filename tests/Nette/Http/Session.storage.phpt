@@ -7,9 +7,9 @@
  * @package    Nette\Http
  */
 
-use Nette\Object,
-	Nette\Http\ISessionStorage,
-	Nette\Http\Session;
+use Nette\Object;
+use Nette\Http\ISessionStorage;
+use Nette\Http\Session;
 
 
 

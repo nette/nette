@@ -11,8 +11,8 @@
 
 namespace Nette\Latte\Macros;
 
-use Nette,
-	Nette\Latte;
+use Nette;
+use Nette\Latte;
 
 
 

@@ -61,9 +61,9 @@ final class Debugger
 	/********************* errors and exceptions reporting ****************d*g**/
 
 	/** server modes {@link Debugger::enable()} */
-	const DEVELOPMENT = FALSE,
-		PRODUCTION = TRUE,
-		DETECT = NULL;
+	const DEVELOPMENT = FALSE;
+	const PRODUCTION = TRUE;
+	const DETECT = NULL;
 
 	/** @var BlueScreen */
 	public static $blueScreen;
@@ -117,11 +117,11 @@ final class Debugger
 	/********************* Firebug extension ****************d*g**/
 
 	/** {@link Debugger::log()} and {@link Debugger::fireLog()} */
-	const DEBUG = 'debug',
-		INFO = 'info',
-		WARNING = 'warning',
-		ERROR = 'error',
-		CRITICAL = 'critical';
+	const DEBUG = 'debug';
+	const INFO = 'info';
+	const WARNING = 'warning';
+	const ERROR = 'error';
+	const CRITICAL = 'critical';
 
 
 

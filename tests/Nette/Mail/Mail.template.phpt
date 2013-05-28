@@ -7,9 +7,9 @@
  * @package    Nette\Mail
  */
 
-use Nette\Latte,
-	Nette\Mail\Message,
-	Nette\Templating\FileTemplate;
+use Nette\Latte;
+use Nette\Mail\Message;
+use Nette\Templating\FileTemplate;
 
 
 

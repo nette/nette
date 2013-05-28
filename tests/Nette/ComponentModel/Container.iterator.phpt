@@ -7,9 +7,9 @@
  * @package    Nette\ComponentModel
  */
 
-use Nette\ComponentModel\Component,
-	Nette\ComponentModel\Container,
-	Nette\Forms\Controls\Button;
+use Nette\ComponentModel\Component;
+use Nette\ComponentModel\Container;
+use Nette\Forms\Controls\Button;
 
 
 

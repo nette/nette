@@ -22,8 +22,8 @@ use Nette;
  */
 class Helpers
 {
-	const EXTENDS_KEY = '_extends',
-		OVERWRITE = TRUE;
+	const EXTENDS_KEY = '_extends';
+	const OVERWRITE = TRUE;
 
 
 	/**

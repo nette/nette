@@ -11,8 +11,8 @@
 
 namespace Nette\PhpGenerator;
 
-use Nette,
-	Nette\Utils\Strings;
+use Nette;
+use Nette\Utils\Strings;
 
 
 

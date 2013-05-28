@@ -22,11 +22,11 @@ use Nette;
  */
 class Logger extends Nette\Object
 {
-	const DEBUG = 'debug',
-		INFO = 'info',
-		WARNING = 'warning',
-		ERROR = 'error',
-		CRITICAL = 'critical';
+	const DEBUG = 'debug';
+	const INFO = 'info';
+	const WARNING = 'warning';
+	const ERROR = 'error';
+	const CRITICAL = 'critical';
 
 	/** @var int interval for sending email is 2 days */
 	public static $emailSnooze = 172800;

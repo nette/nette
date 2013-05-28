@@ -7,10 +7,10 @@
  * @package    Nette\Latte
  */
 
-use Nette\Latte\IMacro,
-	Nette\Latte\MacroNode,
-	Nette\Latte\Parser,
-	Nette\Latte\Compiler;
+use Nette\Latte\IMacro;
+use Nette\Latte\MacroNode;
+use Nette\Latte\Parser;
+use Nette\Latte\Compiler;
 
 
 

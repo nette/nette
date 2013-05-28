@@ -7,8 +7,8 @@
  * @package    Nette\Application\UI
  */
 
-use Nette\Http,
-	Nette\Application;
+use Nette\Http;
+use Nette\Application;
 
 
 

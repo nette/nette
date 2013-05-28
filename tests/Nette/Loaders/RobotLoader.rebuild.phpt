@@ -7,8 +7,8 @@
  * @package    Nette\Loaders
  */
 
-use Nette\Loaders\RobotLoader,
-	Nette\Caching\Storages\DevNullStorage;
+use Nette\Loaders\RobotLoader;
+use Nette\Caching\Storages\DevNullStorage;
 
 
 

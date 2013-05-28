@@ -7,8 +7,8 @@
  * @package    Nette\Utils
  */
 
-use Nette\PhpGenerator\Helpers,
-	Nette\PhpGenerator\PhpLiteral;
+use Nette\PhpGenerator\Helpers;
+use Nette\PhpGenerator\PhpLiteral;
 
 
 

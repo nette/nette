@@ -11,8 +11,8 @@
 
 namespace Nette\Mail;
 
-use Nette,
-	Nette\Utils\Strings;
+use Nette;
+use Nette\Utils\Strings;
 
 
 
@@ -31,9 +31,9 @@ use Nette,
 class Message extends MimePart
 {
 	/** Priority */
-	const HIGH = 1,
-		NORMAL = 3,
-		LOW = 5;
+	const HIGH = 1;
+	const NORMAL = 3;
+	const LOW = 5;
 
 	/** @deprecated */
 	public static $defaultMailer = 'Nette\Mail\SendmailMailer';

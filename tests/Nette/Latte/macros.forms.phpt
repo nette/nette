@@ -8,9 +8,9 @@
  * @keepTrailingSpaces
  */
 
-use Nette\Latte,
-	Nette\Templating\FileTemplate,
-	Nette\Forms\Form;
+use Nette\Latte;
+use Nette\Templating\FileTemplate;
+use Nette\Forms\Form;
 
 
 

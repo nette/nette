@@ -11,9 +11,9 @@
 
 namespace Nette\Application\Routers;
 
-use Nette,
-	Nette\Application,
-	Nette\Utils\Strings;
+use Nette;
+use Nette\Application;
+use Nette\Utils\Strings;
 
 
 
@@ -37,9 +37,9 @@ class Route extends Nette\Object implements Application\IRouter
 	const CASE_SENSITIVE = 256;
 
 	/** @internal url type */
-	const HOST = 1,
-		PATH = 2,
-		RELATIVE = 3;
+	const HOST = 1;
+	const PATH = 2;
+	const RELATIVE = 3;
 
 	/** key used in {@link Route::$styles} or metadata {@link Route::__construct} */
 	const VALUE = 'value';
@@ -50,9 +50,9 @@ class Route extends Nette\Object implements Application\IRouter
 	const FILTER_STRICT = 'filterStrict';
 
 	/** @internal fixity types - how to handle default value? {@link Route::$metadata} */
-	const OPTIONAL = 0,
-		PATH_OPTIONAL = 1,
-		CONSTANT = 2;
+	const OPTIONAL = 0;
+	const PATH_OPTIONAL = 1;
+	const CONSTANT = 2;
 
 	/** @var int */
 	public static $defaultFlags = 0;

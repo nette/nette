@@ -11,8 +11,8 @@
 
 namespace Nette;
 
-use Nette,
-	Nette\DI;
+use Nette;
+use Nette\DI;
 
 
 
@@ -27,10 +27,10 @@ use Nette,
 class Configurator extends Object
 {
 	/** @deprecated */
-	const DEVELOPMENT = 'development',
-		PRODUCTION = 'production',
-		AUTO = TRUE,
-		NONE = FALSE;
+	const DEVELOPMENT = 'development';
+	const PRODUCTION = 'production';
+	const AUTO = TRUE;
+	const NONE = FALSE;
 
 	/** @var array of function(Configurator $sender, DI\Compiler $compiler); Occurs after the compiler is created */
 	public $onCompile;

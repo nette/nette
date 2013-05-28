@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  * @property-read array $config
- * @property-read ContainerBuilder $containerBuilder
+ * @property-read Nette\DI\ContainerBuilder $containerBuilder
  */
 abstract class CompilerExtension extends Nette\Object
 {

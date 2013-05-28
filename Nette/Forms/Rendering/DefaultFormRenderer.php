@@ -11,8 +11,8 @@
 
 namespace Nette\Forms\Rendering;
 
-use Nette,
-	Nette\Utils\Html;
+use Nette;
+use Nette\Utils\Html;
 
 
 

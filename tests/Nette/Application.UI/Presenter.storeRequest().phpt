@@ -7,10 +7,10 @@
  * @package    Nette\Application\UI
  */
 
-use Nette\Http,
-	Nette\Application,
-	Nette\DI,
-	Nette\Security;
+use Nette\Http;
+use Nette\Application;
+use Nette\DI;
+use Nette\Security;
 
 
 

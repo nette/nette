@@ -11,8 +11,8 @@
 
 namespace Nette\Caching\Storages;
 
-use Nette,
-	Nette\Caching\Cache;
+use Nette;
+use Nette\Caching\Cache;
 
 
 
@@ -24,9 +24,9 @@ use Nette,
 class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 {
 	/** @internal cache structure */
-	const META_CALLBACKS = 'callbacks',
-		META_DATA = 'data',
-		META_DELTA = 'delta';
+	const META_CALLBACKS = 'callbacks';
+	const META_DATA = 'data';
+	const META_DELTA = 'delta';
 
 	/** @var \Memcache */
 	private $memcache;

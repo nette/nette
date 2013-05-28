@@ -11,11 +11,11 @@
 
 namespace Nette\Application\UI;
 
-use Nette,
-	Nette\Application,
-	Nette\Application\Responses,
-	Nette\Http,
-	Nette\Reflection;
+use Nette;
+use Nette\Application;
+use Nette\Application\Responses;
+use Nette\Http;
+use Nette\Reflection;
 
 
 
@@ -41,15 +41,15 @@ use Nette,
 abstract class Presenter extends Control implements Application\IPresenter
 {
 	/** bad link handling {@link Presenter::$invalidLinkMode} */
-	const INVALID_LINK_SILENT = 1,
-		INVALID_LINK_WARNING = 2,
-		INVALID_LINK_EXCEPTION = 3;
+	const INVALID_LINK_SILENT = 1;
+	const INVALID_LINK_WARNING = 2;
+	const INVALID_LINK_EXCEPTION = 3;
 
 	/** @internal special parameter key */
-	const SIGNAL_KEY = 'do',
-		ACTION_KEY = 'action',
-		FLASH_KEY = '_fid',
-		DEFAULT_ACTION = 'default';
+	const SIGNAL_KEY = 'do';
+	const ACTION_KEY = 'action';
+	const FLASH_KEY = '_fid';
+	const DEFAULT_ACTION = 'default';
 
 	/** @var int */
 	public $invalidLinkMode;

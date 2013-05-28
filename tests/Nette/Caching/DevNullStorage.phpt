@@ -7,8 +7,8 @@
  * @package    Nette\Caching
  */
 
-use Nette\Caching\Cache,
-	Nette\Caching\Storages\DevNullStorage;
+use Nette\Caching\Cache;
+use Nette\Caching\Storages\DevNullStorage;
 
 
 

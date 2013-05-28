@@ -11,8 +11,8 @@
 
 namespace Nette\Forms\Controls;
 
-use Nette,
-	Nette\Http;
+use Nette;
+use Nette\Http;
 
 
 

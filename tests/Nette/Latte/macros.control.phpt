@@ -8,8 +8,8 @@
  * @keepTrailingSpaces
  */
 
-use Nette\Latte,
-	Nette\Object;
+use Nette\Latte;
+use Nette\Object;
 
 
 

@@ -11,8 +11,8 @@
 
 namespace Nette\Application\Responses;
 
-use Nette,
-	Nette\Http;
+use Nette;
+use Nette\Http;
 
 
 

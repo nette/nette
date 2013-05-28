@@ -7,9 +7,9 @@
  * @package    Nette\ComponentModel
  */
 
-use Nette\ComponentModel\Container,
-	Nette\Object,
-	Nette\ComponentModel\IContainer;
+use Nette\ComponentModel\Container;
+use Nette\Object;
+use Nette\ComponentModel\IContainer;
 
 
 

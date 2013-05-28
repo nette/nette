@@ -11,13 +11,13 @@
 
 namespace Nette\Latte\Macros;
 
-use Nette,
-	Nette\Latte,
-	Nette\Latte\MacroNode,
-	Nette\Latte\PhpWriter,
-	Nette\Latte\CompileException,
-	Nette\Forms\Form,
-	Nette\Utils\Strings;
+use Nette;
+use Nette\Latte;
+use Nette\Latte\MacroNode;
+use Nette\Latte\PhpWriter;
+use Nette\Latte\CompileException;
+use Nette\Forms\Form;
+use Nette\Utils\Strings;
 
 
 

@@ -11,8 +11,8 @@
 
 namespace Nette\Http;
 
-use Nette,
-	Nette\Security\IIdentity;
+use Nette;
+use Nette\Security\IIdentity;
 
 
 

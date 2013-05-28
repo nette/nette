@@ -11,8 +11,8 @@
 
 namespace Nette\Caching\Storages;
 
-use Nette,
-	Nette\Caching\Cache;
+use Nette;
+use Nette\Caching\Cache;
 
 
 
@@ -47,23 +47,23 @@ class FileJournal extends Nette\Object implements IJournal
 	/** Size of 32 bit integer in bytes. INT32_SIZE = 32 / 8 :-) */
 	const INT32_SIZE  = 4;
 
-	const INFO = 'i',
-		TYPE = 't', // TAGS, PRIORITY or DATA
-		IS_LEAF = 'il', // TRUE or FALSE
-		PREV_NODE = 'p', // Prev node id
-		END = 'e',
-		MAX = 'm', // Maximal key in node or -1 when is last node
-		INDEX_DATA = 'id',
-		LAST_INDEX = 'l';
+	const INFO = 'i';
+	const TYPE = 't'; // TAGS, PRIORITY or DATA
+	const IS_LEAF = 'il'; // TRUE or FALSE
+	const PREV_NODE = 'p'; // Prev node id
+	const END = 'e';
+	const MAX = 'm'; // Maximal key in node or -1 when is last node
+	const INDEX_DATA = 'id';
+	const LAST_INDEX = 'l';
 
 	// Indexes
-	const TAGS = 't',
-		PRIORITY = 'p',
-		ENTRIES = 'e';
+	const TAGS = 't';
+	const PRIORITY = 'p';
+	const ENTRIES = 'e';
 
-	const DATA = 'd',
-		KEY = 'k', // string
-		DELETED = 'd'; // TRUE or FALSE
+	const DATA = 'd';
+	const KEY = 'k'; // string
+	const DELETED = 'd'; // TRUE or FALSE
 
 	/** Debug mode, only for testing purposes */
 	public static $debug = FALSE;

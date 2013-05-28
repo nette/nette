@@ -11,11 +11,11 @@
 
 namespace Nette\DI;
 
-use Nette,
-	Nette\Utils\Validators,
-	Nette\Utils\Strings,
-	Nette\Reflection,
-	Nette\PhpGenerator\Helpers as PhpHelpers;
+use Nette;
+use Nette\Utils\Validators;
+use Nette\Utils\Strings;
+use Nette\Reflection;
+use Nette\PhpGenerator\Helpers as PhpHelpers;
 
 
 
@@ -28,8 +28,8 @@ use Nette,
  */
 class ContainerBuilder extends Nette\Object
 {
-	const THIS_SERVICE = 'self',
-		THIS_CONTAINER = 'container';
+	const THIS_SERVICE = 'self';
+	const THIS_CONTAINER = 'container';
 
 	/** @var array */
 	public $parameters = array();

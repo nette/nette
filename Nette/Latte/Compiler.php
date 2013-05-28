@@ -11,8 +11,8 @@
 
 namespace Nette\Latte;
 
-use Nette,
-	Nette\Utils\Strings;
+use Nette;
+use Nette\Utils\Strings;
 
 
 
@@ -60,19 +60,19 @@ class Compiler extends Nette\Object
 	private $templateId;
 
 	/** Context-aware escaping content types */
-	const CONTENT_HTML = 'html',
-		CONTENT_XHTML = 'xhtml',
-		CONTENT_XML = 'xml',
-		CONTENT_JS = 'js',
-		CONTENT_CSS = 'css',
-		CONTENT_ICAL = 'ical',
-		CONTENT_TEXT = 'text';
+	const CONTENT_HTML = 'html';
+	const CONTENT_XHTML = 'xhtml';
+	const CONTENT_XML = 'xml';
+	const CONTENT_JS = 'js';
+	const CONTENT_CSS = 'css';
+	const CONTENT_ICAL = 'ical';
+	const CONTENT_TEXT = 'text';
 
 	/** @internal Context-aware escaping HTML contexts */
-	const CONTEXT_COMMENT = 'comment',
-		CONTEXT_SINGLE_QUOTED_ATTR = "'",
-		CONTEXT_DOUBLE_QUOTED_ATTR = '"',
-		CONTEXT_UNQUOTED_ATTR = '=';
+	const CONTEXT_COMMENT = 'comment';
+	const CONTEXT_SINGLE_QUOTED_ATTR = "'";
+	const CONTEXT_DOUBLE_QUOTED_ATTR = '"';
+	const CONTEXT_UNQUOTED_ATTR = '=';
 
 
 	public function __construct()

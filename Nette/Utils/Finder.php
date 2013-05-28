@@ -11,8 +11,8 @@
 
 namespace Nette\Utils;
 
-use Nette,
-	RecursiveIteratorIterator;
+use Nette;
+use RecursiveIteratorIterator;
 
 
 

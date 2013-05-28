@@ -11,8 +11,8 @@
 
 namespace Nette\Latte;
 
-use Nette,
-	Nette\Utils\Strings;
+use Nette;
+use Nette\Utils\Strings;
 
 
 
@@ -66,12 +66,12 @@ class Parser extends Nette\Object
 	private $xmlMode;
 
 	/** @internal states */
-	const CONTEXT_HTML_TEXT = 'htmlText',
-		CONTEXT_CDATA = 'cdata',
-		CONTEXT_HTML_TAG = 'htmlTag',
-		CONTEXT_HTML_ATTRIBUTE = 'htmlAttribute',
-		CONTEXT_RAW = 'raw',
-		CONTEXT_HTML_COMMENT = 'htmlComment';
+	const CONTEXT_HTML_TEXT = 'htmlText';
+	const CONTEXT_CDATA = 'cdata';
+	const CONTEXT_HTML_TAG = 'htmlTag';
+	const CONTEXT_HTML_ATTRIBUTE = 'htmlAttribute';
+	const CONTEXT_RAW = 'raw';
+	const CONTEXT_HTML_COMMENT = 'htmlComment';
 
 
 

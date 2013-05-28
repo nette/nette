@@ -11,9 +11,9 @@
 
 namespace Nette\DI\Diagnostics;
 
-use Nette,
-	Nette\DI\Container,
-	Nette\Diagnostics\Dumper;
+use Nette;
+use Nette\DI\Container;
+use Nette\Diagnostics\Dumper;
 
 
 

@@ -7,8 +7,8 @@
  * @package    Nette\Application\Routers
  */
 
-use Nette\Http,
-	Nette\Application\Routers\SimpleRouter;
+use Nette\Http;
+use Nette\Application\Routers\SimpleRouter;
 
 
 

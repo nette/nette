@@ -24,9 +24,9 @@ final class Framework
 {
 
 	/** Nette Framework version identification */
-	const NAME = 'Nette Framework',
-		VERSION = '2.1-dev',
-		REVISION = '$WCREV$ released on $WCDATE$';
+	const NAME = 'Nette Framework';
+	const VERSION = '2.1-dev';
+	const REVISION = '$WCREV$ released on $WCDATE$';
 
 	/** @var bool set to TRUE if your host has disabled function ini_set */
 	public static $iAmUsingBadHost = FALSE;

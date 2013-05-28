@@ -11,10 +11,10 @@
 
 namespace NetteModule;
 
-use Nette,
-	Nette\Application,
-	Nette\Application\Responses,
-	Nette\Http;
+use Nette;
+use Nette\Application;
+use Nette\Application\Responses;
+use Nette\Http;
 
 
 

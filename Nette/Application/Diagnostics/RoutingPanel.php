@@ -11,10 +11,10 @@
 
 namespace Nette\Application\Diagnostics;
 
-use Nette,
-	Nette\Application\Routers,
-	Nette\Application\UI\Presenter, // templates
-	Nette\Diagnostics\Dumper;
+use Nette;
+use Nette\Application\Routers;
+use Nette\Application\UI\Presenter; // templates
+use Nette\Diagnostics\Dumper;
 
 
 

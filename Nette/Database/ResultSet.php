@@ -11,9 +11,9 @@
 
 namespace Nette\Database;
 
-use Nette,
-	PDO,
-	Nette\ObjectMixin;
+use Nette;
+use PDO;
+use Nette\ObjectMixin;
 
 
 

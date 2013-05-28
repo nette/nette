@@ -8,10 +8,10 @@
  * @keepTrailingSpaces
  */
 
-use Nette\Latte,
-	Nette\Utils\Html,
-	Nette\Templating\FileTemplate,
-	Nette\Templating\Template;
+use Nette\Latte;
+use Nette\Utils\Html;
+use Nette\Templating\FileTemplate;
+use Nette\Templating\Template;
 
 
 
