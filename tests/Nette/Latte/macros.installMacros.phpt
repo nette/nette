@@ -29,7 +29,7 @@ class MyMacros extends Latte\Macros\MacroSet
 }
 
 
-$template = new FileTemplate(__DIR__ . '/templates/use.latte');
+$template = new FileTemplate(__DIR__ . '/templates/installMacros.latte');
 $template->registerFilter(new Latte\Engine);
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');

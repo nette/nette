@@ -80,7 +80,7 @@ class CoreMacros extends MacroSet
 
 		$me->addMacro('capture', array($me, 'macroCapture'), array($me, 'macroCaptureEnd'));
 		$me->addMacro('include', array($me, 'macroInclude'));
-		$me->addMacro('use', array($me, 'macroUse'));
+		$me->addMacro('installMacros', array($me, 'macroInstallMacros'));
 
 		$me->addMacro('class', NULL, NULL, array($me, 'macroClass'));
 		$me->addMacro('attr', array($me, 'macroOldAttr'), '', array($me, 'macroAttr'));
@@ -195,9 +195,9 @@ class CoreMacros extends MacroSet
 
 
 	/**
-	 * {use class MacroSet}
+	 * {installMacros class MacroSet}
 	 */
-	public function macroUse(MacroNode $node, PhpWriter $writer)
+	public function macroInstallMacros(MacroNode $node, PhpWriter $writer)
 	{
 		Nette\Callback::create($node->tokenizer->fetchWord(), 'install')
 			->invoke($this->getCompiler())
