@@ -45,6 +45,9 @@ use Nette,
  */
 class CoreMacros extends MacroSet
 {
+	/** @var array */
+	private $useClauses;
+
 
 
 	public static function install(Latte\Compiler $compiler)
@@ -81,10 +84,21 @@ class CoreMacros extends MacroSet
 		$me->addMacro('capture', array($me, 'macroCapture'), array($me, 'macroCaptureEnd'));
 		$me->addMacro('include', array($me, 'macroInclude'));
 		$me->addMacro('installMacros', array($me, 'macroInstallMacros'));
+		$me->addMacro('use', array($me, 'macroUse'));
 
 		$me->addMacro('class', NULL, NULL, array($me, 'macroClass'));
 		$me->addMacro('attr', array($me, 'macroOldAttr'), '', array($me, 'macroAttr'));
 		$me->addMacro('href', NULL); // TODO: placeholder
+	}
+
+
+
+	/**
+	 * Initializes template parsing.
+	 */
+	public function initialize()
+	{
+		$this->useClauses = array();
 	}
 
 
@@ -96,7 +110,8 @@ class CoreMacros extends MacroSet
 	public function finalize()
 	{
 		return array('list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '
-			. var_export($this->getCompiler()->getTemplateId(), TRUE) . ')');
+			. var_export($this->getCompiler()->getTemplateId(), TRUE) . ')'
+			. ($this->useClauses ? (";\nuse " . implode(";\nuse ", $this->useClauses)) : ''));
 	}
 
 
@@ -202,6 +217,24 @@ class CoreMacros extends MacroSet
 		Nette\Callback::create($node->tokenizer->fetchWord(), 'install')
 			->invoke($this->getCompiler())
 			->initialize();
+	}
+
+
+
+	/**
+	 * {use namespace}
+	 */
+	public function macroUse(MacroNode $node, PhpWriter $writer)
+	{
+		if (class_exists($class = $node->tokenizer->fetchWord()) && method_exists($class, 'install')) {
+			trigger_error('{use} macro is deprecated for installing macros; use {installMacros} macro instead.', E_USER_DEPRECATED);
+			Nette\Callback::create($class, 'install')
+				->invoke($this->getCompiler())
+				->initialize();
+			return;
+		}
+
+		$this->useClauses[] = $node->args;
 	}
 
 

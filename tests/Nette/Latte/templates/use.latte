@@ -1,0 +1,12 @@
+
+{use Nette\Latte\MacroNode}
+{use Nette\Latte\MacroNode as MN}
+{use Nette\Latte\MacroNode as MN1, Nette\Latte\MacroNode as MN2}
+
+{MacroNode::PREFIX_INNER}
+{MN::PREFIX_INNER}
+
+{snippet test}
+	{MN1::PREFIX_INNER}
+	{MN2::PREFIX_INNER}
+{/snippet}

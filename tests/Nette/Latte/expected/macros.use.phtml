@@ -1,0 +1,49 @@
+<?php
+// prolog Nette\Latte\Macros\CoreMacros
+list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx');
+use Nette\Latte\MacroNode;
+use Nette\Latte\MacroNode as MN;
+use Nette\Latte\MacroNode as MN1, Nette\Latte\MacroNode as MN2
+;
+// prolog Nette\Latte\Macros\UIMacros
+//
+// block _test
+//
+if (!function_exists($_l->blocks['_test'][] = '_xxx__test')) { function _xxx__test($_l, $_args) { extract($_args); $_control->validateControl('test')
+?>	<?php echo Nette\Templating\Helpers::escapeHtml(MN1::PREFIX_INNER, ENT_NOQUOTES) ?>
+
+	<?php echo Nette\Templating\Helpers::escapeHtml(MN2::PREFIX_INNER, ENT_NOQUOTES) ?>
+
+<?php
+}}
+
+//
+// end of blocks
+//
+
+// template extending and snippets support
+
+$_l->extends = empty($template->_extended) && isset($_control) && $_control instanceof Nette\Application\UI\Presenter ? $_control->findLayoutTemplateFile() : NULL; $template->_extended = $_extended = TRUE;
+
+
+if ($_l->extends) {
+	ob_start();
+
+} elseif (!empty($_control->snippetMode)) {
+	return Nette\Latte\Macros\UIMacros::renderSnippets($_control, $_l, get_defined_vars());
+}
+
+//
+// main template
+//
+?>
+
+
+<?php echo Nette\Templating\Helpers::escapeHtml(MacroNode::PREFIX_INNER, ENT_NOQUOTES) ?>
+
+<?php echo Nette\Templating\Helpers::escapeHtml(MN::PREFIX_INNER, ENT_NOQUOTES) ?>
+
+
+<?php if ($_l->extends) { ob_end_clean(); return Nette\Latte\Macros\CoreMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render(); } ?>
+<div id="<?php echo $_control->getSnippetId('test') ?>"><?php call_user_func(reset($_l->blocks['_test']), $_l, $template->getParameters()) ?>
+</div>
