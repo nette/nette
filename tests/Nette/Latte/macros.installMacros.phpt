@@ -19,17 +19,18 @@ require __DIR__ . '/Template.inc';
 
 
 
-class MockControl
+class MyMacros extends Latte\Macros\MacroSet
 {
-	function __call($name, $args)
+	public function __construct($compiler)
 	{
+		parent::__construct($compiler);
+		$this->addMacro('my', 'echo "ok"');
 	}
 }
 
-$template = new FileTemplate(__DIR__ . '/templates/use.latte');
-$template->registerFilter(new Latte\Engine);
-$template->_control = new MockControl;
 
+$template = new FileTemplate(__DIR__ . '/templates/installMacros.latte');
+$template->registerFilter(new Latte\Engine);
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::match(file_get_contents("$path.phtml"), codefix($template->compile()));
