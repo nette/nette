@@ -206,6 +206,10 @@ class SqlBuilder extends Nette\Object
 
 	public function addWhere($condition, $parameters = array())
 	{
+		if (is_array($condition) && is_array($parameters) && !empty($parameters)) {
+			return $this->addWhereComposition($condition, $parameters);
+		}
+
 		$args = func_get_args();
 		$hash = md5(json_encode($args));
 		if (isset($this->conditions[$hash])) {
@@ -504,6 +508,19 @@ class SqlBuilder extends Nette\Object
 		return preg_replace_callback('#(?<=[^\w`"\[]|^)[a-z_][a-z0-9_]*(?=[^\w`"(\]]|\z)#i', function($m) use ($driver) {
 			return strtoupper($m[0]) === $m[0] ? $m[0] : $driver->delimite($m[0]);
 		}, $s);
+	}
+
+
+
+	protected function addWhereComposition(array $columns, array $parameters)
+	{
+		if ($this->driver->isSupported(ISupplementalDriver::SUPPORT_MULTI_COLUMN_AS_OR_COND)) {
+			$conditionFragment = '(' . implode(' = ? AND ', $columns) . ' = ?) OR ';
+			$condition = substr(str_repeat($conditionFragment, count($parameters)), 0, -4);
+			return $this->addWhere($condition, Nette\Utils\Arrays::flatten($parameters));
+		} else {
+			return $this->addWhere('(' . implode(', ', $columns) . ') IN', $parameters);
+		}
 	}
 
 }

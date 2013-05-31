@@ -85,6 +85,10 @@ $sqlBuilder[10] = new SqlBuilder('book', $connection, $reflection);
 $sqlBuilder[10]->addWhere('id NOT', array(1, 2));
 $sqlBuilder[10]->addWhere('id NOT', $dao->table('book')->select('id'));
 
+// tests multi column IN clause
+$sqlBuilder[11] = new SqlBuilder('book_tag', $connection, $reflection);
+$sqlBuilder[11]->addWhere(array('book_id', 'tag_id'), array(array(1, 11), array(2, 12)));
+
 Assert::same(reformat('SELECT * FROM [book] WHERE ([id] = ? OR [id] IS NULL)'), $sqlBuilder[0]->buildSelectQuery());
 Assert::same(reformat('SELECT * FROM [book] WHERE ([id] IN (?))'), $sqlBuilder[4]->buildSelectQuery());
 Assert::same(reformat('SELECT * FROM [book] WHERE ([id] = ? OR [id] = ? OR [id] IN (?))'), $sqlBuilder[5]->buildSelectQuery());
@@ -105,6 +109,14 @@ switch ($driverName) {
 		Assert::equal(reformat('SELECT * FROM [book] WHERE ([id] IN (SELECT [id] FROM [book]))'), $sqlBuilder[2]->buildSelectQuery());
 		Assert::equal(reformat('SELECT * FROM [book] WHERE ([id] IS NULL OR [id] IN (SELECT [id] FROM [book]))'), $sqlBuilder[3]->buildSelectQuery());
 		Assert::equal(reformat('SELECT * FROM [book] WHERE ([id] NOT IN (?)) AND ([id] NOT IN (SELECT [id] FROM [book]))'), $sqlBuilder[10]->buildSelectQuery());
+}
+
+switch ($driverName) {
+	case 'sqlite':
+		Assert::equal('SELECT * FROM [book_tag] WHERE (([book_id] = ? AND [tag_id] = ?) OR ([book_id] = ? AND [tag_id] = ?))', $sqlBuilder[11]->buildSelectQuery());
+		break;
+	default:
+		Assert::equal(reformat('SELECT * FROM [book_tag] WHERE (([book_id], [tag_id]) IN (?))'), $sqlBuilder[11]->buildSelectQuery());
 }
 
 
