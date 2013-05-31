@@ -668,6 +668,11 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	public static function validateRange(IControl $control, $range)
 	{
+		foreach($range as $key => $value) {
+			if($value instanceof IControl) {
+				$range[$key] = $value->isFilled() ? $value->getValue() : null;
+			}
+		}
 		return Nette\Utils\Validators::isInRange($control->getValue(), $range);
 	}
 

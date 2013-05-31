@@ -234,8 +234,16 @@ Nette.validators = {
 	},
 
 	range: function(elem, arg, val) {
-		return Nette.isArray(arg) ?
-			((arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1])) : null;
+		if (!Nette.isArray(arg)) {
+			return null;
+		}
+		for (var i = 0, len = arg.length; i < len; i++) {
+			if (arg[i] !== null && arg[i].control) {
+				var control = elem.form.elements[arg[i].control];
+				arg[i] = Nette.validators.filled(control, null, Nette.getValue(control)) ? parseFloat(Nette.getValue(control)) : null;
+			}
+		}
+		return (arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1]);
 	},
 
 	submitted: function(elem, arg, val) {
