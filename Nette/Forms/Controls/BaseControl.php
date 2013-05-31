@@ -588,10 +588,10 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 			if (is_array($rule->arg)) {
 				foreach ($rule->arg as $key => $value) {
-					$item['arg'][$key] = $value instanceof IControl ? (object) array('control' => $value->getHtmlName()) : $value;
+					$item['arg'][$key] = $value instanceof IControl ? array('control' => $value->getHtmlName()) : $value;
 				}
 			} elseif ($rule->arg !== NULL) {
-				$item['arg'] = $rule->arg instanceof IControl ? (object) array('control' => $rule->arg->getHtmlName()) : $rule->arg;
+				$item['arg'] = $rule->arg instanceof IControl ? array('control' => $rule->arg->getHtmlName()) : $rule->arg;
 			}
 
 			$payload[] = $item;
@@ -628,7 +628,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 		$value = $control->getValue();
 		foreach ((is_array($value) ? $value : array($value)) as $val) {
 			foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
-				if ((string) $val === (string) ($item instanceof IControl ? $item->value : $item)) {
+				if ((string) $val === (string) $item) {
 					return TRUE;
 				}
 			}

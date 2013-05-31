@@ -26,7 +26,7 @@ $form->addText('args3')
 	->addRule(Form::LENGTH, '%d %d', 1);
 
 $form->addText('special', 'Label')
-	->addRule(Form::EMAIL, '%label %value is invalid [field %name]')
+	->addRule(Form::EMAIL, '%label %value is invalid [field %name] %d', $form['special'])
 	->setDefaultValue('xyz');
 
 $form->validate();
@@ -39,6 +39,6 @@ Assert::same( array('5 1'), $form['args2']->getErrors() );
 
 Assert::same( array('1 '), $form['args3']->getErrors() );
 
-Assert::same( array('Label xyz is invalid [field special]'), $form['special']->getErrors() );
+Assert::same( array('Label xyz is invalid [field special] xyz'), $form['special']->getErrors() );
 
-Assert::match('%A%data-nette-rules=\'[{"op":":email","msg":"Label %value is invalid [field special]"%A%', $form->__toString(TRUE));
+Assert::match('%A%data-nette-rules=\'[{"op":":email","msg":"Label %value is invalid [field special] %0"%A%', $form->__toString(TRUE));

@@ -95,7 +95,11 @@ Nette.validateControl = function(elem, rules, onlyCheck) {
 				continue;
 			}
 			if (!onlyCheck) {
-				Nette.addError(el, rule.msg.replace('%value', Nette.getValue(el)));
+				var arr = Nette.isArray(rule.arg) ? rule.arg : [rule.arg];
+				var message = rule.msg.replace(/%(value|\d+)/g, function(foo, m) {
+					return Nette.getValue(m === 'value' ? el : elem.form.elements[arr[m].control]);
+				});
+				Nette.addError(el, message);
 			}
 			return false;
 		}
@@ -165,7 +169,13 @@ Nette.validateRule = function(elem, op, arg) {
 	op = op.replace('::', '_');
 	op = op.replace(/\\/g, '');
 
-	return Nette.validators[op] ? Nette.validators[op](elem, arg, val) : null;
+	arr = Nette.isArray(arg) ? arg.slice(0) : [arg];
+	for (var i = 0, len = arr.length; i < len; i++) {
+		if (arr[i].control) {
+			arr[i] = Nette.getValue(elem.form.elements[arr[i].control]);
+		}
+	}
+	return Nette.validators[op] ? Nette.validators[op](elem, Nette.isArray(arg) ? arr : arr[0], val) : null;
 };
 
 
@@ -184,7 +194,7 @@ Nette.validators = {
 		}
 		arg = Nette.isArray(arg) ? arg : [arg];
 		for (var i = 0, len = arg.length; i < len; i++) {
-			if (val == (arg[i].control ? Nette.getValue(elem.form.elements[arg[i].control]) : arg[i])) {
+			if (val == arg[i]) {
 				return true;
 			}
 		}

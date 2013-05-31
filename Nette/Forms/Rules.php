@@ -204,7 +204,11 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	 */
 	public static function validateRule(Rule $rule)
 	{
-		return $rule->isNegative xor static::getCallback($rule)->invoke($rule->control, $rule->arg);
+		$args = is_array($rule->arg) ? $rule->arg : array($rule->arg);
+		foreach ($args as & $val) {
+			$val = $val instanceof IControl ? $val->getValue() : $val;
+		}
+		return $rule->isNegative xor static::getCallback($rule)->invoke($rule->control, is_array($rule->arg) ? $args : $args[0]);
 	}
 
 
@@ -293,7 +297,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 				default:
 					$args = is_array($rule->arg) ? $rule->arg : array($rule->arg);
 					$i = (int) $m[1] ? $m[1] - 1 : $i + 1;
-					return isset($args[$i]) ? $args[$i] : '';
+					return isset($args[$i]) ? ($args[$i] instanceof IControl ? ($withValue ? $args[$i]->getValue() : "%$i") : $args[$i]) : '';
 			}
 		}, $message);
 		return $message;
