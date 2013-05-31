@@ -116,8 +116,8 @@ class Helpers
 		}, $sql);
 
 		// parameters
-		$i = 0;
-		$sql = preg_replace_callback('#\?#', function() use ($params, & $i) {
+		$sql = preg_replace_callback('#\?#', function() use ($params) {
+			static $i = 0;
 			if (!isset($params[$i])) {
 				return '?';
 			}

@@ -169,9 +169,9 @@ Nette.validateRule = function(elem, op, arg) {
 	op = op.replace('::', '_');
 	op = op.replace(/\\/g, '');
 
-	arr = Nette.isArray(arg) ? arg.slice(0) : [arg];
+	var arr = Nette.isArray(arg) ? arg.slice(0) : [arg];
 	for (var i = 0, len = arr.length; i < len; i++) {
-		if (arr[i].control) {
+		if (arr[i] && arr[i].control) {
 			arr[i] = Nette.getValue(elem.form.elements[arr[i].control]);
 		}
 	}

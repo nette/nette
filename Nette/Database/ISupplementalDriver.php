@@ -64,7 +64,7 @@ interface ISupplementalDriver
 	 * @param  int
 	 * @return void
 	 */
-	function applyLimit(&$sql, $limit, $offset);
+	function applyLimit(& $sql, $limit, $offset);
 
 	/**
 	 * Normalizes result row.

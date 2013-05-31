@@ -328,7 +328,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	 */
 	public function wherePrimary($key)
 	{
-		if (is_array($this->primary) && Nette\Utils\Validators::isList($key)) {
+		if (is_array($this->primary) && Nette\Utils\Arrays::isList($key)) {
 			if (isset($key[0]) && is_array($key[0])) {
 				$this->where($this->primary, $key);
 			} else {
@@ -336,7 +336,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 					$this->where($this->name . '.' . $primary, $key[$i]);
 				}
 			}
-		} elseif (is_array($key) && !Nette\Utils\Validators::isList($key)) { // key contains column names
+		} elseif (is_array($key) && !Nette\Utils\Arrays::isList($key)) { // key contains column names
 			$this->where($key);
 		} else {
 			$this->where($this->name . '.' . $this->getPrimary(), $key);
