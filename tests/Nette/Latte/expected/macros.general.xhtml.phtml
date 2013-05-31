@@ -286,3 +286,12 @@ Hello<?php endif ;$iterations++; endforeach ;$iterations = 0; foreach (array(1) 
 <?php $iterations = 0; foreach ($people as $person): ?>	<li><?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (TRUE) { echo "</li>\n"; continue; } ?></li>
 <?php $iterations++; endforeach ?>
 </ul>
+
+
+<ul title="inner foreach break">
+	<li><?php $iterations = 0; foreach ($people as $person): echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (TRUE) break ;$iterations++; endforeach ?></li>
+</ul>
+
+<ul title="inner foreach continue">
+	<li><?php $iterations = 0; foreach ($people as $person): echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (TRUE) continue ;$iterations++; endforeach ?></li>
+</ul>

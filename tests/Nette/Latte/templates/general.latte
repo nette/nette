@@ -217,3 +217,12 @@ var prop2 = {$people};
 <ul title="foreach continue">
 	<li n:foreach="$people as $person">{$person}{continueIf TRUE}</li>
 </ul>
+
+
+<ul title="inner foreach break">
+	<li n:inner-foreach="$people as $person">{$person}{breakIf TRUE}</li>
+</ul>
+
+<ul title="inner foreach continue">
+	<li n:inner-foreach="$people as $person">{$person}{continueIf TRUE}</li>
+</ul>

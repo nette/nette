@@ -255,7 +255,7 @@ class CoreMacros extends MacroSet
 	public function macroBreakContinueIf(MacroNode $node, PhpWriter $writer)
 	{
 		$cmd = str_replace('If', '', $node->name);
-		if ($node->parentNode && $node->parentNode->htmlNode) {
+		if ($node->parentNode && $node->parentNode->prefix === $node::PREFIX_NONE) {
 			return $writer->write("if (%node.args) { echo \"</{$node->parentNode->htmlNode->name}>\\n\"; $cmd; }");
 		}
 		return $writer->write("if (%node.args) $cmd");
