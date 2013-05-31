@@ -59,6 +59,16 @@ Assert::same( reformat("SELECT id FROM author WHERE ([id] IS NULL) AND ([name] =
 Assert::same( array(), $params );
 
 
+list($sql, $params) = $preprocessor->process(array('SELECT * FROM book_tag WHERE (book_id, tag_id) IN (?)', array(
+	array(1, 2),
+	array(3, 4),
+	array(5, 6),
+)));
+
+Assert::same( reformat("SELECT * FROM book_tag WHERE (book_id, tag_id) IN ((1, 2), (3, 4), (5, 6))"), $sql );
+Assert::same( array(), $params );
+
+
 // order
 list($sql, $params) = $preprocessor->process(array('SELECT id FROM author ORDER BY', array(
 	'id' => TRUE,
