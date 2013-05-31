@@ -282,7 +282,7 @@ class FileJournal extends Nette\Object implements IJournal
 	 * @param  array
 	 * @return array of removed items
 	 */
-	private function cleanTags(array $tags, array &$toDelete)
+	private function cleanTags(array $tags, array & $toDelete)
 	{
 		$entries = array();
 
@@ -305,7 +305,7 @@ class FileJournal extends Nette\Object implements IJournal
 	 * @param  array
 	 * @return array of removed items
 	 */
-	private function cleanPriority($priority, array &$toDelete)
+	private function cleanPriority($priority, array & $toDelete)
 	{
 		list($nodeId, $node) = $this->findIndexNode(self::PRIORITY, $priority);
 
@@ -353,7 +353,7 @@ class FileJournal extends Nette\Object implements IJournal
 	 * @param  array
 	 * @return array of removed items
 	 */
-	private function cleanLinks(array $data, array &$toDelete)
+	private function cleanLinks(array $data, array & $toDelete)
 	{
 		$return = array();
 
@@ -394,7 +394,7 @@ class FileJournal extends Nette\Object implements IJournal
 					continue;
 				}
 
-				$nodeLink = &$node[$link];
+				$nodeLink = & $node[$link];
 				if (!$nodeLink[self::DELETED]) {
 					$nodeLink[self::DELETED] = TRUE;
 					$return[] = $nodeLink[self::KEY];
@@ -499,7 +499,7 @@ class FileJournal extends Nette\Object implements IJournal
 	 * @param  array
 	 * @return void
 	 */
-	private function cleanIndexData($nextNodeId, array $links, &$masterNodeLink)
+	private function cleanIndexData($nextNodeId, array $links, & $masterNodeLink)
 	{
 		$prev = -1;
 
@@ -1158,7 +1158,7 @@ class FileJournal extends Nette\Object implements IJournal
 	 * @return int
 	 * @throws \Nette\InvalidStateException
 	 */
-	private function findNextFreeKey($nodeId, array &$nodeData)
+	private function findNextFreeKey($nodeId, array & $nodeData)
 	{
 		$newKey = $nodeData[self::INFO][self::LAST_INDEX] + 1;
 		$maxKey = ($nodeId + 1) << self::BITROT;
@@ -1184,7 +1184,7 @@ class FileJournal extends Nette\Object implements IJournal
 	 * @param  array
 	 * @return void
 	 */
-	private function arrayAppend(array &$array, array $append)
+	private function arrayAppend(array & $array, array $append)
 	{
 		foreach ($append as $value) {
 			$array[] = $value;
@@ -1199,7 +1199,7 @@ class FileJournal extends Nette\Object implements IJournal
 	 * @param  array
 	 * @return void
 	 */
-	private function arrayAppendKeys(array &$array, array $append)
+	private function arrayAppendKeys(array & $array, array $append)
 	{
 		foreach ($append as $key => $value) {
 			$array[$key] = $value;

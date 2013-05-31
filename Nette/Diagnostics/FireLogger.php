@@ -118,7 +118,7 @@ class FireLogger extends Nette\Object
 	 * @param  int    current recursion level
 	 * @return string
 	 */
-	private static function jsonDump(&$var, $level = 0)
+	private static function jsonDump(& $var, $level = 0)
 	{
 		if (is_bool($var) || is_null($var) || is_int($var) || is_float($var)) {
 			return $var;
@@ -140,7 +140,7 @@ class FireLogger extends Nette\Object
 			} elseif ($level < Debugger::$maxDepth || !Debugger::$maxDepth) {
 				$var[$marker] = TRUE;
 				$res = array();
-				foreach ($var as $k => &$v) {
+				foreach ($var as $k => & $v) {
 					if ($k !== $marker) {
 						$res[self::jsonDump($k)] = self::jsonDump($v, $level + 1);
 					}
@@ -161,7 +161,7 @@ class FireLogger extends Nette\Object
 			} elseif ($level < Debugger::$maxDepth || !Debugger::$maxDepth) {
 				$list[] = $var;
 				$res = array("\x00" => '(object) ' . get_class($var));
-				foreach ($arr as $k => &$v) {
+				foreach ($arr as $k => & $v) {
 					if ($k[0] === "\x00") {
 						$k = substr($k, strrpos($k, "\x00") + 1);
 					}

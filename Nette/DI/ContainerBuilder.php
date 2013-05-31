@@ -495,7 +495,7 @@ class ContainerBuilder extends Nette\Object
 	public function formatPhp($statement, $args, $self = NULL)
 	{
 		$that = $this;
-		array_walk_recursive($args, function(&$val) use ($self, $that) {
+		array_walk_recursive($args, function(& $val) use ($self, $that) {
 			list($val) = $that->normalizeEntity(array($val));
 
 			if ($val instanceof Statement) {
