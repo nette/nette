@@ -284,12 +284,18 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 		if ($translator = $rule->control->getForm()->getTranslator()) {
 			$message = $translator->translate($message, is_int($rule->arg) ? $rule->arg : NULL);
 		}
-		$message = vsprintf(preg_replace('#%(name|label|value)#', '%$0', $message), (array) $rule->arg);
-		$message = str_replace('%name', $rule->control->getName(), $message);
-		$message = str_replace('%label', $rule->control->translate($rule->control->caption), $message);
-		if ($withValue && strpos($message, '%value') !== FALSE) {
-			$message = str_replace('%value', $rule->control->getValue(), $message);
-		}
+		$i = -1;
+		$message = preg_replace_callback('#%(name|label|value|\d+\$[ds]|[ds])#', function($m) use ($rule, $withValue, & $i) {
+			switch ($m[1]) {
+				case 'name': return $rule->control->getName();
+				case 'label': return $rule->control->translate($rule->control->caption);
+				case 'value': return $withValue ? $rule->control->getValue() : $m[0];
+				default:
+					$args = is_array($rule->arg) ? $rule->arg : array($rule->arg);
+					$i = (int) $m[1] ? $m[1] - 1 : $i + 1;
+					return isset($args[$i]) ? $args[$i] : '';
+			}
+		}, $message);
 		return $message;
 	}
 
