@@ -11,13 +11,13 @@
 <tr>
 	<th><label for="frm-count">Number of results:</label></th>
 
-	<td><input type="number" name="count" id="frm-count" data-nette-rules='[{"op":":integer","msg":"Must be numeric value"},{"op":":range","msg":"Must be in range from 1 to 100","arg":[1,100]}]' max="100" min="1" value="10" /></td>
+	<td><input type="number" name="count" id="frm-count" data-nette-rules='[{"op":":integer","msg":"Must be numeric value"},{"op":":range","msg":"Must be in range from 1 to 100","arg":[1,100]}]' min="1" max="100" value="10" /></td>
 </tr>
 
 <tr>
 	<th><label for="frm-precision">Precision:</label></th>
 
-	<td><input type="range" name="precision" id="frm-precision" data-nette-rules='[{"op":":integer","msg":"Precision must be numeric value"},{"op":":range","msg":"Precision must be in range from 0 to 100","arg":[0,100]}]' max="100" min="0" value="50" /></td>
+	<td><input type="range" name="precision" id="frm-precision" data-nette-rules='[{"op":":integer","msg":"Precision must be numeric value"},{"op":":range","msg":"Precision must be in range from 0 to 100","arg":[0,100]}]' min="0" max="100" value="50" /></td>
 </tr>
 
 <tr>

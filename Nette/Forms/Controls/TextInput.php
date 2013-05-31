@@ -90,9 +90,10 @@ class TextInput extends TextBase
 			if ($rule->isNegative || $rule->type !== Nette\Forms\Rule::VALIDATOR) {
 
 			} elseif ($rule->operation === Nette\Forms\Form::RANGE && $control->type !== 'text') {
-				list($control->min, $control->max) = $rule->arg;
+				$control->min = isset($rule->arg[0]) && is_scalar($rule->arg[0]) ? $rule->arg[0] : NULL;
+				$control->max = isset($rule->arg[1]) && is_scalar($rule->arg[1]) ? $rule->arg[1] : NULL;
 
-			} elseif ($rule->operation === Nette\Forms\Form::PATTERN) {
+			} elseif ($rule->operation === Nette\Forms\Form::PATTERN && is_scalar($rule->arg)) {
 				$control->pattern = $rule->arg;
 			}
 		}

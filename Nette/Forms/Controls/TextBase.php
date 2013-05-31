@@ -107,7 +107,8 @@ abstract class TextBase extends BaseControl
 			if ($rule->type === Nette\Forms\Rule::VALIDATOR && !$rule->isNegative
 				&& ($rule->operation === Form::LENGTH || $rule->operation === Form::MAX_LENGTH)
 			) {
-				$control->maxlength = is_array($rule->arg) ? $rule->arg[1] : $rule->arg;
+				$arg = is_array($rule->arg) ? $rule->arg[1] : $rule->arg;
+				$control->maxlength = is_scalar($arg) ? $arg : NULL;
 			}
 		}
 		if ($this->emptyValue !== '') {
