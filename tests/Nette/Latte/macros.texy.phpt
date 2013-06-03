@@ -38,11 +38,11 @@ $result = (string) $template->setSource(<<<EOD
 {\$hello}
 ---------
 - Escaped: {\$hello}
-- Non-escaped: {!\$hello}
+- Non-escaped: {\$hello|noescape}
 
 - Escaped expression: {="<" . "b" . ">hello" . "</b>"}
 
-- Non-escaped expression: {!="<" . "b" . ">hello" . "</b>"}
+- Non-escaped expression: {="<" . "b" . ">hello" . "</b>"|noescape}
 
 - Array access: {\$people[1]}
 

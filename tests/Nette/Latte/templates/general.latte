@@ -2,14 +2,14 @@
 
 <ul>
 	<li>Escaped: {$hello}</li>
-	<li>Non-escaped: {!$hello}</li>
+	<li>Non-escaped: {$hello|noescape}</li>
 	<li>Escaped expression: {='<' . 'b' . '>hello' . '</b>'}</li>
-	<li>Non-escaped expression: {!='<' . 'b' . '>hello' . '</b>'}</li>
+	<li>Non-escaped expression: {='<' . 'b' . '>hello' . '</b>'|noescape}</li>
 	<li>Array access: {$people[1]}</li>
 	<li>Html: {$el}</li>
 	<li>Translated: {_$people[1]}</li>
 	<li>Translated string: {_ahoj}</li>
-	<li>Non-escaped and translated: {!_$people[1]}</li>
+	<li>Non-escaped and translated: {_$people[1]|noescape}</li>
 	<li>Condition: {$hello ? yes} {=$hello ? yes}</li>
 	<li>Array: {$hello ? [a, b, c]|join} {=[a, b, $hello ? c]|join}</li>
 </ul>
