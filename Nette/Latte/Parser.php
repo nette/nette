@@ -32,6 +32,9 @@ class Parser extends Nette\Object
 	/** @var string default macro tag syntax */
 	public $defaultSyntax = 'latte';
 
+	/** @var bool */
+	public $shortNoEscape = TRUE;
+
 	/** @var array */
 	public $syntaxes = array(
 		'latte' => array('\\{(?![\\s\'"{}])', '\\}'), // {...}
@@ -352,6 +355,9 @@ class Parser extends Nette\Object
 		if ($match['name'] === '') {
 			$match['name'] = $match['shortname'] ?: '=';
 			if ($match['noescape']) {
+				if (!$this->shortNoEscape) {
+					throw new CompileException("The noescape shortcut (exclamation mark) is not enabled, use the noescape modifier on line {$this->getLine()}.");
+				}
 				$match['modifiers'] .= '|noescape';
 			}
 		}
@@ -365,8 +371,15 @@ class Parser extends Nette\Object
 		$this->output[] = $token = new Token;
 		$token->type = $type;
 		$token->text = $text;
-		$token->line = substr_count($this->input, "\n", 0, max(1, $this->offset - 1)) + 1;
+		$token->line = $this->getLine();
 		return $token;
+	}
+
+
+
+	private function getLine()
+	{
+		return substr_count($this->input, "\n", 0, max(1, $this->offset - 1)) + 1;
 	}
 
 
