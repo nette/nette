@@ -33,18 +33,18 @@ $template->registerHelperLoader('Nette\Templating\Helpers::loader');
 $template->hello = '<i>Hello</i>';
 $template->people = array('John', 'Mary', 'Paul');
 
-$result = (string) $template->setSource(<<<EOD
+$result = (string) $template->setSource(<<<'EOD'
 {block|lower|texy}
-{\$hello}
+{$hello}
 ---------
-- Escaped: {\$hello}
-- Non-escaped: {\$hello|noescape}
+- Escaped: {$hello}
+- Non-escaped: {$hello|noescape}
 
 - Escaped expression: {="<" . "b" . ">hello" . "</b>"}
 
 - Non-escaped expression: {="<" . "b" . ">hello" . "</b>"|noescape}
 
-- Array access: {\$people[1]}
+- Array access: {$people[1]}
 
 [* image.jpg *]
 {/block}
