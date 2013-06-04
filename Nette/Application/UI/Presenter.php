@@ -206,10 +206,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 			$this->processSignal();
 
 			// RENDERING VIEW
-			$this->beforeRender();
-			// calls $this->render<View>()
-			$this->tryCall($this->formatRenderMethod($this->view), $this->params);
-			$this->afterRender();
+			$this->doRenderView();
 
 			// save component tree persistent state
 			$this->saveGlobalState();
@@ -286,6 +283,16 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 	}
 
+    /**
+     * Render presenter view
+     * The method calls $this->render<View>()
+     */
+    protected function doRenderView()
+    {
+        $this->beforeRender();
+        $this->tryCall($this->formatRenderMethod($this->view), $this->params);
+        $this->afterRender();
+    }
 
 
 	/**
