@@ -123,7 +123,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 
 			$s .= '<tr><td>';
 			if ($error) {
-				$s .= '<span title="' . htmlSpecialChars($error) . '">ERROR</span>';
+				$s .= '<span title="' . htmlSpecialChars($error, ENT_IGNORE | ENT_QUOTES) . '">ERROR</span>';
 			} elseif ($time !== NULL) {
 				$s .= sprintf('%0.3f', $time * 1000);
 			}
