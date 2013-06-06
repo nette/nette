@@ -8,6 +8,8 @@
  * @dataProvider? databases.ini
  */
 
+use Tester\Assert;
+
 require __DIR__ . '/connect.inc.php'; // create $connection
 
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
@@ -57,6 +59,46 @@ Assert::equal(array(
 	2 => Nette\Database\Row::from(array('id' => 2)),
 	3 => Nette\Database\Row::from(array('id' => 3)),
 	4 => Nette\Database\Row::from(array('id' => 4)),
+), $pairs);
+
+
+
+$pairs = $connection->query('SELECT id FROM book ORDER BY id')->fetchPairs(NULL, 'id');
+Assert::equal(array(
+	0 => 1,
+	1 => 2,
+	2 => 3,
+	3 => 4,
+), $pairs);
+
+
+
+$pairs = $connection->query('SELECT id FROM book ORDER BY id')->fetchPairs();
+Assert::equal(array(
+	0 => 1,
+	1 => 2,
+	2 => 3,
+	3 => 4,
+), $pairs);
+
+
+
+$pairs = $connection->query('SELECT id, id + 1 FROM book ORDER BY id')->fetchPairs();
+Assert::equal(array(
+	1 => 2,
+	2 => 3,
+	3 => 4,
+	4 => 5,
+), $pairs);
+
+
+
+$pairs = $connection->query('SELECT id, id + 1, title FROM book ORDER BY id')->fetchPairs();
+Assert::equal(array(
+	1 => 2,
+	2 => 3,
+	3 => 4,
+	4 => 5,
 ), $pairs);
 
 
