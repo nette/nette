@@ -271,12 +271,34 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	/**
 	 * @inheritDoc
 	 */
-	public function fetchPairs($key, $value = NULL)
+	public function fetchPairs($key = NULL, $value = NULL)
 	{
 		$return = array();
-		foreach ($this as $row) {
-			$return[is_object($row[$key]) ? (string) $row[$key] : $row[$key]] = ($value === NULL ? $row : $row[$value]);
+		$rows = $this->fetchAll();
+
+		if ($key === NULL && $value === NULL) {
+			$keys = count(reset($rows));
+			if ($keys === 0) {
+				throw new \LogicException('Selection result-set does not contain any column.');
+			} elseif ($keys === 1) {
+				$value = 0;
+			} else {
+				$key = 0;
+				$value = 1;
+			}
 		}
+
+
+		if ($key === NULL) {
+			foreach ($rows as $row) {
+				$return[] = ($value === NULL ? $row : $row[$value]);
+			}
+		} else {
+			foreach ($rows as $row) {
+				$return[is_object($row[$key]) ? (string) $row[$key] : $row[$key]] = ($value === NULL ? $row : $row[$value]);
+			}
+		}
+
 		return $return;
 	}
 
