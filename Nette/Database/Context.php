@@ -163,7 +163,7 @@ class Context extends Nette\Object
 	public function fetchPairs($args)
 	{
 		$args = func_get_args();
-		return $this->queryArgs(array_shift($args), $args)->fetchPairs(0, 1);
+		return $this->queryArgs(array_shift($args), $args)->fetchPairs();
 	}
 
 

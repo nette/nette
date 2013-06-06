@@ -278,7 +278,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	/**
 	 * @inheritDoc
 	 */
-	public function fetchPairs($key, $value = NULL)
+	public function fetchPairs($key = NULL, $value = NULL)
 	{
 		return Helpers::toPairs($this->fetchAll(), $key, $value);
 	}

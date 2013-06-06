@@ -253,7 +253,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	/**
 	 * @inheritDoc
 	 */
-	public function fetchPairs($key, $value = NULL)
+	public function fetchPairs($key = NULL, $value = NULL)
 	{
 		return Nette\Database\Helpers::toPairs(iterator_to_array($this), $key, $value);
 	}

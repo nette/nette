@@ -229,10 +229,33 @@ class Helpers
 	 */
 	public static function toPairs(array $rows, $key = NULL, $value = NULL)
 	{
-		$return = array();
-		foreach ($rows as $row) {
-			$return[is_object($row[$key]) ? (string) $row[$key] : $row[$key]] = ($value === NULL ? $row : $row[$value]);
+		if (!$rows) {
+			return array();
 		}
+
+		$keys = array_keys((array) reset($rows));
+		if (!count($keys)) {
+			throw new \LogicException('Result set does not contain any column.');
+
+		} elseif ($key === NULL && $value === NULL) {
+			if (count($keys) === 1) {
+				list($value) = $keys;
+			} else {
+				list($key, $value) = $keys;
+			}
+		}
+
+		$return = array();
+		if ($key === NULL) {
+			foreach ($rows as $row) {
+				$return[] = ($value === NULL ? $row : $row[$value]);
+			}
+		} else {
+			foreach ($rows as $row) {
+				$return[is_object($row[$key]) ? (string) $row[$key] : $row[$key]] = ($value === NULL ? $row : $row[$value]);
+			}
+		}
+
 		return $return;
 	}
 
