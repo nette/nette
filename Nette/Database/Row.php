@@ -49,7 +49,7 @@ class Row extends Nette\ArrayHash implements IRow
 	public function offsetExists($key)
 	{
 		if (is_int($key)) {
-			return (bool) array_slice((array) $this, $key, 1);
+			return (bool) current(array_slice((array) $this, $key, 1));
 		}
 		return parent::offsetExists($key);
 	}
