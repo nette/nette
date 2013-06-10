@@ -258,6 +258,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	{
 		$data = $this->pdoStatement ? $this->pdoStatement->fetch() : NULL;
 		if (!$data) {
+			$this->pdoStatement->closeCursor();
 			return FALSE;
 		}
 
