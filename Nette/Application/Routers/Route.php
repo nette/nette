@@ -322,7 +322,7 @@ class Route extends Nette\Object implements Application\IRouter
 				return NULL;
 
 			} elseif (isset($meta[self::FILTER_OUT])) {
-				$params[$name] = call_user_func($meta[self::FILTER_OUT], $params[$name]);
+				$params[$name] = call_user_func($meta[self::FILTER_OUT], $params[$name], $params);
 			}
 
 			if (isset($meta[self::PATTERN]) && !preg_match($meta[self::PATTERN], rawurldecode($params[$name]))) {
