@@ -652,8 +652,11 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 		if ($this->generalCacheKey) {
 			return $this->generalCacheKey;
 		}
-
-		return $this->generalCacheKey = md5(serialize(array(__CLASS__, $this->name, $this->sqlBuilder->getConditions())));
+		$key = array(__CLASS__, $this->name, $this->sqlBuilder->getConditions());
+		foreach (debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : FALSE) as $item) {
+			$key[] = isset($item['file'], $item['line']) ? $item['file'] . $item['line'] : NULL;
+		};
+		return $this->generalCacheKey = md5(serialize($key));
 	}
 
 
