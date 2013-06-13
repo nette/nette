@@ -66,11 +66,13 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 				$this->getElementPrototype()->id = 'frm-' . $name;
 			}
 
-			$this->setAction(new Link(
-				$presenter,
-				$name . self::NAME_SEPARATOR . 'submit!',
-				array()
-			));
+			if (!$this->getAction()) {
+				$this->setAction(new Link(
+					$presenter,
+					$name . self::NAME_SEPARATOR . 'submit!',
+					array()
+				));
+			}
 
 			if (iterator_count($this->getControls()) && $this->isSubmitted()) {
 				foreach ($this->getControls() as $control) {
