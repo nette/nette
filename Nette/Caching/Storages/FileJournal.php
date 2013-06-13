@@ -1186,7 +1186,7 @@ class FileJournal extends Nette\Object implements IJournal
 	 */
 	private function findNextFreeKey($nodeId, array & $nodeData)
 	{
-	  $newKey = $nodeData[self::INFO][self::LAST_INDEX] + 1;
+		$newKey = $nodeData[self::INFO][self::LAST_INDEX] + 1;
 		$maxKey = ($nodeId + 1) << self::BITROT;
 
 		if ($newKey >= $maxKey) {

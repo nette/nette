@@ -21,14 +21,14 @@ require __DIR__ . '/../bootstrap.php';
  */
 trait Trait1
 {
-    public function func1()
-    {}
+	public function func1()
+	{}
 }
 
 trait Trait2
 {
-    protected function func2()
-    {}
+	protected function func2()
+	{}
 }
 
 abstract class Class1

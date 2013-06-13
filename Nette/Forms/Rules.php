@@ -233,10 +233,10 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 		$toggles = $this->toggles;
 		foreach ($actual ? $this->rules : array() as $rule) {
 			if ($rule->type === Rule::CONDITION) {
-	    		$success = static::validateRule($rule);
-    			foreach ($rule->subRules->getToggles(TRUE) as $id => $hide) {
-    				$toggles[$id] = empty($toggles[$id]) ? ($success && $hide) : TRUE;
-    			}
+				$success = static::validateRule($rule);
+				foreach ($rule->subRules->getToggles(TRUE) as $id => $hide) {
+					$toggles[$id] = empty($toggles[$id]) ? ($success && $hide) : TRUE;
+				}
 			}
 		}
 		return $toggles;

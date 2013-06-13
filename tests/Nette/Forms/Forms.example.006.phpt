@@ -67,18 +67,18 @@ $form->fireEvents();
 
 Assert::same( array(
    'first' => array(
-      'name' => 'James Bond',
-      'email' => 'bond@007.com',
-      'street' => 'Unknown',
-      'city' => 'London',
-      'country' => 'GB',
+	  'name' => 'James Bond',
+	  'email' => 'bond@007.com',
+	  'street' => 'Unknown',
+	  'city' => 'London',
+	  'country' => 'GB',
    ),
    'second' => array(
-      'name' => 'Jim Beam',
-      'email' => 'jim@beam.com',
-      'street' => '',
-      'city' => '',
-      'country' => 'US',
+	  'name' => 'Jim Beam',
+	  'email' => 'jim@beam.com',
+	  'street' => '',
+	  'city' => '',
+	  'country' => 'US',
    ),
 ), $form->getValues(TRUE) );
 
