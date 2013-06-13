@@ -47,4 +47,12 @@ class SelectionFactory extends Nette\Object
 		return new Table\Selection($this->connection, $table, $this->reflection, $this->cacheStorage);
 	}
 
+
+
+	/** @return Connection */
+	public function getConnection()
+	{
+		return $this->connection;
+	}
+
 }
