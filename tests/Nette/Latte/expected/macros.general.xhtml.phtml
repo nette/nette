@@ -49,7 +49,7 @@ if ($_l->extends) {
 
 <ul>
 	<li>Escaped: <?php echo Nette\Templating\Helpers::escapeHtml($hello, ENT_NOQUOTES) ?></li>
-	<li>Non-escaped: <?php echo $hello ?></li>
+	<li>Non-escaped: <?php echo $hello ?> <?php echo $hello ?></li>
 	<li>Escaped expression: <?php echo Nette\Templating\Helpers::escapeHtml('<' . 'b' . '>hello' . '</b>', ENT_NOQUOTES) ?></li>
 	<li>Non-escaped expression: <?php echo '<' . 'b' . '>hello' . '</b>' ?></li>
 	<li>Array access: <?php echo Nette\Templating\Helpers::escapeHtml($people[1], ENT_NOQUOTES) ?></li>

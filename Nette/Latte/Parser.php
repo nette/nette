@@ -348,13 +348,14 @@ class Parser extends Nette\Object
 		if (!$match) {
 			return FALSE;
 		}
+		$modifiers = preg_replace('#\|noescape\s?(?=\||\z)#i', '', $match['modifiers'], -1, $noescape);
 		if ($match['name'] === '') {
 			$match['name'] = $match['shortname'] ?: '=';
-			if (!$match['noescape'] && substr($match['shortname'], 0, 1) !== '/') {
-				$match['modifiers'] .= '|escape';
+			if (!$noescape && !$match['noescape'] && substr($match['shortname'], 0, 1) !== '/') {
+				$modifiers .= '|escape';
 			}
 		}
-		return array($match['name'], trim($match['args']), $match['modifiers']);
+		return array($match['name'], trim($match['args']), $modifiers);
 	}
 
 
