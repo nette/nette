@@ -83,8 +83,8 @@ class Parser extends Nette\Object
 	public function parse($input)
 	{
 		if (substr($input, 0, 3) === "\xEF\xBB\xBF") { // BOM
-	    	$input = substr($input, 3);
-	    }
+			$input = substr($input, 3);
+		}
 		if (!Strings::checkEncoding($input)) {
 			throw new Nette\InvalidArgumentException('Template is not valid UTF-8 stream.');
 		}

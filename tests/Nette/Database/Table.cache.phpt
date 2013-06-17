@@ -105,7 +105,7 @@ $cacheStorage->clean(array(Nette\Caching\Cache::ALL => TRUE));
 $relatedStack = array();
 foreach ($connection->table('author') as $author) {
 	$relatedStack[] = $related = $author->related('book.author_id');
-	foreach ($related as $book)	{
+	foreach ($related as $book) {
 		$book->id;
 	}
 }

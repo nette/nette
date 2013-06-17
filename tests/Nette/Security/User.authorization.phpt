@@ -25,7 +25,7 @@ ob_start();
 
 class Authenticator implements IAuthenticator
 {
-	/*
+	/**
 	 * @param  array
 	 * @return IIdentity
 	 * @throws Nette\Security\AuthenticationException

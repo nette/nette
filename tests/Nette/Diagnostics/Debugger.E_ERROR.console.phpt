@@ -23,7 +23,7 @@ Debugger::enable();
 Debugger::$onFatalError[] = function() {
 	Assert::match("
 Fatal error: Call to undefined function missing_funcion() in %a%
-exception 'Nette\FatalErrorException' with message 'Call to undefined function missing_funcion()' in %a%
+exception 'Nette\\FatalErrorException' with message 'Call to undefined function missing_funcion()' in %a%
 Stack trace:
 #0 [internal function]: %ns%Debugger::_shutdownHandler()
 #1 {main}

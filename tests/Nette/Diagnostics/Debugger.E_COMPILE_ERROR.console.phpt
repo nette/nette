@@ -23,7 +23,7 @@ Debugger::enable();
 Debugger::$onFatalError[] = function() {
 	Assert::match("
 Fatal error: Cannot re-assign \$this in %a%
-exception 'Nette\FatalErrorException' with message 'Cannot re-assign \$this' in %a%
+exception 'Nette\\FatalErrorException' with message 'Cannot re-assign \$this' in %a%
 Stack trace:
 #0 [internal function]: %ns%Debugger::_shutdownHandler()
 #1 {main}
