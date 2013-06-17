@@ -147,7 +147,8 @@ class FormMacros extends MacroSet
 		}
 		return $writer->write(
 			($name[0] === '$' ? '$_input = is_object(%0.word) ? %0.word : $_form[%0.word]; echo $_input' : 'echo $_form[%0.word]')
-			. '->getControl(%1.raw)' . ($node->htmlNode->attrs ? '->addAttributes(%2.var)' : '') . '->attributes()',
+			. (strcasecmp($node->htmlNode->name, 'label') ? '->getControl(%1.raw)' : '->getLabel(%1.raw)')
+			. ($node->htmlNode->attrs ? '->addAttributes(%2.var)' : '') . '->attributes()',
 			$name,
 			isset($pair[1]) ? $writer->formatWord($pair[1]) : '',
 			array_fill_keys(array_keys($node->htmlNode->attrs), NULL)

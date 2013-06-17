@@ -13,6 +13,7 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 
 
 <?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array()) ?>
+	<LABEL<?php echo $_form["username"]->getLabel()->attributes() ?>>Name</LABEL>
 	<input value=val type class="hello" <?php echo $_form["username"]->getControl()->addAttributes(array (
   'value' => NULL,
   'type' => NULL,
