@@ -61,6 +61,8 @@ Nette\Diagnostics\Debugger::_init();
 
 Nette\Utils\SafeStream::register();
 
+/**/class_alias('Nette\Config\Configurator', 'Nette\Configurator');/**/
+
 
 
 /**
