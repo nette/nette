@@ -191,21 +191,17 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 
 		if (strcasecmp($this->form->getMethod(), 'get') === 0) {
 			$el = clone $this->form->getElementPrototype();
-			$url = explode('?', (string) $el->action, 2);
-			$el->action = $url[0];
+			$query = parse_url($el->action, PHP_URL_QUERY);
+			$el->action = str_replace("?$query", '', $el->action);
 			$s = '';
-			if (isset($url[1])) {
-				foreach (preg_split('#[;&]#', $url[1]) as $param) {
-					$parts = explode('=', $param, 2);
-					$name = urldecode($parts[0]);
-					if (!isset($this->form[$name])) {
-						$s .= Html::el('input', array('type' => 'hidden', 'name' => $name, 'value' => urldecode($parts[1])));
-					}
+			foreach (preg_split('#[;&]#', $query) as $param) {
+				$parts = explode('=', $param, 2);
+				$name = urldecode($parts[0]);
+				if (!isset($this->form[$name])) {
+					$s .= Html::el('input', array('type' => 'hidden', 'name' => $name, 'value' => urldecode($parts[1])));
 				}
-				$s = "\n\t" . $this->getWrapper('hidden container')->setHtml($s);
 			}
-			return $el->startTag() . $s;
-
+			return $el->startTag() . ($s ? "\n\t" . $this->getWrapper('hidden container')->setHtml($s) : '');
 
 		} else {
 			return $this->form->getElementPrototype()->startTag();

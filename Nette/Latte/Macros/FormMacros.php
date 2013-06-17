@@ -171,10 +171,7 @@ class FormMacros extends MacroSet
 		$el->action = $action = (string) $el->action;
 		$el = clone $el;
 		if (strcasecmp($form->getMethod(), 'get') === 0) {
-			list($el->action) = explode('?', $action, 2);
-			if (($i = strpos($action, '#')) !== FALSE) {
-				$el->action .= substr($action, $i);
-			}
+			$el->action = preg_replace('~\?[^#]*~', '', $el->action, 1);
 		}
 		echo $el->addAttributes($attrs)->startTag();
 	}
@@ -189,15 +186,11 @@ class FormMacros extends MacroSet
 	{
 		$s = '';
 		if (strcasecmp($form->getMethod(), 'get') === 0) {
-			$url = explode('?', $form->getElementPrototype()->action, 2);
-			if (isset($url[1])) {
-				list($url[1]) = explode('#', $url[1], 2);
-				foreach (preg_split('#[;&]#', $url[1]) as $param) {
-					$parts = explode('=', $param, 2);
-					$name = urldecode($parts[0]);
-					if (!isset($form[$name])) {
-						$s .= Nette\Utils\Html::el('input', array('type' => 'hidden', 'name' => $name, 'value' => urldecode($parts[1])));
-					}
+			foreach (preg_split('#[;&]#', parse_url($form->getElementPrototype()->action, PHP_URL_QUERY)) as $param) {
+				$parts = explode('=', $param, 2);
+				$name = urldecode($parts[0]);
+				if (!isset($form[$name])) {
+					$s .= Nette\Utils\Html::el('input', array('type' => 'hidden', 'name' => $name, 'value' => urldecode($parts[1])));
 				}
 			}
 		}
