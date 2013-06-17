@@ -23,9 +23,10 @@ use Nette;
  * @property-read bool $loggedIn
  * @property-read IIdentity $identity
  * @property-read mixed $id
- * @property   IAuthenticator $authenticator
- * @property-read int $logoutReason
  * @property-read array $roles
+ * @property-read int $logoutReason
+ * @property-read IUserStorage $storage
+ * @property   IAuthenticator $authenticator
  * @property   IAuthorizator $authorizator
  */
 class User extends Nette\Object
