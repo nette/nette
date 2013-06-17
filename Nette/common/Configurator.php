@@ -200,7 +200,9 @@ class Configurator extends Object
 					$config = DI\Config\Helpers::merge($loader->load($file, $this->parameters['environment']), $config);
 					continue;
 				}
-			} catch (Nette\Utils\AssertionException $e) {}
+			} catch (Nette\InvalidStateException $e) {
+			} catch (Nette\Utils\AssertionException $e) {
+			}
 
 			$config = DI\Config\Helpers::merge($loader->load($file, $section), $config);
 		}
