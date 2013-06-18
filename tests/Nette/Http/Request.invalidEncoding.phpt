@@ -67,57 +67,60 @@ $_FILES = array(
 	),
 );
 
-// unfiltered data
-$factory = new Http\RequestFactory;
-$request = $factory->createHttpRequest();
+test(function() { // unfiltered data
+	$factory = new Http\RequestFactory;
+	$request = $factory->createHttpRequest();
 
-Assert::same( $request->getQuery('invalid'), INVALID );
-Assert::same( $request->getQuery('control'), CONTROL_CHARACTERS );
-Assert::same( '1', $request->getQuery(INVALID) );
-Assert::same( '1', $request->getQuery(CONTROL_CHARACTERS) );
-Assert::same( '1', $request->query['array'][INVALID] );
+	Assert::same( $request->getQuery('invalid'), INVALID );
+	Assert::same( $request->getQuery('control'), CONTROL_CHARACTERS );
+	Assert::same( '1', $request->getQuery(INVALID) );
+	Assert::same( '1', $request->getQuery(CONTROL_CHARACTERS) );
+	Assert::same( '1', $request->query['array'][INVALID] );
 
-Assert::same( $request->getPost('invalid'), INVALID );
-Assert::same( $request->getPost('control'), CONTROL_CHARACTERS );
-Assert::same( '1', $request->getPost(INVALID) );
-Assert::same( '1', $request->getPost(CONTROL_CHARACTERS) );
-Assert::same( '1', $request->post['array'][INVALID] );
+	Assert::same( $request->getPost('invalid'), INVALID );
+	Assert::same( $request->getPost('control'), CONTROL_CHARACTERS );
+	Assert::same( '1', $request->getPost(INVALID) );
+	Assert::same( '1', $request->getPost(CONTROL_CHARACTERS) );
+	Assert::same( '1', $request->post['array'][INVALID] );
 
-Assert::same( $request->getCookie('invalid'), INVALID );
-Assert::same( $request->getCookie('control'), CONTROL_CHARACTERS );
-Assert::same( '1', $request->getCookie(INVALID) );
-Assert::same( '1', $request->getCookie(CONTROL_CHARACTERS) );
-Assert::same( '1', $request->cookies['array'][INVALID] );
+	Assert::same( $request->getCookie('invalid'), INVALID );
+	Assert::same( $request->getCookie('control'), CONTROL_CHARACTERS );
+	Assert::same( '1', $request->getCookie(INVALID) );
+	Assert::same( '1', $request->getCookie(CONTROL_CHARACTERS) );
+	Assert::same( '1', $request->cookies['array'][INVALID] );
 
-Assert::type( 'Nette\Http\FileUpload', $request->getFile(INVALID) );
-Assert::type( 'Nette\Http\FileUpload', $request->getFile(CONTROL_CHARACTERS) );
-Assert::type( 'Nette\Http\FileUpload', $request->files['file1'] );
+	Assert::type( 'Nette\Http\FileUpload', $request->getFile(INVALID) );
+	Assert::type( 'Nette\Http\FileUpload', $request->getFile(CONTROL_CHARACTERS) );
+	Assert::type( 'Nette\Http\FileUpload', $request->files['file1'] );
+});
 
 
-// filtered data
-$factory = new Http\RequestFactory;
-$factory->setEncoding('UTF-8');
-$request = $factory->createHttpRequest();
 
-Assert::same( "v\xc5\xbe", $request->getQuery('invalid') );
-Assert::same( 'ABC', $request->getQuery('control') );
-Assert::null( $request->getQuery(INVALID) );
-Assert::null( $request->getQuery(CONTROL_CHARACTERS) );
-Assert::false( isset($request->query['array'][INVALID]) );
+test(function() { // filtered data
+	$factory = new Http\RequestFactory;
+	$factory->setEncoding('UTF-8');
+	$request = $factory->createHttpRequest();
 
-Assert::same( "v\xc5\xbe", $request->getPost('invalid') );
-Assert::same( 'ABC', $request->getPost('control') );
-Assert::null( $request->getPost(INVALID) );
-Assert::null( $request->getPost(CONTROL_CHARACTERS) );
-Assert::false( isset($request->post['array'][INVALID]) );
+	Assert::same( "v\xc5\xbe", $request->getQuery('invalid') );
+	Assert::same( 'ABC', $request->getQuery('control') );
+	Assert::null( $request->getQuery(INVALID) );
+	Assert::null( $request->getQuery(CONTROL_CHARACTERS) );
+	Assert::false( isset($request->query['array'][INVALID]) );
 
-Assert::same( "v\xc5\xbe", $request->getCookie('invalid') );
-Assert::same( 'ABC', $request->getCookie('control') );
-Assert::null( $request->getCookie(INVALID) );
-Assert::null( $request->getCookie(CONTROL_CHARACTERS) );
-Assert::false( isset($request->cookies['array'][INVALID]) );
+	Assert::same( "v\xc5\xbe", $request->getPost('invalid') );
+	Assert::same( 'ABC', $request->getPost('control') );
+	Assert::null( $request->getPost(INVALID) );
+	Assert::null( $request->getPost(CONTROL_CHARACTERS) );
+	Assert::false( isset($request->post['array'][INVALID]) );
 
-Assert::null( $request->getFile(INVALID) );
-Assert::null( $request->getFile(CONTROL_CHARACTERS) );
-Assert::type( 'Nette\Http\FileUpload', $request->files['file1'] );
-Assert::same( "v\xc5\xbe", $request->files['file1']->name );
+	Assert::same( "v\xc5\xbe", $request->getCookie('invalid') );
+	Assert::same( 'ABC', $request->getCookie('control') );
+	Assert::null( $request->getCookie(INVALID) );
+	Assert::null( $request->getCookie(CONTROL_CHARACTERS) );
+	Assert::false( isset($request->cookies['array'][INVALID]) );
+
+	Assert::null( $request->getFile(INVALID) );
+	Assert::null( $request->getFile(CONTROL_CHARACTERS) );
+	Assert::type( 'Nette\Http\FileUpload', $request->files['file1'] );
+	Assert::same( "v\xc5\xbe", $request->files['file1']->name );
+});

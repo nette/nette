@@ -18,17 +18,21 @@ Assert::same('Jakub Vrana', $dao->table('book')->get(1)->ref('author')->name);
 
 
 
-$book = $dao->table('book')->get(1);
-$book->update(array(
-	'translator_id' => 12,
-));
+test(function() use ($dao) {
+	$book = $dao->table('book')->get(1);
+	$book->update(array(
+		'translator_id' => 12,
+	));
 
 
 
-$book = $dao->table('book')->get(1);
-Assert::same('David Grudl', $book->ref('author', 'translator_id')->name);
-Assert::same('Jakub Vrana', $book->ref('author', 'author_id')->name);
+	$book = $dao->table('book')->get(1);
+	Assert::same('David Grudl', $book->ref('author', 'translator_id')->name);
+	Assert::same('Jakub Vrana', $book->ref('author', 'author_id')->name);
+});
 
 
 
-Assert::null($dao->table('book')->get(2)->ref('author', 'translator_id'));
+test(function() use ($dao) {
+	Assert::null($dao->table('book')->get(2)->ref('author', 'translator_id'));
+});

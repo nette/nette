@@ -20,17 +20,21 @@ $dao = new Nette\Database\SelectionFactory(
 );
 
 
+test(function() use ($dao) {
+	$book = $dao->table('book')->get(1);
+	$book->related('book_tag')->insert(array('tag_id' => 23));
 
-$book = $dao->table('book')->get(1);
-$book->related('book_tag')->insert(array('tag_id' => 23));
+	Assert::equal(3, $book->related('book_tag')->count());
+	Assert::equal(3, $book->related('book_tag')->count('*'));
 
-Assert::equal(3, $book->related('book_tag')->count());
-Assert::equal(3, $book->related('book_tag')->count('*'));
+	$book->related('book_tag')->where('tag_id', 23)->delete();
+});
 
-$book->related('book_tag')->where('tag_id', 23)->delete();
 
-// test counting already fetched rows
-$book = $dao->table('book')->get(1);
-iterator_to_array($book->related('book_tag'));
-$book->related('book_tag')->insert(array('tag_id' => 23));
-Assert::equal(3, $book->related('book_tag')->count());
+
+test(function() use ($dao) { // test counting already fetched rows
+	$book = $dao->table('book')->get(1);
+	iterator_to_array($book->related('book_tag'));
+	$book->related('book_tag')->insert(array('tag_id' => 23));
+	Assert::equal(3, $book->related('book_tag')->count());
+});

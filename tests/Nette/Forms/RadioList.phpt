@@ -30,39 +30,43 @@ $series = array(
 );
 
 
-// Radio list
+test(function() use ($series) { // Radio list
 
-$form = new Form();
-$form->addRadioList('series0', NULL, $series);
+	$form = new Form();
+	$form->addRadioList('series0', NULL, $series);
 
-Assert::true( (bool) $form->isSubmitted() );
-Assert::true( $form->isValid() );
-Assert::same( array(
-	'series0' => 'red-dwarf',
-), (array) $form->getValues() );
-
-
-
-// Radio list with invalid input
-
-$form = new Form();
-$form->addRadioList('series1', NULL, $series);
-
-Assert::true( (bool) $form->isSubmitted() );
-Assert::true( $form->isValid() );
-Assert::same( array(
-	'series1' => NULL,
-), (array) $form->getValues() );
+	Assert::true( (bool) $form->isSubmitted() );
+	Assert::true( $form->isValid() );
+	Assert::same( array(
+		'series0' => 'red-dwarf',
+	), (array) $form->getValues() );
+});
 
 
-// Indexed arrays
 
-$form = new Form();
-$form->addRadioList('series2', NULL, $series);
+test(function() use ($series) { // Radio list with invalid input
 
-Assert::true( (bool) $form->isSubmitted() );
-Assert::true( $form->isValid() );
-Assert::same( array(
-	'series2' => 0,
-), (array) $form->getValues() );
-Assert::same( 0, $form['series2']->getRawValue() );
+	$form = new Form();
+	$form->addRadioList('series1', NULL, $series);
+
+	Assert::true( (bool) $form->isSubmitted() );
+	Assert::true( $form->isValid() );
+	Assert::same( array(
+		'series1' => NULL,
+	), (array) $form->getValues() );
+});
+
+
+
+test(function() use ($series) { // Indexed arrays
+
+	$form = new Form();
+	$form->addRadioList('series2', NULL, $series);
+
+	Assert::true( (bool) $form->isSubmitted() );
+	Assert::true( $form->isValid() );
+	Assert::same( array(
+		'series2' => 0,
+	), (array) $form->getValues() );
+	Assert::same( 0, $form['series2']->getRawValue() );
+});

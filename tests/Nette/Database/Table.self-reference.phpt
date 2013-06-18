@@ -21,15 +21,19 @@ $dao = new Nette\Database\SelectionFactory(
 );
 
 
-
 $connection->query('UPDATE book SET next_volume = 3 WHERE id IN (2,4)');
 
-$book = $dao->table('book')->get(4);
-Assert::same('Nette', $book->volume->title);
-Assert::same('Nette', $book->ref('book', 'next_volume')->title);
+
+test(function() use ($connection, $dao) {
+	$book = $dao->table('book')->get(4);
+	Assert::same('Nette', $book->volume->title);
+	Assert::same('Nette', $book->ref('book', 'next_volume')->title);
+});
 
 
 
-$book = $dao->table('book')->get(3);
-Assert::same(2, $book->related('book.next_volume')->count('*'));
-Assert::same(2, $book->related('book', 'next_volume')->count('*'));
+test(function() use ($dao) {
+	$book = $dao->table('book')->get(3);
+	Assert::same(2, $book->related('book.next_volume')->count('*'));
+	Assert::same(2, $book->related('book', 'next_volume')->count('*'));
+});

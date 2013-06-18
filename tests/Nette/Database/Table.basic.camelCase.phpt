@@ -19,15 +19,17 @@ $dao = new Nette\Database\SelectionFactory(
 
 
 
-$titles = array();
-foreach ($dao->table('nUsers')->order('nUserId') as $user) {
-	foreach ($user->related('nUsers_nTopics')->order('nTopicId') as $userTopic) {
-		$titles[$userTopic->nTopic->title] = $user->name;
+test(function() use ($dao) {
+	$titles = array();
+	foreach ($dao->table('nUsers')->order('nUserId') as $user) {
+		foreach ($user->related('nUsers_nTopics')->order('nTopicId') as $userTopic) {
+			$titles[$userTopic->nTopic->title] = $user->name;
+		}
 	}
-}
 
-Assert::same(array(
-	'Topic #1' => 'John',
-	'Topic #3' => 'John',
-	'Topic #2' => 'Doe',
-), $titles);
+	Assert::same(array(
+		'Topic #1' => 'John',
+		'Topic #3' => 'John',
+		'Topic #2' => 'Doe',
+	), $titles);
+});

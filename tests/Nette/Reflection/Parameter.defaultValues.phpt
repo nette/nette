@@ -15,7 +15,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-function test($method, $args)
+function check($method, $args)
 {
 	$method = new Reflection\Method($method);
 	foreach ($method->getParameters() as $param) {
@@ -43,42 +43,42 @@ class Test
 }
 
 
-test( 'Test::func1', array(
+check( 'Test::func1', array(
 	/* $a */ array(FALSE, FALSE),
 	/* $b */ array(FALSE, FALSE),
 	/* $c */ array(FALSE, FALSE)
 ));
-test( 'Test::func2', array(
+check( 'Test::func2', array(
 	/* $a */ array(FALSE, FALSE),
 	/* $b */ array(FALSE, PHP_VERSION_ID >= 50407 || (PHP_VERSION_ID >= 50317 && PHP_VERSION_ID < 50400)),
 	/* $c */ array(FALSE, FALSE)
 ));
-test( 'Test::func3', array(
+check( 'Test::func3', array(
 	/* $a */ array(FALSE, FALSE),
 	/* $b */ array(TRUE, TRUE, NULL),
 	/* $c */ array(TRUE, TRUE, NULL)
 ));
-test( 'Test::func4', array(
+check( 'Test::func4', array(
 	/* $a */ array(FALSE, FALSE),
 	/* $b */ array(FALSE, PHP_VERSION_ID >= 50407 || (PHP_VERSION_ID >= 50317 && PHP_VERSION_ID < 50400)),
 	/* $c */ array(FALSE, FALSE)
 ));
-test( 'Test::func5', array(
+check( 'Test::func5', array(
 	/* $a */ array(FALSE, FALSE),
 	/* $b */ array(TRUE, TRUE, NULL),
 	/* $c */ array(TRUE, TRUE, NULL)
 ));
-test( 'Test::func6', array(
+check( 'Test::func6', array(
 	/* $a */ array(FALSE, FALSE),
 	/* $b */ array(FALSE, PHP_VERSION_ID >= 50407 || (PHP_VERSION_ID >= 50317 && PHP_VERSION_ID < 50400)),
 	/* $c */ array(FALSE, FALSE)
 ));
-test( 'Test::func7', array(
+check( 'Test::func7', array(
 	/* $a */ array(FALSE, FALSE),
 	/* $b */ array(TRUE, TRUE, NULL),
 	/* $c */ array(TRUE, TRUE, NULL)
 ));
-test( 'PDO::__construct', array(
+check( 'PDO::__construct', array(
 	/* $dsn */ array(FALSE, FALSE),
 	/* $username */ array(FALSE, FALSE),
 	/* $passwd */ array(FALSE, FALSE),

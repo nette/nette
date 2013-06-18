@@ -32,35 +32,39 @@ class TestClass
 }
 
 
-
-// Class annotations
-
 $rc = new Reflection\ClassType('TestClass');
-$tmp = $rc->getAnnotations();
 
-Assert::same( 'John Doe',  $tmp['author'][0] );
-Assert::true( $tmp['renderable'][0] );
+test(function() use ($rc) { // Class annotations
 
-Assert::true( $rc->hasAnnotation('author'), "has('author')' );
-Assert::same( 'John Doe",  $rc->getAnnotation('author') );
+	$tmp = $rc->getAnnotations();
 
+	Assert::same( 'John Doe',  $tmp['author'][0] );
+	Assert::true( $tmp['renderable'][0] );
 
-
-// Method annotations
-
-$rm = $rc->getMethod('foo');
-$tmp = $rm->getAnnotations();
-
-Assert::true( $tmp['AJAX'][0] );
-Assert::true( $rm->hasAnnotation('AJAX'), "has('AJAX')" );
-Assert::true( $rm->getAnnotation('AJAX') );
+	Assert::true( $rc->hasAnnotation('author'), "has('author')' );
+	Assert::same( 'John Doe",  $rc->getAnnotation('author') );
+});
 
 
-// Property annotations
 
-$rp = $rc->getProperty('foo');
-$tmp = $rp->getAnnotations();
+test(function() use ($rc) { // Method annotations
 
-Assert::true( $tmp['secured'][0] );
-Assert::true( $rp->hasAnnotation('secured'), "has('secured')" );
-Assert::true( $rp->getAnnotation('secured') );
+	$rm = $rc->getMethod('foo');
+	$tmp = $rm->getAnnotations();
+
+	Assert::true( $tmp['AJAX'][0] );
+	Assert::true( $rm->hasAnnotation('AJAX'), "has('AJAX')" );
+	Assert::true( $rm->getAnnotation('AJAX') );
+});
+
+
+
+test(function() use ($rc) { // Property annotations
+
+	$rp = $rc->getProperty('foo');
+	$tmp = $rp->getAnnotations();
+
+	Assert::true( $tmp['secured'][0] );
+	Assert::true( $rp->hasAnnotation('secured'), "has('secured')" );
+	Assert::true( $rp->getAnnotation('secured') );
+});
