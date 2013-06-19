@@ -43,7 +43,7 @@
 <tr>
 	<th></th>
 
-	<td><input type="checkbox" name="send" id="frm-send" data-nette-rules='[{"op":":equal","rules":[],"control":"send","toggle":{"sendBox":true},"arg":true}]' checked="checked" /><label for="frm-send">Ship to address</label></td>
+	<td><label for="frm-send"><input type="checkbox" name="send" id="frm-send" data-nette-rules='[{"op":":equal","rules":[],"control":"send","toggle":{"sendBox":true},"arg":true}]' checked="checked" />Ship to address</label></td>
 </tr>
 </table>
 

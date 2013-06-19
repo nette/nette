@@ -467,8 +467,8 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 			$description = $this->getValue('control requiredsuffix') . $description;
 		}
 
-		$label = $control instanceof Nette\Forms\Controls\Checkbox ? $control->getLabel() : NULL;
-		return $body->setHtml($control->getControl() . $label . $description . $this->renderErrors($control));
+		$el = $control instanceof Nette\Forms\Controls\Checkbox ? $control->getLabel()->insert(0, $control->getControl()) : $control->getControl();
+		return $body->setHtml($el . $description . $this->renderErrors($control));
 	}
 
 
