@@ -186,7 +186,7 @@ class FormMacros extends MacroSet
 	{
 		$s = '';
 		if (strcasecmp($form->getMethod(), 'get') === 0) {
-			foreach (preg_split('#[;&]#', parse_url($form->getElementPrototype()->action, PHP_URL_QUERY)) as $param) {
+			foreach (preg_split('#[;&]#', parse_url($form->getElementPrototype()->action, PHP_URL_QUERY), NULL, PREG_SPLIT_NO_EMPTY) as $param) {
 				$parts = explode('=', $param, 2);
 				$name = urldecode($parts[0]);
 				if (!isset($form[$name])) {
