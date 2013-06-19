@@ -39,7 +39,7 @@ test(function() {
 	Assert::same('<label for="frm-list-0">Another label</label>', (string) $input->getLabel('Another label', 0));
 
 	Assert::type('Nette\Utils\Html', $input->getControl());
-	Assert::same('<input type="radio" name="list" id="frm-list-a" value="a" /><label for="frm-list-a">First</label><br /><input type="radio" name="list" id="frm-list-0" value="0" /><label for="frm-list-0">Second</label><br />', (string) $input->getControl());
+	Assert::same('<label for="frm-list-a"><input type="radio" name="list" id="frm-list-a" value="a" />First</label><br /><label for="frm-list-0"><input type="radio" name="list" id="frm-list-0" value="0" />Second</label><br />', (string) $input->getControl());
 	Assert::same('<input type="radio" name="list" id="frm-list-0" value="0" />', (string) $input->getControl(0));
 });
 
@@ -52,7 +52,7 @@ test(function() { // checked
 		0 => 'Second',
 	))->setValue(0);
 
-	Assert::same('<input type="radio" name="list" id="frm-list-a" value="a" /><label for="frm-list-a">First</label><br /><input type="radio" name="list" id="frm-list-0" checked="checked" value="0" /><label for="frm-list-0">Second</label><br />', (string) $input->getControl());
+	Assert::same('<label for="frm-list-a"><input type="radio" name="list" id="frm-list-a" value="a" />First</label><br /><label for="frm-list-0"><input type="radio" name="list" id="frm-list-0" checked="checked" value="0" />Second</label><br />', (string) $input->getControl());
 });
 
 
@@ -70,7 +70,7 @@ test(function() { // translator
 	Assert::same('<label for="frm-list-0">SECOND</label>', (string) $input->getLabel(NULL, 0));
 	Assert::same('<label for="frm-list-0">ANOTHER LABEL</label>', (string) $input->getLabel('Another label', 0));
 
-	Assert::same('<input type="radio" name="list" id="frm-list-a" value="a" /><label for="frm-list-a">FIRST</label><br /><input type="radio" name="list" id="frm-list-0" value="0" /><label for="frm-list-0">SECOND</label><br />', (string) $input->getControl());
+	Assert::same('<label for="frm-list-a"><input type="radio" name="list" id="frm-list-a" value="a" />FIRST</label><br /><label for="frm-list-0"><input type="radio" name="list" id="frm-list-0" value="0" />SECOND</label><br />', (string) $input->getControl());
 	Assert::same('<input type="radio" name="list" id="frm-list-0" value="0" />', (string) $input->getControl(0));
 });
 
@@ -87,8 +87,8 @@ test(function() { // Html
 	Assert::same('<label><b>Another label</b></label>', (string) $input->getLabel(Html::el('b', 'Another label')));
 	Assert::same('<label for="frm-list-0"><b>Another label</b></label>', (string) $input->getLabel(Html::el('b', 'Another label'), 0));
 
-	Assert::same('<input type="radio" name="list" id="frm-list-a" value="a" /><label for="frm-list-a"><b>First</b></label><br />', (string) $input->getControl());
-	Assert::same('<input type="radio" name="list" id="frm-list-0" value="0" />', (string) $input->getControl(0));
+	Assert::same('<label for="frm-list-a"><input type="radio" name="list" id="frm-list-a" value="a" /><b>First</b></label><br />', (string) $input->getControl());
+	Assert::same('<input type="radio" name="list" id="frm-list-a" value="a" />', (string) $input->getControl('a'));
 });
 
 
@@ -100,7 +100,7 @@ test(function() { // validation rules
 		0 => 'Second',
 	))->setRequired('required');
 
-	Assert::same('<input type="radio" name="list" id="frm-list-a" required="required" data-nette-rules=\'[{"op":":filled","msg":"required"}]\' value="a" /><label for="frm-list-a">First</label><br /><input type="radio" name="list" id="frm-list-0" required="required" value="0" /><label for="frm-list-0">Second</label><br />', (string) $input->getControl());
+	Assert::same('<label for="frm-list-a"><input type="radio" name="list" id="frm-list-a" required="required" data-nette-rules=\'[{"op":":filled","msg":"required"}]\' value="a" />First</label><br /><label for="frm-list-0"><input type="radio" name="list" id="frm-list-0" required="required" value="0" />Second</label><br />', (string) $input->getControl());
 	Assert::same('<input type="radio" name="list" id="frm-list-0" required="required" data-nette-rules=\'[{"op":":filled","msg":"required"}]\' value="0" />', (string) $input->getControl(0));
 });
 
@@ -114,5 +114,5 @@ test(function() { // container
 		0 => 'Second',
 	));
 
-	Assert::same('<input type="radio" name="container[list]" id="frm-container-list-a" value="a" /><label for="frm-container-list-a">First</label><br /><input type="radio" name="container[list]" id="frm-container-list-0" value="0" /><label for="frm-container-list-0">Second</label><br />', (string) $input->getControl());
+	Assert::same('<label for="frm-container-list-a"><input type="radio" name="container[list]" id="frm-container-list-a" value="a" />First</label><br /><label for="frm-container-list-0"><input type="radio" name="container[list]" id="frm-container-list-0" value="0" />Second</label><br />', (string) $input->getControl());
 });

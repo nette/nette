@@ -149,30 +149,29 @@ class RadioList extends BaseControl
 	 */
 	public function getControl($key = NULL)
 	{
-		$value = $this->value === NULL ? NULL : (string) $this->getValue();
+		$selectedValue = $this->value === NULL ? NULL : (string) $this->getValue();
 		$control = parent::getControl();
 
 		if ($key !== NULL) {
 			$control->id .= '-' . $key;
-			$control->checked = (string) $key === $value;
+			$control->checked = (string) $key === $selectedValue;
 			$control->value = $key;
 			return $control;
 		}
 
-		$id = $control->id;
+		$idBase = $control->id;
 		$container = clone $this->container;
 		$separator = (string) $this->separator;
-		$label = $this->getLabel();
+		$label = parent::getLabel();
 
 		foreach ($this->items as $k => $val) {
-			$control->id = $label->for = $id . '-' . $k;
-			$control->checked = (string) $k === $value;
+			$control->id = $label->for = $idBase . '-' . $k;
+			$control->checked = (string) $k === $selectedValue;
 			$control->value = $k;
 			$label->setText($this->translate($val));
 
-			$container->add((string) $control . (string) $label . $separator);
+			$container->add($label->insert(0, $control) . $separator);
 			$control->data('nette-rules', NULL);
-			// TODO: separator after last item?
 		}
 
 		return $container;
