@@ -34,6 +34,16 @@ abstract class TextBase extends BaseControl
 	protected $filters = array();
 
 
+	/**
+	 * @param  string  label
+	 */
+	public function __construct($label = NULL)
+	{
+		parent::__construct($label);
+		$this->addFilter($this->sanitize);
+	}
+
+
 
 	/**
 	 * Sets control's value.
@@ -100,6 +110,23 @@ abstract class TextBase extends BaseControl
 
 
 
+	/**
+	 * Filter: removes unnecessary whitespace and shortens value to control's max length.
+	 * @return string
+	 */
+	public function sanitize($value)
+	{
+		if ($this->control->maxlength) {
+			$value = Nette\Utils\Strings::substring($value, 0, $this->control->maxlength);
+		}
+		if (strcasecmp($this->control->getName(), 'input') === 0) {
+			$value = Nette\Utils\Strings::trim(strtr($value, "\r\n", '  '));
+		}
+		return $value;
+	}
+
+
+
 	public function getControl()
 	{
 		$control = parent::getControl();
@@ -123,6 +150,10 @@ abstract class TextBase extends BaseControl
 	{
 		if ($operation === Form::FLOAT) {
 			$this->addFilter(array(__CLASS__, 'filterFloat'));
+
+		} elseif ($operation === Form::LENGTH || $operation === Form::MAX_LENGTH) {
+			$tmp = is_array($arg) ? $arg[1] : $arg;
+			$this->control->maxlength = is_scalar($tmp) ? $tmp : NULL;
 		}
 		return parent::addRule($operation, $message, $arg);
 	}

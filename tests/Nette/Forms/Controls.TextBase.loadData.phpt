@@ -20,6 +20,7 @@ $_SERVER['REQUEST_METHOD'] = 'POST';
 $_POST = array(
 	'text' => "  a\r b \n c ",
 	'number' => ' 10,5 ',
+	'long' => ' žluťoučký',
 );
 
 
@@ -57,4 +58,24 @@ test(function() { // non float
 		->addRule(~$form::FLOAT);
 
 	Assert::same( '10,5', $form['number']->getValue() );
+});
+
+
+
+test(function() { // max length
+	$form = new Form();
+	$form->addText('long')
+		->addRule($form::MAX_LENGTH, NULL, 5);
+
+	Assert::same( 'žluť', $form['long']->getValue() );
+});
+
+
+
+test(function() { // max length
+	$form = new Form();
+	$form->addTextArea('long')
+		->addRule($form::MAX_LENGTH, NULL, 5);
+
+	Assert::same( ' žluť', $form['long']->getValue() );
 });

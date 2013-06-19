@@ -71,7 +71,7 @@ test(function() { // validation rule LENGTH
 	$input = $form->addTextArea('text')
 		->addRule($form::LENGTH, NULL, array(10, 20));
 
-	Assert::same('<textarea cols="40" rows="10" name="text" id="frm-text" data-nette-rules=\'[{"op":":length","msg":"Please enter a value between 10 and 20 characters long.","arg":[10,20]}]\' maxlength="20"></textarea>', (string) $input->getControl());
+	Assert::same('<textarea cols="40" rows="10" maxlength="20" name="text" id="frm-text" data-nette-rules=\'[{"op":":length","msg":"Please enter a value between 10 and 20 characters long.","arg":[10,20]}]\'></textarea>', (string) $input->getControl());
 });
 
 
@@ -81,7 +81,7 @@ test(function() { // validation rule MAX_LENGTH
 	$input = $form->addTextArea('text')
 		->addRule($form::MAX_LENGTH, NULL, 10);
 
-	Assert::same('<textarea cols="40" rows="10" name="text" id="frm-text" data-nette-rules=\'[{"op":":maxLength","msg":"Please enter a value no longer than 10 characters.","arg":10}]\' maxlength="10"></textarea>', (string) $input->getControl());
+	Assert::same('<textarea cols="40" rows="10" maxlength="10" name="text" id="frm-text" data-nette-rules=\'[{"op":":maxLength","msg":"Please enter a value no longer than 10 characters.","arg":10}]\'></textarea>', (string) $input->getControl());
 });
 
 

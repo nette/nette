@@ -34,7 +34,6 @@ class TextArea extends TextBase
 		$this->control->setName('textarea');
 		$this->control->cols = $cols;
 		$this->control->rows = $rows;
-		$this->value = '';
 	}
 
 
