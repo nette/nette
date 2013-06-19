@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Forms example.
+ * Test: Nette\Forms default rendering.
  *
  * @author     David Grudl
  * @package    Nette\Forms
@@ -38,9 +38,9 @@ $sex = array(
 
 
 
-// Step 1: Define form with validation rules
+
 $form = new Form;
-// setup custom rendering
+
 $renderer = $form->renderer;
 $renderer->wrappers['form']['container'] = Html::el('div')->id('form');
 $renderer->wrappers['form']['errors'] = FALSE;
@@ -56,7 +56,7 @@ $renderer->wrappers['label']['suffix'] = ':';
 $renderer->wrappers['control']['requiredsuffix'] = " \xE2\x80\xA2";
 
 
-// group Personal data
+
 $form->addGroup('Personal data');
 $form->addText('name', 'Your name')
 	->addRule(Form::FILLED, 'Enter your name');
@@ -70,20 +70,20 @@ $form->addSelect('gender', 'Your gender', $sex);
 
 $form->addText('email', 'Email')
 	->setEmptyValue('@')
-	->addCondition(Form::FILLED) // conditional rule: if is email filled, ...
-		->addRule(Form::EMAIL, 'Incorrect email address'); // ... then check email
+	->addCondition(Form::FILLED)
+		->addRule(Form::EMAIL, 'Incorrect email address');
 
 
-// group Shipping address
+
 $form->addGroup('Shipping address')
 	->setOption('embedNext', TRUE);
 
 $form->addCheckbox('send', 'Ship to address')
-	->addCondition(Form::EQUAL, TRUE) // conditional rule: if is checkbox checked...
-		->toggle('sendBox'); // toggle div #sendBox
+	->addCondition(Form::EQUAL, TRUE)
+		->toggle('sendBox');
 
 
-// subgroup
+
 $form->addGroup()
 	->setOption('container', Html::el('div')->id('sendBox'));
 
@@ -99,7 +99,7 @@ $form->addSelect('country', 'Country', $countries)
 		->addRule(Form::FILLED, 'Select your country');
 
 
-// group Your account
+
 $form->addGroup('Your account');
 
 $form->addPassword('password', 'Choose password')
@@ -119,7 +119,7 @@ $form->addHidden('userid');
 $form->addTextArea('note', 'Comment');
 
 
-// group for buttons
+
 $form->addGroup();
 
 $form->addSubmit('submit', 'Send');
@@ -129,10 +129,10 @@ $form->addSubmit('submit', 'Send');
 $defaults = array(
 	'name'    => 'John Doe',
 	'userid'  => 231,
-	'country' => 'CZ', // Czech Republic
+	'country' => 'CZ',
 );
 
 $form->setDefaults($defaults);
 $form->fireEvents();
 
-Assert::match( file_get_contents(__DIR__ . '/Forms.example.004.expect'), $form->__toString(TRUE) );
+Assert::match( file_get_contents(__DIR__ . '/Forms.renderer.2.expect'), $form->__toString(TRUE) );

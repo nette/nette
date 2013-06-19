@@ -58,20 +58,6 @@ test(function() use ($series) { // Select with prompt
 
 
 
-test(function() use ($series) { // MultiSelect
-
-	$form = new Form();
-	$form->addMultiSelect('series0', NULL, $series);
-
-	Assert::true( (bool) $form->isSubmitted() );
-	Assert::true( $form->isValid() );
-	Assert::same( array(
-		'series0' => array('red-dwarf'),
-	), (array) $form->getValues() );
-});
-
-
-
 test(function() use ($series) { // Select with invalid input
 
 	$form = new Form();
@@ -100,20 +86,6 @@ test(function() use ($series) { // Select with prompt and invalid input
 
 
 
-test(function() use ($series) { // MultiSelect with invalid input
-
-	$form = new Form();
-	$form->addMultiSelect('series1', NULL, $series);
-
-	Assert::true( (bool) $form->isSubmitted() );
-	Assert::true( $form->isValid() );
-	Assert::same( array(
-		'series1' => array(),
-	), (array) $form->getValues() );
-});
-
-
-
 test(function() use ($series) { // Indexed arrays
 
 	$form = new Form();
@@ -125,18 +97,4 @@ test(function() use ($series) { // Indexed arrays
 		'series2' => 0,
 	), (array) $form->getValues() );
 	Assert::same( 0, $form['series2']->getRawValue() );
-});
-
-
-
-test(function() use ($series) {
-	$form = new Form();
-	$form->addMultiSelect('series2', NULL, $series);
-
-	Assert::true( (bool) $form->isSubmitted() );
-	Assert::true( $form->isValid() );
-	Assert::same( array(
-		'series2' => array(0),
-	), (array) $form->getValues() );
-	Assert::same( array(0), $form['series2']->getRawValue() );
 });
