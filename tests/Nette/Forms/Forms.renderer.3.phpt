@@ -24,7 +24,7 @@ Assert::match( '<form action="" method="post">
 
 <table>
 <tr>
-	<th>&nbsp;</th>
+	<th></th>
 
 	<td><input type="submit" class="button" name="_submit" id="frm-submit" value="Send" /></td>
 </tr>

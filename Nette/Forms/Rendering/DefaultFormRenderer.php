@@ -428,7 +428,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 		$head = $this->getWrapper('label container');
 
 		if ($control instanceof Nette\Forms\Controls\Checkbox || $control instanceof Nette\Forms\Controls\Button) {
-			return $head->setHtml(($head->getName() === 'td' || $head->getName() === 'th') ? '&nbsp;' : '');
+			return $head;
 
 		} else {
 			$label = $control->getLabel();
