@@ -53,8 +53,8 @@ test(function() { // Html with translator
 	$input = $form->addButton('button', Html::el('b', 'Caption'));
 	$input->setTranslator(new Translator);
 
-	Assert::same('<input type="button" name="button" id="frm-button" value="<B>CAPTION</B>" />', (string) $input->getControl());
-	Assert::same('<input type="button" name="button" id="frm-button" value="<B>ANOTHER LABEL</B>" />', (string) $input->getControl(Html::el('b', 'Another label')));
+	Assert::same('<input type="button" name="button" id="frm-button" value="<b>Caption</b>" />', (string) $input->getControl());
+	Assert::same('<input type="button" name="button" id="frm-button" value="<b>Another label</b>" />', (string) $input->getControl(Html::el('b', 'Another label')));
 });
 
 

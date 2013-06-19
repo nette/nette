@@ -279,7 +279,9 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	public function translate($s, $count = NULL)
 	{
 		$translator = $this->getTranslator();
-		return $translator === NULL || $s == NULL ? $s : $translator->translate($s, $count); // intentionally ==
+		return $translator === NULL || $s == NULL || $s instanceof Html  // intentionally ==
+			? $s
+			: $translator->translate((string) $s, $count);
 	}
 
 
@@ -439,15 +441,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		$label = clone $this->label;
 		$label->for = $this->getHtmlId();
-		if ($caption !== NULL) {
-			$label->setText($this->translate($caption));
-
-		} elseif ($this->caption instanceof Html) {
-			$label->add($this->caption);
-
-		} else {
-			$label->setText($this->translate($this->caption));
-		}
+		$label->setText($this->translate($caption === NULL ? $this->caption : $caption));
 		return $label;
 	}
 

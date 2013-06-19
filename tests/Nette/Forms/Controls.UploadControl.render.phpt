@@ -46,7 +46,7 @@ test(function() { // Html with translator
 
 	Assert::same('<label for="frm-file">LABEL</label>', (string) $input->getLabel());
 	Assert::same('<label for="frm-file">ANOTHER LABEL</label>', (string) $input->getLabel('Another label'));
-	Assert::same('<label for="frm-file">&lt;B&gt;ANOTHER LABEL&lt;/B&gt;</label>', (string) $input->getLabel(Html::el('b', 'Another label')));
+	Assert::same('<label for="frm-file"><b>Another label</b></label>', (string) $input->getLabel(Html::el('b', 'Another label')));
 });
 
 

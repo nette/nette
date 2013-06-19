@@ -78,7 +78,7 @@ test(function() { // Html with translator & groups
 	$input->setTranslator(new Translator);
 
 	Assert::same('<label for="frm-list"><b>Label</b></label>', (string) $input->getLabel());
-	Assert::same('<label for="frm-list">&lt;B&gt;ANOTHER LABEL&lt;/B&gt;</label>', (string) $input->getLabel(Html::el('b', 'Another label')));
+	Assert::same('<label for="frm-list"><b>Another label</b></label>', (string) $input->getLabel(Html::el('b', 'Another label')));
 	Assert::same('<select name="list" id="frm-list"><option class="class" value="">Prompt</option><option class="class">First</option><optgroup label="GROUP"><option>Second</option></optgroup></select>', (string) $input->getControl());
 });
 

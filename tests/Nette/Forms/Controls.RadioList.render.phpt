@@ -84,8 +84,8 @@ test(function() { // Html
 	$input->setTranslator(new Translator);
 
 	Assert::same('<label><b>Label</b></label>', (string) $input->getLabel());
-	Assert::same('<label>&lt;B&gt;ANOTHER LABEL&lt;/B&gt;</label>', (string) $input->getLabel(Html::el('b', 'Another label')));
-	Assert::same('<label for="frm-list-0">&lt;B&gt;ANOTHER LABEL&lt;/B&gt;</label>', (string) $input->getLabel(Html::el('b', 'Another label'), 0));
+	Assert::same('<label><b>Another label</b></label>', (string) $input->getLabel(Html::el('b', 'Another label')));
+	Assert::same('<label for="frm-list-0"><b>Another label</b></label>', (string) $input->getLabel(Html::el('b', 'Another label'), 0));
 
 	Assert::same('<input type="radio" name="list" id="frm-list-a" value="a" /><label for="frm-list-a"><b>First</b></label><br />', (string) $input->getControl());
 	Assert::same('<input type="radio" name="list" id="frm-list-0" value="0" />', (string) $input->getControl(0));

@@ -168,12 +168,7 @@ class RadioList extends BaseControl
 			$control->id = $label->for = $id . '-' . $k;
 			$control->checked = (string) $k === $value;
 			$control->value = $k;
-
-			if ($val instanceof Html) {
-				$label->setHtml($val);
-			} else {
-				$label->setText($this->translate((string) $val));
-			}
+			$label->setText($this->translate($val));
 
 			$container->add((string) $control . (string) $label . $separator);
 			$control->data('nette-rules', NULL);

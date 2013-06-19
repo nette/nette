@@ -61,7 +61,7 @@ test(function() { // Html with translator
 		->setTranslator(new Translator);
 
 	Assert::same('<label for="frm-text"><b>Label</b></label>', (string) $input->getLabel());
-	Assert::same('<label for="frm-text">&lt;B&gt;ANOTHER LABEL&lt;/B&gt;</label>', (string) $input->getLabel(Html::el('b', 'Another label')));
+	Assert::same('<label for="frm-text"><b>Another label</b></label>', (string) $input->getLabel(Html::el('b', 'Another label')));
 });
 
 

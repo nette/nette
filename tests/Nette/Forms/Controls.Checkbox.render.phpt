@@ -49,7 +49,7 @@ test(function() { // Html with translator
 
 	Assert::same('<label for="frm-on">LABEL</label>', (string) $input->getLabel());
 	Assert::same('<label for="frm-on">ANOTHER LABEL</label>', (string) $input->getLabel('Another label'));
-	Assert::same('<label for="frm-on">&lt;B&gt;ANOTHER LABEL&lt;/B&gt;</label>', (string) $input->getLabel(Html::el('b', 'Another label')));
+	Assert::same('<label for="frm-on"><b>Another label</b></label>', (string) $input->getLabel(Html::el('b', 'Another label')));
 });
 
 
