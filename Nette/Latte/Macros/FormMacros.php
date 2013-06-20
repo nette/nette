@@ -40,7 +40,8 @@ class FormMacros extends MacroSet
 		$me->addMacro('form', array($me, 'macroForm'), 'Nette\Latte\Macros\FormMacros::renderFormEnd($_form)');
 		$me->addMacro('formContainer', array($me, 'macroFormContainer'), '$_form = array_pop($_formStack)');
 		$me->addMacro('label', array($me, 'macroLabel'), array($me, 'macroLabelEnd'));
-		$me->addMacro('input', array($me, 'macroInput'), NULL, array($me, 'macroAttrInput'));
+		$me->addMacro('input', array($me, 'macroInput'), NULL, array($me, 'macroAttrName'));
+		$me->addMacro('name', NULL, NULL, array($me, 'macroAttrName'));
 	}
 
 
@@ -139,13 +140,13 @@ class FormMacros extends MacroSet
 
 
 	/**
-	 * n:input
+	 * <input n:name>, <label n:name> or alias n:input
 	 */
-	public function macroAttrInput(MacroNode $node, PhpWriter $writer)
+	public function macroAttrName(MacroNode $node, PhpWriter $writer)
 	{
 		$words = $node->tokenizer->fetchWords();
 		if (!$words) {
-			throw new CompileException("Missing name in n:input.");
+			throw new CompileException("Missing name in n:{$node->name}.");
 		}
 		$name = array_shift($words);
 		return $writer->write(

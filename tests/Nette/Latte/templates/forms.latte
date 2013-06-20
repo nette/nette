@@ -11,8 +11,10 @@
 
 
 {form myForm}
-	<LABEL n:input="username">Name</LABEL>
-	<input value=val type class="hello" n:input="username">
+	<LABEL n:name="username">Name</LABEL>
+	<input value=val type class="hello" n:name="username">
+
+	<input n:input="$form[username]">
 {/form myForm}
 
 
