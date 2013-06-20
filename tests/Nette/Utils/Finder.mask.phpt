@@ -89,7 +89,6 @@ test(function() { // excluding mask
 test(function() { // subdir excluding mask
 	$finder = Finder::findFiles('*')->exclude('*i*/*')->from('files');
 	Assert::same(array(
-		'files/bad.ppt',
 		'files/file.txt',
 	), export($finder));
 });
