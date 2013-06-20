@@ -40,8 +40,8 @@ class FormMacros extends MacroSet
 		$me->addMacro('form', array($me, 'macroForm'), 'Nette\Latte\Macros\FormMacros::renderFormEnd($_form)');
 		$me->addMacro('formContainer', array($me, 'macroFormContainer'), '$_form = array_pop($_formStack)');
 		$me->addMacro('label', array($me, 'macroLabel'), array($me, 'macroLabelEnd'));
-		$me->addMacro('input', array($me, 'macroInput'), NULL, array($me, 'macroAttrName'));
-		$me->addMacro('name', array($me, 'macroName'), array($me, 'macroNameEnd'), array($me, 'macroAttrName'));
+		$me->addMacro('input', array($me, 'macroInput'), NULL, array($me, 'macroInputAttr'));
+		$me->addMacro('name', array($me, 'macroName'), array($me, 'macroNameEnd'), array($me, 'macroNameAttr'));
 	}
 
 
@@ -140,9 +140,23 @@ class FormMacros extends MacroSet
 
 
 	/**
-	 * <form n:name>, <input n:name>, <select n:name>, <textarea n:name> and <label n:name> or alias n:input
+	 * deprecated n:input
 	 */
-	public function macroAttrName(MacroNode $node, PhpWriter $writer)
+	public function macroInputAttr(MacroNode $node, PhpWriter $writer)
+	{
+		if (strtolower($node->htmlNode->name) === 'input') {
+			return $this->macroNameAttr($node, $writer);
+		} else {
+			throw new CompileException("Use n:name instead of n:input.");
+		}
+	}
+
+
+
+	/**
+	 * <form n:name>, <input n:name>, <select n:name>, <textarea n:name> and <label n:name>
+	 */
+	public function macroNameAttr(MacroNode $node, PhpWriter $writer)
 	{
 		$words = $node->tokenizer->fetchWords();
 		if (!$words) {
