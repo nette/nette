@@ -160,10 +160,10 @@ class PhpWriter extends Nette\Object
 	 * Formats macro arguments to PHP code. (It advances tokenizer to the end as a side effect.)
 	 * @return string
 	 */
-	public function formatArgs()
+	public function formatArgs(MacroTokenizer $tokenizer = NULL)
 	{
 		$out = '';
-		$tokenizer = $this->preprocess();
+		$tokenizer = $this->preprocess($tokenizer);
 		while ($token = $tokenizer->fetchToken()) {
 			$out .= $this->canQuote($tokenizer) ? "'$token[value]'" : $token['value'];
 		}
@@ -210,7 +210,8 @@ class PhpWriter extends Nette\Object
 	public function formatWord($s)
 	{
 		return (is_numeric($s) || preg_match('#^\$|[\'"]|^true\z|^false\z|^null\z#i', $s))
-			? $s : '"' . $s . '"';
+			? $this->formatArgs(new MacroTokenizer($s))
+			: '"' . $s . '"';
 	}
 
 
