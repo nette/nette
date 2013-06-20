@@ -11,5 +11,7 @@
 
 
 {form myForm}
-	<input value=val type class="hello" n:input="username">
+	<input value=val type class="hello" n:name="username">
+
+	<input n:input="$form['username']">
 {/form myForm}

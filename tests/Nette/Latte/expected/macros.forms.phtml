@@ -18,4 +18,6 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object("myFo
   'type' => NULL,
   'class' => NULL,
 ))->attributes() ?>/>
+
+	<input <?php $_input = (is_object($form['username']) ? $form['username'] : $_form[$form['username']]); echo $_input->getControl()->attributes() ?>/>
 <?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form) ;
