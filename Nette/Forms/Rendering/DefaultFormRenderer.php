@@ -219,7 +219,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 		$s = '';
 		foreach ($this->form->getControls() as $control) {
 			if ($control instanceof Nette\Forms\Controls\HiddenField && !$control->getOption('rendered')) {
-				$s .= (string) $control->getControl();
+				$s .= $control->getControl();
 			}
 		}
 		if (iterator_count($this->form->getComponents(TRUE, 'Nette\Forms\Controls\TextInput')) < 2) {
@@ -409,7 +409,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 				$description = '';
 			}
 
-			$s[] = (string) $control->getControl() . $description;
+			$s[] = $control->getControl() . $description;
 		}
 		$pair = $this->getWrapper('pair container');
 		$pair->add($this->renderLabel($control));
@@ -425,20 +425,18 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	 */
 	public function renderLabel(Nette\Forms\IControl $control)
 	{
-		$head = $this->getWrapper('label container');
-
-		if ($control instanceof Nette\Forms\Controls\Checkbox || $control instanceof Nette\Forms\Controls\Button) {
-			return $head;
-
-		} else {
-			$label = $control->getLabel();
-			$suffix = $this->getValue('label suffix') . ($control->isRequired() ? $this->getValue('label requiredsuffix') : '');
-			if ($label instanceof Html) {
-				$label->setHtml($label->getHtml() . $suffix);
-				$suffix = '';
-			}
-			return $head->setHtml((string) $label . $suffix);
+		if ($control instanceof Nette\Forms\Controls\Checkbox) {
+			return $this->getWrapper('label container');
 		}
+
+		$suffix = $this->getValue('label suffix') . ($control->isRequired() ? $this->getValue('label requiredsuffix') : '');
+		$label = $control->getLabel();
+		if ($label instanceof Html) {
+			$label->add($suffix);
+		} elseif ($label != NULL) { // @intentionally ==
+			$label .= $suffix;
+		}
+		return $this->getWrapper('label container')->setHtml($label);
 	}
 
 
@@ -456,7 +454,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 
 		$description = $control->getOption('description');
 		if ($description instanceof Html) {
-			$description = ' ' . $control->getOption('description');
+			$description = ' ' . $description;
 
 		} elseif (is_string($description)) {
 			$description = ' ' . $this->getWrapper('control description')->setText($control->translate($description));
@@ -469,14 +467,8 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 			$description = $this->getValue('control requiredsuffix') . $description;
 		}
 
-		$description .= $this->renderErrors($control);
-
-		if ($control instanceof Nette\Forms\Controls\Checkbox || $control instanceof Nette\Forms\Controls\Button) {
-			return $body->setHtml((string) $control->getControl() . (string) $control->getLabel() . $description);
-
-		} else {
-			return $body->setHtml((string) $control->getControl() . $description);
-		}
+		$label = $control instanceof Nette\Forms\Controls\Checkbox ? $control->getLabel() : NULL;
+		return $body->setHtml($control->getControl() . $label . $description . $this->renderErrors($control));
 	}
 
 
