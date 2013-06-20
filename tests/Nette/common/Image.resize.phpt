@@ -131,3 +131,11 @@ $image->resize(300, 150, Image::EXACT);
 Assert::same( 300, $image->width );
 
 Assert::same( 150, $image->height );
+
+
+
+// rotate
+$image = clone $main;
+$image->rotate(90, Image::rgb(0, 0, 0));
+Assert::same( 104, $image->width );
+Assert::same( 176, $image->height );
