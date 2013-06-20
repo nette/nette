@@ -251,10 +251,12 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 */
 	public function addText($name, $label = NULL, $cols = NULL, $maxLength = NULL)
 	{
+		$control = new Controls\TextInput($label, $maxLength);
 		if ($cols) {
 			trigger_error(__METHOD__ . '() third parameter $cols is deprecated.', E_USER_DEPRECATED);
+			$control->getControlPrototype()->size($cols);
 		}
-		return $this[$name] = new Controls\TextInput($label, $cols, $maxLength);
+		return $this[$name] = $control;
 	}
 
 
@@ -269,12 +271,12 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 */
 	public function addPassword($name, $label = NULL, $cols = NULL, $maxLength = NULL)
 	{
+		$control = new Controls\TextInput($label, $maxLength);
 		if ($cols) {
 			trigger_error(__METHOD__ . '() third parameter $cols is deprecated.', E_USER_DEPRECATED);
+			$control->getControlPrototype()->size($cols);
 		}
-		$control = new Controls\TextInput($label, $cols, $maxLength);
-		$control->setType('password');
-		return $this[$name] = $control;
+		return $this[$name] = $control->setType('password');
 	}
 
 
@@ -289,10 +291,12 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 */
 	public function addTextArea($name, $label = NULL, $cols = NULL, $rows = NULL)
 	{
+		$control = new Controls\TextArea($label);
 		if ($cols || $rows) {
 			trigger_error(__METHOD__ . '() parameters $cols and $rows are deprecated.', E_USER_DEPRECATED);
+			$control->getControlPrototype()->cols($cols)->rows($rows);
 		}
-		return $this[$name] = new Controls\TextArea($label, $cols, $rows);
+		return $this[$name] = $control;
 	}
 
 
