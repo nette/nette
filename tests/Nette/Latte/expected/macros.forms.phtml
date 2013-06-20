@@ -15,10 +15,10 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 	<?php $_input = is_object($form['username']) ? $form['username'] : $_form[$form['username']]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array())  ?>
 
 
-	<LABEL title=hello<?php echo $_form["username"]->getLabel()->addAttributes(array (
+	<LABEL title=hello<?php $_input = $_form["username"]; echo $_input->getLabel()->addAttributes(array (
   'title' => NULL,
 ))->attributes() ?>>Name</LABEL>
-	<input value=val type class="hello" <?php echo $_form["username"]->getControl()->addAttributes(array (
+	<input value=val type class="hello" <?php $_input = $_form["username"]; echo $_input->getControl()->addAttributes(array (
   'value' => NULL,
   'type' => NULL,
   'class' => NULL,
@@ -47,11 +47,19 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
   'id' => NULL,
   'class' => NULL,
 ), FALSE) ?>>
-	<input <?php echo $_form["username"]->getControl()->attributes() ?>/>
+	<input <?php $_input = $_form["username"]; echo $_input->getControl()->attributes() ?>/>
 <?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form, FALSE) ?></form>
 
 
 <FORM<?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = is_object($_control['myForm']) ? $_control['myForm'] : $_control[$_control['myForm']], array (
 ), FALSE) ?>>
-	<input <?php echo $_form["username"]->getControl()->attributes() ?>/>
+	<input <?php $_input = $_form["username"]; echo $_input->getControl()->attributes() ?>/>
 <?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form, FALSE) ?></FORM>
+
+
+<select<?php $_input = $_form["select"]; echo $_input->getControl()->attributes() ?>
+><?php echo $_input->getControl()->getHtml() ?></select>
+
+
+<textarea<?php $_input = $_form["area"]; echo $_input->getControl()->attributes() ?>
+><?php echo $_input->getControl()->getHtml() ?></textarea>

@@ -140,7 +140,7 @@ class FormMacros extends MacroSet
 
 
 	/**
-	 * <form n:name>, <input n:name> and <label n:name> or alias n:input
+	 * <form n:name>, <input n:name>, <select n:name>, <textarea n:name> and <label n:name> or alias n:input
 	 */
 	public function macroAttrName(MacroNode $node, PhpWriter $writer)
 	{
@@ -150,8 +150,9 @@ class FormMacros extends MacroSet
 		}
 		$name = array_shift($words);
 		$tagName = strtolower($node->htmlNode->name);
+		$node->isEmpty = !in_array($tagName, array('form', 'select', 'textarea'));
+
 		if ($tagName === 'form') {
-			$node->isEmpty = FALSE;
 			return $writer->write(
 				'Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = '
 				. ($name[0] === '$' ? 'is_object(%0.word) ? %0.word : ' : '')
@@ -161,7 +162,8 @@ class FormMacros extends MacroSet
 			);
 		} else {
 			return $writer->write(
-				($name[0] === '$' ? '$_input = is_object(%0.word) ? %0.word : $_form[%0.word]; echo $_input' : 'echo $_form[%0.word]')
+				'$_input = ' . ($name[0] === '$' ? 'is_object(%0.word) ? %0.word : ' : '')
+				. '$_form[%0.word]; echo $_input'
 				. ($tagName === 'label' ? '->getLabel(%1.raw)' : '->getControl(%1.raw)')
 				. ($node->htmlNode->attrs ? '->addAttributes(%2.var)' : '') . '->attributes()',
 				$name,
@@ -187,7 +189,11 @@ class FormMacros extends MacroSet
 	public function macroNameEnd(MacroNode $node, PhpWriter $writer)
 	{
 		preg_match('#(^.*?>)(.*)(<.*\z)#s', $node->content, $parts);
-		$node->content = $parts[1] . $parts[2] . '<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form, FALSE) ?>' . $parts[3];
+		if (strtolower($node->htmlNode->name) === 'form') {
+			$node->content = $parts[1] . $parts[2] . '<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form, FALSE) ?>' . $parts[3];
+		} else { // select, textarea
+			$node->content = $parts[1] . '<?php echo $_input->getControl()->getHtml() ?>' . $parts[3];
+		}
 	}
 
 

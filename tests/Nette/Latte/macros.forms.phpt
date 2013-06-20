@@ -24,6 +24,8 @@ $form = new Form;
 $form->addHidden('id');
 $form->addText('username', 'Username:'); // must have just one textfield to generate IE fix
 $form->addRadioList('sex', 'Sex:', array('m' => 'male', 'f' => 'female'));
+$form->addSelect('select', NULL, array('m' => 'male', 'f' => 'female'));
+$form->addTextArea('area', NULL)->setValue('one<two');
 $form->addSubmit('send', 'Sign in');
 
 $template = new FileTemplate(__DIR__ . '/templates/forms.latte');
