@@ -104,7 +104,7 @@
 
 	<dt><label for="frm-note">Comment:</label></dt>
 
-	<dd class="odd"><textarea cols="40" rows="10" name="note" id="frm-note"></textarea></dd>
+	<dd class="odd"><textarea name="note" id="frm-note"></textarea></dd>
 
 </dl>
 

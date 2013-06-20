@@ -64,21 +64,21 @@ $sex = array(
 );
 
 $form = new Form();
-$form->addText('name', 'Your name:', 35);  // item name, label, size, maxlength
-$form->addTextArea('note', 'Comment:', 30, 5);
+$form->addText('name', 'Your name:');  // item name, label, size, maxlength
+$form->addTextArea('note', 'Comment:');
 $form->addRadioList('gender', 'Your gender:', $sex);
 $form->addCheckbox('send', 'Ship to address');
 $form->addSelect('country', 'Country:', $countries)->setPrompt('Select your country');
 $form->addMultiSelect('countrym', 'Country:', $countries);
-$form->addPassword('password', 'Choose password:', 20);
+$form->addPassword('password', 'Choose password:');
 $form->addUpload('avatar', 'Picture:');
 $form->addHidden('userid');
 
 $sub = $form->addContainer('firstperson');
-$sub->addText('age', 'Your age:', 5);
+$sub->addText('age', 'Your age:');
 
 $sub = $form->addContainer('secondperson');
-$sub->addText('age', 'Your age:', 5);
+$sub->addText('age', 'Your age:');
 $sub->addUpload('avatar', 'Picture:');
 
 $form->addSubmit('submit1', 'Send');
