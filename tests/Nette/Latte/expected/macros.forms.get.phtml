@@ -13,3 +13,8 @@ if (!empty($_control->snippetMode)) {
 // main template
 //
 Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array()) ;Nette\Latte\Macros\FormMacros::renderFormEnd($_form) ?>
+
+
+<form<?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array (
+), FALSE) ?>>
+<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form, FALSE) ?></form>

@@ -41,7 +41,7 @@ class FormMacros extends MacroSet
 		$me->addMacro('formContainer', array($me, 'macroFormContainer'), '$_form = array_pop($_formStack)');
 		$me->addMacro('label', array($me, 'macroLabel'), array($me, 'macroLabelEnd'));
 		$me->addMacro('input', array($me, 'macroInput'), NULL, array($me, 'macroAttrName'));
-		$me->addMacro('name', NULL, NULL, array($me, 'macroAttrName'));
+		$me->addMacro('name', array($me, 'macroName'), array($me, 'macroNameEnd'), array($me, 'macroAttrName'));
 	}
 
 
@@ -140,7 +140,7 @@ class FormMacros extends MacroSet
 
 
 	/**
-	 * <input n:name>, <label n:name> or alias n:input
+	 * <form n:name>, <input n:name> and <label n:name> or alias n:input
 	 */
 	public function macroAttrName(MacroNode $node, PhpWriter $writer)
 	{
@@ -149,14 +149,45 @@ class FormMacros extends MacroSet
 			throw new CompileException("Missing name in n:{$node->name}.");
 		}
 		$name = array_shift($words);
-		return $writer->write(
-			($name[0] === '$' ? '$_input = is_object(%0.word) ? %0.word : $_form[%0.word]; echo $_input' : 'echo $_form[%0.word]')
-			. (strcasecmp($node->htmlNode->name, 'label') ? '->getControl(%1.raw)' : '->getLabel(%1.raw)')
-			. ($node->htmlNode->attrs ? '->addAttributes(%2.var)' : '') . '->attributes()',
-			$name,
-			implode(', ', array_map(array($writer, 'formatWord'), $words)),
-			array_fill_keys(array_keys($node->htmlNode->attrs), NULL)
-		);
+		$tagName = strtolower($node->htmlNode->name);
+		if ($tagName === 'form') {
+			$node->isEmpty = FALSE;
+			return $writer->write(
+				'Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = '
+				. ($name[0] === '$' ? 'is_object(%0.word) ? %0.word : ' : '')
+				. '$_control[%0.word], %1.var, FALSE)',
+				$name,
+				array_fill_keys(array_keys($node->htmlNode->attrs), NULL)
+			);
+		} else {
+			return $writer->write(
+				($name[0] === '$' ? '$_input = is_object(%0.word) ? %0.word : $_form[%0.word]; echo $_input' : 'echo $_form[%0.word]')
+				. ($tagName === 'label' ? '->getLabel(%1.raw)' : '->getControl(%1.raw)')
+				. ($node->htmlNode->attrs ? '->addAttributes(%2.var)' : '') . '->attributes()',
+				$name,
+				implode(', ', array_map(array($writer, 'formatWord'), $words)),
+				array_fill_keys(array_keys($node->htmlNode->attrs), NULL)
+			);
+		}
+	}
+
+
+
+	public function macroName(MacroNode $node, PhpWriter $writer)
+	{
+		if (!$node->htmlNode) {
+			throw new CompileException("Unknown macro {{$node->name}}, use n:{$node->name} attribute.");
+		} elseif ($node->prefix !== MacroNode::PREFIX_NONE) {
+			throw new CompileException("Unknown attribute n:{$node->prefix}-{$node->name}, use n:{$node->name} attribute.");
+		}
+	}
+
+
+
+	public function macroNameEnd(MacroNode $node, PhpWriter $writer)
+	{
+		preg_match('#(^.*?>)(.*)(<.*\z)#s', $node->content, $parts);
+		$node->content = $parts[1] . $parts[2] . '<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form, FALSE) ?>' . $parts[3];
 	}
 
 
@@ -169,7 +200,7 @@ class FormMacros extends MacroSet
 	 * Renders form begin.
 	 * @return void
 	 */
-	public static function renderFormBegin(Form $form, array $attrs)
+	public static function renderFormBegin(Form $form, array $attrs, $withTags = TRUE)
 	{
 		foreach ($form->getControls() as $control) {
 			$control->setOption('rendered', FALSE);
@@ -180,7 +211,8 @@ class FormMacros extends MacroSet
 		if (strcasecmp($form->getMethod(), 'get') === 0) {
 			$el->action = preg_replace('~\?[^#]*~', '', $el->action, 1);
 		}
-		echo $el->addAttributes($attrs)->startTag();
+		$el->addAttributes($attrs);
+		echo $withTags ? $el->startTag() : $el->attributes();
 	}
 
 
@@ -189,7 +221,7 @@ class FormMacros extends MacroSet
 	 * Renders form end.
 	 * @return string
 	 */
-	public static function renderFormEnd(Form $form)
+	public static function renderFormEnd(Form $form, $withTags = TRUE)
 	{
 		$s = '';
 		if (strcasecmp($form->getMethod(), 'get') === 0) {
@@ -212,7 +244,7 @@ class FormMacros extends MacroSet
 			$s .= '<!--[if IE]><input type=IEbug disabled style="display:none"><![endif]-->';
 		}
 
-		echo ($s ? "<div>$s</div>\n" : '') . $form->getElementPrototype()->endTag() . "\n";
+		echo ($s ? "<div>$s</div>\n" : '') . ($withTags ? $form->getElementPrototype()->endTag() . "\n" : '');
 	}
 
 }

@@ -40,4 +40,18 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 	<?php if ($_label = $_form["sex"]->getLabel(NULL, $key)) echo $_label->addAttributes(array())->startTag() ?>
  <?php echo $_form["sex"]->getControl($key)->addAttributes(array()) ?> <?php echo Nette\Templating\Helpers::escapeHtml($label, ENT_NOQUOTES) ?>
 </label>
-<?php $iterations++; endforeach ;
+<?php $iterations++; endforeach ?>
+
+
+<form id="myForm" class="ajax"<?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array (
+  'id' => NULL,
+  'class' => NULL,
+), FALSE) ?>>
+	<input <?php echo $_form["username"]->getControl()->attributes() ?>/>
+<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form, FALSE) ?></form>
+
+
+<FORM<?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = is_object($_control['myForm']) ? $_control['myForm'] : $_control[$_control['myForm']], array (
+), FALSE) ?>>
+	<input <?php echo $_form["username"]->getControl()->attributes() ?>/>
+<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form, FALSE) ?></FORM>

@@ -29,3 +29,13 @@
 {foreach $form[sex]->items as $key => $label}
 	{label sex:$key} {input sex:$key} {$label}{/label}
 {/foreach}
+
+
+<form n:name="myForm" id="myForm" class="ajax">
+	<input n:name=username>
+</form>
+
+
+<FORM n:name="$_control[myForm]">
+	<input n:name=username>
+</FORM>
