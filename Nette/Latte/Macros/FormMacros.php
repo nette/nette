@@ -171,6 +171,9 @@ class FormMacros extends MacroSet
 	 */
 	public static function renderFormBegin(Form $form, array $attrs)
 	{
+		foreach ($form->getControls() as $control) {
+			$control->setOption('rendered', FALSE);
+		}
 		$el = $form->getElementPrototype();
 		$el->action = $action = (string) $el->action;
 		$el = clone $el;
