@@ -90,15 +90,16 @@ class FormMacros extends MacroSet
 	 */
 	public function macroLabel(MacroNode $node, PhpWriter $writer)
 	{
-		list($name) = $pair = explode(':', $node->tokenizer->fetchWord(), 2);
-		if ($name === '') {
+		$words = $node->tokenizer->fetchWords();
+		if (!$words) {
 			throw new CompileException("Missing name in {{$node->name}}.");
 		}
+		$name = array_shift($words);
 		return $writer->write(
 			($name[0] === '$' ? '$_input = is_object(%0.word) ? %0.word : $_form[%0.word]; if ($_label = $_input' : 'if ($_label = $_form[%0.word]')
 			. '->getLabel(%1.raw)) echo $_label->addAttributes(%node.array)',
 			$name,
-			isset($pair[1]) ? 'NULL, ' . $writer->formatWord($pair[1]) : ''
+			($words ? 'NULL, ' : '') . implode(', ', array_map(array($writer, 'formatWord'), $words))
 		);
 	}
 
@@ -122,15 +123,16 @@ class FormMacros extends MacroSet
 	 */
 	public function macroInput(MacroNode $node, PhpWriter $writer)
 	{
-		list($name) = $pair = explode(':', $node->tokenizer->fetchWord(), 2);
-		if ($name === '') {
+		$words = $node->tokenizer->fetchWords();
+		if (!$words) {
 			throw new CompileException("Missing name in {{$node->name}}.");
 		}
+		$name = array_shift($words);
 		return $writer->write(
 			($name[0] === '$' ? '$_input = is_object(%0.word) ? %0.word : $_form[%0.word]; echo $_input' : 'echo $_form[%0.word]')
 			. '->getControl(%1.raw)->addAttributes(%node.array)',
 			$name,
-			isset($pair[1]) ? $writer->formatWord($pair[1]) : ''
+			implode(', ', array_map(array($writer, 'formatWord'), $words))
 		);
 	}
 
@@ -141,16 +143,17 @@ class FormMacros extends MacroSet
 	 */
 	public function macroAttrInput(MacroNode $node, PhpWriter $writer)
 	{
-		list($name) = $pair = explode(':', $node->tokenizer->fetchWord(), 2);
-		if ($name === '') {
+		$words = $node->tokenizer->fetchWords();
+		if (!$words) {
 			throw new CompileException("Missing name in n:input.");
 		}
+		$name = array_shift($words);
 		return $writer->write(
 			($name[0] === '$' ? '$_input = is_object(%0.word) ? %0.word : $_form[%0.word]; echo $_input' : 'echo $_form[%0.word]')
 			. (strcasecmp($node->htmlNode->name, 'label') ? '->getControl(%1.raw)' : '->getLabel(%1.raw)')
 			. ($node->htmlNode->attrs ? '->addAttributes(%2.var)' : '') . '->attributes()',
 			$name,
-			isset($pair[1]) ? $writer->formatWord($pair[1]) : '',
+			implode(', ', array_map(array($writer, 'formatWord'), $words)),
 			array_fill_keys(array_keys($node->htmlNode->attrs), NULL)
 		);
 	}
