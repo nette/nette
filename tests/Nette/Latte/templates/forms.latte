@@ -1,25 +1,31 @@
-{form myForm}
-<table>
-{foreach $form->controls as $name => $field}
-<tr>
-	<th>{label $name /}<th>
-	<td>{input $name title => Hello, cols => 10}</td>
-</tr>
-{/foreach}
-</table>
-{/form myForm}
+{form myForm id => myForm, class=>"ajax"}
+	{foreach $form->controls as $name => $field}
+		{label $name /}
+		{input $name title => Hello, cols => 10}
 
+		<br>
 
-{form myForm}
-	<LABEL n:name="username">Name</LABEL>
+		{label $field title => hello} {input $field title => Hello, cols => 10} {/label}
+	{/foreach}
+
+	{label $form[username]/}
+
+	<LABEL n:name="username" title=hello>Name</LABEL>
 	<input value=val type class="hello" n:name="username">
 
-	<input n:input="$form[username]">
+	<label n:name="$form['username']"></label>
+	<input n:name="$form[username]">
 {/form myForm}
 
 
-{form myForm}
-	{foreach $form[sex]->items as $key => $label}
-		{label sex:$key/}{input sex:$key} {$label}
-	{/foreach}
-{/form myForm}
+{form myForm /}
+
+
+{* alias form n:name *}
+<input n:input="$form[username]">
+
+
+{* partial rendering of RadioList *}
+{foreach $form[sex]->items as $key => $label}
+	{label sex:$key} {input sex:$key} {$label}{/label}
+{/foreach}

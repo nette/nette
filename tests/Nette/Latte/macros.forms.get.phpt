@@ -21,12 +21,11 @@ require __DIR__ . '/Template.inc';
 
 
 $form = new Form;
-$form->addHidden('id');
-$form->addText('username', 'Username:'); // must have just one textfield to generate IE fix
-$form->addRadioList('sex', 'Sex:', array('m' => 'male', 'f' => 'female'));
+$form->setMethod('get');
+$form->setAction('?arg=val');
 $form->addSubmit('send', 'Sign in');
 
-$template = new FileTemplate(__DIR__ . '/templates/forms.latte');
+$template = new FileTemplate(__DIR__ . '/templates/forms.get.latte');
 $template->registerFilter(new Latte\Engine);
 $template->_control = array('myForm' => $form);
 

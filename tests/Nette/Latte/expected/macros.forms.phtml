@@ -1,31 +1,43 @@
 <?php
 %A%
-Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array()) ?>
-<table>
-<?php $iterations = 0; foreach ($form->controls as $name => $field): ?>
-<tr>
-	<th><?php $_input = is_object($name) ? $name : $_form[$name]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array())  ?><th>
-	<td><?php $_input = is_object($name) ? $name : $_form[$name]; echo $_input->getControl()->addAttributes(array('title' => 'Hello', 'cols' => 10)) ?></td>
-</tr>
+Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array('id' => 'myForm', 'class'=>"ajax")) ;$iterations = 0; foreach ($form->controls as $name => $field): ?>
+		<?php $_input = is_object($name) ? $name : $_form[$name]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array())  ?>
+
+<?php $_input = is_object($name) ? $name : $_form[$name]; echo $_input->getControl()->addAttributes(array('title' => 'Hello', 'cols' => 10)) ?>
+
+		<br />
+
+		<?php $_input = is_object($field) ? $field : $_form[$field]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array('title' => 'hello'))->startTag() ?>
+ <?php $_input = is_object($field) ? $field : $_form[$field]; echo $_input->getControl()->addAttributes(array('title' => 'Hello', 'cols' => 10)) ?>
+ </label>
 <?php $iterations++; endforeach ?>
-</table>
-<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form) ?>
+
+	<?php $_input = is_object($form['username']) ? $form['username'] : $_form[$form['username']]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array())  ?>
 
 
-<?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array()) ?>
-	<LABEL<?php echo $_form["username"]->getLabel()->attributes() ?>>Name</LABEL>
+	<LABEL title=hello<?php echo $_form["username"]->getLabel()->addAttributes(array (
+  'title' => NULL,
+))->attributes() ?>>Name</LABEL>
 	<input value=val type class="hello" <?php echo $_form["username"]->getControl()->addAttributes(array (
   'value' => NULL,
   'type' => NULL,
   'class' => NULL,
 ))->attributes() ?>/>
 
+	<label<?php $_input = is_object($form['username']) ? $form['username'] : $_form[$form['username']]; echo $_input->getLabel()->attributes() ?>></label>
 	<input <?php $_input = is_object($form['username']) ? $form['username'] : $_form[$form['username']]; echo $_input->getControl()->attributes() ?>/>
 <?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form) ?>
 
 
-<?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array()) ;$iterations = 0; foreach ($form['sex']->items as $key => $label): ?>
-		<?php if ($_label = $_form["sex"]->getLabel(NULL, $key)) echo $_label->addAttributes(array()) ; echo $_form["sex"]->getControl($key)->addAttributes(array()) ?>
- <?php echo Nette\Templating\Helpers::escapeHtml($label, ENT_NOQUOTES) ?>
+<?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array()) ;Nette\Latte\Macros\FormMacros::renderFormEnd($_form) ?>
 
-<?php $iterations++; endforeach ;Nette\Latte\Macros\FormMacros::renderFormEnd($_form) ;
+
+
+<input <?php $_input = is_object($form['username']) ? $form['username'] : $_form[$form['username']]; echo $_input->getControl()->attributes() ?>/>
+
+
+<?php $iterations = 0; foreach ($form['sex']->items as $key => $label): ?>
+	<?php if ($_label = $_form["sex"]->getLabel(NULL, $key)) echo $_label->addAttributes(array())->startTag() ?>
+ <?php echo $_form["sex"]->getControl($key)->addAttributes(array()) ?> <?php echo Nette\Templating\Helpers::escapeHtml($label, ENT_NOQUOTES) ?>
+</label>
+<?php $iterations++; endforeach ;
