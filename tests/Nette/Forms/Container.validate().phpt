@@ -15,7 +15,7 @@ use Nette\Forms\Container;
 require __DIR__ . '/../bootstrap.php';
 
 $form = new Form;
-$form->addText('name', 'Text:', 10)->addRule($form::NUMERIC);
+$form->addText('name', 'Text:')->addRule($form::NUMERIC);
 $form->onValidate[] = function (Container $container) {
 	$container['name']->addError('just fail');
 };

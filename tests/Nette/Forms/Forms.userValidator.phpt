@@ -29,7 +29,7 @@ function myValidator1($item, $arg)
 foreach ($datasets as $case) {
 
 	$form = new Form;
-	$control = $form->addText('value', 'Value:', 10)
+	$control = $form->addText('value', 'Value:')
 		->addRule('myValidator1', 'Value %d is not allowed!', 11)
 		->addRule(~'myValidator1', 'Value %d is required!', 22);
 
