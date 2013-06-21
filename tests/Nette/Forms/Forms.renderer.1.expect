@@ -116,7 +116,7 @@
 <tr>
 	<th><label for="frm-note">Comment:</label></th>
 
-	<td><textarea cols="40" rows="10" name="note" id="frm-note"></textarea></td>
+	<td><textarea name="note" id="frm-note"></textarea></td>
 </tr>
 </table>
 </fieldset>

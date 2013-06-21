@@ -68,18 +68,18 @@ $_FILES = array(
 
 
 $form = new Form();
-$form->addText('name', 'Your name:', 35);
+$form->addText('name', 'Your name:');
 
 $sub = $form->addContainer('firstperson');
-$sub->addText('name', 'Your name:', 35);
-$sub->addText('age', 'Your age:', 5);
+$sub->addText('name', 'Your name:');
+$sub->addText('age', 'Your age:');
 
 $sub = $form->addContainer('secondperson');
-$sub->addText('name', 'Your name:', 35);
-$sub->addText('age', 'Your age:', 5);
+$sub->addText('name', 'Your name:');
+$sub->addText('age', 'Your age:');
 $sub->addUpload('avatar', 'Picture:');
 
-$form->addText('age', 'Your age:', 5);
+$form->addText('age', 'Your age:');
 
 $form->addSubmit('submit1', 'Send');
 

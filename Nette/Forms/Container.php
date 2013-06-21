@@ -245,13 +245,18 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 * Adds single-line text input control to the form.
 	 * @param  string  control name
 	 * @param  string  label
-	 * @param  int  width of the control
+	 * @param  int  width of the control (deprecated)
 	 * @param  int  maximum number of characters the user may enter
 	 * @return Nette\Forms\Controls\TextInput
 	 */
 	public function addText($name, $label = NULL, $cols = NULL, $maxLength = NULL)
 	{
-		return $this[$name] = new Controls\TextInput($label, $cols, $maxLength);
+		$control = new Controls\TextInput($label, $maxLength);
+		if ($cols) {
+			trigger_error(__METHOD__ . '() third parameter $cols is deprecated.', E_USER_DEPRECATED);
+			$control->getControlPrototype()->size($cols);
+		}
+		return $this[$name] = $control;
 	}
 
 
@@ -260,15 +265,18 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 * Adds single-line text input control used for sensitive input such as passwords.
 	 * @param  string  control name
 	 * @param  string  label
-	 * @param  int  width of the control
+	 * @param  int  width of the control (deprecated)
 	 * @param  int  maximum number of characters the user may enter
 	 * @return Nette\Forms\Controls\TextInput
 	 */
 	public function addPassword($name, $label = NULL, $cols = NULL, $maxLength = NULL)
 	{
-		$control = new Controls\TextInput($label, $cols, $maxLength);
-		$control->setType('password');
-		return $this[$name] = $control;
+		$control = new Controls\TextInput($label, $maxLength);
+		if ($cols) {
+			trigger_error(__METHOD__ . '() third parameter $cols is deprecated.', E_USER_DEPRECATED);
+			$control->getControlPrototype()->size($cols);
+		}
+		return $this[$name] = $control->setType('password');
 	}
 
 
@@ -281,9 +289,14 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 * @param  int  height of the control in text lines
 	 * @return Nette\Forms\Controls\TextArea
 	 */
-	public function addTextArea($name, $label = NULL, $cols = 40, $rows = 10)
+	public function addTextArea($name, $label = NULL, $cols = NULL, $rows = NULL)
 	{
-		return $this[$name] = new Controls\TextArea($label, $cols, $rows);
+		$control = new Controls\TextArea($label);
+		if ($cols || $rows) {
+			trigger_error(__METHOD__ . '() parameters $cols and $rows are deprecated.', E_USER_DEPRECATED);
+			$control->getControlPrototype()->cols($cols)->rows($rows);
+		}
+		return $this[$name] = $control;
 	}
 
 
@@ -392,7 +405,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 * @param  string  caption
 	 * @return Nette\Forms\Controls\Button
 	 */
-	public function addButton($name, $caption)
+	public function addButton($name, $caption = NULL)
 	{
 		return $this[$name] = new Controls\Button($caption);
 	}
