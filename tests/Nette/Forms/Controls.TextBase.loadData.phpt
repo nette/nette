@@ -21,6 +21,7 @@ $_POST = array(
 	'text' => "  a\r b \n c ",
 	'number' => ' 10,5 ',
 	'long' => ' žluťoučký',
+	'url' => 'nette.org',
 );
 
 
@@ -78,4 +79,14 @@ test(function() { // max length
 		->addRule($form::MAX_LENGTH, NULL, 5);
 
 	Assert::same( ' žluť', $form['long']->getValue() );
+});
+
+
+
+test(function() { // URL
+	$form = new Form();
+	$form->addText('url')
+		->addRule($form::URL);
+
+	Assert::same( 'http://nette.org', $form['url']->getValue() );
 });

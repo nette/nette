@@ -151,6 +151,9 @@ abstract class TextBase extends BaseControl
 		if ($operation === Form::FLOAT) {
 			$this->addFilter(array(__CLASS__, 'filterFloat'));
 
+		} elseif ($operation === Form::URL) {
+			$this->addFilter(array(__CLASS__, 'filterUrl'));
+
 		} elseif ($operation === Form::LENGTH || $operation === Form::MAX_LENGTH) {
 			$tmp = is_array($arg) ? $arg[1] : $arg;
 			$this->control->maxlength = is_scalar($tmp) ? $tmp : NULL;
@@ -222,6 +225,18 @@ abstract class TextBase extends BaseControl
 	public static function validateUrl(TextBase $control)
 	{
 		return Validators::isUrl($control->getValue()) || Validators::isUrl('http://' . $control->getValue());
+	}
+
+
+
+	/**
+	 * URL string cleanup.
+	 * @param  string
+	 * @return string
+	 */
+	public static function filterUrl($s)
+	{
+		return Validators::isUrl('http://' . $s) ? 'http://' . $s : $s;
 	}
 
 
