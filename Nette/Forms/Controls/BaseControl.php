@@ -681,6 +681,17 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Returns errors corresponding to control.
+	 * @return string
+	 */
+	public function getError()
+	{
+		return $this->errors ? implode(' ', array_unique($this->errors)) : NULL;
+	}
+
+
+
+	/**
+	 * Returns errors corresponding to control.
 	 * @return array
 	 */
 	public function getErrors()
