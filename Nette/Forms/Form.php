@@ -36,8 +36,9 @@ class Form extends Container
 {
 	/** validator */
 	const EQUAL = ':equal',
-		IS_IN = ':equal',
+		IS_IN = self::EQUAL,
 		FILLED = ':filled',
+		REQUIRED = self::FILLED,
 		VALID = ':valid';
 
 	/** @deprecated CSRF protection */
@@ -60,7 +61,7 @@ class Form extends Container
 		RANGE = ':range';
 
 	// multiselect
-	const COUNT = ':length';
+	const COUNT = self::LENGTH;
 
 	// file upload
 	const MAX_FILE_SIZE = ':fileSize',
