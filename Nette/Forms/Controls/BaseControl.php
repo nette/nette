@@ -527,12 +527,12 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Makes control mandatory.
-	 * @param  string  error message
+	 * @param  mixed  state or error message
 	 * @return BaseControl  provides a fluent interface
 	 */
-	public function setRequired($message = NULL)
+	public function setRequired($value = TRUE)
 	{
-		$this->rules->setRequired($message);
+		$this->rules->setRequired($value);
 		return $this;
 	}
 

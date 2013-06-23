@@ -64,3 +64,18 @@ test(function() { // 'required' is always the first rule
 	Assert::true( $items[0]->isNegative );
 	Assert::same( Form::EMAIL, $items[1]->operation );
 });
+
+
+
+test(function() { // setRequired(FALSE)
+	$form = new Form;
+	$rules = $form->addText('text')->getRules();
+
+	$rules->addRule($form::EMAIL);
+	$rules->addRule($form::REQUIRED);
+	$rules->setRequired(FALSE);
+
+	$items = iterator_to_array($rules);
+	Assert::same( 1, count($items) );
+	Assert::same( Form::EMAIL, $items[0]->operation );
+});

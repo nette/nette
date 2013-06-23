@@ -69,12 +69,17 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 
 	/**
 	 * Makes control mandatory.
-	 * @param  string  error message
+	 * @param  mixed  state or error message
 	 * @return Rules      provides a fluent interface
 	 */
-	public function setRequired($message = NULL)
+	public function setRequired($value = TRUE)
 	{
-		return $this->addRule(Form::FILLED, $message);
+		if ($value) {
+			$this->addRule(Form::REQUIRED, $value);
+		} else {
+			$this->required = NULL;
+		}
+		return $this;
 	}
 
 
