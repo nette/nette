@@ -43,6 +43,9 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 		Nette\Forms\Controls\SelectBox::VALID => 'Please select a valid option.',
 	);
 
+	/** @var Rule */
+	private $required;
+
 	/** @var Rule[] */
 	private $rules = array();
 
@@ -82,12 +85,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	 */
 	public function isRequired()
 	{
-		foreach ($this->rules as $rule) {
-			if ($rule->type === Rule::VALIDATOR && !$rule->isNegative && $rule->operation === Form::FILLED) {
-				return TRUE;
-			}
-		}
-		return FALSE;
+		return (bool) $this->required;
 	}
 
 
@@ -112,7 +110,11 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 		} else {
 			$rule->message = $message;
 		}
-		$this->rules[] = $rule;
+		if ($rule->operation === Form::REQUIRED) {
+			$this->required = $rule;
+		} else {
+			$this->rules[] = $rule;
+		}
 		return $this;
 	}
 
@@ -203,7 +205,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	public function validate()
 	{
 		$errors = array();
-		foreach ($this->rules as $rule) {
+		foreach ($this as $rule) {
 			if ($rule->control->isDisabled()) {
 				continue;
 			}
@@ -242,12 +244,16 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 
 
 	/**
-	 * Iterates over ruleset.
+	 * Iterates over complete ruleset.
 	 * @return \ArrayIterator
 	 */
 	final public function getIterator()
 	{
-		return new \ArrayIterator($this->rules);
+		$rules = $this->rules;
+		if ($this->required) {
+			array_unshift($rules, $this->required);
+		}
+		return new \ArrayIterator($rules);
 	}
 
 
@@ -259,7 +265,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	public function getToggles($actual = FALSE)
 	{
 		$toggles = $this->toggles;
-		foreach ($actual ? $this->rules : array() as $rule) {
+		foreach ($actual ? $this : array() as $rule) {
 			if ($rule->type === Rule::CONDITION) {
 				$success = static::validateRule($rule);
 				foreach ($rule->subRules->getToggles(TRUE) as $id => $hide) {

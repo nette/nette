@@ -42,3 +42,25 @@ test(function() { // Rules
 	Assert::same( Rule::VALIDATOR, $items[0]->type );
 	Assert::false( $items[0]->isNegative );
 });
+
+
+
+test(function() { // 'required' is always the first rule
+	$form = new Form;
+	$rules = $form->addText('text')->getRules();
+
+	$rules->addRule($form::EMAIL);
+	$rules->addRule($form::REQUIRED);
+
+	$items = iterator_to_array($rules);
+	Assert::same( 2, count($items) );
+	Assert::same( Form::REQUIRED, $items[0]->operation );
+	Assert::same( Form::EMAIL, $items[1]->operation );
+
+	$rules->addRule(~$form::REQUIRED);
+	$items = iterator_to_array($rules);
+	Assert::same( 2, count($items) );
+	Assert::same( Form::REQUIRED, $items[0]->operation );
+	Assert::true( $items[0]->isNegative );
+	Assert::same( Form::EMAIL, $items[1]->operation );
+});
