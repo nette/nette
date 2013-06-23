@@ -21,10 +21,10 @@ Assert::equal( array(
 	'unsigned_int' => 1,
 	'int' => 1,
 	'smallint' => 1,
-	'tinyint' => '1', // PHP bug #48724
+	'tinyint' => PHP_VERSION_ID < 50500 ? '1' : 1, // PHP bug #48724
 	'mediumint' => 1,
 	'bigint' => 1,
-	'bit' => '1', // PHP bug #48724
+	'bit' => '1',
 	'decimal' => 1.0,
 	'decimal2' => 1.1,
 	'float' => 1.0,
@@ -33,7 +33,7 @@ Assert::equal( array(
 	'time' => new Nette\DateTime('10:10:10'),
 	'datetime' => new Nette\DateTime('2012-10-13 10:10:10'),
 	'timestamp' => new Nette\DateTime('2012-10-13 10:10:10'),
-	'year' => '2012', // PHP bug #48724
+	'year' => PHP_VERSION_ID < 50500 ? '2012' : 2012, // PHP bug #48724
 	'char' => 'a',
 	'varchar' => 'a',
 	'binary' => 'a',
@@ -54,10 +54,10 @@ Assert::equal( array(
 	'unsigned_int' => 0,
 	'int' => 0,
 	'smallint' => 0,
-	'tinyint' => '0', // PHP bug #48724
+	'tinyint' => PHP_VERSION_ID < 50500 ? '0' : 0, // PHP bug #48724
 	'mediumint' => 0,
 	'bigint' => 0,
-	'bit' => '0', // PHP bug #48724
+	'bit' => '0',
 	'decimal' => 0.0,
 	'decimal2' => 0.5,
 	'float' => 0.5,
@@ -66,7 +66,7 @@ Assert::equal( array(
 	'time' => new Nette\DateTime('00:00:00'),
 	'datetime' => new Nette\DateTime('0000-00-00 00:00:00'),
 	'timestamp' => new Nette\DateTime('0000-00-00 00:00:00'),
-	'year' => '2000', // PHP bug #48724
+	'year' => PHP_VERSION_ID < 50500 ? '2000' : 2000, // PHP bug #48724
 	'char' => '',
 	'varchar' => '',
 	'binary' => "\x00",
