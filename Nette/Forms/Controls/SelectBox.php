@@ -54,7 +54,6 @@ class SelectBox extends BaseControl
 		if ($items !== NULL) {
 			$this->setItems($items);
 		}
-		$this->addRule($this->validateSelectBoxValid, Nette\Forms\Rules::$defaultMessages[self::VALID]);
 	}
 
 
@@ -231,12 +230,15 @@ class SelectBox extends BaseControl
 
 
 	/**
-	 * Checks if a valid option was selected.
-	 * @return bool
+	 * Performs the server side validation.
+	 * @return void
 	 */
-	public static function validateSelectBoxValid(SelectBox $control)
+	public function validate()
 	{
-		return $control->prompt !== FALSE || $control->getValue() !== NULL;
+		parent::validate();
+		if ($this->prompt === FALSE && $this->getValue() === NULL) {
+			$this->addError(Nette\Forms\Rules::$defaultMessages[self::VALID]);
+		}
 	}
 
 }
