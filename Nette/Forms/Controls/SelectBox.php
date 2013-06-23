@@ -85,13 +85,13 @@ class SelectBox extends BaseControl
 
 
 	/**
-	 * Has been any item selected?
+	 * Is any item selected?
 	 * @return bool
 	 */
 	public function isFilled()
 	{
 		$value = $this->getValue();
-		return is_array($value) ? count($value) > 0 : $value !== NULL;
+		return $value !== NULL && $value !== array();
 	}
 
 

@@ -35,6 +35,17 @@ class Button extends BaseControl
 
 
 	/**
+	 * Is button pressed?
+	 * @return bool
+	 */
+	public function isFilled()
+	{
+		return (bool) $this->getValue();
+	}
+
+
+
+	/**
 	 * Bypasses label generation.
 	 * @return void
 	 */

@@ -85,7 +85,7 @@ class RadioList extends BaseControl
 
 
 	/**
-	 * Has been any radio button selected?
+	 * Is any radio button selected?
 	 * @return bool
 	 */
 	public function isFilled()

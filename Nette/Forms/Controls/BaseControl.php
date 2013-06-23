@@ -319,7 +319,8 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	public function isFilled()
 	{
-		return (string) $this->getValue() !== ''; // NULL, FALSE, '' ==> FALSE
+		$value = $this->getValue();
+		return $value !== NULL && $value !== array() && $value !== '';
 	}
 
 

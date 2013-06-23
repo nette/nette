@@ -49,6 +49,17 @@ class Checkbox extends BaseControl
 
 
 	/**
+	 * Is control filled?
+	 * @return bool
+	 */
+	public function isFilled()
+	{
+		return $this->getValue() !== FALSE; // back compatibility
+	}
+
+
+
+	/**
 	 * Generates control's HTML element.
 	 * @return Nette\Utils\Html
 	 */
