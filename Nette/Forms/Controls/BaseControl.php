@@ -530,9 +530,10 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 * @param  string  error message
 	 * @return BaseControl  provides a fluent interface
 	 */
-	final public function setRequired($message = NULL)
+	public function setRequired($message = NULL)
 	{
-		return $this->addRule(Form::FILLED, $message);
+		$this->rules->setRequired($message);
+		return $this;
 	}
 
 
@@ -543,12 +544,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	final public function isRequired()
 	{
-		foreach ($this->rules as $rule) {
-			if ($rule->type === Rule::VALIDATOR && !$rule->isNegative && $rule->operation === Form::FILLED) {
-				return TRUE;
-			}
-		}
-		return FALSE;
+		return $this->rules->isRequired();
 	}
 
 

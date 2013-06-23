@@ -65,6 +65,34 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 
 
 	/**
+	 * Makes control mandatory.
+	 * @param  string  error message
+	 * @return Rules      provides a fluent interface
+	 */
+	public function setRequired($message = NULL)
+	{
+		return $this->addRule(Form::FILLED, $message);
+	}
+
+
+
+	/**
+	 * Is control mandatory?
+	 * @return bool
+	 */
+	public function isRequired()
+	{
+		foreach ($this->rules as $rule) {
+			if ($rule->type === Rule::VALIDATOR && !$rule->isNegative && $rule->operation === Form::FILLED) {
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
+
+
+
+	/**
 	 * Adds a validation rule for the current control.
 	 * @param  mixed      rule type
 	 * @param  string     message to display for invalid data
