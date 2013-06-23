@@ -26,7 +26,7 @@ class Translator implements Nette\Localization\ITranslator
 
 
 test(function() {
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addButton('button', 'Caption');
 
 	Assert::null($input->getLabel());
@@ -38,7 +38,7 @@ test(function() {
 
 
 test(function() { // translator
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addButton('button', 'Caption');
 	$input->setTranslator(new Translator);
 
@@ -49,7 +49,7 @@ test(function() { // translator
 
 
 test(function() { // Html with translator
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addButton('button', Html::el('b', 'Caption'));
 	$input->setTranslator(new Translator);
 
@@ -60,7 +60,7 @@ test(function() { // Html with translator
 
 
 test(function() { // validation rules
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addButton('button', 'Caption')->setRequired('required');
 
 	Assert::same('<input type="button" name="button" id="frm-button" required="required" data-nette-rules=\'[{"op":":filled","msg":"required"}]\' value="Caption" />', (string) $input->getControl());
@@ -69,7 +69,7 @@ test(function() { // validation rules
 
 
 test(function() { // container
-	$form = new Form();
+	$form = new Form;
 	$container = $form->addContainer('container');
 	$input = $container->addButton('button', 'Caption');
 
@@ -79,7 +79,7 @@ test(function() { // container
 
 
 test(function() { // SubmitButton
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addSubmit('button', 'Caption');
 
 	Assert::null($input->getLabel());

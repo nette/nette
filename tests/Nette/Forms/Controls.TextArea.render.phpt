@@ -26,7 +26,7 @@ class Translator implements Nette\Localization\ITranslator
 
 
 test(function() {
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addTextArea('text', 'Label')
 		->setValue('&text')
 		->setAttribute('autocomplete', 'off');
@@ -42,7 +42,7 @@ test(function() {
 
 
 test(function() { // translator
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addTextArea('text', 'Label')
 		->setAttribute('placeholder', 'place')
 		->setValue('text')
@@ -56,7 +56,7 @@ test(function() { // translator
 
 
 test(function() { // Html with translator
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addTextArea('text', Html::el('b', 'Label'))
 		->setTranslator(new Translator);
 
@@ -67,7 +67,7 @@ test(function() { // Html with translator
 
 
 test(function() { // validation rule LENGTH
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addTextArea('text')
 		->addRule($form::LENGTH, NULL, array(10, 20));
 
@@ -77,7 +77,7 @@ test(function() { // validation rule LENGTH
 
 
 test(function() { // validation rule MAX_LENGTH
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addTextArea('text')
 		->addRule($form::MAX_LENGTH, NULL, 10);
 
@@ -87,7 +87,7 @@ test(function() { // validation rule MAX_LENGTH
 
 
 test(function() { // container
-	$form = new Form();
+	$form = new Form;
 	$container = $form->addContainer('container');
 	$input = $container->addTextArea('text');
 

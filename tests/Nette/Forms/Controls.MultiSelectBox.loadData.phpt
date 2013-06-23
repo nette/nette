@@ -18,54 +18,82 @@ require __DIR__ . '/../bootstrap.php';
 $_SERVER['REQUEST_METHOD'] = 'POST';
 
 $_POST = array(
-	'series0' => 'red-dwarf',
-	'series1' => 'days-of-our-lives',
-	'series2' => 0,
+	'string1' => 'red-dwarf',
+	'string2' => 'days-of-our-lives',
+	'zero' => 0,
+	'empty' => '',
+	'malformed' => array(array(NULL)),
 );
 
 $series = array(
 	'red-dwarf' => 'Red Dwarf',
 	'the-simpsons' => 'The Simpsons',
 	0 => 'South Park',
+	'' => 'Family Guy',
 );
 
 
 test(function() use ($series) {
+	$form = new Form;
+	$input = $form->addMultiSelect('string1', NULL, $series);
 
-	$form = new Form();
-	$form->addMultiSelect('series0', NULL, $series);
-
-	Assert::true( (bool) $form->isSubmitted() );
 	Assert::true( $form->isValid() );
-	Assert::same( array(
-		'series0' => array('red-dwarf'),
-	), (array) $form->getValues() );
+	Assert::same( array('red-dwarf'), $input->getValue() );
+	Assert::true( $input->isFilled() );
 });
 
 
 
 test(function() use ($series) { // invalid input
+	$form = new Form;
+	$input = $form->addMultiSelect('string2', NULL, $series);
 
-	$form = new Form();
-	$form->addMultiSelect('series1', NULL, $series);
-
-	Assert::true( (bool) $form->isSubmitted() );
 	Assert::true( $form->isValid() );
-	Assert::same( array(
-		'series1' => array(),
-	), (array) $form->getValues() );
+	Assert::same( array(), $input->getValue() );
+	Assert::false( $input->isFilled() );
 });
 
 
 
 test(function() use ($series) {
-	$form = new Form();
-	$form->addMultiSelect('series2', NULL, $series);
+	$form = new Form;
+	$input = $form->addMultiSelect('zero', NULL, $series);
 
-	Assert::true( (bool) $form->isSubmitted() );
 	Assert::true( $form->isValid() );
-	Assert::same( array(
-		'series2' => array(0),
-	), (array) $form->getValues() );
-	Assert::same( array(0), $form['series2']->getRawValue() );
+	Assert::same( array(0), $input->getValue() );
+	Assert::same( array(0), $input->getRawValue() );
+	Assert::true( $input->isFilled() );
+});
+
+
+
+test(function() use ($series) { // empty key
+	$form = new Form;
+	$input = $form->addMultiSelect('empty', NULL, $series);
+
+	Assert::true( $form->isValid() );
+	Assert::same( array(''), $input->getValue() );
+	Assert::true( $input->isFilled() );
+});
+
+
+
+test(function() use ($series) { // missing key
+	$form = new Form;
+	$input = $form->addMultiSelect('missing', NULL, $series);
+
+	Assert::true( $form->isValid() );
+	Assert::same( array(), $input->getValue() );
+	Assert::false( $input->isFilled() );
+});
+
+
+
+test(function() use ($series) { // malformed data
+	$form = new Form;
+	$input = $form->addMultiSelect('malformed', NULL, $series);
+
+	Assert::true( $form->isValid() );
+	Assert::same( array(), $input->getValue() );
+	Assert::false( $input->isFilled() );
 });

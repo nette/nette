@@ -26,7 +26,7 @@ class Translator implements Nette\Localization\ITranslator
 
 
 test(function() {
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addImage('button', 'image.gif');
 
 	Assert::null($input->getLabel());
@@ -37,7 +37,7 @@ test(function() {
 
 
 test(function() { // translator
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addImage('button', 'image.gif');
 	$input->setTranslator(new Translator);
 
@@ -47,7 +47,7 @@ test(function() { // translator
 
 
 test(function() { // validation rules
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addImage('button', 'image.gif')->setRequired('required');
 
 	Assert::same('<input type="image" src="image.gif" name="button[]" id="frm-button" required="required" data-nette-rules=\'[{"op":":filled","msg":"required"}]\' />', (string) $input->getControl());
@@ -56,7 +56,7 @@ test(function() { // validation rules
 
 
 test(function() { // container
-	$form = new Form();
+	$form = new Form;
 	$container = $form->addContainer('container');
 	$input = $container->addImage('button', 'image.gif');
 

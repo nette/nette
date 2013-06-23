@@ -20,7 +20,7 @@ $_SERVER['REQUEST_METHOD'] = 'POST';
 $_GET = $_POST = $_FILES = array();
 
 test(function() {
-	$form = new Form();
+	$form = new Form;
 	$form->addSubmit('send', 'Send');
 
 	Assert::true( (bool) $form->isSubmitted() );
@@ -31,7 +31,7 @@ test(function() {
 
 
 test(function() {
-	$form = new Form();
+	$form = new Form;
 	$form->setMethod($form::GET);
 	$form->addSubmit('send', 'Send');
 

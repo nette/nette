@@ -26,7 +26,7 @@ class Translator implements Nette\Localization\ITranslator
 
 
 test(function() {
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addCheckbox('on', 'Label');
 
 	Assert::type('Nette\Utils\Html', $input->getLabel());
@@ -43,7 +43,7 @@ test(function() {
 
 
 test(function() { // Html with translator
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addCheckbox('on', 'Label');
 	$input->setTranslator(new Translator);
 
@@ -55,7 +55,7 @@ test(function() { // Html with translator
 
 
 test(function() { // validation rules
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addCheckbox('on')->setRequired('required');
 
 	Assert::same('<input type="checkbox" name="on" id="frm-on" required="required" data-nette-rules=\'[{"op":":filled","msg":"required"}]\' />', (string) $input->getControl());
@@ -64,7 +64,7 @@ test(function() { // validation rules
 
 
 test(function() { // container
-	$form = new Form();
+	$form = new Form;
 	$container = $form->addContainer('container');
 	$input = $container->addCheckbox('on');
 

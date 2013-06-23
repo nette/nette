@@ -26,7 +26,7 @@ class Translator implements Nette\Localization\ITranslator
 
 
 test(function() {
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addText('text', 'Label')
 		->setValue('text')
 		->setAttribute('autocomplete', 'off');
@@ -42,7 +42,7 @@ test(function() {
 
 
 test(function() { // translator
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addText('text', 'Label')
 		->setAttribute('placeholder', 'place')
 		->setValue('text')
@@ -56,7 +56,7 @@ test(function() { // translator
 
 
 test(function() { // Html with translator
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addText('text', Html::el('b', 'Label'))
 		->setTranslator(new Translator);
 
@@ -67,7 +67,7 @@ test(function() { // Html with translator
 
 
 test(function() { // password
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addPassword('password');
 
 	Assert::same('<input type="password" name="password" id="frm-password" />', (string) $input->getControl());
@@ -76,7 +76,7 @@ test(function() { // password
 
 
 test(function() { // validation rule required & PATTERN
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addText('text')
 		->setRequired('required')
 		->addRule($form::PATTERN, 'error message', '[0-9]+');
@@ -87,7 +87,7 @@ test(function() { // validation rule required & PATTERN
 
 
 test(function() { // conditional required
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addText('text');
 	$input->addCondition($form::FILLED)
 			->addRule($form::FILLED);
@@ -98,7 +98,7 @@ test(function() { // conditional required
 
 
 test(function() { // validation rule LENGTH
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addText('text')
 		->addRule($form::LENGTH, NULL, array(10, 20));
 
@@ -108,7 +108,7 @@ test(function() { // validation rule LENGTH
 
 
 test(function() { // validation rule MAX_LENGTH
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addText('text')
 		->addRule($form::MAX_LENGTH, NULL, 10);
 
@@ -118,7 +118,7 @@ test(function() { // validation rule MAX_LENGTH
 
 
 test(function() { // validation rule RANGE & setType
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addText('count')
 		->setType('number')
 		->addRule(Form::RANGE, 'Must be in range from %d to %d', array(1, 100));
@@ -129,7 +129,7 @@ test(function() { // validation rule RANGE & setType
 
 
 test(function() { // setEmptyValue
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addText('text')
 		->setEmptyValue('empty');
 
@@ -139,7 +139,7 @@ test(function() { // setEmptyValue
 
 
 test(function() { // container
-	$form = new Form();
+	$form = new Form;
 	$container = $form->addContainer('container');
 	$input = $container->addText('text');
 

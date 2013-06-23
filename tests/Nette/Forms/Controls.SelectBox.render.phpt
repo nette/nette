@@ -26,7 +26,7 @@ class Translator implements Nette\Localization\ITranslator
 
 
 test(function() {
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addSelect('list', 'Label', array(
 		'a' => 'First',
 		0 => 'Second',
@@ -43,7 +43,7 @@ test(function() {
 
 
 test(function() { // selected
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addSelect('list', 'Label', array(
 		'a' => 'First',
 		0 => 'Second',
@@ -55,7 +55,7 @@ test(function() { // selected
 
 
 test(function() { // translator & groups
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addSelect('list', 'Label', array(
 		'a' => 'First',
 		'group' => array('Second', 'Third'),
@@ -70,7 +70,7 @@ test(function() { // translator & groups
 
 
 test(function() { // Html with translator & groups
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addSelect('list', Html::el('b', 'Label'), array(
 		'a' => Html::el('option', 'First')->class('class'),
 		'group' => array(Html::el('option', 'Second')),
@@ -85,7 +85,7 @@ test(function() { // Html with translator & groups
 
 
 test(function() { // validation rules
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addSelect('list', 'Label', array(
 		'a' => 'First',
 		0 => 'Second',
@@ -97,7 +97,7 @@ test(function() { // validation rules
 
 
 test(function() { // container
-	$form = new Form();
+	$form = new Form;
 	$container = $form->addContainer('container');
 	$input = $container->addSelect('list', 'Label', array(
 		'a' => 'First',

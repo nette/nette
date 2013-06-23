@@ -21,7 +21,7 @@ $_POST = $_FILES = array();
 $_GET = array('item');
 
 test(function() {
-	$form = new Form();
+	$form = new Form;
 	$form->setMethod($form::GET);
 	$form->addSubmit('send', 'Send');
 

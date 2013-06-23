@@ -18,55 +18,82 @@ require __DIR__ . '/../bootstrap.php';
 $_SERVER['REQUEST_METHOD'] = 'POST';
 
 $_POST = array(
-	'series0' => 'red-dwarf',
-	'series1' => 'days-of-our-lives',
-	'series2' => 0,
+	'string1' => 'red-dwarf',
+	'string2' => 'days-of-our-lives',
+	'zero' => 0,
+	'empty' => '',
+	'malformed' => array(NULL),
 );
 
 $series = array(
 	'red-dwarf' => 'Red Dwarf',
 	'the-simpsons' => 'The Simpsons',
 	0 => 'South Park',
+	'' => 'Family Guy',
 );
 
 
 test(function() use ($series) { // Radio list
+	$form = new Form;
+	$input = $form->addRadioList('string1', NULL, $series);
 
-	$form = new Form();
-	$form->addRadioList('series0', NULL, $series);
-
-	Assert::true( (bool) $form->isSubmitted() );
 	Assert::true( $form->isValid() );
-	Assert::same( array(
-		'series0' => 'red-dwarf',
-	), (array) $form->getValues() );
+	Assert::same( 'red-dwarf', $input->getValue() );
+	Assert::true( $input->isFilled() );
 });
 
 
 
 test(function() use ($series) { // Radio list with invalid input
+	$form = new Form;
+	$input = $form->addRadioList('string2', NULL, $series);
 
-	$form = new Form();
-	$form->addRadioList('series1', NULL, $series);
-
-	Assert::true( (bool) $form->isSubmitted() );
 	Assert::true( $form->isValid() );
-	Assert::same( array(
-		'series1' => NULL,
-	), (array) $form->getValues() );
+	Assert::null( $input->getValue() );
+	Assert::false( $input->isFilled() );
 });
 
 
 
 test(function() use ($series) { // Indexed arrays
+	$form = new Form;
+	$input = $form->addRadioList('zero', NULL, $series);
 
-	$form = new Form();
-	$form->addRadioList('series2', NULL, $series);
-
-	Assert::true( (bool) $form->isSubmitted() );
 	Assert::true( $form->isValid() );
-	Assert::same( array(
-		'series2' => 0,
-	), (array) $form->getValues() );
-	Assert::same( 0, $form['series2']->getRawValue() );
+	Assert::same( 0, $input->getValue() );
+	Assert::same( 0, $input->getRawValue() );
+	Assert::true( $input->isFilled() );
+});
+
+
+
+test(function() use ($series) { // empty key
+	$form = new Form;
+	$input = $form->addRadioList('empty', NULL, $series);
+
+	Assert::true( $form->isValid() );
+	Assert::same( '', $input->getValue() );
+	Assert::true( $input->isFilled() );
+});
+
+
+
+test(function() use ($series) { // missing key
+	$form = new Form;
+	$input = $form->addRadioList('missing', NULL, $series);
+
+	Assert::true( $form->isValid() );
+	Assert::null( $input->getValue() );
+	Assert::false( $input->isFilled() );
+});
+
+
+
+test(function() use ($series) { // malformed data
+	$form = new Form;
+	$input = $form->addRadioList('malformed', NULL, $series);
+
+	Assert::true( $form->isValid() );
+	Assert::null( $input->getValue() );
+	Assert::false( $input->isFilled() );
 });

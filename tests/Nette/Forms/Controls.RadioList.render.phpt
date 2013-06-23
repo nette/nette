@@ -26,7 +26,7 @@ class Translator implements Nette\Localization\ITranslator
 
 
 test(function() {
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addRadioList('list', 'Label', array(
 		'a' => 'First',
 		0 => 'Second',
@@ -46,7 +46,7 @@ test(function() {
 
 
 test(function() { // checked
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addRadioList('list', 'Label', array(
 		'a' => 'First',
 		0 => 'Second',
@@ -58,7 +58,7 @@ test(function() { // checked
 
 
 test(function() { // translator
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addRadioList('list', 'Label', array(
 		'a' => 'First',
 		0 => 'Second',
@@ -77,7 +77,7 @@ test(function() { // translator
 
 
 test(function() { // Html
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addRadioList('list', Html::el('b', 'Label'), array(
 		'a' => Html::el('b', 'First'),
 	));
@@ -94,7 +94,7 @@ test(function() { // Html
 
 
 test(function() { // validation rules
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addRadioList('list', 'Label', array(
 		'a' => 'First',
 		0 => 'Second',
@@ -107,7 +107,7 @@ test(function() { // validation rules
 
 
 test(function() { // container
-	$form = new Form();
+	$form = new Form;
 	$container = $form->addContainer('container');
 	$input = $container->addRadioList('list', 'Label', array(
 		'a' => 'First',

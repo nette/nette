@@ -26,7 +26,7 @@ class Translator implements Nette\Localization\ITranslator
 
 
 test(function() {
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addHidden('hidden', 'value');
 
 	Assert::null($input->getLabel());
@@ -37,7 +37,7 @@ test(function() {
 
 
 test(function() { // validation rules
-	$form = new Form();
+	$form = new Form;
 	$input = $form->addHidden('hidden')->setRequired('required');
 
 	Assert::same('<input type="hidden" name="hidden" id="frm-hidden" required="required" value="" />', (string) $input->getControl());
@@ -46,7 +46,7 @@ test(function() { // validation rules
 
 
 test(function() { // container
-	$form = new Form();
+	$form = new Form;
 	$container = $form->addContainer('container');
 	$input = $container->addHidden('hidden');
 
