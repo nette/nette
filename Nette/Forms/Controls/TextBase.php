@@ -130,14 +130,6 @@ abstract class TextBase extends BaseControl
 	public function getControl()
 	{
 		$control = parent::getControl();
-		foreach ($this->getRules() as $rule) {
-			if ($rule->type === Nette\Forms\Rule::VALIDATOR && !$rule->isNegative
-				&& ($rule->operation === Form::LENGTH || $rule->operation === Form::MAX_LENGTH)
-			) {
-				$arg = is_array($rule->arg) ? $rule->arg[1] : $rule->arg;
-				$control->maxlength = is_scalar($arg) ? $arg : NULL;
-			}
-		}
 		if ($this->emptyValue !== '') {
 			$control->data('nette-empty-value', $this->translate($this->emptyValue));
 		}

@@ -218,8 +218,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 			$success = $this->validateRule($rule);
 
 			if ($rule->type === Rule::CONDITION && $success) {
-				if ($tmp = $rule->subRules->validate()) {
-					$errors = array_merge($errors, $tmp);
+				if ($errors = $rule->subRules->validate()) {
 					break;
 				}
 
