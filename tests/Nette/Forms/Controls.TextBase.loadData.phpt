@@ -100,6 +100,22 @@ test(function() { // float
 	$input = $form->addText('number')
 		->addRule($form::FLOAT);
 
+	Assert::same( '10,5', $input->getValue() );
+	$input->validate();
+	Assert::same( '10.5', $input->getValue() );
+});
+
+
+
+test(function() { // float in condition
+	$_POST = array('number' => ' 10,5 ');
+
+	$form = new Form;
+	$input = $form->addText('number');
+	$input->addCondition($form::FILLED)
+			->addRule($form::FLOAT);
+
+	$input->validate();
 	Assert::same( '10.5', $input->getValue() );
 });
 
@@ -111,7 +127,8 @@ test(function() { // non float
 	$input = $form->addText('number')
 		->addRule(~$form::FLOAT);
 
-	Assert::same( '10,5', $input->getValue() );
+	$input->validate();
+	Assert::same( '10.5', $input->getValue() ); // side effect
 });
 
 
@@ -144,6 +161,7 @@ test(function() { // URL
 	$input = $form->addText('url')
 		->addRule($form::URL);
 
+	$input->validate();
 	Assert::same( 'http://nette.org', $input->getValue() );
 });
 

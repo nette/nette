@@ -70,12 +70,15 @@ test(function() {
 	$control = new TextInput();
 	$control->value = '';
 	Assert::false( Validator::validateUrl($control) );
+	Assert::same( '', $control->value );
 
 	$control->value = 'localhost';
 	Assert::true( Validator::validateUrl($control) );
+	Assert::same( 'http://localhost', $control->value );
 
 	$control->value = 'http://nette.org';
 	Assert::true( Validator::validateUrl($control) );
+	Assert::same( 'http://nette.org', $control->value );
 
 	$control->value = '/nette.org';
 	Assert::false( Validator::validateUrl($control) );
@@ -106,6 +109,7 @@ test(function() {
 	$control->value = '123,5';
 	Assert::false( Validator::validateInteger($control) );
 	Assert::true( Validator::validateFloat($control) );
+	Assert::same( '123.5', $control->value );
 
 	$control->value = '123.5';
 	Assert::false( Validator::validateInteger($control) );

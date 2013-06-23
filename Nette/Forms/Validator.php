@@ -209,7 +209,14 @@ class Validator extends Nette\Object
 	 */
 	public static function validateUrl(IControl $control)
 	{
-		return Validators::isUrl($control->getValue()) || Validators::isUrl('http://' . $control->getValue());
+		if (Validators::isUrl($value = $control->getValue())) {
+			return TRUE;
+
+		} elseif (Validators::isUrl($value = "http://$value")) {
+			$control->setValue($value);
+			return TRUE;
+		}
+		return FALSE;
 	}
 
 
@@ -247,7 +254,12 @@ class Validator extends Nette\Object
 	 */
 	public static function validateFloat(IControl $control)
 	{
-		return Validators::isNumeric(str_replace(array(' ', ','), array('', '.'), $control->getValue()));
+		$value = str_replace(array(' ', ','), array('', '.'), $control->getValue());
+		if (Validators::isNumeric($value)) {
+			$control->setValue($value);
+			return TRUE;
+		}
+		return FALSE;
 	}
 
 
