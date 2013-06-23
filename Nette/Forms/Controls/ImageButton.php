@@ -46,7 +46,7 @@ class ImageButton extends SubmitButton
 	{
 		parent::setValue($value);
 		if (is_array($value) && isset($value[0], $value[1])) {
-			$this->value = $value;
+			$this->value = array((int) $value[0], (int) $value[1]);
 		}
 		return $this;
 	}

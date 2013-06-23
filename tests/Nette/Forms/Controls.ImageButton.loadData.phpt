@@ -22,6 +22,8 @@ $_POST = array(
 	'container' => array(
 		'image' => array(3, 4),
 	),
+	'malformed1' => array(1),
+	'malformed2' => array(array(NULL), 'x'),
 );
 
 
@@ -29,17 +31,30 @@ test(function() {
 	$form = new Form;
 	$input = $form->addImage('image');
 	Assert::true( $input->isFilled() );
-	Assert::same( array('1', '2'), $input->getValue() );
+	Assert::same( array(1, 2), $input->getValue() );
 
 	$input = $form->addContainer('container')->addImage('image');
-	Assert::same( array('3', '4'), $form['container']['image']->getValue() );
+	Assert::same( array(3, 4), $form['container']['image']->getValue() );
 });
 
 
 
 test(function() { // missing data
 	$form = new Form;
-	$input = $form->addImage('unknown');
+	$input = $form->addImage('missing');
 	Assert::false( $input->isFilled() );
 	Assert::false( $input->getValue() );
+});
+
+
+
+test(function() { // malformed data
+	$form = new Form;
+	$input = $form->addImage('malformed1');
+	Assert::true( $input->isFilled() );
+	Assert::true( $input->getValue() );
+
+	$input = $form->addImage('malformed2');
+	Assert::true( $input->isFilled() );
+	Assert::same( array(1, 0), $input->getValue() );
 });
