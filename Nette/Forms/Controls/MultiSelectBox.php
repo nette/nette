@@ -58,9 +58,7 @@ class MultiSelectBox extends SelectBox
 	 */
 	public function getSelectedItem()
 	{
-		return $this->areKeysUsed()
-			? array_intersect_key($this->allowed, array_flip($this->getValue()))
-			: $this->getValue();
+		return array_intersect_key($this->allowed, array_flip($this->getValue()));
 	}
 
 
