@@ -32,7 +32,6 @@ $template->hello = '<i>Hello</i>';
 $template->xss = 'some&<>"\'/chars';
 $template->people = array('John', 'Mary', 'Paul', ']]>');
 $template->menu = array('about', array('product1', 'product2'), 'contact');
-$template->comment = 'test -- comment';
 $template->el = Html::el('div')->title('1/2"');
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');

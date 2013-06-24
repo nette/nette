@@ -86,7 +86,6 @@ if ($_l->extends) {
 <?php echo Nette\Templating\Helpers::escapeHtml((string) (bool) (float) (int) (array) 10, ENT_NOQUOTES) ?>
 
 
-
 <?php if ($hello): ?>
 	<?php echo Nette\Templating\Helpers::escapeHtml($hello, ENT_NOQUOTES) ?>
 
@@ -170,7 +169,6 @@ call_user_func(reset($_l->blocks['menu']), $_l, get_defined_vars())  ?>
 
 <?php $now = new DateTime ;$foo = $now->format('u') ;extract(array('foo' => $now->format('u')), EXTR_SKIP) ?>
 
-<!-- <?php echo Nette\Templating\Helpers::escapeHtmlComment($comment) ?> -->
 
 
 </ul>
