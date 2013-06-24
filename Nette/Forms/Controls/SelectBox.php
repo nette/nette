@@ -59,13 +59,30 @@ class SelectBox extends BaseControl
 
 
 	/**
+	 * Sets selected items (by keys).
+	 * @param  string
+	 * @return SelectBox  provides a fluent interface
+	 */
+	public function setValue($value)
+	{
+		if (is_scalar($value)) {
+			$foo = array($value => NULL);
+			$this->value = key($foo);
+		} else {
+			$this->value = NULL;
+		}
+		return $this;
+	}
+
+
+
+	/**
 	 * Returns selected item key.
 	 * @return mixed
 	 */
 	public function getValue()
 	{
-		$value = $this->getRawValue();
-		return isset($this->allowed[$value]) ? $value : NULL;
+		return isset($this->allowed[$this->value]) ? $this->value : NULL;
 	}
 
 
@@ -76,10 +93,7 @@ class SelectBox extends BaseControl
 	 */
 	public function getRawValue()
 	{
-		if (is_scalar($this->value)) {
-			$foo = array($this->value => NULL);
-			return key($foo);
-		}
+		return $this->value;
 	}
 
 

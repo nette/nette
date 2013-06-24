@@ -22,6 +22,26 @@ use Nette;
  */
 class MultiSelectBox extends SelectBox
 {
+	protected $value = array();
+
+
+	/**
+	 * Sets selected items (by keys).
+	 * @param  array
+	 * @return MultiSelectBox  provides a fluent interface
+	 */
+	public function setValue($values)
+	{
+		$res = array();
+		foreach (is_array($values) ? $values : array($values) as $value) {
+			if (is_scalar($value)) {
+				$res[$value] = NULL;
+			}
+		}
+		$this->value = array_keys($res);
+		return $this;
+	}
+
 
 
 	/**
@@ -30,7 +50,7 @@ class MultiSelectBox extends SelectBox
 	 */
 	public function getValue()
 	{
-		return array_values(array_intersect($this->getRawValue(), array_keys($this->allowed)));
+		return array_values(array_intersect($this->value, array_keys($this->allowed)));
 	}
 
 
@@ -41,13 +61,7 @@ class MultiSelectBox extends SelectBox
 	 */
 	public function getRawValue()
 	{
-		$res = array();
-		foreach (is_array($this->value) ? $this->value : array($this->value) as $val) {
-			if (is_scalar($val)) {
-				$res[$val] = NULL;
-			}
-		}
-		return array_keys($res);
+		return $this->value;
 	}
 
 
@@ -58,7 +72,7 @@ class MultiSelectBox extends SelectBox
 	 */
 	public function getSelectedItem()
 	{
-		return array_intersect_key($this->allowed, array_flip($this->getValue()));
+		return array_intersect_key($this->allowed, array_flip($this->value));
 	}
 
 
