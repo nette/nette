@@ -52,7 +52,7 @@ abstract class TextBase extends BaseControl
 	 */
 	public function setValue($value)
 	{
-		$this->value = is_array($value) ? '' : Strings::normalizeNewLines($value);
+		$this->value = (string) $value;
 		return $this;
 	}
 
@@ -69,6 +69,13 @@ abstract class TextBase extends BaseControl
 			$value = (string) $filter($value);
 		}
 		return $value === $this->translate($this->emptyValue) ? '' : $value;
+	}
+
+
+
+	protected function setRawValue($value)
+	{
+		return $this->setValue(is_scalar($value) ? Strings::normalizeNewLines($value) : '');
 	}
 
 

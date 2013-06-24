@@ -50,7 +50,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/** @var string textual caption or label */
 	public $caption;
 
-	/** @var mixed unfiltered control value */
+	/** @var mixed current control value */
 	protected $value;
 
 	/** @var Nette\Utils\Html  control element template */
@@ -346,11 +346,22 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	public function loadHttpData()
 	{
-		$this->setValue(Nette\Utils\Arrays::get(
+		$this->setRawValue(Nette\Utils\Arrays::get(
 			$this->getForm()->getHttpData(),
 			explode('[', strtr(str_replace(array('[]', ']'), '', $this->getHtmlName()), '.', '_')),
 			NULL
 		));
+	}
+
+
+
+	/**
+	 * Sets control's submitted data.
+	 * @return BaseControl  provides a fluent interface
+	 */
+	protected function setRawValue($value)
+	{
+		return $this->setValue($value);
 	}
 
 

@@ -32,14 +32,7 @@ class MultiSelectBox extends SelectBox
 	 */
 	public function setValue($values)
 	{
-		$res = array();
-		foreach (is_array($values) ? $values : array($values) as $value) {
-			if (is_scalar($value)) {
-				$res[$value] = NULL;
-			}
-		}
-		$this->value = array_keys($res);
-		return $this;
+		return $this->setRawValue($values);
 	}
 
 
@@ -51,6 +44,20 @@ class MultiSelectBox extends SelectBox
 	public function getValue()
 	{
 		return array_values(array_intersect($this->value, array_keys($this->allowed)));
+	}
+
+
+
+	protected function setRawValue($values)
+	{
+		$res = array();
+		foreach (is_array($values) ? $values : array($values) as $value) {
+			if (is_scalar($value)) {
+				$res[$value] = NULL;
+			}
+		}
+		$this->value = array_keys($res);
+		return $this;
 	}
 
 

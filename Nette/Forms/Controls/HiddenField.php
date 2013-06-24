@@ -52,8 +52,15 @@ class HiddenField extends BaseControl
 	 */
 	public function setValue($value)
 	{
-		$this->value = is_scalar($value) ? (string) $value : '';
+		$this->value = (string) $value;
 		return $this;
+	}
+
+
+
+	protected function setRawValue($value)
+	{
+		return $this->setValue(is_scalar($value) ? (string) $value : '');
 	}
 
 

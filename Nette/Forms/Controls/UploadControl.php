@@ -56,20 +56,18 @@ class UploadControl extends BaseControl
 
 	/**
 	 * Sets control's value.
-	 * @param  array|Nette\Http\FileUpload
-	 * @return Nette\Http\FileUpload  provides a fluent interface
+	 * @return UploadControl  provides a fluent interface
 	 */
 	public function setValue($value)
 	{
-		if (is_array($value)) {
-			$this->value = new Http\FileUpload($value);
+		return $this;
+	}
 
-		} elseif ($value instanceof Http\FileUpload) {
-			$this->value = $value;
 
-		} else {
-			$this->value = new Http\FileUpload(NULL);
-		}
+
+	protected function setRawValue($value)
+	{
+		$this->value = $value instanceof Http\FileUpload ? $value : new Http\FileUpload(NULL);
 		return $this;
 	}
 
@@ -81,7 +79,7 @@ class UploadControl extends BaseControl
 	 */
 	public function isFilled()
 	{
-		return $this->value instanceof Http\FileUpload && $this->value->isOK();
+		return $this->value && $this->value->isOK();
 	}
 
 
