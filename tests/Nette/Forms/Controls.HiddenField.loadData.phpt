@@ -47,3 +47,13 @@ test(function() { // invalid data
 	Assert::same( '', $input->getValue() );
 	Assert::false( $input->isFilled() );
 });
+
+
+
+test(function() { // errors ate moved to form
+	$form = new Form;
+	$input = $form->addHidden('hidden');
+	$input->addError('error');
+	Assert::same( array(), $input->getErrors() );
+	Assert::same( array('error'), $form->getErrors() );
+});

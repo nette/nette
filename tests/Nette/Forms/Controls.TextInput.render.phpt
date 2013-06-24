@@ -46,11 +46,12 @@ test(function() { // translator
 	$input = $form->addText('text', 'Label')
 		->setAttribute('placeholder', 'place')
 		->setValue('text')
-		->setTranslator(new Translator);
+		->setTranslator(new Translator)
+		->setEmptyValue('xxx');
 
 	Assert::same('<label for="frm-text">LABEL</label>', (string) $input->getLabel());
 	Assert::same('<label for="frm-text">ANOTHER LABEL</label>', (string) $input->getLabel('Another label'));
-	Assert::same('<input type="text" placeholder="PLACE" name="text" id="frm-text" value="text" />', (string) $input->getControl());
+	Assert::same('<input type="text" placeholder="PLACE" name="text" id="frm-text" data-nette-empty-value="XXX" value="text" />', (string) $input->getControl());
 });
 
 
@@ -68,7 +69,8 @@ test(function() { // Html with translator
 
 test(function() { // password
 	$form = new Form;
-	$input = $form->addPassword('password');
+	$input = $form->addPassword('password')
+		->setValue('xxx');
 
 	Assert::same('<input type="password" name="password" id="frm-password" />', (string) $input->getControl());
 });

@@ -31,6 +31,8 @@ $form->addText('special', 'Label')
 
 $form->validate();
 
+Assert::false( $form->hasErrors() );
+
 Assert::same( array(), $form->getErrors() );
 
 Assert::same( array('1 5'), $form['args1']->getErrors() );

@@ -46,6 +46,16 @@ test(function() { // trim & new lines in textarea
 
 
 
+test(function() { // empty value
+	$form = new Form;
+	$input = $form->addText('url')
+		->setEmptyValue('nette.org');
+
+	Assert::same( '', $input->getValue() );
+});
+
+
+
 test(function() { // invalid UTF
 	$form = new Form;
 	$input = $form->addText('invalidutf');

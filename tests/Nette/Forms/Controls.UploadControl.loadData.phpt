@@ -8,7 +8,9 @@
  */
 
 use Nette\Forms\Form,
-	Nette\Http\FileUpload;
+	Nette\Http\FileUpload,
+	Nette\Forms\Controls\UploadControl;
+
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -21,7 +23,7 @@ $_FILES = array(
 	'avatar' => array(
 		'name' => 'license.txt',
 		'type' => 'text/plain',
-		'tmp_name' => 'C:\\PHP\\temp\\php1D5C.tmp',
+		'tmp_name' => __DIR__ . '/files/logo.gif',
 		'error' => 0,
 		'size' => 3013,
 	),
@@ -52,7 +54,7 @@ test(function() {
 		'name' => 'license.txt',
 		'type' => '',
 		'size' => 3013,
-		'tmp_name' => 'C:\\PHP\\temp\\php1D5C.tmp',
+		'tmp_name' => __DIR__ . '/files/logo.gif',
 		'error' => 0,
 	)), $input->getValue() );
 	Assert::true( $input->isFilled() );
@@ -102,4 +104,24 @@ test(function() { // malformed data
 	Assert::true( $form->isValid() );
 	Assert::equal( new FileUpload(array()), $input->getValue() );
 	Assert::false( $input->isFilled() );
+});
+
+
+
+test(function() { // validators
+	$form = new Form;
+	$input = $form->addUpload('avatar')
+		->addRule($form::MAX_FILE_SIZE, NULL, 3000);
+
+	Assert::false( UploadControl::validateFileSize($input, 3012) );
+	Assert::true( UploadControl::validateFileSize($input, 3013) );
+
+	Assert::true( UploadControl::validateMimeType($input, 'image/gif') );
+	Assert::true( UploadControl::validateMimeType($input, 'image/*') );
+	Assert::false( UploadControl::validateMimeType($input, 'text/*') );
+	Assert::true( UploadControl::validateMimeType($input, 'text/css,image/*') );
+	Assert::true( UploadControl::validateMimeType($input, array('text/css', 'image/*')) );
+	Assert::false( UploadControl::validateMimeType($input, array()) );
+
+	Assert::true( UploadControl::validateImage($input) );
 });

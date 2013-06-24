@@ -116,3 +116,16 @@ test(function() { // container
 
 	Assert::same('<label for="frm-container-list-a"><input type="radio" name="container[list]" id="frm-container-list-a" value="a" />First</label><br /><label for="frm-container-list-0"><input type="radio" name="container[list]" id="frm-container-list-0" value="0" />Second</label><br />', (string) $input->getControl());
 });
+
+
+
+test(function() { // container prototype
+	$form = new Form;
+	$input = $form->addRadioList('list', NULL, array(
+		'a' => 'b',
+	));
+	$input->getSeparatorPrototype()->setName('hr');
+	$input->getContainerPrototype()->setName('div');
+
+	Assert::same('<div><label for="frm-list-a"><input type="radio" name="list" id="frm-list-a" value="a" />b</label><hr /></div>', (string) $input->getControl());
+});

@@ -66,7 +66,8 @@ $form->addGroup('Shipping address')
 	->setOption('embedNext', TRUE);
 
 $form->addCheckbox('send', 'Ship to address')
-	->addCondition(Form::EQUAL, TRUE)
+	->addCondition(Form::EQUAL, FALSE)
+	->elseCondition()
 		->toggle('sendBox');
 
 
@@ -110,11 +111,15 @@ $form->addHidden('userid');
 
 $form->addTextArea('note', 'Comment:');
 
+$form->addButton('unset');
+unset($form['unset']);
+
 
 
 $form->addGroup();
 
 $form->addSubmit('submit', 'Send');
+$form->addButton('cancel', 'Cancel');
 
 
 

@@ -25,6 +25,7 @@ test(function() {
 	$form->addSubmit('send', 'Send');
 
 	Assert::false( (bool) $form->isSubmitted() );
+	Assert::false( (bool) $form->isSuccess() );
 	Assert::same( array(), $form->getHttpData() );
 	Assert::same( array(), $form->getValues(TRUE) );
 });
@@ -44,7 +45,7 @@ test(function() {
 
 test(function() {
 	$name = 'name';
-	$_GET[Form::TRACKER_ID] = $name;
+	$_GET = array(Form::TRACKER_ID => $name);
 
 	$form = new Form($name);
 	$form->setMethod($form::GET);

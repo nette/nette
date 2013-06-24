@@ -43,7 +43,7 @@
 <tr>
 	<th></th>
 
-	<td><label for="frm-send"><input type="checkbox" name="send" id="frm-send" data-nette-rules='[{"op":":equal","rules":[],"control":"send","toggle":{"sendBox":true},"arg":true}]' checked="checked" />Ship to address</label></td>
+	<td><label for="frm-send"><input type="checkbox" name="send" id="frm-send" data-nette-rules='[{"op":":equal","rules":[],"control":"send","arg":false},{"op":"~:equal","rules":[],"control":"send","toggle":{"sendBox":true},"arg":false}]' checked="checked" />Ship to address</label></td>
 </tr>
 </table>
 
@@ -126,7 +126,7 @@
 <tr>
 	<th></th>
 
-	<td><input type="submit" class="button" name="_submit" id="frm-submit" value="Send" /></td>
+	<td><input type="submit" class="button" name="_submit" id="frm-submit" value="Send" /> <input type="button" class="button" name="cancel" id="frm-cancel" value="Cancel" /></td>
 </tr>
 </table>
 </fieldset>

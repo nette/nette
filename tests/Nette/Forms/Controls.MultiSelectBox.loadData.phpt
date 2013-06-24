@@ -20,6 +20,7 @@ $_SERVER['REQUEST_METHOD'] = 'POST';
 $_POST = array(
 	'string1' => 'red-dwarf',
 	'string2' => 'days-of-our-lives',
+	'multi' => array('red-dwarf', 'unknown', 0),
 	'zero' => 0,
 	'empty' => '',
 	'malformed' => array(array(NULL)),
@@ -39,6 +40,7 @@ test(function() use ($series) {
 
 	Assert::true( $form->isValid() );
 	Assert::same( array('red-dwarf'), $input->getValue() );
+	Assert::same( array('red-dwarf' => 'Red Dwarf'), $input->getSelectedItem() );
 	Assert::true( $input->isFilled() );
 });
 
@@ -50,7 +52,20 @@ test(function() use ($series) { // invalid input
 
 	Assert::true( $form->isValid() );
 	Assert::same( array(), $input->getValue() );
+	Assert::same( array(), $input->getSelectedItem() );
 	Assert::false( $input->isFilled() );
+});
+
+
+
+test(function() use ($series) { // multiple selected items
+	$form = new Form;
+	$input = $form->addMultiSelect('multi', NULL, $series);
+
+	Assert::true( $form->isValid() );
+	Assert::same( array('red-dwarf', 0), $input->getValue() );
+	Assert::same( array('red-dwarf' => 'Red Dwarf', 0 => 'South Park'), $input->getSelectedItem() );
+	Assert::true( $input->isFilled() );
 });
 
 
@@ -62,6 +77,7 @@ test(function() use ($series) {
 	Assert::true( $form->isValid() );
 	Assert::same( array(0), $input->getValue() );
 	Assert::same( array(0), $input->getRawValue() );
+	Assert::same( array(0 => 'South Park'), $input->getSelectedItem() );
 	Assert::true( $input->isFilled() );
 });
 
@@ -73,6 +89,7 @@ test(function() use ($series) { // empty key
 
 	Assert::true( $form->isValid() );
 	Assert::same( array(''), $input->getValue() );
+	Assert::same( array('' => 'Family Guy'), $input->getSelectedItem() );
 	Assert::true( $input->isFilled() );
 });
 
@@ -84,6 +101,7 @@ test(function() use ($series) { // missing key
 
 	Assert::true( $form->isValid() );
 	Assert::same( array(), $input->getValue() );
+	Assert::same( array(), $input->getSelectedItem() );
 	Assert::false( $input->isFilled() );
 });
 
@@ -95,5 +113,30 @@ test(function() use ($series) { // malformed data
 
 	Assert::true( $form->isValid() );
 	Assert::same( array(), $input->getValue() );
+	Assert::same( array(), $input->getSelectedItem() );
 	Assert::false( $input->isFilled() );
+});
+
+
+
+test(function() use ($series) { // validateLength
+	$form = new Form;
+	$input = $form->addMultiSelect('multi', NULL, $series);
+
+	Assert::true( $input::validateLength($input, 2) );
+	Assert::false( $input::validateLength($input, 3) );
+	Assert::false( $input::validateLength($input, array(3, )) );
+	Assert::true( $input::validateLength($input, array(0, 3)) );
+});
+
+
+
+test(function() use ($series) { // validateEqual
+	$form = new Form;
+	$input = $form->addMultiSelect('multi', NULL, $series);
+
+	Assert::true( $input::validateEqual($input, 'red-dwarf') );
+	Assert::false( $input::validateEqual($input, 'unknown') );
+	Assert::false( $input::validateEqual($input, array('unknown')) );
+	Assert::true( $input::validateEqual($input, array(0)) );
 });
