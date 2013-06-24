@@ -318,9 +318,7 @@ class Route extends Nette\Object implements Application\IRouter
 				}
 			}
 
-			if (!is_scalar($params[$name])) {
-
-			} elseif (isset($meta['filterTable2'][$params[$name]])) {
+			if (is_scalar($params[$name]) && isset($meta['filterTable2'][$params[$name]])) {
 				$params[$name] = $meta['filterTable2'][$params[$name]];
 
 			} elseif (isset($meta['filterTable2']) && !empty($meta[self::FILTER_STRICT])) {
