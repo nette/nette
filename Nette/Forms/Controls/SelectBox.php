@@ -65,6 +65,9 @@ class SelectBox extends BaseControl
 	 */
 	public function setValue($value)
 	{
+		if (!isset($this->allowed[$value]) && $value !== NULL) {
+			throw new Nette\InvalidArgumentException("Value '$value' is out of range of current items.");
+		}
 		return $this->setRawValue($value);
 	}
 

@@ -84,6 +84,18 @@ test(function() { // malformed data
 
 
 
+test(function() { // setValue() and invalid argument
+	$form = new Form;
+	$input = $form->addText('text');
+	$input->setValue(NULL);
+
+	Assert::exception(function() use ($input) {
+		$input->setValue(array());
+	}, 'Nette\InvalidArgumentException', "Value must be scalar or NULL, array given.");
+});
+
+
+
 test(function() { // float
 	$form = new Form;
 	$input = $form->addText('number')

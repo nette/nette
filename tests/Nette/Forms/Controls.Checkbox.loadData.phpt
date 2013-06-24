@@ -46,3 +46,15 @@ test(function() { // malformed data
 	Assert::false( $input->getValue() );
 	Assert::false( $input->isFilled() );
 });
+
+
+
+test(function() { // setValue() and invalid argument
+	$form = new Form;
+	$input = $form->addCheckbox('checkbox');
+	$input->setValue(NULL);
+
+	Assert::exception(function() use ($input) {
+		$input->setValue(array());
+	}, 'Nette\InvalidArgumentException', "Value must be scalar or NULL, array given.");
+});

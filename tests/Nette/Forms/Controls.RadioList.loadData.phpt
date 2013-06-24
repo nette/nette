@@ -97,3 +97,15 @@ test(function() use ($series) { // malformed data
 	Assert::null( $input->getValue() );
 	Assert::false( $input->isFilled() );
 });
+
+
+
+test(function() use ($series) { // setValue() and invalid argument
+	$form = new Form;
+	$input = $form->addRadioList('select', NULL, $series);
+	$input->setValue(NULL);
+
+	Assert::exception(function() use ($input) {
+		$input->setValue('unknown');
+	}, 'Nette\InvalidArgumentException', "Value 'unknown' is out of range of current items.");
+});

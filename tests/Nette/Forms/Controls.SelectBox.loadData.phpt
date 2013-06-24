@@ -193,3 +193,15 @@ test(function() {  // doubled item
 		), FALSE);
 	}, 'Nette\InvalidArgumentException', "Items contain duplication for key 'the-simpsons'.");
 });
+
+
+
+test(function() use ($series) { // setValue() and invalid argument
+	$form = new Form;
+	$input = $form->addSelect('select', NULL, $series);
+	$input->setValue(NULL);
+
+	Assert::exception(function() use ($input) {
+		$input->setValue('unknown');
+	}, 'Nette\InvalidArgumentException', "Value 'unknown' is out of range of current items.");
+});

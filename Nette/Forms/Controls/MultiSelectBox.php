@@ -32,6 +32,14 @@ class MultiSelectBox extends SelectBox
 	 */
 	public function setValue($values)
 	{
+		if (is_scalar($values) || $values === NULL) {
+			$values = (array) $values;
+		} elseif (!is_array($values)) {
+			throw new Nette\InvalidArgumentException('Value must be array or NULL, ' . gettype($values) . ' given.');
+		}
+		if ($diff = array_diff($values, array_keys($this->allowed))) {
+			throw new Nette\InvalidArgumentException("Values '" . implode("', '", $diff) . "' are out of range of current items.");
+		}
 		return $this->setRawValue($values);
 	}
 

@@ -50,10 +50,22 @@ test(function() { // invalid data
 
 
 
-test(function() { // errors ate moved to form
+test(function() { // errors are moved to form
 	$form = new Form;
 	$input = $form->addHidden('hidden');
 	$input->addError('error');
 	Assert::same( array(), $input->getErrors() );
 	Assert::same( array('error'), $form->getErrors() );
+});
+
+
+
+test(function() { // setValue() and invalid argument
+	$form = new Form;
+	$input = $form->addHidden('hidden');
+	$input->setValue(NULL);
+
+	Assert::exception(function() use ($input) {
+		$input->setValue(array());
+	}, 'Nette\InvalidArgumentException', "Value must be scalar or NULL, array given.");
 });
