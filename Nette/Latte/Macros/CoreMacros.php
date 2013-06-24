@@ -56,6 +56,7 @@ class CoreMacros extends MacroSet
 		$me->addMacro('else', array($me, 'macroElse'));
 		$me->addMacro('ifset', 'if (isset(%node.args)):', 'endif');
 		$me->addMacro('elseifset', 'elseif (isset(%node.args)):');
+		$me->addMacro('ifcontent', array($me, 'macroIfContent'), array($me, 'macroEndIfContent'));
 
 		$me->addMacro('foreach', '', array($me, 'macroEndForeach'));
 		$me->addMacro('for', 'for (%node.args):', 'endfor');
@@ -155,6 +156,38 @@ class CoreMacros extends MacroSet
 			return 'ob_start()';
 		}
 		return 'else:';
+	}
+
+
+
+	/**
+	 * n:ifcontent
+	 */
+	public function macroIfContent(MacroNode $node, PhpWriter $writer)
+	{
+		if (!$node->htmlNode) {
+			throw new CompileException("Unknown macro {{$node->name}}, use n:{$node->name} attribute.");
+		} elseif ($node->prefix !== MacroNode::PREFIX_NONE) {
+			throw new CompileException("Unknown attribute n:{$node->prefix}-{$node->name}, use n:{$node->name} attribute.");
+		}
+
+		return $writer->write('ob_start()');
+	}
+
+
+
+	/**
+	 * n:ifcontent
+	 */
+	public function macroEndIfContent(MacroNode $node, PhpWriter $writer)
+	{
+		preg_match('#(^.*?>)(.*)(<.*\z)#s', $node->content, $parts);
+		$node->content = $parts[1]
+			. '<?php ob_start() ?>'
+			. $parts[2]
+			. '<?php $_ifcontent = ob_get_length(); ob_end_flush() ?>'
+			. $parts[3];
+		return '$_ifcontent ? ob_end_flush() : ob_end_clean()';
 	}
 
 
