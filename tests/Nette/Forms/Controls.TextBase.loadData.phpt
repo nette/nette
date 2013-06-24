@@ -102,7 +102,7 @@ test(function() { // float
 
 	Assert::same( '10,5', $input->getValue() );
 	$input->validate();
-	Assert::same( '10.5', $input->getValue() );
+	Assert::same( 10.5, $input->getValue() );
 });
 
 
@@ -116,7 +116,7 @@ test(function() { // float in condition
 			->addRule($form::FLOAT);
 
 	$input->validate();
-	Assert::same( '10.5', $input->getValue() );
+	Assert::same( 10.5, $input->getValue() );
 });
 
 
@@ -128,7 +128,7 @@ test(function() { // non float
 		->addRule(~$form::FLOAT);
 
 	$input->validate();
-	Assert::same( '10.5', $input->getValue() ); // side effect
+	Assert::same( 10.5, $input->getValue() ); // side effect
 });
 
 
@@ -169,7 +169,7 @@ test(function() { // URL
 test(function() { // object
 	$form = new Form;
 	$input = $form->addText('text')
-		->setValue(new Nette\DateTime('2013-07-05'));
+		->setValue($date = new Nette\DateTime('2013-07-05'));
 
-	Assert::same( '2013-07-05 00:00:00', $input->getValue() );
+	Assert::same( $date, $input->getValue() );
 });

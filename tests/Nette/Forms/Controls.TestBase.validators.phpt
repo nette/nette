@@ -100,18 +100,45 @@ test(function() {
 	$control = new TextInput();
 	$control->value = '';
 	Assert::false( Validator::validateInteger($control) );
-	Assert::false( Validator::validateFloat($control) );
+	Assert::same( '', $control->value );
 
 	$control->value = '-123';
 	Assert::true( Validator::validateInteger($control) );
-	Assert::true( Validator::validateFloat($control) );
+	Assert::same( -123, $control->value );
 
 	$control->value = '123,5';
 	Assert::false( Validator::validateInteger($control) );
-	Assert::true( Validator::validateFloat($control) );
-	Assert::same( '123.5', $control->value );
+	Assert::same( '123,5', $control->value );
 
 	$control->value = '123.5';
 	Assert::false( Validator::validateInteger($control) );
+	Assert::same( '123.5', $control->value );
+
+	$control->value = PHP_INT_MAX . PHP_INT_MAX;
+	Assert::true( Validator::validateInteger($control) );
+	Assert::same( PHP_INT_MAX . PHP_INT_MAX, $control->value );
+});
+
+
+test(function() {
+	$control = new TextInput();
+	$control->value = '';
+	Assert::false( Validator::validateFloat($control) );
+	Assert::same( '', $control->value );
+
+	$control->value = '-123';
 	Assert::true( Validator::validateFloat($control) );
+	Assert::same( -123.0, $control->value );
+
+	$control->value = '123,5';
+	Assert::true( Validator::validateFloat($control) );
+	Assert::same( 123.5, $control->value );
+
+	$control->value = '123.5';
+	Assert::true( Validator::validateFloat($control) );
+	Assert::same( 123.5, $control->value );
+
+	$control->value = PHP_INT_MAX . PHP_INT_MAX;
+	Assert::true( Validator::validateFloat($control) );
+	Assert::same( (float) (PHP_INT_MAX . PHP_INT_MAX), $control->value );
 });

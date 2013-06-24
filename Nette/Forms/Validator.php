@@ -244,7 +244,13 @@ class Validator extends Nette\Object
 	 */
 	public static function validateInteger(IControl $control)
 	{
-		return Validators::isNumericInt($control->getValue());
+		if (Validators::isNumericInt($value = $control->getValue())) {
+			if (!is_float($tmp = $value * 1)) { // bigint leave as string
+				$control->setValue($tmp);
+			}
+			return TRUE;
+		}
+		return FALSE;
 	}
 
 
@@ -256,7 +262,7 @@ class Validator extends Nette\Object
 	{
 		$value = str_replace(array(' ', ','), array('', '.'), $control->getValue());
 		if (Validators::isNumeric($value)) {
-			$control->setValue($value);
+			$control->setValue((float) $value);
 			return TRUE;
 		}
 		return FALSE;

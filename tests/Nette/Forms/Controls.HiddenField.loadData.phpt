@@ -30,7 +30,7 @@ test(function() {
 
 test(function() {
 	$form = new Form;
-	$input = $form->addText('unknown');
+	$input = $form->addHidden('unknown');
 	Assert::same( '', $input->getValue() );
 	Assert::false( $input->isFilled() );
 });

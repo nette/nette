@@ -41,10 +41,12 @@ abstract class TextBase extends BaseControl
 	 */
 	public function setValue($value)
 	{
-		if (!is_scalar($value) && $value !== NULL && !method_exists($value, '__toString')) {
+		if ($value === NULL) {
+			$value = '';
+		} elseif (!is_scalar($value) && !method_exists($value, '__toString')) {
 			throw new Nette\InvalidArgumentException('Value must be scalar or NULL, ' . gettype($value) . ' given.');
 		}
-		$this->rawValue = $this->value = (string) $value;
+		$this->rawValue = $this->value = $value;
 		return $this;
 	}
 
@@ -55,7 +57,7 @@ abstract class TextBase extends BaseControl
 	 */
 	public function getValue()
 	{
-		$value = (string) $this->value;
+		$value = $this->value;
 		if (!empty($this->control->maxlength)) {
 			$value = Nette\Utils\Strings::substring($value, 0, $this->control->maxlength);
 		}
