@@ -12,7 +12,7 @@
 namespace Nette\Forms\Controls;
 
 use Nette,
-	Nette\Http;
+	Nette\Http\FileUpload;
 
 
 
@@ -26,11 +26,13 @@ class UploadControl extends BaseControl
 
 	/**
 	 * @param  string  label
+	 * @param  bool  allows to upload multiple files
 	 */
-	public function __construct($label = NULL)
+	public function __construct($label = NULL, $multiple = FALSE)
 	{
 		parent::__construct($label);
 		$this->control->type = 'file';
+		$this->control->multiple = (bool) $multiple;
 	}
 
 
@@ -67,7 +69,18 @@ class UploadControl extends BaseControl
 
 	protected function setRawValue($value)
 	{
-		$this->value = $value instanceof Http\FileUpload ? $value : new Http\FileUpload(NULL);
+		if ($this->control->multiple) {
+			$this->value = array();
+			foreach (is_array($value) ? $value : array() as $item) {
+				if ($item instanceof FileUpload) {
+					$this->value[] = $item;
+				}
+			}
+		} elseif (!$value instanceof FileUpload) {
+			$this->value = new FileUpload(NULL);
+		} else {
+			$this->value = $value;
+		}
 		return $this;
 	}
 
@@ -79,7 +92,18 @@ class UploadControl extends BaseControl
 	 */
 	public function isFilled()
 	{
-		return $this->value && $this->value->isOK();
+		return $this->value instanceof FileUpload ? $this->value->isOk() : (bool) $this->value; // ignore NULL object
+	}
+
+
+
+	/**
+	 * Returns HTML name of control.
+	 * @return string
+	 */
+	public function getHtmlName()
+	{
+		return parent::getHtmlName() . ($this->control->multiple ? '[]' : '');
 	}
 
 
@@ -92,8 +116,12 @@ class UploadControl extends BaseControl
 	 */
 	public static function validateFileSize(UploadControl $control, $limit)
 	{
-		$file = $control->getValue();
-		return $file instanceof Http\FileUpload && $file->getSize() <= $limit && $file->getError() !== UPLOAD_ERR_INI_SIZE;
+		foreach (static::toArray($control->getValue()) as $file) {
+			if ($file->getSize() > $limit || $file->getError() === UPLOAD_ERR_INI_SIZE) {
+				return FALSE;
+			}
+		}
+		return TRUE;
 	}
 
 
@@ -106,18 +134,14 @@ class UploadControl extends BaseControl
 	 */
 	public static function validateMimeType(UploadControl $control, $mimeType)
 	{
-		$file = $control->getValue();
-		if ($file instanceof Http\FileUpload) {
+		$mimeTypes = is_array($mimeType) ? $mimeType : explode(',', $mimeType);
+		foreach (static::toArray($control->getValue()) as $file) {
 			$type = strtolower($file->getContentType());
-			$mimeTypes = is_array($mimeType) ? $mimeType : explode(',', $mimeType);
-			if (in_array($type, $mimeTypes, TRUE)) {
-				return TRUE;
-			}
-			if (in_array(preg_replace('#/.*#', '/*', $type), $mimeTypes, TRUE)) {
-				return TRUE;
+			if (!in_array($type, $mimeTypes, TRUE) && !in_array(preg_replace('#/.*#', '/*', $type), $mimeTypes, TRUE)) {
+				return FALSE;
 			}
 		}
-		return FALSE;
+		return TRUE;
 	}
 
 
@@ -128,8 +152,22 @@ class UploadControl extends BaseControl
 	 */
 	public static function validateImage(UploadControl $control)
 	{
-		$file = $control->getValue();
-		return $file instanceof Http\FileUpload && $file->isImage();
+		foreach (static::toArray($control->getValue()) as $file) {
+			if (!$file->isImage()) {
+				return FALSE;
+			}
+		}
+		return TRUE;
+	}
+
+
+
+	/**
+	 * @return array
+	 */
+	public static function toArray($value)
+	{
+		return $value instanceof FileUpload ? array($value) : (array) $value;
 	}
 
 }

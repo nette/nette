@@ -39,6 +39,15 @@ test(function() {
 
 
 
+test(function() { // multiple
+	$form = new Form;
+	$input = $form->addUpload('file', 'Label', TRUE);
+
+	Assert::same('<input type="file" multiple="multiple" name="file[]" id="frm-file" />', (string) $input->getControl());
+});
+
+
+
 test(function() { // Html with translator
 	$form = new Form;
 	$input = $form->addUpload('file', 'Label');
