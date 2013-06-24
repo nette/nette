@@ -15,16 +15,12 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$_SERVER['REQUEST_METHOD'] = 'POST';
+before(function() {
+	$_SERVER['REQUEST_METHOD'] = 'POST';
+	$_POST = $_FILES = array();
+});
 
-$_POST = array(
-	'string1' => 'red-dwarf',
-	'string2' => 'days-of-our-lives',
-	'multi' => array('red-dwarf', 'unknown', 0),
-	'zero' => 0,
-	'empty' => '',
-	'malformed' => array(array(NULL)),
-);
+
 
 $series = array(
 	'red-dwarf' => 'Red Dwarf',
@@ -34,9 +30,12 @@ $series = array(
 );
 
 
+
 test(function() use ($series) {
+	$_POST = array('select' => 'red-dwarf');
+
 	$form = new Form;
-	$input = $form->addMultiSelect('string1', NULL, $series);
+	$input = $form->addMultiSelect('select', NULL, $series);
 
 	Assert::true( $form->isValid() );
 	Assert::same( array('red-dwarf'), $input->getValue() );
@@ -47,8 +46,10 @@ test(function() use ($series) {
 
 
 test(function() use ($series) { // invalid input
+	$_POST = array('select' => 'days-of-our-lives');
+
 	$form = new Form;
-	$input = $form->addMultiSelect('string2', NULL, $series);
+	$input = $form->addMultiSelect('select', NULL, $series);
 
 	Assert::true( $form->isValid() );
 	Assert::same( array(), $input->getValue() );
@@ -59,6 +60,8 @@ test(function() use ($series) { // invalid input
 
 
 test(function() use ($series) { // multiple selected items
+	$_POST = array('multi' => array('red-dwarf', 'unknown', 0));
+
 	$form = new Form;
 	$input = $form->addMultiSelect('multi', NULL, $series);
 
@@ -71,6 +74,8 @@ test(function() use ($series) { // multiple selected items
 
 
 test(function() use ($series) {
+	$_POST = array('zero' => 0);
+
 	$form = new Form;
 	$input = $form->addMultiSelect('zero', NULL, $series);
 
@@ -84,6 +89,8 @@ test(function() use ($series) {
 
 
 test(function() use ($series) { // empty key
+	$_POST = array('empty' => '');
+
 	$form = new Form;
 	$input = $form->addMultiSelect('empty', NULL, $series);
 
@@ -108,6 +115,8 @@ test(function() use ($series) { // missing key
 
 
 test(function() use ($series) { // malformed data
+	$_POST = array('malformed' => array(array(NULL)));
+
 	$form = new Form;
 	$input = $form->addMultiSelect('malformed', NULL, $series);
 
@@ -120,6 +129,8 @@ test(function() use ($series) { // malformed data
 
 
 test(function() use ($series) { // validateLength
+	$_POST = array('multi' => array('red-dwarf', 'unknown', 0));
+
 	$form = new Form;
 	$input = $form->addMultiSelect('multi', NULL, $series);
 
@@ -132,6 +143,8 @@ test(function() use ($series) { // validateLength
 
 
 test(function() use ($series) { // validateEqual
+	$_POST = array('multi' => array('red-dwarf', 'unknown', 0));
+
 	$form = new Form;
 	$input = $form->addMultiSelect('multi', NULL, $series);
 

@@ -15,19 +15,21 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$_SERVER['REQUEST_METHOD'] = 'POST';
+before(function() {
+	$_SERVER['REQUEST_METHOD'] = 'POST';
+	$_POST = $_FILES = array();
+});
 
-$_POST = array(
+
+
+test(function() {
+	$_POST = array(
 	'image' => array(1, 2),
 	'container' => array(
 		'image' => array(3, 4),
 	),
-	'malformed1' => array(1),
-	'malformed2' => array(array(NULL), 'x'),
-);
+	);
 
-
-test(function() {
 	$form = new Form;
 	$input = $form->addImage('image');
 	Assert::true( $input->isFilled() );
@@ -49,6 +51,11 @@ test(function() { // missing data
 
 
 test(function() { // malformed data
+	$_POST = array(
+		'malformed1' => array(1),
+		'malformed2' => array(array(NULL), 'x'),
+	);
+
 	$form = new Form;
 	$input = $form->addImage('malformed1');
 	Assert::true( $input->isFilled() );

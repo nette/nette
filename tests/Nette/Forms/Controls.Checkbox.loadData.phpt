@@ -15,16 +15,19 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$_SERVER['REQUEST_METHOD'] = 'POST';
+before(function() {
+	$_SERVER['REQUEST_METHOD'] = 'POST';
+	$_POST = $_FILES = array();
+});
 
-$_POST = array(
-	'off' => '',
-	'on' => 1,
-	'malformed' => array(NULL),
-);
 
 
 test(function() {
+	$_POST = array(
+		'off' => '',
+		'on' => 1,
+	);
+
 	$form = new Form;
 	$input = $form->addCheckbox('off');
 
@@ -40,6 +43,8 @@ test(function() {
 
 
 test(function() { // malformed data
+	$_POST = array('malformed' => array(NULL));
+
 	$form = new Form;
 	$input = $form->addCheckbox('malformed');
 

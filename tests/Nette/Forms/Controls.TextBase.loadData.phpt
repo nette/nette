@@ -15,19 +15,16 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$_SERVER['REQUEST_METHOD'] = 'POST';
+before(function() {
+	$_SERVER['REQUEST_METHOD'] = 'POST';
+	$_POST = $_FILES = array();
+});
 
-$_POST = array(
-	'text' => "  a\r b \n c ",
-	'number' => ' 10,5 ',
-	'long' => ' žluťoučký',
-	'url' => 'nette.org',
-	'malformed' => array(NULL),
-	'invalidutf' => "invalid\xAA\xAA\xAAutf",
-);
 
 
 test(function() { // trim & new lines
+	$_POST = array('text' => "  a\r b \n c ");
+
 	$form = new Form;
 	$input = $form->addText('text');
 
@@ -38,6 +35,8 @@ test(function() { // trim & new lines
 
 
 test(function() { // trim & new lines in textarea
+	$_POST = array('text' => "  a\r b \n c ");
+
 	$form = new Form;
 	$input = $form->addTextArea('text');
 
@@ -47,6 +46,8 @@ test(function() { // trim & new lines in textarea
 
 
 test(function() { // empty value
+	$_POST = array('url' => 'nette.org');
+
 	$form = new Form;
 	$input = $form->addText('url')
 		->setEmptyValue('nette.org');
@@ -57,6 +58,8 @@ test(function() { // empty value
 
 
 test(function() { // invalid UTF
+	$_POST = array('invalidutf' => "invalid\xAA\xAA\xAAutf");
+
 	$form = new Form;
 	$input = $form->addText('invalidutf');
 	Assert::same( 'invalidutf', $input->getValue() );
@@ -75,6 +78,8 @@ test(function() { // missing data
 
 
 test(function() { // malformed data
+	$_POST = array('malformed' => array(NULL));
+
 	$form = new Form;
 	$input = $form->addText('malformed');
 
@@ -85,6 +90,8 @@ test(function() { // malformed data
 
 
 test(function() { // setValue() and invalid argument
+	$_POST = array('text' => "  a\r b \n c ");
+
 	$form = new Form;
 	$input = $form->addText('text');
 	$input->setValue(NULL);
@@ -97,6 +104,8 @@ test(function() { // setValue() and invalid argument
 
 
 test(function() { // float
+	$_POST = array('number' => ' 10,5 ');
+
 	$form = new Form;
 	$input = $form->addText('number')
 		->addRule($form::FLOAT);
@@ -107,6 +116,8 @@ test(function() { // float
 
 
 test(function() { // non float
+	$_POST = array('number' => ' 10,5 ');
+
 	$form = new Form;
 	$input = $form->addText('number')
 		->addRule(~$form::FLOAT);
@@ -117,6 +128,8 @@ test(function() { // non float
 
 
 test(function() { // max length
+	$_POST = array('long' => ' žluťoučký');
+
 	$form = new Form;
 	$input = $form->addText('long')
 		->addRule($form::MAX_LENGTH, NULL, 5);
@@ -127,6 +140,8 @@ test(function() { // max length
 
 
 test(function() { // max length
+	$_POST = array('long' => ' žluťoučký');
+
 	$form = new Form;
 	$input = $form->addTextArea('long')
 		->addRule($form::MAX_LENGTH, NULL, 5);
@@ -137,6 +152,8 @@ test(function() { // max length
 
 
 test(function() { // URL
+	$_POST = array('url' => 'nette.org');
+
 	$form = new Form;
 	$input = $form->addText('url')
 		->addRule($form::URL);

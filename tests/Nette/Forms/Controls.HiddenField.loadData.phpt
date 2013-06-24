@@ -15,15 +15,15 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$_SERVER['REQUEST_METHOD'] = 'POST';
+before(function() {
+	$_SERVER['REQUEST_METHOD'] = 'POST';
+	$_POST = $_FILES = array();
+});
 
-$_POST = array(
-	'text' => "  a\r b \n c ",
-	'malformed' => array(NULL),
-);
 
 
 test(function() {
+	$_POST = array('text' => "  a\r b \n c ");
 	$form = new Form;
 	$input = $form->addHidden('text');
 	Assert::same( "  a\r b \n c ", $input->getValue() );
@@ -42,6 +42,7 @@ test(function() {
 
 
 test(function() { // invalid data
+	$_POST = array('malformed' => array(NULL));
 	$form = new Form;
 	$input = $form->addHidden('malformed');
 	Assert::same( '', $input->getValue() );

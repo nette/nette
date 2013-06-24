@@ -15,9 +15,12 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$_SERVER['REQUEST_METHOD'] = 'GET';
+before(function() {
+	$_SERVER['REQUEST_METHOD'] = 'GET';
+	$_GET = $_POST = $_FILES = array();
+});
 
-$_GET = $_POST = $_FILES = array();
+
 
 test(function() {
 	$form = new Form;

@@ -15,15 +15,12 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$_SERVER['REQUEST_METHOD'] = 'POST';
+before(function() {
+	$_SERVER['REQUEST_METHOD'] = 'POST';
+	$_POST = $_FILES = array();
+});
 
-$_POST = array(
-	'string1' => 'red-dwarf',
-	'string2' => 'days-of-our-lives',
-	'zero' => 0,
-	'empty' => '',
-	'malformed' => array(NULL),
-);
+
 
 $series = array(
 	'red-dwarf' => 'Red Dwarf',
@@ -33,9 +30,12 @@ $series = array(
 );
 
 
+
 test(function() use ($series) { // Radio list
+	$_POST = array('radio' => 'red-dwarf');
+
 	$form = new Form;
-	$input = $form->addRadioList('string1', NULL, $series);
+	$input = $form->addRadioList('radio', NULL, $series);
 
 	Assert::true( $form->isValid() );
 	Assert::same( 'red-dwarf', $input->getValue() );
@@ -45,8 +45,10 @@ test(function() use ($series) { // Radio list
 
 
 test(function() use ($series) { // Radio list with invalid input
+	$_POST = array('radio' => 'days-of-our-lives');
+
 	$form = new Form;
-	$input = $form->addRadioList('string2', NULL, $series);
+	$input = $form->addRadioList('radio', NULL, $series);
 
 	Assert::true( $form->isValid() );
 	Assert::null( $input->getValue() );
@@ -56,6 +58,8 @@ test(function() use ($series) { // Radio list with invalid input
 
 
 test(function() use ($series) { // Indexed arrays
+	$_POST = array('zero' => 0);
+
 	$form = new Form;
 	$input = $form->addRadioList('zero', NULL, $series);
 
@@ -68,6 +72,8 @@ test(function() use ($series) { // Indexed arrays
 
 
 test(function() use ($series) { // empty key
+	$_POST = array('empty' => '');
+
 	$form = new Form;
 	$input = $form->addRadioList('empty', NULL, $series);
 
@@ -79,6 +85,8 @@ test(function() use ($series) { // empty key
 
 
 test(function() use ($series) { // missing key
+	$_POST = array('malformed' => array(NULL));
+
 	$form = new Form;
 	$input = $form->addRadioList('missing', NULL, $series);
 
@@ -90,6 +98,8 @@ test(function() use ($series) { // missing key
 
 
 test(function() use ($series) { // malformed data
+	$_POST = array('malformed' => array(NULL));
+
 	$form = new Form;
 	$input = $form->addRadioList('malformed', NULL, $series);
 
@@ -102,7 +112,7 @@ test(function() use ($series) { // malformed data
 
 test(function() use ($series) { // setValue() and invalid argument
 	$form = new Form;
-	$input = $form->addRadioList('select', NULL, $series);
+	$input = $form->addRadioList('radio', NULL, $series);
 	$input->setValue(NULL);
 
 	Assert::exception(function() use ($input) {
