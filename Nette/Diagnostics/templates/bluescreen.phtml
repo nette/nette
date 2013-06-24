@@ -109,7 +109,7 @@ $counter = 0;
 
 
 
-			<?php $stack = is_callable(array($ex, 'getCustomTrace')) ? $ex->getCustomTrace() : $ex->getTrace(); $expanded = NULL ?>
+			<?php $stack = $ex->getTrace(); if (method_exists($ex, 'getCustomTrace')) { $rm = new \ReflectionMethod($ex, 'getCustomTrace'); if ($rm->isPublic() && !$rm->isStatic()) $stack = $ex->getCustomTrace(); } $expanded = NULL ?>
 			<?php if ($this->isCollapsed($ex->getFile())) {
 				foreach ($stack as $key => $row) {
 					if (isset($row['file']) && !$this->isCollapsed($row['file'])) { $expanded = $key; break; }
