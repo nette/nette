@@ -676,6 +676,43 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
+	 * Count/length validator. Range is array, min and max length pair.
+	 * @return bool
+	 */
+	public static function validateLength(IControl $control, $range)
+	{
+		if (!is_array($range)) {
+			$range = array($range, $range);
+		}
+		$value = $control->getValue();
+		return Nette\Utils\Validators::isInRange(is_array($value) ? count($value) : Nette\Utils\Strings::length($value), $range);
+	}
+
+
+
+	/**
+	 * Min-length validator: has control's value minimal count/length?
+	 * @return bool
+	 */
+	public static function validateMinLength(IControl $control, $length)
+	{
+		return static::validateLength($control, array($length, NULL));
+	}
+
+
+
+	/**
+	 * Max-length validator: is control's value count/length in limit?
+	 * @return bool
+	 */
+	public static function validateMaxLength(IControl $control, $length)
+	{
+		return static::validateLength($control, array(NULL, $length));
+	}
+
+
+
+	/**
 	 * Adds error message to the list.
 	 * @param  string  error message
 	 * @return void

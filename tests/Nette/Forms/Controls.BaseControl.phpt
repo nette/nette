@@ -47,6 +47,46 @@ test(function() { // validators
 
 	Assert::true( $input::validateFilled($input) );
 	Assert::true( $input::validateValid($input) );
+
+	Assert::true( $input::validateLength($input, NULL) );
+	Assert::false( $input::validateLength($input, 2) );
+	Assert::true( $input::validateLength($input, 3) );
+
+	Assert::true( $input::validateMinLength($input, 3) );
+	Assert::false( $input::validateMinLength($input, 4) );
+
+	Assert::true( $input::validateMaxLength($input, 3) );
+	Assert::false( $input::validateMaxLength($input, 2) );
+
+	Assert::true( $input::validateRange($input, array(NULL, NULL)) );
+	Assert::true( $input::validateRange($input, array(100, 1000)) );
+	Assert::false( $input::validateRange($input, array(1000, NULL)) );
+});
+
+
+
+test(function() { // validators for array
+	$form = new Form;
+	$input = $form->addMultiSelect('select', NULL, array('a', 'b', 'c', 'd'));
+	$input->setValue(array(1, 2, 3));
+
+	Assert::true( $input::validateEqual($input, 1) );
+	Assert::true( $input::validateEqual($input, '1') );
+	Assert::true( $input::validateEqual($input, array(123, 3)) ); // "is in"
+	Assert::false( $input::validateEqual($input, array('x')) );
+
+	Assert::true( $input::validateFilled($input) );
+	Assert::true( $input::validateValid($input) );
+
+	Assert::true( $input::validateLength($input, NULL) );
+	Assert::false( $input::validateLength($input, 2) );
+	Assert::true( $input::validateLength($input, 3) );
+
+	Assert::true( $input::validateMinLength($input, 3) );
+	Assert::false( $input::validateMinLength($input, 4) );
+
+	Assert::true( $input::validateMaxLength($input, 3) );
+	Assert::false( $input::validateMaxLength($input, 2) );
 });
 
 

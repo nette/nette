@@ -166,48 +166,6 @@ abstract class TextBase extends BaseControl
 
 
 	/**
-	 * Min-length validator: has control's value minimal length?
-	 * @param  TextBase
-	 * @param  int  length
-	 * @return bool
-	 */
-	public static function validateMinLength(TextBase $control, $length)
-	{
-		return Strings::length($control->getValue()) >= $length;
-	}
-
-
-
-	/**
-	 * Max-length validator: is control's value length in limit?
-	 * @param  TextBase
-	 * @param  int  length
-	 * @return bool
-	 */
-	public static function validateMaxLength(TextBase $control, $length)
-	{
-		return Strings::length($control->getValue()) <= $length;
-	}
-
-
-
-	/**
-	 * Length validator: is control's value length in range?
-	 * @param  TextBase
-	 * @param  array  min and max length pair
-	 * @return bool
-	 */
-	public static function validateLength(TextBase $control, $range)
-	{
-		if (!is_array($range)) {
-			$range = array($range, $range);
-		}
-		return Validators::isInRange(Strings::length($control->getValue()), $range);
-	}
-
-
-
-	/**
 	 * Email validator: is control's value valid email address?
 	 * @param  TextBase
 	 * @return bool
