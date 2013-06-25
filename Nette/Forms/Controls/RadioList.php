@@ -56,6 +56,21 @@ class RadioList extends BaseControl
 
 
 	/**
+	 * Sets selected radio value.
+	 * @param  string
+	 * @return RadioList  provides a fluent interface
+	 */
+	public function setValue($value)
+	{
+		if (!isset($this->items[$value]) && $value !== NULL) {
+			throw new Nette\InvalidArgumentException("Value '$value' is out of range of current items.");
+		}
+		return $this->setRawValue($value);
+	}
+
+
+
+	/**
 	 * Returns selected radio value.
 	 * @return mixed
 	 */
@@ -64,8 +79,20 @@ class RadioList extends BaseControl
 		if ($raw) {
 			trigger_error(__METHOD__ . '(TRUE) is deprecated; use getRawValue() instead.', E_USER_DEPRECATED);
 		}
-		$value = $this->getRawValue();
-		return ($raw || isset($this->items[$value])) ? $value : NULL;
+		return ($raw || isset($this->items[$this->value])) ? $this->value : NULL;
+	}
+
+
+
+	protected function setRawValue($value)
+	{
+		if (is_scalar($value)) {
+			$foo = array($value => NULL);
+			$this->value = key($foo);
+		} else {
+			$this->value = NULL;
+		}
+		return $this;
 	}
 
 
@@ -76,16 +103,13 @@ class RadioList extends BaseControl
 	 */
 	public function getRawValue()
 	{
-		if (is_scalar($this->value)) {
-			$foo = array($this->value => NULL);
-			return key($foo);
-		}
+		return $this->value;
 	}
 
 
 
 	/**
-	 * Has been any radio button selected?
+	 * Is any radio button selected?
 	 * @return bool
 	 */
 	public function isFilled()
@@ -149,35 +173,29 @@ class RadioList extends BaseControl
 	 */
 	public function getControl($key = NULL)
 	{
-		$value = $this->value === NULL ? NULL : (string) $this->getValue();
+		$selectedValue = $this->value === NULL ? NULL : (string) $this->getValue();
 		$control = parent::getControl();
 
 		if ($key !== NULL) {
 			$control->id .= '-' . $key;
-			$control->checked = (string) $key === $value;
+			$control->checked = (string) $key === $selectedValue;
 			$control->value = $key;
 			return $control;
 		}
 
-		$id = $control->id;
+		$idBase = $control->id;
 		$container = clone $this->container;
 		$separator = (string) $this->separator;
-		$label = $this->getLabel();
+		$label = parent::getLabel();
 
 		foreach ($this->items as $k => $val) {
-			$control->id = $label->for = $id . '-' . $k;
-			$control->checked = (string) $k === $value;
+			$control->id = $label->for = $idBase . '-' . $k;
+			$control->checked = (string) $k === $selectedValue;
 			$control->value = $k;
+			$label->setText($this->translate($val));
 
-			if ($val instanceof Html) {
-				$label->setHtml($val);
-			} else {
-				$label->setText($this->translate((string) $val));
-			}
-
-			$container->add((string) $control . (string) $label . $separator);
+			$container->add($label->insert(0, $control) . $separator);
 			$control->data('nette-rules', NULL);
-			// TODO: separator after last item?
 		}
 
 		return $container;

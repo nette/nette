@@ -306,7 +306,10 @@ class Compiler extends Nette\Object
 		$isEmpty = !$htmlNode->closing && (Strings::contains($token->text, '/') || $htmlNode->isEmpty);
 
 		if ($isEmpty && in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML))) { // auto-correct
-			$token->text = preg_replace('#^.*>#', $this->contentType === self::CONTENT_XHTML ? ' />' : '>', $token->text);
+			$token->text = preg_replace('#^.*>#', $htmlNode->isEmpty
+				? ($this->contentType === self::CONTENT_XHTML ? ' />' : '>')
+				: "></$htmlNode->name>",
+			$token->text);
 		}
 
 		if (empty($htmlNode->macroAttrs)) {

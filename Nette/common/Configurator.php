@@ -103,7 +103,7 @@ class Configurator extends Object
 	 */
 	protected function getDefaultParameters()
 	{
-		$trace = debug_backtrace(FALSE);
+		$trace = debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : FALSE);
 		$debugMode = static::detectDebugMode();
 		return array(
 			'appDir' => isset($trace[1]['file']) ? dirname($trace[1]['file']) : NULL,
@@ -200,7 +200,9 @@ class Configurator extends Object
 					$config = DI\Config\Helpers::merge($loader->load($file, $this->parameters['environment']), $config);
 					continue;
 				}
-			} catch (Nette\Utils\AssertionException $e) {}
+			} catch (Nette\InvalidStateException $e) {
+			} catch (Nette\Utils\AssertionException $e) {
+			}
 
 			$config = DI\Config\Helpers::merge($loader->load($file, $section), $config);
 		}

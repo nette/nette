@@ -64,6 +64,9 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	protected $refCache;
 
 	/** @var string */
+	protected $generalCacheKey;
+
+	/** @var string */
 	protected $specificCacheKey;
 
 	/** @var array of [conditions => [key => IRow]]; used by GroupedSelection */
@@ -325,14 +328,18 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	 */
 	public function wherePrimary($key)
 	{
-		if (is_array($this->primary) && Nette\Utils\Validators::isList($key)) {
-			foreach ($this->primary as $i => $primary) {
-				$this->where($primary, $key[$i]);
+		if (is_array($this->primary) && Nette\Utils\Arrays::isList($key)) {
+			if (isset($key[0]) && is_array($key[0])) {
+				$this->where($this->primary, $key);
+			} else {
+				foreach ($this->primary as $i => $primary) {
+					$this->where($this->name . '.' . $primary, $key[$i]);
+				}
 			}
-		} elseif (is_array($key)) { // key contains column names
+		} elseif (is_array($key) && !Nette\Utils\Arrays::isList($key)) { // key contains column names
 			$this->where($key);
 		} else {
-			$this->where($this->getPrimary(), $key);
+			$this->where($this->name . '.' . $this->getPrimary(), $key);
 		}
 
 		return $this;
@@ -349,21 +356,19 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	 */
 	public function where($condition, $parameters = array())
 	{
-		if (is_array($condition)) { // where(array('column1' => 1, 'column2 > ?' => 2))
+		if (is_array($condition) && $parameters === array()) { // where(array('column1' => 1, 'column2 > ?' => 2))
 			foreach ($condition as $key => $val) {
 				if (is_int($key)) {
-					$this->where($val);	// where('full condition')
+					$this->where($val); // where('full condition')
 				} else {
-					$this->where($key, $val);	// where('column', 1)
+					$this->where($key, $val); // where('column', 1)
 				}
 			}
 			return $this;
 		}
 
-		if (call_user_func_array(array($this->sqlBuilder, 'addWhere'), func_get_args())) {
-			$this->emptyResultSet();
-		}
-
+		$this->emptyResultSet();
+		call_user_func_array(array($this->sqlBuilder, 'addWhere'), func_get_args());
 		return $this;
 	}
 
@@ -530,6 +535,10 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 		$this->observeCache = $this;
 
+		if ($this->primary === NULL && $this->sqlBuilder->getSelect() === NULL) {
+			throw new Nette\InvalidStateException('Table with no primary key requires an explicit select clause.');
+		}
+
 		try {
 			$result = $this->query($this->getSql());
 
@@ -590,10 +599,15 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 
 
-	protected function emptyResultSet()
+	protected function emptyResultSet($saveCache = TRUE)
 	{
+		if ($this->rows !== NULL && $saveCache) {
+			$this->saveCacheState();
+		}
+
 		$this->rows = NULL;
 		$this->specificCacheKey = NULL;
+		$this->generalCacheKey = NULL;
 	}
 
 
@@ -602,6 +616,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	{
 		if ($this->observeCache === $this && $this->cache && !$this->sqlBuilder->getSelect() && $this->accessedColumns !== $this->previousAccessedColumns) {
 			$this->cache->save($this->getGeneralCacheKey(), $this->accessedColumns);
+			$this->previousAccessedColumns = NULL;
 		}
 	}
 
@@ -634,7 +649,11 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	 */
 	protected function getGeneralCacheKey()
 	{
-		return md5(serialize(array(__CLASS__, $this->name, $this->sqlBuilder->getConditions())));
+		if ($this->generalCacheKey) {
+			return $this->generalCacheKey;
+		}
+
+		return $this->generalCacheKey = md5(serialize(array(__CLASS__, $this->name, $this->sqlBuilder->getConditions())));
 	}
 
 
@@ -674,8 +693,21 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 		}
 
 		if ($selectColumn && !$this->sqlBuilder->getSelect() && $this->previousAccessedColumns && ($key === NULL || !isset($this->previousAccessedColumns[$key]))) {
+			if ($this->sqlBuilder->getLimit()) {
+				$generalCacheKey = $this->generalCacheKey;
+				$primaries = array();
+				foreach ((array) $this->rows as $row) {
+					$primary = $row->getPrimary();
+					$primaries[] = is_array($primary) ? array_values($primary) : $primary;
+				}
+			}
 			$this->previousAccessedColumns = array();
-			$this->emptyResultSet();
+			$this->emptyResultSet(FALSE);
+			if ($this->sqlBuilder->getLimit()) {
+				$this->sqlBuilder->setLimit(NULL, NULL);
+				$this->wherePrimary($primaries);
+				$this->generalCacheKey = $generalCacheKey;
+			}
 			$this->dataRefreshed = TRUE;
 
 			if ($key === NULL) {

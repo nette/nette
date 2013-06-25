@@ -43,6 +43,9 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 		Nette\Forms\Controls\SelectBox::VALID => 'Please select a valid option.',
 	);
 
+	/** @var Rule */
+	private $required;
+
 	/** @var Rule[] */
 	private $rules = array();
 
@@ -60,6 +63,34 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	public function __construct(IControl $control)
 	{
 		$this->control = $control;
+	}
+
+
+
+	/**
+	 * Makes control mandatory.
+	 * @param  mixed  state or error message
+	 * @return Rules      provides a fluent interface
+	 */
+	public function setRequired($value = TRUE)
+	{
+		if ($value) {
+			$this->addRule(Form::REQUIRED, $value);
+		} else {
+			$this->required = NULL;
+		}
+		return $this;
+	}
+
+
+
+	/**
+	 * Is control mandatory?
+	 * @return bool
+	 */
+	public function isRequired()
+	{
+		return (bool) $this->required;
 	}
 
 
@@ -84,7 +115,11 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 		} else {
 			$rule->message = $message;
 		}
-		$this->rules[] = $rule;
+		if ($rule->operation === Form::REQUIRED) {
+			$this->required = $rule;
+		} else {
+			$this->rules[] = $rule;
+		}
 		return $this;
 	}
 
@@ -175,7 +210,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	public function validate()
 	{
 		$errors = array();
-		foreach ($this->rules as $rule) {
+		foreach ($this as $rule) {
 			if ($rule->control->isDisabled()) {
 				continue;
 			}
@@ -183,8 +218,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 			$success = $this->validateRule($rule);
 
 			if ($rule->type === Rule::CONDITION && $success) {
-				if ($tmp = $rule->subRules->validate()) {
-					$errors = array_merge($errors, $tmp);
+				if ($errors = $rule->subRules->validate()) {
 					break;
 				}
 
@@ -204,18 +238,26 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	 */
 	public static function validateRule(Rule $rule)
 	{
-		return $rule->isNegative xor static::getCallback($rule)->invoke($rule->control, $rule->arg);
+		$args = is_array($rule->arg) ? $rule->arg : array($rule->arg);
+		foreach ($args as & $val) {
+			$val = $val instanceof IControl ? $val->getValue() : $val;
+		}
+		return $rule->isNegative xor static::getCallback($rule)->invoke($rule->control, is_array($rule->arg) ? $args : $args[0]);
 	}
 
 
 
 	/**
-	 * Iterates over ruleset.
+	 * Iterates over complete ruleset.
 	 * @return \ArrayIterator
 	 */
 	final public function getIterator()
 	{
-		return new \ArrayIterator($this->rules);
+		$rules = $this->rules;
+		if ($this->required) {
+			array_unshift($rules, $this->required);
+		}
+		return new \ArrayIterator($rules);
 	}
 
 
@@ -227,12 +269,12 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	public function getToggles($actual = FALSE)
 	{
 		$toggles = $this->toggles;
-		foreach ($actual ? $this->rules : array() as $rule) {
+		foreach ($actual ? $this : array() as $rule) {
 			if ($rule->type === Rule::CONDITION) {
-	    		$success = static::validateRule($rule);
-    			foreach ($rule->subRules->getToggles(TRUE) as $id => $hide) {
-    				$toggles[$id] = empty($toggles[$id]) ? ($success && $hide) : TRUE;
-    			}
+				$success = static::validateRule($rule);
+				foreach ($rule->subRules->getToggles(TRUE) as $id => $hide) {
+					$toggles[$id] = empty($toggles[$id]) ? ($success && $hide) : TRUE;
+				}
 			}
 		}
 		return $toggles;
@@ -284,12 +326,18 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 		if ($translator = $rule->control->getForm()->getTranslator()) {
 			$message = $translator->translate($message, is_int($rule->arg) ? $rule->arg : NULL);
 		}
-		$message = vsprintf(preg_replace('#%(name|label|value)#', '%$0', $message), (array) $rule->arg);
-		$message = str_replace('%name', $rule->control->getName(), $message);
-		$message = str_replace('%label', $rule->control->translate($rule->control->caption), $message);
-		if ($withValue && strpos($message, '%value') !== FALSE) {
-			$message = str_replace('%value', $rule->control->getValue(), $message);
-		}
+		$message = preg_replace_callback('#%(name|label|value|\d+\$[ds]|[ds])#', function($m) use ($rule, $withValue) {
+			static $i = -1;
+			switch ($m[1]) {
+				case 'name': return $rule->control->getName();
+				case 'label': return $rule->control->translate($rule->control->caption);
+				case 'value': return $withValue ? $rule->control->getValue() : $m[0];
+				default:
+					$args = is_array($rule->arg) ? $rule->arg : array($rule->arg);
+					$i = (int) $m[1] ? $m[1] - 1 : $i + 1;
+					return isset($args[$i]) ? ($args[$i] instanceof IControl ? ($withValue ? $args[$i]->getValue() : "%$i") : $args[$i]) : '';
+			}
+		}, $message);
 		return $message;
 	}
 

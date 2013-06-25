@@ -10,4 +10,3 @@ factories:
 	two: ILoremAccessor()
 	three: ILoremAccessor(@lorem2)
 	four: ILoremAccessor(@\Lorem)
-	

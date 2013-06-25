@@ -233,6 +233,9 @@ class Route extends Nette\Object implements Application\IRouter
 			}
 		}
 
+		if (isset($this->metadata[NULL][self::FILTER_IN])) {
+			$params = call_user_func($this->metadata[NULL][self::FILTER_IN], $params);
+		}
 
 		// 5) BUILD Request
 		if (!isset($params[self::PRESENTER_KEY])) {
@@ -277,6 +280,10 @@ class Route extends Nette\Object implements Application\IRouter
 
 		$presenter = $appRequest->getPresenterName();
 		$params[self::PRESENTER_KEY] = $presenter;
+
+		if (isset($metadata[NULL][self::FILTER_OUT])) {
+			$params = call_user_func($metadata[NULL][self::FILTER_OUT], $params);
+		}
 
 		if (isset($metadata[self::MODULE_KEY])) { // try split into module and [submodule:]presenter parts
 			$module = $metadata[self::MODULE_KEY];
@@ -656,6 +663,7 @@ class Route extends Nette\Object implements Application\IRouter
 
 	/**
 	 * Proprietary cache aim.
+	 * @internal
 	 * @return string|FALSE
 	 */
 	public function getTargetPresenter()

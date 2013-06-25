@@ -358,13 +358,12 @@ if (!empty($_control->snippetMode)) {
 		if ($node->name === 'widget') {
 			trigger_error('Macro {widget} is deprecated; use {control} instead.', E_USER_DEPRECATED);
 		}
-		$pair = $node->tokenizer->fetchWord();
-		if ($pair === FALSE) {
+		$words = $node->tokenizer->fetchWords();
+		if (!$words) {
 			throw new CompileException("Missing control name in {control}");
 		}
-		$pair = explode(':', $pair, 2);
-		$name = $writer->formatWord($pair[0]);
-		$method = isset($pair[1]) ? ucfirst($pair[1]) : '';
+		$name = $writer->formatWord($words[0]);
+		$method = isset($words[1]) ? ucfirst($words[1]) : '';
 		$method = Strings::match($method, '#^\w*\z#') ? "render$method" : "{\"render$method\"}";
 		$param = $writer->formatArray();
 		if (!Strings::contains($node->args, '=>')) {

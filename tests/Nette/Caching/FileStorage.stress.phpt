@@ -5,6 +5,7 @@
  *
  * @author     David Grudl
  * @package    Nette\Caching
+ * @multiple   5
  */
 
 use Nette\Caching\Storages\FileStorage,
@@ -16,14 +17,13 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-// TODO: run it twice (or more) simultaneously</h1>
 set_time_limit(0);
 
 
 
 function randomStr()
 {
-	$s = str_repeat('LaTrine', rand(100, 20000));
+	$s = str_repeat('LaTrine', rand(10, 2000));
 	return sha1($s, TRUE) . $s;
 }
 

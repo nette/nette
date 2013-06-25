@@ -28,9 +28,6 @@ final class Rule extends Nette\Object
 	/** type */
 	const VALIDATOR = 2;
 
-	/** type */
-	const FILTER = 3;
-
 	/** @var IControl */
 	public $control;
 

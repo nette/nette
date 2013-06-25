@@ -138,7 +138,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 		if ($data instanceof Nette\Callback || $data instanceof \Closure) {
 			$this->storage->lock($key);
-			$data = Nette\Callback::create($data)->invokeArgs(array(&$dependencies));
+			$data = Nette\Callback::create($data)->invokeArgs(array(& $dependencies));
 		}
 
 		if ($data === NULL) {

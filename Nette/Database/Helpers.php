@@ -30,7 +30,7 @@ class Helpers
 		'^_' => IReflection::FIELD_TEXT, // PostgreSQL arrays
 		'BYTEA|BLOB|BIN' => IReflection::FIELD_BINARY,
 		'TEXT|CHAR|POINT|INTERVAL' => IReflection::FIELD_TEXT,
-		'YEAR|BYTE|COUNTER|SERIAL|INT|LONG|SHORT' => IReflection::FIELD_INTEGER,
+		'YEAR|BYTE|COUNTER|SERIAL|INT|LONG|SHORT|^TINY$' => IReflection::FIELD_INTEGER,
 		'CURRENCY|REAL|MONEY|FLOAT|DOUBLE|DECIMAL|NUMERIC|NUMBER' => IReflection::FIELD_FLOAT,
 		'^TIME$' => IReflection::FIELD_TIME,
 		'TIME' => IReflection::FIELD_DATETIME, // DATETIME, TIMESTAMP
@@ -116,8 +116,8 @@ class Helpers
 		}, $sql);
 
 		// parameters
-		$i = 0;
-		$sql = preg_replace_callback('#\?#', function() use ($params, & $i) {
+		$sql = preg_replace_callback('#\?#', function() use ($params) {
+			static $i = 0;
 			if (!isset($params[$i])) {
 				return '?';
 			}
@@ -225,7 +225,7 @@ class Helpers
 		$panel = new Nette\Database\Diagnostics\ConnectionPanel($connection);
 		$panel->explain = $explain;
 		$panel->name = $name;
-		Nette\Diagnostics\Debugger::$bar->addPanel($panel);
+		Nette\Diagnostics\Debugger::getBar()->addPanel($panel);
 		return $panel;
 	}
 

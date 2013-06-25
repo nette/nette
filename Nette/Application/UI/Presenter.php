@@ -33,8 +33,6 @@ use Nette,
  * @property-read bool $ajax
  * @property-read Nette\Application\Request $lastCreatedRequest
  * @property-read Nette\Http\SessionSection $flashSession
- * @property-read \SystemContainer|Nette\DI\Container $context
- * @property-read Nette\Application\Application $application
  * @property-read Nette\Http\Session $session
  * @property-read Nette\Security\User $user
  */
@@ -1267,6 +1265,8 @@ abstract class Presenter extends Control implements Application\IPresenter
 		$params = $this->request->getParameters();
 		if ($this->isAjax()) {
 			$params += $this->request->getPost();
+		} elseif (isset($this->request->post[self::SIGNAL_KEY])) {
+			$params[self::SIGNAL_KEY] = $this->request->post[self::SIGNAL_KEY];
 		}
 
 		foreach ($params as $key => $value) {
@@ -1393,7 +1393,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	final public function getService($name)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use $container->getService() instead.', E_USER_DEPRECATED);
+		trigger_error(__METHOD__ . '() is deprecated; use dependency injection instead.', E_USER_DEPRECATED);
 		return $this->context->getService($name);
 	}
 
@@ -1420,20 +1420,22 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * @return Nette\Http\Context
+	 * @deprecated
 	 */
 	protected function getHttpContext()
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use dependency injection instead.', E_USER_DEPRECATED);
 		return $this->httpContext;
 	}
 
 
 
 	/**
-	 * @return Nette\Application\Application
+	 * @deprecated
 	 */
 	public function getApplication()
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use dependency injection instead.', E_USER_DEPRECATED);
 		return $this->application;
 	}
 

@@ -14,17 +14,6 @@ use Nette\Diagnostics\Debugger;
 
 
 /**
- * Nette\Diagnostics\Debugger::enable() shortcut.
- */
-function debug()
-{
-	Debugger::$strictMode = TRUE;
-	Debugger::enable(Debugger::DEVELOPMENT);
-}
-
-
-
-/**
  * Nette\Diagnostics\Debugger::dump() shortcut.
  */
 function dump($var)

@@ -60,10 +60,25 @@ class MacroTokenizer extends Nette\Utils\Tokenizer
 	 */
 	public function fetchWord()
 	{
-		$word = $this->fetchUntil(self::T_WHITESPACE, ',');
+		$words = $this->fetchWords();
+		return $words ? implode(':', $words) : FALSE;
+	}
+
+
+
+	/**
+	 * Reads single tokens delimited by colon from string.
+	 * @param  string
+	 * @return array
+	 */
+	public function fetchWords()
+	{
+		do {
+			$words[] = $this->fetchUntil(self::T_WHITESPACE, ',', ':');
+		} while ($this->fetch(':'));
 		$this->fetch(',');
 		$this->fetchAll(self::T_WHITESPACE, self::T_COMMENT);
-		return $word;
+		return $words === array(FALSE) ? array() : $words;
 	}
 
 }

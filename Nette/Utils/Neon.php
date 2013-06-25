@@ -325,7 +325,7 @@ class Neon extends Nette\Object
 
 
 
-	private function addValue(&$result, $hasKey, $key, $value)
+	private function addValue(& $result, $hasKey, $key, $value)
 	{
 		if ($hasKey) {
 			if ($result && array_key_exists($key, $result)) {

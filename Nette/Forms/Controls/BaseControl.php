@@ -50,7 +50,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/** @var string textual caption or label */
 	public $caption;
 
-	/** @var mixed unfiltered control value */
+	/** @var mixed current control value */
 	protected $value;
 
 	/** @var Nette\Utils\Html  control element template */
@@ -279,7 +279,9 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	public function translate($s, $count = NULL)
 	{
 		$translator = $this->getTranslator();
-		return $translator === NULL || $s == NULL ? $s : $translator->translate($s, $count); // intentionally ==
+		return $translator === NULL || $s == NULL || $s instanceof Html  // intentionally ==
+			? $s
+			: $translator->translate((string) $s, $count);
 	}
 
 
@@ -317,7 +319,8 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	public function isFilled()
 	{
-		return (string) $this->getValue() !== ''; // NULL, FALSE, '' ==> FALSE
+		$value = $this->getValue();
+		return $value !== NULL && $value !== array() && $value !== '';
 	}
 
 
@@ -343,11 +346,22 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	public function loadHttpData()
 	{
-		$path = explode('[', strtr(str_replace(array('[]', ']'), '', $this->getHtmlName()), '.', '_'));
-		try {
-			$this->setValue(Nette\Utils\Arrays::get($this->getForm()->getHttpData(), $path, NULL));
-		} catch (\InvalidArgumentException $e) {
-		}
+		$this->setRawValue(Nette\Utils\Arrays::get(
+			$this->getForm()->getHttpData(),
+			explode('[', strtr(str_replace(array('[]', ']'), '', $this->getHtmlName()), '.', '_')),
+			NULL
+		));
+	}
+
+
+
+	/**
+	 * Sets control's submitted data.
+	 * @return BaseControl  provides a fluent interface
+	 */
+	protected function setRawValue($value)
+	{
+		return $this->setValue($value);
 	}
 
 
@@ -439,15 +453,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		$label = clone $this->label;
 		$label->for = $this->getHtmlId();
-		if ($caption !== NULL) {
-			$label->setText($this->translate($caption));
-
-		} elseif ($this->caption instanceof Html) {
-			$label->add($this->caption);
-
-		} else {
-			$label->setText($this->translate($this->caption));
-		}
+		$label->setText($this->translate($caption === NULL ? $this->caption : $caption));
 		return $label;
 	}
 
@@ -533,12 +539,13 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Makes control mandatory.
-	 * @param  string  error message
+	 * @param  mixed  state or error message
 	 * @return BaseControl  provides a fluent interface
 	 */
-	final public function setRequired($message = NULL)
+	public function setRequired($value = TRUE)
 	{
-		return $this->addRule(Form::FILLED, $message);
+		$this->rules->setRequired($value);
+		return $this;
 	}
 
 
@@ -549,12 +556,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	final public function isRequired()
 	{
-		foreach ($this->rules as $rule) {
-			if ($rule->type === Rule::VALIDATOR && !$rule->isNegative && $rule->operation === Form::FILLED) {
-				return TRUE;
-			}
-		}
-		return FALSE;
+		return $this->rules->isRequired();
 	}
 
 
@@ -588,10 +590,10 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 			if (is_array($rule->arg)) {
 				foreach ($rule->arg as $key => $value) {
-					$item['arg'][$key] = $value instanceof IControl ? (object) array('control' => $value->getHtmlName()) : $value;
+					$item['arg'][$key] = $value instanceof IControl ? array('control' => $value->getHtmlName()) : $value;
 				}
 			} elseif ($rule->arg !== NULL) {
-				$item['arg'] = $rule->arg instanceof IControl ? (object) array('control' => $rule->arg->getHtmlName()) : $rule->arg;
+				$item['arg'] = $rule->arg instanceof IControl ? array('control' => $rule->arg->getHtmlName()) : $rule->arg;
 			}
 
 			$payload[] = $item;
@@ -628,7 +630,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 		$value = $control->getValue();
 		foreach ((is_array($value) ? $value : array($value)) as $val) {
 			foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
-				if ((string) $val === (string) ($item instanceof IControl ? $item->value : $item)) {
+				if ((string) $val === (string) $item) {
 					return TRUE;
 				}
 			}
@@ -681,6 +683,17 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	public function addError($message)
 	{
 		$this->errors[] = $message;
+	}
+
+
+
+	/**
+	 * Returns errors corresponding to control.
+	 * @return string
+	 */
+	public function getError()
+	{
+		return $this->errors ? implode(' ', array_unique($this->errors)) : NULL;
 	}
 
 

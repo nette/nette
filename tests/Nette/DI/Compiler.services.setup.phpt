@@ -47,7 +47,7 @@ class Ipsum
 }
 
 
-function test($arg)
+function globtest($arg)
 {
 	Notes::add(__METHOD__ . ' ' . $arg);
 }
@@ -77,7 +77,7 @@ Assert::same(array(
 	'Lorem::test 4',
 	'Ipsum::test 5',
 	'Ipsum::test 6',
-	'test 7',
+	'globtest 7',
 ), Notes::fetch());
 
 Assert::same( 8, $container->getService('lorem')->test );

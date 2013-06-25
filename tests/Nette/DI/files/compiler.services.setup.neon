@@ -19,7 +19,7 @@ services:
 			- @ipsum::test(6)
 
 			# global function
-			- ::test(7)
+			- ::globtest(7)
 
 			# local properties
 			- @lorem::$test(null)

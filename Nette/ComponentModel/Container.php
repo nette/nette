@@ -139,7 +139,10 @@ class Container extends Component implements IContainer
 			}
 
 			if ($name === '') {
-				throw new Nette\InvalidArgumentException("Component or subcomponent name must not be empty string.");
+				if ($need) {
+					throw new Nette\InvalidArgumentException("Component or subcomponent name must not be empty string.");
+				}
+				return;
 			}
 		}
 

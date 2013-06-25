@@ -2,14 +2,14 @@
 
 <ul>
 	<li>Escaped: {$hello}</li>
-	<li>Non-escaped: {!$hello}</li>
+	<li>Non-escaped: {$hello|noescape}</li>
 	<li>Escaped expression: {='<' . 'b' . '>hello' . '</b>'}</li>
-	<li>Non-escaped expression: {!='<' . 'b' . '>hello' . '</b>'}</li>
+	<li>Non-escaped expression: {='<' . 'b' . '>hello' . '</b>'|noescape}</li>
 	<li>Array access: {$people[1]}</li>
 	<li>Html: {$el}</li>
 	<li>Translated: {_$people[1]}</li>
 	<li>Translated string: {_ahoj}</li>
-	<li>Non-escaped and translated: {!_$people[1]}</li>
+	<li>Non-escaped and translated: {_$people[1]|noescape}</li>
 	<li>Condition: {$hello ? yes} {=$hello ? yes}</li>
 	<li>Array: {$hello ? [a, b, c]|join} {=[a, b, $hello ? c]|join}</li>
 </ul>
@@ -31,13 +31,6 @@
 <p val = />{$xss}</p>
 
 {= (string) (bool) (float) (int) (array) 10}
-
-{* comment *}
-
-{* multi {inner} {inner}
-line
-comment *}
-
 
 {if $hello}
 	{$hello}
@@ -123,7 +116,6 @@ var prop2 = {$people};
 {var $foo = $now->format('u')}
 {default $foo = $now->format('u')}
 
-<!-- {$comment} -->
 
 
 </ul>
@@ -216,4 +208,13 @@ var prop2 = {$people};
 
 <ul title="foreach continue">
 	<li n:foreach="$people as $person">{$person}{continueIf TRUE}</li>
+</ul>
+
+
+<ul title="inner foreach break">
+	<li n:inner-foreach="$people as $person">{$person}{breakIf TRUE}</li>
+</ul>
+
+<ul title="inner foreach continue">
+	<li n:inner-foreach="$people as $person">{$person}{continueIf TRUE}</li>
 </ul>

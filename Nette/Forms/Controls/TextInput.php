@@ -25,33 +25,14 @@ class TextInput extends TextBase
 {
 
 	/**
-	 * @param  string  control name
 	 * @param  string  label
-	 * @param  int  width of the control
 	 * @param  int  maximum number of characters the user may enter
 	 */
-	public function __construct($label = NULL, $cols = NULL, $maxLength = NULL)
+	public function __construct($label = NULL, $maxLength = NULL)
 	{
 		parent::__construct($label);
 		$this->control->type = 'text';
-		$this->control->size = $cols;
 		$this->control->maxlength = $maxLength;
-		$this->addFilter($this->sanitize);
-		$this->value = '';
-	}
-
-
-
-	/**
-	 * Filter: removes unnecessary whitespace and shortens value to control's max length.
-	 * @return string
-	 */
-	public function sanitize($value)
-	{
-		if ($this->control->maxlength && Nette\Utils\Strings::length($value) > $this->control->maxlength) {
-			$value = Nette\Utils\Strings::substring($value, 0, $this->control->maxlength);
-		}
-		return Nette\Utils\Strings::trim(strtr($value, "\r\n", '  '));
 	}
 
 
@@ -90,9 +71,10 @@ class TextInput extends TextBase
 			if ($rule->isNegative || $rule->type !== Nette\Forms\Rule::VALIDATOR) {
 
 			} elseif ($rule->operation === Nette\Forms\Form::RANGE && $control->type !== 'text') {
-				list($control->min, $control->max) = $rule->arg;
+				$control->min = isset($rule->arg[0]) && is_scalar($rule->arg[0]) ? $rule->arg[0] : NULL;
+				$control->max = isset($rule->arg[1]) && is_scalar($rule->arg[1]) ? $rule->arg[1] : NULL;
 
-			} elseif ($rule->operation === Nette\Forms\Form::PATTERN) {
+			} elseif ($rule->operation === Nette\Forms\Form::PATTERN && is_scalar($rule->arg)) {
 				$control->pattern = $rule->arg;
 			}
 		}

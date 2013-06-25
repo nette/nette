@@ -15,12 +15,14 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName
 
 
 
-$apps = array();
-foreach ($dao->table('book')->where('title LIKE ?', '%t%')->order('title')->limit(3) as $book) {  // SELECT * FROM `book` WHERE (`title` LIKE ?) ORDER BY `title` LIMIT 3
-	$apps[] = $book->title;
-}
+test(function() use ($dao) {
+	$apps = array();
+	foreach ($dao->table('book')->where('title LIKE ?', '%t%')->order('title')->limit(3) as $book) {  // SELECT * FROM `book` WHERE (`title` LIKE ?) ORDER BY `title` LIMIT 3
+		$apps[] = $book->title;
+	}
 
-Assert::same(array(
-	'1001 tipu a triku pro PHP',
-	'Nette',
-), $apps);
+	Assert::same(array(
+		'1001 tipu a triku pro PHP',
+		'Nette',
+	), $apps);
+});

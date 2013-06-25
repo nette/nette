@@ -7,18 +7,13 @@
  * @package    Nette\Diagnostics
  */
 
-use Nette\Diagnostics\Debugger;
-
-
-
 require __DIR__ . '/../bootstrap.php';
 
 
 
-Debugger::$consoleMode = TRUE;
-Debugger::$productionMode = FALSE;
+$blueScreen = new Nette\Diagnostics\BlueScreen;
 
-Debugger::$blueScreen->collapsePaths[] = __DIR__;
+$blueScreen->collapsePaths[] = __DIR__;
 
-Assert::true(Debugger::$blueScreen->isCollapsed(__FILE__));
-Assert::false(Debugger::$blueScreen->isCollapsed(dirname(__DIR__) . 'somethingElse'));
+Assert::true($blueScreen->isCollapsed(__FILE__));
+Assert::false($blueScreen->isCollapsed(dirname(__DIR__) . 'somethingElse'));

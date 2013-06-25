@@ -54,7 +54,21 @@ class SelectBox extends BaseControl
 		if ($items !== NULL) {
 			$this->setItems($items);
 		}
-		$this->addRule($this->validateSelectBoxValid, Nette\Forms\Rules::$defaultMessages[self::VALID]);
+	}
+
+
+
+	/**
+	 * Sets selected items (by keys).
+	 * @param  string
+	 * @return SelectBox  provides a fluent interface
+	 */
+	public function setValue($value)
+	{
+		if (!isset($this->allowed[$value]) && $value !== NULL) {
+			throw new Nette\InvalidArgumentException("Value '$value' is out of range of current items.");
+		}
+		return $this->setRawValue($value);
 	}
 
 
@@ -65,8 +79,20 @@ class SelectBox extends BaseControl
 	 */
 	public function getValue()
 	{
-		$value = $this->getRawValue();
-		return isset($this->allowed[$value]) ? $value : NULL;
+		return isset($this->allowed[$this->value]) ? $this->value : NULL;
+	}
+
+
+
+	protected function setRawValue($value)
+	{
+		if (is_scalar($value)) {
+			$foo = array($value => NULL);
+			$this->value = key($foo);
+		} else {
+			$this->value = NULL;
+		}
+		return $this;
 	}
 
 
@@ -77,22 +103,19 @@ class SelectBox extends BaseControl
 	 */
 	public function getRawValue()
 	{
-		if (is_scalar($this->value)) {
-			$foo = array($this->value => NULL);
-			return key($foo);
-		}
+		return $this->value;
 	}
 
 
 
 	/**
-	 * Has been any item selected?
+	 * Is any item selected?
 	 * @return bool
 	 */
 	public function isFilled()
 	{
 		$value = $this->getValue();
-		return is_array($value) ? count($value) > 0 : $value !== NULL;
+		return $value !== NULL && $value !== array();
 	}
 
 
@@ -231,12 +254,15 @@ class SelectBox extends BaseControl
 
 
 	/**
-	 * Checks if a valid option was selected.
-	 * @return bool
+	 * Performs the server side validation.
+	 * @return void
 	 */
-	public static function validateSelectBoxValid(SelectBox $control)
+	public function validate()
 	{
-		return $control->prompt !== FALSE || $control->getValue() !== NULL;
+		parent::validate();
+		if ($this->prompt === FALSE && $this->getValue() === NULL) {
+			$this->addError(Nette\Forms\Rules::$defaultMessages[self::VALID]);
+		}
 	}
 
 }

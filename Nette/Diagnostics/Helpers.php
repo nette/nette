@@ -38,7 +38,7 @@ final class Helpers
 			return Nette\Utils\Html::el('a')
 				->href(strtr(Debugger::$editor, array('%file' => rawurlencode($file), '%line' => $line)))
 				->title("$file:$line")
-				->setHtml(htmlSpecialChars(rtrim($dir, DIRECTORY_SEPARATOR)) . DIRECTORY_SEPARATOR . '<b>' . htmlSpecialChars(basename($file)) . '</b>' . ($line ? ":$line" : ''));
+				->setHtml(htmlSpecialChars(rtrim($dir, DIRECTORY_SEPARATOR), ENT_IGNORE) . DIRECTORY_SEPARATOR . '<b>' . htmlSpecialChars(basename($file), ENT_IGNORE) . '</b>' . ($line ? ":$line" : ''));
 		} else {
 			return Nette\Utils\Html::el('span')->setText($file . ($line ? ":$line" : ''));
 		}
@@ -58,6 +58,32 @@ final class Helpers
 				return $item;
 			}
 		}
+	}
+
+
+
+	public static function fixStack($exception)
+	{
+		if (function_exists('xdebug_get_function_stack')) {
+			$stack = array();
+			foreach (array_slice(array_reverse(xdebug_get_function_stack()), 2, -1) as $row) {
+				$frame = array(
+					'file' => $row['file'],
+					'line' => $row['line'],
+					'function' => isset($row['function']) ? $row['function'] : '*unknown*',
+					'args' => array(),
+				);
+				if (!empty($row['class'])) {
+					$frame['type'] = isset($row['type']) && $row['type'] === 'dynamic' ? '->' : '::';
+					$frame['class'] = $row['class'];
+				}
+				$stack[] = $frame;
+			}
+			$ref = new \ReflectionProperty('Exception', 'trace');
+			$ref->setAccessible(TRUE);
+			$ref->setValue($exception, $stack);
+		}
+		return $exception;
 	}
 
 

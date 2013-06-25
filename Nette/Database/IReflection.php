@@ -41,7 +41,7 @@ interface IReflection
 	/**
 	 * Gets referenced table & referenced column.
 	 * Example:
-	 * 	  author, book returns array(book, author_id)
+	 *   author, book returns array(book, author_id)
 	 *
 	 * @param  string  source table
 	 * @param  string  referencing key

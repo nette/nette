@@ -57,7 +57,8 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 			return;
 		}
 		$source = NULL;
-		foreach ($result instanceof \PDOException ? $result->getTrace() : debug_backtrace(FALSE) as $row) {
+		$trace = $result instanceof \PDOException ? $result->getTrace() : debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : FALSE);
+		foreach ($trace as $row) {
 			if (isset($row['file']) && is_file($row['file']) && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) !== 0) {
 				if (isset($row['function']) && strpos($row['function'], 'call_user_func') === 0) continue;
 				if (isset($row['class']) && is_subclass_of($row['class'], '\\Nette\\Database\\Connection')) continue;
@@ -123,7 +124,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 
 			$s .= '<tr><td>';
 			if ($error) {
-				$s .= '<span title="' . htmlSpecialChars($error) . '">ERROR</span>';
+				$s .= '<span title="' . htmlSpecialChars($error, ENT_IGNORE | ENT_QUOTES) . '">ERROR</span>';
 			} elseif ($time !== NULL) {
 				$s .= sprintf('%0.3f', $time * 1000);
 			}

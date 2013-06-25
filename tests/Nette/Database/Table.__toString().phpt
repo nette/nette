@@ -15,8 +15,12 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName
 
 
 
-Assert::same('2', (string) $dao->table('book')->get(2));
+test(function() use ($dao) {
+	Assert::same('2', (string) $dao->table('book')->get(2));
+});
 
 
 
-Assert::same(2, $dao->table('book')->get(2)->getPrimary());
+test(function() use ($dao) {
+	Assert::same(2, $dao->table('book')->get(2)->getPrimary());
+});

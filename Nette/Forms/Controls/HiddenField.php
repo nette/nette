@@ -52,8 +52,18 @@ class HiddenField extends BaseControl
 	 */
 	public function setValue($value)
 	{
-		$this->value = is_scalar($value) ? (string) $value : '';
+		if (!is_scalar($value) && $value !== NULL) {
+			throw new Nette\InvalidArgumentException('Value must be scalar or NULL, ' . gettype($value) . ' given.');
+		}
+		$this->value = (string) $value;
 		return $this;
+	}
+
+
+
+	protected function setRawValue($value)
+	{
+		return $this->setValue(is_scalar($value) ? (string) $value : '');
 	}
 
 

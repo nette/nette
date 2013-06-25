@@ -42,8 +42,29 @@ class Checkbox extends BaseControl
 	 */
 	public function setValue($value)
 	{
-		$this->value = is_scalar($value) ? (bool) $value : FALSE;
+		if (!is_scalar($value) && $value !== NULL) {
+			throw new Nette\InvalidArgumentException('Value must be scalar or NULL, ' . gettype($value) . ' given.');
+		}
+		$this->value = (bool) $value;
 		return $this;
+	}
+
+
+
+	protected function setRawValue($value)
+	{
+		return $this->setValue(is_scalar($value) ? (bool) $value : FALSE);
+	}
+
+
+
+	/**
+	 * Is control filled?
+	 * @return bool
+	 */
+	public function isFilled()
+	{
+		return $this->getValue() !== FALSE; // back compatibility
 	}
 
 

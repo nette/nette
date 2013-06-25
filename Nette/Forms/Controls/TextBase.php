@@ -34,6 +34,16 @@ abstract class TextBase extends BaseControl
 	protected $filters = array();
 
 
+	/**
+	 * @param  string  label
+	 */
+	public function __construct($label = NULL)
+	{
+		parent::__construct($label);
+		$this->addFilter($this->sanitize);
+	}
+
+
 
 	/**
 	 * Sets control's value.
@@ -42,7 +52,10 @@ abstract class TextBase extends BaseControl
 	 */
 	public function setValue($value)
 	{
-		$this->value = is_array($value) ? '' : Strings::normalizeNewLines($value);
+		if (!is_scalar($value) && $value !== NULL) {
+			throw new Nette\InvalidArgumentException('Value must be scalar or NULL, ' . gettype($value) . ' given.');
+		}
+		$this->value = (string) $value;
 		return $this;
 	}
 
@@ -59,6 +72,13 @@ abstract class TextBase extends BaseControl
 			$value = (string) $filter($value);
 		}
 		return $value === $this->translate($this->emptyValue) ? '' : $value;
+	}
+
+
+
+	protected function setRawValue($value)
+	{
+		return $this->setValue(is_scalar($value) ? Strings::normalizeNewLines($value) : '');
 	}
 
 
@@ -100,16 +120,26 @@ abstract class TextBase extends BaseControl
 
 
 
+	/**
+	 * Filter: removes unnecessary whitespace and shortens value to control's max length.
+	 * @return string
+	 */
+	public function sanitize($value)
+	{
+		if ($this->control->maxlength) {
+			$value = Nette\Utils\Strings::substring($value, 0, $this->control->maxlength);
+		}
+		if (strcasecmp($this->control->getName(), 'input') === 0) {
+			$value = Nette\Utils\Strings::trim(strtr($value, "\r\n", '  '));
+		}
+		return $value;
+	}
+
+
+
 	public function getControl()
 	{
 		$control = parent::getControl();
-		foreach ($this->getRules() as $rule) {
-			if ($rule->type === Nette\Forms\Rule::VALIDATOR && !$rule->isNegative
-				&& ($rule->operation === Form::LENGTH || $rule->operation === Form::MAX_LENGTH)
-			) {
-				$control->maxlength = is_array($rule->arg) ? $rule->arg[1] : $rule->arg;
-			}
-		}
 		if ($this->emptyValue !== '') {
 			$control->data('nette-empty-value', $this->translate($this->emptyValue));
 		}
@@ -122,6 +152,13 @@ abstract class TextBase extends BaseControl
 	{
 		if ($operation === Form::FLOAT) {
 			$this->addFilter(array(__CLASS__, 'filterFloat'));
+
+		} elseif ($operation === Form::URL) {
+			$this->addFilter(array(__CLASS__, 'filterUrl'));
+
+		} elseif ($operation === Form::LENGTH || $operation === Form::MAX_LENGTH) {
+			$tmp = is_array($arg) ? $arg[1] : $arg;
+			$this->control->maxlength = is_scalar($tmp) ? $tmp : NULL;
 		}
 		return parent::addRule($operation, $message, $arg);
 	}
@@ -190,6 +227,18 @@ abstract class TextBase extends BaseControl
 	public static function validateUrl(TextBase $control)
 	{
 		return Validators::isUrl($control->getValue()) || Validators::isUrl('http://' . $control->getValue());
+	}
+
+
+
+	/**
+	 * URL string cleanup.
+	 * @param  string
+	 * @return string
+	 */
+	public static function filterUrl($s)
+	{
+		return Validators::isUrl('http://' . $s) ? 'http://' . $s : $s;
 	}
 
 
