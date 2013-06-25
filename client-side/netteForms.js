@@ -60,6 +60,9 @@ Nette.getValue = function(elem) {
 	} else if (elem.type === 'radio') {
 		return Nette.getValue(elem.form.elements[elem.name].nodeName ? [elem] : elem.form.elements[elem.name]);
 
+	} else if (elem.type === 'file') {
+		return elem.files || elem.value;
+
 	} else {
 		return elem.value.replace("\r", '').replace(/^\s+|\s+$/g, '');
 	}
@@ -253,7 +256,14 @@ Nette.validators = {
 	},
 
 	fileSize: function(elem, arg, val) {
-		return window.FileList && elem.files[0] ? elem.files[0].size <= arg : true;
+		if (window.FileList) {
+			for (var i = 0; i < val.length; i++) {
+				if (val[i].size > arg) {
+					return false;
+				}
+			}
+			return true;
+		}
 	}
 };
 
