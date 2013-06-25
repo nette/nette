@@ -24,12 +24,6 @@ interface IControl
 {
 
 	/**
-	 * Loads HTTP data.
-	 * @return void
-	 */
-	function loadHttpData();
-
-	/**
 	 * Sets control's value.
 	 * @param  mixed
 	 * @return void
