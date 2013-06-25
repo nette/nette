@@ -165,6 +165,10 @@ abstract class TextBase extends BaseControl
 
 
 
+	/********************* validators ****************d*g**/
+
+
+
 	/**
 	 * Email validator: is control's value valid email address?
 	 * @param  TextBase

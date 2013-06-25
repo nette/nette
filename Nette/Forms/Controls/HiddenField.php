@@ -35,17 +35,6 @@ class HiddenField extends BaseControl
 
 
 	/**
-	 * Bypasses label generation.
-	 * @return void
-	 */
-	public function getLabel($caption = NULL)
-	{
-		return NULL;
-	}
-
-
-
-	/**
 	 * Sets control's value.
 	 * @param  string
 	 * @return HiddenField  provides a fluent interface
@@ -77,6 +66,17 @@ class HiddenField extends BaseControl
 		return parent::getControl()
 			->value($this->value)
 			->data('nette-rules', NULL);
+	}
+
+
+
+	/**
+	 * Bypasses label generation.
+	 * @return void
+	 */
+	public function getLabel($caption = NULL)
+	{
+		return NULL;
 	}
 
 

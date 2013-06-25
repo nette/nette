@@ -108,6 +108,10 @@ class UploadControl extends BaseControl
 
 
 
+	/********************* validators ****************d*g**/
+
+
+
 	/**
 	 * FileSize validator: is file size in limit?
 	 * @param  UploadControl
