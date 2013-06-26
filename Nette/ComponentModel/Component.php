@@ -63,12 +63,13 @@ abstract class Component extends Nette\Object implements IComponent
 			$path = self::NAME_SEPARATOR . $this->name;
 			$depth = 1;
 			while ($obj !== NULL) {
-				if ($obj instanceof $type) {
+				$parent = $obj->getParent();
+				if ($type ? $obj instanceof $type : $parent === NULL) {
 					break;
 				}
 				$path = self::NAME_SEPARATOR . $obj->getName() . $path;
 				$depth++;
-				$obj = $obj->getParent(); // IComponent::getParent()
+				$obj = $parent; // IComponent::getParent()
 				if ($obj === $this) {
 					$obj = NULL; // prevent cycling
 				}
