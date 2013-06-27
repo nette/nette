@@ -15,8 +15,7 @@ use Nette,
 	Nette\Latte,
 	Nette\Latte\CompileException,
 	Nette\Latte\MacroNode,
-	Nette\Latte\PhpWriter,
-	Nette\Utils\Tokenizer;
+	Nette\Latte\PhpWriter;
 
 
 
@@ -361,33 +360,35 @@ class CoreMacros extends MacroSet
 		if ($node->name === 'assign') {
 			trigger_error('Macro {assign} is deprecated; use {var} instead.', E_USER_DEPRECATED);
 		}
-		$out = '';
+
 		$var = TRUE;
 		$tokens = $writer->preprocess();
-		while ($token = $tokens->nextToken()) {
+		$res = new Latte\MacroTokens;
+		while ($tokens->nextToken()) {
 			if ($var && $tokens->isCurrent(Latte\MacroTokens::T_SYMBOL, Latte\MacroTokens::T_VARIABLE)) {
 				if ($node->name === 'default') {
-					$out .= "'" . ltrim($token[Tokenizer::VALUE], "$") . "'";
+					$res->append("'" . ltrim($tokens->currentValue(), '$') . "'");
 				} else {
-					$out .= '$' . ltrim($token[Tokenizer::VALUE], "$");
+					$res->append('$' . ltrim($tokens->currentValue(), '$'));
 				}
 				$var = NULL;
 
-			} elseif ($tokens->isCurrent('=', '=>') && $token['depth'] === 0) {
-				$out .= $node->name === 'default' ? '=>' : '=';
+			} elseif ($tokens->isCurrent('=', '=>') && $tokens->depth === 0) {
+				$res->append($node->name === 'default' ? '=>' : '=');
 				$var = FALSE;
 
-			} elseif ($tokens->isCurrent(',') && $token['depth'] === 0) {
-				$out .= $node->name === 'default' ? ',' : ';';
+			} elseif ($tokens->isCurrent(',') && $tokens->depth === 0) {
+				$res->append($node->name === 'default' ? ',' : ';');
 				$var = TRUE;
 
 			} elseif ($var === NULL && $node->name === 'default' && !$tokens->isCurrent(Latte\MacroTokens::T_WHITESPACE)) {
-				throw new CompileException("Unexpected '" . $token[Tokenizer::VALUE] . "' in {default $node->args}");
+				throw new CompileException("Unexpected '" . $tokens->currentValue() . "' in {default $node->args}");
 
 			} else {
-				$out .= $writer->canQuote($tokens) ? "'" . $token[Tokenizer::VALUE] . "'" : $token[Tokenizer::VALUE];
+				$res->append($tokens->currentToken());
 			}
 		}
+		$out = $writer->quoteFilter($res)->joinAll();
 		return $node->name === 'default' ? "extract(array($out), EXTR_SKIP)" : $out;
 	}
 

@@ -11,8 +11,7 @@
 
 namespace Nette\Latte;
 
-use Nette,
-	Nette\Utils\Tokenizer;
+use Nette;
 
 
 
@@ -59,7 +58,7 @@ class PhpWriter extends Nette\Object
 	{
 		$me = $this;
 		$mask = Nette\Utils\Strings::replace($mask, '#%escape(\(([^()]*+|(?1))+\))#', function($m) use ($me) {
-			return $me->escape(substr($m[1], 1, -1));
+			return $me->escapeFilter(new MacroTokens(substr($m[1], 1, -1)))->joinAll();
 		});
 		$mask = Nette\Utils\Strings::replace($mask, '#%modify(\(([^()]*+|(?1))+\))#', function($m) use ($me) {
 			return $me->formatModifiers(substr($m[1], 1, -1));
@@ -116,43 +115,11 @@ class PhpWriter extends Nette\Object
 	 */
 	public function formatModifiers($var)
 	{
-		$modifiers = ltrim($this->modifiers, '|');
-		if (!$modifiers) {
-			return $var;
-		}
-
-		$tokens = $this->preprocess(new MacroTokens($modifiers));
-		$inside = FALSE;
-		while ($token = $tokens->nextToken()) {
-			if ($tokens->isCurrent(MacroTokens::T_WHITESPACE)) {
-				$var = rtrim($var) . ' ';
-
-			} elseif (!$inside) {
-				if ($tokens->isCurrent(MacroTokens::T_SYMBOL)) {
-					if ($this->compiler && $tokens->isCurrent('escape')) {
-						$var = $this->escape($var);
-						$tokens->nextToken('|');
-					} else {
-						$var = "\$template->" . $token[Tokenizer::VALUE] . "($var";
-						$inside = TRUE;
-					}
-				} else {
-					throw new CompileException("Modifier name must be alphanumeric string, '" . $token[Tokenizer::VALUE] . "' given.");
-				}
-			} else {
-				if ($tokens->isCurrent(':', ',')) {
-					$var = $var . ', ';
-
-				} elseif ($tokens->isCurrent('|')) {
-					$var = $var . ')';
-					$inside = FALSE;
-
-				} else {
-					$var .= $this->canQuote($tokens) ? "'" . $token[Tokenizer::VALUE] . "'" : $token[Tokenizer::VALUE];
-				}
-			}
-		}
-		return $inside ? "$var)" : $var;
+		$tokens = new MacroTokens(ltrim($this->modifiers, '|'));
+		$tokens = $this->preprocess($tokens);
+		$tokens = $this->modifiersFilter($tokens, $var);
+		$tokens = $this->quoteFilter($tokens);
+		return $tokens->joinAll();
 	}
 
 
@@ -163,12 +130,9 @@ class PhpWriter extends Nette\Object
 	 */
 	public function formatArgs(MacroTokens $tokens = NULL)
 	{
-		$out = '';
 		$tokens = $this->preprocess($tokens);
-		while ($token = $tokens->nextToken()) {
-			$out .= $this->canQuote($tokens) ? "'" . $token[Tokenizer::VALUE] . "'" : $token[Tokenizer::VALUE];
-		}
-		return $out;
+		$tokens = $this->quoteFilter($tokens);
+		return $tokens->joinAll();
 	}
 
 
@@ -179,26 +143,10 @@ class PhpWriter extends Nette\Object
 	 */
 	public function formatArray()
 	{
-		$out = '';
-		$expand = NULL;
 		$tokens = $this->preprocess();
-		while ($token = $tokens->nextToken()) {
-			if ($tokens->isCurrent('(expand)') && $token['depth'] === 0) {
-				$expand = TRUE;
-				$out .= '),';
-
-			} elseif ($expand && $tokens->isCurrent(',') && !$token['depth']) {
-				$expand = FALSE;
-				$out .= ', array(';
-			} else {
-				$out .= $this->canQuote($tokens) ? "'" . $token[Tokenizer::VALUE] . "'" : $token[Tokenizer::VALUE];
-			}
-		}
-		if ($expand === NULL) {
-			return "array($out)";
-		} else {
-			return "array_merge(array($out" . ($expand ? ', array(' : '') ."))";
-		}
+		$tokens = $this->expandFilter($tokens);
+		$tokens = $this->quoteFilter($tokens);
+		return $tokens->joinAll();
 	}
 
 
@@ -218,84 +166,195 @@ class PhpWriter extends Nette\Object
 
 
 	/**
-	 * @return bool
-	 */
-	public function canQuote(MacroTokens $tokens)
-	{
-		return $tokens->isCurrent(MacroTokens::T_SYMBOL)
-			&& (!$tokens->isPrev() || $tokens->isPrev(',', '(', '[', '=', '=>', ':', '?'))
-			&& (!$tokens->isNext() || $tokens->isNext(',', ')', ']', '=', '=>', ':', '|'));
-	}
-
-
-
-	/**
 	 * Preprocessor for tokens. (It advances tokenizer to the end as a side effect.)
 	 * @return MacroTokens
 	 */
 	public function preprocess(MacroTokens $tokens = NULL)
 	{
 		$tokens = $tokens === NULL ? $this->tokens : $tokens;
-		$inTernary = $prev = NULL;
-		$res = $arrays = array();
-		while ($token = $tokens->nextToken()) {
-			$token['depth'] = $depth = count($arrays);
-
-			if ($tokens->isCurrent(MacroTokens::T_COMMENT)) {
-				continue; // remove comments
-
-			} elseif ($tokens->isCurrent(MacroTokens::T_WHITESPACE)) {
-				$res[] = $token;
-				continue;
-			}
-
-			if ($tokens->isCurrent('?')) { // short ternary operators without :
-				$inTernary = $depth;
-
-			} elseif ($tokens->isCurrent(':')) {
-				$inTernary = NULL;
-
-			} elseif ($inTernary === $depth && $tokens->isCurrent(',', ')', ']')) { // close ternary
-				$res[] = array(Tokenizer::VALUE => ':', Tokenizer::TYPE => NULL, 'depth' => $depth);
-				$res[] = array(Tokenizer::VALUE => 'null', Tokenizer::TYPE => NULL, 'depth' => $depth);
-				$inTernary = NULL;
-			}
-
-			if ($tokens->isCurrent('[')) { // simplified array syntax [...]
-				if ($arrays[] = !$tokens->isPrev(']', ')', MacroTokens::T_SYMBOL, MacroTokens::T_VARIABLE, MacroTokens::T_KEYWORD)) {
-					$res[] = array(Tokenizer::VALUE => 'array', Tokenizer::TYPE => NULL, 'depth' => $depth);
-					$token = array(Tokenizer::VALUE => '(', Tokenizer::TYPE => NULL, 'depth' => $depth);
-
-				}
-			} elseif ($tokens->isCurrent(']')) {
-				if (array_pop($arrays) === TRUE) {
-					$token = array(Tokenizer::VALUE => ')', Tokenizer::TYPE => NULL, 'depth' => $depth);
-				}
-			} elseif ($tokens->isCurrent('(')) { // only count
-				$arrays[] = '(';
-
-			} elseif ($tokens->isCurrent(')')) { // only count
-				array_pop($arrays);
-			}
-
-			$res[] = $prev = $token;
-		}
-
-		if ($inTernary !== NULL) { // close ternary
-			$res[] = array(Tokenizer::VALUE => ':', Tokenizer::TYPE => NULL, 'depth' => count($arrays));
-			$res[] = array(Tokenizer::VALUE => 'null', Tokenizer::TYPE => NULL, 'depth' => count($arrays));
-		}
-
-		$tokens = clone $tokens;
-		$tokens->reset();
-		$tokens->tokens = $res;
+		$tokens = $this->removeCommentsFilter($tokens);
+		$tokens = $this->shortTernaryFilter($tokens);
+		$tokens = $this->shortArraysFilter($tokens);
 		return $tokens;
 	}
 
 
 
-	public function escape($s)
+	/**
+	 * Removes PHP comments.
+	 * @return MacroTokens
+	 */
+	public function removeCommentsFilter(MacroTokens $tokens)
 	{
+		$res = new MacroTokens;
+		while ($tokens->nextToken()) {
+			if (!$tokens->isCurrent(MacroTokens::T_COMMENT)) {
+				$res->append($tokens->currentToken());
+			}
+		}
+		return $res;
+	}
+
+
+
+	/**
+	 * Simplified ternary expressions withnout third part.
+	 * @return MacroTokens
+	 */
+	public function shortTernaryFilter(MacroTokens $tokens)
+	{
+		$res = new MacroTokens;
+		$inTernary = NULL;
+		while ($tokens->nextToken()) {
+			if ($tokens->isCurrent('?')) {
+				$inTernary = $tokens->depth;
+
+			} elseif ($tokens->isCurrent(':')) {
+				$inTernary = NULL;
+
+			} elseif ($inTernary === $tokens->depth && $tokens->isCurrent(',', ')', ']')) {
+				$res->append(':null');
+				$inTernary = NULL;
+			}
+			$res->append($tokens->currentToken());
+		}
+
+		if ($inTernary !== NULL) {
+			$res->append(':null');
+		}
+		return $res;
+	}
+
+
+
+	/**
+	 * Simplified array syntax [...]
+	 * @return MacroTokens
+	 */
+	public function shortArraysFilter(MacroTokens $tokens)
+	{
+		$res = new MacroTokens;
+		$arrays = array();
+		while ($tokens->nextToken()) {
+			if ($tokens->isCurrent('[')) {
+				if ($arrays[] = !$tokens->isPrev(']', ')', MacroTokens::T_SYMBOL, MacroTokens::T_VARIABLE, MacroTokens::T_KEYWORD)) {
+					$res->append('array(');
+					continue;
+
+				}
+			} elseif ($tokens->isCurrent(']')) {
+				if (array_pop($arrays) === TRUE) {
+					$res->append(')');
+					continue;
+				}
+			}
+			$res->append($tokens->currentToken());
+		}
+		return $res;
+	}
+
+
+
+	/**
+	 * Pseudocast (expand).
+	 */
+	public function expandFilter(MacroTokens $tokens)
+	{
+		$res = new MacroTokens('array(');
+		$expand = NULL;
+		while ($tokens->nextToken()) {
+			if ($tokens->isCurrent('(expand)') && $tokens->depth === 0) {
+				$expand = TRUE;
+				$res->append('),');
+			} elseif ($expand && $tokens->isCurrent(',') && !$tokens->depth) {
+				$expand = FALSE;
+				$res->append(', array(');
+			} else {
+				$res->append($tokens->currentToken());
+			}
+		}
+
+		if ($expand !== NULL) {
+			$res->prepend('array_merge(')->append($expand ? ', array()' : ')');
+		}
+		return $res->append(')');
+	}
+
+
+
+	/**
+	 * Quotes symbols to strings.
+	 * @return MacroTokens
+	 */
+	public function quoteFilter(MacroTokens $tokens)
+	{
+		$res = new MacroTokens;
+		while ($tokens->nextToken()) {
+			$res->append($tokens->isCurrent(MacroTokens::T_SYMBOL)
+				&& (!$tokens->isPrev() || $tokens->isPrev(',', '(', '[', '=', '=>', ':', '?'))
+				&& (!$tokens->isNext() || $tokens->isNext(',', ')', ']', '=', '=>', ':', '|'))
+				? "'" . $tokens->currentValue() . "'"
+				: $tokens->currentToken()
+			);
+		}
+		return $res;
+	}
+
+
+
+	/**
+	 * Formats modifiers calling.
+	 * @return MacroTokens
+	 */
+	public function modifiersFilter(MacroTokens $tokens, $var)
+	{
+		$inside = FALSE;
+		$res = new MacroTokens($var);
+		while ($tokens->nextToken()) {
+			if ($tokens->isCurrent(MacroTokens::T_WHITESPACE)) {
+				$res->append(' ');
+
+			} elseif ($inside) {
+				if ($tokens->isCurrent(':', ',')) {
+					$res->append(', ');
+					$tokens->nextAll(MacroTokens::T_WHITESPACE);
+
+				} elseif ($tokens->isCurrent('|')) {
+					$res->append(')');
+					$inside = FALSE;
+
+				} else {
+					$res->append($tokens->currentToken());
+				}
+			} else {
+				if ($tokens->isCurrent(MacroTokens::T_SYMBOL)) {
+					if ($this->compiler && $tokens->isCurrent('escape')) {
+						$res = $this->escapeFilter($res);
+						$tokens->nextToken('|');
+					} else {
+						$res->prepend('$template->' . $tokens->currentValue() . '(');
+						$inside = TRUE;
+					}
+				} else {
+					throw new CompileException("Modifier name must be alphanumeric string, '" . $tokens->currentValue() . "' given.");
+				}
+			}
+		}
+		if ($inside) {
+			$res->append(')');
+		}
+		return $res;
+	}
+
+
+
+	/**
+	 * Escapes expression in tokens.
+	 * @return MacroTokens
+	 */
+	public function escapeFilter(MacroTokens $tokens)
+	{
+		$tokens = clone $tokens;
 		switch ($this->compiler->getContentType()) {
 		case Compiler::CONTENT_XHTML:
 		case Compiler::CONTENT_HTML:
@@ -305,30 +364,33 @@ class PhpWriter extends Nette\Object
 			case Compiler::CONTEXT_DOUBLE_QUOTED_ATTR:
 			case Compiler::CONTEXT_UNQUOTED_ATTR:
 				if ($context[1] === Compiler::CONTENT_JS) {
-					$s = "Nette\\Templating\\Helpers::escapeJs($s)";
+					$tokens->prepend('Nette\Templating\Helpers::escapeJs(')->append(')');
 				} elseif ($context[1] === Compiler::CONTENT_CSS) {
-					$s = "Nette\\Templating\\Helpers::escapeCss($s)";
+					$tokens->prepend('Nette\Templating\Helpers::escapeCss(')->append(')');
 				}
-				$quote = $context[0] === Compiler::CONTEXT_SINGLE_QUOTED_ATTR ? ', ENT_QUOTES' : '';
-				$s = "htmlSpecialChars($s$quote)";
-				return $context[0] === Compiler::CONTEXT_UNQUOTED_ATTR ? "'\"' . $s . '\"'" : $s;
+				$tokens->prepend('htmlSpecialChars(')->append($context[0] === Compiler::CONTEXT_SINGLE_QUOTED_ATTR ? ', ENT_QUOTES)' : ')');
+				if ($context[0] === Compiler::CONTEXT_UNQUOTED_ATTR) {
+					$tokens->prepend("'\"' . ")->append(" . '\"'");
+				}
+				return $tokens;
 			case Compiler::CONTEXT_COMMENT:
-				return "Nette\\Templating\\Helpers::escapeHtmlComment($s)";
+				return $tokens->prepend('Nette\Templating\Helpers::escapeHtmlComment(')->append(')');
+				return;
 			case Compiler::CONTENT_JS:
 			case Compiler::CONTENT_CSS:
-				return 'Nette\Templating\Helpers::escape' . ucfirst($context[0]) . "($s)";
+				return $tokens->prepend('Nette\Templating\Helpers::escape' . ucfirst($context[0]) . '(')->append(')');
 			default:
-				return "Nette\\Templating\\Helpers::escapeHtml($s, ENT_NOQUOTES)";
+				return $tokens->prepend('Nette\Templating\Helpers::escapeHtml(')->append(', ENT_NOQUOTES)');
 			}
 		case Compiler::CONTENT_XML:
 		case Compiler::CONTENT_JS:
 		case Compiler::CONTENT_CSS:
 		case Compiler::CONTENT_ICAL:
-			return 'Nette\Templating\Helpers::escape' . ucfirst($this->compiler->getContentType()) . "($s)";
+			return $tokens->prepend('Nette\Templating\Helpers::escape' . ucfirst($this->compiler->getContentType()) . '(')->append(')');
 		case Compiler::CONTENT_TEXT:
-			return $s;
+			return $tokens;
 		default:
-			return "\$template->escape($s)";
+			return $tokens->prepend('$template->escape(')->append(')');
 		}
 	}
 
