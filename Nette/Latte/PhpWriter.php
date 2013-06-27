@@ -204,23 +204,23 @@ class PhpWriter extends Nette\Object
 	public function shortTernaryFilter(MacroTokens $tokens)
 	{
 		$res = new MacroTokens;
-		$inTernary = NULL;
+		$inTernary = array();
 		while ($tokens->nextToken()) {
 			if ($tokens->isCurrent('?')) {
-				$inTernary = $tokens->depth;
+				$inTernary[] = $tokens->depth;
 
 			} elseif ($tokens->isCurrent(':')) {
-				$inTernary = NULL;
+				array_pop($inTernary);
 
-			} elseif ($inTernary === $tokens->depth && $tokens->isCurrent(',', ')', ']')) {
-				$res->append(':null');
-				$inTernary = NULL;
+			} elseif (end($inTernary) === $tokens->depth && $tokens->isCurrent(',', ')', ']')) {
+				$res->append(' : NULL');
+				array_pop($inTernary);
 			}
 			$res->append($tokens->currentToken());
 		}
 
-		if ($inTernary !== NULL) {
-			$res->append(':null');
+		if ($inTernary) {
+			$res->append(' : NULL');
 		}
 		return $res;
 	}
@@ -292,7 +292,7 @@ class PhpWriter extends Nette\Object
 		while ($tokens->nextToken()) {
 			$res->append($tokens->isCurrent(MacroTokens::T_SYMBOL)
 				&& (!$tokens->isPrev() || $tokens->isPrev(',', '(', '[', '=', '=>', ':', '?'))
-				&& (!$tokens->isNext() || $tokens->isNext(',', ')', ']', '=', '=>', ':', '|'))
+				&& (!$tokens->isNext() || $tokens->isNext(',', ')', ']', '=', '=>', ':', '?'))
 				? "'" . $tokens->currentValue() . "'"
 				: $tokens->currentToken()
 			);

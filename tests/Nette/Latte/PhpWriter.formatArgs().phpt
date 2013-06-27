@@ -64,7 +64,8 @@ test(function() { // simplified arrays
 
 
 test(function() { // short ternary operators
-	Assert::same( '($first ? \'first\':null), $var ? \'foo\' : \'bar\', $var ? \'foo\':null',  formatArgs('($first ? first), $var ? foo : bar, $var ? foo') );
+	Assert::same( "(\$first ? 'first' : NULL), \$var ? 'foo' : 'bar', \$var ? 'foo' : NULL",  formatArgs('($first ? first), $var ? foo : bar, $var ? foo') );
+	Assert::same( "('a' ? 'b' : NULL) ? ('c' ? 'd' : NULL) : NULL",  formatArgs('(a ? b) ? (c ? d)') );
 });
 
 

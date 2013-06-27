@@ -61,10 +61,10 @@ if ($_l->extends) {
 	<li>Translated: <?php echo Nette\Templating\Helpers::escapeHtml($template->translate($people[1]), ENT_NOQUOTES) ?></li>
 	<li>Translated string: <?php echo Nette\Templating\Helpers::escapeHtml($template->translate('ahoj'), ENT_NOQUOTES) ?></li>
 	<li>Non-escaped and translated: <?php echo $template->translate($people[1]) ?></li>
-	<li>Condition: <?php echo Nette\Templating\Helpers::escapeHtml($hello ? 'yes':null, ENT_NOQUOTES) ?>
- <?php echo Nette\Templating\Helpers::escapeHtml($hello ? 'yes':null, ENT_NOQUOTES) ?></li>
-	<li>Array: <?php echo Nette\Templating\Helpers::escapeHtml($template->join($hello ? array('a', 'b', 'c'):null), ENT_NOQUOTES) ?>
- <?php echo Nette\Templating\Helpers::escapeHtml($template->join(array('a', 'b', $hello ? 'c':null)), ENT_NOQUOTES) ?></li>
+	<li>Condition: <?php echo Nette\Templating\Helpers::escapeHtml($hello ? 'yes' : NULL, ENT_NOQUOTES) ?>
+ <?php echo Nette\Templating\Helpers::escapeHtml($hello ? 'yes' : NULL, ENT_NOQUOTES) ?></li>
+	<li>Array: <?php echo Nette\Templating\Helpers::escapeHtml($template->join($hello ? array('a', 'b', 'c') : NULL), ENT_NOQUOTES) ?>
+ <?php echo Nette\Templating\Helpers::escapeHtml($template->join(array('a', 'b', $hello ? 'c' : NULL)), ENT_NOQUOTES) ?></li>
 </ul>
 
 <input> <input> <input>
@@ -73,7 +73,7 @@ if ($_l->extends) {
 
 { test} {"test} {'test}
 
-<p<?php echo Nette\Utils\Html::el(NULL, array('title' => $hello, 'lang' => isset($lang) ? $lang:null))->attributes() ?>> </p>
+<p<?php echo Nette\Utils\Html::el(NULL, array('title' => $hello, 'lang' => isset($lang) ? $lang : NULL))->attributes() ?>> </p>
 
 <p val = <?php if (true): ?>"a"<?php else: ?>"b"<?php endif ?>> </p>
 
@@ -246,9 +246,9 @@ bold<?php if (array_pop($_l->ifs)): ?></b>
 
 { }
 
-<p<?php if ($_l->tmp = array_filter(array('foo', (false ? 'first':null), 'odd', ($hello ? 'foo' : 'bar')))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>>n:class</p>
+<p<?php if ($_l->tmp = array_filter(array('foo', (false ? 'first' : NULL), 'odd', ($hello ? 'foo' : 'bar')))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>>n:class</p>
 
-<p<?php if ($_l->tmp = array_filter(array(false ? 'first':null))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>>n:class empty</p>
+<p<?php if ($_l->tmp = array_filter(array(false ? 'first' : NULL))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>>n:class empty</p>
 
 <meta>
 <?php if (true): ?><meta>
@@ -265,11 +265,11 @@ bold<?php if (array_pop($_l->ifs)): ?></b>
 
 
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array(1,2,3)) as $foo): ?>
-	<b<?php if ($_l->tmp = array_filter(array($iterator->even ? 'even':null))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>>item</b>
+	<b<?php if ($_l->tmp = array_filter(array($iterator->even ? 'even' : NULL))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>>item</b>
 <?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
 
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array(1, 2, 3)) as $foo): ?>
-<p<?php if ($_l->tmp = array_filter(array($iterator->even ? 'even':null))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>
+<p<?php if ($_l->tmp = array_filter(array($iterator->even ? 'even' : NULL))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>
 ><?php echo Nette\Templating\Helpers::escapeHtml($foo, ENT_NOQUOTES) ?></p>
 <?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
 
