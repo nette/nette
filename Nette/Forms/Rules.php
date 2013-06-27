@@ -75,7 +75,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	public function setRequired($value = TRUE)
 	{
 		if ($value) {
-			$this->addRule(Form::REQUIRED, $value);
+			$this->addRule(Form::REQUIRED, is_string($value) ? $value : NULL);
 		} else {
 			$this->required = NULL;
 		}
