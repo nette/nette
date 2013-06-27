@@ -255,8 +255,8 @@ class PhpWriter extends Nette\Object
 				$inTernary = NULL;
 
 			} elseif ($inTernary === $depth && ($token['value'] === ',' || $token['value'] === ')' || $token['value'] === ']')) { // close ternary
-				$tokens[] = MacroTokenizer::createToken(':') + array('depth' => $depth);
-				$tokens[] = MacroTokenizer::createToken('null') + array('depth' => $depth);
+				$tokens[] = array('value' => ':', 'type' => NULL, 'depth' => $depth);
+				$tokens[] = array('value' => 'null', 'type' => NULL, 'depth' => $depth);
 				$inTernary = NULL;
 			}
 
@@ -264,12 +264,12 @@ class PhpWriter extends Nette\Object
 				if ($arrays[] = $prev['value'] !== ']' && $prev['value'] !== ')' && $prev['type'] !== MacroTokenizer::T_SYMBOL
 					&& $prev['type'] !== MacroTokenizer::T_VARIABLE && $prev['type'] !== MacroTokenizer::T_KEYWORD
 				) {
-					$tokens[] = MacroTokenizer::createToken('array') + array('depth' => $depth);
-					$token = MacroTokenizer::createToken('(');
+					$tokens[] = array('value' => 'array', 'type' => NULL, 'depth' => $depth);
+					$token = array('value' => '(', 'type' => NULL, 'depth' => $depth);
 				}
 			} elseif ($token['value'] === ']') {
 				if (array_pop($arrays) === TRUE) {
-					$token = MacroTokenizer::createToken(')');
+					$token = array('value' => ')', 'type' => NULL, 'depth' => $depth);
 				}
 			} elseif ($token['value'] === '(') { // only count
 				$arrays[] = '(';
@@ -282,8 +282,8 @@ class PhpWriter extends Nette\Object
 		}
 
 		if ($inTernary !== NULL) { // close ternary
-			$tokens[] = MacroTokenizer::createToken(':') + array('depth' => count($arrays));
-			$tokens[] = MacroTokenizer::createToken('null') + array('depth' => count($arrays));
+			$tokens[] = array('value' => ':', 'type' => NULL, 'depth' => count($arrays));
+			$tokens[] = array('value' => 'null', 'type' => NULL, 'depth' => count($arrays));
 		}
 
 		$tokenizer = clone $tokenizer;

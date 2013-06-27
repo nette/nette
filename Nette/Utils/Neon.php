@@ -55,6 +55,12 @@ class Neon extends Nette\Object
 		'(' => ')',
 	);
 
+	/** @var string */
+	private $input;
+
+	/** @var array */
+	private $tokens;
+
 	/** @var int */
 	private $n = 0;
 
@@ -142,13 +148,14 @@ class Neon extends Nette\Object
 			$input = substr($input, 3);
 		}
 		$input = str_replace("\r", '', $input);
-		self::$tokenizer->tokenize($input);
 
 		$parser = new static;
+		$parser->input = $input;
+		$parser->tokens = self::$tokenizer->tokenize($input);
 		$res = $parser->parse(0);
 
-		while (isset(self::$tokenizer->tokens[$parser->n])) {
-			if (self::$tokenizer->tokens[$parser->n][0] === "\n") {
+		while (isset($parser->tokens[$parser->n])) {
+			if ($parser->tokens[$parser->n][0] === "\n") {
 				$parser->n++;
 			} else {
 				$parser->error();
@@ -169,7 +176,7 @@ class Neon extends Nette\Object
 		$inlineParser = $indent === NULL;
 		$value = $key = $object = NULL;
 		$hasValue = $hasKey = FALSE;
-		$tokens = self::$tokenizer->tokens;
+		$tokens = $this->tokens;
 		$n = & $this->n;
 		$count = count($tokens);
 
@@ -359,8 +366,8 @@ class Neon extends Nette\Object
 	private function error($message = "Unexpected '%s'")
 	{
 		list(, $line, $col) = self::$tokenizer->getOffset($this->n);
-		$token = isset(self::$tokenizer->tokens[$this->n])
-			? str_replace("\n", '<new line>', Strings::truncate(self::$tokenizer->tokens[$this->n], 40))
+		$token = isset($this->tokens[$this->n])
+			? str_replace("\n", '<new line>', Strings::truncate($this->tokens[$this->n], 40))
 			: 'end';
 		throw new NeonException(str_replace('%s', $token, $message) . " on line $line, column $col.");
 	}

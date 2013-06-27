@@ -83,7 +83,6 @@ class MacroNode extends Nette\Object
 		$this->parentNode = $parentNode;
 		$this->htmlNode = $htmlNode;
 		$this->prefix = $prefix;
-		$this->tokenizer = new MacroTokenizer($this->args);
 		$this->data = new \stdClass;
 		$this->setArgs($args);
 	}
@@ -93,7 +92,7 @@ class MacroNode extends Nette\Object
 	public function setArgs($args)
 	{
 		$this->args = (string) $args;
-		$this->tokenizer->tokenize($this->args);
+		$this->tokenizer = new MacroTokenizer($this->args);
 	}
 
 }
