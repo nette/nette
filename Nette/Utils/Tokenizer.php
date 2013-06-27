@@ -91,10 +91,10 @@ class Tokenizer extends Nette\Object
 			}
 
 		} else {
-			$this->tokens = Strings::split($input, $this->re, PREG_SPLIT_NO_EMPTY);
-			if ($this->tokens && !Strings::match(end($this->tokens), $this->re)) {
-				$tmp = Strings::split($this->input, $this->re, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_OFFSET_CAPTURE);
-				list(, $errorOffset) = end($tmp);
+			$this->tokens = Strings::split($input, $this->re, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_OFFSET_CAPTURE);
+			$last = end($this->tokens);
+			if ($this->tokens && !Strings::match($last[0], $this->re)) {
+				$errorOffset = $last[1];
 			}
 		}
 
@@ -244,12 +244,8 @@ class Tokenizer extends Nette\Object
 	public function isCurrent($arg)
 	{
 		$args = func_get_args();
-		if (is_array($this->current)) {
-			return in_array($this->current[self::VALUE], $args, TRUE)
-				|| in_array($this->current[self::TYPE], $args, TRUE);
-		} else {
-			return in_array($this->current, $args, TRUE);
-		}
+		return in_array($this->current[self::VALUE], $args, TRUE)
+			|| (isset($this->current[self::TYPE]) && in_array($this->current[self::TYPE], $args, TRUE));
 	}
 
 
@@ -274,14 +270,13 @@ class Tokenizer extends Nette\Object
 		while (isset($this->tokens[$pos])) {
 			$token = $this->tokens[$pos];
 			$pos += $prev ? -1 : 1;
-			$value = is_array($token) ? $token[self::VALUE] : $token;
-			$type = is_array($token) ? $token[self::TYPE] : $token;
-			if (!$wanted || (in_array($value, $wanted, TRUE) || in_array($type, $wanted, TRUE)) ^ $neg) {
+			$type = isset($token[self::TYPE]) ? $token[self::TYPE] : NULL;
+			if (!$wanted || (in_array($token[self::VALUE], $wanted, TRUE) || in_array($type, $wanted, TRUE)) ^ $neg) {
 				if ($advance) {
 					$this->position = $pos;
 					$this->current = $token;
 				}
-				$res .= $value;
+				$res .= $token[self::VALUE];
 				if ($first) {
 					break;
 				}
