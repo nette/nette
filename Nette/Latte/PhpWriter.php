@@ -123,12 +123,12 @@ class PhpWriter extends Nette\Object
 		$tokens = $this->preprocess(new MacroTokens($modifiers));
 		$inside = FALSE;
 		while ($token = $tokens->fetchToken()) {
-			if ($token['type'] === MacroTokens::T_WHITESPACE) {
+			if ($tokens->isCurrent(MacroTokens::T_WHITESPACE)) {
 				$var = rtrim($var) . ' ';
 
 			} elseif (!$inside) {
-				if ($token['type'] === MacroTokens::T_SYMBOL) {
-					if ($this->compiler && $token['value'] === 'escape') {
+				if ($tokens->isCurrent(MacroTokens::T_SYMBOL)) {
+					if ($this->compiler && $tokens->isCurrent('escape')) {
 						$var = $this->escape($var);
 						$tokens->fetch('|');
 					} else {
@@ -139,10 +139,10 @@ class PhpWriter extends Nette\Object
 					throw new CompileException("Modifier name must be alphanumeric string, '$token[value]' given.");
 				}
 			} else {
-				if ($token['value'] === ':' || $token['value'] === ',') {
+				if ($tokens->isCurrent(':', ',')) {
 					$var = $var . ', ';
 
-				} elseif ($token['value'] === '|') {
+				} elseif ($tokens->isCurrent('|')) {
 					$var = $var . ')';
 					$inside = FALSE;
 
@@ -182,11 +182,11 @@ class PhpWriter extends Nette\Object
 		$expand = NULL;
 		$tokens = $this->preprocess();
 		while ($token = $tokens->fetchToken()) {
-			if ($token['value'] === '(expand)' && $token['depth'] === 0) {
+			if ($tokens->isCurrent('(expand)') && $token['depth'] === 0) {
 				$expand = TRUE;
 				$out .= '),';
 
-			} elseif ($expand && ($token['value'] === ',') && !$token['depth']) {
+			} elseif ($expand && $tokens->isCurrent(',') && !$token['depth']) {
 				$expand = FALSE;
 				$out .= ', array(';
 			} else {
@@ -240,41 +240,39 @@ class PhpWriter extends Nette\Object
 		while ($token = $tokens->fetchToken()) {
 			$token['depth'] = $depth = count($arrays);
 
-			if ($token['type'] === MacroTokens::T_COMMENT) {
+			if ($tokens->isCurrent(MacroTokens::T_COMMENT)) {
 				continue; // remove comments
 
-			} elseif ($token['type'] === MacroTokens::T_WHITESPACE) {
+			} elseif ($tokens->isCurrent(MacroTokens::T_WHITESPACE)) {
 				$res[] = $token;
 				continue;
 			}
 
-			if ($token['value'] === '?') { // short ternary operators without :
+			if ($tokens->isCurrent('?')) { // short ternary operators without :
 				$inTernary = $depth;
 
-			} elseif ($token['value'] === ':') {
+			} elseif ($tokens->isCurrent(':')) {
 				$inTernary = NULL;
 
-			} elseif ($inTernary === $depth && ($token['value'] === ',' || $token['value'] === ')' || $token['value'] === ']')) { // close ternary
+			} elseif ($inTernary === $depth && $tokens->isCurrent(',', ')', ']')) { // close ternary
 				$res[] = array('value' => ':', 'type' => NULL, 'depth' => $depth);
 				$res[] = array('value' => 'null', 'type' => NULL, 'depth' => $depth);
 				$inTernary = NULL;
 			}
 
-			if ($token['value'] === '[') { // simplified array syntax [...]
-				if ($arrays[] = $prev['value'] !== ']' && $prev['value'] !== ')' && $prev['type'] !== MacroTokens::T_SYMBOL
-					&& $prev['type'] !== MacroTokens::T_VARIABLE && $prev['type'] !== MacroTokens::T_KEYWORD
-				) {
+			if ($tokens->isCurrent('[')) { // simplified array syntax [...]
+				if ($arrays[] = !$tokens->isPrev(']', ')', MacroTokens::T_SYMBOL, MacroTokens::T_VARIABLE, MacroTokens::T_KEYWORD)) {
 					$res[] = array('value' => 'array', 'type' => NULL, 'depth' => $depth);
 					$token = array('value' => '(', 'type' => NULL, 'depth' => $depth);
 				}
-			} elseif ($token['value'] === ']') {
+			} elseif ($tokens->isCurrent(']')) {
 				if (array_pop($arrays) === TRUE) {
 					$token = array('value' => ')', 'type' => NULL, 'depth' => $depth);
 				}
-			} elseif ($token['value'] === '(') { // only count
+			} elseif ($tokens->isCurrent('(')) { // only count
 				$arrays[] = '(';
 
-			} elseif ($token['value'] === ')') { // only count
+			} elseif ($tokens->isCurrent(')')) { // only count
 				array_pop($arrays);
 			}
 

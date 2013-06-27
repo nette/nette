@@ -364,7 +364,7 @@ class CoreMacros extends MacroSet
 		$var = TRUE;
 		$tokens = $writer->preprocess();
 		while ($token = $tokens->fetchToken()) {
-			if ($var && ($token['type'] === Latte\MacroTokens::T_SYMBOL || $token['type'] === Latte\MacroTokens::T_VARIABLE)) {
+			if ($var && $tokens->isCurrent(Latte\MacroTokens::T_SYMBOL, Latte\MacroTokens::T_VARIABLE)) {
 				if ($node->name === 'default') {
 					$out .= "'" . ltrim($token['value'], "$") . "'";
 				} else {
@@ -372,15 +372,15 @@ class CoreMacros extends MacroSet
 				}
 				$var = NULL;
 
-			} elseif (($token['value'] === '=' || $token['value'] === '=>') && $token['depth'] === 0) {
+			} elseif ($tokens->isCurrent('=', '=>') && $token['depth'] === 0) {
 				$out .= $node->name === 'default' ? '=>' : '=';
 				$var = FALSE;
 
-			} elseif ($token['value'] === ',' && $token['depth'] === 0) {
+			} elseif ($tokens->isCurrent(',') && $token['depth'] === 0) {
 				$out .= $node->name === 'default' ? ',' : ';';
 				$var = TRUE;
 
-			} elseif ($var === NULL && $node->name === 'default' && $token['type'] !== Latte\MacroTokens::T_WHITESPACE) {
+			} elseif ($var === NULL && $node->name === 'default' && !$tokens->isCurrent(Latte\MacroTokens::T_WHITESPACE)) {
 				throw new CompileException("Unexpected '$token[value]' in {default $node->args}");
 
 			} else {
