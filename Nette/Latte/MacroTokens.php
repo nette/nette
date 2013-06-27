@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class MacroTokenizer extends Nette\Utils\Tokenizer
+class MacroTokens extends Nette\Utils\Tokenizer
 {
 	const T_WHITESPACE = 1,
 		T_COMMENT = 2,

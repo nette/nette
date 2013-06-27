@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Latte\MacroTokenizer::fetchWord()
+ * Test: Nette\Latte\MacroTokens::fetchWord()
  *
  * @author     David Grudl
  * @package    Nette\Latte
  */
 
-use Nette\Latte\MacroTokenizer;
+use Nette\Latte\MacroTokens;
 
 
 
@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 test(function() {
-	$tokenizer = new MacroTokenizer('');
+	$tokenizer = new MacroTokens('');
 	Assert::same( FALSE,  $tokenizer->fetchWord() );
 	Assert::same( FALSE,  $tokenizer->fetchAll() );
 });
@@ -24,7 +24,7 @@ test(function() {
 
 
 test(function() {
-	$tokenizer = new MacroTokenizer('$1d-,a');
+	$tokenizer = new MacroTokens('$1d-,a');
 	Assert::same( '$1d-',  $tokenizer->fetchWord() );
 	Assert::same( 'a',  $tokenizer->fetchAll() );
 });
@@ -32,7 +32,7 @@ test(function() {
 
 
 test(function() {
-	$tokenizer = new MacroTokenizer('"item\'1""item2"');
+	$tokenizer = new MacroTokens('"item\'1""item2"');
 	Assert::same( '"item\'1""item2"',  $tokenizer->fetchWord() );
 	Assert::same( FALSE,  $tokenizer->fetchAll() );
 });

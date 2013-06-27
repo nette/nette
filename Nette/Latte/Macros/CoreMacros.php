@@ -362,9 +362,9 @@ class CoreMacros extends MacroSet
 		}
 		$out = '';
 		$var = TRUE;
-		$tokenizer = $writer->preprocess();
-		while ($token = $tokenizer->fetchToken()) {
-			if ($var && ($token['type'] === Latte\MacroTokenizer::T_SYMBOL || $token['type'] === Latte\MacroTokenizer::T_VARIABLE)) {
+		$tokens = $writer->preprocess();
+		while ($token = $tokens->fetchToken()) {
+			if ($var && ($token['type'] === Latte\MacroTokens::T_SYMBOL || $token['type'] === Latte\MacroTokens::T_VARIABLE)) {
 				if ($node->name === 'default') {
 					$out .= "'" . ltrim($token['value'], "$") . "'";
 				} else {
@@ -380,11 +380,11 @@ class CoreMacros extends MacroSet
 				$out .= $node->name === 'default' ? ',' : ';';
 				$var = TRUE;
 
-			} elseif ($var === NULL && $node->name === 'default' && $token['type'] !== Latte\MacroTokenizer::T_WHITESPACE) {
+			} elseif ($var === NULL && $node->name === 'default' && $token['type'] !== Latte\MacroTokens::T_WHITESPACE) {
 				throw new CompileException("Unexpected '$token[value]' in {default $node->args}");
 
 			} else {
-				$out .= $writer->canQuote($tokenizer) ? "'$token[value]'" : $token['value'];
+				$out .= $writer->canQuote($tokens) ? "'$token[value]'" : $token['value'];
 			}
 		}
 		return $node->name === 'default' ? "extract(array($out), EXTR_SKIP)" : $out;

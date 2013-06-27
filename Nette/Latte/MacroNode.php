@@ -44,7 +44,7 @@ class MacroNode extends Nette\Object
 	/** @var bool */
 	public $closing = FALSE;
 
-	/** @var MacroTokenizer */
+	/** @var MacroTokens */
 	public $tokenizer;
 
 	/** @var MacroNode */
@@ -92,7 +92,7 @@ class MacroNode extends Nette\Object
 	public function setArgs($args)
 	{
 		$this->args = (string) $args;
-		$this->tokenizer = new MacroTokenizer($this->args);
+		$this->tokenizer = new MacroTokens($this->args);
 	}
 
 }

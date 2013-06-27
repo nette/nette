@@ -8,14 +8,14 @@
  */
 
 use Nette\Latte\PhpWriter,
-	Nette\Latte\MacroTokenizer;
+	Nette\Latte\MacroTokens;
 
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-$writer = new PhpWriter(new MacroTokenizer(''));
+$writer = new PhpWriter(new MacroTokens(''));
 
 
 Assert::same( '""',  $writer->formatWord('') );

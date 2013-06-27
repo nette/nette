@@ -8,7 +8,7 @@
  */
 
 use Nette\Latte\PhpWriter,
-	Nette\Latte\MacroTokenizer;
+	Nette\Latte\MacroTokens;
 
 
 
@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 function formatModifiers($arg, $modifiers) {
-	$writer = new PhpWriter(new MacroTokenizer(''), $modifiers);
+	$writer = new PhpWriter(new MacroTokens(''), $modifiers);
 	return $writer->formatModifiers($arg);
 }
 
