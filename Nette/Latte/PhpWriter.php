@@ -123,7 +123,7 @@ class PhpWriter extends Nette\Object
 
 		$tokens = $this->preprocess(new MacroTokens($modifiers));
 		$inside = FALSE;
-		while ($token = $tokens->fetchToken()) {
+		while ($token = $tokens->nextToken()) {
 			if ($tokens->isCurrent(MacroTokens::T_WHITESPACE)) {
 				$var = rtrim($var) . ' ';
 
@@ -131,7 +131,7 @@ class PhpWriter extends Nette\Object
 				if ($tokens->isCurrent(MacroTokens::T_SYMBOL)) {
 					if ($this->compiler && $tokens->isCurrent('escape')) {
 						$var = $this->escape($var);
-						$tokens->fetch('|');
+						$tokens->nextToken('|');
 					} else {
 						$var = "\$template->" . $token[Tokenizer::VALUE] . "($var";
 						$inside = TRUE;
@@ -165,7 +165,7 @@ class PhpWriter extends Nette\Object
 	{
 		$out = '';
 		$tokens = $this->preprocess($tokens);
-		while ($token = $tokens->fetchToken()) {
+		while ($token = $tokens->nextToken()) {
 			$out .= $this->canQuote($tokens) ? "'" . $token[Tokenizer::VALUE] . "'" : $token[Tokenizer::VALUE];
 		}
 		return $out;
@@ -182,7 +182,7 @@ class PhpWriter extends Nette\Object
 		$out = '';
 		$expand = NULL;
 		$tokens = $this->preprocess();
-		while ($token = $tokens->fetchToken()) {
+		while ($token = $tokens->nextToken()) {
 			if ($tokens->isCurrent('(expand)') && $token['depth'] === 0) {
 				$expand = TRUE;
 				$out .= '),';
@@ -223,8 +223,8 @@ class PhpWriter extends Nette\Object
 	public function canQuote(MacroTokens $tokens)
 	{
 		return $tokens->isCurrent(MacroTokens::T_SYMBOL)
-			&& (!$tokens->hasPrev() || $tokens->isPrev(',', '(', '[', '=', '=>', ':', '?'))
-			&& (!$tokens->hasNext() || $tokens->isNext(',', ')', ']', '=', '=>', ':', '|'));
+			&& (!$tokens->isPrev() || $tokens->isPrev(',', '(', '[', '=', '=>', ':', '?'))
+			&& (!$tokens->isNext() || $tokens->isNext(',', ')', ']', '=', '=>', ':', '|'));
 	}
 
 
@@ -238,7 +238,7 @@ class PhpWriter extends Nette\Object
 		$tokens = $tokens === NULL ? $this->tokens : $tokens;
 		$inTernary = $prev = NULL;
 		$res = $arrays = array();
-		while ($token = $tokens->fetchToken()) {
+		while ($token = $tokens->nextToken()) {
 			$token['depth'] = $depth = count($arrays);
 
 			if ($tokens->isCurrent(MacroTokens::T_COMMENT)) {

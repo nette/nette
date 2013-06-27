@@ -364,7 +364,7 @@ class CoreMacros extends MacroSet
 		$out = '';
 		$var = TRUE;
 		$tokens = $writer->preprocess();
-		while ($token = $tokens->fetchToken()) {
+		while ($token = $tokens->nextToken()) {
 			if ($var && $tokens->isCurrent(Latte\MacroTokens::T_SYMBOL, Latte\MacroTokens::T_VARIABLE)) {
 				if ($node->name === 'default') {
 					$out .= "'" . ltrim($token[Tokenizer::VALUE], "$") . "'";

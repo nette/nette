@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class MacroTokens extends Nette\Utils\Tokenizer
+class MacroTokens extends Nette\Utils\TokenIterator
 {
 	const T_WHITESPACE = 1,
 		T_COMMENT = 2,
@@ -32,11 +32,22 @@ class MacroTokens extends Nette\Utils\Tokenizer
 		T_KEYWORD = 8,
 		T_CHAR = 9;
 
+	/** @var Nette\Utils\Tokenizer */
+	private static $tokenizer;
 
 
-	public function __construct($input)
+
+	public function __construct($input = NULL)
 	{
-		parent::__construct(array(
+		parent::__construct(is_array($input) ? $input : $this->parse($input));
+		$this->ignored = array(self::T_COMMENT, self::T_WHITESPACE);
+	}
+
+
+
+	public function parse($s)
+	{
+		self::$tokenizer = self::$tokenizer ?: new Nette\Utils\Tokenizer(array(
 			self::T_WHITESPACE => '\s+',
 			self::T_COMMENT => '(?s)/\*.*?\*/',
 			self::T_STRING => Parser::RE_STRING,
@@ -47,8 +58,7 @@ class MacroTokens extends Nette\Utils\Tokenizer
 			self::T_SYMBOL => '[\w\pL_]+(?:-[\w\pL_]+)*',
 			self::T_CHAR => '::|=>|[^"\']', // =>, any char except quotes
 		), 'u');
-		$this->ignored = array(self::T_COMMENT, self::T_WHITESPACE);
-		$this->tokenize($input);
+		return self::$tokenizer->tokenize($s);
 	}
 
 
@@ -74,11 +84,11 @@ class MacroTokens extends Nette\Utils\Tokenizer
 	public function fetchWords()
 	{
 		do {
-			$words[] = $this->fetchUntil(self::T_WHITESPACE, ',', ':');
-		} while ($this->fetch(':'));
-		$this->fetch(',');
-		$this->fetchAll(self::T_WHITESPACE, self::T_COMMENT);
-		return $words === array(FALSE) ? array() : $words;
+			$words[] = $this->joinUntil(self::T_WHITESPACE, ',', ':');
+		} while ($this->nextToken(':'));
+		$this->nextToken(',');
+		$this->nextAll(self::T_WHITESPACE, self::T_COMMENT);
+		return $words === array('') ? array() : $words;
 	}
 
 }

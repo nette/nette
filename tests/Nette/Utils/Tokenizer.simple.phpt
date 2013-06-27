@@ -20,12 +20,12 @@ $tokenizer = new Tokenizer(array(
 	'\s+',
 	'\w+',
 ));
-$tokenizer->tokenize('say 123');
+$tokens = $tokenizer->tokenize('say 123');
 Assert::same( array(
 	array('say', 0),
 	array(' ', 3),
 	array('123', 4),
-), $tokenizer->tokens );
+), $tokens );
 
 Assert::exception(function() use ($tokenizer) {
 	$tokenizer->tokenize('say 123;');

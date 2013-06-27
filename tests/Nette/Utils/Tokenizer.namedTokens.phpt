@@ -20,12 +20,12 @@ $tokenizer = new Tokenizer(array(
 	T_WHITESPACE => '\s+',
 	T_STRING => '\w+',
 ));
-$tokenizer->tokenize("say \n123");
+$tokens = $tokenizer->tokenize("say \n123");
 Assert::same( array(
 	array(Tokenizer::VALUE => 'say', Tokenizer::OFFSET => 0, Tokenizer::TYPE => T_STRING),
 	array(Tokenizer::VALUE => " \n", Tokenizer::OFFSET => 3, Tokenizer::TYPE => T_WHITESPACE),
 	array(Tokenizer::VALUE => '123', Tokenizer::OFFSET => 5, Tokenizer::TYPE => T_DNUMBER),
-), $tokenizer->tokens );
+), $tokens );
 
 Assert::exception(function() use ($tokenizer) {
 	$tokenizer->tokenize('say 123;');
