@@ -35,6 +35,9 @@ class MacroTokens extends Nette\Utils\TokenIterator
 	/** @var Nette\Utils\Tokenizer */
 	private static $tokenizer;
 
+	/** @var int */
+	public $depth = 0;
+
 
 
 	public function __construct($input = NULL)
@@ -89,6 +92,26 @@ class MacroTokens extends Nette\Utils\TokenIterator
 		$this->nextToken(',');
 		$this->nextAll(self::T_WHITESPACE, self::T_COMMENT);
 		return $words === array('') ? array() : $words;
+	}
+
+
+
+	public function reset()
+	{
+		parent::reset();
+		$this->depth = 0;
+	}
+
+
+
+	protected function next()
+	{
+		parent::next();
+		if ($this->isCurrent('[', '(', '{')) {
+			$this->depth++;
+		} elseif ($this->isPrev(']', ')', '}')) {
+			$this->depth--;
+		}
 	}
 
 }
