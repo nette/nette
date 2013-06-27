@@ -183,9 +183,13 @@ class TokenIterator extends Nette\Object
 
 
 
+	/**
+	 * @return TokenIterator
+	 */
 	public function reset()
 	{
 		$this->position = -1;
+		return $this;
 	}
 
 

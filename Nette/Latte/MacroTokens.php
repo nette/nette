@@ -70,10 +70,14 @@ class MacroTokens extends Nette\Utils\TokenIterator
 	 * Appends simple token or string (will be parsed).
 	 * @return MacroTokens
 	 */
-	public function append($val)
+	public function append($val, $position = NULL)
 	{
 		if ($val != NULL) { // intentionally @
-			array_splice($this->tokens, count($this->tokens), 0, is_array($val) ? array($val) : $this->parse($val));
+			array_splice(
+				$this->tokens,
+				$position === NULL ? count($this->tokens) : $position, 0,
+				is_array($val) ? array($val) : $this->parse($val)
+			);
 		}
 		return $this;
 	}
@@ -126,8 +130,8 @@ class MacroTokens extends Nette\Utils\TokenIterator
 
 	public function reset()
 	{
-		parent::reset();
 		$this->depth = 0;
+		return parent::reset();
 	}
 
 
