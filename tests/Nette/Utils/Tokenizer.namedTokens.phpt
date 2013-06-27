@@ -22,9 +22,9 @@ $tokenizer = new Tokenizer(array(
 ));
 $tokenizer->tokenize("say \n123");
 Assert::same( array(
-	array('value' => 'say', 'type' => T_STRING, 'line' => 1),
-	array('value' => " \n", 'type' => T_WHITESPACE, 'line' => 1),
-	array('value' => '123', 'type' => T_DNUMBER, 'line' => 2),
+	array('value' => 'say', 'type' => T_STRING, 'offset' => 0),
+	array('value' => " \n", 'type' => T_WHITESPACE, 'offset' => 3),
+	array('value' => '123', 'type' => T_DNUMBER, 'offset' => 5),
 ), $tokenizer->tokens );
 
 Assert::exception(function() use ($tokenizer) {
