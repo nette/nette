@@ -22,6 +22,10 @@ use Nette;
  */
 class Tokenizer extends Nette\Object
 {
+	const VALUE = 0,
+		OFFSET = 1,
+		TYPE = 2;
+
 	/** @var array */
 	public $tokens;
 
@@ -79,8 +83,8 @@ class Tokenizer extends Nette\Object
 						$type = $this->types[$i - 1]; break;
 					}
 				}
-				$match = self::createToken($match[0], $type, $len);
-				$len += strlen($match['value']);
+				$match = array(self::VALUE => $match[0], self::OFFSET => $len, self::TYPE => $type);
+				$len += strlen($match[self::VALUE]);
 			}
 			if ($len !== strlen($input)) {
 				$errorOffset = $len;
@@ -106,7 +110,7 @@ class Tokenizer extends Nette\Object
 
 	public static function createToken($value, $type = NULL, $offset = NULL)
 	{
-		return array('value' => $value, 'type' => $type, 'offset' => $offset);
+		return array(self::VALUE => $value, self::OFFSET => $offset, self::TYPE => $type);
 	}
 
 
@@ -241,8 +245,8 @@ class Tokenizer extends Nette\Object
 	{
 		$args = func_get_args();
 		if (is_array($this->current)) {
-			return in_array($this->current['value'], $args, TRUE)
-				|| in_array($this->current['type'], $args, TRUE);
+			return in_array($this->current[self::VALUE], $args, TRUE)
+				|| in_array($this->current[self::TYPE], $args, TRUE);
 		} else {
 			return in_array($this->current, $args, TRUE);
 		}
@@ -270,8 +274,8 @@ class Tokenizer extends Nette\Object
 		while (isset($this->tokens[$pos])) {
 			$token = $this->tokens[$pos];
 			$pos += $prev ? -1 : 1;
-			$value = is_array($token) ? $token['value'] : $token;
-			$type = is_array($token) ? $token['type'] : $token;
+			$value = is_array($token) ? $token[self::VALUE] : $token;
+			$type = is_array($token) ? $token[self::TYPE] : $token;
 			if (!$wanted || (in_array($value, $wanted, TRUE) || in_array($type, $wanted, TRUE)) ^ $neg) {
 				if ($advance) {
 					$this->position = $pos;

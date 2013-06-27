@@ -11,7 +11,8 @@
 
 namespace Nette\Latte;
 
-use Nette;
+use Nette,
+	Nette\Utils\Tokenizer;
 
 
 
@@ -132,11 +133,11 @@ class PhpWriter extends Nette\Object
 						$var = $this->escape($var);
 						$tokens->fetch('|');
 					} else {
-						$var = "\$template->" . $token['value'] . "($var";
+						$var = "\$template->" . $token[Tokenizer::VALUE] . "($var";
 						$inside = TRUE;
 					}
 				} else {
-					throw new CompileException("Modifier name must be alphanumeric string, '$token[value]' given.");
+					throw new CompileException("Modifier name must be alphanumeric string, '" . $token[Tokenizer::VALUE] . "' given.");
 				}
 			} else {
 				if ($tokens->isCurrent(':', ',')) {
@@ -147,7 +148,7 @@ class PhpWriter extends Nette\Object
 					$inside = FALSE;
 
 				} else {
-					$var .= $this->canQuote($tokens) ? "'$token[value]'" : $token['value'];
+					$var .= $this->canQuote($tokens) ? "'" . $token[Tokenizer::VALUE] . "'" : $token[Tokenizer::VALUE];
 				}
 			}
 		}
@@ -165,7 +166,7 @@ class PhpWriter extends Nette\Object
 		$out = '';
 		$tokens = $this->preprocess($tokens);
 		while ($token = $tokens->fetchToken()) {
-			$out .= $this->canQuote($tokens) ? "'$token[value]'" : $token['value'];
+			$out .= $this->canQuote($tokens) ? "'" . $token[Tokenizer::VALUE] . "'" : $token[Tokenizer::VALUE];
 		}
 		return $out;
 	}
@@ -190,7 +191,7 @@ class PhpWriter extends Nette\Object
 				$expand = FALSE;
 				$out .= ', array(';
 			} else {
-				$out .= $this->canQuote($tokens) ? "'$token[value]'" : $token['value'];
+				$out .= $this->canQuote($tokens) ? "'" . $token[Tokenizer::VALUE] . "'" : $token[Tokenizer::VALUE];
 			}
 		}
 		if ($expand === NULL) {
@@ -255,19 +256,20 @@ class PhpWriter extends Nette\Object
 				$inTernary = NULL;
 
 			} elseif ($inTernary === $depth && $tokens->isCurrent(',', ')', ']')) { // close ternary
-				$res[] = array('value' => ':', 'type' => NULL, 'depth' => $depth);
-				$res[] = array('value' => 'null', 'type' => NULL, 'depth' => $depth);
+				$res[] = array(Tokenizer::VALUE => ':', Tokenizer::TYPE => NULL, 'depth' => $depth);
+				$res[] = array(Tokenizer::VALUE => 'null', Tokenizer::TYPE => NULL, 'depth' => $depth);
 				$inTernary = NULL;
 			}
 
 			if ($tokens->isCurrent('[')) { // simplified array syntax [...]
 				if ($arrays[] = !$tokens->isPrev(']', ')', MacroTokens::T_SYMBOL, MacroTokens::T_VARIABLE, MacroTokens::T_KEYWORD)) {
-					$res[] = array('value' => 'array', 'type' => NULL, 'depth' => $depth);
-					$token = array('value' => '(', 'type' => NULL, 'depth' => $depth);
+					$res[] = array(Tokenizer::VALUE => 'array', Tokenizer::TYPE => NULL, 'depth' => $depth);
+					$token = array(Tokenizer::VALUE => '(', Tokenizer::TYPE => NULL, 'depth' => $depth);
+
 				}
 			} elseif ($tokens->isCurrent(']')) {
 				if (array_pop($arrays) === TRUE) {
-					$token = array('value' => ')', 'type' => NULL, 'depth' => $depth);
+					$token = array(Tokenizer::VALUE => ')', Tokenizer::TYPE => NULL, 'depth' => $depth);
 				}
 			} elseif ($tokens->isCurrent('(')) { // only count
 				$arrays[] = '(';
@@ -280,8 +282,8 @@ class PhpWriter extends Nette\Object
 		}
 
 		if ($inTernary !== NULL) { // close ternary
-			$res[] = array('value' => ':', 'type' => NULL, 'depth' => count($arrays));
-			$res[] = array('value' => 'null', 'type' => NULL, 'depth' => count($arrays));
+			$res[] = array(Tokenizer::VALUE => ':', Tokenizer::TYPE => NULL, 'depth' => count($arrays));
+			$res[] = array(Tokenizer::VALUE => 'null', Tokenizer::TYPE => NULL, 'depth' => count($arrays));
 		}
 
 		$tokens = clone $tokens;

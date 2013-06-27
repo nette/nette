@@ -36,6 +36,6 @@ test(function() {
 		T_STRING => '\w+',
 	));
 	$tokenizer->tokenize("say 123");
-	Assert::same( Tokenizer::createToken('say', T_STRING, 0), $tokenizer->fetchToken('say') );
+	Assert::same( array(Tokenizer::VALUE => 'say', Tokenizer::OFFSET => 0, Tokenizer::TYPE => T_STRING), $tokenizer->fetchToken('say') );
 	Assert::same( ' ', $tokenizer->fetch() );
 });

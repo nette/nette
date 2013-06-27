@@ -15,7 +15,8 @@ use Nette,
 	Nette\Latte,
 	Nette\Latte\CompileException,
 	Nette\Latte\MacroNode,
-	Nette\Latte\PhpWriter;
+	Nette\Latte\PhpWriter,
+	Nette\Utils\Tokenizer;
 
 
 
@@ -366,9 +367,9 @@ class CoreMacros extends MacroSet
 		while ($token = $tokens->fetchToken()) {
 			if ($var && $tokens->isCurrent(Latte\MacroTokens::T_SYMBOL, Latte\MacroTokens::T_VARIABLE)) {
 				if ($node->name === 'default') {
-					$out .= "'" . ltrim($token['value'], "$") . "'";
+					$out .= "'" . ltrim($token[Tokenizer::VALUE], "$") . "'";
 				} else {
-					$out .= '$' . ltrim($token['value'], "$");
+					$out .= '$' . ltrim($token[Tokenizer::VALUE], "$");
 				}
 				$var = NULL;
 
@@ -381,10 +382,10 @@ class CoreMacros extends MacroSet
 				$var = TRUE;
 
 			} elseif ($var === NULL && $node->name === 'default' && !$tokens->isCurrent(Latte\MacroTokens::T_WHITESPACE)) {
-				throw new CompileException("Unexpected '$token[value]' in {default $node->args}");
+				throw new CompileException("Unexpected '" . $token[Tokenizer::VALUE] . "' in {default $node->args}");
 
 			} else {
-				$out .= $writer->canQuote($tokens) ? "'$token[value]'" : $token['value'];
+				$out .= $writer->canQuote($tokens) ? "'" . $token[Tokenizer::VALUE] . "'" : $token[Tokenizer::VALUE];
 			}
 		}
 		return $node->name === 'default' ? "extract(array($out), EXTR_SKIP)" : $out;
