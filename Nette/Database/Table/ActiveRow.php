@@ -93,7 +93,7 @@ class ActiveRow implements \IteratorAggregate, IRow
 	/**
 	 * Returns primary key value.
 	 * @param  bool
-	 * @return mixed
+	 * @return mixed possible int, string, array, object (Nette\DateTime)
 	 */
 	public function getPrimary($need = TRUE)
 	{
