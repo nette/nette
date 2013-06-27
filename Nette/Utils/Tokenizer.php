@@ -97,8 +97,7 @@ class Tokenizer extends Nette\Object
 		}
 
 		if (isset($errorOffset)) {
-			$line = $errorOffset ? substr_count($this->input, "\n", 0, $errorOffset) + 1 : 1;
-			$col = $errorOffset - strrpos(substr($this->input, 0, $errorOffset), "\n") + 1;
+			list($line, $col) = $this->getCoordinates($this->input, $errorOffset);
 			$token = str_replace("\n", '\n', substr($input, $errorOffset, 10));
 			throw new TokenizerException("Unexpected '$token' on line $line, column $col.");
 		}
@@ -123,11 +122,20 @@ class Tokenizer extends Nette\Object
 	{
 		$tokens = Strings::split($this->input, $this->re, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_OFFSET_CAPTURE);
 		$offset = isset($tokens[$i]) ? $tokens[$i][1] : strlen($this->input);
-		return array(
-			$offset,
-			($offset ? substr_count($this->input, "\n", 0, $offset) + 1 : 1),
-			$offset - strrpos(substr($this->input, 0, $offset), "\n"),
-		);
+		list($line, $col) = $this->getCoordinates($this->input, $offset);
+		return array($offset, $line, $col);
+	}
+
+
+
+	/**
+	 * Returns coordinates of offset in string.
+	 * @return array [line, column]
+	 */
+	public static function getCoordinates($text, $offset)
+	{
+		$text = substr($text, 0, $offset);
+		return array(substr_count($text, "\n") + 1, $offset - strrpos("\n" . $text, "\n") + 1);
 	}
 
 
