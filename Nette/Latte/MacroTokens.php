@@ -67,6 +67,34 @@ class MacroTokens extends Nette\Utils\TokenIterator
 
 
 	/**
+	 * Appends simple token or string (will be parsed).
+	 * @return MacroTokens
+	 */
+	public function append($val)
+	{
+		if ($val != NULL) { // intentionally @
+			array_splice($this->tokens, count($this->tokens), 0, is_array($val) ? array($val) : $this->parse($val));
+		}
+		return $this;
+	}
+
+
+
+	/**
+	 * Prepends simple token or string (will be parsed).
+	 * @return MacroTokens
+	 */
+	public function prepend($val)
+	{
+		if ($val != NULL) { // intentionally @
+			array_splice($this->tokens, 0, 0, is_array($val) ? array($val) : $this->parse($val));
+		}
+		return $this;
+	}
+
+
+
+	/**
 	 * Reads single token (optionally delimited by comma) from string.
 	 * @param  string
 	 * @return string
