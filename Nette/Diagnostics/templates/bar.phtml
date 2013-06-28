@@ -380,13 +380,19 @@ var Panel = Nette.Debug.Panel = Nette.Class({
 		}
 	},
 
-	focus: function() {
+	focus: function(callback) {
 		if (this.hasClass(Panel.WINDOW)) {
 			this.data().win.focus();
 		} else {
-			clearTimeout(this.data().blurTimeout);
-			this.addClass(Panel.FOCUSED).show();
-			this[0].style.zIndex = zIndex++;
+			var elem = this;
+			clearTimeout(this.data().displayTimeout);
+			this.data().displayTimeout = setTimeout(function() {
+				elem.addClass(Panel.FOCUSED).show();
+				elem[0].style.zIndex = zIndex++;
+				if (callback) {
+					callback();
+				}
+			}, 50);
 		}
 	},
 
@@ -394,7 +400,8 @@ var Panel = Nette.Debug.Panel = Nette.Class({
 		this.removeClass(Panel.FOCUSED);
 		if (this.hasClass(Panel.PEEK)) {
 			var panel = this;
-			this.data().blurTimeout = setTimeout(function() {
+			clearTimeout(this.data().displayTimeout);
+			this.data().displayTimeout = setTimeout(function() {
 				panel.hide();
 			}, 50);
 		}
@@ -546,12 +553,13 @@ Nette.Debug.Bar = Nette.Class({
 
 		}).bind('mouseenter', function(e) {
 			if (!this.rel || this.rel === 'close' || bar.hasClass('nette-dragged')) return;
-			var panel = Panel.factory(this.rel);
-			panel.focus();
-			if (panel.hasClass(Panel.PEEK)) {
-				var offset = $(this).offset();
-				panel.offset({left: offset.left - panel.position().width + offset.width + 4, top: offset.top - panel.position().height - 4});
-			}
+			var panel = Panel.factory(this.rel), link = $(this);
+			panel.focus(function() {
+				if (panel.hasClass(Panel.PEEK)) {
+					var offset = link.offset();
+					panel.offset({left: offset.left - panel.position().width + offset.width + 4, top: offset.top - panel.position().height - 4});
+				}
+			});
 
 		}).bind('mouseleave', function(e) {
 			if (!this.rel || this.rel === 'close' || bar.hasClass('nette-dragged')) return;
