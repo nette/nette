@@ -149,11 +149,12 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 
 	/**
+	 * @param  bool
 	 * @return string|array
 	 */
-	public function getPrimary()
+	public function getPrimary($need = TRUE)
 	{
-		if ($this->primary === NULL) {
+		if ($this->primary === NULL && $need) {
 			throw new \LogicException("Table \"{$this->name}\" does not have a primary key.");
 		}
 		return $this->primary;
@@ -168,12 +169,10 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	{
 		if ($this->primarySequence === FALSE) {
 			$this->primarySequence = NULL;
-
-			$primary = $this->getPrimary();
 			$driver = $this->connection->getSupplementalDriver();
-			if ($driver->isSupported(ISupplementalDriver::SUPPORT_SEQUENCE)) {
+			if ($driver->isSupported(ISupplementalDriver::SUPPORT_SEQUENCE) && $this->primary !== NULL) {
 				foreach ($driver->getColumns($this->name) as $column) {
-					if ($column['name'] === $primary) {
+					if ($column['name'] === $this->primary) {
 						$this->primarySequence = $column['vendor']['sequence'];
 						break;
 					}

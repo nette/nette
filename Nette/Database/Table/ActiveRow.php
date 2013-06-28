@@ -97,8 +97,11 @@ class ActiveRow implements \IteratorAggregate, IRow
 	 */
 	public function getPrimary($need = TRUE)
 	{
-		$primary = $this->table->getPrimary();
-		if (!is_array($primary)) {
+		$primary = $this->table->getPrimary($need);
+		if ($primary === NULL) {
+			return NULL;
+
+		} elseif (!is_array($primary)) {
 			if (isset($this->data[$primary])) {
 				return $this->data[$primary];
 			} elseif ($need) {
@@ -106,6 +109,7 @@ class ActiveRow implements \IteratorAggregate, IRow
 			} else {
 				return NULL;
 			}
+
 		} else {
 			$primaryVal = array();
 			foreach ($primary as $key) {
