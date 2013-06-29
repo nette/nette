@@ -39,7 +39,7 @@ test(function() { // Rules
 	Assert::same( Rule::VALIDATOR, $items[0]->type );
 	Assert::false( $items[0]->isNegative );
 
-	Assert::same( array('Please complete mandatory field.'), $rules->validate() );
+	Assert::same( array('This field is required.'), $rules->validate() );
 });
 
 

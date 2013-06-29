@@ -23,6 +23,6 @@ $form->setValues(array('name' => "invalid*input"));
 $form->validate();
 
 Assert::same(array(
-	'Please enter a numeric value.',
+	'Please enter a valid integer.',
 	'just fail',
 ), $form['name']->getErrors());

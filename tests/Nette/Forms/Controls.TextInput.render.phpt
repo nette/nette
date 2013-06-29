@@ -87,7 +87,7 @@ test(function() { // conditional required
 	$input->addCondition($form::FILLED)
 			->addRule($form::FILLED);
 
-	Assert::same('<input type="text" name="text" id="frm-text" data-nette-rules=\'[{"op":":filled","rules":[{"op":":filled","msg":"Please complete mandatory field."}],"control":"text"}]\' value="">', (string) $input->getControl());
+	Assert::same('<input type="text" name="text" id="frm-text" data-nette-rules=\'[{"op":":filled","rules":[{"op":":filled","msg":"This field is required."}],"control":"text"}]\' value="">', (string) $input->getControl());
 });
 
 
@@ -105,7 +105,7 @@ test(function() { // validation rule MAX_LENGTH
 	$input = $form->addText('text')
 		->addRule($form::MAX_LENGTH, NULL, 10);
 
-	Assert::same('<input type="text" name="text" maxlength="10" id="frm-text" data-nette-rules=\'[{"op":":maxLength","msg":"Please enter a value no longer than 10 characters.","arg":10}]\' value="">', (string) $input->getControl());
+	Assert::same('<input type="text" name="text" maxlength="10" id="frm-text" data-nette-rules=\'[{"op":":maxLength","msg":"Please enter no more than 10 characters.","arg":10}]\' value="">', (string) $input->getControl());
 });
 
 
