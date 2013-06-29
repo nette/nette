@@ -459,9 +459,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 			return;
 		}
 		$this->cleanErrors();
-		foreach ($this->rules->validate() as $error) {
-			$this->addError($error);
-		}
+		$this->rules->validate();
 	}
 
 

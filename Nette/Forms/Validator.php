@@ -134,7 +134,7 @@ class Validator extends Nette\Object
 	 */
 	public static function validateValid(IControl $control)
 	{
-		return !$control->getRules()->validate();
+		return $control->getRules()->validate();
 	}
 
 

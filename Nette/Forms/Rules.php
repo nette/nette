@@ -172,25 +172,22 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 
 	/**
 	 * Validates against ruleset.
-	 * @return string[]
+	 * @return bool
 	 */
 	public function validate()
 	{
-		$errors = array();
 		foreach ($this as $rule) {
 			$success = $this->validateRule($rule);
 
-			if ($rule->type === Rule::CONDITION && $success) {
-				if ($errors = $rule->subRules->validate()) {
-					break;
-				}
+			if ($rule->type === Rule::CONDITION && $success && !$rule->subRules->validate()) {
+				return FALSE;
 
 			} elseif ($rule->type === Rule::VALIDATOR && !$success) {
-				$errors[] = Validator::formatMessage($rule, TRUE);
-				break;
+				$rule->control->addError(Validator::formatMessage($rule, TRUE));
+				return FALSE;
 			}
 		}
-		return $errors;
+		return TRUE;
 	}
 
 

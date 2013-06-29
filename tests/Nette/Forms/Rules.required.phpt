@@ -39,13 +39,15 @@ test(function() { // Rules
 	Assert::same( Rule::VALIDATOR, $items[0]->type );
 	Assert::false( $items[0]->isNegative );
 
-	Assert::same( array('This field is required.'), $rules->validate() );
+	Assert::false( $rules->validate() );
+	Assert::same( array('This field is required.'), $input->getErrors() );
 });
 
 
 test(function() { // 'required' is always the first rule
 	$form = new Form;
-	$rules = $form->addText('text')->getRules();
+	$input = $form->addText('text');
+	$rules = $input->getRules();
 
 	$rules->addRule($form::EMAIL);
 	$rules->addRule($form::REQUIRED);
@@ -62,13 +64,15 @@ test(function() { // 'required' is always the first rule
 	Assert::true( $items[0]->isNegative );
 	Assert::same( Form::EMAIL, $items[1]->operation );
 
-	Assert::same( array('Please enter a valid email address.'), $rules->validate() );
+	Assert::false( $rules->validate() );
+	Assert::same( array('Please enter a valid email address.'), $input->getErrors() );
 });
 
 
 test(function() { // setRequired(FALSE)
 	$form = new Form;
-	$rules = $form->addText('text')->getRules();
+	$input = $form->addText('text');
+	$rules = $input->getRules();
 
 	$rules->addRule($form::EMAIL);
 	$rules->addRule($form::REQUIRED);
@@ -78,5 +82,6 @@ test(function() { // setRequired(FALSE)
 	Assert::same( 1, count($items) );
 	Assert::same( Form::EMAIL, $items[0]->operation );
 
-	Assert::same( array('Please enter a valid email address.'), $rules->validate() );
+	Assert::false( $rules->validate() );
+	Assert::same( array('Please enter a valid email address.'), $input->getErrors() );
 });
