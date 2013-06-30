@@ -64,6 +64,16 @@ class DateTime extends \DateTime
 	}
 
 
+	/**
+	 * DateTime object factory of the current time and date
+	 * @return DateTime
+	 */
+	public static function now()
+	{
+		return self::from(date('m/d/Y h:i:s a', time()));
+	}
+
+
 
 	public function __toString()
 	{
