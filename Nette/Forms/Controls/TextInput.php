@@ -36,6 +36,16 @@ class TextInput extends TextBase
 
 
 	/**
+	 * Loads HTTP data.
+	 * @return void
+	 */
+	public function loadHttpData()
+	{
+		$this->setValue($this->getHttpData(Nette\Forms\Form::DATA_LINE));
+	}
+
+
+	/**
 	 * Changes control's type attribute.
 	 * @param  string
 	 * @return BaseControl  provides a fluent interface

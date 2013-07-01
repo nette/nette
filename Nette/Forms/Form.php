@@ -71,6 +71,11 @@ class Form extends Container
 	const GET = 'get',
 		POST = 'post';
 
+	/** submitted data types */
+	const DATA_TEXT = 1;
+	const DATA_LINE = 2;
+	const DATA_FILE = 3;
+
 	/** @internal tracker ID */
 	const TRACKER_ID = '_form_';
 
@@ -360,7 +365,7 @@ class Form extends Container
 	 * Returns submitted HTTP data.
 	 * @return array
 	 */
-	final public function getHttpData()
+	final public function getHttpData($htmlName = NULL, $type = self::DATA_TEXT)
 	{
 		if ($this->httpData === NULL) {
 			if (!$this->isAnchored()) {
@@ -370,7 +375,9 @@ class Form extends Container
 			$this->httpData = (array) $data;
 			$this->submittedBy = is_array($data);
 		}
-		return $this->httpData;
+		return $htmlName === NULL
+			? $this->httpData
+			: Helpers::extractHttpData($this->httpData, $htmlName, $type);
 	}
 
 

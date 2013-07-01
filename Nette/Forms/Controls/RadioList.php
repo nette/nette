@@ -53,6 +53,19 @@ class RadioList extends BaseControl
 
 
 	/**
+	 * Loads HTTP data.
+	 * @return void
+	 */
+	public function loadHttpData()
+	{
+		$this->value = $this->getHttpData();
+		if ($this->value !== NULL) {
+			$this->value = key(array($this->value => NULL));
+		}
+	}
+
+
+	/**
 	 * Sets selected radio value.
 	 * @param  string
 	 * @return RadioList  provides a fluent interface
@@ -62,7 +75,8 @@ class RadioList extends BaseControl
 		if (!isset($this->items[$value]) && $value !== NULL) {
 			throw new Nette\InvalidArgumentException("Value '$value' is out of range of current items.");
 		}
-		return $this->setRawValue($value);
+		$this->value = $value === NULL ? NULL : key(array($value => NULL));
+		return $this;
 	}
 
 
@@ -76,18 +90,6 @@ class RadioList extends BaseControl
 			trigger_error(__METHOD__ . '(TRUE) is deprecated; use getRawValue() instead.', E_USER_DEPRECATED);
 		}
 		return ($raw || isset($this->items[$this->value])) ? $this->value : NULL;
-	}
-
-
-	protected function setRawValue($value)
-	{
-		if (is_scalar($value)) {
-			$foo = array($value => NULL);
-			$this->value = key($foo);
-		} else {
-			$this->value = NULL;
-		}
-		return $this;
 	}
 
 

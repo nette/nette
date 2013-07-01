@@ -54,9 +54,9 @@ test(function() { // malformed data
 	$form = new Form;
 	$input = $form->addImage('malformed1');
 	Assert::true( $input->isFilled() );
-	Assert::true( $input->getValue() );
+	Assert::same( array(1, 0), $input->getValue() );
 
 	$input = $form->addImage('malformed2');
-	Assert::true( $input->isFilled() );
-	Assert::same( array(1, 0), $input->getValue() );
+	Assert::false( $input->isFilled() );
+	Assert::false( $input->getValue() );
 });

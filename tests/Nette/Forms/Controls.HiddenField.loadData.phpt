@@ -23,7 +23,7 @@ test(function() {
 	$_POST = array('text' => "  a\r b \n c ");
 	$form = new Form;
 	$input = $form->addHidden('text');
-	Assert::same( "  a\r b \n c ", $input->getValue() );
+	Assert::same( "  a\n b \n c ", $input->getValue() );
 	Assert::true( $input->isFilled() );
 });
 

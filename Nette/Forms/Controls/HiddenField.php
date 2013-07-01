@@ -47,12 +47,6 @@ class HiddenField extends BaseControl
 	}
 
 
-	protected function setRawValue($value)
-	{
-		return $this->setValue(is_scalar($value) ? (string) $value : '');
-	}
-
-
 	/**
 	 * Generates control's HTML element.
 	 * @return Nette\Utils\Html

@@ -56,6 +56,19 @@ class SelectBox extends BaseControl
 
 
 	/**
+	 * Loads HTTP data.
+	 * @return void
+	 */
+	public function loadHttpData()
+	{
+		$this->value = $this->getHttpData();
+		if ($this->value !== NULL) {
+			$this->value = key(array($this->value => NULL));
+		}
+	}
+
+
+	/**
 	 * Sets selected items (by keys).
 	 * @param  string
 	 * @return SelectBox  provides a fluent interface
@@ -65,7 +78,8 @@ class SelectBox extends BaseControl
 		if (!isset($this->allowed[$value]) && $value !== NULL) {
 			throw new Nette\InvalidArgumentException("Value '$value' is out of range of current items.");
 		}
-		return $this->setRawValue($value);
+		$this->value = $value === NULL ? NULL : key(array($value => NULL));
+		return $this;
 	}
 
 
@@ -76,18 +90,6 @@ class SelectBox extends BaseControl
 	public function getValue()
 	{
 		return isset($this->allowed[$this->value]) ? $this->value : NULL;
-	}
-
-
-	protected function setRawValue($value)
-	{
-		if (is_scalar($value)) {
-			$foo = array($value => NULL);
-			$this->value = key($foo);
-		} else {
-			$this->value = NULL;
-		}
-		return $this;
 	}
 
 

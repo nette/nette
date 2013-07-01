@@ -25,6 +25,16 @@ class MultiSelectBox extends SelectBox
 
 
 	/**
+	 * Loads HTTP data.
+	 * @return void
+	 */
+	public function loadHttpData()
+	{
+		$this->value = array_keys(array_flip($this->getHttpData()));
+	}
+
+
+	/**
 	 * Sets selected items (by keys).
 	 * @param  array
 	 * @return MultiSelectBox  provides a fluent interface
@@ -39,7 +49,8 @@ class MultiSelectBox extends SelectBox
 		if ($diff = array_diff($values, array_keys($this->allowed))) {
 			throw new Nette\InvalidArgumentException("Values '" . implode("', '", $diff) . "' are out of range of current items.");
 		}
-		return $this->setRawValue($values);
+		$this->value = array_keys(array_flip($values));
+		return $this;
 	}
 
 
@@ -50,19 +61,6 @@ class MultiSelectBox extends SelectBox
 	public function getValue()
 	{
 		return array_values(array_intersect($this->value, array_keys($this->allowed)));
-	}
-
-
-	protected function setRawValue($values)
-	{
-		$res = array();
-		foreach (is_array($values) ? $values : array($values) as $value) {
-			if (is_scalar($value)) {
-				$res[$value] = NULL;
-			}
-		}
-		$this->value = array_keys($res);
-		return $this;
 	}
 
 

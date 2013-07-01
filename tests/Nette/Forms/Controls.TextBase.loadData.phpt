@@ -122,7 +122,7 @@ test(function() { // max length
 	$input = $form->addText('long')
 		->addRule($form::MAX_LENGTH, NULL, 5);
 
-	Assert::same( 'žluť', $input->getValue() );
+	Assert::same( 'žluťo', $input->getValue() );
 });
 
 

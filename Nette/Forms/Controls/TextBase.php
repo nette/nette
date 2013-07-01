@@ -34,16 +34,6 @@ abstract class TextBase extends BaseControl
 
 
 	/**
-	 * @param  string  label
-	 */
-	public function __construct($label = NULL)
-	{
-		parent::__construct($label);
-		$this->addFilter($this->sanitize);
-	}
-
-
-	/**
 	 * Sets control's value.
 	 * @param  string
 	 * @return TextBase  provides a fluent interface
@@ -64,17 +54,14 @@ abstract class TextBase extends BaseControl
 	 */
 	public function getValue()
 	{
-		$value = $this->value;
+		$value = (string) $this->value;
+		if (!empty($this->control->maxlength)) {
+			$value = Nette\Utils\Strings::substring($value, 0, $this->control->maxlength);
+		}
 		foreach ($this->filters as $filter) {
 			$value = (string) $filter($value);
 		}
 		return $value === $this->translate($this->emptyValue) ? '' : $value;
-	}
-
-
-	protected function setRawValue($value)
-	{
-		return $this->setValue(is_scalar($value) ? Strings::normalizeNewLines($value) : '');
 	}
 
 
@@ -109,22 +96,6 @@ abstract class TextBase extends BaseControl
 	{
 		$this->filters[] = new Nette\Callback($filter);
 		return $this;
-	}
-
-
-	/**
-	 * Filter: removes unnecessary whitespace and shortens value to control's max length.
-	 * @return string
-	 */
-	public function sanitize($value)
-	{
-		if ($this->control->maxlength) {
-			$value = Nette\Utils\Strings::substring($value, 0, $this->control->maxlength);
-		}
-		if (strcasecmp($this->control->getName(), 'input') === 0) {
-			$value = Nette\Utils\Strings::trim(strtr($value, "\r\n", '  '));
-		}
-		return $value;
 	}
 
 

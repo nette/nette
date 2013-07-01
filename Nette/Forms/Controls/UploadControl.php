@@ -54,29 +54,34 @@ class UploadControl extends BaseControl
 
 
 	/**
+	 * Loads HTTP data.
+	 * @return void
+	 */
+	public function loadHttpData()
+	{
+		$this->value = $this->getHttpData(Nette\Forms\Form::DATA_FILE);
+		if ($this->value === NULL) {
+			$this->value = new FileUpload(NULL);
+		}
+	}
+
+
+	/**
+	 * Returns HTML name of control.
+	 * @return string
+	 */
+	public function getHtmlName()
+	{
+		return parent::getHtmlName() . ($this->control->multiple ? '[]' : '');
+	}
+
+
+	/**
 	 * Sets control's value.
 	 * @return UploadControl  provides a fluent interface
 	 */
 	public function setValue($value)
 	{
-		return $this;
-	}
-
-
-	protected function setRawValue($value)
-	{
-		if ($this->control->multiple) {
-			$this->value = array();
-			foreach (is_array($value) ? $value : array() as $item) {
-				if ($item instanceof FileUpload) {
-					$this->value[] = $item;
-				}
-			}
-		} elseif (!$value instanceof FileUpload) {
-			$this->value = new FileUpload(NULL);
-		} else {
-			$this->value = $value;
-		}
 		return $this;
 	}
 
@@ -88,16 +93,6 @@ class UploadControl extends BaseControl
 	public function isFilled()
 	{
 		return $this->value instanceof FileUpload ? $this->value->isOk() : (bool) $this->value; // ignore NULL object
-	}
-
-
-	/**
-	 * Returns HTML name of control.
-	 * @return string
-	 */
-	public function getHtmlName()
-	{
-		return parent::getHtmlName() . ($this->control->multiple ? '[]' : '');
 	}
 
 

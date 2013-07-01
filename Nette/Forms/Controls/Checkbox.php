@@ -48,12 +48,6 @@ class Checkbox extends BaseControl
 	}
 
 
-	protected function setRawValue($value)
-	{
-		return $this->setValue(is_scalar($value) ? (bool) $value : FALSE);
-	}
-
-
 	/**
 	 * Is control filled?
 	 * @return bool

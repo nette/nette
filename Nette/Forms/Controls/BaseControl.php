@@ -70,9 +70,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/** @var string */
 	private $htmlId;
 
-	/** @var string */
-	private $htmlName;
-
 	/** @var Nette\Forms\Rules */
 	private $rules;
 
@@ -105,7 +102,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	protected function attached($form)
 	{
 		if (!$this->disabled && $form instanceof Form && $form->isAnchored() && $form->isSubmitted()) {
-			$this->htmlName = NULL;
 			$this->loadHttpData();
 		}
 	}
@@ -123,22 +119,12 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
-	 * Returns HTML name of control.
-	 * @return string
+	 * Loads HTTP data.
+	 * @return void
 	 */
-	public function getHtmlName()
+	public function loadHttpData()
 	{
-		if ($this->htmlName === NULL) {
-			$name = str_replace(self::NAME_SEPARATOR, '][', $this->lookupPath('Nette\Forms\Form'), $count);
-			if ($count) {
-				$name = substr_replace($name, '', strpos($name, ']'), 1) . ']';
-			}
-			if (is_numeric($name) || in_array($name, array('attributes','children','elements','focus','length','reset','style','submit','onsubmit'))) {
-				$name = '_' . $name;
-			}
-			$this->htmlName = $name;
-		}
-		return $this->htmlName;
+		$this->setValue($this->getHttpData());
 	}
 
 
@@ -146,13 +132,19 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 * Loads HTTP data.
 	 * @return void
 	 */
-	public function loadHttpData()
+	public function getHttpData($type = Nette\Forms\Form::DATA_TEXT, $htmlTail = NULL)
 	{
-		$this->setRawValue(Nette\Utils\Arrays::get(
-			$this->getForm()->getHttpData(),
-			explode('[', strtr(str_replace(array('[]', ']'), '', $this->getHtmlName()), '.', '_')),
-			NULL
-		));
+		return $this->getForm()->getHttpData($this->getHtmlName() . $htmlTail, $type);
+	}
+
+
+	/**
+	 * Returns HTML name of control.
+	 * @return string
+	 */
+	public function getHtmlName()
+	{
+		return Nette\Forms\Helpers::generateHtmlName($this->lookupPath('Nette\Forms\Form'));
 	}
 
 
@@ -202,16 +194,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 			$this->setValue($value);
 		}
 		return $this;
-	}
-
-
-	/**
-	 * Sets control's submitted data.
-	 * @return BaseControl  provides a fluent interface
-	 */
-	protected function setRawValue($value)
-	{
-		return $this->setValue($value);
 	}
 
 

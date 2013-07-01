@@ -46,16 +46,15 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 
 
 	/**
-	 * Sets 'pressed' indicator.
-	 * @param  bool
-	 * @return SubmitButton  provides a fluent interface
+	 * Loads HTTP data.
+	 * @return void
 	 */
-	public function setValue($value)
+	public function loadHttpData()
 	{
-		if ($this->value = $value !== NULL) {
+		parent::loadHttpData();
+		if ($this->value !== NULL) {
 			$this->getForm()->setSubmittedBy($this);
 		}
-		return $this;
 	}
 
 

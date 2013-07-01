@@ -15,11 +15,11 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $datasets = array(
-	array(array('send1' => 'send1'), array('name', 'age', 'age2')),
-	array(array('send2' => 'send2'), array()),
-	array(array('send3' => 'send3'), array('name')),
-	array(array('send4' => 'send4'), array('age')),
-	array(array('send5' => 'send5'), array('age', 'age2')),
+	array('send1', array('name', 'age', 'age2')),
+	array('send2', array()),
+	array('send3', array('name')),
+	array('send4', array('age')),
+	array('send5', array('age', 'age2')),
 );
 
 foreach ($datasets as $case) {
@@ -37,7 +37,7 @@ foreach ($datasets as $case) {
 	$form->addSubmit('send4')->setValidationScope(array($form['details']['age']));
 	$form->addSubmit('send5')->setValidationScope(array($form['details']));
 
-	$form->setValues($case[0]);
+	$form->setSubmittedBy($form[$case[0]]);
 
 	Assert::true((bool) $form->isSubmitted());
 	$form->validate();

@@ -36,17 +36,15 @@ class ImageButton extends SubmitButton
 
 
 	/**
-	 * Sets coordinates as a value if available.
-	 * @param  bool|array
-	 * @return ImageButton  provides a fluent interface
+	 * Loads HTTP data.
+	 * @return void
 	 */
-	public function setValue($value)
+	public function loadHttpData()
 	{
-		parent::setValue($value);
-		if (is_array($value) && isset($value[0], $value[1])) {
-			$this->value = array((int) $value[0], (int) $value[1]);
-		}
-		return $this;
+		parent::loadHttpData();
+		$this->value = $this->value
+			? array((int) array_shift($this->value), (int) array_shift($this->value))
+			: FALSE;
 	}
 
 

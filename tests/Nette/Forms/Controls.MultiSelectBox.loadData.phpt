@@ -27,21 +27,8 @@ $series = array(
 );
 
 
-test(function() use ($series) {
-	$_POST = array('select' => 'red-dwarf');
-
-	$form = new Form;
-	$input = $form->addMultiSelect('select', NULL, $series);
-
-	Assert::true( $form->isValid() );
-	Assert::same( array('red-dwarf'), $input->getValue() );
-	Assert::same( array('red-dwarf' => 'Red Dwarf'), $input->getSelectedItem() );
-	Assert::true( $input->isFilled() );
-});
-
-
 test(function() use ($series) { // invalid input
-	$_POST = array('select' => 'days-of-our-lives');
+	$_POST = array('select' => 'red-dwarf');
 
 	$form = new Form;
 	$input = $form->addMultiSelect('select', NULL, $series);
@@ -53,7 +40,7 @@ test(function() use ($series) { // invalid input
 });
 
 
-test(function() use ($series) { // multiple selected items
+test(function() use ($series) { // multiple selected items, zero item
 	$_POST = array('multi' => array('red-dwarf', 'unknown', 0));
 
 	$form = new Form;
@@ -61,27 +48,14 @@ test(function() use ($series) { // multiple selected items
 
 	Assert::true( $form->isValid() );
 	Assert::same( array('red-dwarf', 0), $input->getValue() );
+	Assert::same( array('red-dwarf', 'unknown', 0), $input->getRawValue() );
 	Assert::same( array('red-dwarf' => 'Red Dwarf', 0 => 'South Park'), $input->getSelectedItem() );
 	Assert::true( $input->isFilled() );
 });
 
 
-test(function() use ($series) {
-	$_POST = array('zero' => 0);
-
-	$form = new Form;
-	$input = $form->addMultiSelect('zero', NULL, $series);
-
-	Assert::true( $form->isValid() );
-	Assert::same( array(0), $input->getValue() );
-	Assert::same( array(0), $input->getRawValue() );
-	Assert::same( array(0 => 'South Park'), $input->getSelectedItem() );
-	Assert::true( $input->isFilled() );
-});
-
-
 test(function() use ($series) { // empty key
-	$_POST = array('empty' => '');
+	$_POST = array('empty' => array(''));
 
 	$form = new Form;
 	$input = $form->addMultiSelect('empty', NULL, $series);

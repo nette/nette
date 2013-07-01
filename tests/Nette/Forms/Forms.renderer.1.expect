@@ -8,7 +8,7 @@
 <tr class="required">
 	<th><label class="required" for="frm-name">Your name:</label></th>
 
-	<td><input type="text" class="text" name="name" id="frm-name" required="required" data-nette-rules='[{"op":":filled","msg":"Enter your name"}]' value="John Doe " /></td>
+	<td><input type="text" class="text" name="name" id="frm-name" required="required" data-nette-rules='[{"op":":filled","msg":"Enter your name"}]' value="John Doe" /></td>
 </tr>
 
 <tr class="required">
