@@ -206,12 +206,11 @@ class Form extends Container
 	/**
 	 * Cross-Site Request Forgery (CSRF) form protection.
 	 * @param  string
-	 * @param  int
 	 * @return Controls\CsrfProtection
 	 */
-	public function addProtection($message = NULL, $timeout = NULL)
+	public function addProtection($message = NULL)
 	{
-		return $this[self::PROTECTOR_ID] = new Controls\CsrfProtection($message, $timeout);
+		return $this[self::PROTECTOR_ID] = new Controls\CsrfProtection($message);
 	}
 
 
