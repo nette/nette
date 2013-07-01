@@ -67,9 +67,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/** @var bool */
 	private $omitted = FALSE;
 
-	/** @var string */
-	private $htmlId;
-
 	/** @var Nette\Forms\Rules */
 	private $rules;
 
@@ -304,7 +301,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	public function setHtmlId($id)
 	{
-		$this->htmlId = $id;
+		$this->control->id = $id;
 		return $this;
 	}
 
@@ -315,15 +312,10 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	public function getHtmlId()
 	{
-		if ($this->htmlId === FALSE) {
-			return NULL;
-
-		} elseif ($this->htmlId === NULL) {
-			$this->htmlId = sprintf(self::$idMask, $this->lookup('Nette\Application\IPresenter', FALSE)
-				? $this->lookupPath('Nette\Application\IPresenter')
-				: $this->lookupPath('Nette\Forms\Form'));
+		if (!isset($this->control->id)) {
+			$this->control->id = sprintf(self::$idMask, $this->lookupPath(NULL));
 		}
-		return $this->htmlId;
+		return $this->control->id;
 	}
 
 
