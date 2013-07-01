@@ -33,6 +33,7 @@ use Nette,
  * @property-read bool $ajax
  * @property-read Nette\Application\Request $lastCreatedRequest
  * @property-read Nette\Http\SessionSection $flashSession
+ * @property-read \SystemContainer|Nette\DI\Container $context
  * @property-read Nette\Http\Session $session
  * @property-read Nette\Security\User $user
  */
