@@ -34,7 +34,7 @@ test(function() {
 	Assert::same('<label for="frm-text">Another label</label>', (string) $input->getLabel('Another label'));
 
 	Assert::type('Nette\Utils\Html', $input->getControl());
-	Assert::same('<input type="text" autocomplete="off" name="text" id="frm-text" value="text" />', (string) $input->getControl());
+	Assert::same('<input type="text" name="text" autocomplete="off" id="frm-text" value="text" />', (string) $input->getControl());
 });
 
 
@@ -48,7 +48,7 @@ test(function() { // translator
 
 	Assert::same('<label for="frm-text">LABEL</label>', (string) $input->getLabel());
 	Assert::same('<label for="frm-text">ANOTHER LABEL</label>', (string) $input->getLabel('Another label'));
-	Assert::same('<input type="text" placeholder="PLACE" name="text" id="frm-text" data-nette-empty-value="XXX" value="text" />', (string) $input->getControl());
+	Assert::same('<input type="text" name="text" placeholder="PLACE" id="frm-text" data-nette-empty-value="XXX" value="text" />', (string) $input->getControl());
 });
 
 
@@ -96,7 +96,7 @@ test(function() { // validation rule LENGTH
 	$input = $form->addText('text')
 		->addRule($form::LENGTH, NULL, array(10, 20));
 
-	Assert::same('<input type="text" maxlength="20" name="text" id="frm-text" data-nette-rules=\'[{"op":":length","msg":"Please enter a value between 10 and 20 characters long.","arg":[10,20]}]\' value="" />', (string) $input->getControl());
+	Assert::same('<input type="text" name="text" maxlength="20" id="frm-text" data-nette-rules=\'[{"op":":length","msg":"Please enter a value between 10 and 20 characters long.","arg":[10,20]}]\' value="" />', (string) $input->getControl());
 });
 
 
@@ -105,7 +105,7 @@ test(function() { // validation rule MAX_LENGTH
 	$input = $form->addText('text')
 		->addRule($form::MAX_LENGTH, NULL, 10);
 
-	Assert::same('<input type="text" maxlength="10" name="text" id="frm-text" data-nette-rules=\'[{"op":":maxLength","msg":"Please enter a value no longer than 10 characters.","arg":10}]\' value="" />', (string) $input->getControl());
+	Assert::same('<input type="text" name="text" maxlength="10" id="frm-text" data-nette-rules=\'[{"op":":maxLength","msg":"Please enter a value no longer than 10 characters.","arg":10}]\' value="" />', (string) $input->getControl());
 });
 
 

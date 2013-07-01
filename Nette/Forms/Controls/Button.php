@@ -59,9 +59,8 @@ class Button extends BaseControl
 	 */
 	public function getControl($caption = NULL)
 	{
-		$control = parent::getControl();
-		$control->value = $this->translate($caption === NULL ? $this->caption : $caption);
-		return $control;
+		return parent::getControl()
+			->value($this->translate($caption === NULL ? $this->caption : $caption));
 	}
 
 }

@@ -40,7 +40,7 @@ test(function() { // multiple
 	$form = new Form;
 	$input = $form->addUpload('file', 'Label', TRUE);
 
-	Assert::same('<input type="file" multiple="multiple" name="file[]" id="frm-file" />', (string) $input->getControl());
+	Assert::same('<input type="file" name="file[]" multiple="multiple" id="frm-file" />', (string) $input->getControl());
 });
 
 

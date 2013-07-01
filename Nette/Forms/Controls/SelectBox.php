@@ -205,39 +205,30 @@ class SelectBox extends BaseControl
 	 */
 	public function getControl()
 	{
-		$selected = $this->getValue();
-		$selected = is_array($selected) ? array_flip($selected) : array($selected => TRUE);
-		$control = parent::getControl();
+		$selected = array_flip((array) $this->value);
+		$select = parent::getControl();
 		$option = Nette\Utils\Html::el('option');
+		$items = $this->getItems();
 
 		if ($this->prompt !== FALSE) {
-			$control->add($this->prompt instanceof Nette\Utils\Html
-				? $this->prompt->value('')
-				: (string) $option->value('')->setText($this->translate((string) $this->prompt))
-			);
+			$items = array('' => $this->prompt) + $items;
 		}
 
-		foreach ($this->items as $key => $value) {
-			if (!is_array($value)) {
-				$value = array($key => $value);
-				$dest = $control;
+		foreach ($items as $group => $subitems) {
+			if (!is_array($subitems)) {
+				$subitems = array($group => $subitems);
+				$dest = $select;
 			} else {
-				$dest = $control->create('optgroup')->label($this->translate($key));
+				$dest = $select->create('optgroup')->label($this->translate($group));
 			}
 
-			foreach ($value as $key2 => $value2) {
-				if ($value2 instanceof Nette\Utils\Html) {
-					$dest->add((string) $value2->value($key2)
-						->selected(isset($selected[$key2])));
-
-				} else {
-					$dest->add((string) $option->value($key2)
-						->selected(isset($selected[$key2]))
-						->setText($this->translate((string) $value2)));
-				}
+			foreach ($subitems as $value => $caption) {
+				$option = $caption instanceof Nette\Utils\Html ? clone $caption
+					: $option->setText($this->translate((string) $caption));
+				$dest->add((string) $option->value($value)->selected(isset($selected[$value])));
 			}
 		}
-		return $control;
+		return $select;
 	}
 
 

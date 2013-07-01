@@ -7,13 +7,13 @@
 
 	<dt><label class="required" for="frm-name">Your name:</label></dt>
 
-	<dd><input type="text" class="text" name="name" id="frm-name" required="required" data-nette-rules='[{"op":":filled","msg":"Enter your name"}]' value="John Doe" /> •</dd>
+	<dd><input type="text" name="name" class="text" id="frm-name" required="required" data-nette-rules='[{"op":":filled","msg":"Enter your name"}]' value="John Doe" /> •</dd>
 
 
 
 	<dt><label class="required" for="frm-age">Your age:</label></dt>
 
-	<dd class="odd"><input type="text" class="text" name="age" id="frm-age" required="required" data-nette-rules='[{"op":":filled","msg":"Enter your age"},{"op":":integer","msg":"Age must be numeric value"},{"op":":range","msg":"Age must be in range from 10 to 100","arg":[10,100]}]' value="9.9" /> •
+	<dd class="odd"><input type="text" name="age" class="text" id="frm-age" required="required" data-nette-rules='[{"op":":filled","msg":"Enter your age"},{"op":":integer","msg":"Age must be numeric value"},{"op":":range","msg":"Age must be in range from 10 to 100","arg":[10,100]}]' value="9.9" /> •
 
 	<span class="error">
 		Age must be numeric value
@@ -35,7 +35,7 @@
 
 	<dt><label for="frm-email">Email:</label></dt>
 
-	<dd class="odd"><input type="text" class="text" name="email" id="frm-email" data-nette-rules='[{"op":":filled","rules":[{"op":":email","msg":"Incorrect email address"}],"control":"email"}]' data-nette-empty-value="&#64;" value="&#64;" /></dd>
+	<dd class="odd"><input type="text" name="email" class="text" id="frm-email" data-nette-rules='[{"op":":filled","rules":[{"op":":email","msg":"Incorrect email address"}],"control":"email"}]' data-nette-empty-value="&#64;" value="&#64;" /></dd>
 
 </dl>
 
@@ -56,13 +56,13 @@
 
 	<dt><label for="frm-street">Street:</label></dt>
 
-	<dd class="odd"><input type="text" class="text" name="street" id="frm-street" value="" /></dd>
+	<dd class="odd"><input type="text" name="street" class="text" id="frm-street" value="" /></dd>
 
 
 
 	<dt><label for="frm-city">City:</label></dt>
 
-	<dd><input type="text" class="text" name="city" id="frm-city" data-nette-rules='[{"op":":equal","rules":[{"op":":filled","msg":"Enter your shipping address"}],"control":"send","arg":true}]' value="Troubsko" /></dd>
+	<dd><input type="text" name="city" class="text" id="frm-city" data-nette-rules='[{"op":":equal","rules":[{"op":":filled","msg":"Enter your shipping address"}],"control":"send","arg":true}]' value="Troubsko" /></dd>
 
 
 
@@ -81,7 +81,7 @@
 
 	<dt><label class="required" for="frm-password">Choose password:</label></dt>
 
-	<dd><input type="password" class="text" name="password" id="frm-password" required="required" data-nette-rules='[{"op":":filled","msg":"Choose your password"},{"op":":minLength","msg":"The password is too short: it must be at least 3 characters","arg":3}]' /> • <small>(at least 3 characters)</small>
+	<dd><input type="password" name="password" class="text" id="frm-password" required="required" data-nette-rules='[{"op":":filled","msg":"Choose your password"},{"op":":minLength","msg":"The password is too short: it must be at least 3 characters","arg":3}]' /> • <small>(at least 3 characters)</small>
 
 	<span class="error">
 		The password is too short: it must be at least 3 characters
@@ -92,13 +92,13 @@
 
 	<dt><label for="frm-password2">Reenter password:</label></dt>
 
-	<dd class="odd"><input type="password" class="text" name="password2" id="frm-password2" data-nette-rules='[{"op":":valid","rules":[{"op":":filled","msg":"Reenter your password"},{"op":":equal","msg":"Passwords do not match","arg":{"control":"password"}}],"control":"password"}]' /></dd>
+	<dd class="odd"><input type="password" name="password2" class="text" id="frm-password2" data-nette-rules='[{"op":":valid","rules":[{"op":":filled","msg":"Reenter your password"},{"op":":equal","msg":"Passwords do not match","arg":{"control":"password"}}],"control":"password"}]' /></dd>
 
 
 
 	<dt><label for="frm-avatar">Picture:</label></dt>
 
-	<dd><input type="file" class="text" name="avatar" id="frm-avatar" /></dd>
+	<dd><input type="file" name="avatar" class="text" id="frm-avatar" /></dd>
 
 
 
@@ -114,7 +114,7 @@
 
 	<dt></dt>
 
-	<dd><input type="submit" class="button" name="_submit" id="frm-submit" value="Send" /></dd>
+	<dd><input type="submit" name="_submit" class="button" id="frm-submit" value="Send" /></dd>
 
 </dl>
 

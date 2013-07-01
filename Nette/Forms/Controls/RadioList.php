@@ -163,29 +163,30 @@ class RadioList extends BaseControl
 	 */
 	public function getControl($key = NULL)
 	{
-		$selectedValue = $this->value === NULL ? NULL : (string) $this->getValue();
-		$control = parent::getControl();
+		$selected = array_flip((array) $this->value);
+		$input = parent::getControl();
 
 		if ($key !== NULL) {
-			$control->id .= '-' . $key;
-			$control->checked = (string) $key === $selectedValue;
-			$control->value = $key;
-			return $control;
+			return $input->addAttributes(array(
+				'type' => 'radio',
+				'id' => $this->getHtmlId() . "-$key",
+				'checked' => isset($selected[$key]),
+				'value' => $key,
+			));
 		}
 
-		$idBase = $control->id;
+		$idBase = $input->id;
 		$container = clone $this->container;
 		$separator = (string) $this->separator;
 		$label = parent::getLabel();
 
-		foreach ($this->items as $k => $val) {
-			$control->id = $label->for = $idBase . '-' . $k;
-			$control->checked = (string) $k === $selectedValue;
-			$control->value = $k;
-			$label->setText($this->translate($val));
+		foreach ($this->items as $value => $caption) {
+			$input->id = $label->for = $idBase . '-' . $value;
+			$input->checked(isset($selected[$value]))->value($value);
+			$label->setText($this->translate($caption));
 
-			$container->add($label->insert(0, $control) . $separator);
-			$control->data('nette-rules', NULL);
+			$container->add($label->insert(0, $input) . $separator);
+			$input->data('nette-rules', NULL);
 		}
 
 		return $container;

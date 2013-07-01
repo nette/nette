@@ -87,7 +87,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		$this->monitor('Nette\Forms\Form');
 		parent::__construct();
-		$this->control = Html::el('input');
+		$this->control = Html::el('input', array('type' => NULL, 'name' => NULL));
 		$this->label = Html::el('label');
 		$this->caption = $caption;
 		$this->rules = new Nette\Forms\Rules($this);
@@ -252,20 +252,14 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		$this->setOption('rendered', TRUE);
 
-		$control = clone $this->control;
-		$control->name = $this->getHtmlName();
-		$control->disabled = $this->disabled;
-		$control->id = $this->getHtmlId();
-		$control->required = $this->isRequired();
-
-		if (isset($control->placeholder)) {
-			$control->placeholder = $this->translate($control->placeholder);
-		}
-
 		$rules = self::exportRules($this->rules);
-		$control->data('nette-rules', $rules ? Nette\Utils\Json::encode($rules) : NULL);
-
-		return $control;
+		$el = clone $this->control;
+		return $el->addAttributes(array(
+			'name' => $this->getHtmlName(),
+			'id' => $this->getHtmlId(),
+			'required' => $this->isRequired(),
+			'disabled' => $this->isDisabled(),
+		))->data('nette-rules', $rules ? Nette\Utils\Json::encode($rules) : NULL);
 	}
 
 

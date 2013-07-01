@@ -72,22 +72,24 @@ class TextInput extends TextBase
 	 */
 	public function getControl()
 	{
-		$control = parent::getControl();
+		$input = parent::getControl();
+
 		foreach ($this->getRules() as $rule) {
 			if ($rule->isNegative || $rule->type !== Nette\Forms\Rule::VALIDATOR) {
 
-			} elseif ($rule->operation === Nette\Forms\Form::RANGE && $control->type !== 'text') {
-				$control->min = isset($rule->arg[0]) && is_scalar($rule->arg[0]) ? $rule->arg[0] : NULL;
-				$control->max = isset($rule->arg[1]) && is_scalar($rule->arg[1]) ? $rule->arg[1] : NULL;
+			} elseif ($rule->operation === Nette\Forms\Form::RANGE && $input->type !== 'text') {
+				$input->min = isset($rule->arg[0]) && is_scalar($rule->arg[0]) ? $rule->arg[0] : NULL;
+				$input->max = isset($rule->arg[1]) && is_scalar($rule->arg[1]) ? $rule->arg[1] : NULL;
 
 			} elseif ($rule->operation === Nette\Forms\Form::PATTERN && is_scalar($rule->arg)) {
-				$control->pattern = $rule->arg;
+				$input->pattern = $rule->arg;
 			}
 		}
-		if ($control->type !== 'password') {
-			$control->value = $this->getValue() === '' ? $this->translate($this->emptyValue) : $this->value;
+
+		if ($input->type !== 'password') {
+			$input->value = $this->getValue() === '' ? $this->translate($this->emptyValue) : $this->value;
 		}
-		return $control;
+		return $input;
 	}
 
 }

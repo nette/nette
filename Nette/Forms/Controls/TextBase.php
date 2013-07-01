@@ -101,11 +101,14 @@ abstract class TextBase extends BaseControl
 
 	public function getControl()
 	{
-		$control = parent::getControl();
+		$el = parent::getControl();
 		if ($this->emptyValue !== '') {
-			$control->data('nette-empty-value', $this->translate($this->emptyValue));
+			$el->data('nette-empty-value', $this->translate($this->emptyValue));
 		}
-		return $control;
+		if (isset($el->placeholder)) {
+			$el->placeholder = $this->translate($el->placeholder);
+		}
+		return $el;
 	}
 
 
