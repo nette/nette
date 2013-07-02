@@ -7,7 +7,8 @@
  * @package    Nette\Forms
  */
 
-use Nette\Forms\Form;
+use Nette\Forms\Form,
+	Nette\Forms\Validator;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -97,10 +98,10 @@ test(function() use ($series) { // validateLength
 	$form = new Form;
 	$input = $form->addMultiSelect('multi', NULL, $series);
 
-	Assert::true( $input::validateLength($input, 2) );
-	Assert::false( $input::validateLength($input, 3) );
-	Assert::false( $input::validateLength($input, array(3, )) );
-	Assert::true( $input::validateLength($input, array(0, 3)) );
+	Assert::true( Validator::validateLength($input, 2) );
+	Assert::false( Validator::validateLength($input, 3) );
+	Assert::false( Validator::validateLength($input, array(3, )) );
+	Assert::true( Validator::validateLength($input, array(0, 3)) );
 });
 
 
@@ -110,10 +111,10 @@ test(function() use ($series) { // validateEqual
 	$form = new Form;
 	$input = $form->addMultiSelect('multi', NULL, $series);
 
-	Assert::true( $input::validateEqual($input, 'red-dwarf') );
-	Assert::false( $input::validateEqual($input, 'unknown') );
-	Assert::false( $input::validateEqual($input, array('unknown')) );
-	Assert::true( $input::validateEqual($input, array(0)) );
+	Assert::true( Validator::validateEqual($input, 'red-dwarf') );
+	Assert::false( Validator::validateEqual($input, 'unknown') );
+	Assert::false( Validator::validateEqual($input, array('unknown')) );
+	Assert::true( Validator::validateEqual($input, array(0)) );
 });
 
 

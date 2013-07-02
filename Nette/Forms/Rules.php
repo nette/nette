@@ -21,26 +21,8 @@ use Nette;
  */
 final class Rules extends Nette\Object implements \IteratorAggregate
 {
-	/** @internal */
-	const VALIDATE_PREFIX = 'validate';
-
-	/** @var array */
-	public static $defaultMessages = array(
-		Form::PROTECTION => 'Please submit this form again (security token has expired).',
-		Form::EQUAL => 'Please enter %s.',
-		Form::FILLED => 'Please complete mandatory field.',
-		Form::MIN_LENGTH => 'Please enter a value of at least %d characters.',
-		Form::MAX_LENGTH => 'Please enter a value no longer than %d characters.',
-		Form::LENGTH => 'Please enter a value between %d and %d characters long.',
-		Form::EMAIL => 'Please enter a valid email address.',
-		Form::URL => 'Please enter a valid URL.',
-		Form::INTEGER => 'Please enter a numeric value.',
-		Form::FLOAT => 'Please enter a numeric value.',
-		Form::RANGE => 'Please enter a value between %d and %d.',
-		Form::MAX_FILE_SIZE => 'The size of the uploaded file can be up to %d bytes.',
-		Form::IMAGE => 'The uploaded file must be image in format JPEG, GIF or PNG.',
-		Nette\Forms\Controls\SelectBox::VALID => 'Please select a valid option.',
-	);
+	/** @deprecated */
+	public static $defaultMessages;
 
 	/** @var Rule */
 	private $required;
@@ -286,10 +268,12 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	{
 		$op = $rule->operation;
 		if (is_string($op) && strncmp($op, ':', 1) === 0) {
-			return new Nette\Callback(get_class($rule->control), self::VALIDATE_PREFIX . ltrim($op, ':'));
+			return new Nette\Callback('Nette\Forms\Validator::validate' . ltrim($op, ':'));
 		} else {
 			return new Nette\Callback($op);
 		}
 	}
 
 }
+
+Rules::$defaultMessages = & Validator::$messages;

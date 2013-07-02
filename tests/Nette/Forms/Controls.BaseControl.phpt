@@ -7,7 +7,8 @@
  * @package    Nette\Forms
  */
 
-use Nette\Forms\Form;
+use Nette\Forms\Form,
+	Nette\Forms\Validator;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -38,27 +39,27 @@ test(function() { // validators
 	$input = $form->addText('text');
 	$input->setValue(123);
 
-	Assert::true( $input::validateEqual($input, 123) );
-	Assert::true( $input::validateEqual($input, '123') );
-	Assert::true( $input::validateEqual($input, array(123, 3)) ); // "is in"
-	Assert::false( $input::validateEqual($input, array('x')) );
+	Assert::true( Validator::validateEqual($input, 123) );
+	Assert::true( Validator::validateEqual($input, '123') );
+	Assert::true( Validator::validateEqual($input, array(123, 3)) ); // "is in"
+	Assert::false( Validator::validateEqual($input, array('x')) );
 
-	Assert::true( $input::validateFilled($input) );
-	Assert::true( $input::validateValid($input) );
+	Assert::true( Validator::validateFilled($input) );
+	Assert::true( Validator::validateValid($input) );
 
-	Assert::true( $input::validateLength($input, NULL) );
-	Assert::false( $input::validateLength($input, 2) );
-	Assert::true( $input::validateLength($input, 3) );
+	Assert::true( Validator::validateLength($input, NULL) );
+	Assert::false( Validator::validateLength($input, 2) );
+	Assert::true( Validator::validateLength($input, 3) );
 
-	Assert::true( $input::validateMinLength($input, 3) );
-	Assert::false( $input::validateMinLength($input, 4) );
+	Assert::true( Validator::validateMinLength($input, 3) );
+	Assert::false( Validator::validateMinLength($input, 4) );
 
-	Assert::true( $input::validateMaxLength($input, 3) );
-	Assert::false( $input::validateMaxLength($input, 2) );
+	Assert::true( Validator::validateMaxLength($input, 3) );
+	Assert::false( Validator::validateMaxLength($input, 2) );
 
-	Assert::true( $input::validateRange($input, array(NULL, NULL)) );
-	Assert::true( $input::validateRange($input, array(100, 1000)) );
-	Assert::false( $input::validateRange($input, array(1000, NULL)) );
+	Assert::true( Validator::validateRange($input, array(NULL, NULL)) );
+	Assert::true( Validator::validateRange($input, array(100, 1000)) );
+	Assert::false( Validator::validateRange($input, array(1000, NULL)) );
 });
 
 
@@ -67,23 +68,23 @@ test(function() { // validators for array
 	$input = $form->addMultiSelect('select', NULL, array('a', 'b', 'c', 'd'));
 	$input->setValue(array(1, 2, 3));
 
-	Assert::true( $input::validateEqual($input, 1) );
-	Assert::true( $input::validateEqual($input, '1') );
-	Assert::true( $input::validateEqual($input, array(123, 3)) ); // "is in"
-	Assert::false( $input::validateEqual($input, array('x')) );
+	Assert::true( Validator::validateEqual($input, 1) );
+	Assert::true( Validator::validateEqual($input, '1') );
+	Assert::true( Validator::validateEqual($input, array(123, 3)) ); // "is in"
+	Assert::false( Validator::validateEqual($input, array('x')) );
 
-	Assert::true( $input::validateFilled($input) );
-	Assert::true( $input::validateValid($input) );
+	Assert::true( Validator::validateFilled($input) );
+	Assert::true( Validator::validateValid($input) );
 
-	Assert::true( $input::validateLength($input, NULL) );
-	Assert::false( $input::validateLength($input, 2) );
-	Assert::true( $input::validateLength($input, 3) );
+	Assert::true( Validator::validateLength($input, NULL) );
+	Assert::false( Validator::validateLength($input, 2) );
+	Assert::true( Validator::validateLength($input, 3) );
 
-	Assert::true( $input::validateMinLength($input, 3) );
-	Assert::false( $input::validateMinLength($input, 4) );
+	Assert::true( Validator::validateMinLength($input, 3) );
+	Assert::false( Validator::validateMinLength($input, 4) );
 
-	Assert::true( $input::validateMaxLength($input, 3) );
-	Assert::false( $input::validateMaxLength($input, 2) );
+	Assert::true( Validator::validateMaxLength($input, 3) );
+	Assert::false( Validator::validateMaxLength($input, 2) );
 });
 
 

@@ -7,8 +7,8 @@
  * @package    Nette\Forms
  */
 
-use Nette\Forms\Form;
-use Nette\Forms\Container;
+use Nette\Forms\Form,
+	Nette\Forms\Container;
 
 
 require __DIR__ . '/../bootstrap.php';

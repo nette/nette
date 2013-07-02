@@ -7,7 +7,8 @@
  * @package    Nette\Forms
  */
 
-use Nette\Forms\Form;
+use Nette\Forms\Form,
+	Nette\Forms\Validator;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -60,11 +61,11 @@ test(function() {
 	$form = new Form;
 	$input = $form->addSubmit('send', 'Send');
 	Assert::false( $input->isSubmittedBy() );
-	Assert::false( $input::validateSubmitted($input) );
+	Assert::false( Validator::validateSubmitted($input) );
 
 	$_POST = array('send' => '');
 	$form = new Form;
 	$input = $form->addSubmit('send', 'Send');
 	Assert::true( $input->isSubmittedBy() );
-	Assert::true( $input::validateSubmitted($input) );
+	Assert::true( Validator::validateSubmitted($input) );
 });
