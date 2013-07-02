@@ -14,7 +14,6 @@ namespace Nette\DI;
 use Nette;
 
 
-
 /**
  * The container accessor.
  *
@@ -33,14 +32,12 @@ class NestedAccessor extends Nette\Object
 	private $namespace;
 
 
-
 	public function __construct(Container $container, $namespace)
 	{
 		$this->container = $container;
 		$this->namespace = $namespace . '.';
 		$this->parameters = & $container->parameters[$namespace];
 	}
-
 
 
 	/**
@@ -58,7 +55,6 @@ class NestedAccessor extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return object
 	 */
@@ -67,7 +63,6 @@ class NestedAccessor extends Nette\Object
 		$service = $this->container->getService($this->namespace . $name);
 		return $service;
 	}
-
 
 
 	/**
@@ -79,7 +74,6 @@ class NestedAccessor extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return bool
 	 */
@@ -87,7 +81,6 @@ class NestedAccessor extends Nette\Object
 	{
 		return $this->container->hasService($this->namespace . $name);
 	}
-
 
 
 	/**

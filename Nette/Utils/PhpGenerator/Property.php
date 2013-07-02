@@ -14,7 +14,6 @@ namespace Nette\Utils\PhpGenerator;
 use Nette;
 
 
-
 /**
  * Class property description.
  *

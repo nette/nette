@@ -14,7 +14,6 @@ namespace Nette\Caching;
 use Nette;
 
 
-
 /**
  * Output caching helper.
  *
@@ -32,14 +31,12 @@ class OutputHelper extends Nette\Object
 	private $key;
 
 
-
 	public function __construct(Cache $cache, $key)
 	{
 		$this->cache = $cache;
 		$this->key = $key;
 		ob_start();
 	}
-
 
 
 	/**

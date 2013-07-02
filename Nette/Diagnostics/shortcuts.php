@@ -12,7 +12,6 @@
 use Nette\Diagnostics\Debugger;
 
 
-
 /**
  * Nette\Diagnostics\Debugger::dump shortcut.
  */

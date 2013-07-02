@@ -10,9 +10,7 @@
 use Nette\Latte;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class MockControl
@@ -28,7 +26,6 @@ class MockControl
 	}
 
 }
-
 
 
 class MockPresenter extends MockControl
@@ -48,7 +45,6 @@ class MockPresenter extends MockControl
 	}
 
 }
-
 
 
 $template = new Nette\Templating\Template;

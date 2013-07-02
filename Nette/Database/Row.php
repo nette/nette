@@ -14,7 +14,6 @@ namespace Nette\Database;
 use Nette;
 
 
-
 /**
  * Represents a single table row.
  *
@@ -36,7 +35,6 @@ class Row extends Nette\ArrayHash
 	}
 
 
-
 	/**
 	 * Returns a item.
 	 * @param  mixed  key or index
@@ -53,7 +51,6 @@ class Row extends Nette\ArrayHash
 		}
 		return $this->$key;
 	}
-
 
 
 	public function offsetExists($key)

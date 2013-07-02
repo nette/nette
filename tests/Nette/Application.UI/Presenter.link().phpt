@@ -11,9 +11,7 @@ use Nette\Http,
 	Nette\Application;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class TestControl extends Application\UI\Control
@@ -44,7 +42,6 @@ class TestControl extends Application\UI\Control
 	}
 
 
-
 	/**
 	 * Save params
 	 * @param  array
@@ -59,7 +56,6 @@ class TestControl extends Application\UI\Control
 	}
 
 }
-
 
 
 class TestPresenter extends Application\UI\Presenter

@@ -14,7 +14,6 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nette_test1.sql");
 
 
-
 $apps = $connection->table('book')->order('title')->fetchPairs('id', 'title');  // SELECT * FROM `book` ORDER BY `title`
 Assert::same(array(
 	1 => '1001 tipu a triku pro PHP',
@@ -24,7 +23,6 @@ Assert::same(array(
 ), $apps);
 
 
-
 $ids = $connection->table('book')->order('id')->fetchPairs('id', 'id');  // SELECT * FROM `book` ORDER BY `id`
 Assert::same(array(
 	1 => 1,
@@ -32,7 +30,6 @@ Assert::same(array(
 	3 => 3,
 	4 => 4,
 ), $ids);
-
 
 
 $connection->table('author')->get(11)->update(array('born' => new DateTime('2002-02-20')));

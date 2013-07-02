@@ -10,9 +10,7 @@
 use Nette\Config\Configurator;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 date_default_timezone_set('America/Los_Angeles');

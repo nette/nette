@@ -10,9 +10,7 @@
 use Nette\Environment;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Assert::null( Environment::getVariable('foo', NULL), "Getting variable 'foo':" );

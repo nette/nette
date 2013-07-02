@@ -14,7 +14,6 @@ namespace Nette\Database\Drivers;
 use Nette;
 
 
-
 /**
  * Supplemental ODBC database driver.
  *
@@ -26,16 +25,13 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	private $connection;
 
 
-
 	public function __construct(Nette\Database\Connection $connection, array $options)
 	{
 		$this->connection = $connection;
 	}
 
 
-
 	/********************* SQL ****************d*g**/
-
 
 
 	/**
@@ -47,7 +43,6 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	}
 
 
-
 	/**
 	 * Formats boolean for use in a SQL statement.
 	 */
@@ -55,7 +50,6 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	{
 		return $value ? '1' : '0';
 	}
-
 
 
 	/**
@@ -67,7 +61,6 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	}
 
 
-
 	/**
 	 * Encodes string for use in a LIKE statement.
 	 */
@@ -76,7 +69,6 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 		$value = strtr($value, array("'" => "''", '%' => '[%]', '_' => '[_]', '[' => '[[]'));
 		return ($pos <= 0 ? "'%" : "'") . $value . ($pos >= 0 ? "%'" : "'");
 	}
-
 
 
 	/**
@@ -94,7 +86,6 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	}
 
 
-
 	/**
 	 * Normalizes result row.
 	 */
@@ -104,9 +95,7 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	}
 
 
-
 	/********************* reflection ****************d*g**/
-
 
 
 	/**
@@ -118,7 +107,6 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	}
 
 
-
 	/**
 	 * Returns metadata for all columns in a table.
 	 */
@@ -126,7 +114,6 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	{
 		throw new Nette\NotImplementedException;
 	}
-
 
 
 	/**
@@ -138,7 +125,6 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	}
 
 
-
 	/**
 	 * Returns metadata for all foreign keys in a table.
 	 */
@@ -146,7 +132,6 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	{
 		throw new Nette\NotImplementedException;
 	}
-
 
 
 	/**

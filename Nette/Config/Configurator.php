@@ -15,7 +15,6 @@ use Nette,
 	Nette\Caching\Cache;
 
 
-
 /**
  * Initial system DI container generator.
  *
@@ -44,12 +43,10 @@ class Configurator extends Nette\Object
 	protected $files = array();
 
 
-
 	public function __construct()
 	{
 		$this->parameters = $this->getDefaultParameters();
 	}
-
 
 
 	/**
@@ -65,7 +62,6 @@ class Configurator extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return bool
 	 */
@@ -73,7 +69,6 @@ class Configurator extends Nette\Object
 	{
 		return !$this->parameters['productionMode'];
 	}
-
 
 
 	/**
@@ -90,7 +85,6 @@ class Configurator extends Nette\Object
 	}
 
 
-
 	/**
 	 * Adds new parameters. The %params% will be expanded.
 	 * @return Configurator  provides a fluent interface
@@ -100,7 +94,6 @@ class Configurator extends Nette\Object
 		$this->parameters = Helpers::merge($params, $this->parameters);
 		return $this;
 	}
-
 
 
 	/**
@@ -125,7 +118,6 @@ class Configurator extends Nette\Object
 	}
 
 
-
 	/**
 	 * @param  string        error log directory
 	 * @param  string        administrator email
@@ -136,7 +128,6 @@ class Configurator extends Nette\Object
 		Nette\Diagnostics\Debugger::$strictMode = TRUE;
 		Nette\Diagnostics\Debugger::enable($this->parameters['productionMode'], $logDirectory, $email);
 	}
-
 
 
 	/**
@@ -154,7 +145,6 @@ class Configurator extends Nette\Object
 	}
 
 
-
 	/**
 	 * Adds configuration file.
 	 * @return Configurator  provides a fluent interface
@@ -166,14 +156,12 @@ class Configurator extends Nette\Object
 	}
 
 
-
 	/** @deprecated */
 	public function loadConfig($file, $section = NULL)
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use addConfig(file, [section])->createContainer() instead.', E_USER_WARNING);
 		return $this->addConfig($file, $section)->createContainer();
 	}
-
 
 
 	/**
@@ -207,7 +195,6 @@ class Configurator extends Nette\Object
 		Nette\Environment::setContext($container); // back compatibility
 		return $container;
 	}
-
 
 
 	/**
@@ -246,7 +233,6 @@ class Configurator extends Nette\Object
 	}
 
 
-
 	protected function checkCompatibility(array $config)
 	{
 		foreach (array('service' => 'services', 'variable' => 'parameters', 'variables' => 'parameters', 'mode' => 'parameters', 'const' => 'constants') as $old => $new) {
@@ -266,7 +252,6 @@ class Configurator extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return Compiler
 	 */
@@ -280,7 +265,6 @@ class Configurator extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return Loader
 	 */
@@ -290,16 +274,13 @@ class Configurator extends Nette\Object
 	}
 
 
-
 	protected function getCacheDirectory()
 	{
 		return empty($this->parameters['tempDir']) ? NULL : $this->parameters['tempDir'] . '/cache';
 	}
 
 
-
 	/********************* tools ****************d*g**/
-
 
 
 	/**
@@ -318,7 +299,6 @@ class Configurator extends Nette\Object
 	}
 
 
-
 	/** @deprecated */
 	public function setProductionMode($value = TRUE)
 	{
@@ -326,13 +306,11 @@ class Configurator extends Nette\Object
 	}
 
 
-
 	/** @deprecated */
 	public function isProductionMode()
 	{
 		return !$this->isDebugMode();
 	}
-
 
 
 	/** @deprecated */

@@ -10,9 +10,7 @@
 use Nette\Http\Url;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $url = new Url('http://username:password@hostname:60/path/script.php?arg=value#anchor');

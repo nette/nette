@@ -10,20 +10,15 @@
 use Nette\Utils\Json;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Assert::same( '"ok"', Json::encode('ok') );
 
 
-
-
 Assert::exception(function() {
 	Json::encode(array("bad utf\xFF"));
 }, 'Nette\Utils\JsonException', '%a?%Invalid UTF-8 sequence%a?%');
-
 
 
 Assert::exception(function() {

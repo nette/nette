@@ -11,9 +11,7 @@ use Nette\Http,
 	Nette\Application\Routers\CliRouter;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $_SERVER['argv'] = 1;

@@ -12,7 +12,6 @@ use Nette\Caching\Storages\MemcachedStorage,
 	Nette\Caching\Cache;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 

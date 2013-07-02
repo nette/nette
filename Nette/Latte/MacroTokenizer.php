@@ -14,7 +14,6 @@ namespace Nette\Latte;
 use Nette;
 
 
-
 /**
  * Macro tag tokenizer.
  *
@@ -33,7 +32,6 @@ class MacroTokenizer extends Nette\Utils\Tokenizer
 		T_CHAR = 9;
 
 
-
 	public function __construct($input)
 	{
 		parent::__construct(array(
@@ -50,7 +48,6 @@ class MacroTokenizer extends Nette\Utils\Tokenizer
 		$this->ignored = array(self::T_COMMENT, self::T_WHITESPACE);
 		$this->tokenize($input);
 	}
-
 
 
 	/**

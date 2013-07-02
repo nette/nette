@@ -14,7 +14,6 @@ namespace Nette\Http;
 use Nette;
 
 
-
 /**
  * Provides access to individual files that have been uploaded by a client.
  *
@@ -49,7 +48,6 @@ class FileUpload extends Nette\Object
 	private $error;
 
 
-
 	public function __construct($value)
 	{
 		foreach (array('name', 'type', 'size', 'tmp_name', 'error') as $key) {
@@ -65,7 +63,6 @@ class FileUpload extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the file name.
 	 * @return string
@@ -76,7 +73,6 @@ class FileUpload extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the sanitized file name.
 	 * @return string
@@ -85,7 +81,6 @@ class FileUpload extends Nette\Object
 	{
 		return trim(Nette\Utils\Strings::webalize($this->name, '.', FALSE), '.-');
 	}
-
 
 
 	/**
@@ -101,7 +96,6 @@ class FileUpload extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the size of an uploaded file.
 	 * @return int
@@ -110,7 +104,6 @@ class FileUpload extends Nette\Object
 	{
 		return $this->size;
 	}
-
 
 
 	/**
@@ -123,7 +116,6 @@ class FileUpload extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the path to an uploaded file.
 	 * @return string
@@ -132,7 +124,6 @@ class FileUpload extends Nette\Object
 	{
 		return $this->tmpName;
 	}
-
 
 
 	/**
@@ -145,7 +136,6 @@ class FileUpload extends Nette\Object
 	}
 
 
-
 	/**
 	 * Is there any error?
 	 * @return bool
@@ -154,7 +144,6 @@ class FileUpload extends Nette\Object
 	{
 		return $this->error === UPLOAD_ERR_OK;
 	}
-
 
 
 	/**
@@ -175,7 +164,6 @@ class FileUpload extends Nette\Object
 	}
 
 
-
 	/**
 	 * Is uploaded file GIF, PNG or JPEG?
 	 * @return bool
@@ -184,7 +172,6 @@ class FileUpload extends Nette\Object
 	{
 		return in_array($this->getContentType(), array('image/gif', 'image/png', 'image/jpeg'), TRUE);
 	}
-
 
 
 	/**
@@ -197,7 +184,6 @@ class FileUpload extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the dimensions of an uploaded image as array.
 	 * @return array
@@ -206,7 +192,6 @@ class FileUpload extends Nette\Object
 	{
 		return $this->isOk() ? @getimagesize($this->tmpName) : NULL; // @ - files smaller than 12 bytes causes read error
 	}
-
 
 
 	/**

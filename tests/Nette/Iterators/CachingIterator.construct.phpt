@@ -10,9 +10,7 @@
 use Nette\Iterators;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 // ==> array
@@ -26,7 +24,6 @@ Assert::same( array(
 ), $tmp );
 
 
-
 // ==> stdClass
 
 $arr = (object) array('Nette', 'Framework');
@@ -36,7 +33,6 @@ Assert::same( array(
 	'0 => Nette',
 	'1 => Framework',
 ), $tmp );
-
 
 
 // ==> IteratorAggregate
@@ -50,7 +46,6 @@ Assert::same( array(
 ), $tmp );
 
 
-
 // ==> Iterator
 
 $tmp = array();
@@ -59,7 +54,6 @@ Assert::same( array(
 	'0 => Nette',
 	'1 => Framework',
 ), $tmp );
-
 
 
 // ==> SimpleXMLElement
@@ -71,7 +65,6 @@ Assert::same( array(
 	'item => Nette',
 	'item => Framework',
 ), $tmp );
-
 
 
 // ==> object

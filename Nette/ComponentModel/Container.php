@@ -14,7 +14,6 @@ namespace Nette\ComponentModel;
 use Nette;
 
 
-
 /**
  * ComponentContainer is default implementation of IContainer.
  *
@@ -31,9 +30,7 @@ class Container extends Component implements IContainer
 	private $cloning;
 
 
-
 	/********************* interface IContainer ****************d*g**/
-
 
 
 	/**
@@ -99,7 +96,6 @@ class Container extends Component implements IContainer
 	}
 
 
-
 	/**
 	 * Removes a component from the IContainer.
 	 * @return void
@@ -114,7 +110,6 @@ class Container extends Component implements IContainer
 		unset($this->components[$name]);
 		$component->setParent(NULL);
 	}
-
 
 
 	/**
@@ -167,7 +162,6 @@ class Container extends Component implements IContainer
 	}
 
 
-
 	/**
 	 * Component factory. Delegates the creation of components to a createComponent<Name> method.
 	 * @param  string      component name
@@ -186,7 +180,6 @@ class Container extends Component implements IContainer
 			return $component;
 		}
 	}
-
 
 
 	/**
@@ -209,7 +202,6 @@ class Container extends Component implements IContainer
 	}
 
 
-
 	/**
 	 * Descendant can override this method to disallow insert a child by throwing an Nette\InvalidStateException.
 	 * @return void
@@ -220,9 +212,7 @@ class Container extends Component implements IContainer
 	}
 
 
-
 	/********************* cloneable, serializable ****************d*g**/
-
 
 
 	/**
@@ -240,7 +230,6 @@ class Container extends Component implements IContainer
 		}
 		parent::__clone();
 	}
-
 
 
 	/**

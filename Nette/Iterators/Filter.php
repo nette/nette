@@ -14,7 +14,6 @@ namespace Nette\Iterators;
 use Nette;
 
 
-
 /**
  * Callback iterator filter.
  *
@@ -31,7 +30,6 @@ class Filter extends \FilterIterator
 		parent::__construct($iterator);
 		$this->callback = new Nette\Callback($callback);
 	}
-
 
 
 	public function accept()

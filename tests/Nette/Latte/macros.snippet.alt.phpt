@@ -13,11 +13,9 @@ use Nette\Latte,
 	Nette\Templating\FileTemplate;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/Template.inc';
-
 
 
 $template = new FileTemplate(__DIR__ . '/templates/snippet.alt.latte');

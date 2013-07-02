@@ -10,16 +10,13 @@
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Debugger::$consoleColors = NULL;
 Debugger::$consoleMode = TRUE;
 Debugger::$productionMode = FALSE;
 setLocale(LC_ALL, 'czech');
-
 
 
 Assert::match( 'array(2) [

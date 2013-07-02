@@ -14,7 +14,6 @@ namespace Nette\Http;
 use Nette;
 
 
-
 /**
  * HttpResponse class.
  *
@@ -43,7 +42,6 @@ final class Response extends Nette\Object implements IResponse
 
 	/** @var int HTTP response code */
 	private $code = self::S200_OK;
-
 
 
 	/**
@@ -79,7 +77,6 @@ final class Response extends Nette\Object implements IResponse
 	}
 
 
-
 	/**
 	 * Returns HTTP response code.
 	 * @return int
@@ -88,7 +85,6 @@ final class Response extends Nette\Object implements IResponse
 	{
 		return $this->code;
 	}
-
 
 
 	/**
@@ -115,7 +111,6 @@ final class Response extends Nette\Object implements IResponse
 	}
 
 
-
 	/**
 	 * Adds HTTP header.
 	 * @param  string  header name
@@ -134,7 +129,6 @@ final class Response extends Nette\Object implements IResponse
 	}
 
 
-
 	/**
 	 * Sends a Content-type HTTP header.
 	 * @param  string  mime-type
@@ -147,7 +141,6 @@ final class Response extends Nette\Object implements IResponse
 		$this->setHeader('Content-Type', $type . ($charset ? '; charset=' . $charset : ''));
 		return $this;
 	}
-
 
 
 	/**
@@ -172,7 +165,6 @@ final class Response extends Nette\Object implements IResponse
 	}
 
 
-
 	/**
 	 * Sets the number of seconds before a page cached on a browser expires.
 	 * @param  string|int|DateTime  time, value 0 means "until the browser is closed"
@@ -194,7 +186,6 @@ final class Response extends Nette\Object implements IResponse
 	}
 
 
-
 	/**
 	 * Checks if headers have been sent.
 	 * @return bool
@@ -203,7 +194,6 @@ final class Response extends Nette\Object implements IResponse
 	{
 		return headers_sent();
 	}
-
 
 
 	/**
@@ -225,7 +215,6 @@ final class Response extends Nette\Object implements IResponse
 	}
 
 
-
 	/**
 	 * Returns a list of headers to sent.
 	 * @return array
@@ -241,7 +230,6 @@ final class Response extends Nette\Object implements IResponse
 	}
 
 
-
 	/**
 	 * Returns HTTP valid date format.
 	 * @param  string|int|DateTime
@@ -253,7 +241,6 @@ final class Response extends Nette\Object implements IResponse
 		$time->setTimezone(new \DateTimeZone('GMT'));
 		return $time->format('D, d M Y H:i:s \G\M\T');
 	}
-
 
 
 	/**
@@ -269,7 +256,6 @@ final class Response extends Nette\Object implements IResponse
 			self::$fixIE = FALSE;
 		}
 	}
-
 
 
 	/**
@@ -305,7 +291,6 @@ final class Response extends Nette\Object implements IResponse
 	}
 
 
-
 	/**
 	 * Removes duplicate cookies from response.
 	 * @return void
@@ -331,7 +316,6 @@ final class Response extends Nette\Object implements IResponse
 			header($header, $key === 0);
 		}
 	}
-
 
 
 	/**

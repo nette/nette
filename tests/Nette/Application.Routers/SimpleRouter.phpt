@@ -11,9 +11,7 @@ use Nette\Http,
 	Nette\Application\Routers\SimpleRouter;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $router = new SimpleRouter(array(

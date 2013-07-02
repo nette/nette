@@ -14,7 +14,6 @@ namespace Nette\Forms\Controls;
 use Nette;
 
 
-
 /**
  * Check box control. Allows the user to select a true or false condition.
  *
@@ -34,7 +33,6 @@ class Checkbox extends BaseControl
 	}
 
 
-
 	/**
 	 * Sets control's value.
 	 * @param  bool
@@ -45,7 +43,6 @@ class Checkbox extends BaseControl
 		$this->value = is_scalar($value) ? (bool) $value : FALSE;
 		return $this;
 	}
-
 
 
 	/**

@@ -14,7 +14,6 @@ namespace Nette\Diagnostics;
 use Nette;
 
 
-
 /**
  * Custom output for Debugger.
  *

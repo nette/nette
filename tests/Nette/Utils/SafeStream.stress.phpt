@@ -11,9 +11,7 @@
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 function randomStr()
@@ -23,12 +21,10 @@ function randomStr()
 }
 
 
-
 function checkStr($s)
 {
 	return substr($s, 0, 16) === md5(substr($s, 16), TRUE);
 }
-
 
 
 define('COUNT_FILES', 3);

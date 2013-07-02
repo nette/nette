@@ -14,7 +14,6 @@ namespace Nette\Diagnostics;
 use Nette;
 
 
-
 /**
  * Debug Bar.
  *
@@ -24,7 +23,6 @@ class Bar extends Nette\Object
 {
 	/** @var array */
 	private $panels = array();
-
 
 
 	/**
@@ -44,7 +42,6 @@ class Bar extends Nette\Object
 		$this->panels[$id] = $panel;
 		return $this;
 	}
-
 
 
 	/**

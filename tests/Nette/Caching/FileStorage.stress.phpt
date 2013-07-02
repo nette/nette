@@ -11,14 +11,11 @@ use Nette\Caching\Storages\FileStorage,
 	Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 // TODO: run it twice (or more) simultaneously</h1>
 set_time_limit(0);
-
 
 
 function randomStr()
@@ -28,12 +25,10 @@ function randomStr()
 }
 
 
-
 function checkStr($s)
 {
 	return substr($s, 0, 20) === sha1(substr($s, 20), TRUE);
 }
-
 
 
 define('COUNT_FILES', 3);

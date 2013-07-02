@@ -11,9 +11,7 @@ use Nette\Forms\Form,
 	Nette\Utils\Html;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $form = new Form;

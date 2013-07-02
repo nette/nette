@@ -10,9 +10,7 @@
 use Nette\Reflection;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class Foo
@@ -30,7 +28,6 @@ class Bar extends Foo implements Countable
 
 Assert::equal( new Reflection\ClassType('Bar'), Reflection\ClassType::from('Bar') );
 Assert::equal( new Reflection\ClassType('Bar'), Reflection\ClassType::from(new Bar) );
-
 
 
 $rc = Reflection\ClassType::from('Bar');
@@ -60,7 +57,6 @@ Assert::equal( array(
 	new Reflection\Method('Bar', 'count'),
 	new Reflection\Method('Foo', 'f'),
 ), $rc->getMethods() );
-
 
 
 Assert::equal( new Reflection\Property('Bar', 'var'), $rc->getProperty('var') );

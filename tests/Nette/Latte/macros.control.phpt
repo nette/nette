@@ -12,11 +12,9 @@ use Nette\Latte,
 	Nette\Object;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/Template.inc';
-
 
 
 class MockComponent extends Object
@@ -31,7 +29,6 @@ class MockComponent extends Object
 }
 
 
-
 class MockControl extends Object
 {
 
@@ -42,7 +39,6 @@ class MockControl extends Object
 	}
 
 }
-
 
 
 $template = new Nette\Templating\Template;

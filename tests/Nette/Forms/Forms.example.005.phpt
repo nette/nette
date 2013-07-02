@@ -10,21 +10,17 @@
 use Nette\Forms\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $_SERVER['REQUEST_METHOD'] = 'POST';
 $_POST = array('num1'=>'5','num2'=>'5','submit1'=>'Send',);
 
 
-
 function myValidator($item, $arg)
 {
 	return $item->value % $arg === 0;
 }
-
 
 
 // Step 1: Define form with validation rules

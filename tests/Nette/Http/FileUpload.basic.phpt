@@ -10,9 +10,7 @@
 use Nette\Http\FileUpload;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $upload = new FileUpload(array(
@@ -32,7 +30,6 @@ Assert::same( 0, $upload->getError() );
 Assert::true( $upload->isOk() );
 Assert::false( $upload->isImage() );
 Assert::same( file_get_contents(__DIR__ . '/files/file.txt'), $upload->getContents() );
-
 
 
 $upload = new FileUpload(array(

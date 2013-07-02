@@ -10,9 +10,7 @@
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Debugger::tryError(); {
@@ -21,7 +19,6 @@ Debugger::tryError(); {
 
 Assert::true( $res );
 Assert::same( "Undefined variable: a", $e->getMessage() );
-
 
 
 Debugger::tryError(); {

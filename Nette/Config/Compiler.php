@@ -15,7 +15,6 @@ use Nette,
 	Nette\Utils\Validators;
 
 
-
 /**
  * DI container compiler.
  *
@@ -40,7 +39,6 @@ class Compiler extends Nette\Object
 	private static $reserved = array('services' => 1, 'factories' => 1, 'parameters' => 1);
 
 
-
 	/**
 	 * Add custom configurator extension.
 	 * @return Compiler  provides a fluent interface
@@ -55,7 +53,6 @@ class Compiler extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return array
 	 */
@@ -63,7 +60,6 @@ class Compiler extends Nette\Object
 	{
 		return $this->extensions;
 	}
-
 
 
 	/**
@@ -75,7 +71,6 @@ class Compiler extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns configuration without expanded parameters.
 	 * @return array
@@ -84,7 +79,6 @@ class Compiler extends Nette\Object
 	{
 		return $this->config;
 	}
-
 
 
 	/**
@@ -101,14 +95,12 @@ class Compiler extends Nette\Object
 	}
 
 
-
 	public function processParameters()
 	{
 		if (isset($this->config['parameters'])) {
 			$this->container->parameters = $this->config['parameters'];
 		}
 	}
-
 
 
 	public function processExtensions()
@@ -122,7 +114,6 @@ class Compiler extends Nette\Object
 			throw new Nette\InvalidStateException("Found sections '$extra' in configuration, but corresponding extensions are missing.");
 		}
 	}
-
 
 
 	public function processServices()
@@ -149,7 +140,6 @@ class Compiler extends Nette\Object
 			}
 		}
 	}
-
 
 
 	public function generateCode($className, $parentName)
@@ -192,9 +182,7 @@ class Compiler extends Nette\Object
 	}
 
 
-
 	/********************* tools ****************d*g**/
-
 
 
 	/**
@@ -244,7 +232,6 @@ class Compiler extends Nette\Object
 			}
 		}
 	}
-
 
 
 	/**
@@ -347,7 +334,6 @@ class Compiler extends Nette\Object
 			}
 		}
 	}
-
 
 
 	/**

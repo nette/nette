@@ -14,7 +14,6 @@ namespace Nette\Utils\PhpGenerator;
 use Nette;
 
 
-
 /**
  * Class method description.
  *
@@ -73,14 +72,12 @@ class Method extends Nette\Object
 	}
 
 
-
 	/** @return Parameter */
 	public function addUse($name)
 	{
 		$param = new Parameter;
 		return $this->uses[] = $param->setName($name);
 	}
-
 
 
 	/** @return Method */
@@ -91,7 +88,6 @@ class Method extends Nette\Object
 	}
 
 
-
 	/** @return Method */
 	public function addBody($statement, array $args = NULL)
 	{
@@ -100,12 +96,10 @@ class Method extends Nette\Object
 	}
 
 
-
 	public function __call($name, $args)
 	{
 		return Nette\ObjectMixin::callProperty($this, $name, $args);
 	}
-
 
 
 	/** @return string  PHP code */

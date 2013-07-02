@@ -15,7 +15,6 @@ use Nette,
 	Nette\ObjectMixin;
 
 
-
 /**
  * Reports information about a function.
  *
@@ -52,7 +51,6 @@ class GlobalFunction extends \ReflectionFunction
 	}
 
 
-
 	/**
 	 * @return Nette\Callback
 	 */
@@ -62,12 +60,10 @@ class GlobalFunction extends \ReflectionFunction
 	}
 
 
-
 	public function __toString()
 	{
 		return 'Function ' . $this->getName() . '()';
 	}
-
 
 
 	public function getClosure()
@@ -76,9 +72,7 @@ class GlobalFunction extends \ReflectionFunction
 	}
 
 
-
 	/********************* Reflection layer ****************d*g**/
-
 
 
 	/**
@@ -88,7 +82,6 @@ class GlobalFunction extends \ReflectionFunction
 	{
 		return ($name = $this->getExtensionName()) ? new Extension($name) : NULL;
 	}
-
 
 
 	/**
@@ -103,9 +96,7 @@ class GlobalFunction extends \ReflectionFunction
 	}
 
 
-
 	/********************* Nette\Object behaviour ****************d*g**/
-
 
 
 	/**
@@ -117,12 +108,10 @@ class GlobalFunction extends \ReflectionFunction
 	}
 
 
-
 	public function __call($name, $args)
 	{
 		return ObjectMixin::call($this, $name, $args);
 	}
-
 
 
 	public function &__get($name)
@@ -131,19 +120,16 @@ class GlobalFunction extends \ReflectionFunction
 	}
 
 
-
 	public function __set($name, $value)
 	{
 		return ObjectMixin::set($this, $name, $value);
 	}
 
 
-
 	public function __isset($name)
 	{
 		return ObjectMixin::has($this, $name);
 	}
-
 
 
 	public function __unset($name)

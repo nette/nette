@@ -15,7 +15,6 @@ use Nette,
 	Nette\Caching\Cache;
 
 
-
 /**
  * Nette auto loader is responsible for loading classes and interfaces.
  *
@@ -53,14 +52,12 @@ class RobotLoader extends AutoLoader
 	private $cacheStorage;
 
 
-
 	public function __construct()
 	{
 		if (!extension_loaded('tokenizer')) {
 			throw new Nette\NotSupportedException("PHP extension Tokenizer is not loaded.");
 		}
 	}
-
 
 
 	/**
@@ -73,7 +70,6 @@ class RobotLoader extends AutoLoader
 		parent::register();
 		return $this;
 	}
-
 
 
 	/**
@@ -120,7 +116,6 @@ class RobotLoader extends AutoLoader
 	}
 
 
-
 	/**
 	 * Add directory (or directories) to list.
 	 * @param  string|array
@@ -140,7 +135,6 @@ class RobotLoader extends AutoLoader
 	}
 
 
-
 	/**
 	 * @return array of class => filename
 	 */
@@ -156,7 +150,6 @@ class RobotLoader extends AutoLoader
 	}
 
 
-
 	/**
 	 * Rebuilds class list cache.
 	 * @return void
@@ -166,7 +159,6 @@ class RobotLoader extends AutoLoader
 		$this->rebuilt = TRUE; // prevents calling rebuild() or updateFile() in tryLoad()
 		$this->getCache()->save($this->getKey(), new Nette\Callback($this, '_rebuildCallback'));
 	}
-
 
 
 	/**
@@ -218,7 +210,6 @@ class RobotLoader extends AutoLoader
 	}
 
 
-
 	/**
 	 * Creates an iterator scaning directory for PHP files, subdirectories and 'netterobots.txt' files.
 	 * @return \Iterator
@@ -260,7 +251,6 @@ class RobotLoader extends AutoLoader
 	}
 
 
-
 	/**
 	 * @return void
 	 */
@@ -292,7 +282,6 @@ class RobotLoader extends AutoLoader
 			}
 		}
 	}
-
 
 
 	/**
@@ -374,9 +363,7 @@ class RobotLoader extends AutoLoader
 	}
 
 
-
 	/********************* backend ****************d*g**/
-
 
 
 	/**
@@ -389,7 +376,6 @@ class RobotLoader extends AutoLoader
 	}
 
 
-
 	/**
 	 * @return Nette\Caching\IStorage
 	 */
@@ -397,7 +383,6 @@ class RobotLoader extends AutoLoader
 	{
 		return $this->cacheStorage;
 	}
-
 
 
 	/**
@@ -411,7 +396,6 @@ class RobotLoader extends AutoLoader
 		}
 		return new Cache($this->cacheStorage, 'Nette.RobotLoader');
 	}
-
 
 
 	/**

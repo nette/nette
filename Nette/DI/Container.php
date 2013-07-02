@@ -14,7 +14,6 @@ namespace Nette\DI;
 use Nette;
 
 
-
 /**
  * The dependency injection container default implementation.
  *
@@ -46,13 +45,11 @@ class Container extends Nette\FreezableObject implements IContainer
 	private $creating;
 
 
-
 	public function __construct(array $params = array())
 	{
 		$this->parameters = $params + $this->parameters;
 		$this->params = &$this->parameters;
 	}
-
 
 
 	/**
@@ -62,7 +59,6 @@ class Container extends Nette\FreezableObject implements IContainer
 	{
 		return $this->parameters;
 	}
-
 
 
 	/**
@@ -99,7 +95,6 @@ class Container extends Nette\FreezableObject implements IContainer
 	}
 
 
-
 	/**
 	 * Removes the service from the container.
 	 * @param  string
@@ -110,7 +105,6 @@ class Container extends Nette\FreezableObject implements IContainer
 		$this->updating();
 		unset($this->registry[$name], $this->factories[$name], $this->meta[$name]);
 	}
-
 
 
 	/**
@@ -172,7 +166,6 @@ class Container extends Nette\FreezableObject implements IContainer
 	}
 
 
-
 	/**
 	 * Does the service exist?
 	 * @param  string service name
@@ -184,7 +177,6 @@ class Container extends Nette\FreezableObject implements IContainer
 			|| isset($this->factories[$name])
 			|| method_exists($this, $method = Container::getMethodName($name)) && $this->getReflection()->getMethod($method)->getName() === $method;
 	}
-
 
 
 	/**
@@ -199,7 +191,6 @@ class Container extends Nette\FreezableObject implements IContainer
 		}
 		return isset($this->registry[$name]);
 	}
-
 
 
 	/**
@@ -224,7 +215,6 @@ class Container extends Nette\FreezableObject implements IContainer
 	}
 
 
-
 	/**
 	 * Gets the service names of the specified tag.
 	 * @param  string
@@ -242,9 +232,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	}
 
 
-
 	/********************* autowiring ****************d*g**/
-
 
 
 	/**
@@ -270,7 +258,6 @@ class Container extends Nette\FreezableObject implements IContainer
 	}
 
 
-
 	/**
 	 * Calls method using autowiring.
 	 * @param  mixed   class, object, function, callable
@@ -284,9 +271,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	}
 
 
-
 	/********************* shortcuts ****************d*g**/
-
 
 
 	/**
@@ -298,7 +283,6 @@ class Container extends Nette\FreezableObject implements IContainer
 	{
 		return Helpers::expand($s, $this->parameters);
 	}
-
 
 
 	/**
@@ -313,7 +297,6 @@ class Container extends Nette\FreezableObject implements IContainer
 		}
 		return $this->registry[$name];
 	}
-
 
 
 	/**
@@ -338,7 +321,6 @@ class Container extends Nette\FreezableObject implements IContainer
 	}
 
 
-
 	/**
 	 * Does the service exist?
 	 * @param  string
@@ -350,7 +332,6 @@ class Container extends Nette\FreezableObject implements IContainer
 	}
 
 
-
 	/**
 	 * Removes the service, shortcut for removeService().
 	 * @return void
@@ -359,7 +340,6 @@ class Container extends Nette\FreezableObject implements IContainer
 	{
 		$this->removeService($name);
 	}
-
 
 
 	public static function getMethodName($name, $isService = TRUE)

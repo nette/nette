@@ -12,9 +12,7 @@ use Nette\Http,
 	Nette\ArrayHash;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $_SERVER['REQUEST_METHOD'] = 'POST';
@@ -64,7 +62,6 @@ $_FILES = array(
 		),
 	),
 );
-
 
 
 $form = new Form();

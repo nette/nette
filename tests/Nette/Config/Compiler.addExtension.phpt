@@ -10,9 +10,7 @@
 use Nette\Config\CompilerExtension;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 abstract class BaseExtension extends CompilerExtension

@@ -10,9 +10,7 @@
 use Nette\Utils\Arrays;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $arr  = array(
@@ -50,7 +48,6 @@ Assert::same( array(
 ), $dolly );
 
 
-
 // Traversing
 
 $dolly = $arr;
@@ -69,7 +66,6 @@ Assert::same( array(
 		'item' => 'changed',
 	),
 ), $dolly );
-
 
 
 // Error

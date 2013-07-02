@@ -10,15 +10,12 @@
 use Nette\Config\Configurator;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class MyApp extends Nette\Application\Application
 {
 }
-
 
 
 $configurator = new Configurator;

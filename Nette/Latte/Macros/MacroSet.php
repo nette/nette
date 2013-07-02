@@ -16,7 +16,6 @@ use Nette,
 	Nette\Latte\MacroNode;
 
 
-
 /**
  * Base IMacro implementation. Allows add multiple macros.
  *
@@ -31,12 +30,10 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 	private $macros;
 
 
-
 	public function __construct(Latte\Compiler $compiler)
 	{
 		$this->compiler = $compiler;
 	}
-
 
 
 	public function addMacro($name, $begin, $end = NULL, $attr = NULL)
@@ -47,12 +44,10 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 	}
 
 
-
 	public static function install(Latte\Compiler $compiler)
 	{
 		return new static($compiler);
 	}
-
 
 
 	/**
@@ -64,7 +59,6 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 	}
 
 
-
 	/**
 	 * Finishes template parsing.
 	 * @return array(prolog, epilog)
@@ -72,7 +66,6 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 	public function finalize()
 	{
 	}
-
 
 
 	/**
@@ -100,7 +93,6 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 	}
 
 
-
 	/**
 	 * Node is closed.
 	 * @return void
@@ -112,7 +104,6 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 			$node->closingCode = "<?php $res ?>";
 		}
 	}
-
 
 
 	/**
@@ -129,7 +120,6 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 			return Nette\Callback::create($def)->invoke($node, $writer);
 		}
 	}
-
 
 
 	/**

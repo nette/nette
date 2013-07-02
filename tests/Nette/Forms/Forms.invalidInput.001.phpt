@@ -11,9 +11,7 @@ use Nette\Http,
 	Nette\Forms\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $_SERVER['REQUEST_METHOD'] = 'POST';

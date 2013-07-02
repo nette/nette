@@ -17,7 +17,6 @@ use Nette,
 	Nette\Diagnostics\Debugger;
 
 
-
 /**
  * Routing debugger for Debug Bar.
  *
@@ -38,7 +37,6 @@ class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	private $request;
 
 
-
 	public static function initializePanel(Nette\Application\Application $application)
 	{
 		Debugger::$blueScreen->addPanel(function($e) use ($application) {
@@ -51,13 +49,11 @@ class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	}
 
 
-
 	public function __construct(Nette\Application\IRouter $router, Nette\Http\IRequest $httpRequest)
 	{
 		$this->router = $router;
 		$this->httpRequest = $httpRequest;
 	}
-
 
 
 	/**
@@ -73,7 +69,6 @@ class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	}
 
 
-
 	/**
 	 * Renders panel.
 	 * @return string
@@ -84,7 +79,6 @@ class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 		require __DIR__ . '/templates/RoutingPanel.panel.phtml';
 		return ob_get_clean();
 	}
-
 
 
 	/**

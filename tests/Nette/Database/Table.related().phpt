@@ -14,7 +14,6 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nette_test1.sql");
 
 
-
 $books1 = $books2 = $books3 = array();
 
 foreach ($connection->table('author') as $author) {  // SELECT * FROM `author`
@@ -48,7 +47,6 @@ Assert::same($expectBooks, $books2);
 Assert::same($expectBooks, $books3);
 
 
-
 $tagsAuthors = array();
 foreach ($connection->table('tag') as $tag) {
 
@@ -74,7 +72,6 @@ Assert::same(array(
 ), $tagsAuthors);
 
 
-
 $counts1 = $counts2 = array();
 foreach($connection->table('author')->order('id') as $author) {
 	$counts1[] = $author->related('book.author_id')->count('id');
@@ -83,7 +80,6 @@ foreach($connection->table('author')->order('id') as $author) {
 
 Assert::same(array(2, 2, 0), $counts1);
 Assert::same(array(1, 0, 0), $counts2);
-
 
 
 $author = $connection->table('author')->get(11);

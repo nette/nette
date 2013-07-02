@@ -14,7 +14,6 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nette_test1.sql");
 
 
-
 $count = $connection->table('book')->count('*');  // SELECT COUNT(*) FROM `book`
 Assert::same(4, $count);
 
@@ -30,7 +29,6 @@ Assert::same(array(
 	'Nette' => 1,
 	'Dibi' => 2,
 ), $tags);
-
 
 
 $authors = $connection->table('author')->where('book:translator_id IS NOT NULL')->group('author.id');  // SELECT `author`.* FROM `author` INNER JOIN `book` ON `author`.`id` = `book`.`author_id` WHERE (`book`.`translator_id` IS NOT NULL) GROUP BY `author`.`id`

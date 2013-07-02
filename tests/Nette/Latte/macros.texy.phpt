@@ -10,9 +10,7 @@
 use Nette\Latte;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class MockTexy
@@ -22,7 +20,6 @@ class MockTexy
 		return '<pre>' . $text . '</pre>';
 	}
 }
-
 
 
 $template = new Nette\Templating\Template;

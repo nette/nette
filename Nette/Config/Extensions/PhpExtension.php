@@ -15,7 +15,6 @@ use Nette,
 	Nette\DI\ContainerBuilder;
 
 
-
 /**
  * PHP directives definition.
  *

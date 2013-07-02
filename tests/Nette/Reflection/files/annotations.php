@@ -29,7 +29,6 @@ class AnnotatedClass1
 	var $g;
 
 
-
 	/** @return a */
 	public function a()
 	{}

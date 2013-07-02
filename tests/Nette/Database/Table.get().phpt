@@ -14,7 +14,6 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nette_test1.sql");
 
 
-
 $book = $connection->table('book')->get(1);  // SELECT * FROM `book` WHERE (`id` = ?)
 
 Assert::same(array(

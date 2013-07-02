@@ -15,7 +15,6 @@ use Nette,
 	Nette\Http;
 
 
-
 /**
  * Text box and browse button that allow users to select a file to upload to the server.
  *
@@ -34,7 +33,6 @@ class UploadControl extends BaseControl
 	}
 
 
-
 	/**
 	 * This method will be called when the component (or component's parent)
 	 * becomes attached to a monitored object. Do not call this method yourself.
@@ -51,7 +49,6 @@ class UploadControl extends BaseControl
 		}
 		parent::attached($form);
 	}
-
 
 
 	/**
@@ -74,7 +71,6 @@ class UploadControl extends BaseControl
 	}
 
 
-
 	/**
 	 * Has been any file uploaded?
 	 * @return bool
@@ -83,7 +79,6 @@ class UploadControl extends BaseControl
 	{
 		return $this->value instanceof Http\FileUpload && $this->value->isOK();
 	}
-
 
 
 	/**
@@ -97,7 +92,6 @@ class UploadControl extends BaseControl
 		$file = $control->getValue();
 		return $file instanceof Http\FileUpload && $file->getSize() <= $limit;
 	}
-
 
 
 	/**
@@ -121,7 +115,6 @@ class UploadControl extends BaseControl
 		}
 		return FALSE;
 	}
-
 
 
 	/**

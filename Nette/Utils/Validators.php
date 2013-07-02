@@ -14,7 +14,6 @@ namespace Nette\Utils;
 use Nette;
 
 
-
 /**
  * Validation utilites.
  *
@@ -68,7 +67,6 @@ class Validators extends Nette\Object
 	);
 
 
-
 	/**
 	 * Throws exception if a variable is of unexpected type.
 	 * @param  mixed
@@ -94,7 +92,6 @@ class Validators extends Nette\Object
 	}
 
 
-
 	/**
 	 * Throws exception if an array field is missing or of unexpected type.
 	 * @param  array
@@ -112,7 +109,6 @@ class Validators extends Nette\Object
 			static::assert($arr[$field], $expected, str_replace('%', $field, $label));
 		}
 	}
-
 
 
 	/**
@@ -160,7 +156,6 @@ class Validators extends Nette\Object
 	}
 
 
-
 	/**
 	 * Finds whether a value is an integer.
 	 * @return bool
@@ -169,7 +164,6 @@ class Validators extends Nette\Object
 	{
 		return is_int($value) || is_string($value) && preg_match('#^-?[0-9]+\z#', $value);
 	}
-
 
 
 	/**
@@ -182,7 +176,6 @@ class Validators extends Nette\Object
 	}
 
 
-
 	/**
 	 * Finds whether a value is a syntactically correct callback.
 	 * @return bool
@@ -191,7 +184,6 @@ class Validators extends Nette\Object
 	{
 		return $value && is_callable($value, TRUE);
 	}
-
 
 
 	/**
@@ -205,7 +197,6 @@ class Validators extends Nette\Object
 	}
 
 
-
 	/**
 	 * Finds whether a value is "falsy".
 	 * @return bool
@@ -214,7 +205,6 @@ class Validators extends Nette\Object
 	{
 		return $value == NULL; // intentionally ==
 	}
-
 
 
 	/**
@@ -228,7 +218,6 @@ class Validators extends Nette\Object
 	}
 
 
-
 	/**
 	 * Is a value in specified range?
 	 * @param  mixed
@@ -239,7 +228,6 @@ class Validators extends Nette\Object
 	{
 		return (!isset($range[0]) || $value >= $range[0]) && (!isset($range[1]) || $value <= $range[1]);
 	}
-
 
 
 	/**
@@ -258,7 +246,6 @@ class Validators extends Nette\Object
 	}
 
 
-
 	/**
 	 * Finds whether a string is a valid URL.
 	 * @param  string
@@ -273,7 +260,6 @@ class Validators extends Nette\Object
 	}
 
 }
-
 
 
 /**

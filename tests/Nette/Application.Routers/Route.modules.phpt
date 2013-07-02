@@ -10,11 +10,9 @@
 use Nette\Application\Routers\Route;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/Route.inc';
-
 
 
 $route = new Route('<presenter>', array(
@@ -31,7 +29,6 @@ Assert::null( testRouteOut($route, 'Module:Homepage') );
 Assert::same( 'http://example.com/homepage', testRouteOut($route, 'Module:Submodule:Homepage') );
 
 
-
 $route = new Route('<presenter>', array(
 	'module' => 'Module:Submodule',
 	'presenter' => 'Default',
@@ -46,7 +43,6 @@ Assert::null( testRouteOut($route, 'Module:Homepage') );
 Assert::same( 'http://example.com/homepage', testRouteOut($route, 'Module:Submodule:Homepage') );
 
 
-
 $route = new Route('<module>/<presenter>', array(
 	'presenter' => 'AnyDefault',
 ));
@@ -58,8 +54,6 @@ testRouteIn($route, '/module.submodule', 'Module:Submodule:AnyDefault', array(
 Assert::null( testRouteOut($route, 'Homepage') );
 Assert::same( 'http://example.com/module/homepage', testRouteOut($route, 'Module:Homepage') );
 Assert::same( 'http://example.com/module.submodule/homepage', testRouteOut($route, 'Module:Submodule:Homepage') );
-
-
 
 
 $route = new Route('<module>/<presenter>', array(

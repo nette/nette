@@ -10,9 +10,7 @@
 use Nette\Iterators;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $arr = array('The', 'Nette', 'Framework');

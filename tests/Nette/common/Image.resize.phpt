@@ -10,15 +10,12 @@
 use Nette\Image;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 if (!extension_loaded('gd')) {
 	Tester\Helpers::skip('Requires PHP extension GD.');
 }
-
 
 
 $main = Image::fromFile('images/logo.gif');
@@ -33,7 +30,6 @@ $image->crop(10, 20, 50, 300);
 Assert::same( 50, $image->width );
 
 Assert::same( 84, $image->height );
-
 
 
 $image = clone $main;
@@ -124,14 +120,11 @@ Assert::same( 176, $image->width );
 Assert::same( 104, $image->height );
 
 
-
-
 $image = clone $main;
 $image->resize(300, 150, Image::EXACT);
 Assert::same( 300, $image->width );
 
 Assert::same( 150, $image->height );
-
 
 
 // rotate

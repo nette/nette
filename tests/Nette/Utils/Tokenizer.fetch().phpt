@@ -10,9 +10,7 @@
 use Nette\Utils\Tokenizer;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $tokenizer = new Tokenizer(array(
@@ -24,7 +22,6 @@ $tokenizer->tokenize('say 123');
 Assert::false( $tokenizer->fetch('s') );
 Assert::same( 'say', $tokenizer->fetch('say') );
 Assert::same( ' ', $tokenizer->fetch() );
-
 
 
 $tokenizer = new Tokenizer(array(

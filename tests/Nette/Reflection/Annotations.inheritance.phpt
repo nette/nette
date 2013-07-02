@@ -10,9 +10,7 @@
 use Nette\Reflection;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 interface IA {
@@ -52,7 +50,6 @@ class B extends A {
 
 	private function bar() {}
 }
-
 
 
 // constructors

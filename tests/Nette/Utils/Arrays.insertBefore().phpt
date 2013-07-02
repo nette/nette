@@ -10,9 +10,7 @@
 use Nette\Utils\Arrays;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $arr  = array(
@@ -53,7 +51,6 @@ Assert::same( array(
 ), $dolly );
 
 
-
 // Last item
 $dolly = $arr;
 Arrays::insertBefore($dolly, 7, array('new' => 'value'));
@@ -75,7 +72,6 @@ Assert::same( array(
 	7 => 'fourth',
 	'new' => 'value',
 ), $dolly );
-
 
 
 // Undefined item

@@ -13,15 +13,12 @@ use Nette\Latte,
 	Nette\Utils\Html;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/Template.inc';
 
 
-
 restore_error_handler();
-
 
 
 $template = new FileTemplate(__DIR__ . '/templates/xml.latte');

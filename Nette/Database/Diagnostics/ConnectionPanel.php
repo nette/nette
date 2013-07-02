@@ -16,7 +16,6 @@ use Nette,
 	Nette\Diagnostics\Debugger;
 
 
-
 /**
  * Debug panel for Nette\Database.
  *
@@ -43,7 +42,6 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 	public $disabled = FALSE;
 
 
-
 	public function logQuery(Nette\Database\Statement $result, array $params = NULL)
 	{
 		if ($this->disabled) {
@@ -61,7 +59,6 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 		$this->totalTime += $result->getTime();
 		$this->queries[] = array($result->queryString, $params, $result->getTime(), $result->rowCount(), $result->getConnection(), $source);
 	}
-
 
 
 	public static function renderException($e)
@@ -82,7 +79,6 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 	}
 
 
-
 	public function getTab()
 	{
 		return '<span title="Nette\\Database ' . htmlSpecialChars($this->name) . '">'
@@ -91,7 +87,6 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 			. ($this->totalTime ? ' / ' . sprintf('%0.1f', $this->totalTime * 1000) . 'ms' : '')
 			. '</span>';
 	}
-
 
 
 	public function getPanel()

@@ -10,14 +10,11 @@
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Debugger::$consoleColors = NULL;
 Debugger::$productionMode = FALSE;
-
 
 
 class Test

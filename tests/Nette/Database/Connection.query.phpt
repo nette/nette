@@ -13,7 +13,6 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nette_test1.sql");
 
 
-
 $res = $connection->query('SELECT id FROM author WHERE id = ?', 11);
 Assert::type( 'Nette\Database\Statement', $res );
 Assert::same( 'SELECT id FROM author WHERE id = ?', $res->getQueryString() );

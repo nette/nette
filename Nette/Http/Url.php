@@ -14,7 +14,6 @@ namespace Nette\Http;
 use Nette;
 
 
-
 /**
  * URI Syntax (RFC 3986).
  *
@@ -87,7 +86,6 @@ class Url extends Nette\FreezableObject
 	private $fragment = '';
 
 
-
 	/**
 	 * @param  string  URL
 	 * @throws Nette\InvalidArgumentException
@@ -120,7 +118,6 @@ class Url extends Nette\FreezableObject
 	}
 
 
-
 	/**
 	 * Sets the scheme part of URI.
 	 * @param  string
@@ -134,7 +131,6 @@ class Url extends Nette\FreezableObject
 	}
 
 
-
 	/**
 	 * Returns the scheme part of URI.
 	 * @return string
@@ -143,7 +139,6 @@ class Url extends Nette\FreezableObject
 	{
 		return $this->scheme;
 	}
-
 
 
 	/**
@@ -159,7 +154,6 @@ class Url extends Nette\FreezableObject
 	}
 
 
-
 	/**
 	 * Returns the user name part of URI.
 	 * @return string
@@ -168,7 +162,6 @@ class Url extends Nette\FreezableObject
 	{
 		return $this->user;
 	}
-
 
 
 	/**
@@ -184,7 +177,6 @@ class Url extends Nette\FreezableObject
 	}
 
 
-
 	/**
 	 * Returns the password part of URI.
 	 * @return string
@@ -193,7 +185,6 @@ class Url extends Nette\FreezableObject
 	{
 		return $this->pass;
 	}
-
 
 
 	/**
@@ -209,7 +200,6 @@ class Url extends Nette\FreezableObject
 	}
 
 
-
 	/**
 	 * Returns the host part of URI.
 	 * @return string
@@ -218,7 +208,6 @@ class Url extends Nette\FreezableObject
 	{
 		return $this->host;
 	}
-
 
 
 	/**
@@ -234,7 +223,6 @@ class Url extends Nette\FreezableObject
 	}
 
 
-
 	/**
 	 * Returns the port part of URI.
 	 * @return string
@@ -243,7 +231,6 @@ class Url extends Nette\FreezableObject
 	{
 		return $this->port;
 	}
-
 
 
 	/**
@@ -259,7 +246,6 @@ class Url extends Nette\FreezableObject
 	}
 
 
-
 	/**
 	 * Returns the path part of URI.
 	 * @return string
@@ -268,7 +254,6 @@ class Url extends Nette\FreezableObject
 	{
 		return $this->path;
 	}
-
 
 
 	/**
@@ -284,7 +269,6 @@ class Url extends Nette\FreezableObject
 	}
 
 
-
 	/**
 	 * Appends the query part of URI.
 	 * @param  string|array
@@ -298,7 +282,6 @@ class Url extends Nette\FreezableObject
 	}
 
 
-
 	/**
 	 * Returns the query part of URI.
 	 * @return string
@@ -307,7 +290,6 @@ class Url extends Nette\FreezableObject
 	{
 		return $this->query;
 	}
-
 
 
 	/**
@@ -323,7 +305,6 @@ class Url extends Nette\FreezableObject
 	}
 
 
-
 	/**
 	 * Returns the fragment part of URI.
 	 * @return string
@@ -332,7 +313,6 @@ class Url extends Nette\FreezableObject
 	{
 		return $this->fragment;
 	}
-
 
 
 	/**
@@ -345,7 +325,6 @@ class Url extends Nette\FreezableObject
 			. ($this->query === '' ? '' : '?' . $this->query)
 			. ($this->fragment === '' ? '' : '#' . $this->fragment);
 	}
-
 
 
 	/**
@@ -367,7 +346,6 @@ class Url extends Nette\FreezableObject
 	}
 
 
-
 	/**
 	 * Returns the scheme and authority part of URI.
 	 * @return string
@@ -376,7 +354,6 @@ class Url extends Nette\FreezableObject
 	{
 		return ($this->scheme ? $this->scheme . ':' : '') . '//' . $this->getAuthority();
 	}
-
 
 
 	/**
@@ -390,7 +367,6 @@ class Url extends Nette\FreezableObject
 	}
 
 
-
 	/**
 	 * Returns the base-URI.
 	 * @return string
@@ -401,7 +377,6 @@ class Url extends Nette\FreezableObject
 	}
 
 
-
 	/**
 	 * Returns the relative-URI.
 	 * @return string
@@ -410,7 +385,6 @@ class Url extends Nette\FreezableObject
 	{
 		return (string) substr($this->getAbsoluteUrl(), strlen($this->getBaseUrl()));
 	}
-
 
 
 	/**
@@ -447,7 +421,6 @@ class Url extends Nette\FreezableObject
 	}
 
 
-
 	/**
 	 * Transform to canonical form.
 	 * @return void
@@ -461,7 +434,6 @@ class Url extends Nette\FreezableObject
 	}
 
 
-
 	/**
 	 * @return string
 	 */
@@ -469,7 +441,6 @@ class Url extends Nette\FreezableObject
 	{
 		return $this->getAbsoluteUrl();
 	}
-
 
 
 	/**
@@ -492,7 +463,6 @@ class Url extends Nette\FreezableObject
 		}
 		return $s;
 	}
-
 
 
 	/** @deprecated */

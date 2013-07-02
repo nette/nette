@@ -10,9 +10,7 @@
 use Nette\Config;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $obj = new stdClass;

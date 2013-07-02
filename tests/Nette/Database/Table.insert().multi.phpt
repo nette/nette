@@ -14,7 +14,6 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nette_test1.sql");
 
 
-
 $connection->table('author')->insert(array(
 	array(
 		'name' => 'Catelyn Stark',
@@ -27,7 +26,6 @@ $connection->table('author')->insert(array(
 		'born' => new DateTime('2021-11-11'),
 	),
 ));  // INSERT INTO `author` (`name`, `web`, `born`) VALUES ('Catelyn Stark', 'http://example.com', '2011-11-11 00:00:00'), ('Sansa Stark', 'http://example.com', '2021-11-11 00:00:00')
-
 
 
 $connection->table('book_tag')->where('book_id', 1)->delete();  // DELETE FROM `book_tag` WHERE (`book_id` = ?)

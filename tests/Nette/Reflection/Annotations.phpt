@@ -10,9 +10,7 @@
 use Nette\Reflection;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 /**
@@ -32,7 +30,6 @@ class TestClass
 }
 
 
-
 // Class annotations
 
 $rc = new Reflection\ClassType('TestClass');
@@ -43,7 +40,6 @@ Assert::true( $tmp['renderable'][0] );
 
 Assert::true( $rc->hasAnnotation('author'), "has('author')' );
 Assert::same( 'John Doe",  $rc->getAnnotation('author') );
-
 
 
 // Method annotations

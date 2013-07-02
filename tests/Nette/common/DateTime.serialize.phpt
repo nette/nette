@@ -9,10 +9,7 @@
  */
 
 
-
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 date_default_timezone_set('Europe/Prague');
@@ -29,8 +26,6 @@ $obj = unserialize(serialize($obj));
 Assert::same( '1978-01-23 10:00:00', $obj->format('Y-m-d H:i:s') );
 Assert::same( 'Europe/London', $obj->getTimezone()->getName() );
 Assert::same( 254397600, $obj->getTimestamp() );
-
-
 
 
 $obj = new Nette\DateTime(NULL, new DateTimeZone('Europe/London'));

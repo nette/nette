@@ -14,7 +14,6 @@ namespace Nette\Utils;
 use Nette;
 
 
-
 /**
  * JSON encoder and decoder.
  *
@@ -37,7 +36,6 @@ final class Json
 	);
 
 
-
 	/**
 	 * Static class - cannot be instantiated.
 	 */
@@ -45,7 +43,6 @@ final class Json
 	{
 		throw new Nette\StaticClassException;
 	}
-
 
 
 	/**
@@ -75,7 +72,6 @@ final class Json
 	}
 
 
-
 	/**
 	 * Decodes a JSON string.
 	 * @param  string
@@ -94,7 +90,6 @@ final class Json
 	}
 
 }
-
 
 
 /**

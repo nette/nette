@@ -14,7 +14,6 @@ namespace Nette\Security;
 use Nette;
 
 
-
 /**
  * Default implementation of IIdentity.
  *
@@ -51,7 +50,6 @@ class Identity extends Nette\FreezableObject implements IIdentity
 	}
 
 
-
 	/**
 	 * Sets the ID of user.
 	 * @param  mixed
@@ -65,7 +63,6 @@ class Identity extends Nette\FreezableObject implements IIdentity
 	}
 
 
-
 	/**
 	 * Returns the ID of user.
 	 * @return mixed
@@ -74,7 +71,6 @@ class Identity extends Nette\FreezableObject implements IIdentity
 	{
 		return $this->id;
 	}
-
 
 
 	/**
@@ -90,7 +86,6 @@ class Identity extends Nette\FreezableObject implements IIdentity
 	}
 
 
-
 	/**
 	 * Returns a list of roles that the user is a member of.
 	 * @return array
@@ -101,7 +96,6 @@ class Identity extends Nette\FreezableObject implements IIdentity
 	}
 
 
-
 	/**
 	 * Returns a user data.
 	 * @return array
@@ -110,7 +104,6 @@ class Identity extends Nette\FreezableObject implements IIdentity
 	{
 		return $this->data;
 	}
-
 
 
 	/**
@@ -131,7 +124,6 @@ class Identity extends Nette\FreezableObject implements IIdentity
 	}
 
 
-
 	/**
 	 * Returns user data value.
 	 * @param  string  property name
@@ -148,7 +140,6 @@ class Identity extends Nette\FreezableObject implements IIdentity
 	}
 
 
-
 	/**
 	 * Is property defined?
 	 * @param  string  property name
@@ -158,7 +149,6 @@ class Identity extends Nette\FreezableObject implements IIdentity
 	{
 		return isset($this->data[$key]) || parent::__isset($key);
 	}
-
 
 
 	/**

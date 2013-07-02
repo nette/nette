@@ -14,7 +14,6 @@ namespace Nette;
 use Nette;
 
 
-
 /**
  * Nette\Object is the ultimate ancestor of all instantiable classes.
  *
@@ -68,7 +67,6 @@ abstract class Object
 	}
 
 
-
 	/**
 	 * Call to undefined method.
 	 * @param  string  method name
@@ -82,7 +80,6 @@ abstract class Object
 	}
 
 
-
 	/**
 	 * Call to undefined static method.
 	 * @param  string  method name (in lower case!)
@@ -94,7 +91,6 @@ abstract class Object
 	{
 		return ObjectMixin::callStatic(get_called_class(), $name, $args);
 	}
-
 
 
 	/**
@@ -119,7 +115,6 @@ abstract class Object
 	}
 
 
-
 	/**
 	 * Returns property value. Do not call directly.
 	 * @param  string  property name
@@ -130,7 +125,6 @@ abstract class Object
 	{
 		return ObjectMixin::get($this, $name);
 	}
-
 
 
 	/**
@@ -146,7 +140,6 @@ abstract class Object
 	}
 
 
-
 	/**
 	 * Is property defined?
 	 * @param  string  property name
@@ -156,7 +149,6 @@ abstract class Object
 	{
 		return ObjectMixin::has($this, $name);
 	}
-
 
 
 	/**

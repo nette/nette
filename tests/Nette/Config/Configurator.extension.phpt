@@ -12,9 +12,7 @@ use Nette\Config\Configurator,
 	Nette\DI\ContainerBuilder;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class DatabaseExtension extends Nette\Config\CompilerExtension
@@ -36,7 +34,6 @@ class DatabaseExtension extends Nette\Config\CompilerExtension
 		Notes::add(__METHOD__);
 	}
 }
-
 
 
 $configurator = new Configurator;

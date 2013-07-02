@@ -10,9 +10,7 @@
 use Nette\Loaders\NetteLoader;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $loader = NetteLoader::getInstance();

@@ -15,7 +15,6 @@ use Nette,
 	Nette\Caching;
 
 
-
 /**
  * Template.
  *
@@ -45,7 +44,6 @@ class Template extends Nette\Object implements ITemplate
 	private $cacheStorage;
 
 
-
 	/**
 	 * Sets template source code.
 	 * @param  string
@@ -58,7 +56,6 @@ class Template extends Nette\Object implements ITemplate
 	}
 
 
-
 	/**
 	 * Returns template source code.
 	 * @return source
@@ -69,9 +66,7 @@ class Template extends Nette\Object implements ITemplate
 	}
 
 
-
 	/********************* rendering ****************d*g**/
-
 
 
 	/**
@@ -97,7 +92,6 @@ class Template extends Nette\Object implements ITemplate
 	}
 
 
-
 	/**
 	 * Renders template to file.
 	 * @param  string
@@ -109,7 +103,6 @@ class Template extends Nette\Object implements ITemplate
 			throw new Nette\IOException("Unable to save file '$file'.");
 		}
 	}
-
 
 
 	/**
@@ -135,7 +128,6 @@ class Template extends Nette\Object implements ITemplate
 	}
 
 
-
 	/**
 	 * Applies filters on template content.
 	 * @return string
@@ -157,9 +149,7 @@ class Template extends Nette\Object implements ITemplate
 	}
 
 
-
 	/********************* template filters & helpers ****************d*g**/
-
 
 
 	/**
@@ -178,7 +168,6 @@ class Template extends Nette\Object implements ITemplate
 	}
 
 
-
 	/**
 	 * Returns all registered compile-time filters.
 	 * @return array
@@ -187,7 +176,6 @@ class Template extends Nette\Object implements ITemplate
 	{
 		return $this->filters;
 	}
-
 
 
 	/**
@@ -203,7 +191,6 @@ class Template extends Nette\Object implements ITemplate
 	}
 
 
-
 	/**
 	 * Registers callback as template run-time helpers loader.
 	 * @param  callable
@@ -216,7 +203,6 @@ class Template extends Nette\Object implements ITemplate
 	}
 
 
-
 	/**
 	 * Returns all registered run-time helpers.
 	 * @return array
@@ -227,7 +213,6 @@ class Template extends Nette\Object implements ITemplate
 	}
 
 
-
 	/**
 	 * Returns all registered template run-time helper loaders.
 	 * @return array
@@ -236,7 +221,6 @@ class Template extends Nette\Object implements ITemplate
 	{
 		return $this->helperLoaders;
 	}
-
 
 
 	/**
@@ -263,7 +247,6 @@ class Template extends Nette\Object implements ITemplate
 	}
 
 
-
 	/**
 	 * Sets translate adapter.
 	 * @return Template  provides a fluent interface
@@ -275,9 +258,7 @@ class Template extends Nette\Object implements ITemplate
 	}
 
 
-
 	/********************* template parameters ****************d*g**/
-
 
 
 	/**
@@ -295,7 +276,6 @@ class Template extends Nette\Object implements ITemplate
 	}
 
 
-
 	/**
 	 * Sets all parameters.
 	 * @param  array
@@ -306,7 +286,6 @@ class Template extends Nette\Object implements ITemplate
 		$this->params = $params + $this->params;
 		return $this;
 	}
-
 
 
 	/**
@@ -320,14 +299,12 @@ class Template extends Nette\Object implements ITemplate
 	}
 
 
-
 	/** @deprecated */
 	function setParams(array $params)
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use setParameters() instead.', E_USER_WARNING);
 		return $this->setParameters($params);
 	}
-
 
 
 	/** @deprecated */
@@ -338,7 +315,6 @@ class Template extends Nette\Object implements ITemplate
 	}
 
 
-
 	/**
 	 * Sets a template parameter. Do not call directly.
 	 * @return void
@@ -347,7 +323,6 @@ class Template extends Nette\Object implements ITemplate
 	{
 		$this->params[$name] = $value;
 	}
-
 
 
 	/**
@@ -364,7 +339,6 @@ class Template extends Nette\Object implements ITemplate
 	}
 
 
-
 	/**
 	 * Determines whether parameter is defined. Do not call directly.
 	 * @return bool
@@ -373,7 +347,6 @@ class Template extends Nette\Object implements ITemplate
 	{
 		return isset($this->params[$name]);
 	}
-
 
 
 	/**
@@ -387,9 +360,7 @@ class Template extends Nette\Object implements ITemplate
 	}
 
 
-
 	/********************* caching ****************d*g**/
-
 
 
 	/**
@@ -401,7 +372,6 @@ class Template extends Nette\Object implements ITemplate
 		$this->cacheStorage = $storage;
 		return $this;
 	}
-
 
 
 	/**
@@ -416,9 +386,7 @@ class Template extends Nette\Object implements ITemplate
 	}
 
 
-
 	/********************* tools ****************d*g**/
-
 
 
 	/**

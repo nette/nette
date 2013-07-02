@@ -53,7 +53,6 @@ $connection->setCacheStorage($cacheStorage);
 $connection->setDatabaseReflection(new Nette\Database\Reflection\DiscoveredReflection($cacheStorage));
 
 
-
 $queries = 0;
 $connection->onQuery[] = function(Statement $query) use (& $queries) {
 	if (preg_match('#SHOW|CONSTRAINT_NAME|pg_catalog#i', $query->queryString)) return;

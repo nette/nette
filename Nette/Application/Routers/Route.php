@@ -16,7 +16,6 @@ use Nette,
 	Nette\Utils\Strings;
 
 
-
 /**
  * The bidirectional route is responsible for mapping
  * HTTP request to a Request object for dispatch and vice-versa.
@@ -111,7 +110,6 @@ class Route extends Nette\Object implements Application\IRouter
 	private $flags;
 
 
-
 	/**
 	 * @param  string  URL mask, e.g. '<presenter>/<action>/<id \d{1,3}>'
 	 * @param  array|string   default values or metadata
@@ -138,7 +136,6 @@ class Route extends Nette\Object implements Application\IRouter
 		$this->flags = $flags | static::$defaultFlags;
 		$this->setMask($mask, $metadata);
 	}
-
 
 
 	/**
@@ -252,7 +249,6 @@ class Route extends Nette\Object implements Application\IRouter
 			array(Application\Request::SECURED => $httpRequest->isSecured())
 		);
 	}
-
 
 
 	/**
@@ -399,7 +395,6 @@ class Route extends Nette\Object implements Application\IRouter
 
 		return $url;
 	}
-
 
 
 	/**
@@ -594,7 +589,6 @@ class Route extends Nette\Object implements Application\IRouter
 	}
 
 
-
 	/**
 	 * Returns mask.
 	 * @return string
@@ -603,7 +597,6 @@ class Route extends Nette\Object implements Application\IRouter
 	{
 		return $this->mask;
 	}
-
 
 
 	/**
@@ -622,7 +615,6 @@ class Route extends Nette\Object implements Application\IRouter
 	}
 
 
-
 	/**
 	 * Returns flags.
 	 * @return int
@@ -633,9 +625,7 @@ class Route extends Nette\Object implements Application\IRouter
 	}
 
 
-
 	/********************* Utilities ****************d*g**/
-
 
 
 	/**
@@ -666,7 +656,6 @@ class Route extends Nette\Object implements Application\IRouter
 	}
 
 
-
 	/**
 	 * Rename keys in array.
 	 * @param  array
@@ -693,9 +682,7 @@ class Route extends Nette\Object implements Application\IRouter
 	}
 
 
-
 	/********************* Inflectors ****************d*g**/
-
 
 
 	/**
@@ -710,7 +697,6 @@ class Route extends Nette\Object implements Application\IRouter
 		$s = rawurlencode($s);
 		return $s;
 	}
-
 
 
 	/**
@@ -729,7 +715,6 @@ class Route extends Nette\Object implements Application\IRouter
 	}
 
 
-
 	/**
 	 * PascalCase:Presenter name -> dash-and-dot-separated.
 	 * @param  string
@@ -743,7 +728,6 @@ class Route extends Nette\Object implements Application\IRouter
 		$s = rawurlencode($s);
 		return $s;
 	}
-
 
 
 	/**
@@ -762,7 +746,6 @@ class Route extends Nette\Object implements Application\IRouter
 	}
 
 
-
 	/**
 	 * Url encode.
 	 * @param  string
@@ -774,9 +757,7 @@ class Route extends Nette\Object implements Application\IRouter
 	}
 
 
-
 	/********************* Route::$styles manipulator ****************d*g**/
-
 
 
 	/**
@@ -801,7 +782,6 @@ class Route extends Nette\Object implements Application\IRouter
 			static::$styles[$style] = array();
 		}
 	}
-
 
 
 	/**

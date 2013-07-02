@@ -10,9 +10,7 @@
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Debugger::$consoleMode = FALSE;

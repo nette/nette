@@ -10,9 +10,7 @@
 use Nette\Http;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 // Setup environment

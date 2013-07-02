@@ -14,7 +14,6 @@ namespace Nette\Application;
 use Nette;
 
 
-
 /**
  * Front Controller.
  *
@@ -73,7 +72,6 @@ class Application extends Nette\Object
 	private $router;
 
 
-
 	public function __construct(IPresenterFactory $presenterFactory, IRouter $router, Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
 	{
 		$this->httpRequest = $httpRequest;
@@ -81,7 +79,6 @@ class Application extends Nette\Object
 		$this->presenterFactory = $presenterFactory;
 		$this->router = $router;
 	}
-
 
 
 	/**
@@ -194,7 +191,6 @@ class Application extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns all processed requests.
 	 * @return Request[]
@@ -203,7 +199,6 @@ class Application extends Nette\Object
 	{
 		return $this->requests;
 	}
-
 
 
 	/**
@@ -216,9 +211,7 @@ class Application extends Nette\Object
 	}
 
 
-
 	/********************* services ****************d*g**/
-
 
 
 	/**
@@ -231,7 +224,6 @@ class Application extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns presenter factory.
 	 * @return IPresenterFactory
@@ -242,9 +234,7 @@ class Application extends Nette\Object
 	}
 
 
-
 	/********************* request serialization ****************d*g**/
-
 
 
 	/** @deprecated */

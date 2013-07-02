@@ -11,9 +11,7 @@ use Nette\Utils\Html,
 	Nette\Forms\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $_SERVER['REQUEST_METHOD'] = 'POST';
@@ -35,7 +33,6 @@ $sex = array(
 	'm' => Html::el('option', 'male')->style('color: #248bd3'),
 	'f' => Html::el('option', 'female')->style('color: #e948d4'),
 );
-
 
 
 // Step 1: Define form with validation rules
@@ -123,7 +120,6 @@ $form->addTextArea('note', 'Comment');
 $form->addGroup();
 
 $form->addSubmit('submit', 'Send');
-
 
 
 $defaults = array(

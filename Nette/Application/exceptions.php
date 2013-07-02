@@ -14,7 +14,6 @@ namespace Nette\Application;
 use Nette;
 
 
-
 /**
  * The exception that is thrown when user attempts to terminate the current presenter or application.
  * This is special "silent exception" with no error message or code.
@@ -22,7 +21,6 @@ use Nette;
 class AbortException extends \Exception
 {
 }
-
 
 
 /**
@@ -44,14 +42,12 @@ class ApplicationException extends \Exception
 }
 
 
-
 /**
  * The exception that is thrown when a presenter cannot be loaded.
  */
 class InvalidPresenterException extends \Exception
 {
 }
-
 
 
 /**
@@ -78,7 +74,6 @@ class BadRequestException extends \Exception
 	}
 
 }
-
 
 
 /**

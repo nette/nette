@@ -11,9 +11,7 @@ use Nette\DI\Container,
 	Nette\DI\NestedAccessor;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class Service

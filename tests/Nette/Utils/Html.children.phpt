@@ -10,9 +10,7 @@
 use Nette\Utils\Html;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 // add
@@ -32,7 +30,6 @@ Assert::match( '
 ', $el->render(2), 'indentation' );
 
 
-
 $el = Html::el(NULL);
 $el->add( Html::el('p')->setText('one') );
 $el->add( Html::el('p')->setText('two') );
@@ -43,7 +40,6 @@ Assert::same( '<p>one</p><p>two</p>', (string) $el );
 Assert::true( isset($el[1]) );
 Assert::same( '<p>two</p>', (string) $el[1] );
 Assert::false( isset($el[2]) );
-
 
 
 // ==> Iterator:

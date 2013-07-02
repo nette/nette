@@ -14,7 +14,6 @@ namespace Nette\Latte;
 use Nette;
 
 
-
 /**
  * PHP code generator helpers.
  *
@@ -32,12 +31,10 @@ class PhpWriter extends Nette\Object
 	private $compiler;
 
 
-
 	public static function using(MacroNode $node, Compiler $compiler = NULL)
 	{
 		return new static($node->tokenizer, $node->modifiers, $compiler);
 	}
-
 
 
 	public function __construct(MacroTokenizer $argsTokenizer, $modifiers = NULL, Compiler $compiler = NULL)
@@ -46,7 +43,6 @@ class PhpWriter extends Nette\Object
 		$this->modifiers = $modifiers;
 		$this->compiler = $compiler;
 	}
-
 
 
 	/**
@@ -92,7 +88,6 @@ class PhpWriter extends Nette\Object
 			}
 		});
 	}
-
 
 
 	/**
@@ -142,7 +137,6 @@ class PhpWriter extends Nette\Object
 	}
 
 
-
 	/**
 	 * Formats macro arguments to PHP code.
 	 * @return string
@@ -156,7 +150,6 @@ class PhpWriter extends Nette\Object
 		}
 		return $out;
 	}
-
 
 
 	/**
@@ -188,7 +181,6 @@ class PhpWriter extends Nette\Object
 	}
 
 
-
 	/**
 	 * Formats parameter to PHP string.
 	 * @param  string
@@ -201,7 +193,6 @@ class PhpWriter extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return bool
 	 */
@@ -211,7 +202,6 @@ class PhpWriter extends Nette\Object
 			&& (!$tokenizer->hasPrev() || $tokenizer->isPrev(',', '(', '[', '=', '=>', ':', '?'))
 			&& (!$tokenizer->hasNext() || $tokenizer->isNext(',', ')', ']', '=', '=>', ':', '|'));
 	}
-
 
 
 	/**
@@ -277,7 +267,6 @@ class PhpWriter extends Nette\Object
 		$tokenizer->tokens = $tokens;
 		return $tokenizer;
 	}
-
 
 
 	public function escape($s)

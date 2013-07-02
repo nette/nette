@@ -10,7 +10,6 @@
 use Nette\Forms\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 

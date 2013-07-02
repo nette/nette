@@ -15,7 +15,6 @@ use Nette,
 	Nette\ObjectMixin;
 
 
-
 /**
  * Reports information about a extension.
  *
@@ -30,9 +29,7 @@ class Extension extends \ReflectionExtension
 	}
 
 
-
 	/********************* Reflection layer ****************d*g**/
-
 
 
 	public function getClasses()
@@ -45,7 +42,6 @@ class Extension extends \ReflectionExtension
 	}
 
 
-
 	public function getFunctions()
 	{
 		foreach ($res = parent::getFunctions() as $key => $val) {
@@ -55,9 +51,7 @@ class Extension extends \ReflectionExtension
 	}
 
 
-
 	/********************* Nette\Object behaviour ****************d*g**/
-
 
 
 	/**
@@ -69,12 +63,10 @@ class Extension extends \ReflectionExtension
 	}
 
 
-
 	public function __call($name, $args)
 	{
 		return ObjectMixin::call($this, $name, $args);
 	}
-
 
 
 	public function &__get($name)
@@ -83,19 +75,16 @@ class Extension extends \ReflectionExtension
 	}
 
 
-
 	public function __set($name, $value)
 	{
 		return ObjectMixin::set($this, $name, $value);
 	}
 
 
-
 	public function __isset($name)
 	{
 		return ObjectMixin::has($this, $name);
 	}
-
 
 
 	public function __unset($name)

@@ -10,9 +10,7 @@
 use Nette\Http\Url;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $url = new Url('file://localhost/D:/dokumentace/rfc3986.txt');

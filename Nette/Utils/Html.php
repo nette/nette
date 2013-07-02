@@ -14,7 +14,6 @@ namespace Nette\Utils;
 use Nette;
 
 
-
 /**
  * HTML helper.
  *
@@ -50,7 +49,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 		'source'=>1,'base'=>1,'col'=>1,'link'=>1,'param'=>1,'basefont'=>1,'frame'=>1,'isindex'=>1,'wbr'=>1,'command'=>1);
 
 
-
 	/**
 	 * Static factory.
 	 * @param  string element name (or NULL)
@@ -80,7 +78,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	}
 
 
-
 	/**
 	 * Changes element's name.
 	 * @param  string
@@ -100,7 +97,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	}
 
 
-
 	/**
 	 * Returns element's name.
 	 * @return string
@@ -111,7 +107,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	}
 
 
-
 	/**
 	 * Is element empty?
 	 * @return bool
@@ -120,7 +115,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	{
 		return $this->isEmpty;
 	}
-
 
 
 	/**
@@ -135,7 +129,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	}
 
 
-
 	/**
 	 * Overloaded setter for element's attribute.
 	 * @param  string    HTML attribute name
@@ -146,7 +139,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	{
 		$this->attrs[$name] = $value;
 	}
-
 
 
 	/**
@@ -160,7 +152,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	}
 
 
-
 	/**
 	 * Overloaded tester for element's attribute.
 	 * @param  string    HTML attribute name
@@ -172,7 +163,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	}
 
 
-
 	/**
 	 * Overloaded unsetter for element's attribute.
 	 * @param  string    HTML attribute name
@@ -182,7 +172,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	{
 		unset($this->attrs[$name]);
 	}
-
 
 
 	/**
@@ -224,7 +213,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	}
 
 
-
 	/**
 	 * Special setter for element's attribute.
 	 * @param  string path
@@ -242,7 +230,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 		$this->attrs['href'] = $path;
 		return $this;
 	}
-
 
 
 	/**
@@ -269,7 +256,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	}
 
 
-
 	/**
 	 * Returns element's HTML content.
 	 * @return string
@@ -288,7 +274,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	}
 
 
-
 	/**
 	 * Sets element's textual content.
 	 * @param  string
@@ -304,7 +289,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	}
 
 
-
 	/**
 	 * Returns element's textual content.
 	 * @return string
@@ -313,7 +297,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	{
 		return html_entity_decode(strip_tags($this->getHtml()), ENT_QUOTES, 'UTF-8');
 	}
-
 
 
 	/**
@@ -327,7 +310,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	}
 
 
-
 	/**
 	 * Creates and adds a new Html child.
 	 * @param  string  elements's name
@@ -339,7 +321,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 		$this->insert(NULL, $child = static::el($name, $attrs));
 		return $child;
 	}
-
 
 
 	/**
@@ -368,7 +349,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	}
 
 
-
 	/**
 	 * Inserts (replaces) child node (\ArrayAccess implementation).
 	 * @param  int
@@ -379,7 +359,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	{
 		$this->insert($index, $child, TRUE);
 	}
-
 
 
 	/**
@@ -393,7 +372,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	}
 
 
-
 	/**
 	 * Exists child node? (\ArrayAccess implementation).
 	 * @param  int index
@@ -403,7 +381,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	{
 		return isset($this->children[$index]);
 	}
-
 
 
 	/**
@@ -419,7 +396,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	}
 
 
-
 	/**
 	 * Required by the \Countable interface.
 	 * @return int
@@ -430,7 +406,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	}
 
 
-
 	/**
 	 * Removed all children.
 	 * @return void
@@ -439,7 +414,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	{
 		$this->children = array();
 	}
-
 
 
 	/**
@@ -460,7 +434,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	}
 
 
-
 	/**
 	 * Returns all of children.
 	 * @return array
@@ -469,7 +442,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	{
 		return $this->children;
 	}
-
 
 
 	/**
@@ -505,12 +477,10 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	}
 
 
-
 	final public function __toString()
 	{
 		return $this->render();
 	}
-
 
 
 	/**
@@ -528,7 +498,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	}
 
 
-
 	/**
 	 * Returns element's end tag.
 	 * @return string
@@ -537,7 +506,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	{
 		return $this->name && !$this->isEmpty ? '</' . $this->name . '>' : '';
 	}
-
 
 
 	/**
@@ -598,7 +566,6 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 		$s = str_replace('@', '&#64;', $s);
 		return $s;
 	}
-
 
 
 	/**

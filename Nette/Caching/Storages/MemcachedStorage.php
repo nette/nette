@@ -15,7 +15,6 @@ use Nette,
 	Nette\Caching\Cache;
 
 
-
 /**
  * Memcached storage.
  *
@@ -38,7 +37,6 @@ class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 	private $journal;
 
 
-
 	/**
 	 * Checks if Memcached extension is available.
 	 * @return bool
@@ -47,7 +45,6 @@ class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 	{
 		return extension_loaded('memcache');
 	}
-
 
 
 	public function __construct($host = 'localhost', $port = 11211, $prefix = '', IJournal $journal = NULL)
@@ -65,7 +62,6 @@ class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 	}
 
 
-
 	public function addServer($host = 'localhost', $port = 11211, $timeout = 1)
 	{
 		if ($this->memcache->addServer($host, $port, TRUE, 1, $timeout) === FALSE) {
@@ -75,7 +71,6 @@ class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 	}
 
 
-
 	/**
 	 * @return \Memcache
 	 */
@@ -83,7 +78,6 @@ class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 	{
 		return $this->memcache;
 	}
-
 
 
 	/**
@@ -120,7 +114,6 @@ class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 	}
 
 
-
 	/**
 	 * Prevents item reading and writing. Lock is released by write() or remove().
 	 * @param  string key
@@ -129,7 +122,6 @@ class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 	public function lock($key)
 	{
 	}
-
 
 
 	/**
@@ -173,7 +165,6 @@ class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 	}
 
 
-
 	/**
 	 * Removes item from the cache.
 	 * @param  string key
@@ -183,7 +174,6 @@ class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 	{
 		$this->memcache->delete($this->prefix . $key, 0);
 	}
-
 
 
 	/**

@@ -10,9 +10,7 @@
 use Nette\Reflection;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class SecuredAnnotation extends Reflection\Annotation
@@ -32,7 +30,6 @@ class TestClass {
 	public $foo;
 
 }
-
 
 
 // Class annotations

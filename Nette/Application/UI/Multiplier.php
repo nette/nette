@@ -14,7 +14,6 @@ namespace Nette\Application\UI;
 use Nette;
 
 
-
 /**
  * Component multiplier.
  *
@@ -31,7 +30,6 @@ class Multiplier extends PresenterComponent
 		parent::__construct();
 		$this->factory = new Nette\Callback($factory);
 	}
-
 
 
 	protected function createComponent($name)

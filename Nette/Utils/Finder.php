@@ -15,7 +15,6 @@ use Nette,
 	RecursiveIteratorIterator;
 
 
-
 /**
  * Finder allows searching through directory trees using iterator.
  *
@@ -49,7 +48,6 @@ class Finder extends Nette\Object implements \IteratorAggregate
 	private $cursor;
 
 
-
 	/**
 	 * Begins search for files matching mask and all directories.
 	 * @param  mixed
@@ -63,7 +61,6 @@ class Finder extends Nette\Object implements \IteratorAggregate
 		$finder = new static;
 		return $finder->select(array(), 'isDir')->select($mask, 'isFile');
 	}
-
 
 
 	/**
@@ -81,7 +78,6 @@ class Finder extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	/**
 	 * Begins search for directories matching mask.
 	 * @param  mixed
@@ -95,7 +91,6 @@ class Finder extends Nette\Object implements \IteratorAggregate
 		$finder = new static;
 		return $finder->select($mask, 'isDir');
 	}
-
 
 
 	/**
@@ -119,7 +114,6 @@ class Finder extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	/**
 	 * Searchs in the given folder(s).
 	 * @param  string|array
@@ -133,7 +127,6 @@ class Finder extends Nette\Object implements \IteratorAggregate
 		$this->maxDepth = 0;
 		return $this->from($path);
 	}
-
 
 
 	/**
@@ -155,7 +148,6 @@ class Finder extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	/**
 	 * Shows folder content prior to the folder.
 	 * @return Finder  provides a fluent interface
@@ -165,7 +157,6 @@ class Finder extends Nette\Object implements \IteratorAggregate
 		$this->order = RecursiveIteratorIterator::CHILD_FIRST;
 		return $this;
 	}
-
 
 
 	/**
@@ -197,9 +188,7 @@ class Finder extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	/********************* iterator generator ****************d*g**/
-
 
 
 	/**
@@ -224,7 +213,6 @@ class Finder extends Nette\Object implements \IteratorAggregate
 			return $iterator;
 		}
 	}
-
 
 
 	/**
@@ -278,9 +266,7 @@ class Finder extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	/********************* filtering ****************d*g**/
-
 
 
 	/**
@@ -304,7 +290,6 @@ class Finder extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	/**
 	 * Restricts the search using callback.
 	 * @param  callable
@@ -317,7 +302,6 @@ class Finder extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	/**
 	 * Limits recursion level.
 	 * @param  int
@@ -328,7 +312,6 @@ class Finder extends Nette\Object implements \IteratorAggregate
 		$this->maxDepth = $depth;
 		return $this;
 	}
-
 
 
 	/**
@@ -354,7 +337,6 @@ class Finder extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	/**
 	 * Restricts the search by modified time.
 	 * @param  string  "[operator] [date]" example: >1978-01-23
@@ -375,7 +357,6 @@ class Finder extends Nette\Object implements \IteratorAggregate
 			return Finder::compare($file->getMTime(), $operator, $date);
 		});
 	}
-
 
 
 	/**
@@ -407,7 +388,6 @@ class Finder extends Nette\Object implements \IteratorAggregate
 	}
 
 }
-
 
 
 if (PHP_VERSION_ID < 50301) {

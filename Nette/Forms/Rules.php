@@ -14,7 +14,6 @@ namespace Nette\Forms;
 use Nette;
 
 
-
 /**
  * List of validation & condition rules.
  *
@@ -55,12 +54,10 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	private $control;
 
 
-
 	public function __construct(IControl $control)
 	{
 		$this->control = $control;
 	}
-
 
 
 	/**
@@ -88,7 +85,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	/**
 	 * Adds a validation condition a returns new branch.
 	 * @param  mixed      condition type
@@ -99,7 +95,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	{
 		return $this->addConditionOn($this->control, $operation, $arg);
 	}
-
 
 
 	/**
@@ -125,7 +120,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	/**
 	 * Adds a else statement.
 	 * @return Rules      else branch
@@ -141,7 +135,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	/**
 	 * Ends current validation condition.
 	 * @return Rules      parent branch
@@ -150,7 +143,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	{
 		return $this->parent;
 	}
-
 
 
 	/**
@@ -164,7 +156,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 		$this->toggles[$id] = $hide;
 		return $this;
 	}
-
 
 
 	/**
@@ -197,7 +188,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	/**
 	 * Iterates over ruleset.
 	 * @return \ArrayIterator
@@ -208,7 +198,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	/**
 	 * @return array
 	 */
@@ -216,7 +205,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	{
 		return $this->toggles;
 	}
-
 
 
 	/**
@@ -238,7 +226,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	private function getCallback($rule)
 	{
 		$op = $rule->operation;
@@ -248,7 +235,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 			return new Nette\Callback($op);
 		}
 	}
-
 
 
 	public static function formatMessage($rule, $withValue)

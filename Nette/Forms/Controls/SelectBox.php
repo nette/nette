@@ -14,7 +14,6 @@ namespace Nette\Forms\Controls;
 use Nette;
 
 
-
 /**
  * Select box control that allows single item selection.
  *
@@ -40,7 +39,6 @@ class SelectBox extends BaseControl
 	private $useKeys = TRUE;
 
 
-
 	/**
 	 * @param  string  label
 	 * @param  array   items from which to choose
@@ -57,7 +55,6 @@ class SelectBox extends BaseControl
 	}
 
 
-
 	/**
 	 * Returns selected item key.
 	 * @return mixed
@@ -66,7 +63,6 @@ class SelectBox extends BaseControl
 	{
 		return is_scalar($this->value) && isset($this->allowed[$this->value]) ? $this->value : NULL;
 	}
-
 
 
 	/**
@@ -79,7 +75,6 @@ class SelectBox extends BaseControl
 	}
 
 
-
 	/**
 	 * Has been any item selected?
 	 * @return bool
@@ -89,7 +84,6 @@ class SelectBox extends BaseControl
 		$value = $this->getValue();
 		return is_array($value) ? count($value) > 0 : $value !== NULL;
 	}
-
 
 
 	/**
@@ -108,14 +102,12 @@ class SelectBox extends BaseControl
 	}
 
 
-
 	/** @deprecated */
 	function skipFirst($v = NULL)
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use setPrompt() instead.', E_USER_WARNING);
 		return $this->setPrompt($v);
 	}
-
 
 
 	/**
@@ -128,7 +120,6 @@ class SelectBox extends BaseControl
 	}
 
 
-
 	/**
 	 * Are the keys used?
 	 * @return bool
@@ -137,7 +128,6 @@ class SelectBox extends BaseControl
 	{
 		return $this->useKeys;
 	}
-
 
 
 	/**
@@ -173,7 +163,6 @@ class SelectBox extends BaseControl
 	}
 
 
-
 	/**
 	 * Returns items from which to choose.
 	 * @return array
@@ -182,7 +171,6 @@ class SelectBox extends BaseControl
 	{
 		return $this->items;
 	}
-
 
 
 	/**
@@ -194,7 +182,6 @@ class SelectBox extends BaseControl
 		$value = $this->getValue();
 		return ($this->useKeys && $value !== NULL) ? $this->allowed[$value] : $value;
 	}
-
 
 
 	/**

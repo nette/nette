@@ -14,7 +14,6 @@ namespace Nette\Application;
 use Nette;
 
 
-
 /**
  * The bi-directional router.
  *

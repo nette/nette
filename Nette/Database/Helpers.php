@@ -14,7 +14,6 @@ namespace Nette\Database;
 use Nette;
 
 
-
 /**
  * Database helpers.
  *
@@ -34,7 +33,6 @@ class Helpers
 		'DATE' => IReflection::FIELD_DATE,
 		'BOOL' => IReflection::FIELD_BOOL,
 	);
-
 
 
 	/**
@@ -72,7 +70,6 @@ class Helpers
 			echo "</tbody>\n</table>\n";
 		}
 	}
-
 
 
 	/**
@@ -116,7 +113,6 @@ class Helpers
 	}
 
 
-
 	/**
 	 * Heuristic type detection.
 	 * @param  string
@@ -136,7 +132,6 @@ class Helpers
 		}
 		return $cache[$type];
 	}
-
 
 
 	/**

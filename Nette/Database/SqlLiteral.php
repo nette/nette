@@ -14,7 +14,6 @@ namespace Nette\Database;
 use Nette;
 
 
-
 /**
  * SQL literal value.
  *
@@ -30,7 +29,6 @@ class SqlLiteral extends Nette\Object
 	{
 		$this->value = (string) $value;
 	}
-
 
 
 	/**

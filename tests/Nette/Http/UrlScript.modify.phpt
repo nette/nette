@@ -10,9 +10,7 @@
 use Nette\Http\UrlScript;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $url = new UrlScript('http://nette.org:8080/file.php?q=search');

@@ -10,7 +10,6 @@
 use Nette\Http\Session;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 

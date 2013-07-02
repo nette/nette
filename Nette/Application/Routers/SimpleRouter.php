@@ -15,7 +15,6 @@ use Nette,
 	Nette\Application;
 
 
-
 /**
  * The bidirectional route for trivial routing via query parameters.
  *
@@ -37,7 +36,6 @@ class SimpleRouter extends Nette\Object implements Application\IRouter
 
 	/** @var int */
 	private $flags;
-
 
 
 	/**
@@ -65,7 +63,6 @@ class SimpleRouter extends Nette\Object implements Application\IRouter
 		$this->defaults = $defaults;
 		$this->flags = $flags;
 	}
-
 
 
 	/**
@@ -97,7 +94,6 @@ class SimpleRouter extends Nette\Object implements Application\IRouter
 			array(Application\Request::SECURED => $httpRequest->isSecured())
 		);
 	}
-
 
 
 	/**
@@ -136,7 +132,6 @@ class SimpleRouter extends Nette\Object implements Application\IRouter
 	}
 
 
-
 	/**
 	 * Returns default values.
 	 * @return array
@@ -145,7 +140,6 @@ class SimpleRouter extends Nette\Object implements Application\IRouter
 	{
 		return $this->defaults;
 	}
-
 
 
 	/**

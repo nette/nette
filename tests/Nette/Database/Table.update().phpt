@@ -14,7 +14,6 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nette_test1.sql");
 
 
-
 $author = $connection->table('author')->get(12);  // SELECT * FROM `author` WHERE (`id` = ?)
 $author->name = 'Tyrion Lannister';
 $author->update();  // UPDATE `author` SET `name`='Tyrion Lannister' WHERE (`id` = 12)
@@ -25,14 +24,12 @@ $book1 = $book->get(1);  // SELECT * FROM `book` WHERE (`id` = ?)
 Assert::same('Jakub Vrana', $book1->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11))
 
 
-
 $book2 = $book->insert(array(
 	'author_id' => $author->getPrimary(),
 	'title' => 'Game of Thrones',
 ));  // INSERT INTO `book` (`author_id`, `title`) VALUES (12, 'Game of Thrones')
 
 Assert::same('Tyrion Lannister', $book2->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (12))
-
 
 
 $book2->author_id = $connection->table('author')->get(12);  // SELECT * FROM `author` WHERE (`id` = ?)
@@ -44,8 +41,6 @@ $book2->author_id = $connection->table('author')->get(11);  // SELECT * FROM `au
 $book2->update();  // UPDATE `book` SET `author_id`=11 WHERE (`id` = '5')
 
 Assert::same('Jakub Vrana', $book2->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11))
-
-
 
 
 $tag = $connection->table('tag')->insert(array(

@@ -12,9 +12,7 @@ use Nette\Latte,
 	Nette\Templating\FileTemplate;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $template = new FileTemplate;

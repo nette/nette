@@ -20,7 +20,6 @@ use Nette,
 	Nette\Utils\Strings;
 
 
-
 /**
  * Macros for Nette\Forms.
  *
@@ -47,7 +46,6 @@ class FormMacros extends MacroSet
 	}
 
 
-
 	/********************* macros ****************d*g**/
 
 
@@ -66,7 +64,6 @@ class FormMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * <input n:name> or alias n:input
 	 */
@@ -80,9 +77,7 @@ class FormMacros extends MacroSet
 	}
 
 
-
 	/********************* run-time writers ****************d*g**/
-
 
 
 	/**
@@ -102,7 +97,6 @@ class FormMacros extends MacroSet
 		}
 		echo $el->addAttributes($attrs)->startTag();
 	}
-
 
 
 	/**

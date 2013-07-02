@@ -14,7 +14,6 @@ namespace Nette\Forms\Controls;
 use Nette;
 
 
-
 /**
  * Submittable image button form control.
  *
@@ -36,7 +35,6 @@ class ImageButton extends SubmitButton
 	}
 
 
-
 	/**
 	 * Returns HTML name of control.
 	 * @return string
@@ -46,7 +44,6 @@ class ImageButton extends SubmitButton
 		$name = parent::getHtmlName();
 		return strpos($name, '[') === FALSE ? $name : $name . '[]';
 	}
-
 
 
 	/**

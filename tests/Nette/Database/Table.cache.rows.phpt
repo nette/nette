@@ -17,7 +17,6 @@ $connection->setCacheStorage($cacheStorage);
 $connection->setDatabaseReflection(new Nette\Database\Reflection\DiscoveredReflection($cacheStorage));
 
 
-
 $selections = array();
 foreach ($selections[] = $connection->table('book') as $book) {
 	$book->author->name;
@@ -41,7 +40,6 @@ Assert::same(array(
 	'http://davidgrudl.com/',
 	'http://www.vrana.cz/',
 ), array_keys($webs));
-
 
 
 $bookSelection = $connection->table('book')->order('id');

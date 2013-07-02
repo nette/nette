@@ -10,9 +10,7 @@
 use Nette\Latte;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $parser = new Latte\Parser();

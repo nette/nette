@@ -14,7 +14,6 @@ namespace Nette\ComponentModel;
 use Nette;
 
 
-
 /**
  * Recursive component iterator. See Container::getComponents().
  *
@@ -34,7 +33,6 @@ class RecursiveComponentIterator extends \RecursiveArrayIterator implements \Cou
 	}
 
 
-
 	/**
 	 * The sub-iterator for the current element.
 	 * @return \RecursiveIterator
@@ -43,7 +41,6 @@ class RecursiveComponentIterator extends \RecursiveArrayIterator implements \Cou
 	{
 		return $this->current()->getComponents();
 	}
-
 
 
 	/**

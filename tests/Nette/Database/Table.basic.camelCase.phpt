@@ -15,7 +15,6 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nett
 $connection->setDatabaseReflection(new Nette\Database\Reflection\DiscoveredReflection);
 
 
-
 $titles = array();
 foreach ($connection->table('nUsers')->order('nUserId') as $user) {
 	foreach ($user->related('nUsers_nTopics')->order('nTopicId') as $userTopic) {

@@ -10,9 +10,7 @@
 use Nette\Reflection;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 /**
@@ -41,7 +39,6 @@ class TestClass {
 	{}
 
 }
-
 
 
 // Class annotations

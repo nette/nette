@@ -10,9 +10,7 @@
 use Nette\Config\Configurator;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class Lorem
@@ -29,7 +27,6 @@ class Ipsum
 	{
 	}
 }
-
 
 
 Assert::exception(function() {

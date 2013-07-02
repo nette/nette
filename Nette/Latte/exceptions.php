@@ -14,7 +14,6 @@ namespace Nette\Latte;
 use Nette;
 
 
-
 /**
  * The exception occured during Latte compilation.
  *

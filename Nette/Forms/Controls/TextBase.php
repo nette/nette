@@ -17,7 +17,6 @@ use Nette,
 	Nette\Utils\Validators;
 
 
-
 /**
  * Implements the basic functionality common to text input controls.
  *
@@ -44,7 +43,6 @@ abstract class TextBase extends BaseControl
 	}
 
 
-
 	/**
 	 * Sets control's value.
 	 * @param  string
@@ -55,7 +53,6 @@ abstract class TextBase extends BaseControl
 		$this->value = is_array($value) ? '' : str_replace("\r\n", "\n", $value);
 		return $this;
 	}
-
 
 
 	/**
@@ -72,7 +69,6 @@ abstract class TextBase extends BaseControl
 	}
 
 
-
 	/**
 	 * Sets the special value which is treated as empty string.
 	 * @param  string
@@ -85,7 +81,6 @@ abstract class TextBase extends BaseControl
 	}
 
 
-
 	/**
 	 * Returns the special value which is treated as empty string.
 	 * @return string
@@ -94,7 +89,6 @@ abstract class TextBase extends BaseControl
 	{
 		return $this->emptyValue;
 	}
-
 
 
 	/**
@@ -107,7 +101,6 @@ abstract class TextBase extends BaseControl
 		$this->filters[] = new Nette\Callback($filter);
 		return $this;
 	}
-
 
 
 	/**
@@ -124,7 +117,6 @@ abstract class TextBase extends BaseControl
 		}
 		return $value;
 	}
-
 
 
 	public function getControl()
@@ -144,7 +136,6 @@ abstract class TextBase extends BaseControl
 	}
 
 
-
 	public function addRule($operation, $message = NULL, $arg = NULL)
 	{
 		if ($operation === Form::FLOAT) {
@@ -156,7 +147,6 @@ abstract class TextBase extends BaseControl
 		}
 		return parent::addRule($operation, $message, $arg);
 	}
-
 
 
 	/**
@@ -171,7 +161,6 @@ abstract class TextBase extends BaseControl
 	}
 
 
-
 	/**
 	 * Max-length validator: is control's value length in limit?
 	 * @param  TextBase
@@ -182,7 +171,6 @@ abstract class TextBase extends BaseControl
 	{
 		return Strings::length($control->getValue()) <= $length;
 	}
-
 
 
 	/**
@@ -200,7 +188,6 @@ abstract class TextBase extends BaseControl
 	}
 
 
-
 	/**
 	 * Email validator: is control's value valid email address?
 	 * @param  TextBase
@@ -210,7 +197,6 @@ abstract class TextBase extends BaseControl
 	{
 		return Validators::isEmail($control->getValue());
 	}
-
 
 
 	/**
@@ -224,13 +210,11 @@ abstract class TextBase extends BaseControl
 	}
 
 
-
 	/** @deprecated */
 	public static function validateRegexp(TextBase $control, $regexp)
 	{
 		return (bool) Strings::match($control->getValue(), $regexp);
 	}
-
 
 
 	/**
@@ -245,7 +229,6 @@ abstract class TextBase extends BaseControl
 	}
 
 
-
 	/**
 	 * Integer validator: is a control's value decimal number?
 	 * @param  TextBase
@@ -255,7 +238,6 @@ abstract class TextBase extends BaseControl
 	{
 		return Validators::isNumericInt($control->getValue());
 	}
-
 
 
 	/**
@@ -269,7 +251,6 @@ abstract class TextBase extends BaseControl
 	}
 
 
-
 	/**
 	 * Rangle validator: is a control's value number in specified range?
 	 * @param  TextBase
@@ -280,7 +261,6 @@ abstract class TextBase extends BaseControl
 	{
 		return Validators::isInRange($control->getValue(), $range);
 	}
-
 
 
 	/**

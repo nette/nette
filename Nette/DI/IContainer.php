@@ -14,7 +14,6 @@ namespace Nette\DI;
 use Nette;
 
 
-
 /**
  * @deprecated
  */

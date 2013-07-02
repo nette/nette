@@ -10,9 +10,7 @@
 use Nette\Utils\Arrays;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $arr  = array(
@@ -32,7 +30,6 @@ Assert::same( 'x', Arrays::get($arr, 'undefined', 'x') );
 Assert::exception(function() use ($arr) {
 	Arrays::get($arr, 'undefined');
 }, 'Nette\InvalidArgumentException', "Missing item 'undefined'.");
-
 
 
 // Traversing

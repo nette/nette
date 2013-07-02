@@ -10,9 +10,7 @@
 use Nette\Utils\Paginator;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $paginator = new Paginator;
@@ -30,7 +28,6 @@ Assert::same( 0, $paginator->countdownOffset );
 Assert::same( 1, $paginator->length );
 
 
-
 $paginator = new Paginator;
 $paginator->itemCount = 7;
 $paginator->itemsPerPage = 6;
@@ -41,7 +38,6 @@ Assert::same( 0, $paginator->page );
 Assert::same( 0, $paginator->offset );
 Assert::same( 1, $paginator->countdownOffset );
 Assert::same( 6, $paginator->length );
-
 
 
 $paginator = new Paginator;
@@ -59,7 +55,6 @@ Assert::same( 0, $paginator->countdownOffset );
 Assert::same( 7, $paginator->length );
 
 
-
 $paginator = new Paginator;
 $paginator->itemCount = -1;
 $paginator->itemsPerPage = 7;
@@ -75,7 +70,6 @@ Assert::same( 0, $paginator->countdownOffset );
 Assert::same( 0, $paginator->length );
 
 
-
 $paginator = new Paginator;
 $paginator->itemCount = 7;
 $paginator->itemsPerPage = 6;
@@ -89,7 +83,6 @@ Assert::same( 2, $paginator->lastPage );
 Assert::same( 6, $paginator->offset );
 Assert::same( 0, $paginator->countdownOffset );
 Assert::same( 1, $paginator->length );
-
 
 
 $paginator = new Paginator;
@@ -115,7 +108,6 @@ Assert::false( $paginator->isLast() );
 $paginator->setPage(2);
 Assert::false( $paginator->isFirst() );
 Assert::true( $paginator->isLast() );
-
 
 
 $paginator = new Paginator;

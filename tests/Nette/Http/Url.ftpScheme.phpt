@@ -10,9 +10,7 @@
 use Nette\Http\Url;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $url = new Url('ftp://ftp.is.co.za/rfc/rfc3986.txt');

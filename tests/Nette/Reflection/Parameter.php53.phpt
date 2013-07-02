@@ -11,9 +11,7 @@
 use Nette\Reflection;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $reflect = new Reflection\GlobalFunction(function($x, $y) {});

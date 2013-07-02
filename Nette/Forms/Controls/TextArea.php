@@ -14,7 +14,6 @@ namespace Nette\Forms\Controls;
 use Nette;
 
 
-
 /**
  * Multiline text input control.
  *
@@ -35,7 +34,6 @@ class TextArea extends TextBase
 		$this->control->cols = $cols;
 		$this->control->rows = $rows;
 	}
-
 
 
 	/**

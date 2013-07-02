@@ -14,7 +14,6 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nette_test1.sql");
 
 
-
 $connection->table('author')->insert(array(
 	'id' => 14,
 	'name' => 'Eddard Stark',
@@ -28,14 +27,12 @@ switch ($driverName) {
 }
 
 
-
 $insert = array(
 	'name' => 'Catelyn Stark',
 	'web' => 'http://example.com',
 	'born' => new Nette\DateTime('2011-11-11'),
 );
 $connection->table('author')->insert($insert);  // INSERT INTO `author` (`name`, `web`, `born`) VALUES ('Catelyn Stark', 'http://example.com', '2011-11-11 00:00:00')
-
 
 
 $catelynStark = $connection->table('author')->get(15);  // SELECT * FROM `author` WHERE (`id` = ?)
@@ -45,7 +42,6 @@ Assert::equal(array(
 	'web' => 'http://example.com',
 	'born' => new Nette\DateTime('2011-11-11'),
 ), $catelynStark->toArray());
-
 
 
 $book = $connection->table('book');
@@ -66,7 +62,6 @@ $book3 = $book->insert(array(
 ));  // INSERT INTO `book` (`title`, `author_id`) VALUES ('Dragonstone', 14)
 
 Assert::same('Eddard Stark', $book3->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11, 15))
-
 
 
 Assert::exception(function() use ($connection) {

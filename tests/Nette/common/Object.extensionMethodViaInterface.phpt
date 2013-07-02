@@ -10,9 +10,7 @@
 use Nette\Reflection;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 interface IFirst
@@ -27,19 +25,16 @@ class TestClass extends Nette\Object implements ISecond
 }
 
 
-
 function IFirst_join(ISecond $that, $separator)
 {
 	return __METHOD__ . ' says ' . $that->foo . $separator . $that->bar;
 }
 
 
-
 function ISecond_join(ISecond $that, $separator)
 {
 	return __METHOD__ . ' says ' . $that->foo . $separator . $that->bar;
 }
-
 
 
 Reflection\ClassType::from('IFirst')->setExtensionMethod('join', 'IFirst_join');

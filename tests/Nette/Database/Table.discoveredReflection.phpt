@@ -15,7 +15,6 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nett
 $connection->setDatabaseReflection(new Nette\Database\Reflection\DiscoveredReflection);
 
 
-
 $appTags = array();
 foreach ($connection->table('book') as $book) {
 	$appTags[$book->title] = array(
@@ -48,7 +47,6 @@ Assert::same(array(
 ), $appTags);
 
 
-
 $books = array();
 foreach ($connection->table('author') as $author) {
 	foreach ($author->related('book') as $book) {
@@ -64,10 +62,8 @@ Assert::same(array(
 ), $books);
 
 
-
 $book = $connection->table('book')->get(1);
 Assert::same('Jakub Vrana', $book->translator->name);
-
 
 
 $book = $connection->table('book')->get(2);
@@ -82,7 +78,6 @@ Assert::false(isset($book->author));
 Assert::false(isset($book->translator));
 Assert::true(empty($book->author));
 Assert::true(empty($book->translator));
-
 
 
 if (

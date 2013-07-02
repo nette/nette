@@ -10,15 +10,12 @@
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Debugger::$consoleColors = NULL;
 Debugger::$consoleMode = TRUE;
 Debugger::$productionMode = FALSE;
-
 
 
 $arr = array(
@@ -67,7 +64,6 @@ Assert::match( 'array(5) {
 }
 
 ', Debugger::dump($arr, TRUE) );
-
 
 
 Debugger::$maxDepth = 2;

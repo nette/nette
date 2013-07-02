@@ -14,7 +14,6 @@ namespace Nette\Application\Responses;
 use Nette;
 
 
-
 /**
  * JSON response used mainly for AJAX requests.
  *
@@ -32,7 +31,6 @@ class JsonResponse extends Nette\Object implements Nette\Application\IResponse
 	private $contentType;
 
 
-
 	/**
 	 * @param  array|\stdClass  payload
 	 * @param  string    MIME content type
@@ -47,7 +45,6 @@ class JsonResponse extends Nette\Object implements Nette\Application\IResponse
 	}
 
 
-
 	/**
 	 * @return array|\stdClass
 	 */
@@ -55,7 +52,6 @@ class JsonResponse extends Nette\Object implements Nette\Application\IResponse
 	{
 		return $this->payload;
 	}
-
 
 
 	/**
@@ -66,7 +62,6 @@ class JsonResponse extends Nette\Object implements Nette\Application\IResponse
 	{
 		return $this->contentType;
 	}
-
 
 
 	/**

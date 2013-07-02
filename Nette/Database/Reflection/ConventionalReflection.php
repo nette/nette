@@ -14,7 +14,6 @@ namespace Nette\Database\Reflection;
 use Nette;
 
 
-
 /**
  * Reflection metadata class for a database.
  *
@@ -34,7 +33,6 @@ class ConventionalReflection extends Nette\Object implements Nette\Database\IRef
 	protected $table;
 
 
-
 	/**
 	 * Create conventional structure.
 	 * @param  string %s stands for table name
@@ -49,12 +47,10 @@ class ConventionalReflection extends Nette\Object implements Nette\Database\IRef
 	}
 
 
-
 	public function getPrimary($table)
 	{
 		return sprintf($this->primary, $this->getColumnFromTable($table));
 	}
-
 
 
 	public function getHasManyReference($table, $key)
@@ -67,7 +63,6 @@ class ConventionalReflection extends Nette\Object implements Nette\Database\IRef
 	}
 
 
-
 	public function getBelongsToReference($table, $key)
 	{
 		$table = $this->getColumnFromTable($table);
@@ -78,10 +73,8 @@ class ConventionalReflection extends Nette\Object implements Nette\Database\IRef
 	}
 
 
-
 	public function setConnection(Nette\Database\Connection $connection)
 	{}
-
 
 
 	protected function getColumnFromTable($name)

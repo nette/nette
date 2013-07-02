@@ -11,7 +11,6 @@ use Nette\Http\Session,
 	Nette\Http\SessionSection;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 

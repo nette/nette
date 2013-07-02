@@ -14,7 +14,6 @@ namespace Nette\Config;
 use Nette;
 
 
-
 /**
  * Adapter for reading and writing configuration files.
  *

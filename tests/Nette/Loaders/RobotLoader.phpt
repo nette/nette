@@ -11,9 +11,7 @@ use Nette\Loaders\RobotLoader,
 	Nette\Caching\Storages\DevNullStorage;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $loader = new RobotLoader;

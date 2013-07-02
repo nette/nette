@@ -18,7 +18,6 @@ use Nette,
 	Nette\Database\SqlLiteral;
 
 
-
 /**
  * Builds SQL query.
  * SqlBuilder is based on great library NotORM http://www.notorm.com written by Jakub Vrana.
@@ -71,7 +70,6 @@ class SqlBuilder extends Nette\Object
 	protected $having = '';
 
 
-
 	public function __construct($tableName, Connection $connection, IReflection $reflection)
 	{
 		$this->tableName = $tableName;
@@ -82,12 +80,10 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	public function buildInsertQuery()
 	{
 		return "INSERT INTO {$this->delimitedTable}";
 	}
-
 
 
 	public function buildUpdateQuery()
@@ -96,12 +92,10 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	public function buildDeleteQuery()
 	{
 		return "DELETE{$this->buildTopClause()} FROM {$this->delimitedTable}" . $this->buildConditions();
 	}
-
 
 
 	public function importConditions(SqlBuilder $builder)
@@ -112,9 +106,7 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	/********************* SQL selectors ****************d*g**/
-
 
 
 	public function addSelect($columns)
@@ -126,12 +118,10 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	public function getSelect()
 	{
 		return $this->select;
 	}
-
 
 
 	public function addWhere($condition, $parameters = array())
@@ -238,12 +228,10 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	public function getConditions()
 	{
 		return array_values($this->conditions);
 	}
-
 
 
 	public function addOrder($columns)
@@ -252,12 +240,10 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	public function getOrder()
 	{
 		return $this->order;
 	}
-
 
 
 	public function setLimit($limit, $offset)
@@ -267,19 +253,16 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	public function getLimit()
 	{
 		return $this->limit;
 	}
 
 
-
 	public function getOffset()
 	{
 		return $this->offset;
 	}
-
 
 
 	public function setGroup($columns, $having)
@@ -289,12 +272,10 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	public function getGroup()
 	{
 		return $this->group;
 	}
-
 
 
 	public function getHaving()
@@ -303,9 +284,7 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	/********************* SQL building ****************d*g**/
-
 
 
 	/**
@@ -338,12 +317,10 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	public function getParameters()
 	{
 		return $this->parameters;
 	}
-
 
 
 	protected function buildJoins($val, $inner = FALSE)
@@ -380,7 +357,6 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	protected function buildConditions()
 	{
 		$return = '';
@@ -410,7 +386,6 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	protected function buildTopClause()
 	{
 		if ($this->limit !== NULL && $this->driverName === 'dblib') {
@@ -420,7 +395,6 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	protected function tryDelimite($s)
 	{
 		$driver = $this->driver;
@@ -428,7 +402,6 @@ class SqlBuilder extends Nette\Object
 			return strtoupper($m[0]) === $m[0] ? $m[0] : $driver->delimite($m[0]);
 		}, $s);
 	}
-
 
 
 	protected function removeExtraTables($expression)

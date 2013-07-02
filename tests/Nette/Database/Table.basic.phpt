@@ -14,7 +14,6 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nette_test1.sql");
 
 
-
 $book = $connection->table('book')->where('id = ?', 1)->select('id, title')->fetch()->toArray();  // SELECT `id`, `title` FROM `book` WHERE (`id` = ?)
 Assert::same(array(
 	'id' => 1,
@@ -31,7 +30,6 @@ $book = $connection->table('book')->get(1);
 Assert::exception(function() use ($book) {
 	$book->unknown_column;
 }, 'Nette\MemberAccessException', 'Cannot read an undeclared column "unknown_column".');
-
 
 
 $bookTags = array();
@@ -64,7 +62,6 @@ Assert::same(array(
 		'tags' => array('PHP', 'MySQL'),
 	),
 ), $bookTags);
-
 
 
 $connection->setDatabaseReflection(new Nette\Database\Reflection\DiscoveredReflection);

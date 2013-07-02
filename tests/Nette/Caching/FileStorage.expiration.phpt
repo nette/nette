@@ -11,9 +11,7 @@ use Nette\Caching\Cache,
 	Nette\Caching\Storages\FileStorage;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $key = 'nette';
@@ -32,7 +30,6 @@ $cache->save($key, $value, array(
 sleep(1);
 clearstatcache();
 Assert::true( isset($cache[$key]) );
-
 
 
 // Sleeping 3 seconds

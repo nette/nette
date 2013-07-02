@@ -14,7 +14,6 @@ namespace Nette\Database;
 use Nette;
 
 
-
 /**
  * SQL preprocessor.
  *
@@ -41,13 +40,11 @@ class SqlPreprocessor extends Nette\Object
 	private $arrayMode;
 
 
-
 	public function __construct(Connection $connection)
 	{
 		$this->connection = $connection;
 		$this->driver = $connection->getSupplementalDriver();
 	}
-
 
 
 	/**
@@ -72,7 +69,6 @@ class SqlPreprocessor extends Nette\Object
 	}
 
 
-
 	/** @internal */
 	public function callback($m)
 	{
@@ -91,7 +87,6 @@ class SqlPreprocessor extends Nette\Object
 			return $m;
 		}
 	}
-
 
 
 	private function formatValue($value)

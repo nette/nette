@@ -14,7 +14,6 @@ namespace Nette\Diagnostics;
 use Nette;
 
 
-
 /**
  * Red BlueScreen.
  *
@@ -24,7 +23,6 @@ class BlueScreen extends Nette\Object
 {
 	/** @var array */
 	private $panels = array();
-
 
 
 	/**
@@ -41,7 +39,6 @@ class BlueScreen extends Nette\Object
 	}
 
 
-
 	/**
 	 * Renders blue screen.
 	 * @param  \Exception
@@ -52,7 +49,6 @@ class BlueScreen extends Nette\Object
 		$panels = $this->panels;
 		require __DIR__ . '/templates/bluescreen.phtml';
 	}
-
 
 
 	/**
@@ -69,7 +65,6 @@ class BlueScreen extends Nette\Object
 			return static::highlightPhp($source, $line, $lines, $vars);
 		}
 	}
-
 
 
 	/**

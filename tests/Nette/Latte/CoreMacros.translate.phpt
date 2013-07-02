@@ -10,7 +10,6 @@
 use Nette\Latte\Macros\CoreMacros;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 

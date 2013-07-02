@@ -10,9 +10,7 @@
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Debugger::$consoleColors = NULL;
@@ -34,7 +32,6 @@ Assert::match( 'array(4) [
    ]
 ]
 ', Debugger::dump($arr, TRUE) );
-
 
 
 $arr = array('x' => 1, 'y' => 2);

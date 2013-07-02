@@ -10,9 +10,7 @@
 use Nette\Utils\Finder;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 function export($iterator)
@@ -22,7 +20,6 @@ function export($iterator)
 	sort($arr);
 	return $arr;
 }
-
 
 
 // multiple mask

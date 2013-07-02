@@ -10,16 +10,13 @@
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Debugger::$consoleMode = TRUE;
 Debugger::$productionMode = FALSE;
 
 Debugger::enable();
-
 
 
 function first($arg1, $arg2)

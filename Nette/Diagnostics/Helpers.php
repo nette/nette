@@ -14,7 +14,6 @@ namespace Nette\Diagnostics;
 use Nette;
 
 
-
 /**
  * Rendering helpers for Debugger.
  *
@@ -43,7 +42,6 @@ final class Helpers
 			return Nette\Utils\Html::el('span')->setText($file);
 		}
 	}
-
 
 
 	/**
@@ -194,7 +192,6 @@ final class Helpers
 	}
 
 
-
 	/**
 	 * Dumps variable.
 	 * @param  string
@@ -213,7 +210,6 @@ final class Helpers
 			self::htmlDump($dump)
 		) . '</pre>';
 	}
-
 
 
 	public static function findTrace(array $trace, $method, & $index = NULL)

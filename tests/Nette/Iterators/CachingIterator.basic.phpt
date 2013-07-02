@@ -10,9 +10,7 @@
 use Nette\Iterators;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 // ==> Two items in array
@@ -42,7 +40,6 @@ Assert::same( 1, $iterator->getCounter() );
 Assert::false( $iterator->isEmpty() );
 
 
-
 $arr = array('Nette');
 
 $iterator = new Iterators\CachingIterator($arr);
@@ -60,7 +57,6 @@ Assert::true( $iterator->isFirst() );
 Assert::true( $iterator->isLast() );
 Assert::same( 1, $iterator->getCounter() );
 Assert::false( $iterator->isEmpty() );
-
 
 
 $arr = array();

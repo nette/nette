@@ -14,7 +14,6 @@ namespace Nette\Config\Adapters;
 use Nette;
 
 
-
 /**
  * Reading and generating PHP files.
  *
@@ -32,7 +31,6 @@ class PhpAdapter extends Nette\Object implements Nette\Config\IAdapter
 	{
 		return Nette\Utils\LimitedScope::load($file);
 	}
-
 
 
 	/**

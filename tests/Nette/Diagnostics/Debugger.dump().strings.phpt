@@ -10,15 +10,12 @@
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Debugger::$consoleColors = NULL;
 Debugger::$consoleMode = TRUE;
 Debugger::$productionMode = FALSE;
-
 
 
 Assert::match( 'array(8) [

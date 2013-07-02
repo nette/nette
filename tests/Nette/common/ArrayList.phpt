@@ -10,9 +10,7 @@
 use Nette\ArrayList;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class Person
@@ -32,7 +30,6 @@ class Person
 }
 
 
-
 $list = new ArrayList;
 $jack = new Person('Jack');
 $mary = new Person('Mary');
@@ -42,7 +39,6 @@ $list[] = $jack;
 
 Assert::same( $mary, $list[0] );
 Assert::same( $jack, $list[1] );
-
 
 
 Assert::same( array(
@@ -60,10 +56,8 @@ Assert::same( array(
 ), $tmp );
 
 
-
 Assert::same( 2, $list->count() );
 Assert::same( 2, count($list) );
-
 
 
 Assert::exception(function() use ($list) {

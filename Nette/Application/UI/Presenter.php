@@ -18,7 +18,6 @@ use Nette,
 	Nette\Reflection;
 
 
-
 /**
  * Presenter component represents a webpage instance. It converts Request to IResponse.
  *
@@ -112,7 +111,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	private $context;
 
 
-
 	public function __construct(Nette\DI\Container $context = NULL)
 	{
 		$this->context = $context;
@@ -122,7 +120,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * @return Nette\Application\Request
 	 */
@@ -130,7 +127,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		return $this->request;
 	}
-
 
 
 	/**
@@ -143,7 +139,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Returns a name that uniquely identifies component.
 	 * @return string
@@ -154,9 +149,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/********************* interface IPresenter ****************d*g**/
-
 
 
 	/**
@@ -233,7 +226,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * @return void
 	 */
@@ -241,7 +233,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		$this->startupCheck = TRUE;
 	}
-
 
 
 	/**
@@ -253,7 +244,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Common render method.
 	 * @return void
@@ -263,7 +253,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * @param  Nette\Application\IResponse
 	 * @return void
@@ -271,7 +260,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	protected function shutdown($response)
 	{
 	}
-
 
 
 	/**
@@ -287,9 +275,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/********************* signal handling ****************d*g**/
-
 
 
 	/**
@@ -318,7 +304,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Returns pair signal receiver and name.
 	 * @return array|NULL
@@ -327,7 +312,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		return $this->signal === NULL ? NULL : array($this->signalReceiver, $this->signal);
 	}
-
 
 
 	/**
@@ -358,9 +342,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/********************* rendering ****************d*g**/
-
 
 
 	/**
@@ -371,7 +353,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		return $fullyQualified ? ':' . $this->getName() . ':' . $this->action : $this->action;
 	}
-
 
 
 	/**
@@ -391,7 +372,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Returns current view.
 	 * @return string
@@ -400,7 +380,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		return $this->view;
 	}
-
 
 
 	/**
@@ -415,7 +394,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Returns current layout name.
 	 * @return string|FALSE
@@ -424,7 +402,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		return $this->layout;
 	}
-
 
 
 	/**
@@ -437,7 +414,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 		$this->layout = $layout === FALSE ? FALSE : (string) $layout;
 		return $this;
 	}
-
 
 
 	/**
@@ -472,7 +448,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Finds layout template file name.
 	 * @return string
@@ -495,7 +470,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 			throw new Nette\FileNotFoundException("Layout not found. Missing template '$file'.");
 		}
 	}
-
 
 
 	/**
@@ -524,7 +498,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Formats view template file names.
 	 * @return array
@@ -544,7 +517,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Formats action method name.
 	 * @param  string
@@ -554,7 +526,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		return 'action' . $action;
 	}
-
 
 
 	/**
@@ -568,9 +539,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/********************* partial AJAX rendering ****************d*g**/
-
 
 
 	/**
@@ -580,7 +549,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		return $this->payload;
 	}
-
 
 
 	/**
@@ -596,7 +564,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Sends AJAX payload to the output.
 	 * @return void
@@ -608,9 +575,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/********************* navigation & flow ****************d*g**/
-
 
 
 	/**
@@ -623,7 +588,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 		$this->response = $response;
 		$this->terminate();
 	}
-
 
 
 	/**
@@ -639,7 +603,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 		}
 		throw new Application\AbortException();
 	}
-
 
 
 	/**
@@ -658,7 +621,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 		$this->createRequest($this, $destination, is_array($args) ? $args : array_slice(func_get_args(), 1), 'forward');
 		$this->sendResponse(new Responses\ForwardResponse($this->lastCreatedRequest));
 	}
-
 
 
 	/**
@@ -690,7 +652,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Throws HTTP error.
 	 * @param  string
@@ -704,7 +665,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Link to myself.
 	 * @return string
@@ -713,7 +673,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		return $this->getAction(TRUE);
 	}
-
 
 
 	/**
@@ -726,7 +685,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Returns the last created Request flag.
 	 * @param  string
@@ -736,7 +694,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		return !empty($this->lastCreatedRequestFlag[$flag]);
 	}
-
 
 
 	/**
@@ -755,7 +712,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 			}
 		}
 	}
-
 
 
 	/**
@@ -777,7 +733,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 			$this->terminate();
 		}
 	}
-
 
 
 	/**
@@ -1013,7 +968,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Converts list of arguments to named parameters.
 	 * @param  string  class name
@@ -1066,7 +1020,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Invalid link handler. Descendant can override this method to change default behaviour.
 	 * @return string
@@ -1086,9 +1039,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/********************* request serialization ****************d*g**/
-
 
 
 	/**
@@ -1107,7 +1058,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 		$session->setExpiration($expiration, $key);
 		return $key;
 	}
-
 
 
 	/**
@@ -1131,9 +1081,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/********************* interface IStatePersistent ****************d*g**/
-
 
 
 	/**
@@ -1146,7 +1094,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 		return (array) Reflection\ClassType::from(/*5.2*func_get_arg(0)*//**/get_called_class()/**/)
 			->getAnnotation('persistent');
 	}
-
 
 
 	/**
@@ -1217,7 +1164,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Permanently saves state information for all subcomponents to $this->globalState.
 	 * @return void
@@ -1232,7 +1178,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 		$this->globalParams = array();
 		$this->globalState = $this->getGlobalState();
 	}
-
 
 
 	/**
@@ -1288,7 +1233,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Pops parameters for specified component.
 	 * @param  string  component id
@@ -1307,9 +1251,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/********************* flash session ****************d*g**/
-
 
 
 	/**
@@ -1321,7 +1263,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 		return !empty($this->params[self::FLASH_KEY])
 			&& $this->getSession()->hasSection('Nette.Application.Flash/' . $this->params[self::FLASH_KEY]);
 	}
-
 
 
 	/**
@@ -1337,9 +1278,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/********************* services ****************d*g**/
-
 
 
 	/**
@@ -1349,7 +1288,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		$this->context = $context;
 	}
-
 
 
 	/**
@@ -1362,7 +1300,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * @deprecated
 	 */
@@ -1370,7 +1307,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		return $this->context->getService($name);
 	}
-
 
 
 	/**
@@ -1382,7 +1318,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * @return Nette\Http\Response
 	 */
@@ -1390,7 +1325,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		return $this->context->getByType('Nette\Http\IResponse');
 	}
-
 
 
 	/**
@@ -1402,7 +1336,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * @return Nette\Application\Application
 	 */
@@ -1410,7 +1343,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		return $this->context->getByType('Nette\Application\Application');
 	}
-
 
 
 	/**
@@ -1421,7 +1353,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 		$handler = $this->context->getByType('Nette\Http\Session');
 		return $namespace === NULL ? $handler : $handler->getSection($namespace);
 	}
-
 
 
 	/**

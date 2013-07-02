@@ -16,7 +16,6 @@ use Nette,
 	Nette\Utils\Validators;
 
 
-
 /**
  * Core Nette Framework services.
  *
@@ -76,7 +75,6 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		'explain' => TRUE,
 		'reflection' => 'Nette\Database\Reflection\DiscoveredReflection',
 	);
-
 
 
 	public function loadConfiguration()
@@ -284,7 +282,6 @@ class NetteExtension extends Nette\Config\CompilerExtension
 	}
 
 
-
 	public function afterCompile(Nette\Utils\PhpGenerator\ClassType $class)
 	{
 		$initialize = $class->methods['initialize'];
@@ -352,7 +349,6 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			}
 		}
 	}
-
 
 
 	private function checkTempDir($dir)

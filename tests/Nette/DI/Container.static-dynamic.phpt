@@ -10,9 +10,7 @@
 use Nette\DI\Container;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class MyContainer extends Container
@@ -24,7 +22,6 @@ class MyContainer extends Container
 	}
 
 }
-
 
 
 $container = new MyContainer;

@@ -10,9 +10,7 @@
 use Nette\Http\RequestFactory;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $factory = new RequestFactory;
@@ -26,7 +24,6 @@ $_SERVER = array(
 Assert::same( '/projects/modules-usage/www/', $factory->createHttpRequest()->getUrl()->getScriptPath() );
 
 
-
 $_SERVER = array(
 	'REQUEST_URI' => '/projects/modules-usage/www/default/add-item',
 	'SCRIPT_FILENAME' => 'W:/projects/Modules-Usage/www/index.php',
@@ -36,7 +33,6 @@ $_SERVER = array(
 Assert::same( '/projects/modules-usage/www/', $factory->createHttpRequest()->getUrl()->getScriptPath() );
 
 
-
 $_SERVER = array(
 	'REQUEST_URI' => '/www/index.php',
 	'SCRIPT_FILENAME' => 'w:\projects\modules-usage\www\index.php',
@@ -44,7 +40,6 @@ $_SERVER = array(
 );
 
 Assert::same( '/www/index.php', $factory->createHttpRequest()->getUrl()->getScriptPath() );
-
 
 
 $_SERVER = array(

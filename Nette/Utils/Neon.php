@@ -14,7 +14,6 @@ namespace Nette\Utils;
 use Nette;
 
 
-
 /**
  * Simple parser & generator for Nette Object Notation.
  *
@@ -123,7 +122,6 @@ class Neon extends Nette\Object
 	}
 
 
-
 	/**
 	 * Decodes a NEON string.
 	 * @param  string
@@ -156,7 +154,6 @@ class Neon extends Nette\Object
 		}
 		return $res;
 	}
-
 
 
 	/**
@@ -324,7 +321,6 @@ class Neon extends Nette\Object
 	}
 
 
-
 	private function addValue(&$result, $hasKey, $key, $value)
 	{
 		if ($hasKey) {
@@ -336,7 +332,6 @@ class Neon extends Nette\Object
 			$result[] = $value;
 		}
 	}
-
 
 
 	private function cbString($m)
@@ -355,7 +350,6 @@ class Neon extends Nette\Object
 	}
 
 
-
 	private function error($message = "Unexpected '%s'")
 	{
 		list(, $line, $col) = self::$tokenizer->getOffset($this->n);
@@ -368,7 +362,6 @@ class Neon extends Nette\Object
 }
 
 
-
 /**
  * Representation of 'foo(bar=1)' literal
  */
@@ -377,7 +370,6 @@ class NeonEntity extends \stdClass
 	public $value;
 	public $attributes;
 }
-
 
 
 /**

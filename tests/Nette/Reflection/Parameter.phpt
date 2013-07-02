@@ -10,9 +10,7 @@
 use Nette\Reflection;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 function myFunction($test, $test2 = null) {
@@ -28,7 +26,6 @@ Assert::null( $params[0]->declaringClass );
 Assert::same( 'Function myFunction()', (string) $params[1]->declaringFunction );
 Assert::null( $params[1]->class );
 Assert::null( $params[1]->declaringClass );
-
 
 
 class Foo

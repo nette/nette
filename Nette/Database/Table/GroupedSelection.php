@@ -14,7 +14,6 @@ namespace Nette\Database\Table;
 use Nette;
 
 
-
 /**
  * Representation of filtered table grouped by some column.
  * GroupedSelection is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
@@ -34,7 +33,6 @@ class GroupedSelection extends Selection
 	protected $active;
 
 
-
 	/**
 	 * Creates filtered and grouped table representation.
 	 * @param  Selection  $refTable
@@ -47,7 +45,6 @@ class GroupedSelection extends Selection
 		$this->refTable = $refTable;
 		$this->column = $column;
 	}
-
 
 
 	/**
@@ -63,7 +60,6 @@ class GroupedSelection extends Selection
 	}
 
 
-
 	/** @deprecated */
 	public function through($column)
 	{
@@ -74,7 +70,6 @@ class GroupedSelection extends Selection
 	}
 
 
-
 	public function select($columns)
 	{
 		if (!$this->sqlBuilder->getSelect()) {
@@ -83,7 +78,6 @@ class GroupedSelection extends Selection
 
 		return parent::select($columns);
 	}
-
 
 
 	public function order($columns)
@@ -97,9 +91,7 @@ class GroupedSelection extends Selection
 	}
 
 
-
 	/********************* aggregations ****************d*g**/
-
 
 
 	public function aggregation($function)
@@ -128,7 +120,6 @@ class GroupedSelection extends Selection
 	}
 
 
-
 	public function count($column = NULL)
 	{
 		$return = parent::count($column);
@@ -136,9 +127,7 @@ class GroupedSelection extends Selection
 	}
 
 
-
 	/********************* internal ****************d*g**/
-
 
 
 	protected function execute()
@@ -200,7 +189,6 @@ class GroupedSelection extends Selection
 	}
 
 
-
 	protected function getRefTable(& $refPath)
 	{
 		$refObj = $this->refTable;
@@ -214,9 +202,7 @@ class GroupedSelection extends Selection
 	}
 
 
-
 	/********************* manipulation ****************d*g**/
-
 
 
 	public function insert($data)
@@ -237,7 +223,6 @@ class GroupedSelection extends Selection
 	}
 
 
-
 	public function update($data)
 	{
 		$builder = $this->sqlBuilder;
@@ -249,7 +234,6 @@ class GroupedSelection extends Selection
 		$this->sqlBuilder = $builder;
 		return $return;
 	}
-
 
 
 	public function delete()

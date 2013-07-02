@@ -16,7 +16,6 @@ use Nette,
 	PDO;
 
 
-
 /**
  * Filtered table representation.
  * Selection is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
@@ -83,7 +82,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	protected $keys = array();
 
 
-
 	/**
 	 * Creates filtered table representation.
 	 * @param  string  database table name
@@ -100,19 +98,16 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	public function __destruct()
 	{
 		$this->saveCacheState();
 	}
 
 
-
 	public function __clone()
 	{
 		$this->sqlBuilder = clone $this->sqlBuilder;
 	}
-
 
 
 	/**
@@ -124,7 +119,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/**
 	 * @return string
 	 */
@@ -132,7 +126,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	{
 		return $this->name;
 	}
-
 
 
 	/**
@@ -146,7 +139,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		}
 		return $this->primary;
 	}
-
 
 
 	/**
@@ -171,7 +163,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/**
 	 * @param  string
 	 * @return Selection provides a fluent interface
@@ -183,7 +174,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/**
 	 * @return string
 	 */
@@ -191,7 +181,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	{
 		return $this->sqlBuilder->buildSelectQuery($this->getPreviousAccessedColumns());
 	}
-
 
 
 	/**
@@ -209,7 +198,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/**
 	 * @internal
 	 * @return SqlBuilder
@@ -220,9 +208,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/********************* quick access ****************d*g**/
-
 
 
 	/**
@@ -237,7 +223,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/**
 	 * Returns next row of result.
 	 * @return ActiveRow or FALSE if there is no row
@@ -249,7 +234,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		next($this->data);
 		return $return;
 	}
-
 
 
 	/**
@@ -268,9 +252,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/********************* sql selectors ****************d*g**/
-
 
 
 	/**
@@ -286,7 +268,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/**
 	 * Method is deprecated, use wherePrimary() instead.
 	 * @return Selection provides a fluent interface
@@ -295,7 +276,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	{
 		return $this->wherePrimary($key);
 	}
-
 
 
 	/**
@@ -317,7 +297,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 		return $this;
 	}
-
 
 
 	/**
@@ -348,7 +327,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/**
 	 * Adds order clause, more calls appends to the end.
 	 * @param  string for example 'column1, column2 DESC'
@@ -360,7 +338,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$this->sqlBuilder->addOrder($columns);
 		return $this;
 	}
-
 
 
 	/**
@@ -377,7 +354,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/**
 	 * Sets offset using page number, more calls rewrite old values.
 	 * @param  int
@@ -388,7 +364,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	{
 		return $this->limit($itemsPerPage, ($page - 1) * $itemsPerPage);
 	}
-
 
 
 	/**
@@ -405,9 +380,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/********************* aggregations ****************d*g**/
-
 
 
 	/**
@@ -426,7 +399,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/**
 	 * Counts number of rows.
 	 * @param  string  if it is not provided returns count of result rows, otherwise runs new sql counting query
@@ -442,7 +414,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/**
 	 * Returns minimum value from a column.
 	 * @param  string
@@ -452,7 +423,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	{
 		return $this->aggregation("MIN($column)");
 	}
-
 
 
 	/**
@@ -466,7 +436,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/**
 	 * Returns sum of values in a column.
 	 * @param  string
@@ -478,9 +447,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/********************* internal ****************d*g**/
-
 
 
 	protected function execute()
@@ -523,12 +490,10 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	protected function createRow(array $row)
 	{
 		return new ActiveRow($row, $this);
 	}
-
 
 
 	protected function createSelectionInstance($table = NULL)
@@ -537,12 +502,10 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	protected function createGroupedSelectionInstance($table, $column)
 	{
 		return new GroupedSelection($this, $table, $column);
 	}
-
 
 
 	protected function query($query)
@@ -551,12 +514,10 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	protected function emptyResultSet()
 	{
 		$this->rows = NULL;
 	}
-
 
 
 	protected function saveCacheState()
@@ -565,7 +526,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			$this->cache->save($this->getCacheKey(), $this->accessedColumns);
 		}
 	}
-
 
 
 	/**
@@ -578,7 +538,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/**
 	 * Returns cache key for selected columns caching
 	 * @return string
@@ -587,7 +546,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	{
 		return md5(serialize(array(__CLASS__, $this->name, $this->sqlBuilder->getConditions())));
 	}
-
 
 
 	/**
@@ -624,7 +582,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/**
 	 * @internal
 	 * @param  string
@@ -637,7 +594,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/**
 	 * Returns if selection requeried for more columns.
 	 * @return bool
@@ -648,9 +604,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/********************* manipulation ****************d*g**/
-
 
 
 	/**
@@ -687,7 +641,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/**
 	 * Updates all rows in result set.
 	 * Joins in UPDATE are supported only in MySQL
@@ -714,7 +667,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/**
 	 * Deletes all rows in result set.
 	 * @return int number of affected rows or FALSE in case of an error
@@ -725,9 +677,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/********************* references ****************d*g**/
-
 
 
 	/**
@@ -775,7 +725,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/**
 	 * Returns referencing rows.
 	 * @param  string
@@ -797,9 +746,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/********************* interface Iterator ****************d*g**/
-
 
 
 	public function rewind()
@@ -808,7 +755,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$this->keys = array_keys($this->data);
 		reset($this->keys);
 	}
-
 
 
 	/** @return ActiveRow */
@@ -822,7 +768,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/**
 	 * @return string row ID
 	 */
@@ -832,12 +777,10 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	public function next()
 	{
 		next($this->keys);
 	}
-
 
 
 	public function valid()
@@ -846,9 +789,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/********************* interface ArrayAccess ****************d*g**/
-
 
 
 	/**
@@ -864,7 +805,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/**
 	 * Returns specified row.
 	 * @param  string row ID
@@ -877,7 +817,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
-
 	/**
 	 * Tests if row exists.
 	 * @param  string row ID
@@ -888,7 +827,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$this->execute();
 		return isset($this->rows[$key]);
 	}
-
 
 
 	/**

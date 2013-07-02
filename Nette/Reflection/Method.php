@@ -15,7 +15,6 @@ use Nette,
 	Nette\ObjectMixin;
 
 
-
 /**
  * Reports information about a method.
  *
@@ -67,7 +66,6 @@ class Method extends \ReflectionMethod
 	}
 
 
-
 	/**
 	 * @return Nette\Callback
 	 */
@@ -77,16 +75,13 @@ class Method extends \ReflectionMethod
 	}
 
 
-
 	public function __toString()
 	{
 		return 'Method ' . parent::getDeclaringClass()->getName() . '::' . $this->getName() . '()';
 	}
 
 
-
 	/********************* Reflection layer ****************d*g**/
-
 
 
 	/**
@@ -96,7 +91,6 @@ class Method extends \ReflectionMethod
 	{
 		return new ClassType(parent::getDeclaringClass()->getName());
 	}
-
 
 
 	/**
@@ -109,7 +103,6 @@ class Method extends \ReflectionMethod
 	}
 
 
-
 	/**
 	 * @return Extension
 	 */
@@ -117,7 +110,6 @@ class Method extends \ReflectionMethod
 	{
 		return ($name = $this->getExtensionName()) ? new Extension($name) : NULL;
 	}
-
 
 
 	/**
@@ -133,9 +125,7 @@ class Method extends \ReflectionMethod
 	}
 
 
-
 	/********************* Nette\Annotations support ****************d*g**/
-
 
 
 	/**
@@ -150,7 +140,6 @@ class Method extends \ReflectionMethod
 	}
 
 
-
 	/**
 	 * Returns an annotation value.
 	 * @param  string
@@ -163,7 +152,6 @@ class Method extends \ReflectionMethod
 	}
 
 
-
 	/**
 	 * Returns all annotations.
 	 * @return IAnnotation[][]
@@ -172,7 +160,6 @@ class Method extends \ReflectionMethod
 	{
 		return AnnotationsParser::getAll($this);
 	}
-
 
 
 	/**
@@ -185,9 +172,7 @@ class Method extends \ReflectionMethod
 	}
 
 
-
 	/********************* Nette\Object behaviour ****************d*g**/
-
 
 
 	/**
@@ -199,12 +184,10 @@ class Method extends \ReflectionMethod
 	}
 
 
-
 	public function __call($name, $args)
 	{
 		return ObjectMixin::call($this, $name, $args);
 	}
-
 
 
 	public function &__get($name)
@@ -213,19 +196,16 @@ class Method extends \ReflectionMethod
 	}
 
 
-
 	public function __set($name, $value)
 	{
 		return ObjectMixin::set($this, $name, $value);
 	}
 
 
-
 	public function __isset($name)
 	{
 		return ObjectMixin::has($this, $name);
 	}
-
 
 
 	public function __unset($name)

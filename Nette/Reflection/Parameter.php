@@ -15,7 +15,6 @@ use Nette,
 	Nette\ObjectMixin;
 
 
-
 /**
  * Reports information about a method's parameter.
  *
@@ -44,7 +43,6 @@ class Parameter extends \ReflectionParameter
 	}
 
 
-
 	/**
 	 * @return ClassType
 	 */
@@ -52,7 +50,6 @@ class Parameter extends \ReflectionParameter
 	{
 		return ($ref = parent::getClass()) ? new ClassType($ref->getName()) : NULL;
 	}
-
 
 
 	/**
@@ -71,7 +68,6 @@ class Parameter extends \ReflectionParameter
 	}
 
 
-
 	/**
 	 * @return ClassType
 	 */
@@ -79,7 +75,6 @@ class Parameter extends \ReflectionParameter
 	{
 		return ($ref = parent::getDeclaringClass()) ? new ClassType($ref->getName()) : NULL;
 	}
-
 
 
 	/**
@@ -91,7 +86,6 @@ class Parameter extends \ReflectionParameter
 			? new Method($this->function[0], $this->function[1])
 			: new GlobalFunction($this->function);
 	}
-
 
 
 	/**
@@ -111,16 +105,13 @@ class Parameter extends \ReflectionParameter
 	}
 
 
-
 	public function __toString()
 	{
 		return 'Parameter $' . parent::getName() . ' in ' . $this->getDeclaringFunction();
 	}
 
 
-
 	/********************* Nette\Object behaviour ****************d*g**/
-
 
 
 	/**
@@ -132,12 +123,10 @@ class Parameter extends \ReflectionParameter
 	}
 
 
-
 	public function __call($name, $args)
 	{
 		return ObjectMixin::call($this, $name, $args);
 	}
-
 
 
 	public function &__get($name)
@@ -146,19 +135,16 @@ class Parameter extends \ReflectionParameter
 	}
 
 
-
 	public function __set($name, $value)
 	{
 		return ObjectMixin::set($this, $name, $value);
 	}
 
 
-
 	public function __isset($name)
 	{
 		return ObjectMixin::has($this, $name);
 	}
-
 
 
 	public function __unset($name)

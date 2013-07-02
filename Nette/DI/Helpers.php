@@ -14,7 +14,6 @@ namespace Nette\DI;
 use Nette;
 
 
-
 /**
  * The DI helpers.
  *
@@ -77,7 +76,6 @@ final class Helpers
 	}
 
 
-
 	/**
 	 * Expand counterpart.
 	 * @param  mixed
@@ -94,7 +92,6 @@ final class Helpers
 		}
 		return $value;
 	}
-
 
 
 	/**

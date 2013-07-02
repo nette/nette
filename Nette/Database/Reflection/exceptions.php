@@ -14,14 +14,12 @@ namespace Nette\Database\Reflection;
 use PDOException;
 
 
-
 /**
  * Reference not found exception.
  */
 class MissingReferenceException extends PDOException
 {
 }
-
 
 
 /**

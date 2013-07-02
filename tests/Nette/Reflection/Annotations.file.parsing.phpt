@@ -11,11 +11,9 @@
 use Nette\Reflection\AnnotationsParser;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/files/annotations.php';
-
 
 
 AnnotationsParser::$useReflection = FALSE;

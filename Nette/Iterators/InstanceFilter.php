@@ -14,7 +14,6 @@ namespace Nette\Iterators;
 use Nette;
 
 
-
 /**
  * Instance iterator filter.
  *
@@ -38,7 +37,6 @@ class InstanceFilter extends \FilterIterator implements \Countable
 	}
 
 
-
 	/**
 	 * Expose the current element of the inner iterator?
 	 * @return bool
@@ -47,7 +45,6 @@ class InstanceFilter extends \FilterIterator implements \Countable
 	{
 		return $this->current() instanceof $this->type;
 	}
-
 
 
 	/**

@@ -10,9 +10,7 @@
 use Nette\Application\Request;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class Invokable extends Nette\Object

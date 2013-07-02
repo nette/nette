@@ -14,7 +14,6 @@ namespace Nette\Application;
 use Nette;
 
 
-
 /**
  * Any response returned by presenter.
  *

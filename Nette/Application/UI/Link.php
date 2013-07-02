@@ -14,7 +14,6 @@ namespace Nette\Application\UI;
 use Nette;
 
 
-
 /**
  * Lazy encapsulation of PresenterComponent::link().
  * Do not instantiate directly, use PresenterComponent::lazyLink()
@@ -48,7 +47,6 @@ class Link extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns link destination.
 	 * @return string
@@ -57,7 +55,6 @@ class Link extends Nette\Object
 	{
 		return $this->destination;
 	}
-
 
 
 	/**
@@ -73,7 +70,6 @@ class Link extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns link parameter.
 	 * @param  string
@@ -85,7 +81,6 @@ class Link extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns link parameters.
 	 * @return array
@@ -94,7 +89,6 @@ class Link extends Nette\Object
 	{
 		return $this->params;
 	}
-
 
 
 	/**

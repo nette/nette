@@ -14,7 +14,6 @@ namespace Nette\Http;
 use Nette;
 
 
-
 /**
  * Session section.
  *
@@ -38,7 +37,6 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	public $warnOnUndefined = FALSE;
 
 
-
 	/**
 	 * Do not call directly. Use Session::getSection().
 	 */
@@ -51,7 +49,6 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 		$this->session = $session;
 		$this->name = $name;
 	}
-
 
 
 	/**
@@ -67,7 +64,6 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	}
 
 
-
 	/**
 	 * Returns an iterator over all section variables.
 	 * @return \ArrayIterator
@@ -81,7 +77,6 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 			return new \ArrayIterator;
 		}
 	}
-
 
 
 	/**
@@ -100,7 +95,6 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	}
 
 
-
 	/**
 	 * Gets a variable from this session section.
 	 * @param  string    name
@@ -117,7 +111,6 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	}
 
 
-
 	/**
 	 * Determines whether a variable in this session section is set.
 	 * @param  string    name
@@ -132,7 +125,6 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	}
 
 
-
 	/**
 	 * Unsets a variable in this session section.
 	 * @param  string    name
@@ -143,7 +135,6 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 		$this->start();
 		unset($this->data[$name], $this->meta[$name]);
 	}
-
 
 
 	/**
@@ -158,7 +149,6 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	}
 
 
-
 	/**
 	 * Gets a variable from this session section.
 	 * @param  string    name
@@ -168,7 +158,6 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	{
 		return $this->__get($name);
 	}
-
 
 
 	/**
@@ -182,7 +171,6 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	}
 
 
-
 	/**
 	 * Unsets a variable in this session section.
 	 * @param  string    name
@@ -192,7 +180,6 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	{
 		$this->__unset($name);
 	}
-
 
 
 	/**
@@ -234,7 +221,6 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	}
 
 
-
 	/**
 	 * Removes the expiration from the section or specific variables.
 	 * @param  mixed   optional list of variables / single variable to expire
@@ -256,7 +242,6 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 			unset($this->meta[$variables]['T'], $this->meta[$variable]['B']);
 		}
 	}
-
 
 
 	/**

@@ -10,9 +10,7 @@
 use Nette\DI\Container;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class Service

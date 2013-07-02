@@ -14,7 +14,6 @@ namespace Nette\Utils\PhpGenerator;
 use Nette;
 
 
-
 /**
  * Class/Interface/Trait description.
  *
@@ -71,7 +70,6 @@ class ClassType extends Nette\Object
 	}
 
 
-
 	/** @return ClassType */
 	public function addConst($name, $value)
 	{
@@ -80,14 +78,12 @@ class ClassType extends Nette\Object
 	}
 
 
-
 	/** @return Property */
 	public function addProperty($name, $value = NULL)
 	{
 		$property = new Property;
 		return $this->properties[$name] = $property->setName($name)->setValue($value);
 	}
-
 
 
 	/** @return Method */
@@ -103,12 +99,10 @@ class ClassType extends Nette\Object
 	}
 
 
-
 	public function __call($name, $args)
 	{
 		return Nette\ObjectMixin::callProperty($this, $name, $args);
 	}
-
 
 
 	/** @return string  PHP code */

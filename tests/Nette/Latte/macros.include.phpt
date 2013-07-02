@@ -14,11 +14,9 @@ use Nette\Latte,
 	Nette\Templating\Template;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/Template.inc';
-
 
 
 $latte = new Latte\Engine;
@@ -35,7 +33,6 @@ Assert::match(file_get_contents("$path.html"), $template->__toString(TRUE));
 Assert::match(file_get_contents("$path.inc1.phtml"), $cache->phtml['include1.latte']);
 Assert::match(file_get_contents("$path.inc2.phtml"), $cache->phtml['include2.latte']);
 Assert::match(file_get_contents("$path.inc3.phtml"), $cache->phtml['include3.latte']);
-
 
 
 $template = new Template;

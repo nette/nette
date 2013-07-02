@@ -14,7 +14,6 @@ namespace Nette;
 use Nette;
 
 
-
 /**
  * Nette\Object behaviour mixin.
  *
@@ -36,7 +35,6 @@ final class ObjectMixin
 	{
 		throw new StaticClassException;
 	}
-
 
 
 	/**
@@ -74,7 +72,6 @@ final class ObjectMixin
 	}
 
 
-
 	/**
 	 * __call() implementation for entities.
 	 * @param  object
@@ -104,7 +101,6 @@ final class ObjectMixin
 	}
 
 
-
 	/**
 	 * __callStatic() implementation.
 	 * @param  string
@@ -117,7 +113,6 @@ final class ObjectMixin
 	{
 		throw new MemberAccessException("Call to undefined static method $class::$method().");
 	}
-
 
 
 	/**
@@ -154,7 +149,6 @@ final class ObjectMixin
 	}
 
 
-
 	/**
 	 * __set() implementation.
 	 * @param  object
@@ -189,7 +183,6 @@ final class ObjectMixin
 	}
 
 
-
 	/**
 	 * __unset() implementation.
 	 * @param  object
@@ -204,7 +197,6 @@ final class ObjectMixin
 			throw new MemberAccessException("Cannot unset the property $class::\$$name.");
 		}
 	}
-
 
 
 	/**
@@ -222,7 +214,6 @@ final class ObjectMixin
 		}
 		return $name !== '' && (isset(self::$methods[$class]['get' . $name]) || isset(self::$methods[$class]['is' . $name]));
 	}
-
 
 
 	/**

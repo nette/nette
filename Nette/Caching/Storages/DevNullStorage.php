@@ -14,7 +14,6 @@ namespace Nette\Caching\Storages;
 use Nette;
 
 
-
 /**
  * Cache dummy storage.
  *
@@ -33,7 +32,6 @@ class DevNullStorage extends Nette\Object implements Nette\Caching\IStorage
 	}
 
 
-
 	/**
 	 * Prevents item reading and writing. Lock is released by write() or remove().
 	 * @param  string key
@@ -42,7 +40,6 @@ class DevNullStorage extends Nette\Object implements Nette\Caching\IStorage
 	public function lock($key)
 	{
 	}
-
 
 
 	/**
@@ -57,7 +54,6 @@ class DevNullStorage extends Nette\Object implements Nette\Caching\IStorage
 	}
 
 
-
 	/**
 	 * Removes item from the cache.
 	 * @param  string key
@@ -66,7 +62,6 @@ class DevNullStorage extends Nette\Object implements Nette\Caching\IStorage
 	public function remove($key)
 	{
 	}
-
 
 
 	/**

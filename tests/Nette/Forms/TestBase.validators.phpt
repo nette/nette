@@ -11,9 +11,7 @@ use Nette\Forms\Controls\TextInput,
 	Nette\Forms\Controls\TextBase;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $control = new TextInput();

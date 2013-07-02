@@ -14,7 +14,6 @@ namespace Nette;
 use Nette;
 
 
-
 /**
  * DateTime with serialization and timestamp support for PHP 5.2.
  *
@@ -41,7 +40,6 @@ class DateTime extends \DateTime
 	const YEAR = 31557600;
 
 
-
 	/**
 	 * DateTime object factory.
 	 * @param  string|int|\DateTime
@@ -64,12 +62,10 @@ class DateTime extends \DateTime
 	}
 
 
-
 	public function __toString()
 	{
 		return $this->format('Y-m-d H:i:s');
 	}
-
 
 
 	public function modifyClone($modify = '')
@@ -77,7 +73,6 @@ class DateTime extends \DateTime
 		$dolly = clone $this;
 		return $modify ? $dolly->modify($modify) : $dolly;
 	}
-
 
 
 	/*5.2*
@@ -88,12 +83,10 @@ class DateTime extends \DateTime
 	}
 
 
-
 	public static function __set_state($state)
 	{
 		return new self($state['date'], new \DateTimeZone($state['timezone']));
 	}
-
 
 
 	public function __sleep()
@@ -103,7 +96,6 @@ class DateTime extends \DateTime
 	}
 
 
-
 	public function __wakeup()
 	{
 		$this->__construct($this->fix[0], new \DateTimeZone($this->fix[1]));
@@ -111,12 +103,10 @@ class DateTime extends \DateTime
 	}
 
 
-
 	public function getTimestamp()
 	{
 		return (int) $this->format('U');
 	}
-
 
 
 	public function setTimestamp($timestamp)

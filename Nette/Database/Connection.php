@@ -16,7 +16,6 @@ use Nette,
 	PDO;
 
 
-
 /**
  * Represents a connection between PHP and a database server.
  *
@@ -47,7 +46,6 @@ class Connection extends PDO
 	public $onQuery;
 
 
-
 	public function __construct($dsn, $username = NULL, $password = NULL, array $options = NULL, $driverClass = NULL)
 	{
 		parent::__construct($this->dsn = $dsn, $username, $password, $options);
@@ -60,12 +58,10 @@ class Connection extends PDO
 	}
 
 
-
 	public function getDsn()
 	{
 		return $this->dsn;
 	}
-
 
 
 	/** @return ISupplementalDriver */
@@ -73,7 +69,6 @@ class Connection extends PDO
 	{
 		return $this->driver;
 	}
-
 
 
 	/**
@@ -88,7 +83,6 @@ class Connection extends PDO
 	}
 
 
-
 	/** @return IReflection */
 	public function getDatabaseReflection()
 	{
@@ -97,7 +91,6 @@ class Connection extends PDO
 		}
 		return $this->databaseReflection;
 	}
-
 
 
 	/**
@@ -111,12 +104,10 @@ class Connection extends PDO
 	}
 
 
-
 	public function getCache()
 	{
 		return $this->cache;
 	}
-
 
 
 	/**
@@ -132,7 +123,6 @@ class Connection extends PDO
 	}
 
 
-
 	/**
 	 * Generates and executes SQL query.
 	 * @param  string  statement
@@ -144,7 +134,6 @@ class Connection extends PDO
 		$args = func_get_args();
 		return $this->queryArgs(array_shift($args), $args)->rowCount();
 	}
-
 
 
 	/**
@@ -167,9 +156,7 @@ class Connection extends PDO
 	}
 
 
-
 	/********************* shortcuts ****************d*g**/
-
 
 
 	/**
@@ -185,7 +172,6 @@ class Connection extends PDO
 	}
 
 
-
 	/**
 	 * Shortcut for query()->fetchField()
 	 * @param  string  statement
@@ -197,7 +183,6 @@ class Connection extends PDO
 		$args = func_get_args();
 		return $this->queryArgs(array_shift($args), $args)->fetchField();
 	}
-
 
 
 	/**
@@ -213,7 +198,6 @@ class Connection extends PDO
 	}
 
 
-
 	/**
 	 * Shortcut for query()->fetchPairs()
 	 * @param  string  statement
@@ -225,7 +209,6 @@ class Connection extends PDO
 		$args = func_get_args();
 		return $this->queryArgs(array_shift($args), $args)->fetchPairs();
 	}
-
 
 
 	/**
@@ -241,9 +224,7 @@ class Connection extends PDO
 	}
 
 
-
 	/********************* selector ****************d*g**/
-
 
 
 	/**
@@ -257,9 +238,7 @@ class Connection extends PDO
 	}
 
 
-
 	/********************* Nette\Object behaviour ****************d*g**/
-
 
 
 	/**
@@ -271,12 +250,10 @@ class Connection extends PDO
 	}
 
 
-
 	public function __call($name, $args)
 	{
 		return ObjectMixin::call($this, $name, $args);
 	}
-
 
 
 	public function &__get($name)
@@ -285,19 +262,16 @@ class Connection extends PDO
 	}
 
 
-
 	public function __set($name, $value)
 	{
 		return ObjectMixin::set($this, $name, $value);
 	}
 
 
-
 	public function __isset($name)
 	{
 		return ObjectMixin::has($this, $name);
 	}
-
 
 
 	public function __unset($name)

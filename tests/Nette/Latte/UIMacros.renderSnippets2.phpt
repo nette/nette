@@ -10,9 +10,7 @@
 use Nette\Latte;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class InnerControl extends Nette\Application\UI\Control
@@ -74,7 +72,6 @@ class TestPresenter extends Nette\Application\UI\Presenter
 
 $control = new TestPresenter;
 $control->snippetMode = true;
-
 
 
 $control->emptyPayload();

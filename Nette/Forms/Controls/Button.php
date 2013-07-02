@@ -14,7 +14,6 @@ namespace Nette\Forms\Controls;
 use Nette;
 
 
-
 /**
  * Push button control with no default behavior.
  *
@@ -33,7 +32,6 @@ class Button extends BaseControl
 	}
 
 
-
 	/**
 	 * Bypasses label generation.
 	 * @return void
@@ -42,7 +40,6 @@ class Button extends BaseControl
 	{
 		return NULL;
 	}
-
 
 
 	/**

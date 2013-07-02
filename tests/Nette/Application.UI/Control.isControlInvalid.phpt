@@ -10,16 +10,13 @@
 use Nette\Application\UI;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class TestControl extends UI\Control
 {
 
 }
-
 
 
 $control = new TestControl();

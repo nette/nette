@@ -10,7 +10,6 @@
  */
 
 
-
 /**
  * Check and reset PHP configuration.
  */
@@ -34,7 +33,6 @@ umask(0);
 @header('Content-Type: text/html; charset=utf-8'); // @ - headers may be sent
 
 
-
 /**
  * Load and configure Nette Framework.
  */
@@ -42,7 +40,6 @@ define('NETTE', TRUE);
 define('NETTE_DIR', __DIR__);
 define('NETTE_VERSION_ID', 20010); // v2.0.10
 define('NETTE_PACKAGE', '5.3');
-
 
 
 require_once __DIR__ . '/common/exceptions.php';
@@ -62,7 +59,6 @@ Nette\Diagnostics\Debugger::_init();
 Nette\Utils\SafeStream::register();
 
 /**/class_alias('Nette\Config\Configurator', 'Nette\Configurator');/**/
-
 
 
 /**

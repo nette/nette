@@ -14,7 +14,6 @@ namespace Nette\Application\Responses;
 use Nette;
 
 
-
 /**
  * File download response.
  *
@@ -56,7 +55,6 @@ class FileResponse extends Nette\Object implements Nette\Application\IResponse
 	}
 
 
-
 	/**
 	 * Returns the path to a downloaded file.
 	 * @return string
@@ -65,7 +63,6 @@ class FileResponse extends Nette\Object implements Nette\Application\IResponse
 	{
 		return $this->file;
 	}
-
 
 
 	/**
@@ -78,7 +75,6 @@ class FileResponse extends Nette\Object implements Nette\Application\IResponse
 	}
 
 
-
 	/**
 	 * Returns the MIME content type of a downloaded file.
 	 * @return string
@@ -87,7 +83,6 @@ class FileResponse extends Nette\Object implements Nette\Application\IResponse
 	{
 		return $this->contentType;
 	}
-
 
 
 	/**

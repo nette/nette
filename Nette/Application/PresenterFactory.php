@@ -14,7 +14,6 @@ namespace Nette\Application;
 use Nette;
 
 
-
 /**
  * Default presenter loader.
  *
@@ -35,7 +34,6 @@ class PresenterFactory extends Nette\Object implements IPresenterFactory
 	private $container;
 
 
-
 	/**
 	 * @param  string
 	 */
@@ -44,7 +42,6 @@ class PresenterFactory extends Nette\Object implements IPresenterFactory
 		$this->baseDir = $baseDir;
 		$this->container = $container;
 	}
-
 
 
 	/**
@@ -69,7 +66,6 @@ class PresenterFactory extends Nette\Object implements IPresenterFactory
 		}
 		return $presenter;
 	}
-
 
 
 	/**
@@ -131,7 +127,6 @@ class PresenterFactory extends Nette\Object implements IPresenterFactory
 	}
 
 
-
 	/**
 	 * Formats presenter class name from its name.
 	 * @param  string
@@ -144,7 +139,6 @@ class PresenterFactory extends Nette\Object implements IPresenterFactory
 	}
 
 
-
 	/**
 	 * Formats presenter name from class name.
 	 * @param  string
@@ -155,7 +149,6 @@ class PresenterFactory extends Nette\Object implements IPresenterFactory
 		/*5.2*return strtr(substr($class, 0, -9), '_', ':');*/
 		return str_replace('Module\\', ':', substr($class, 0, -9));
 	}
-
 
 
 	/**

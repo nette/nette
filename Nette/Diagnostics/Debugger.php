@@ -14,7 +14,6 @@ namespace Nette\Diagnostics;
 use Nette;
 
 
-
 /**
  * Debugger: displays and logs errors.
  *
@@ -138,7 +137,6 @@ final class Debugger
 		CRITICAL = 'critical';
 
 
-
 	/**
 	 * Static class - cannot be instantiated.
 	 */
@@ -146,7 +144,6 @@ final class Debugger
 	{
 		throw new Nette\StaticClassException;
 	}
-
 
 
 	/**
@@ -210,9 +207,7 @@ final class Debugger
 	}
 
 
-
 	/********************* errors and exceptions reporting ****************d*g**/
-
 
 
 	/**
@@ -292,7 +287,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Is Debug enabled?
 	 * @return bool
@@ -301,7 +295,6 @@ final class Debugger
 	{
 		return self::$enabled;
 	}
-
 
 
 	/**
@@ -359,7 +352,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Shutdown handler to catch fatal errors and execute of the planned activities.
 	 * @return void
@@ -388,7 +380,6 @@ final class Debugger
 			self::$bar->render();
 		}
 	}
-
 
 
 	/**
@@ -462,7 +453,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Handler to catch warnings and notices.
 	 * @param  int    level of the error raised
@@ -529,7 +519,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Handles exception thrown in __toString().
 	 * @param  \Exception
@@ -545,7 +534,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Starts catching potential errors/warnings.
 	 * @return void
@@ -557,7 +545,6 @@ final class Debugger
 		}
 		self::$lastError = NULL;
 	}
-
 
 
 	/**
@@ -576,9 +563,7 @@ final class Debugger
 	}
 
 
-
 	/********************* useful tools ****************d*g**/
-
 
 
 	/**
@@ -634,7 +619,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Starts/stops stopwatch.
 	 * @param  string  name
@@ -648,7 +632,6 @@ final class Debugger
 		$time[$name] = $now;
 		return $delta;
 	}
-
 
 
 	/**
@@ -670,7 +653,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Sends message to FireLogger console.
 	 * @param  mixed   message to log
@@ -684,13 +666,11 @@ final class Debugger
 	}
 
 
-
 	private static function isHtmlMode()
 	{
 		return !self::$ajaxDetected && !self::$consoleMode
 			&& !preg_match('#^Content-Type: (?!text/html)#im', implode("\n", headers_list()));
 	}
-
 
 
 	/** @deprecated */

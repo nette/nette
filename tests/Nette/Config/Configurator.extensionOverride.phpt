@@ -12,9 +12,7 @@ use Nette\Config\Configurator,
 	Nette\DI\ContainerBuilder;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class Factory
@@ -114,7 +112,6 @@ class FooExtension extends Nette\Config\CompilerExtension
 	}
 
 }
-
 
 
 $configurator = new Configurator;

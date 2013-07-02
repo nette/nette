@@ -15,7 +15,6 @@ use Nette,
 	Nette\Utils\Strings;
 
 
-
 /**
  * Annotations support for PHP.
  *
@@ -46,7 +45,6 @@ final class AnnotationsParser
 	private static $cacheStorage;
 
 
-
 	/**
 	 * Static class - cannot be instantiated.
 	 */
@@ -54,7 +52,6 @@ final class AnnotationsParser
 	{
 		throw new Nette\StaticClassException;
 	}
-
 
 
 	/**
@@ -138,7 +135,6 @@ final class AnnotationsParser
 
 		return self::$cache[$type][$member] = $annotations;
 	}
-
 
 
 	/**
@@ -227,7 +223,6 @@ final class AnnotationsParser
 
 		return $res;
 	}
-
 
 
 	/**
@@ -331,9 +326,7 @@ final class AnnotationsParser
 	}
 
 
-
 	/********************* backend ****************d*g**/
-
 
 
 	/**
@@ -343,7 +336,6 @@ final class AnnotationsParser
 	{
 		self::$cacheStorage = $storage;
 	}
-
 
 
 	/**

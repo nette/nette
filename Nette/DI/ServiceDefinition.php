@@ -14,7 +14,6 @@ namespace Nette\DI;
 use Nette;
 
 
-
 /**
  * Definition used by ContainerBuilder.
  *
@@ -47,7 +46,6 @@ class ServiceDefinition extends Nette\Object
 	public $internal = FALSE;
 
 
-
 	public function setClass($class, array $args = array())
 	{
 		$this->class = $class;
@@ -58,13 +56,11 @@ class ServiceDefinition extends Nette\Object
 	}
 
 
-
 	public function setFactory($factory, array $args = array())
 	{
 		$this->factory = new Statement($factory, $args);
 		return $this;
 	}
-
 
 
 	public function setArguments(array $args = array())
@@ -78,13 +74,11 @@ class ServiceDefinition extends Nette\Object
 	}
 
 
-
 	public function addSetup($target, $args = NULL)
 	{
 		$this->setup[] = new Statement($target, is_array($args) ? $args : array_slice(func_get_args(), 1));
 		return $this;
 	}
-
 
 
 	public function setParameters(array $params)
@@ -95,13 +89,11 @@ class ServiceDefinition extends Nette\Object
 	}
 
 
-
 	public function addTag($tag, $attrs = TRUE)
 	{
 		$this->tags[$tag] = $attrs;
 		return $this;
 	}
-
 
 
 	public function setAutowired($on)
@@ -111,14 +103,12 @@ class ServiceDefinition extends Nette\Object
 	}
 
 
-
 	public function setShared($on)
 	{
 		$this->shared = (bool) $on;
 		$this->autowired = $this->shared ? $this->autowired : FALSE;
 		return $this;
 	}
-
 
 
 	public function setInternal($on)

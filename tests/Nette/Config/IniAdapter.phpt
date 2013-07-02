@@ -10,7 +10,6 @@
 use Nette\Config;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 define('TEMP_FILE', TEMP_DIR . '/cfg.ini');

@@ -14,7 +14,6 @@ namespace Nette\Database\Drivers;
 use Nette;
 
 
-
 /**
  * Supplemental MS SQL database driver.
  *
@@ -26,16 +25,13 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	private $connection;
 
 
-
 	public function __construct(Nette\Database\Connection $connection, array $options)
 	{
 		$this->connection = $connection;
 	}
 
 
-
 	/********************* SQL ****************d*g**/
-
 
 
 	/**
@@ -48,7 +44,6 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Formats boolean for use in a SQL statement.
 	 */
@@ -56,7 +51,6 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	{
 		return $value ? '1' : '0';
 	}
-
 
 
 	/**
@@ -68,7 +62,6 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Encodes string for use in a LIKE statement.
 	 */
@@ -77,7 +70,6 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 		$value = strtr($value, array("'" => "''", '%' => '[%]', '_' => '[_]', '[' => '[[]'));
 		return ($pos <= 0 ? "'%" : "'") . $value . ($pos >= 0 ? "%'" : "'");
 	}
-
 
 
 	/**
@@ -95,7 +87,6 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Normalizes result row.
 	 */
@@ -105,9 +96,7 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/********************* reflection ****************d*g**/
-
 
 
 	/**
@@ -119,7 +108,6 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Returns metadata for all columns in a table.
 	 */
@@ -127,7 +115,6 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	{
 		throw new Nette\NotImplementedException;
 	}
-
 
 
 	/**
@@ -139,7 +126,6 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Returns metadata for all foreign keys in a table.
 	 */
@@ -147,7 +133,6 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	{
 		throw new Nette\NotImplementedException;
 	}
-
 
 
 	/**

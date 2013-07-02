@@ -18,7 +18,6 @@ use Nette\Database\Reflection\DiscoveredReflection;
 use Nette\Database\Table\SqlBuilder;
 
 
-
 //$cacheStorage = new Nette\Caching\Storages\MemoryStorage;
 //$connection->setCacheStorage($cacheStorage);
 $reflection = new DiscoveredReflection;
@@ -97,7 +96,6 @@ switch ($driverName) {
 }
 
 
-
 $books = $connection->table('book')->where('id',
 	$connection->table('book_tag')->select('book_id')->where('tag_id', 21)
 );
@@ -143,12 +141,10 @@ Assert::exception(function() use ($connection, $reflection) {
 }, 'Nette\InvalidArgumentException', 'Argument count does not match placeholder count.');
 
 
-
 Assert::exception(function() use ($connection, $reflection) {
 	$sqlBuilder = new SqlBuilder('book', $connection, $reflection);
 	$sqlBuilder->addWhere('id = ?', NULL);
 }, 'Nette\InvalidArgumentException', 'Column operator does not accept NULL argument.');
-
 
 
 Assert::exception(function() use ($connection, $reflection) {

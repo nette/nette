@@ -10,9 +10,7 @@
 use Nette\Forms\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $_SERVER['REQUEST_METHOD'] = 'POST';
@@ -35,7 +33,6 @@ $sex = array(
 	'm' => 'male',
 	'f' => 'female',
 );
-
 
 
 // Step 1: Define form with validation rules

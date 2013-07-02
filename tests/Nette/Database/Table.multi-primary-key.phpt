@@ -16,7 +16,6 @@ $connection->setCacheStorage($cacheStorage);
 $connection->setDatabaseReflection(new Nette\Database\Reflection\DiscoveredReflection($cacheStorage));
 
 
-
 $book = $connection->table('book')->get(1);
 foreach ($book->related('book_tag') as $bookTag) {
 	if ($bookTag->tag->name === 'PHP') {
@@ -32,7 +31,6 @@ Assert::same(1, $count);
 
 $count = $connection->table('book_tag')->count('*');
 Assert::same(5, $count);
-
 
 
 $book = $connection->table('book')->get(3);
@@ -52,7 +50,6 @@ Assert::same(array(
 	'private',
 	'public',
 ), $states);
-
 
 
 $connection->table('book_tag')->insert(array(

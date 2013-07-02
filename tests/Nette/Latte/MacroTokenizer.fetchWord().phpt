@@ -10,9 +10,7 @@
 use Nette\Latte\MacroTokenizer;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $tokenizer = new MacroTokenizer('');

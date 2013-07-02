@@ -14,7 +14,6 @@ namespace Nette\Iterators;
 use Nette;
 
 
-
 /**
  * Callback recursive iterator filter.
  *
@@ -37,12 +36,10 @@ class RecursiveFilter extends \FilterIterator implements \RecursiveIterator
 	}
 
 
-
 	public function accept()
 	{
 		return $this->callback === NULL || $this->callback->invoke($this);
 	}
-
 
 
 	public function hasChildren()
@@ -50,7 +47,6 @@ class RecursiveFilter extends \FilterIterator implements \RecursiveIterator
 		return $this->getInnerIterator()->hasChildren()
 			&& ($this->childrenCallback === NULL || $this->childrenCallback->invoke($this));
 	}
-
 
 
 	public function getChildren()

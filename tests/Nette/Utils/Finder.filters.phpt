@@ -11,9 +11,7 @@
 use Nette\Utils\Finder;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 function export($iterator)
@@ -23,7 +21,6 @@ function export($iterator)
 	sort($arr);
 	return $arr;
 }
-
 
 
 // size filter
@@ -41,7 +38,6 @@ Assert::same(array(
 ), export($finder));
 
 
-
 $finder = Finder::find('*')->size('>', 10)->size('< 100b')->from('files');
 Assert::same(array(
 	'files/file.txt',
@@ -53,16 +49,13 @@ Assert::same(array(
 ), export($finder));
 
 
-
 $finder = Finder::findDirectories('*')->size('>', 10)->size('< 100b')->from('files');
 Assert::same(array(), export($finder));
-
 
 
 // date filter
 $finder = Finder::findFiles('*')->date('> 2020-01-02')->from('files');
 Assert::same(array(), export($finder));
-
 
 
 // custom filters
