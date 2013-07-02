@@ -83,4 +83,45 @@ class Helpers extends Nette\Object
 		return $name;
 	}
 
+
+	/**
+	 * @return array
+	 */
+	public static function exportRules(Rules $rules)
+	{
+		$payload = array();
+		foreach ($rules as $rule) {
+			if (!is_string($op = $rule->operation)) {
+				$op = new Nette\Callback($op);
+				if (!$op->isStatic()) {
+					continue;
+				}
+			}
+			if ($rule->type === Rule::VALIDATOR) {
+				$item = array('op' => ($rule->isNegative ? '~' : '') . $op, 'msg' => Validator::formatMessage($rule, FALSE));
+
+			} elseif ($rule->type === Rule::CONDITION) {
+				$item = array(
+					'op' => ($rule->isNegative ? '~' : '') . $op,
+					'rules' => static::exportRules($rule->subRules),
+					'control' => $rule->control->getHtmlName()
+				);
+				if ($rule->subRules->getToggles()) {
+					$item['toggle'] = $rule->subRules->getToggles();
+				}
+			}
+
+			if (is_array($rule->arg)) {
+				foreach ($rule->arg as $key => $value) {
+					$item['arg'][$key] = $value instanceof IControl ? array('control' => $value->getHtmlName()) : $value;
+				}
+			} elseif ($rule->arg !== NULL) {
+				$item['arg'] = $rule->arg instanceof IControl ? array('control' => $rule->arg->getHtmlName()) : $rule->arg;
+			}
+
+			$payload[] = $item;
+		}
+		return $payload;
+	}
+
 }

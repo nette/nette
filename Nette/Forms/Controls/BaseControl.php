@@ -14,8 +14,7 @@ namespace Nette\Forms\Controls;
 use Nette,
 	Nette\Forms\IControl,
 	Nette\Utils\Html,
-	Nette\Forms\Form,
-	Nette\Forms\Rule;
+	Nette\Forms\Form;
 
 
 /**
@@ -249,7 +248,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		$this->setOption('rendered', TRUE);
 
-		$rules = self::exportRules($this->rules);
+		$rules = Nette\Forms\Helpers::exportRules($this->rules);
 		$el = clone $this->control;
 		return $el->addAttributes(array(
 			'name' => $this->getHtmlName(),
@@ -506,80 +505,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	public function cleanErrors()
 	{
 		$this->errors = array();
-	}
-
-
-	public function formatMessage($rule, $withValue = TRUE)
-	{
-		$message = $rule->message;
-		if ($message instanceof Nette\Utils\Html) {
-			return $message;
-
-		} elseif ($message === NULL && is_string($rule->operation) && isset(Nette\Forms\Rules::$defaultMessages[$rule->operation])) {
-			$message = Nette\Forms\Rules::$defaultMessages[$rule->operation];
-
-		} elseif ($message == NULL) { // intentionally ==
-			trigger_error("Missing validation message for control '{$rule->control->name}'.", E_USER_WARNING);
-		}
-
-		if ($translator = $rule->control->getForm()->getTranslator()) {
-			$message = $translator->translate($message, is_int($rule->arg) ? $rule->arg : NULL);
-		}
-
-		$message = preg_replace_callback('#%(name|label|value|\d+\$[ds]|[ds])#', function($m) use ($rule, $withValue) {
-			static $i = -1;
-			switch ($m[1]) {
-				case 'name': return $rule->control->getName();
-				case 'label': return $rule->control->translate($rule->control->caption);
-				case 'value': return $withValue ? $rule->control->getValue() : $m[0];
-				default:
-					$args = is_array($rule->arg) ? $rule->arg : array($rule->arg);
-					$i = (int) $m[1] ? $m[1] - 1 : $i + 1;
-					return isset($args[$i]) ? ($args[$i] instanceof IControl ? ($withValue ? $args[$i]->getValue() : "%$i") : $args[$i]) : '';
-			}
-		}, $message);
-		return $message;
-	}
-
-
-	/**
-	 * @return array
-	 */
-	protected static function exportRules($rules)
-	{
-		$payload = array();
-		foreach ($rules as $rule) {
-			if (!is_string($op = $rule->operation)) {
-				$op = new Nette\Callback($op);
-				if (!$op->isStatic()) {
-					continue;
-				}
-			}
-			if ($rule->type === Rule::VALIDATOR) {
-				$item = array('op' => ($rule->isNegative ? '~' : '') . $op, 'msg' => $rule->control->formatMessage($rule, FALSE));
-
-			} elseif ($rule->type === Rule::CONDITION) {
-				$item = array(
-					'op' => ($rule->isNegative ? '~' : '') . $op,
-					'rules' => self::exportRules($rule->subRules),
-					'control' => $rule->control->getHtmlName()
-				);
-				if ($rule->subRules->getToggles()) {
-					$item['toggle'] = $rule->subRules->getToggles();
-				}
-			}
-
-			if (is_array($rule->arg)) {
-				foreach ($rule->arg as $key => $value) {
-					$item['arg'][$key] = $value instanceof IControl ? array('control' => $value->getHtmlName()) : $value;
-				}
-			} elseif ($rule->arg !== NULL) {
-				$item['arg'] = $rule->arg instanceof IControl ? array('control' => $rule->arg->getHtmlName()) : $rule->arg;
-			}
-
-			$payload[] = $item;
-		}
-		return $payload;
 	}
 
 
