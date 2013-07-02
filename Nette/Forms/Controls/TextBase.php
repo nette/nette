@@ -30,6 +30,9 @@ abstract class TextBase extends BaseControl
 	/** @var array */
 	protected $filters = array();
 
+	/** @var mixed unfiltered submitted value */
+	protected $rawValue = '';
+
 
 	/**
 	 * Sets control's value.
@@ -41,7 +44,7 @@ abstract class TextBase extends BaseControl
 		if (!is_scalar($value) && $value !== NULL && !method_exists($value, '__toString')) {
 			throw new Nette\InvalidArgumentException('Value must be scalar or NULL, ' . gettype($value) . ' given.');
 		}
-		$this->value = (string) $value;
+		$this->rawValue = $this->value = (string) $value;
 		return $this;
 	}
 
