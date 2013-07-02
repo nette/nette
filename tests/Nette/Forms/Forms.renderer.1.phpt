@@ -11,9 +11,7 @@ use Nette\Forms\Form,
 	Nette\Utils\Html;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $_SERVER['REQUEST_METHOD'] = 'POST';
@@ -35,8 +33,6 @@ $sex = array(
 	'm' => 'male',
 	'f' => 'female',
 );
-
-
 
 
 $form = new Form;
@@ -61,7 +57,6 @@ $form->addText('email', 'Email:')
 		->addRule(Form::EMAIL, 'Incorrect email address');
 
 
-
 $form->addGroup('Shipping address')
 	->setOption('embedNext', TRUE);
 
@@ -69,7 +64,6 @@ $form->addCheckbox('send', 'Ship to address')
 	->addCondition(Form::EQUAL, FALSE)
 	->elseCondition()
 		->toggle('sendBox');
-
 
 
 $form->addGroup()
@@ -89,7 +83,6 @@ $form->addSelect('country', 'Country:', $countries)
 $form->addSelect('countrySetItems', 'Country:')
 	->setPrompt('Select your country')
 	->setItems($countries);
-
 
 
 $form->addGroup('Your account');
@@ -115,12 +108,10 @@ $form->addButton('unset');
 unset($form['unset']);
 
 
-
 $form->addGroup();
 
 $form->addSubmit('submit', 'Send');
 $form->addButton('cancel', 'Cancel');
-
 
 
 $defaults = array(

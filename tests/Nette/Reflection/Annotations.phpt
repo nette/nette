@@ -10,9 +10,7 @@
 use Nette\Reflection;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 /**
@@ -46,7 +44,6 @@ test(function() use ($rc) { // Class annotations
 });
 
 
-
 test(function() use ($rc) { // Method annotations
 
 	$rm = $rc->getMethod('foo');
@@ -56,7 +53,6 @@ test(function() use ($rc) { // Method annotations
 	Assert::true( $rm->hasAnnotation('AJAX'), "has('AJAX')" );
 	Assert::true( $rm->getAnnotation('AJAX') );
 });
-
 
 
 test(function() use ($rc) { // Property annotations

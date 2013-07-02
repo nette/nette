@@ -14,7 +14,6 @@ namespace Nette\Forms\Controls;
 use Nette;
 
 
-
 /**
  * Single line text input control.
  *
@@ -36,7 +35,6 @@ class TextInput extends TextBase
 	}
 
 
-
 	/**
 	 * Changes control's type attribute.
 	 * @param  string
@@ -49,7 +47,6 @@ class TextInput extends TextBase
 	}
 
 
-
 	/** @deprecated */
 	public function setPasswordMode($mode = TRUE)
 	{
@@ -57,7 +54,6 @@ class TextInput extends TextBase
 		$this->control->type = $mode ? 'password' : 'text';
 		return $this;
 	}
-
 
 
 	/**

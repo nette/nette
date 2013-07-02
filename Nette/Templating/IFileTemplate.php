@@ -14,7 +14,6 @@ namespace Nette\Templating;
 use Nette;
 
 
-
 /**
  * Defines file-based template methods.
  *

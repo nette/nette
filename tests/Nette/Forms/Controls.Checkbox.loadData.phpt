@@ -10,16 +10,13 @@
 use Nette\Forms\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 before(function() {
 	$_SERVER['REQUEST_METHOD'] = 'POST';
 	$_POST = $_FILES = array();
 });
-
 
 
 test(function() {
@@ -41,7 +38,6 @@ test(function() {
 });
 
 
-
 test(function() { // malformed data
 	$_POST = array('malformed' => array(NULL));
 
@@ -51,7 +47,6 @@ test(function() { // malformed data
 	Assert::false( $input->getValue() );
 	Assert::false( $input->isFilled() );
 });
-
 
 
 test(function() { // setValue() and invalid argument

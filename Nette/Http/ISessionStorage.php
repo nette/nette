@@ -14,7 +14,6 @@ namespace Nette\Http;
 use Nette;
 
 
-
 /**
  * User session storage. @see http://php.net/session_set_save_handler
  *

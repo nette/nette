@@ -10,11 +10,9 @@
 use Nette\Reflection\AnnotationsParser;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/files/annotations.php';
-
 
 
 AnnotationsParser::$useReflection = FALSE;
@@ -77,14 +75,12 @@ test(function() { // AnnotatedClass1
 });
 
 
-
 test(function() { // AnnotatedClass2
 	$rc = new ReflectionClass('Test\AnnotatedClass2');
 	Assert::same( array(
 		'author' => array('jack'),
 	), AnnotationsParser::getAll($rc) );
 });
-
 
 
 test(function() { // AnnotatedClass3

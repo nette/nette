@@ -10,9 +10,7 @@
 use Nette\Utils\Tokenizer;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $tokenizer = new Tokenizer(array(

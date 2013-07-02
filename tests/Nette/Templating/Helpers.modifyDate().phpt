@@ -10,9 +10,7 @@
 use Nette\Templating\Helpers;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 setlocale(LC_TIME, 'C');

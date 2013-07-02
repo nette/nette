@@ -10,9 +10,7 @@
 use Nette\DI;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 interface IFoo
@@ -42,7 +40,6 @@ class Test2 extends Test1
 	public $varD;
 
 }
-
 
 
 $builder = new DI\ContainerBuilder;

@@ -10,9 +10,7 @@
 use Nette\Reflection;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 /**
@@ -103,7 +101,6 @@ test(function() use ($rc) { // Class annotations
 });
 
 
-
 test(function() use ($rc) { // Method annotations
 
 	$rm = $rc->getMethod('foo');
@@ -112,7 +109,6 @@ test(function() use ($rc) { // Method annotations
 	Assert::same( 'admin',  $tmp['RolesAllowed'][0][0] );
 	Assert::same( 'web editor',  $tmp['RolesAllowed'][0][1] );
 });
-
 
 
 test(function() use ($rc) { // Property annotations

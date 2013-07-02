@@ -10,9 +10,7 @@
 use Nette\DI;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class Test
@@ -30,7 +28,6 @@ class Test
 	}
 
 }
-
 
 
 $builder = new DI\ContainerBuilder;

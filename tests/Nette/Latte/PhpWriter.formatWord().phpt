@@ -11,7 +11,6 @@ use Nette\Latte\PhpWriter,
 	Nette\Latte\MacroTokens;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 

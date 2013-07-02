@@ -22,7 +22,6 @@ test(function() use ($connection) {
 });
 
 
-
 test(function() use ($connection) {
 	$connection->beginTransaction();
 	$connection->query('DELETE FROM book');

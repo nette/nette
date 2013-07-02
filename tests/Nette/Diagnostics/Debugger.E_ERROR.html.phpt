@@ -10,9 +10,7 @@
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Debugger::$productionMode = FALSE;
@@ -25,8 +23,6 @@ Debugger::$onFatalError[] = function() {
 	die(0);
 };
 ob_start();
-
-
 
 
 function first($arg1, $arg2)

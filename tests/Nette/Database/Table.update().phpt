@@ -18,7 +18,6 @@ $dao = new Nette\Database\SelectionFactory(
 );
 
 
-
 $author = $dao->table('author')->get(12);  // SELECT * FROM `author` WHERE (`id` = ?)
 $author->update(array(
 	'name' => 'Tyrion Lannister',
@@ -30,14 +29,12 @@ $book1 = $book->get(1);  // SELECT * FROM `book` WHERE (`id` = ?)
 Assert::same('Jakub Vrana', $book1->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11))
 
 
-
 $book2 = $book->insert(array(
 	'author_id' => $author->getPrimary(),
 	'title' => 'Game of Thrones',
 ));  // INSERT INTO `book` (`author_id`, `title`) VALUES (12, 'Game of Thrones')
 
 Assert::same('Tyrion Lannister', $book2->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (12))
-
 
 
 $book2->update(array(
@@ -58,7 +55,6 @@ $book2->update(array(
 
 Assert::same('Geek', $book2->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (13))
 Assert::same(13, $book2->author_id);
-
 
 
 $tag = $dao->table('tag')->insert(array(

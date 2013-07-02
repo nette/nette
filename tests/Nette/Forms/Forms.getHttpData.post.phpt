@@ -10,16 +10,13 @@
 use Nette\Forms\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 before(function() {
 	$_SERVER['REQUEST_METHOD'] = 'POST';
 	$_GET = $_POST = $_FILES = array();
 });
-
 
 
 test(function() {
@@ -31,7 +28,6 @@ test(function() {
 	Assert::same( array(), $form->getHttpData() );
 	Assert::same( array(), $form->getValues(TRUE) );
 });
-
 
 
 test(function() {
@@ -46,7 +42,6 @@ test(function() {
 });
 
 
-
 test(function() {
 	$name = 'name';
 	$_POST = array(Form::TRACKER_ID => $name);
@@ -59,7 +54,6 @@ test(function() {
 	Assert::same( array(), $form->getValues(TRUE) );
 	Assert::same( $name, $form[Form::TRACKER_ID]->getValue() );
 });
-
 
 
 test(function() {

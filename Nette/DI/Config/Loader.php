@@ -15,7 +15,6 @@ use Nette,
 	Nette\Utils\Validators;
 
 
-
 /**
  * Configuration file loader.
  *
@@ -35,7 +34,6 @@ class Loader extends Nette\Object
 	);
 
 	private $dependencies = array();
-
 
 
 	/**
@@ -73,7 +71,6 @@ class Loader extends Nette\Object
 	}
 
 
-
 	/**
 	 * Save configuration to file.
 	 * @param  array
@@ -88,7 +85,6 @@ class Loader extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns configuration files.
 	 * @return array
@@ -97,7 +93,6 @@ class Loader extends Nette\Object
 	{
 		return array_unique($this->dependencies);
 	}
-
 
 
 	/**
@@ -113,7 +108,6 @@ class Loader extends Nette\Object
 	}
 
 
-
 	/** @return IAdapter */
 	private function getAdapter($file)
 	{
@@ -123,7 +117,6 @@ class Loader extends Nette\Object
 		}
 		return is_object($this->adapters[$extension]) ? $this->adapters[$extension] : new $this->adapters[$extension];
 	}
-
 
 
 	private function getSection(array $data, $key, $file)

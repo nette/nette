@@ -11,7 +11,6 @@ use Nette\Forms\Form,
 	Nette\Utils\Html;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -22,7 +21,6 @@ class Translator implements Nette\Localization\ITranslator
 		return strtoupper($s);
 	}
 }
-
 
 
 test(function() {
@@ -44,7 +42,6 @@ test(function() {
 });
 
 
-
 test(function() { // checked
 	$form = new Form;
 	$input = $form->addRadioList('list', 'Label', array(
@@ -54,7 +51,6 @@ test(function() { // checked
 
 	Assert::same('<label for="frm-list-a"><input type="radio" name="list" id="frm-list-a" value="a" />First</label><br /><label for="frm-list-0"><input type="radio" name="list" id="frm-list-0" checked="checked" value="0" />Second</label><br />', (string) $input->getControl());
 });
-
 
 
 test(function() { // translator
@@ -75,7 +71,6 @@ test(function() { // translator
 });
 
 
-
 test(function() { // Html
 	$form = new Form;
 	$input = $form->addRadioList('list', Html::el('b', 'Label'), array(
@@ -92,7 +87,6 @@ test(function() { // Html
 });
 
 
-
 test(function() { // validation rules
 	$form = new Form;
 	$input = $form->addRadioList('list', 'Label', array(
@@ -105,7 +99,6 @@ test(function() { // validation rules
 });
 
 
-
 test(function() { // container
 	$form = new Form;
 	$container = $form->addContainer('container');
@@ -116,7 +109,6 @@ test(function() { // container
 
 	Assert::same('<label for="frm-container-list-a"><input type="radio" name="container[list]" id="frm-container-list-a" value="a" />First</label><br /><label for="frm-container-list-0"><input type="radio" name="container[list]" id="frm-container-list-0" value="0" />Second</label><br />', (string) $input->getControl());
 });
-
 
 
 test(function() { // container prototype

@@ -10,9 +10,7 @@
 use Nette\Latte\MacroTokens;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 test(function() {
@@ -22,13 +20,11 @@ test(function() {
 });
 
 
-
 test(function() {
 	$tokenizer = new MacroTokens('$1d-,a');
 	Assert::same( array('$1d-'),  $tokenizer->fetchWords() );
 	Assert::same( 'a',  $tokenizer->joinAll() );
 });
-
 
 
 test(function() {

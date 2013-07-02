@@ -15,7 +15,6 @@ use Nette,
 	Nette\Http\FileUpload;
 
 
-
 /**
  * Text box and browse button that allow users to select a file to upload to the server.
  *
@@ -36,7 +35,6 @@ class UploadControl extends BaseControl
 	}
 
 
-
 	/**
 	 * This method will be called when the component (or component's parent)
 	 * becomes attached to a monitored object. Do not call this method yourself.
@@ -55,7 +53,6 @@ class UploadControl extends BaseControl
 	}
 
 
-
 	/**
 	 * Sets control's value.
 	 * @return UploadControl  provides a fluent interface
@@ -64,7 +61,6 @@ class UploadControl extends BaseControl
 	{
 		return $this;
 	}
-
 
 
 	protected function setRawValue($value)
@@ -85,7 +81,6 @@ class UploadControl extends BaseControl
 	}
 
 
-
 	/**
 	 * Has been any file uploaded?
 	 * @return bool
@@ -94,7 +89,6 @@ class UploadControl extends BaseControl
 	{
 		return $this->value instanceof FileUpload ? $this->value->isOk() : (bool) $this->value; // ignore NULL object
 	}
-
 
 
 	/**
@@ -107,9 +101,7 @@ class UploadControl extends BaseControl
 	}
 
 
-
 	/********************* validators ****************d*g**/
-
 
 
 	/**
@@ -127,7 +119,6 @@ class UploadControl extends BaseControl
 		}
 		return TRUE;
 	}
-
 
 
 	/**
@@ -149,7 +140,6 @@ class UploadControl extends BaseControl
 	}
 
 
-
 	/**
 	 * Image validator: is file image?
 	 * @return bool
@@ -163,7 +153,6 @@ class UploadControl extends BaseControl
 		}
 		return TRUE;
 	}
-
 
 
 	/**

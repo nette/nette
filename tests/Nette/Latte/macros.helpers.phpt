@@ -12,11 +12,9 @@ use Nette\Latte,
 	Nette\Templating\FileTemplate;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/Template.inc';
-
 
 
 class MyHelper
@@ -36,7 +34,6 @@ function types()
 	foreach (func_get_args() as $arg) $res[] = gettype($arg);
 	return implode(', ', $res);
 }
-
 
 
 $template = new FileTemplate(__DIR__ . '/templates/helpers.latte');

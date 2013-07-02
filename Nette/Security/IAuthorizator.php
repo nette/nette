@@ -14,7 +14,6 @@ namespace Nette\Security;
 use Nette;
 
 
-
 /**
  * Authorizator checks if a given role has authorization
  * to access a given resource.

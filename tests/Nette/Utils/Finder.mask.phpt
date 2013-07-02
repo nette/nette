@@ -10,9 +10,7 @@
 use Nette\Utils\Finder;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 function export($iterator)
@@ -22,7 +20,6 @@ function export($iterator)
 	sort($arr);
 	return $arr;
 }
-
 
 
 test(function() { // multiple mask
@@ -36,7 +33,6 @@ test(function() { // multiple mask
 });
 
 
-
 test(function() {
 	$finder = Finder::findFiles(array('*.txt', '*.gif'))->from('files');
 	Assert::same(array(
@@ -48,7 +44,6 @@ test(function() {
 });
 
 
-
 test(function() { // * mask
 	$finder = Finder::findFiles('*.txt', '*')->in('files/subdir');
 	Assert::same(array(
@@ -56,7 +51,6 @@ test(function() { // * mask
 		'files/subdir/readme',
 	), export($finder));
 });
-
 
 
 test(function() { // *.* mask
@@ -67,14 +61,12 @@ test(function() { // *.* mask
 });
 
 
-
 test(function() { // subdir mask
 	$finder = Finder::findFiles('*/*2/*')->from('files');
 	Assert::same(array(
 		'files/subdir/subdir2/file.txt',
 	), export($finder));
 });
-
 
 
 test(function() { // excluding mask
@@ -85,14 +77,12 @@ test(function() { // excluding mask
 });
 
 
-
 test(function() { // subdir excluding mask
 	$finder = Finder::findFiles('*')->exclude('*i*/*')->from('files');
 	Assert::same(array(
 		'files/file.txt',
 	), export($finder));
 });
-
 
 
 test(function() { // complex mask
@@ -103,14 +93,12 @@ test(function() { // complex mask
 });
 
 
-
 test(function() {
 	$finder = Finder::findFiles('*2*/fi??.*')->from('files');
 	Assert::same(array(
 		'files/subdir/subdir2/file.txt',
 	), export($finder));
 });
-
 
 
 test(function() { // anchored
@@ -121,14 +109,12 @@ test(function() { // anchored
 });
 
 
-
 test(function() {
 	$finder = Finder::findFiles('/*/f*')->from('files');
 	Assert::same(array(
 		'files/subdir/file.txt',
 	), export($finder));
 });
-
 
 
 test(function() { // multidirs mask

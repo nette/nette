@@ -14,7 +14,6 @@ namespace Nette\DI;
 use Nette;
 
 
-
 /**
  * The DI helpers.
  *
@@ -81,7 +80,6 @@ final class Helpers
 	}
 
 
-
 	/**
 	 * Generates list of arguments using autowiring.
 	 * @param  Nette\Reflection\GlobalFunction|Nette\Reflection\Method
@@ -141,7 +139,6 @@ final class Helpers
 
 		return $optCount ? array_slice($res, 0, -$optCount) : $res;
 	}
-
 
 
 	/**

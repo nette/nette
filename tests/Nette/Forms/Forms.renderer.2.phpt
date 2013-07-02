@@ -11,9 +11,7 @@ use Nette\Utils\Html,
 	Nette\Forms\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $_SERVER['REQUEST_METHOD'] = 'POST';
@@ -37,8 +35,6 @@ $sex = array(
 );
 
 
-
-
 $form = new Form;
 
 $renderer = $form->renderer;
@@ -54,7 +50,6 @@ $renderer->wrappers['control']['errors'] = TRUE;
 $renderer->wrappers['label']['container'] = 'dt';
 $renderer->wrappers['label']['suffix'] = ':';
 $renderer->wrappers['control']['requiredsuffix'] = " \xE2\x80\xA2";
-
 
 
 $form->addGroup('Personal data');
@@ -74,14 +69,12 @@ $form->addText('email', 'Email')
 		->addRule(Form::EMAIL, 'Incorrect email address');
 
 
-
 $form->addGroup('Shipping address')
 	->setOption('embedNext', TRUE);
 
 $form->addCheckbox('send', 'Ship to address')
 	->addCondition(Form::EQUAL, TRUE)
 		->toggle('sendBox');
-
 
 
 $form->addGroup()
@@ -97,7 +90,6 @@ $form->addSelect('country', 'Country', $countries)
 	->setPrompt('Select your country')
 	->addConditionOn($form['send'], Form::EQUAL, TRUE)
 		->addRule(Form::FILLED, 'Select your country');
-
 
 
 $form->addGroup('Your account');
@@ -119,11 +111,9 @@ $form->addHidden('userid');
 $form->addTextArea('note', 'Comment');
 
 
-
 $form->addGroup();
 
 $form->addSubmit('submit', 'Send');
-
 
 
 $defaults = array(

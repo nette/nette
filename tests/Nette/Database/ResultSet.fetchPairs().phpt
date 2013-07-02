@@ -13,7 +13,6 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
 
 
-
 test(function() use ($connection) {
 	$res = $connection->query('SELECT * FROM book ORDER BY title');
 	Assert::same(array(
@@ -32,7 +31,6 @@ test(function() use ($connection) {
 });
 
 
-
 test(function() use ($connection) {
 	$pairs = $connection->query('SELECT title, id FROM book ORDER BY title')->fetchPairs(1, 0);
 	Assert::same(array(
@@ -42,7 +40,6 @@ test(function() use ($connection) {
 		3 => 'Nette',
 	), $pairs);
 });
-
 
 
 test(function() use ($connection) {
@@ -56,7 +53,6 @@ test(function() use ($connection) {
 });
 
 
-
 test(function() use ($connection) {
 	$pairs = $connection->query('SELECT id FROM book ORDER BY id')->fetchPairs('id');
 	Assert::equal(array(
@@ -66,7 +62,6 @@ test(function() use ($connection) {
 		4 => Nette\Database\Row::from(array('id' => 4)),
 	), $pairs);
 });
-
 
 
 test(function() use ($connection) {

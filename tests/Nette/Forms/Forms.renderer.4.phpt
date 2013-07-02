@@ -11,7 +11,6 @@
 require __DIR__ . '/../bootstrap.php';
 
 
-
 $form = new Nette\Forms\Form;
 $form->setMethod('GET');
 $form->setAction('link?a=b&c[]=d');

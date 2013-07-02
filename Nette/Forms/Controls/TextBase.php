@@ -17,7 +17,6 @@ use Nette,
 	Nette\Utils\Validators;
 
 
-
 /**
  * Implements the basic functionality common to text input controls.
  *
@@ -44,7 +43,6 @@ abstract class TextBase extends BaseControl
 	}
 
 
-
 	/**
 	 * Sets control's value.
 	 * @param  string
@@ -58,7 +56,6 @@ abstract class TextBase extends BaseControl
 		$this->value = (string) $value;
 		return $this;
 	}
-
 
 
 	/**
@@ -75,12 +72,10 @@ abstract class TextBase extends BaseControl
 	}
 
 
-
 	protected function setRawValue($value)
 	{
 		return $this->setValue(is_scalar($value) ? Strings::normalizeNewLines($value) : '');
 	}
-
 
 
 	/**
@@ -95,7 +90,6 @@ abstract class TextBase extends BaseControl
 	}
 
 
-
 	/**
 	 * Returns the special value which is treated as empty string.
 	 * @return string
@@ -104,7 +98,6 @@ abstract class TextBase extends BaseControl
 	{
 		return $this->emptyValue;
 	}
-
 
 
 	/**
@@ -117,7 +110,6 @@ abstract class TextBase extends BaseControl
 		$this->filters[] = new Nette\Callback($filter);
 		return $this;
 	}
-
 
 
 	/**
@@ -136,7 +128,6 @@ abstract class TextBase extends BaseControl
 	}
 
 
-
 	public function getControl()
 	{
 		$control = parent::getControl();
@@ -145,7 +136,6 @@ abstract class TextBase extends BaseControl
 		}
 		return $control;
 	}
-
 
 
 	public function addRule($operation, $message = NULL, $arg = NULL)
@@ -164,9 +154,7 @@ abstract class TextBase extends BaseControl
 	}
 
 
-
 	/********************* validators ****************d*g**/
-
 
 
 	/**
@@ -180,7 +168,6 @@ abstract class TextBase extends BaseControl
 	}
 
 
-
 	/**
 	 * URL validator: is control's value valid URL?
 	 * @param  TextBase
@@ -190,7 +177,6 @@ abstract class TextBase extends BaseControl
 	{
 		return Validators::isUrl($control->getValue()) || Validators::isUrl('http://' . $control->getValue());
 	}
-
 
 
 	/**
@@ -204,14 +190,12 @@ abstract class TextBase extends BaseControl
 	}
 
 
-
 	/** @deprecated */
 	public static function validateRegexp(TextBase $control, $regexp)
 	{
 		trigger_error('Validator REGEXP is deprecated; use PATTERN instead (which is matched against the entire value and is case sensitive).', E_USER_DEPRECATED);
 		return (bool) Strings::match($control->getValue(), $regexp);
 	}
-
 
 
 	/**
@@ -226,7 +210,6 @@ abstract class TextBase extends BaseControl
 	}
 
 
-
 	/**
 	 * Integer validator: is a control's value decimal number?
 	 * @param  TextBase
@@ -238,7 +221,6 @@ abstract class TextBase extends BaseControl
 	}
 
 
-
 	/**
 	 * Float validator: is a control's value float number?
 	 * @param  TextBase
@@ -248,7 +230,6 @@ abstract class TextBase extends BaseControl
 	{
 		return Validators::isNumeric(static::filterFloat($control->getValue()));
 	}
-
 
 
 	/**

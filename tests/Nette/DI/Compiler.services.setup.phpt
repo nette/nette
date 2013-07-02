@@ -10,9 +10,7 @@
 use Nette\DI;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class Factory
@@ -51,8 +49,6 @@ function globtest($arg)
 {
 	Notes::add(__METHOD__ . ' ' . $arg);
 }
-
-
 
 
 $loader = new DI\Config\Loader;

@@ -15,7 +15,6 @@ use Nette,
 	Nette\Caching;
 
 
-
 /**
  * Template stored in file.
  *
@@ -25,7 +24,6 @@ class FileTemplate extends Template implements IFileTemplate
 {
 	/** @var string */
 	private $file;
-
 
 
 	/**
@@ -38,7 +36,6 @@ class FileTemplate extends Template implements IFileTemplate
 			$this->setFile($file);
 		}
 	}
-
 
 
 	/**
@@ -56,7 +53,6 @@ class FileTemplate extends Template implements IFileTemplate
 	}
 
 
-
 	/**
 	 * Returns the path to the template file.
 	 * @return string  template file path
@@ -65,7 +61,6 @@ class FileTemplate extends Template implements IFileTemplate
 	{
 		return $this->file;
 	}
-
 
 
 	/**
@@ -78,9 +73,7 @@ class FileTemplate extends Template implements IFileTemplate
 	}
 
 
-
 	/********************* rendering ****************d*g**/
-
 
 
 	/**

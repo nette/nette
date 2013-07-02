@@ -15,7 +15,6 @@ use Nette,
 	Nette\Application\BadRequestException;
 
 
-
 /**
  * Helpers for Presenter & PresenterComponent.
  *
@@ -32,7 +31,6 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 
 	/** @var array isMethodCallable cache */
 	private static $mcCache = array();
-
 
 
 	/**
@@ -72,7 +70,6 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 	}
 
 
-
 	/**
 	 * @param  string|NULL
 	 * @return array of persistent components.
@@ -98,7 +95,6 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 	}
 
 
-
 	/**
 	 * Is a method callable? It means class is instantiable and method has
 	 * public visibility, is non-static and non-abstract.
@@ -117,7 +113,6 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 		}
 		return $cache;
 	}
-
 
 
 	/**
@@ -142,7 +137,6 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 		}
 		return $res;
 	}
-
 
 
 	/**

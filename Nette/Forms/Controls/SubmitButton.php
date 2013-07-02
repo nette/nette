@@ -14,7 +14,6 @@ namespace Nette\Forms\Controls;
 use Nette;
 
 
-
 /**
  * Submittable button control.
  *
@@ -35,7 +34,6 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	private $validationScope;
 
 
-
 	/**
 	 * @param  string  caption
 	 */
@@ -45,7 +43,6 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 		$this->control->type = 'submit';
 		$this->setOmitted(TRUE);
 	}
-
 
 
 	/**
@@ -62,7 +59,6 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	}
 
 
-
 	/**
 	 * Tells if the form was submitted by this button.
 	 * @return bool
@@ -71,7 +67,6 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	{
 		return $this->getForm()->isSubmitted() === $this;
 	}
-
 
 
 	/**
@@ -100,7 +95,6 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	}
 
 
-
 	/**
 	 * Gets the validation scope.
 	 * @return array|NULL
@@ -111,7 +105,6 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	}
 
 
-
 	/**
 	 * Fires click event.
 	 * @return void
@@ -120,7 +113,6 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	{
 		$this->onClick($this);
 	}
-
 
 
 	/**

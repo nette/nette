@@ -14,7 +14,6 @@ namespace Nette\Utils;
 use Nette;
 
 
-
 /**
  * Traversing helper. Internal class.
  *
@@ -32,7 +31,6 @@ class TokenIterator extends Nette\Object
 	public $ignored = array();
 
 
-
 	/**
 	 * @param array[]
 	 */
@@ -40,7 +38,6 @@ class TokenIterator extends Nette\Object
 	{
 		$this->tokens = $tokens;
 	}
-
 
 
 	/**
@@ -55,7 +52,6 @@ class TokenIterator extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns current token value.
 	 * @return string|NULL
@@ -66,7 +62,6 @@ class TokenIterator extends Nette\Object
 			? $this->tokens[$this->position][Tokenizer::VALUE]
 			: NULL;
 	}
-
 
 
 	/**
@@ -80,7 +75,6 @@ class TokenIterator extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns next token value.
 	 * @param  desired token
@@ -90,7 +84,6 @@ class TokenIterator extends Nette\Object
 	{
 		return $this->scan(func_get_args(), TRUE, TRUE, TRUE); // onlyFirst, advance, strings
 	}
-
 
 
 	/**
@@ -104,7 +97,6 @@ class TokenIterator extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns all next tokens until it sees a token with the given value.
 	 * @param  tokens
@@ -114,7 +106,6 @@ class TokenIterator extends Nette\Object
 	{
 		return $this->scan(func_get_args(), FALSE, TRUE, FALSE, TRUE); // advance, until
 	}
-
 
 
 	/**
@@ -128,7 +119,6 @@ class TokenIterator extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns concatenation of all next tokens until it sees a token with the given value.
 	 * @param  tokens
@@ -138,7 +128,6 @@ class TokenIterator extends Nette\Object
 	{
 		return $this->scan(func_get_args(), FALSE, TRUE, TRUE, TRUE); // advance, strings, until
 	}
-
 
 
 	/**
@@ -158,7 +147,6 @@ class TokenIterator extends Nette\Object
 	}
 
 
-
 	/**
 	 * Checks the next token.
 	 * @param  token
@@ -168,7 +156,6 @@ class TokenIterator extends Nette\Object
 	{
 		return (bool) $this->scan(func_get_args(), TRUE, FALSE); // onlyFirst
 	}
-
 
 
 	/**
@@ -182,7 +169,6 @@ class TokenIterator extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return TokenIterator
 	 */
@@ -193,12 +179,10 @@ class TokenIterator extends Nette\Object
 	}
 
 
-
 	protected function next()
 	{
 		$this->position++;
 	}
-
 
 
 	/**

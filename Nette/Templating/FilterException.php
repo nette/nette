@@ -14,7 +14,6 @@ namespace Nette\Templating;
 use Nette;
 
 
-
 /**
  * The exception occured during template compilation.
  *
@@ -29,13 +28,11 @@ class FilterException extends Nette\InvalidStateException
 	public $sourceLine;
 
 
-
 	public function __construct($message, $code = 0, $sourceLine = 0)
 	{
 		$this->sourceLine = (int) $sourceLine;
 		parent::__construct($message, $code);
 	}
-
 
 
 	public function setSourceFile($file)

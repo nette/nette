@@ -14,7 +14,6 @@ namespace Nette\Caching\Storages;
 use Nette;
 
 
-
 /**
  * Memory cache storage.
  *
@@ -24,7 +23,6 @@ class MemoryStorage extends Nette\Object implements Nette\Caching\IStorage
 {
 	/** @var array */
 	private $data = array();
-
 
 
 	/**
@@ -38,7 +36,6 @@ class MemoryStorage extends Nette\Object implements Nette\Caching\IStorage
 	}
 
 
-
 	/**
 	 * Prevents item reading and writing. Lock is released by write() or remove().
 	 * @param  string key
@@ -47,7 +44,6 @@ class MemoryStorage extends Nette\Object implements Nette\Caching\IStorage
 	public function lock($key)
 	{
 	}
-
 
 
 	/**
@@ -63,7 +59,6 @@ class MemoryStorage extends Nette\Object implements Nette\Caching\IStorage
 	}
 
 
-
 	/**
 	 * Removes item from the cache.
 	 * @param  string key
@@ -73,7 +68,6 @@ class MemoryStorage extends Nette\Object implements Nette\Caching\IStorage
 	{
 		unset($this->data[$key]);
 	}
-
 
 
 	/**

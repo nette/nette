@@ -27,7 +27,6 @@ Assert::equal('eddard stark', $book->name);
 Assert::equal(new Nette\DateTime('2011-11-11'), $book->born);
 
 
-
 $books = $dao->table('book');
 
 $book1 = $books->get(1);  // SELECT * FROM `book` WHERE (`id` = ?)
@@ -41,7 +40,6 @@ $book2 = $books->insert(array(
 Assert::same('eddard stark', $book2->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11, 15))
 
 
-
 // SQL Server throw PDOException because does not allow insert explicit value for IDENTITY column.
 // This exception is about primary key violation.
 if ($driverName !== 'sqlsrv') {
@@ -53,7 +51,6 @@ if ($driverName !== 'sqlsrv') {
 		));
 	}, '\PDOException');
 }
-
 
 
 switch ($driverName) {
@@ -74,7 +71,6 @@ switch ($driverName) {
 }
 $dao->table('book')->insert($selection);
 Assert::equal(4, $dao->table('book')->where('title LIKE', "Biography%")->count('*'));
-
 
 
 // Insert into table without primary key

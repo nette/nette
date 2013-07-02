@@ -14,7 +14,6 @@ namespace Nette\Forms;
 use Nette;
 
 
-
 /**
  * Creates, validates and renders HTML forms.
  *
@@ -133,7 +132,6 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * This method will be called when the component (or component's parent)
 	 * becomes attached to a monitored object. Do not call this method yourself.
@@ -148,7 +146,6 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * Returns self.
 	 * @return Form
@@ -157,7 +154,6 @@ class Form extends Container
 	{
 		return $this;
 	}
-
 
 
 	/**
@@ -172,7 +168,6 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * Returns form's action.
 	 * @return mixed URI
@@ -181,7 +176,6 @@ class Form extends Container
 	{
 		return $this->element->action;
 	}
-
 
 
 	/**
@@ -199,7 +193,6 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * Returns form's method.
 	 * @return string get | post
@@ -208,7 +201,6 @@ class Form extends Container
 	{
 		return $this->element->method;
 	}
-
 
 
 	/**
@@ -221,7 +213,6 @@ class Form extends Container
 	{
 		return $this[self::PROTECTOR_ID] = new Controls\CsrfProtection($message, $timeout);
 	}
-
 
 
 	/**
@@ -246,7 +237,6 @@ class Form extends Container
 			return $this->groups[$caption] = $group;
 		}
 	}
-
 
 
 	/**
@@ -275,7 +265,6 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * Returns all defined groups.
 	 * @return FormGroup[]
@@ -284,7 +273,6 @@ class Form extends Container
 	{
 		return $this->groups;
 	}
-
 
 
 	/**
@@ -298,9 +286,7 @@ class Form extends Container
 	}
 
 
-
 	/********************* translator ****************d*g**/
-
 
 
 	/**
@@ -314,7 +300,6 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * Returns translate adapter.
 	 * @return Nette\Localization\ITranslator|NULL
@@ -325,9 +310,7 @@ class Form extends Container
 	}
 
 
-
 	/********************* submission ****************d*g**/
-
 
 
 	/**
@@ -338,7 +321,6 @@ class Form extends Container
 	{
 		return TRUE;
 	}
-
 
 
 	/**
@@ -354,7 +336,6 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * Tells if the form was submitted and successfully validated.
 	 * @return bool
@@ -363,7 +344,6 @@ class Form extends Container
 	{
 		return $this->isSubmitted() && $this->isValid();
 	}
-
 
 
 	/**
@@ -375,7 +355,6 @@ class Form extends Container
 		$this->submittedBy = $by === NULL ? FALSE : $by;
 		return $this;
 	}
-
 
 
 	/**
@@ -394,7 +373,6 @@ class Form extends Container
 		}
 		return $this->httpData;
 	}
-
 
 
 	/**
@@ -421,7 +399,6 @@ class Form extends Container
 		}
 		$this->onSubmit($this);
 	}
-
 
 
 	/**
@@ -454,9 +431,7 @@ class Form extends Container
 	}
 
 
-
 	/********************* validation ****************d*g**/
-
 
 
 	public function validate(array $controls = NULL)
@@ -466,7 +441,6 @@ class Form extends Container
 		}
 		parent::validate($controls);
 	}
-
 
 
 	/**
@@ -480,7 +454,6 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * Returns global validation errors.
 	 * @return array
@@ -489,7 +462,6 @@ class Form extends Container
 	{
 		return array_unique($this->errors);
 	}
-
 
 
 	/**
@@ -501,7 +473,6 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * @return void
 	 */
@@ -509,7 +480,6 @@ class Form extends Container
 	{
 		$this->errors = array();
 	}
-
 
 
 	/**
@@ -522,9 +492,7 @@ class Form extends Container
 	}
 
 
-
 	/********************* rendering ****************d*g**/
-
 
 
 	/**
@@ -537,7 +505,6 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * Sets form renderer.
 	 * @return Form  provides a fluent interface
@@ -547,7 +514,6 @@ class Form extends Container
 		$this->renderer = $renderer;
 		return $this;
 	}
-
 
 
 	/**
@@ -563,7 +529,6 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * Renders form.
 	 * @return void
@@ -574,7 +539,6 @@ class Form extends Container
 		array_unshift($args, $this);
 		echo call_user_func_array(array($this->getRenderer(), 'render'), $args);
 	}
-
 
 
 	/**
@@ -597,9 +561,7 @@ class Form extends Container
 	}
 
 
-
 	/********************* backend ****************d*g**/
-
 
 
 	/**
@@ -614,7 +576,6 @@ class Form extends Container
 		}
 		return $this->httpRequest;
 	}
-
 
 
 	/**

@@ -15,7 +15,6 @@ use Nette,
 	Nette\Caching\Cache;
 
 
-
 /**
  * Cache file storage.
  *
@@ -68,7 +67,6 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 	private $locks;
 
 
-
 	public function __construct($dir, IJournal $journal = NULL)
 	{
 		$this->dir = realpath($dir);
@@ -83,7 +81,6 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 			$this->clean(array());
 		}
 	}
-
 
 
 	/**
@@ -101,7 +98,6 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 			return NULL;
 		}
 	}
-
 
 
 	/**
@@ -144,7 +140,6 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 	}
 
 
-
 	/**
 	 * Prevents item reading and writing. Lock is released by write() or remove().
 	 * @param  string key
@@ -167,7 +162,6 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 		$this->locks[$key] = $handle;
 		flock($handle, LOCK_EX);
 	}
-
 
 
 	/**
@@ -257,7 +251,6 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 	}
 
 
-
 	/**
 	 * Removes item from the cache.
 	 * @param  string key
@@ -268,7 +261,6 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 		unset($this->locks[$key]);
 		$this->delete($this->getCacheFile($key));
 	}
-
 
 
 	/**
@@ -326,7 +318,6 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 	}
 
 
-
 	/**
 	 * Reads cache data from disk.
 	 * @param  string  file path
@@ -360,7 +351,6 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 	}
 
 
-
 	/**
 	 * Reads cache data from disk and closes cache file handle.
 	 * @param  array
@@ -380,7 +370,6 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 	}
 
 
-
 	/**
 	 * Returns file name.
 	 * @param  string
@@ -394,7 +383,6 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 		}
 		return $this->dir . '/_' . $file;
 	}
-
 
 
 	/**

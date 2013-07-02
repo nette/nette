@@ -14,7 +14,6 @@ namespace Nette\Http;
 use Nette;
 
 
-
 /**
  * URI Syntax (RFC 3986).
  *
@@ -87,7 +86,6 @@ class Url extends Nette\Object
 	private $fragment = '';
 
 
-
 	/**
 	 * @param  string  URL
 	 * @throws Nette\InvalidArgumentException
@@ -120,7 +118,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Sets the scheme part of URI.
 	 * @param  string
@@ -133,7 +130,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the scheme part of URI.
 	 * @return string
@@ -142,7 +138,6 @@ class Url extends Nette\Object
 	{
 		return $this->scheme;
 	}
-
 
 
 	/**
@@ -157,7 +152,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the user name part of URI.
 	 * @return string
@@ -166,7 +160,6 @@ class Url extends Nette\Object
 	{
 		return $this->user;
 	}
-
 
 
 	/**
@@ -181,7 +174,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the password part of URI.
 	 * @return string
@@ -190,7 +182,6 @@ class Url extends Nette\Object
 	{
 		return $this->pass;
 	}
-
 
 
 	/**
@@ -205,7 +196,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the host part of URI.
 	 * @return string
@@ -214,7 +204,6 @@ class Url extends Nette\Object
 	{
 		return $this->host;
 	}
-
 
 
 	/**
@@ -229,7 +218,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the port part of URI.
 	 * @return string
@@ -238,7 +226,6 @@ class Url extends Nette\Object
 	{
 		return $this->port;
 	}
-
 
 
 	/**
@@ -253,7 +240,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the path part of URI.
 	 * @return string
@@ -262,7 +248,6 @@ class Url extends Nette\Object
 	{
 		return $this->path;
 	}
-
 
 
 	/**
@@ -275,7 +260,6 @@ class Url extends Nette\Object
 		$this->query = (string) (is_array($value) ? http_build_query($value, '', '&') : $value);
 		return $this;
 	}
-
 
 
 	/**
@@ -291,7 +275,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the query part of URI.
 	 * @return string
@@ -300,7 +283,6 @@ class Url extends Nette\Object
 	{
 		return $this->query;
 	}
-
 
 
 	/**
@@ -315,7 +297,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the fragment part of URI.
 	 * @return string
@@ -324,7 +305,6 @@ class Url extends Nette\Object
 	{
 		return $this->fragment;
 	}
-
 
 
 	/**
@@ -337,7 +317,6 @@ class Url extends Nette\Object
 			. ($this->query === '' ? '' : '?' . $this->query)
 			. ($this->fragment === '' ? '' : '#' . $this->fragment);
 	}
-
 
 
 	/**
@@ -359,7 +338,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the scheme and authority part of URI.
 	 * @return string
@@ -368,7 +346,6 @@ class Url extends Nette\Object
 	{
 		return ($this->scheme ? $this->scheme . ':' : '') . '//' . $this->getAuthority();
 	}
-
 
 
 	/**
@@ -382,7 +359,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the base-URI.
 	 * @return string
@@ -393,7 +369,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the relative-URI.
 	 * @return string
@@ -402,7 +377,6 @@ class Url extends Nette\Object
 	{
 		return (string) substr($this->getAbsoluteUrl(), strlen($this->getBaseUrl()));
 	}
-
 
 
 	/**
@@ -439,7 +413,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Transform to canonical form.
 	 * @return Url
@@ -453,7 +426,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return string
 	 */
@@ -461,7 +433,6 @@ class Url extends Nette\Object
 	{
 		return $this->getAbsoluteUrl();
 	}
-
 
 
 	/**

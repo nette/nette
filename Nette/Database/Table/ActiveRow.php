@@ -15,7 +15,6 @@ use Nette,
 	Nette\Database\Reflection\MissingReferenceException;
 
 
-
 /**
  * Single row representation.
  * ActiveRow is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
@@ -38,13 +37,11 @@ class ActiveRow implements \IteratorAggregate, IRow
 	private $isModified = FALSE;
 
 
-
 	public function __construct(array $data, Selection $table)
 	{
 		$this->data = $data;
 		$this->table = $table;
 	}
-
 
 
 	/**
@@ -57,7 +54,6 @@ class ActiveRow implements \IteratorAggregate, IRow
 	}
 
 
-
 	/**
 	 * @internal
 	 */
@@ -65,7 +61,6 @@ class ActiveRow implements \IteratorAggregate, IRow
 	{
 		return $this->table;
 	}
-
 
 
 	public function __toString()
@@ -78,7 +73,6 @@ class ActiveRow implements \IteratorAggregate, IRow
 	}
 
 
-
 	/**
 	 * @return array
 	 */
@@ -87,7 +81,6 @@ class ActiveRow implements \IteratorAggregate, IRow
 		$this->accessColumn(NULL);
 		return $this->data;
 	}
-
 
 
 	/**
@@ -127,7 +120,6 @@ class ActiveRow implements \IteratorAggregate, IRow
 	}
 
 
-
 	/**
 	 * Returns row signature (composition of primary keys)
 	 * @param  bool
@@ -137,7 +129,6 @@ class ActiveRow implements \IteratorAggregate, IRow
 	{
 		return implode('|', (array) $this->getPrimary($need));
 	}
-
 
 
 	/**
@@ -156,7 +147,6 @@ class ActiveRow implements \IteratorAggregate, IRow
 	}
 
 
-
 	/**
 	 * Returns referencing rows.
 	 * @param  string
@@ -173,7 +163,6 @@ class ActiveRow implements \IteratorAggregate, IRow
 
 		return $this->table->getReferencingTable($key, $throughColumn, $this[$this->table->getPrimary()]);
 	}
-
 
 
 	/**
@@ -200,7 +189,6 @@ class ActiveRow implements \IteratorAggregate, IRow
 	}
 
 
-
 	/**
 	 * Deletes row.
 	 * @return int number of affected rows or FALSE in case of an error
@@ -219,9 +207,7 @@ class ActiveRow implements \IteratorAggregate, IRow
 	}
 
 
-
 	/********************* interface IteratorAggregate ****************d*g**/
-
 
 
 	public function getIterator()
@@ -231,9 +217,7 @@ class ActiveRow implements \IteratorAggregate, IRow
 	}
 
 
-
 	/********************* interface ArrayAccess & magic accessors ****************d*g**/
-
 
 
 	/**
@@ -248,7 +232,6 @@ class ActiveRow implements \IteratorAggregate, IRow
 	}
 
 
-
 	/**
 	 * Returns value of column.
 	 * @param  string column name
@@ -258,7 +241,6 @@ class ActiveRow implements \IteratorAggregate, IRow
 	{
 		return $this->__get($key);
 	}
-
 
 
 	/**
@@ -272,7 +254,6 @@ class ActiveRow implements \IteratorAggregate, IRow
 	}
 
 
-
 	/**
 	 * Removes column from data.
 	 * @param  string column name
@@ -284,12 +265,10 @@ class ActiveRow implements \IteratorAggregate, IRow
 	}
 
 
-
 	public function __set($key, $value)
 	{
 		throw new Nette\DeprecatedException('ActiveRow is read-only; use update() method instead.');
 	}
-
 
 
 	public function &__get($key)
@@ -313,7 +292,6 @@ class ActiveRow implements \IteratorAggregate, IRow
 	}
 
 
-
 	public function __isset($key)
 	{
 		$this->accessColumn($key);
@@ -325,12 +303,10 @@ class ActiveRow implements \IteratorAggregate, IRow
 	}
 
 
-
 	public function __unset($key)
 	{
 		throw new Nette\DeprecatedException('ActiveRow is read-only.');
 	}
-
 
 
 	protected function accessColumn($key, $selectColumn = TRUE)
@@ -343,12 +319,10 @@ class ActiveRow implements \IteratorAggregate, IRow
 	}
 
 
-
 	protected function removeAccessColumn($key)
 	{
 		$this->table->removeAccessColumn($key);
 	}
-
 
 
 	protected function getReference($table, $column)

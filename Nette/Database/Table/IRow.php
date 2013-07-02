@@ -14,7 +14,6 @@ namespace Nette\Database\Table;
 use Nette\Database;
 
 
-
 /**
  * Row interface.
  *

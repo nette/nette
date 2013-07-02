@@ -14,7 +14,6 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
 
 
-
 test(function() use ($dao) {
 	$books1 = $books2 = $books3 = array();
 
@@ -50,7 +49,6 @@ test(function() use ($dao) {
 });
 
 
-
 test(function() use ($dao) {
 	$tagsAuthors = array();
 	foreach ($dao->table('tag') as $tag) {
@@ -78,7 +76,6 @@ test(function() use ($dao) {
 });
 
 
-
 test(function() use ($dao) {
 	$counts1 = $counts2 = array();
 	foreach($dao->table('author')->order('id') as $author) {
@@ -89,7 +86,6 @@ test(function() use ($dao) {
 	Assert::same(array(2, 2, 0), $counts1);
 	Assert::same(array(1, 0, 0), $counts2);
 });
-
 
 
 test(function() use ($dao) {

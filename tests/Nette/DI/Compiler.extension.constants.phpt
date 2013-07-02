@@ -10,9 +10,7 @@
 use Nette\DI;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class Lorem
@@ -28,7 +26,6 @@ class Lorem
 }
 
 define('MY_CONSTANT_TEST', "one");
-
 
 
 $loader = new DI\Config\Loader;

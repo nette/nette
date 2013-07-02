@@ -15,7 +15,6 @@ use Nette,
 	Nette\Utils\Html;
 
 
-
 /**
  * Converts a Form into the HTML output.
  *
@@ -123,7 +122,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	protected $counter;
 
 
-
 	/**
 	 * Provides complete form rendering.
 	 * @param  Nette\Forms\Form
@@ -154,7 +152,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	}
 
 
-
 	/**
 	 * Initializes form.
 	 * @return void
@@ -174,7 +171,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 			}
 		}
 	}
-
 
 
 	/**
@@ -209,7 +205,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	}
 
 
-
 	/**
 	 * Renders form end.
 	 * @return string
@@ -231,7 +226,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 
 		return $s . $this->form->getElementPrototype()->endTag() . "\n";
 	}
-
 
 
 	/**
@@ -258,7 +252,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 		}
 		return "\n" . $container->render($control ? 1 : 0);
 	}
-
 
 
 	/**
@@ -321,7 +314,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	}
 
 
-
 	/**
 	 * Renders group of controls.
 	 * @param  Nette\Forms\Container|FormGroup
@@ -365,7 +357,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	}
 
 
-
 	/**
 	 * Renders single visual row.
 	 * @return string
@@ -383,7 +374,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 		$pair->id = $control->getOption('id');
 		return $pair->render(0);
 	}
-
 
 
 	/**
@@ -418,7 +408,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	}
 
 
-
 	/**
 	 * Renders 'label' part of visual row of controls.
 	 * @return string
@@ -438,7 +427,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 		}
 		return $this->getWrapper('label container')->setHtml($label);
 	}
-
 
 
 	/**
@@ -472,7 +460,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	}
 
 
-
 	/**
 	 * @param  string
 	 * @return Nette\Utils\Html
@@ -482,7 +469,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 		$data = $this->getValue($name);
 		return $data instanceof Html ? clone $data : Html::el($data);
 	}
-
 
 
 	/**

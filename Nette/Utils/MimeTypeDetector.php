@@ -14,7 +14,6 @@ namespace Nette\Utils;
 use Nette;
 
 
-
 /**
  * Mime type detector.
  *
@@ -30,7 +29,6 @@ final class MimeTypeDetector
 	{
 		throw new Nette\StaticClassException;
 	}
-
 
 
 	/**
@@ -57,7 +55,6 @@ final class MimeTypeDetector
 
 		return isset($type) && preg_match('#^\S+/\S+\z#', $type) ? $type : 'application/octet-stream';
 	}
-
 
 
 	/**

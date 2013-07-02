@@ -14,14 +14,12 @@ namespace Nette\DI;
 use Nette;
 
 
-
 /**
  * Service not found exception.
  */
 class MissingServiceException extends Nette\InvalidStateException
 {
 }
-
 
 
 /**

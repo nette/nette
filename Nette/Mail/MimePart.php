@@ -15,7 +15,6 @@ use Nette,
 	Nette\Utils\Strings;
 
 
-
 /**
  * MIME message part.
  *
@@ -46,7 +45,6 @@ class MimePart extends Nette\Object
 
 	/** @var string */
 	private $body;
-
 
 
 	/**
@@ -95,7 +93,6 @@ class MimePart extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns a header.
 	 * @param  string
@@ -105,7 +102,6 @@ class MimePart extends Nette\Object
 	{
 		return isset($this->headers[$name]) ? $this->headers[$name] : NULL;
 	}
-
 
 
 	/**
@@ -118,7 +114,6 @@ class MimePart extends Nette\Object
 		unset($this->headers[$name]);
 		return $this;
 	}
-
 
 
 	/**
@@ -161,7 +156,6 @@ class MimePart extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns all headers.
 	 * @return array
@@ -170,7 +164,6 @@ class MimePart extends Nette\Object
 	{
 		return $this->headers;
 	}
-
 
 
 	/**
@@ -186,7 +179,6 @@ class MimePart extends Nette\Object
 	}
 
 
-
 	/**
 	 * Sets Content-Transfer-Encoding header.
 	 * @param  string
@@ -199,7 +191,6 @@ class MimePart extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns Content-Transfer-Encoding header.
 	 * @return string
@@ -210,7 +201,6 @@ class MimePart extends Nette\Object
 	}
 
 
-
 	/**
 	 * Adds or creates new multipart.
 	 * @return MimePart
@@ -219,7 +209,6 @@ class MimePart extends Nette\Object
 	{
 		return $this->parts[] = $part === NULL ? new self : $part;
 	}
-
 
 
 	/**
@@ -237,7 +226,6 @@ class MimePart extends Nette\Object
 	}
 
 
-
 	/**
 	 * Gets textual body.
 	 * @return mixed
@@ -248,9 +236,7 @@ class MimePart extends Nette\Object
 	}
 
 
-
 	/********************* building ****************d*g**/
-
 
 
 	/**
@@ -311,9 +297,7 @@ class MimePart extends Nette\Object
 	}
 
 
-
 	/********************* QuotedPrintable helpers ****************d*g**/
-
 
 
 	/**

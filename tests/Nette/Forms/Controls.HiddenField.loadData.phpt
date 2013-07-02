@@ -10,16 +10,13 @@
 use Nette\Forms\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 before(function() {
 	$_SERVER['REQUEST_METHOD'] = 'POST';
 	$_POST = $_FILES = array();
 });
-
 
 
 test(function() {
@@ -31,14 +28,12 @@ test(function() {
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$input = $form->addText('unknown');
 	Assert::same( '', $input->getValue() );
 	Assert::false( $input->isFilled() );
 });
-
 
 
 test(function() { // invalid data
@@ -50,7 +45,6 @@ test(function() { // invalid data
 });
 
 
-
 test(function() { // errors are moved to form
 	$form = new Form;
 	$input = $form->addHidden('hidden');
@@ -58,7 +52,6 @@ test(function() { // errors are moved to form
 	Assert::same( array(), $input->getErrors() );
 	Assert::same( array('error'), $form->getErrors() );
 });
-
 
 
 test(function() { // setValue() and invalid argument

@@ -11,9 +11,7 @@ use Nette\Utils\Tokenizer,
 	Nette\Utils\TokenIterator;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 test(function() {
@@ -53,7 +51,6 @@ test(function() {
 	Assert::same( 1, $traverser->position );
 
 
-
 	$traverser->position = 0;
 	Assert::null( $traverser->nextValue(T_STRING) );
 	Assert::same( 0, $traverser->position );
@@ -71,7 +68,6 @@ test(function() {
 	Assert::same( 0, $traverser->position );
 	Assert::same( ' ', $traverser->joinUntil(T_STRING, T_DNUMBER) );
 	Assert::same( 1, $traverser->position );
-
 
 
 	$traverser->position = 2;
@@ -92,7 +88,6 @@ test(function() {
 	Assert::same( '', $traverser->joinUntil(T_STRING, T_DNUMBER, T_WHITESPACE) );
 	Assert::same( 2, $traverser->position );
 });
-
 
 
 test(function() {

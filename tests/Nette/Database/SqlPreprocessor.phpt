@@ -13,7 +13,6 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 use Nette\Database\SqlLiteral;
 
 
-
 $preprocessor = new Nette\Database\SqlPreprocessor($connection);
 
 test(function() use ($preprocessor) { // basic
@@ -23,13 +22,11 @@ test(function() use ($preprocessor) { // basic
 });
 
 
-
 test(function() use ($preprocessor) {
 	list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE id =', 11));
 	Assert::same( 'SELECT id FROM author WHERE id = 11', $sql );
 	Assert::same( array(), $params );
 });
-
 
 
 test(function() use ($preprocessor) {
@@ -39,13 +36,11 @@ test(function() use ($preprocessor) {
 });
 
 
-
 test(function() use ($preprocessor) {
 	list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE id = ?', 11, 'OR id = ?', 12));
 	Assert::same( 'SELECT id FROM author WHERE id = 11 OR id = 12', $sql );
 	Assert::same( array(), $params );
 });
-
 
 
 test(function() use ($preprocessor) {
@@ -55,13 +50,11 @@ test(function() use ($preprocessor) {
 });
 
 
-
 test(function() use ($preprocessor) {
 	list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE id =', '? OR id = ?', 11, 12));
 	Assert::same( 'SELECT id FROM author WHERE id = 11 OR id = 12', $sql );
 	Assert::same( array(), $params );
 });
-
 
 
 test(function() use ($preprocessor) { // where
@@ -77,7 +70,6 @@ test(function() use ($preprocessor) { // where
 });
 
 
-
 test(function() use ($preprocessor) {
 	list($sql, $params) = $preprocessor->process(array('SELECT * FROM book_tag WHERE (book_id, tag_id) IN (?)', array(
 		array(1, 2),
@@ -88,7 +80,6 @@ test(function() use ($preprocessor) {
 	Assert::same( reformat("SELECT * FROM book_tag WHERE (book_id, tag_id) IN ((1, 2), (3, 4), (5, 6))"), $sql );
 	Assert::same( array(), $params );
 });
-
 
 
 test(function() use ($preprocessor) { // order
@@ -102,13 +93,11 @@ test(function() use ($preprocessor) { // order
 });
 
 
-
 test(function() use ($preprocessor) { // missing parameters
 	Assert::exception(function() use ($preprocessor) {
 		$preprocessor->process(array('SELECT id FROM author WHERE id =', '? OR id = ?', 11));
 	}, 'Nette\InvalidArgumentException', 'There are more placeholders than passed parameters.');
 });
-
 
 
 test(function() use ($preprocessor) { // SqlLiteral
@@ -118,13 +107,11 @@ test(function() use ($preprocessor) { // SqlLiteral
 });
 
 
-
 test(function() use ($preprocessor) {
 	list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE', new SqlLiteral('id=11'), 'OR', new SqlLiteral('id=?', array(12))));
 	Assert::same( 'SELECT id FROM author WHERE id=11 OR id=?', $sql );
 	Assert::same( array(12), $params );
 });
-
 
 
 test(function() use ($preprocessor) {
@@ -137,7 +124,6 @@ test(function() use ($preprocessor) {
 	Assert::same( reformat('SELECT id FROM author WHERE ([id] IS NULL) AND ([born] IN (1, 2, 3+1)) AND ([web] = NOW())'), $sql );
 	Assert::same( array(), $params );
 });
-
 
 
 test(function() use ($preprocessor, $driverName) { // insert
@@ -154,7 +140,6 @@ test(function() use ($preprocessor, $driverName) { // insert
 	}
 	Assert::same( array(), $params );
 });
-
 
 
 test(function() use ($preprocessor, $driverName) { // multi insert
@@ -174,7 +159,6 @@ test(function() use ($preprocessor, $driverName) { // multi insert
 });
 
 
-
 test(function() use ($preprocessor) { // update
 	list($sql, $params) = $preprocessor->process(array('UPDATE author SET ?',
 		array('id' => 12, 'name' => new SqlLiteral('UPPER(?)', array('John Doe'))),
@@ -183,7 +167,6 @@ test(function() use ($preprocessor) { // update
 	Assert::same( reformat("UPDATE author SET [id]=12, [name]=UPPER(?)"), $sql );
 	Assert::same( array('John Doe'), $params );
 });
-
 
 
 test(function() use ($preprocessor, $driverName) { // multi & update

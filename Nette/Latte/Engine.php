@@ -14,7 +14,6 @@ namespace Nette\Latte;
 use Nette;
 
 
-
 /**
  * Templating engine Latte.
  *
@@ -27,7 +26,6 @@ class Engine extends Nette\Object
 
 	/** @var Compiler */
 	private $compiler;
-
 
 
 	public function __construct()
@@ -43,7 +41,6 @@ class Engine extends Nette\Object
 	}
 
 
-
 	/**
 	 * Invokes filter.
 	 * @param  string
@@ -55,7 +52,6 @@ class Engine extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return Parser
 	 */
@@ -63,7 +59,6 @@ class Engine extends Nette\Object
 	{
 		return $this->parser;
 	}
-
 
 
 	/**

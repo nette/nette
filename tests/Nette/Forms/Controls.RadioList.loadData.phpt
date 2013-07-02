@@ -10,9 +10,7 @@
 use Nette\Forms\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 before(function() {
@@ -21,14 +19,12 @@ before(function() {
 });
 
 
-
 $series = array(
 	'red-dwarf' => 'Red Dwarf',
 	'the-simpsons' => 'The Simpsons',
 	0 => 'South Park',
 	'' => 'Family Guy',
 );
-
 
 
 test(function() use ($series) { // Radio list
@@ -43,7 +39,6 @@ test(function() use ($series) { // Radio list
 });
 
 
-
 test(function() use ($series) { // Radio list with invalid input
 	$_POST = array('radio' => 'days-of-our-lives');
 
@@ -54,7 +49,6 @@ test(function() use ($series) { // Radio list with invalid input
 	Assert::null( $input->getValue() );
 	Assert::false( $input->isFilled() );
 });
-
 
 
 test(function() use ($series) { // Indexed arrays
@@ -70,7 +64,6 @@ test(function() use ($series) { // Indexed arrays
 });
 
 
-
 test(function() use ($series) { // empty key
 	$_POST = array('empty' => '');
 
@@ -81,7 +74,6 @@ test(function() use ($series) { // empty key
 	Assert::same( '', $input->getValue() );
 	Assert::true( $input->isFilled() );
 });
-
 
 
 test(function() use ($series) { // missing key
@@ -96,7 +88,6 @@ test(function() use ($series) { // missing key
 });
 
 
-
 test(function() use ($series) { // malformed data
 	$_POST = array('malformed' => array(NULL));
 
@@ -107,7 +98,6 @@ test(function() use ($series) { // malformed data
 	Assert::null( $input->getValue() );
 	Assert::false( $input->isFilled() );
 });
-
 
 
 test(function() use ($series) { // setValue() and invalid argument

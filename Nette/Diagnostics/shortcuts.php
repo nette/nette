@@ -12,7 +12,6 @@
 use Nette\Diagnostics\Debugger;
 
 
-
 /**
  * Nette\Diagnostics\Debugger::dump() shortcut.
  */
@@ -23,7 +22,6 @@ function dump($var)
 	}
 	return $var;
 }
-
 
 
 /**

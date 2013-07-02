@@ -10,9 +10,7 @@
 use Nette\Http\Url;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 test(function() {
@@ -27,7 +25,6 @@ test(function() {
 	Assert::same( '',  $url->query );
 	Assert::same( '',  $url->fragment );
 });
-
 
 
 test(function() {

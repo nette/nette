@@ -10,9 +10,7 @@
 use Nette\Utils\Finder;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 function export($iterator)
@@ -24,12 +22,10 @@ function export($iterator)
 }
 
 
-
 test(function() { // non-recursive file search
 	$finder = Finder::findFiles('file.txt')->in('files');
 	Assert::same(array('files/file.txt'), export($finder));
 });
-
 
 
 test(function() { // recursive file search
@@ -42,7 +38,6 @@ test(function() { // recursive file search
 });
 
 
-
 test(function() { // recursive file search with depth limit
 	$finder = Finder::findFiles('file.txt')->from('files')->limitDepth(1);
 	Assert::same(array(
@@ -50,7 +45,6 @@ test(function() { // recursive file search with depth limit
 		'files/subdir/file.txt',
 	), export($finder));
 });
-
 
 
 test(function() { // non-recursive file & directory search
@@ -61,7 +55,6 @@ test(function() { // non-recursive file & directory search
 		'files/subdir',
 	), export($finder));
 });
-
 
 
 test(function() { // recursive file & directory search
@@ -77,7 +70,6 @@ test(function() { // recursive file & directory search
 });
 
 
-
 test(function() { // recursive file & directory search in child-first order
 	$finder = Finder::find('file.txt')->from('files')->childFirst();
 	Assert::same(array(
@@ -91,7 +83,6 @@ test(function() { // recursive file & directory search in child-first order
 });
 
 
-
 test(function() { // recursive file & directory search excluding folders
 	$finder = Finder::find('file.txt')->from('files')->exclude('images')->exclude('subdir2', '*.txt');
 	Assert::same(array(
@@ -102,14 +93,12 @@ test(function() { // recursive file & directory search excluding folders
 });
 
 
-
 test(function() { // non-recursive directory search
 	$finder = Finder::findDirectories('subdir*')->in('files');
 	Assert::same(array(
 		'files/subdir',
 	), export($finder));
 });
-
 
 
 test(function() { // recursive directory search

@@ -14,7 +14,6 @@ namespace Nette\Forms;
 use Nette;
 
 
-
 /**
  * List of validation & condition rules.
  *
@@ -59,12 +58,10 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	private $control;
 
 
-
 	public function __construct(IControl $control)
 	{
 		$this->control = $control;
 	}
-
 
 
 	/**
@@ -83,7 +80,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	/**
 	 * Is control mandatory?
 	 * @return bool
@@ -92,7 +88,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	{
 		return (bool) $this->required;
 	}
-
 
 
 	/**
@@ -120,7 +115,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	/**
 	 * Adds a validation condition a returns new branch.
 	 * @param  mixed      condition type
@@ -131,7 +125,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	{
 		return $this->addConditionOn($this->control, $operation, $arg);
 	}
-
 
 
 	/**
@@ -157,7 +150,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	/**
 	 * Adds a else statement.
 	 * @return Rules      else branch
@@ -173,7 +165,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	/**
 	 * Ends current validation condition.
 	 * @return Rules      parent branch
@@ -182,7 +173,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	{
 		return $this->parent;
 	}
-
 
 
 	/**
@@ -196,7 +186,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 		$this->toggles[$id] = $hide;
 		return $this;
 	}
-
 
 
 	/**
@@ -227,7 +216,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	/**
 	 * Validates single rule.
 	 * @return bool
@@ -242,7 +230,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	/**
 	 * Iterates over complete ruleset.
 	 * @return \ArrayIterator
@@ -255,7 +242,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 		}
 		return new \ArrayIterator($rules);
 	}
-
 
 
 	/**
@@ -277,7 +263,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	}
 
 
-
 	/**
 	 * Process 'operation' string.
 	 * @param  Rule
@@ -295,7 +280,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 			throw new Nette\InvalidArgumentException("Unknown operation$operation for control '{$rule->control->name}'.");
 		}
 	}
-
 
 
 	private static function getCallback($rule)

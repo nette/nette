@@ -10,9 +10,7 @@
 use Nette\Latte\MacroTokens;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 test(function() { // constructor
@@ -25,7 +23,6 @@ test(function() { // constructor
 	$tokenizer3 = new MacroTokens(NULL);
 	Assert::same( 0, count($tokenizer3->tokens) );
 });
-
 
 
 test(function() { // append
@@ -54,7 +51,6 @@ test(function() { // append
 });
 
 
-
 test(function() { // append with position
 	$tokenizer = new MacroTokens('world');
 
@@ -73,7 +69,6 @@ test(function() { // append with position
 	$res = $tokenizer->append('false', FALSE);
 	Assert::same( 'falsehello world*!', $tokenizer->reset()->joinAll() );
 });
-
 
 
 test(function() { // prepend

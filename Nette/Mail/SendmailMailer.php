@@ -14,7 +14,6 @@ namespace Nette\Mail;
 use Nette;
 
 
-
 /**
  * Sends emails via the PHP internal mail() function.
  *
@@ -24,7 +23,6 @@ class SendmailMailer extends Nette\Object implements IMailer
 {
 	/** @var string */
 	public $commandArgs;
-
 
 
 	/**

@@ -14,7 +14,6 @@ namespace Nette\Security;
 use Nette;
 
 
-
 /**
  * Access control list (ACL) functionality and privileges management.
  *
@@ -55,9 +54,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	private $queriedRole, $queriedResource;
 
 
-
 	/********************* roles ****************d*g**/
-
 
 
 	/**
@@ -99,7 +96,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Returns TRUE if the Role exists in the list.
 	 * @param  string
@@ -110,7 +106,6 @@ class Permission extends Nette\Object implements IAuthorizator
 		$this->checkRole($role, FALSE);
 		return isset($this->roles[$role]);
 	}
-
 
 
 	/**
@@ -131,7 +126,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Returns all Roles.
 	 * @return array
@@ -140,7 +134,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	{
 		return array_keys($this->roles);
 	}
-
 
 
 	/**
@@ -153,7 +146,6 @@ class Permission extends Nette\Object implements IAuthorizator
 		$this->checkRole($role);
 		return array_keys($this->roles[$role]['parents']);
 	}
-
 
 
 	/**
@@ -184,7 +176,6 @@ class Permission extends Nette\Object implements IAuthorizator
 
 		return FALSE;
 	}
-
 
 
 	/**
@@ -228,7 +219,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Removes all Roles from the list.
 	 *
@@ -252,9 +242,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/********************* resources ****************d*g**/
-
 
 
 	/**
@@ -288,7 +276,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Returns TRUE if the Resource exists in the list.
 	 * @param  string
@@ -299,7 +286,6 @@ class Permission extends Nette\Object implements IAuthorizator
 		$this->checkResource($resource, FALSE);
 		return isset($this->resources[$resource]);
 	}
-
 
 
 	/**
@@ -320,7 +306,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Returns all Resources.
 	 * @return array
@@ -329,7 +314,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	{
 		return array_keys($this->resources);
 	}
-
 
 
 	/**
@@ -370,7 +354,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Removes a Resource and all of its children.
 	 *
@@ -406,7 +389,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Removes all Resources.
 	 * @return Permission  provides a fluent interface
@@ -426,9 +408,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/********************* defining rules ****************d*g**/
-
 
 
 	/**
@@ -448,7 +428,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Denies one or more Roles access to [certain $privileges upon] the specified Resource(s).
 	 * If $assertion is provided, then it must return TRUE in order for rule to apply.
@@ -466,7 +445,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Removes "allow" permissions from the list in the context of the given Roles, Resources, and privileges.
 	 *
@@ -482,7 +460,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Removes "deny" restrictions from the list in the context of the given Roles, Resources, and privileges.
 	 *
@@ -496,7 +473,6 @@ class Permission extends Nette\Object implements IAuthorizator
 		$this->setRule(FALSE, self::DENY, $roles, $resources, $privileges);
 		return $this;
 	}
-
 
 
 	/**
@@ -607,9 +583,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/********************* querying the ACL ****************d*g**/
-
 
 
 	/**
@@ -678,7 +652,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Returns real currently queried Role. Use by assertion.
 	 * @return mixed
@@ -687,7 +660,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	{
 		return $this->queriedRole;
 	}
-
 
 
 	/**
@@ -700,9 +672,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/********************* internals ****************d*g**/
-
 
 
 	/**
@@ -754,7 +724,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Returns the rule type associated with the specified Resource, Role, and privilege.
 	 * @param  string|Permission::ALL
@@ -794,7 +763,6 @@ class Permission extends Nette\Object implements IAuthorizator
 			return self::ALLOW;
 		}
 	}
-
 
 
 	/**

@@ -14,7 +14,6 @@ namespace Nette\Mail;
 use Nette;
 
 
-
 /**
  * Sends emails via the SMTP server.
  *
@@ -47,7 +46,6 @@ class SmtpMailer extends Nette\Object implements IMailer
 	private $persistent;
 
 
-
 	public function __construct(array $options = array())
 	{
 		if (isset($options['host'])) {
@@ -66,7 +64,6 @@ class SmtpMailer extends Nette\Object implements IMailer
 		}
 		$this->persistent = !empty($options['persistent']);
 	}
-
 
 
 	/**
@@ -116,7 +113,6 @@ class SmtpMailer extends Nette\Object implements IMailer
 	}
 
 
-
 	/**
 	 * Connects and authenticates to SMTP server.
 	 * @return void
@@ -155,7 +151,6 @@ class SmtpMailer extends Nette\Object implements IMailer
 	}
 
 
-
 	/**
 	 * Disconnects from SMTP server.
 	 * @return void
@@ -165,7 +160,6 @@ class SmtpMailer extends Nette\Object implements IMailer
 		fclose($this->connection);
 		$this->connection = NULL;
 	}
-
 
 
 	/**
@@ -182,7 +176,6 @@ class SmtpMailer extends Nette\Object implements IMailer
 			throw new SmtpException('SMTP server did not accept ' . ($message ? $message : $line));
 		}
 	}
-
 
 
 	/**
@@ -202,7 +195,6 @@ class SmtpMailer extends Nette\Object implements IMailer
 	}
 
 }
-
 
 
 /**

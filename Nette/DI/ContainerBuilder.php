@@ -18,7 +18,6 @@ use Nette,
 	Nette\PhpGenerator\Helpers as PhpHelpers;
 
 
-
 /**
  * Basic container builder.
  *
@@ -50,7 +49,6 @@ class ContainerBuilder extends Nette\Object
 	/*private in 5.4*/public $current;
 
 
-
 	/**
 	 * Adds new service definition.
 	 * @param  string
@@ -68,7 +66,6 @@ class ContainerBuilder extends Nette\Object
 	}
 
 
-
 	/**
 	 * Removes the specified service definition.
 	 * @param  string
@@ -78,7 +75,6 @@ class ContainerBuilder extends Nette\Object
 	{
 		unset($this->definitions[$name]);
 	}
-
 
 
 	/**
@@ -95,7 +91,6 @@ class ContainerBuilder extends Nette\Object
 	}
 
 
-
 	/**
 	 * Gets all service definitions.
 	 * @return array
@@ -104,7 +99,6 @@ class ContainerBuilder extends Nette\Object
 	{
 		return $this->definitions;
 	}
-
 
 
 	/**
@@ -118,9 +112,7 @@ class ContainerBuilder extends Nette\Object
 	}
 
 
-
 	/********************* class resolving ****************d*g**/
-
 
 
 	/**
@@ -148,7 +140,6 @@ class ContainerBuilder extends Nette\Object
 	}
 
 
-
 	/**
 	 * Gets the service objects of the specified tag.
 	 * @param  string
@@ -164,7 +155,6 @@ class ContainerBuilder extends Nette\Object
 		}
 		return $found;
 	}
-
 
 
 	/**
@@ -188,7 +178,6 @@ class ContainerBuilder extends Nette\Object
 		$this->addDependency($rm->getFileName());
 		return Helpers::autowireArguments($rm, $arguments, $this);
 	}
-
 
 
 	/**
@@ -305,7 +294,6 @@ class ContainerBuilder extends Nette\Object
 	}
 
 
-
 	private function resolveClass($name, $recursive = array())
 	{
 		if (isset($recursive[$name])) {
@@ -365,7 +353,6 @@ class ContainerBuilder extends Nette\Object
 	}
 
 
-
 	/**
 	 * Adds a file to the list of dependencies.
 	 * @return ContainerBuilder  provides a fluent interface
@@ -375,7 +362,6 @@ class ContainerBuilder extends Nette\Object
 		$this->dependencies[$file] = TRUE;
 		return $this;
 	}
-
 
 
 	/**
@@ -389,9 +375,7 @@ class ContainerBuilder extends Nette\Object
 	}
 
 
-
 	/********************* code generator ****************d*g**/
-
 
 
 	/**
@@ -444,7 +428,6 @@ class ContainerBuilder extends Nette\Object
 
 		return $this->generatedClasses;
 	}
-
 
 
 	/**
@@ -523,7 +506,6 @@ class ContainerBuilder extends Nette\Object
 	}
 
 
-
 	/**
 	 * Converts parameters from ServiceDefinition to PhpGenerator.
 	 * @return Nette\PhpGenerator\Parameter[]
@@ -544,7 +526,6 @@ class ContainerBuilder extends Nette\Object
 		}
 		return $res;
 	}
-
 
 
 	/**
@@ -618,7 +599,6 @@ class ContainerBuilder extends Nette\Object
 	}
 
 
-
 	/**
 	 * Formats PHP statement.
 	 * @return string
@@ -647,7 +627,6 @@ class ContainerBuilder extends Nette\Object
 	}
 
 
-
 	/**
 	 * Expands %placeholders% in strings.
 	 * @return mixed
@@ -658,7 +637,6 @@ class ContainerBuilder extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return Nette\PhpGenerator\PhpLiteral
 	 */
@@ -666,7 +644,6 @@ class ContainerBuilder extends Nette\Object
 	{
 		return new Nette\PhpGenerator\PhpLiteral($phpCode);
 	}
-
 
 
 	/** @internal */
@@ -689,7 +666,6 @@ class ContainerBuilder extends Nette\Object
 		}
 		return $entity; // Class, @service, [Class, member], [@service, member], [, globalFunc]
 	}
-
 
 
 	/**
@@ -720,7 +696,6 @@ class ContainerBuilder extends Nette\Object
 		}
 		return $service;
 	}
-
 
 
 	/** @deprecated */

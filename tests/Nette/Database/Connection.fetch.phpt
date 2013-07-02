@@ -13,7 +13,6 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
 
 
-
 test(function() use ($connection) { // fetch
 	$row = $connection->fetch('SELECT name, id FROM author WHERE id = ?', 11);
 	Assert::type( 'Nette\Database\Row', $row );
@@ -24,11 +23,9 @@ test(function() use ($connection) { // fetch
 });
 
 
-
 test(function() use ($connection) { // fetchField
 	Assert::same('Jakub Vrana', $connection->fetchField('SELECT name FROM author ORDER BY id'));
 });
-
 
 
 test(function() use ($connection) { // fetchPairs
@@ -38,7 +35,6 @@ test(function() use ($connection) { // fetchPairs
 		'Geek' => 13,
 	), $pairs);
 });
-
 
 
 test(function() use ($connection) { // fetchAll

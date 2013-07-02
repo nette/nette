@@ -16,7 +16,6 @@ use Nette,
 	Nette\Utils\Neon;
 
 
-
 /**
  * Reading and generating NEON files.
  *
@@ -37,7 +36,6 @@ class NeonAdapter extends Nette\Object implements Nette\DI\Config\IAdapter
 	{
 		return $this->process((array) Neon::decode(file_get_contents($file)));
 	}
-
 
 
 	private function process(array $arr)
@@ -70,7 +68,6 @@ class NeonAdapter extends Nette\Object implements Nette\DI\Config\IAdapter
 		}
 		return $res;
 	}
-
 
 
 	/**

@@ -14,7 +14,6 @@ namespace Nette\Latte;
 use Nette;
 
 
-
 /**
  * HTML element node.
  *
@@ -45,7 +44,6 @@ class HtmlNode extends Nette\Object
 
 	/** @var int */
 	public $offset;
-
 
 
 	public function __construct($name, self $parentNode = NULL)

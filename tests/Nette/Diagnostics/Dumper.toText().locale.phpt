@@ -10,9 +10,7 @@
 use Nette\Diagnostics\Dumper;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 setLocale(LC_ALL, 'czech');

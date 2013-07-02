@@ -11,9 +11,7 @@ use Nette\Caching\Cache,
 	Nette\Caching\Storages\FileStorage;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 // key and data with special chars
@@ -46,7 +44,6 @@ $cache[$key] = $value;
 $cache[$key] = NULL;
 
 Assert::false( isset($cache[$key]) );
-
 
 
 // Writing cache...

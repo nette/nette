@@ -14,7 +14,6 @@ namespace Nette\Database;
 use Nette;
 
 
-
 /**
  * SQL literal value.
  *
@@ -30,13 +29,11 @@ class SqlLiteral extends Nette\Object
 	private $parameters;
 
 
-
 	public function __construct($value, array $parameters = array())
 	{
 		$this->value = (string) $value;
 		$this->parameters = $parameters;
 	}
-
 
 
 	/**
@@ -46,7 +43,6 @@ class SqlLiteral extends Nette\Object
 	{
 		return $this->parameters;
 	}
-
 
 
 	/**

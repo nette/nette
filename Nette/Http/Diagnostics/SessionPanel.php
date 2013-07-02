@@ -14,7 +14,6 @@ namespace Nette\Http\Diagnostics;
 use Nette;
 
 
-
 /**
  * Session panel for Debugger Bar.
  *
@@ -33,7 +32,6 @@ class SessionPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 		require __DIR__ . '/templates/SessionPanel.tab.phtml';
 		return ob_get_clean();
 	}
-
 
 
 	/**

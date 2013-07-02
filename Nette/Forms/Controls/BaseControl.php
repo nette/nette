@@ -18,7 +18,6 @@ use Nette,
 	Nette\Forms\Rule;
 
 
-
 /**
  * Base class that implements the basic functionality common to form controls.
  *
@@ -84,7 +83,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	private $options = array();
 
 
-
 	/**
 	 * @param  string  caption
 	 */
@@ -97,7 +95,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 		$this->caption = $caption;
 		$this->rules = new Nette\Forms\Rules($this);
 	}
-
 
 
 	/**
@@ -114,7 +111,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Returns form.
 	 * @param  bool   throw exception if form doesn't exist?
@@ -124,7 +120,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		return $this->lookup('Nette\Forms\Form', $need);
 	}
-
 
 
 	/**
@@ -147,7 +142,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Loads HTTP data.
 	 * @return void
@@ -162,9 +156,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/********************* interface IFormControl ****************d*g**/
-
 
 
 	/**
@@ -178,7 +170,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Returns control's value.
 	 * @return mixed
@@ -187,7 +178,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		return $this->value;
 	}
-
 
 
 	/**
@@ -199,7 +189,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 		$value = $this->getValue();
 		return $value !== NULL && $value !== array() && $value !== '';
 	}
-
 
 
 	/**
@@ -216,7 +205,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Sets control's submitted data.
 	 * @return BaseControl  provides a fluent interface
@@ -225,7 +213,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		return $this->setValue($value);
 	}
-
 
 
 	/**
@@ -240,7 +227,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Is control disabled?
 	 * @return bool
@@ -249,7 +235,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		return $this->disabled;
 	}
-
 
 
 	/**
@@ -264,7 +249,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Is control value excluded from $form->getValues() result?
 	 * @return bool
@@ -275,9 +259,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/********************* rendering ****************d*g**/
-
 
 
 	/**
@@ -305,7 +287,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Generates label's HTML element.
 	 * @param  string
@@ -320,7 +301,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Returns control's HTML element template.
 	 * @return Nette\Utils\Html
@@ -329,7 +309,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		return $this->control;
 	}
-
 
 
 	/**
@@ -342,7 +321,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Changes control's HTML id.
 	 * @param  string new ID, or FALSE or NULL
@@ -353,7 +331,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 		$this->htmlId = $id;
 		return $this;
 	}
-
 
 
 	/**
@@ -374,7 +351,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Changes control's HTML attribute.
 	 * @param  string name
@@ -388,9 +364,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/********************* translator ****************d*g**/
-
 
 
 	/**
@@ -404,7 +378,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Returns translate adapter.
 	 * @return Nette\Localization\ITranslator|NULL
@@ -416,7 +389,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 		}
 		return $this->translator;
 	}
-
 
 
 	/**
@@ -434,9 +406,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/********************* rules ****************d*g**/
-
 
 
 	/**
@@ -453,7 +423,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Adds a validation condition a returns new branch.
 	 * @param  mixed     condition type
@@ -464,7 +433,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		return $this->rules->addCondition($operation, $value);
 	}
-
 
 
 	/**
@@ -480,7 +448,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * @return Nette\Forms\Rules
 	 */
@@ -488,7 +455,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		return $this->rules;
 	}
-
 
 
 	/**
@@ -503,7 +469,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Is control mandatory?
 	 * @return bool
@@ -512,7 +477,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		return $this->rules->isRequired();
 	}
-
 
 
 	/**
@@ -528,7 +492,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Adds error message to the list.
 	 * @param  string  error message
@@ -538,7 +501,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		$this->errors[] = $message;
 	}
-
 
 
 	/**
@@ -551,7 +513,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Returns errors corresponding to control.
 	 * @return array
@@ -560,7 +521,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		return array_unique($this->errors);
 	}
-
 
 
 	/**
@@ -572,7 +532,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * @return void
 	 */
@@ -580,7 +539,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		$this->errors = array();
 	}
-
 
 
 	public function formatMessage($rule, $withValue = TRUE)
@@ -614,7 +572,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 		}, $message);
 		return $message;
 	}
-
 
 
 	/**
@@ -658,9 +615,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/********************* validators ****************d*g**/
-
 
 
 	/**
@@ -681,7 +636,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Filled validator: is control filled?
 	 * @return bool
@@ -690,7 +644,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		return $control->isFilled();
 	}
-
 
 
 	/**
@@ -703,7 +656,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Rangle validator: is a control's value number in specified range?
 	 * @param  Nette\Forms\IControl
@@ -714,7 +666,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		return Nette\Utils\Validators::isInRange($control->getValue(), $range);
 	}
-
 
 
 	/**
@@ -731,7 +682,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Min-length validator: has control's value minimal count/length?
 	 * @return bool
@@ -740,7 +690,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		return static::validateLength($control, array($length, NULL));
 	}
-
 
 
 	/**
@@ -753,9 +702,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/********************* user data ****************d*g**/
-
 
 
 	/**
@@ -773,7 +720,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Returns user-specific option.
 	 * @return mixed
@@ -782,7 +728,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		return isset($this->options[$key]) ? $this->options[$key] : $default;
 	}
-
 
 
 	/**

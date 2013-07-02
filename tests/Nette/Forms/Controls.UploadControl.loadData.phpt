@@ -12,9 +12,7 @@ use Nette\Forms\Form,
 	Nette\Forms\Controls\UploadControl;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $_SERVER['REQUEST_METHOD'] = 'POST';
@@ -68,7 +66,6 @@ test(function() {
 });
 
 
-
 test(function() { // container
 	$form = new Form;
 	$input = $form->addContainer('container')->addUpload('avatar');
@@ -83,7 +80,6 @@ test(function() { // container
 	)), $input->getValue() );
 	Assert::true( $input->isFilled() );
 });
-
 
 
 test(function() { // multiple (in container)
@@ -108,7 +104,6 @@ test(function() { // multiple (in container)
 });
 
 
-
 test(function() { // missing data
 	$form = new Form;
 	$input = $form->addUpload('missing')
@@ -118,7 +113,6 @@ test(function() { // missing data
 	Assert::equal( new FileUpload(array()), $input->getValue() );
 	Assert::false( $input->isFilled() );
 });
-
 
 
 test(function() { // malformed data
@@ -152,7 +146,6 @@ test(function() { // malformed data
 });
 
 
-
 test(function() { // validators
 	$form = new Form;
 	$input = $form->addUpload('avatar')
@@ -170,7 +163,6 @@ test(function() { // validators
 
 	Assert::true( UploadControl::validateImage($input) );
 });
-
 
 
 test(function() { // validators on multiple files

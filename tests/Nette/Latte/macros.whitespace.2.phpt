@@ -10,9 +10,7 @@
 use Nette\Latte;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $template = new Nette\Templating\Template;
@@ -32,7 +30,6 @@ EOD
 ));
 
 
-
 Assert::match(<<<EOD
 qwerty
 
@@ -46,7 +43,6 @@ qwerty
 
 EOD
 ));
-
 
 
 Assert::match(<<<EOD
@@ -64,7 +60,6 @@ qwerty
 
 EOD
 ));
-
 
 
 Assert::match(<<<EOD

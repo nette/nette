@@ -14,7 +14,6 @@ namespace Nette\Database;
 use Nette;
 
 
-
 /**
  * Table\Selection factory.
  *
@@ -40,13 +39,11 @@ class SelectionFactory extends Nette\Object
 	}
 
 
-
 	/** @return Nette\Database\Table\Selection */
 	public function table($table)
 	{
 		return new Table\Selection($this->connection, $table, $this->reflection, $this->cacheStorage);
 	}
-
 
 
 	/** @return Connection */

@@ -17,7 +17,6 @@ use Nette,
 	Nette\Http;
 
 
-
 /**
  * Micro presenter.
  *
@@ -34,12 +33,10 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	private $request;
 
 
-
 	public function __construct(Nette\DI\Container $context)
 	{
 		$this->context = $context;
 	}
-
 
 
 	/**
@@ -50,7 +47,6 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	{
 		return $this->context;
 	}
-
 
 
 	/**
@@ -106,7 +102,6 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Template factory.
 	 * @param  string
@@ -133,7 +128,6 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Redirects to another URL.
 	 * @param  string
@@ -144,7 +138,6 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	{
 		return new Responses\RedirectResponse($url, $code);
 	}
-
 
 
 	/**
@@ -158,7 +151,6 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	{
 		throw new Application\BadRequestException($message, $code);
 	}
-
 
 
 	/**

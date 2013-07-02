@@ -18,7 +18,6 @@ $dao = new Nette\Database\SelectionFactory(
 );
 
 
-
 test(function() use ($dao) {
 	$dao->table('author')->insert(array(
 		array(
@@ -32,7 +31,6 @@ test(function() use ($dao) {
 			'born' => new DateTime('2021-11-11'),
 		),
 	));  // INSERT INTO `author` (`name`, `web`, `born`) VALUES ('Catelyn Stark', 'http://example.com', '2011-11-11 00:00:00'), ('Sansa Stark', 'http://example.com', '2021-11-11 00:00:00')
-
 
 
 	$dao->table('book_tag')->where('book_id', 1)->delete();  // DELETE FROM `book_tag` WHERE (`book_id` = ?)

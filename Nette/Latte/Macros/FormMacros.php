@@ -20,7 +20,6 @@ use Nette,
 	Nette\Utils\Strings;
 
 
-
 /**
  * Macros for Nette\Forms.
  *
@@ -45,9 +44,7 @@ class FormMacros extends MacroSet
 	}
 
 
-
 	/********************* macros ****************d*g**/
-
 
 
 	/**
@@ -68,7 +65,6 @@ class FormMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * {formContainer ...}
 	 */
@@ -83,7 +79,6 @@ class FormMacros extends MacroSet
 			'$_formStack[] = $_form; $formContainer = $_form = ' . ($name[0] === '$' ? 'is_object(%node.word) ? %node.word : ' : '') . '$_form[%node.word]'
 		);
 	}
-
 
 
 	/**
@@ -105,7 +100,6 @@ class FormMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * {/label}
 	 */
@@ -116,7 +110,6 @@ class FormMacros extends MacroSet
 			return $writer->write('?></label><?php');
 		}
 	}
-
 
 
 	/**
@@ -138,7 +131,6 @@ class FormMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * deprecated n:input
 	 */
@@ -150,7 +142,6 @@ class FormMacros extends MacroSet
 			throw new CompileException("Use n:name instead of n:input.");
 		}
 	}
-
 
 
 	/**
@@ -188,7 +179,6 @@ class FormMacros extends MacroSet
 	}
 
 
-
 	public function macroName(MacroNode $node, PhpWriter $writer)
 	{
 		if (!$node->htmlNode) {
@@ -197,7 +187,6 @@ class FormMacros extends MacroSet
 			throw new CompileException("Unknown attribute n:{$node->prefix}-{$node->name}, use n:{$node->name} attribute.");
 		}
 	}
-
 
 
 	public function macroNameEnd(MacroNode $node, PhpWriter $writer)
@@ -211,9 +200,7 @@ class FormMacros extends MacroSet
 	}
 
 
-
 	/********************* run-time writers ****************d*g**/
-
 
 
 	/**
@@ -234,7 +221,6 @@ class FormMacros extends MacroSet
 		$el->addAttributes($attrs);
 		echo $withTags ? $el->startTag() : $el->attributes();
 	}
-
 
 
 	/**

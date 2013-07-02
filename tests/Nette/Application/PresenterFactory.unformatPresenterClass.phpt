@@ -10,9 +10,7 @@
 use Nette\Application\PresenterFactory;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
@@ -39,7 +37,6 @@ test(function() use ($factory) {
 	Assert::same( NULL, $factory->unformatPresenterClass('Foo') );
 	Assert::same( NULL, $factory->unformatPresenterClass('FooMod\BarPresenter') );
 });
-
 
 
 test(function() use ($factory) {

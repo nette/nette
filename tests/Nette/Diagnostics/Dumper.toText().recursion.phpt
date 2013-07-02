@@ -10,9 +10,7 @@
 use Nette\Diagnostics\Dumper;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $arr = array(1, 2, 3);
@@ -27,7 +25,6 @@ Assert::match( 'array (4)
    |  2 => 3
    |  3 => array (4) [ RECURSION ]
 ', Dumper::toText($arr) );
-
 
 
 $arr = (object) array('x' => 1, 'y' => 2);

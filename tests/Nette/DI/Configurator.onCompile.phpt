@@ -10,15 +10,12 @@
 use Nette\Config\Configurator;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class DatabaseExtension extends Nette\DI\CompilerExtension
 {
 }
-
 
 
 $configurator = new Configurator;

@@ -14,7 +14,6 @@ namespace Nette\DI\Extensions;
 use Nette;
 
 
-
 /**
  * Enables registration of other extensions in $config file
  *

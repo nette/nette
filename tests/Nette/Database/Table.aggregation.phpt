@@ -20,7 +20,6 @@ test(function() use ($dao) {
 });
 
 
-
 test(function() use ($dao) {
 	$tags = array();
 	foreach ($dao->table('book') as $book) {  // SELECT * FROM `book`
@@ -35,7 +34,6 @@ test(function() use ($dao) {
 		'Dibi' => 2,
 	), $tags);
 });
-
 
 
 test(function() use ($dao) {

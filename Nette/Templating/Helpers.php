@@ -17,7 +17,6 @@ use Nette,
 	Nette\Utils\Html;
 
 
-
 /**
  * Template helpers.
  *
@@ -52,7 +51,6 @@ final class Helpers
 	public static $dateFormat = '%x';
 
 
-
 	/**
 	 * Try to load the requested helper.
 	 * @param  string  helper name
@@ -66,7 +64,6 @@ final class Helpers
 			return self::$helpers[$helper];
 		}
 	}
-
 
 
 	/**
@@ -84,7 +81,6 @@ final class Helpers
 	}
 
 
-
 	/**
 	 * Escapes string for use inside HTML comments.
 	 * @param  string  UTF-8 encoding
@@ -94,7 +90,6 @@ final class Helpers
 	{
 		return ' ' . str_replace('-', '- ', $s); // dash is very problematic character in comments
 	}
-
 
 
 	/**
@@ -111,7 +106,6 @@ final class Helpers
 	}
 
 
-
 	/**
 	 * Escapes string for use inside CSS template.
 	 * @param  string UTF-8 encoding
@@ -122,7 +116,6 @@ final class Helpers
 		// http://www.w3.org/TR/2006/WD-CSS21-20060411/syndata.html#q6
 		return addcslashes($s, "\x00..\x1F!\"#$%&'()*+,./:;<=>?@[\\]^`{|}~");
 	}
-
 
 
 	/**
@@ -139,7 +132,6 @@ final class Helpers
 	}
 
 
-
 	/**
 	 * Escapes string for use inside iCal template.
 	 * @param  mixed  UTF-8 encoding
@@ -150,7 +142,6 @@ final class Helpers
 		// http://www.ietf.org/rfc/rfc5545.txt
 		return addcslashes(preg_replace('#[\x00-\x08\x0B\x0C-\x1F]+#', '', $s), "\";\\,:\n");
 	}
-
 
 
 	/**
@@ -167,7 +158,6 @@ final class Helpers
 				return trim(preg_replace('#[ \t\r\n]+#', " ", $m[0]));
 			});
 	}
-
 
 
 	/**
@@ -188,7 +178,6 @@ final class Helpers
 		}
 		return $s;
 	}
-
 
 
 	/**
@@ -214,7 +203,6 @@ final class Helpers
 	}
 
 
-
 	/**
 	 * Date/time modification.
 	 * @param  string|int|DateTime
@@ -228,7 +216,6 @@ final class Helpers
 			? NULL
 			: Nette\DateTime::from($time)->modify($delta . $unit);
 	}
-
 
 
 	/**
@@ -251,7 +238,6 @@ final class Helpers
 	}
 
 
-
 	/**
 	 * Returns array of string length.
 	 * @param  mixed
@@ -261,7 +247,6 @@ final class Helpers
 	{
 		return is_string($var) ? Strings::length($var) : count($var);
 	}
-
 
 
 	/**
@@ -275,7 +260,6 @@ final class Helpers
 	{
 		return str_replace($search, $replacement, $subject);
 	}
-
 
 
 	/**
@@ -293,7 +277,6 @@ final class Helpers
 	}
 
 
-
 	/**
 	 * /dev/null.
 	 * @param  mixed
@@ -305,9 +288,7 @@ final class Helpers
 	}
 
 
-
 	/********************* Template tools ****************d*g**/
-
 
 
 	/**

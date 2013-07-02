@@ -15,7 +15,6 @@ use Nette,
 	Nette\Security\IIdentity;
 
 
-
 /**
  * Session storage for user object.
  *
@@ -33,12 +32,10 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 	private $sessionSection;
 
 
-
 	public function  __construct(Session $sessionHandler)
 	{
 		$this->sessionHandler = $sessionHandler;
 	}
-
 
 
 	/**
@@ -66,7 +63,6 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 	}
 
 
-
 	/**
 	 * Is this user authenticated?
 	 * @return bool
@@ -76,7 +72,6 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 		$session = $this->getSessionSection(FALSE);
 		return $session && $session->authenticated;
 	}
-
 
 
 	/**
@@ -90,7 +85,6 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 	}
 
 
-
 	/**
 	 * Returns current user identity, if any.
 	 * @return Nette\Security\IIdentity|NULL
@@ -100,7 +94,6 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 		$session = $this->getSessionSection(FALSE);
 		return $session ? $session->identity : NULL;
 	}
-
 
 
 	/**
@@ -118,7 +111,6 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 	}
 
 
-
 	/**
 	 * Returns current namespace.
 	 * @return string
@@ -127,7 +119,6 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 	{
 		return $this->namespace;
 	}
-
 
 
 	/**
@@ -157,7 +148,6 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 	}
 
 
-
 	/**
 	 * Why was user logged out?
 	 * @return int
@@ -167,7 +157,6 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 		$session = $this->getSessionSection(FALSE);
 		return $session ? $session->reason : NULL;
 	}
-
 
 
 	/**

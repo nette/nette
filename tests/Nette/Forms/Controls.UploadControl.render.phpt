@@ -11,7 +11,6 @@ use Nette\Forms\Form,
 	Nette\Utils\Html;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -22,7 +21,6 @@ class Translator implements Nette\Localization\ITranslator
 		return strtoupper($s);
 	}
 }
-
 
 
 test(function() {
@@ -38,14 +36,12 @@ test(function() {
 });
 
 
-
 test(function() { // multiple
 	$form = new Form;
 	$input = $form->addUpload('file', 'Label', TRUE);
 
 	Assert::same('<input type="file" multiple="multiple" name="file[]" id="frm-file" />', (string) $input->getControl());
 });
-
 
 
 test(function() { // Html with translator
@@ -59,14 +55,12 @@ test(function() { // Html with translator
 });
 
 
-
 test(function() { // validation rules
 	$form = new Form;
 	$input = $form->addUpload('file')->setRequired('required');
 
 	Assert::same('<input type="file" name="file" id="frm-file" required="required" data-nette-rules=\'[{"op":":filled","msg":"required"}]\' />', (string) $input->getControl());
 });
-
 
 
 test(function() { // container

@@ -10,7 +10,6 @@
 use Nette\Forms\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -31,7 +30,6 @@ test(function() { // AND
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$form->addText('1');
@@ -47,7 +45,6 @@ test(function() {
 		'b' => FALSE,
 	), $form->getToggles() );
 });
-
 
 
 test(function() {
@@ -67,7 +64,6 @@ test(function() {
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$form->addText('1');
@@ -83,7 +79,6 @@ test(function() {
 		'b' => TRUE,
 	), $form->getToggles() );
 });
-
 
 
 test(function() { // OR
@@ -104,7 +99,6 @@ test(function() { // OR
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$form->addText('1');
@@ -121,7 +115,6 @@ test(function() {
 		'b' => TRUE,
 	), $form->getToggles() );
 });
-
 
 
 test(function() {
@@ -142,7 +135,6 @@ test(function() {
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$form->addText('1');
@@ -161,7 +153,6 @@ test(function() {
 });
 
 
-
 test(function() { // OR & two components
 	$form = new Form;
 	$form->addText('1')
@@ -178,7 +169,6 @@ test(function() { // OR & two components
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$form->addText('1')
@@ -193,7 +183,6 @@ test(function() {
 		'b' => TRUE,
 	), $form->getToggles() );
 });
-
 
 
 test(function() {
@@ -212,7 +201,6 @@ test(function() {
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$form->addText('1')
@@ -227,7 +215,6 @@ test(function() {
 		'b' => TRUE,
 	), $form->getToggles() );
 });
-
 
 
 test(function() { // OR & multiple used ID
@@ -245,7 +232,6 @@ test(function() { // OR & multiple used ID
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$form->addText('1')
@@ -261,7 +247,6 @@ test(function() {
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$form->addText('1')
@@ -277,7 +262,6 @@ test(function() {
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$form->addText('1')
@@ -291,7 +275,6 @@ test(function() {
 		'a' => TRUE,
 	), $form->getToggles() );
 });
-
 
 
 test(function() { // AND & multiple used ID
@@ -310,7 +293,6 @@ test(function() { // AND & multiple used ID
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$form->addText('1');
@@ -325,7 +307,6 @@ test(function() {
 		'a' => FALSE,
 	), $form->getToggles() );
 });
-
 
 
 test(function() {
@@ -344,7 +325,6 @@ test(function() {
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$form->addText('1');
@@ -359,7 +339,6 @@ test(function() {
 		'a' => TRUE,
 	), $form->getToggles() );
 });
-
 
 
 test(function() { // $hide = FALSE
@@ -379,7 +358,6 @@ test(function() { // $hide = FALSE
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$form->addText('1');
@@ -395,7 +373,6 @@ test(function() {
 		'b' => FALSE,
 	), $form->getToggles() );
 });
-
 
 
 test(function() {
@@ -415,7 +392,6 @@ test(function() {
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$form->addText('1')
@@ -430,7 +406,6 @@ test(function() {
 		'b' => TRUE,
 	), $form->getToggles() );
 });
-
 
 
 test(function() {
@@ -449,7 +424,6 @@ test(function() {
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$form->addText('1')
@@ -464,7 +438,6 @@ test(function() {
 		'b' => FALSE,
 	), $form->getToggles() );
 });
-
 
 
 test(function() { // $hide = FALSE & multiple used ID
@@ -483,7 +456,6 @@ test(function() { // $hide = FALSE & multiple used ID
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$form->addText('1');
@@ -498,7 +470,6 @@ test(function() {
 		'a' => FALSE,
 	), $form->getToggles() );
 });
-
 
 
 test(function() {
@@ -517,7 +488,6 @@ test(function() {
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$form->addText('1')
@@ -532,7 +502,6 @@ test(function() {
 		'b' => TRUE,
 	), $form->getToggles() );
 });
-
 
 
 test(function() {
@@ -551,7 +520,6 @@ test(function() {
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$form->addText('1')
@@ -565,7 +533,6 @@ test(function() {
 		'a' => FALSE,
 	), $form->getToggles() );
 });
-
 
 
 test(function() {

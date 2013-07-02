@@ -11,7 +11,6 @@ use Nette\Forms\Form,
 	Nette\Utils\Html;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -22,7 +21,6 @@ class Translator implements Nette\Localization\ITranslator
 		return strtoupper($s);
 	}
 }
-
 
 
 test(function() {
@@ -40,7 +38,6 @@ test(function() {
 });
 
 
-
 test(function() { // translator
 	$form = new Form;
 	$input = $form->addTextArea('text', 'Label')
@@ -54,7 +51,6 @@ test(function() { // translator
 });
 
 
-
 test(function() { // Html with translator
 	$form = new Form;
 	$input = $form->addTextArea('text', Html::el('b', 'Label'))
@@ -63,7 +59,6 @@ test(function() { // Html with translator
 	Assert::same('<label for="frm-text"><b>Label</b></label>', (string) $input->getLabel());
 	Assert::same('<label for="frm-text"><b>Another label</b></label>', (string) $input->getLabel(Html::el('b', 'Another label')));
 });
-
 
 
 test(function() { // validation rule LENGTH
@@ -75,7 +70,6 @@ test(function() { // validation rule LENGTH
 });
 
 
-
 test(function() { // validation rule MAX_LENGTH
 	$form = new Form;
 	$input = $form->addTextArea('text')
@@ -83,7 +77,6 @@ test(function() { // validation rule MAX_LENGTH
 
 	Assert::same('<textarea maxlength="10" name="text" id="frm-text" data-nette-rules=\'[{"op":":maxLength","msg":"Please enter a value no longer than 10 characters.","arg":10}]\'></textarea>', (string) $input->getControl());
 });
-
 
 
 test(function() { // container

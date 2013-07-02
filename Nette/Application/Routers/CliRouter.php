@@ -15,7 +15,6 @@ use Nette,
 	Nette\Application;
 
 
-
 /**
  * The unidirectional router for CLI. (experimental)
  *
@@ -31,7 +30,6 @@ class CliRouter extends Nette\Object implements Application\IRouter
 	private $defaults;
 
 
-
 	/**
 	 * @param  array   default values
 	 */
@@ -39,7 +37,6 @@ class CliRouter extends Nette\Object implements Application\IRouter
 	{
 		$this->defaults = $defaults;
 	}
-
 
 
 	/**
@@ -102,7 +99,6 @@ class CliRouter extends Nette\Object implements Application\IRouter
 	}
 
 
-
 	/**
 	 * This router is only unidirectional.
 	 * @return NULL
@@ -111,7 +107,6 @@ class CliRouter extends Nette\Object implements Application\IRouter
 	{
 		return NULL;
 	}
-
 
 
 	/**

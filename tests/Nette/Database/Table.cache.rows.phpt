@@ -20,7 +20,6 @@ $dao = new Nette\Database\SelectionFactory(
 );
 
 
-
 $selections = array();
 foreach ($selections[] = $dao->table('book') as $book) {
 	$book->author->name;
@@ -46,7 +45,6 @@ Assert::same(array(
 ), array_keys($webs));
 
 
-
 $bookSelection = $dao->table('book')->order('id');
 $book = $bookSelection->fetch();
 $book->author_id;
@@ -60,7 +58,6 @@ $books[] = $bookSelection->fetch()->toArray();
 Assert::same(1, $books[0]['id']);
 Assert::same(2, $books[1]['id']);
 Assert::same(3, $books[2]['id']);
-
 
 
 $row = $dao->table('author')->insert(array(

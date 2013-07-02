@@ -14,7 +14,6 @@ namespace Nette\DI;
 use Nette;
 
 
-
 /**
  * Assignment or calling statement.
  *
@@ -27,7 +26,6 @@ class Statement extends Nette\Object
 
 	/** @var array */
 	public $arguments;
-
 
 
 	public function __construct($entity, array $arguments = array())

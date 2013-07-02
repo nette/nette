@@ -16,7 +16,6 @@ use Nette,
 	Nette\Diagnostics\Debugger;
 
 
-
 /**
  * Default Error Presenter.
  *

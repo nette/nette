@@ -10,9 +10,7 @@
 use Nette\Http;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 // Setup environment
@@ -93,7 +91,6 @@ test(function() { // unfiltered data
 	Assert::type( 'Nette\Http\FileUpload', $request->getFile(CONTROL_CHARACTERS) );
 	Assert::type( 'Nette\Http\FileUpload', $request->files['file1'] );
 });
-
 
 
 test(function() { // filtered data

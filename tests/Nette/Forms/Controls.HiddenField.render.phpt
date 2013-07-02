@@ -11,7 +11,6 @@ use Nette\Forms\Form,
 	Nette\Utils\Html;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -24,7 +23,6 @@ class Translator implements Nette\Localization\ITranslator
 }
 
 
-
 test(function() {
 	$form = new Form;
 	$input = $form->addHidden('hidden', 'value');
@@ -35,14 +33,12 @@ test(function() {
 });
 
 
-
 test(function() { // validation rules
 	$form = new Form;
 	$input = $form->addHidden('hidden')->setRequired('required');
 
 	Assert::same('<input type="hidden" name="hidden" id="frm-hidden" required="required" value="" />', (string) $input->getControl());
 });
-
 
 
 test(function() { // container

@@ -14,7 +14,6 @@ namespace Nette\Forms\Controls;
 use Nette;
 
 
-
 /**
  * @author Filip Procházka
  */
@@ -27,7 +26,6 @@ class CsrfProtection extends HiddenField
 
 	/** @var Nette\Http\Session */
 	public $session;
-
 
 
 	/**
@@ -43,7 +41,6 @@ class CsrfProtection extends HiddenField
 	}
 
 
-
 	protected function attached($parent)
 	{
 		parent::attached($parent);
@@ -51,7 +48,6 @@ class CsrfProtection extends HiddenField
 			$this->session = $parent->getSession();
 		}
 	}
-
 
 
 	/**
@@ -69,7 +65,6 @@ class CsrfProtection extends HiddenField
 	}
 
 
-
 	/**
 	 * Generates control's HTML element.
 	 *
@@ -81,7 +76,6 @@ class CsrfProtection extends HiddenField
 	}
 
 
-
 	/**
 	 * @return bool
 	 */
@@ -91,9 +85,7 @@ class CsrfProtection extends HiddenField
 	}
 
 
-
 	/********************* backend ****************d*g**/
-
 
 
 	/**

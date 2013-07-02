@@ -11,9 +11,7 @@ use Nette\Forms\Controls\TextInput,
 	Nette\Forms\Controls\TextBase;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 test(function() {
@@ -22,7 +20,6 @@ test(function() {
 	Assert::true( TextBase::validateMinLength($control, 0) );
 	Assert::false( TextBase::validateMinLength($control, 1) );
 });
-
 
 
 test(function() {
@@ -34,7 +31,6 @@ test(function() {
 	Assert::false( TextBase::validateMaxLength($control, 2) );
 	Assert::true( TextBase::validateMaxLength($control, 3) );
 });
-
 
 
 test(function() {
@@ -49,7 +45,6 @@ test(function() {
 	Assert::true( TextBase::validateLength($control, array(3, )) );
 	Assert::false( TextBase::validateLength($control, array(5, 6)) );
 });
-
 
 
 test(function() {
@@ -71,7 +66,6 @@ test(function() {
 });
 
 
-
 test(function() {
 	$control = new TextInput();
 	$control->value = '';
@@ -88,7 +82,6 @@ test(function() {
 });
 
 
-
 test(function() {
 	$control = new TextInput();
 	$control->value = '123x';
@@ -98,7 +91,6 @@ test(function() {
 	Assert::true( TextBase::validatePattern($control, '[0-9]+x') );
 	Assert::false( TextBase::validatePattern($control, '[0-9]+X') );
 });
-
 
 
 test(function() {

@@ -10,9 +10,7 @@
 use Nette\DI;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class Lorem
@@ -24,9 +22,6 @@ interface ILoremAccessor
 	/** @return Lorem */
 	function get();
 }
-
-
-
 
 
 $loader = new DI\Config\Loader;

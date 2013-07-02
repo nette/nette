@@ -10,9 +10,7 @@
 use Nette\DI;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class Ipsum
@@ -39,7 +37,6 @@ class Lorem
 	}
 
 }
-
 
 
 $builder = new DI\ContainerBuilder;

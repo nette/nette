@@ -14,7 +14,6 @@ namespace Nette\Forms\Controls;
 use Nette;
 
 
-
 /**
  * Select box control that allows multiple item selection.
  *
@@ -44,7 +43,6 @@ class MultiSelectBox extends SelectBox
 	}
 
 
-
 	/**
 	 * Returns selected keys.
 	 * @return array
@@ -53,7 +51,6 @@ class MultiSelectBox extends SelectBox
 	{
 		return array_values(array_intersect($this->value, array_keys($this->allowed)));
 	}
-
 
 
 	protected function setRawValue($values)
@@ -69,7 +66,6 @@ class MultiSelectBox extends SelectBox
 	}
 
 
-
 	/**
 	 * Returns selected keys (not checked).
 	 * @return array
@@ -78,7 +74,6 @@ class MultiSelectBox extends SelectBox
 	{
 		return $this->value;
 	}
-
 
 
 	/**
@@ -91,7 +86,6 @@ class MultiSelectBox extends SelectBox
 	}
 
 
-
 	/**
 	 * Returns HTML name of control.
 	 * @return string
@@ -100,7 +94,6 @@ class MultiSelectBox extends SelectBox
 	{
 		return parent::getHtmlName() . '[]';
 	}
-
 
 
 	/**

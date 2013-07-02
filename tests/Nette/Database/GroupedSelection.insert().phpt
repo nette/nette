@@ -31,7 +31,6 @@ test(function() use ($dao) {
 });
 
 
-
 test(function() use ($dao) { // test counting already fetched rows
 	$book = $dao->table('book')->get(1);
 	iterator_to_array($book->related('book_tag'));

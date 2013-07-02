@@ -14,7 +14,6 @@ namespace Nette\Latte;
 use Nette;
 
 
-
 /**
  * Macro element node.
  *
@@ -74,7 +73,6 @@ class MacroNode extends Nette\Object
 	public $saved;
 
 
-
 	public function __construct(IMacro $macro, $name, $args = NULL, $modifiers = NULL, self $parentNode = NULL, HtmlNode $htmlNode = NULL, $prefix = NULL)
 	{
 		$this->macro = $macro;
@@ -86,7 +84,6 @@ class MacroNode extends Nette\Object
 		$this->data = new \stdClass;
 		$this->setArgs($args);
 	}
-
 
 
 	public function setArgs($args)

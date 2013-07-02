@@ -10,9 +10,7 @@
 use Nette\DI\Helpers;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Assert::same( 'item', Helpers::expand('item', array()) );

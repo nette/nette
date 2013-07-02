@@ -15,7 +15,6 @@ use Nette,
 	Nette\Utils\Strings;
 
 
-
 /**
  * Latte parser.
  *
@@ -77,7 +76,6 @@ class Parser extends Nette\Object
 		CONTEXT_HTML_COMMENT = 'htmlComment';
 
 
-
 	/**
 	 * Process all {macros} and <tags/>.
 	 * @param  string
@@ -124,7 +122,6 @@ class Parser extends Nette\Object
 	}
 
 
-
 	/**
 	 * Handles CONTEXT_HTML_TEXT.
 	 */
@@ -151,7 +148,6 @@ class Parser extends Nette\Object
 	}
 
 
-
 	/**
 	 * Handles CONTEXT_CDATA.
 	 */
@@ -171,7 +167,6 @@ class Parser extends Nette\Object
 		}
 		return $matches;
 	}
-
 
 
 	/**
@@ -210,7 +205,6 @@ class Parser extends Nette\Object
 	}
 
 
-
 	/**
 	 * Handles CONTEXT_HTML_ATTRIBUTE.
 	 */
@@ -227,7 +221,6 @@ class Parser extends Nette\Object
 		}
 		return $matches;
 	}
-
 
 
 	/**
@@ -248,7 +241,6 @@ class Parser extends Nette\Object
 	}
 
 
-
 	/**
 	 * Handles CONTEXT_RAW.
 	 */
@@ -259,7 +251,6 @@ class Parser extends Nette\Object
 		~xsi');
 		return $matches;
 	}
-
 
 
 	/**
@@ -281,7 +272,6 @@ class Parser extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return Parser  provides a fluent interface
 	 */
@@ -290,7 +280,6 @@ class Parser extends Nette\Object
 		$this->context = array($context, $quote);
 		return $this;
 	}
-
 
 
 	/**
@@ -308,7 +297,6 @@ class Parser extends Nette\Object
 		}
 		return $this;
 	}
-
 
 
 	/**
@@ -330,7 +318,6 @@ class Parser extends Nette\Object
 		';
 		return $this;
 	}
-
 
 
 	/**
@@ -365,7 +352,6 @@ class Parser extends Nette\Object
 	}
 
 
-
 	private function addToken($type, $text)
 	{
 		$this->output[] = $token = new Token;
@@ -376,12 +362,10 @@ class Parser extends Nette\Object
 	}
 
 
-
 	private function getLine()
 	{
 		return substr_count($this->input, "\n", 0, max(1, $this->offset - 1)) + 1;
 	}
-
 
 
 	/**

@@ -14,7 +14,6 @@ namespace Nette\Http;
 use Nette;
 
 
-
 /**
  * Provides access to session sections as well as session settings and management methods.
  *
@@ -69,13 +68,11 @@ class Session extends Nette\Object
 	private $response;
 
 
-
 	public function __construct(IRequest $request, IResponse $response)
 	{
 		$this->request = $request;
 		$this->response = $response;
 	}
-
 
 
 	/**
@@ -167,7 +164,6 @@ class Session extends Nette\Object
 	}
 
 
-
 	/**
 	 * Has been session started?
 	 * @return bool
@@ -176,7 +172,6 @@ class Session extends Nette\Object
 	{
 		return (bool) self::$started;
 	}
-
 
 
 	/**
@@ -191,7 +186,6 @@ class Session extends Nette\Object
 			self::$started = FALSE;
 		}
 	}
-
 
 
 	/**
@@ -214,7 +208,6 @@ class Session extends Nette\Object
 	}
 
 
-
 	/**
 	 * Does session exists for the current request?
 	 * @return bool
@@ -223,7 +216,6 @@ class Session extends Nette\Object
 	{
 		return self::$started || $this->request->getCookie($this->getName()) !== NULL;
 	}
-
 
 
 	/**
@@ -248,7 +240,6 @@ class Session extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the current session ID. Don't make dependencies, can be changed for each request.
 	 * @return string
@@ -257,7 +248,6 @@ class Session extends Nette\Object
 	{
 		return session_id();
 	}
-
 
 
 	/**
@@ -278,7 +268,6 @@ class Session extends Nette\Object
 	}
 
 
-
 	/**
 	 * Gets the session name.
 	 * @return string
@@ -289,9 +278,7 @@ class Session extends Nette\Object
 	}
 
 
-
 	/********************* sections management ****************d*g**/
-
 
 
 	/**
@@ -307,7 +294,6 @@ class Session extends Nette\Object
 	}
 
 
-
 	/**
 	 * Checks if a session section exist and is not empty.
 	 * @param  string
@@ -321,7 +307,6 @@ class Session extends Nette\Object
 
 		return !empty($_SESSION['__NF']['DATA'][$section]);
 	}
-
 
 
 	/**
@@ -341,7 +326,6 @@ class Session extends Nette\Object
 			return new \ArrayIterator;
 		}
 	}
-
 
 
 	/**
@@ -377,9 +361,7 @@ class Session extends Nette\Object
 	}
 
 
-
 	/********************* configuration ****************d*g**/
-
 
 
 	/**
@@ -402,7 +384,6 @@ class Session extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns all session options.
 	 * @return array
@@ -411,7 +392,6 @@ class Session extends Nette\Object
 	{
 		return $this->options;
 	}
-
 
 
 	/**
@@ -467,7 +447,6 @@ class Session extends Nette\Object
 	}
 
 
-
 	/**
 	 * Sets the amount of time allowed between requests before the session will be terminated.
 	 * @param  string|int|DateTime  time, value 0 means "until the browser is closed"
@@ -491,7 +470,6 @@ class Session extends Nette\Object
 	}
 
 
-
 	/**
 	 * Sets the session cookie parameters.
 	 * @param  string  path
@@ -509,7 +487,6 @@ class Session extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the session cookie parameters.
 	 * @return array  containing items: lifetime, path, domain, secure, httponly
@@ -518,7 +495,6 @@ class Session extends Nette\Object
 	{
 		return session_get_cookie_params();
 	}
-
 
 
 	/**
@@ -531,7 +507,6 @@ class Session extends Nette\Object
 			'save_path' => $path,
 		));
 	}
-
 
 
 	/**
@@ -548,7 +523,6 @@ class Session extends Nette\Object
 			array($storage, 'write'), array($storage, 'remove'), array($storage, 'clean')
 		);
 	}
-
 
 
 	/**

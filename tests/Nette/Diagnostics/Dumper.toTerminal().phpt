@@ -10,9 +10,7 @@
 use Nette\Diagnostics\Dumper;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Assert::match( "\x1b[1;33mNULL\x1b[0m", Dumper::toTerminal(NULL) );

@@ -15,7 +15,6 @@ use Nette,
 	Nette\Http;
 
 
-
 /**
  * Redirects to new URI.
  *
@@ -33,7 +32,6 @@ class RedirectResponse extends Nette\Object implements Nette\Application\IRespon
 	private $code;
 
 
-
 	/**
 	 * @param  string  URI
 	 * @param  int     HTTP code 3xx
@@ -45,7 +43,6 @@ class RedirectResponse extends Nette\Object implements Nette\Application\IRespon
 	}
 
 
-
 	/**
 	 * @return string
 	 */
@@ -55,7 +52,6 @@ class RedirectResponse extends Nette\Object implements Nette\Application\IRespon
 	}
 
 
-
 	/**
 	 * @return int
 	 */
@@ -63,7 +59,6 @@ class RedirectResponse extends Nette\Object implements Nette\Application\IRespon
 	{
 		return $this->code;
 	}
-
 
 
 	/**

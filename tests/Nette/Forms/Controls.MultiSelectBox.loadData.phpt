@@ -10,9 +10,7 @@
 use Nette\Forms\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 before(function() {
@@ -21,14 +19,12 @@ before(function() {
 });
 
 
-
 $series = array(
 	'red-dwarf' => 'Red Dwarf',
 	'the-simpsons' => 'The Simpsons',
 	0 => 'South Park',
 	'' => 'Family Guy',
 );
-
 
 
 test(function() use ($series) {
@@ -44,7 +40,6 @@ test(function() use ($series) {
 });
 
 
-
 test(function() use ($series) { // invalid input
 	$_POST = array('select' => 'days-of-our-lives');
 
@@ -58,7 +53,6 @@ test(function() use ($series) { // invalid input
 });
 
 
-
 test(function() use ($series) { // multiple selected items
 	$_POST = array('multi' => array('red-dwarf', 'unknown', 0));
 
@@ -70,7 +64,6 @@ test(function() use ($series) { // multiple selected items
 	Assert::same( array('red-dwarf' => 'Red Dwarf', 0 => 'South Park'), $input->getSelectedItem() );
 	Assert::true( $input->isFilled() );
 });
-
 
 
 test(function() use ($series) {
@@ -87,7 +80,6 @@ test(function() use ($series) {
 });
 
 
-
 test(function() use ($series) { // empty key
 	$_POST = array('empty' => '');
 
@@ -101,7 +93,6 @@ test(function() use ($series) { // empty key
 });
 
 
-
 test(function() use ($series) { // missing key
 	$form = new Form;
 	$input = $form->addMultiSelect('missing', NULL, $series);
@@ -111,7 +102,6 @@ test(function() use ($series) { // missing key
 	Assert::same( array(), $input->getSelectedItem() );
 	Assert::false( $input->isFilled() );
 });
-
 
 
 test(function() use ($series) { // malformed data
@@ -127,7 +117,6 @@ test(function() use ($series) { // malformed data
 });
 
 
-
 test(function() use ($series) { // validateLength
 	$_POST = array('multi' => array('red-dwarf', 'unknown', 0));
 
@@ -141,7 +130,6 @@ test(function() use ($series) { // validateLength
 });
 
 
-
 test(function() use ($series) { // validateEqual
 	$_POST = array('multi' => array('red-dwarf', 'unknown', 0));
 
@@ -153,7 +141,6 @@ test(function() use ($series) { // validateEqual
 	Assert::false( $input::validateEqual($input, array('unknown')) );
 	Assert::true( $input::validateEqual($input, array(0)) );
 });
-
 
 
 test(function() use ($series) { // setValue() and invalid argument

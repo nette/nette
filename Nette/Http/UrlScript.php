@@ -14,7 +14,6 @@ namespace Nette\Http;
 use Nette;
 
 
-
 /**
  * Extended HTTP URL.
  *
@@ -39,7 +38,6 @@ class UrlScript extends Url
 	private $scriptPath = '/';
 
 
-
 	/**
 	 * Sets the script-path part of URI.
 	 * @param  string
@@ -52,7 +50,6 @@ class UrlScript extends Url
 	}
 
 
-
 	/**
 	 * Returns the script-path part of URI.
 	 * @return string
@@ -61,7 +58,6 @@ class UrlScript extends Url
 	{
 		return $this->scriptPath;
 	}
-
 
 
 	/**
@@ -73,7 +69,6 @@ class UrlScript extends Url
 		$pos = strrpos($this->scriptPath, '/');
 		return $pos === FALSE ? '' : substr($this->path, 0, $pos + 1);
 	}
-
 
 
 	/**

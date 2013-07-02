@@ -14,7 +14,6 @@ namespace Nette\Diagnostics;
 use Nette;
 
 
-
 /**
  * Debugger: displays and logs errors.
  *
@@ -135,8 +134,6 @@ final class Debugger
 	public static $bar;
 
 
-
-
 	/**
 	 * Static class - cannot be instantiated.
 	 */
@@ -144,7 +141,6 @@ final class Debugger
 	{
 		throw new Nette\StaticClassException;
 	}
-
 
 
 	/**
@@ -227,7 +223,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * @return BlueScreen
 	 */
@@ -263,7 +258,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * @return Bar
 	 */
@@ -280,7 +274,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * @return void
 	 */
@@ -288,7 +281,6 @@ final class Debugger
 	{
 		self::$logger = $logger;
 	}
-
 
 
 	/**
@@ -307,7 +299,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * @return FireLogger
 	 */
@@ -320,7 +311,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Is Debug enabled?
 	 * @return bool
@@ -329,7 +319,6 @@ final class Debugger
 	{
 		return self::$enabled;
 	}
-
 
 
 	/**
@@ -396,7 +385,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Shutdown handler to catch fatal errors and execute of the planned activities.
 	 * @return void
@@ -417,7 +405,6 @@ final class Debugger
 			self::getBar()->render();
 		}
 	}
-
 
 
 	/**
@@ -484,7 +471,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Handler to catch warnings and notices.
 	 * @param  int    level of the error raised
@@ -540,7 +526,6 @@ final class Debugger
 	}
 
 
-
 	/** @deprecated */
 	public static function toStringException(\Exception $exception)
 	{
@@ -552,7 +537,6 @@ final class Debugger
 	}
 
 
-
 	/** @deprecated */
 	public static function tryError()
 	{
@@ -562,7 +546,6 @@ final class Debugger
 		}
 		self::$lastError = NULL;
 	}
-
 
 
 	/** @deprecated */
@@ -578,9 +561,7 @@ final class Debugger
 	}
 
 
-
 	/********************* useful tools ****************d*g**/
-
 
 
 	/**
@@ -611,7 +592,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Starts/stops stopwatch.
 	 * @param  string  name
@@ -625,7 +605,6 @@ final class Debugger
 		$time[$name] = $now;
 		return $delta;
 	}
-
 
 
 	/**
@@ -647,7 +626,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Sends message to FireLogger console.
 	 * @param  mixed   message to log
@@ -661,14 +639,12 @@ final class Debugger
 	}
 
 
-
 	private static function isHtmlMode()
 	{
 		return empty($_SERVER['HTTP_X_REQUESTED_WITH'])
 			&& PHP_SAPI !== 'cli'
 			&& !preg_match('#^Content-Type: (?!text/html)#im', implode("\n", headers_list()));
 	}
-
 
 
 	public static function addPanel(IBarPanel $panel, $id = NULL)

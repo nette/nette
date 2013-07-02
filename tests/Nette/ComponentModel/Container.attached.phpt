@@ -10,9 +10,7 @@
 use Nette\ComponentModel\Container;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class TestClass extends Container implements ArrayAccess
@@ -70,7 +68,6 @@ Assert::same( array(
 	'C::ATTACHED(A)',
 	'B::ATTACHED(A)',
 ), Notes::fetch());
-
 
 
 // removing 'b' from 'a'

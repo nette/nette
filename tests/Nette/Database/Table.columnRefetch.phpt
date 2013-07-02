@@ -13,7 +13,6 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
 
 
-
 $cacheStorage = new Nette\Caching\Storages\MemoryStorage;
 $dao = new Nette\Database\SelectionFactory(
 	$connection,
@@ -22,14 +21,11 @@ $dao = new Nette\Database\SelectionFactory(
 );
 
 
-
-
 $books = $dao->table('book')->order('id DESC')->limit(2);
 foreach ($books as $book) {
 	$book->title;
 }
 $books->__destruct();
-
 
 
 $books = $dao->table('book')->order('id DESC')->limit(2);

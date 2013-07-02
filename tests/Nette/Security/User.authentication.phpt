@@ -11,15 +11,12 @@ use Nette\Security\IAuthenticator,
 	Nette\Security\Identity;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 // Setup environment
 $_COOKIE = array();
 ob_start();
-
 
 
 class Authenticator implements IAuthenticator
@@ -46,17 +43,14 @@ class Authenticator implements IAuthenticator
 }
 
 
-
 function onLoggedIn($user) {
 	// TODO: add test
 }
 
 
-
 function onLoggedOut($user) {
 	// TODO: add test
 }
-
 
 
 $container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
@@ -69,7 +63,6 @@ $user->onLoggedOut[] = 'onLoggedOut';
 Assert::false( $user->isLoggedIn() );
 Assert::null( $user->getIdentity() );
 Assert::null( $user->getId() );
-
 
 
 // authenticate
@@ -104,8 +97,6 @@ Assert::true( $user->isLoggedIn() );
 Assert::equal( new Identity('John Doe', 'admin'), $user->getIdentity() );
 
 
-
-
 // log out
 // logging out...
 $user->logout(FALSE);
@@ -119,8 +110,6 @@ $user->logout(TRUE);
 
 Assert::false( $user->isLoggedIn() );
 Assert::null( $user->getIdentity() );
-
-
 
 
 // namespace

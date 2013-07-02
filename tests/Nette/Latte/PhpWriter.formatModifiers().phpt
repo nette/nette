@@ -11,7 +11,6 @@ use Nette\Latte\PhpWriter,
 	Nette\Latte\MacroTokens;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -36,12 +35,10 @@ test(function() { // special
 });
 
 
-
 test(function() { // common
 	Assert::same( '$template->mod(@)',  formatModifiers('@', 'mod') );
 	Assert::same( '$template->mod3($template->mod2($template->mod1(@)))',  formatModifiers('@', 'mod1|mod2|mod3') );
 });
-
 
 
 test(function() { // arguments

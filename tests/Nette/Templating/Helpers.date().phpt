@@ -10,13 +10,10 @@
 use Nette\Templating\Helpers;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
-
 setlocale(LC_TIME, 'C');
-
 
 
 Assert::null( Helpers::date(NULL), "TemplateHelpers::date(NULL)" );

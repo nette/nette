@@ -14,7 +14,6 @@ namespace Nette\ComponentModel;
 use Nette;
 
 
-
 /**
  * Component is the base class for all components.
  *
@@ -37,7 +36,6 @@ abstract class Component extends Nette\Object implements IComponent
 	private $monitors = array();
 
 
-
 	public function __construct(IContainer $parent = NULL, $name = NULL)
 	{
 		if ($parent !== NULL) {
@@ -47,7 +45,6 @@ abstract class Component extends Nette\Object implements IComponent
 			$this->name = $name;
 		}
 	}
-
 
 
 	/**
@@ -91,7 +88,6 @@ abstract class Component extends Nette\Object implements IComponent
 	}
 
 
-
 	/**
 	 * Lookup for component specified by class or interface name. Returns backtrace path.
 	 * A path is the concatenation of component names separated by self::NAME_SEPARATOR.
@@ -104,7 +100,6 @@ abstract class Component extends Nette\Object implements IComponent
 		$this->lookup($type, $need);
 		return $this->monitors[$type][2];
 	}
-
 
 
 	/**
@@ -123,7 +118,6 @@ abstract class Component extends Nette\Object implements IComponent
 	}
 
 
-
 	/**
 	 * Stops monitoring.
 	 * @param  string class/interface type
@@ -133,7 +127,6 @@ abstract class Component extends Nette\Object implements IComponent
 	{
 		unset($this->monitors[$type]);
 	}
-
 
 
 	/**
@@ -147,7 +140,6 @@ abstract class Component extends Nette\Object implements IComponent
 	}
 
 
-
 	/**
 	 * This method will be called before the component (or component's parent)
 	 * becomes detached from a monitored object. Do not call this method yourself.
@@ -159,9 +151,7 @@ abstract class Component extends Nette\Object implements IComponent
 	}
 
 
-
 	/********************* interface IComponent ****************d*g**/
-
 
 
 	/**
@@ -173,7 +163,6 @@ abstract class Component extends Nette\Object implements IComponent
 	}
 
 
-
 	/**
 	 * Returns the container if any.
 	 * @return IContainer|NULL
@@ -182,7 +171,6 @@ abstract class Component extends Nette\Object implements IComponent
 	{
 		return $this->parent;
 	}
-
 
 
 	/**
@@ -228,7 +216,6 @@ abstract class Component extends Nette\Object implements IComponent
 	}
 
 
-
 	/**
 	 * Is called by a component when it is about to be set new parent. Descendant can
 	 * override this method to disallow a parent change by throwing an Nette\InvalidStateException
@@ -238,7 +225,6 @@ abstract class Component extends Nette\Object implements IComponent
 	protected function validateParent(IContainer $parent)
 	{
 	}
-
 
 
 	/**
@@ -302,9 +288,7 @@ abstract class Component extends Nette\Object implements IComponent
 	}
 
 
-
 	/********************* cloneable, serializable ****************d*g**/
-
 
 
 	/**
@@ -328,7 +312,6 @@ abstract class Component extends Nette\Object implements IComponent
 	}
 
 
-
 	/**
 	 * Prevents serialization.
 	 */
@@ -336,7 +319,6 @@ abstract class Component extends Nette\Object implements IComponent
 	{
 		throw new Nette\NotImplementedException('Object serialization is not supported by class ' . get_class($this));
 	}
-
 
 
 	/**

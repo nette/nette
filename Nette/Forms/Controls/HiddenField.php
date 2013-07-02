@@ -14,7 +14,6 @@ namespace Nette\Forms\Controls;
 use Nette;
 
 
-
 /**
  * Hidden form control used to store a non-displayed value.
  *
@@ -33,7 +32,6 @@ class HiddenField extends BaseControl
 	}
 
 
-
 	/**
 	 * Sets control's value.
 	 * @param  string
@@ -49,12 +47,10 @@ class HiddenField extends BaseControl
 	}
 
 
-
 	protected function setRawValue($value)
 	{
 		return $this->setValue(is_scalar($value) ? (string) $value : '');
 	}
-
 
 
 	/**
@@ -69,7 +65,6 @@ class HiddenField extends BaseControl
 	}
 
 
-
 	/**
 	 * Bypasses label generation.
 	 * @return void
@@ -78,7 +73,6 @@ class HiddenField extends BaseControl
 	{
 		return NULL;
 	}
-
 
 
 	/**

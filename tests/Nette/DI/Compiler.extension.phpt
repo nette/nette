@@ -10,9 +10,7 @@
 use Nette\DI;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class DatabaseExtension extends Nette\DI\CompilerExtension
@@ -34,9 +32,6 @@ class DatabaseExtension extends Nette\DI\CompilerExtension
 		Notes::add(__METHOD__);
 	}
 }
-
-
-
 
 
 $loader = new DI\Config\Loader;

@@ -10,16 +10,13 @@
 use Nette\Forms\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 before(function() {
 	$_SERVER['REQUEST_METHOD'] = 'POST';
 	$_POST = $_FILES = array();
 });
-
 
 
 test(function() {
@@ -40,14 +37,12 @@ test(function() {
 });
 
 
-
 test(function() { // missing data
 	$form = new Form;
 	$input = $form->addImage('missing');
 	Assert::false( $input->isFilled() );
 	Assert::false( $input->getValue() );
 });
-
 
 
 test(function() { // malformed data

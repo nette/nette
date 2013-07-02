@@ -11,7 +11,6 @@ use Nette\Forms\Form,
 	Nette\Utils\Html;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -22,7 +21,6 @@ class Translator implements Nette\Localization\ITranslator
 		return strtoupper($s);
 	}
 }
-
 
 
 test(function() {
@@ -41,7 +39,6 @@ test(function() {
 });
 
 
-
 test(function() { // selected
 	$form = new Form;
 	$input = $form->addMultiSelect('list', 'Label', array(
@@ -51,7 +48,6 @@ test(function() { // selected
 
 	Assert::same('<select name="list[]" id="frm-list" multiple="multiple"><option value="a">First</option><option value="0" selected="selected">Second</option></select>', (string) $input->getControl());
 });
-
 
 
 test(function() { // translator & groups
@@ -68,7 +64,6 @@ test(function() { // translator & groups
 });
 
 
-
 test(function() { // Html with translator & groups
 	$form = new Form;
 	$input = $form->addMultiSelect('list', Html::el('b', 'Label'), array(
@@ -83,7 +78,6 @@ test(function() { // Html with translator & groups
 });
 
 
-
 test(function() { // validation rules
 	$form = new Form;
 	$input = $form->addMultiSelect('list', 'Label', array(
@@ -93,7 +87,6 @@ test(function() { // validation rules
 
 	Assert::same('<select name="list[]" id="frm-list" required="required" data-nette-rules=\'[{"op":":filled","msg":"required"}]\' multiple="multiple"><option value="a">First</option><option value="0">Second</option></select>', (string) $input->getControl());
 });
-
 
 
 test(function() { // container

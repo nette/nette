@@ -10,9 +10,7 @@
 use Nette\Utils\Tokenizer;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Assert::same( array(1, 1), Tokenizer::getCoordinates("say \n123", 0));

@@ -11,16 +11,13 @@ use Nette\Caching\Storages\FileJournal,
 	Nette\Caching\Cache;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 function check($result, $condition, $name)
 {
 	Assert::true($condition, $name . ($condition === TRUE ? '' : 'Count: ' . count($result)));
 }
-
 
 
 $journal = new FileJournal(TEMP_DIR);

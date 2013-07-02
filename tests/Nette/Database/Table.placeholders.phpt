@@ -18,7 +18,6 @@ use Nette\Database\Reflection\DiscoveredReflection;
 use Nette\Database\Table\SqlBuilder;
 
 
-
 $reflection = new DiscoveredReflection($connection);
 $dao = new Nette\Database\SelectionFactory($connection, $reflection);
 
@@ -53,7 +52,6 @@ test(function() use ($dao, $driverName) {
 });
 
 
-
 test(function() use ($dao) {
 	$bookTagsCount = array();
 	$books = $dao
@@ -72,7 +70,6 @@ test(function() use ($dao) {
 		'Nette' => 1,
 	), $bookTagsCount);
 });
-
 
 
 test(function() use ($dao, $driverName) {

@@ -12,9 +12,7 @@ use Nette\ComponentModel\Component,
 	Nette\Forms\Controls\Button;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class ComponentX extends Component
@@ -32,7 +30,6 @@ $c->getComponent('one')->addComponent(new Container, 'inner2');
 $c->getComponent('one')->getComponent('inner2')->addComponent(new Button('label'), 'button2');
 
 
-
 // Normal
 $list = $c->getComponents();
 Assert::same( array(
@@ -42,13 +39,11 @@ Assert::same( array(
 ), array_keys(iterator_to_array($list)) );
 
 
-
 // Filter
 $list = $c->getComponents(FALSE, 'Nette\Forms\Controls\Button');
 Assert::same( array(
 	"button1",
 ), array_keys(iterator_to_array($list)) );
-
 
 
 // RecursiveIteratorIterator
@@ -63,7 +58,6 @@ Assert::same( array(
 ), array_keys(iterator_to_array($list)) );
 
 
-
 // Recursive
 $list = $c->getComponents(TRUE);
 Assert::same( array(
@@ -74,7 +68,6 @@ Assert::same( array(
 	"two",
 	"button1",
 ), array_keys(iterator_to_array($list)) );
-
 
 
 // Recursive CHILD_FIRST
@@ -89,14 +82,12 @@ Assert::same( array(
 ), array_keys(iterator_to_array($list)) );
 
 
-
 // Recursive & filter I
 $list = $c->getComponents(TRUE, 'Nette\Forms\Controls\Button');
 Assert::same( array(
 	"button2",
 	"button1",
 ), array_keys(iterator_to_array($list)) );
-
 
 
 // Recursive & filter II

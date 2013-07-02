@@ -11,7 +11,6 @@ use Nette\Forms\Form,
 	Nette\Utils\Html;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -22,7 +21,6 @@ class Translator implements Nette\Localization\ITranslator
 		return strtoupper($s);
 	}
 }
-
 
 
 test(function() {
@@ -41,7 +39,6 @@ test(function() {
 });
 
 
-
 test(function() { // Html with translator
 	$form = new Form;
 	$input = $form->addCheckbox('on', 'Label');
@@ -53,14 +50,12 @@ test(function() { // Html with translator
 });
 
 
-
 test(function() { // validation rules
 	$form = new Form;
 	$input = $form->addCheckbox('on')->setRequired('required');
 
 	Assert::same('<input type="checkbox" name="on" id="frm-on" required="required" data-nette-rules=\'[{"op":":filled","msg":"required"}]\' />', (string) $input->getControl());
 });
-
 
 
 test(function() { // container

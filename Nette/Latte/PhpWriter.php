@@ -14,7 +14,6 @@ namespace Nette\Latte;
 use Nette;
 
 
-
 /**
  * PHP code generator helpers.
  *
@@ -32,12 +31,10 @@ class PhpWriter extends Nette\Object
 	private $compiler;
 
 
-
 	public static function using(MacroNode $node, Compiler $compiler = NULL)
 	{
 		return new static($node->tokenizer, $node->modifiers, $compiler);
 	}
-
 
 
 	public function __construct(MacroTokens $tokens, $modifiers = NULL, Compiler $compiler = NULL)
@@ -46,7 +43,6 @@ class PhpWriter extends Nette\Object
 		$this->modifiers = $modifiers;
 		$this->compiler = $compiler;
 	}
-
 
 
 	/**
@@ -107,7 +103,6 @@ class PhpWriter extends Nette\Object
 	}
 
 
-
 	/**
 	 * Formats modifiers calling.
 	 * @param  string
@@ -123,7 +118,6 @@ class PhpWriter extends Nette\Object
 	}
 
 
-
 	/**
 	 * Formats macro arguments to PHP code. (It advances tokenizer to the end as a side effect.)
 	 * @return string
@@ -134,7 +128,6 @@ class PhpWriter extends Nette\Object
 		$tokens = $this->quoteFilter($tokens);
 		return $tokens->joinAll();
 	}
-
 
 
 	/**
@@ -150,7 +143,6 @@ class PhpWriter extends Nette\Object
 	}
 
 
-
 	/**
 	 * Formats parameter to PHP string.
 	 * @param  string
@@ -162,7 +154,6 @@ class PhpWriter extends Nette\Object
 			? $this->formatArgs(new MacroTokens($s))
 			: '"' . $s . '"';
 	}
-
 
 
 	/**
@@ -179,7 +170,6 @@ class PhpWriter extends Nette\Object
 	}
 
 
-
 	/**
 	 * Removes PHP comments.
 	 * @return MacroTokens
@@ -194,7 +184,6 @@ class PhpWriter extends Nette\Object
 		}
 		return $res;
 	}
-
 
 
 	/**
@@ -226,7 +215,6 @@ class PhpWriter extends Nette\Object
 	}
 
 
-
 	/**
 	 * Simplified array syntax [...]
 	 * @return MacroTokens
@@ -252,7 +240,6 @@ class PhpWriter extends Nette\Object
 		}
 		return $res;
 	}
-
 
 
 	/**
@@ -281,7 +268,6 @@ class PhpWriter extends Nette\Object
 	}
 
 
-
 	/**
 	 * Quotes symbols to strings.
 	 * @return MacroTokens
@@ -299,7 +285,6 @@ class PhpWriter extends Nette\Object
 		}
 		return $res;
 	}
-
 
 
 	/**
@@ -345,7 +330,6 @@ class PhpWriter extends Nette\Object
 		}
 		return $res;
 	}
-
 
 
 	/**

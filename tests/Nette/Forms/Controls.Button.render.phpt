@@ -11,7 +11,6 @@ use Nette\Forms\Form,
 	Nette\Utils\Html;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -22,7 +21,6 @@ class Translator implements Nette\Localization\ITranslator
 		return strtoupper($s);
 	}
 }
-
 
 
 test(function() {
@@ -36,7 +34,6 @@ test(function() {
 });
 
 
-
 test(function() { // translator
 	$form = new Form;
 	$input = $form->addButton('button', 'Caption');
@@ -45,7 +42,6 @@ test(function() { // translator
 	Assert::same('<input type="button" name="button" id="frm-button" value="CAPTION" />', (string) $input->getControl());
 	Assert::same('<input type="button" name="button" id="frm-button" value="ANOTHER CAPTION" />', (string) $input->getControl('Another caption'));
 });
-
 
 
 test(function() { // Html with translator
@@ -58,14 +54,12 @@ test(function() { // Html with translator
 });
 
 
-
 test(function() { // validation rules
 	$form = new Form;
 	$input = $form->addButton('button', 'Caption')->setRequired('required');
 
 	Assert::same('<input type="button" name="button" id="frm-button" required="required" data-nette-rules=\'[{"op":":filled","msg":"required"}]\' value="Caption" />', (string) $input->getControl());
 });
-
 
 
 test(function() { // container
@@ -75,7 +69,6 @@ test(function() { // container
 
 	Assert::same('<input type="button" name="container[button]" id="frm-container-button" value="Caption" />', (string) $input->getControl());
 });
-
 
 
 test(function() { // SubmitButton

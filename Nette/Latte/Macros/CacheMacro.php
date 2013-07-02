@@ -15,7 +15,6 @@ use Nette,
 	Nette\Latte;
 
 
-
 /**
  * Macro {cache} ... {/cache}
  *
@@ -25,7 +24,6 @@ class CacheMacro extends Nette\Object implements Latte\IMacro
 {
 	/** @var bool */
 	private $used;
-
 
 
 	/**
@@ -38,7 +36,6 @@ class CacheMacro extends Nette\Object implements Latte\IMacro
 	}
 
 
-
 	/**
 	 * Finishes template parsing.
 	 * @return array(prolog, epilog)
@@ -49,7 +46,6 @@ class CacheMacro extends Nette\Object implements Latte\IMacro
 			return array('Nette\Latte\Macros\CacheMacro::initRuntime($template, $_g);');
 		}
 	}
-
 
 
 	/**
@@ -67,7 +63,6 @@ class CacheMacro extends Nette\Object implements Latte\IMacro
 	}
 
 
-
 	/**
 	 * Node is closed.
 	 * @return void
@@ -78,9 +73,7 @@ class CacheMacro extends Nette\Object implements Latte\IMacro
 	}
 
 
-
 	/********************* run-time helpers ****************d*g**/
-
 
 
 	/**
@@ -92,7 +85,6 @@ class CacheMacro extends Nette\Object implements Latte\IMacro
 			end($global->caches)->dependencies[Nette\Caching\Cache::FILES][] = $template->getFile();
 		}
 	}
-
 
 
 	/**

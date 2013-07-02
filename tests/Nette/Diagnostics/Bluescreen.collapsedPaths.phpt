@@ -10,7 +10,6 @@
 require __DIR__ . '/../bootstrap.php';
 
 
-
 $blueScreen = new Nette\Diagnostics\BlueScreen;
 
 $blueScreen->collapsePaths[] = __DIR__;

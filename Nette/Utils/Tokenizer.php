@@ -14,7 +14,6 @@ namespace Nette\Utils;
 use Nette;
 
 
-
 /**
  * Simple lexical analyser. Internal class.
  *
@@ -33,7 +32,6 @@ class Tokenizer extends Nette\Object
 	private $types;
 
 
-
 	/**
 	 * @param  array of [(int) symbol type => pattern]
 	 * @param  string  regular expression flag
@@ -44,7 +42,6 @@ class Tokenizer extends Nette\Object
 		$keys = array_keys($patterns);
 		$this->types = $keys === range(0, count($patterns) - 1) ? FALSE : $keys;
 	}
-
 
 
 	/**
@@ -91,7 +88,6 @@ class Tokenizer extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns position of token in input string.
 	 * @param  int token number
@@ -104,7 +100,6 @@ class Tokenizer extends Nette\Object
 	}
 
 }
-
 
 
 /**

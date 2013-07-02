@@ -10,9 +10,7 @@
 use Nette\Latte;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $template = new Nette\Templating\Template;
@@ -31,7 +29,6 @@ EOD
 , (string) $template);
 
 
-
 $template->setSource(<<<EOD
 <div n:ifcontent></div>
 EOD
@@ -40,7 +37,6 @@ EOD
 Assert::match(<<<EOD
 EOD
 , (string) $template);
-
 
 
 $template->setSource(<<<'EOD'
@@ -54,7 +50,6 @@ EOD
 , (string) $template);
 
 
-
 $template->setSource(<<<'EOD'
 <div n:ifcontent>{$empty}</div>
 EOD
@@ -65,11 +60,9 @@ EOD
 , (string) $template);
 
 
-
 Assert::exception(function() use ($template) {
 	$template->setSource('{ifcontent}')->compile();
 }, 'Nette\Latte\CompileException', 'Unknown macro {ifcontent}, use n:ifcontent attribute.');
-
 
 
 Assert::exception(function() use ($template) {

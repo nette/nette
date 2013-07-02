@@ -10,9 +10,7 @@
 use Nette\DI;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $builder = new DI\ContainerBuilder;
@@ -50,7 +48,6 @@ test(function() use ($builder) { // compile-time
 
 	Assert::same( array(), $builder->findByTag('unknown') );
 });
-
 
 
 test(function() use ($builder) { // run-time

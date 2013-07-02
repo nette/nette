@@ -10,11 +10,9 @@
 use Nette\Application\Routers\Route;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/Route.inc';
-
 
 
 $route = new Route('<presenter>/[<action>/[<id \d{1,3}>]]', array(

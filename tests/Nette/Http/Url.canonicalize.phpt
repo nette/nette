@@ -10,9 +10,7 @@
 use Nette\Http\Url;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $url = new Url('http://hostname/path?arg=value&arg2=v%20a%26l%3Du%2Be');

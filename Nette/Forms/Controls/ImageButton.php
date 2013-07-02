@@ -14,7 +14,6 @@ namespace Nette\Forms\Controls;
 use Nette;
 
 
-
 /**
  * Submittable image button form control.
  *
@@ -36,7 +35,6 @@ class ImageButton extends SubmitButton
 	}
 
 
-
 	/**
 	 * Sets coordinates as a value if available.
 	 * @param  bool|array
@@ -50,7 +48,6 @@ class ImageButton extends SubmitButton
 		}
 		return $this;
 	}
-
 
 
 	/**

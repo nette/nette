@@ -14,7 +14,6 @@ namespace Nette\Application;
 use Nette;
 
 
-
 /**
  * Presenter request. Immutable object.
  *
@@ -56,7 +55,6 @@ final class Request extends Nette\Object
 	private $files;
 
 
-
 	/**
 	 * @param  string  fully qualified presenter name (module:module:presenter)
 	 * @param  string  method
@@ -76,7 +74,6 @@ final class Request extends Nette\Object
 	}
 
 
-
 	/**
 	 * Sets the presenter name.
 	 * @param  string
@@ -89,7 +86,6 @@ final class Request extends Nette\Object
 	}
 
 
-
 	/**
 	 * Retrieve the presenter name.
 	 * @return string
@@ -98,7 +94,6 @@ final class Request extends Nette\Object
 	{
 		return $this->name;
 	}
-
 
 
 	/**
@@ -112,7 +107,6 @@ final class Request extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns all variables provided to the presenter (usually via URL).
 	 * @return array
@@ -121,7 +115,6 @@ final class Request extends Nette\Object
 	{
 		return $this->params;
 	}
-
 
 
 	/**
@@ -135,7 +128,6 @@ final class Request extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns all variables provided to the presenter via POST.
 	 * @return array
@@ -144,7 +136,6 @@ final class Request extends Nette\Object
 	{
 		return $this->post;
 	}
-
 
 
 	/**
@@ -158,7 +149,6 @@ final class Request extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns all uploaded files.
 	 * @return array
@@ -167,7 +157,6 @@ final class Request extends Nette\Object
 	{
 		return $this->files;
 	}
-
 
 
 	/**
@@ -182,7 +171,6 @@ final class Request extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the method.
 	 * @return string
@@ -191,7 +179,6 @@ final class Request extends Nette\Object
 	{
 		return $this->method;
 	}
-
 
 
 	/**
@@ -205,7 +192,6 @@ final class Request extends Nette\Object
 	}
 
 
-
 	/**
 	 * Checks if the method is POST.
 	 * @return bool
@@ -214,7 +200,6 @@ final class Request extends Nette\Object
 	{
 		return strcasecmp($this->method, 'post') === 0;
 	}
-
 
 
 	/**
@@ -228,7 +213,6 @@ final class Request extends Nette\Object
 		$this->flags[$flag] = (bool) $value;
 		return $this;
 	}
-
 
 
 	/**

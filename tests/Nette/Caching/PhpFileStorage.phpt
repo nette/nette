@@ -11,9 +11,7 @@ use Nette\Caching\Cache,
 	Nette\Caching\Storages\PhpFileStorage;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $key = 'nette';

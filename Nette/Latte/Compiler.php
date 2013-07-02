@@ -15,7 +15,6 @@ use Nette,
 	Nette\Utils\Strings;
 
 
-
 /**
  * Latte compiler.
  *
@@ -81,7 +80,6 @@ class Compiler extends Nette\Object
 	}
 
 
-
 	/**
 	 * Adds new macro.
 	 * @param  string
@@ -93,7 +91,6 @@ class Compiler extends Nette\Object
 		$this->macroHandlers->attach($macro);
 		return $this;
 	}
-
 
 
 	/**
@@ -149,7 +146,6 @@ class Compiler extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return Compiler  provides a fluent interface
 	 */
@@ -161,7 +157,6 @@ class Compiler extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return string
 	 */
@@ -169,7 +164,6 @@ class Compiler extends Nette\Object
 	{
 		return $this->contentType;
 	}
-
 
 
 	/**
@@ -182,7 +176,6 @@ class Compiler extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return array [context, subcontext]
 	 */
@@ -190,7 +183,6 @@ class Compiler extends Nette\Object
 	{
 		return $this->context;
 	}
-
 
 
 	/**
@@ -202,7 +194,6 @@ class Compiler extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return MacroNode|NULL
 	 */
@@ -210,7 +201,6 @@ class Compiler extends Nette\Object
 	{
 		return $this->macroNode;
 	}
-
 
 
 	/**
@@ -223,12 +213,10 @@ class Compiler extends Nette\Object
 	}
 
 
-
 	public function expandTokens($s)
 	{
 		return strtr($s, $this->attrCodes);
 	}
-
 
 
 	private function processText(Token $token)
@@ -240,7 +228,6 @@ class Compiler extends Nette\Object
 		}
 		$this->output .= $token->text;
 	}
-
 
 
 	private function processMacroTag(Token $token)
@@ -257,7 +244,6 @@ class Compiler extends Nette\Object
 			}
 		}
 	}
-
 
 
 	private function processHtmlTagBegin(Token $token)
@@ -291,7 +277,6 @@ class Compiler extends Nette\Object
 		}
 		$this->output .= $token->text;
 	}
-
 
 
 	private function processHtmlTagEnd(Token $token)
@@ -339,7 +324,6 @@ class Compiler extends Nette\Object
 	}
 
 
-
 	private function processHtmlAttribute(Token $token)
 	{
 		if (Strings::startsWith($token->name, Parser::N_PREFIX)) {
@@ -368,7 +352,6 @@ class Compiler extends Nette\Object
 	}
 
 
-
 	private function processComment(Token $token)
 	{
 		$isLeftmost = trim(substr($this->output, strrpos("\n$this->output", "\n"))) === '';
@@ -378,9 +361,7 @@ class Compiler extends Nette\Object
 	}
 
 
-
 	/********************* macros ****************d*g**/
-
 
 
 	/**
@@ -403,7 +384,6 @@ class Compiler extends Nette\Object
 		}
 		return $node;
 	}
-
 
 
 	/**
@@ -444,7 +424,6 @@ class Compiler extends Nette\Object
 	}
 
 
-
 	private function writeCode($code, & $output, $isRightmost, $isLeftmost = NULL)
 	{
 		if ($isRightmost) {
@@ -458,7 +437,6 @@ class Compiler extends Nette\Object
 		}
 		$output .= $code;
 	}
-
 
 
 	/**
@@ -537,7 +515,6 @@ class Compiler extends Nette\Object
 			$this->output .= "\n";
 		}
 	}
-
 
 
 	/**

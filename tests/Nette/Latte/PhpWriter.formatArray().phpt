@@ -11,9 +11,7 @@ use Nette\Latte\PhpWriter,
 	Nette\Latte\MacroTokens;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 function formatArray($args) {
@@ -30,11 +28,9 @@ test(function() { // symbols
 });
 
 
-
 test(function() { // simplified arrays
 	Assert::same( 'array(array(\'item\', 123, array(), $item[1]))',  formatArray('[item, 123, [], $item[1]]') );
 });
-
 
 
 test(function() { // expand

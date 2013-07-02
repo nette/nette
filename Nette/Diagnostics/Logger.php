@@ -14,7 +14,6 @@ namespace Nette\Diagnostics;
 use Nette;
 
 
-
 /**
  * Logger.
  *
@@ -39,7 +38,6 @@ class Logger extends Nette\Object
 
 	/** @var string|array email or emails to which send error notifications */
 	public $email;
-
 
 
 	/**
@@ -68,7 +66,6 @@ class Logger extends Nette\Object
 		}
 		return $res;
 	}
-
 
 
 	/**

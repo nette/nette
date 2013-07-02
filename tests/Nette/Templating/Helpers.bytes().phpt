@@ -10,9 +10,7 @@
 use Nette\Templating\Helpers;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Assert::same( "0 B", Helpers::bytes(0.1), "TemplateHelpers::bytes(0.1)" );

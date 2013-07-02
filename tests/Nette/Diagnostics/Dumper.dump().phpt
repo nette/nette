@@ -10,7 +10,6 @@
 use Nette\Diagnostics\Dumper;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -23,7 +22,6 @@ test(function() { // html mode
 });
 
 
-
 test(function() { // text mode
 	header('Content-Type: text/plain');
 	putenv('TERM=');
@@ -31,7 +29,6 @@ test(function() { // text mode
 	Assert::same( 123, Dumper::dump(123) );
 	Assert::match( '123', ob_get_clean() );
 });
-
 
 
 test(function() { // terminal mode

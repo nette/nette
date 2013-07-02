@@ -16,7 +16,6 @@ use Nette,
 	Nette\Utils\Validators;
 
 
-
 /**
  * Core Nette Framework services.
  *
@@ -84,7 +83,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	);
 
 
-
 	public function loadConfiguration()
 	{
 		$container = $this->getContainerBuilder();
@@ -110,7 +108,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	}
 
 
-
 	private function setupCache(ContainerBuilder $container)
 	{
 		$container->addDefinition($this->prefix('cacheJournal'))
@@ -129,7 +126,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	}
 
 
-
 	private function setupHttp(ContainerBuilder $container)
 	{
 		$container->addDefinition($this->prefix('httpRequestFactory'))
@@ -146,7 +142,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		$container->addDefinition($this->prefix('httpContext'))
 			->setClass('Nette\Http\Context');
 	}
-
 
 
 	private function setupSession(ContainerBuilder $container, array $config)
@@ -172,7 +167,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			$session->addSetup('setOptions', array($config));
 		}
 	}
-
 
 
 	private function setupSecurity(ContainerBuilder $container, array $config)
@@ -207,7 +201,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	}
 
 
-
 	private function setupApplication(ContainerBuilder $container, array $config)
 	{
 		$application = $container->addDefinition('application') // no namespace for back compatibility
@@ -230,7 +223,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	}
 
 
-
 	private function setupRouting(ContainerBuilder $container, array $config)
 	{
 		$router = $container->addDefinition('router') // no namespace for back compatibility
@@ -246,7 +238,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			));
 		}
 	}
-
 
 
 	private function setupMailer(ContainerBuilder $container, array $config)
@@ -266,14 +257,12 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	}
 
 
-
 	private function setupForms(ContainerBuilder $container)
 	{
 		$container->addDefinition($this->prefix('basicForm'))
 			->setClass('Nette\Forms\Form')
 			->setShared(FALSE);
 	}
-
 
 
 	private function setupTemplating(ContainerBuilder $container, array $config)
@@ -303,7 +292,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			$latte->addSetup($macro . '(?->compiler)', array('@self'));
 		}
 	}
-
 
 
 	private function setupDatabase(ContainerBuilder $container, array $config)
@@ -360,14 +348,12 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	}
 
 
-
 	private function setupContainer(ContainerBuilder $container, array $config)
 	{
 		if ($config['accessors']) {
 			$container->parameters['container']['accessors'] = TRUE;
 		}
 	}
-
 
 
 	public function afterCompile(Nette\PhpGenerator\ClassType $class)
@@ -448,7 +434,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			}
 		}
 	}
-
 
 
 	private function checkTempDir($dir)

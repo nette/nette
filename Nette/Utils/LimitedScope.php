@@ -14,7 +14,6 @@ namespace Nette\Utils;
 use Nette;
 
 
-
 /**
  * Limited scope for PHP code evaluation and script including.
  *
@@ -31,7 +30,6 @@ final class LimitedScope
 	{
 		throw new Nette\StaticClassException;
 	}
-
 
 
 	/**
@@ -52,7 +50,6 @@ final class LimitedScope
 		}
 		return $res;
 	}
-
 
 
 	/**

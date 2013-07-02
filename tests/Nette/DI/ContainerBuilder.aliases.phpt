@@ -10,7 +10,6 @@
 use Nette\DI;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 

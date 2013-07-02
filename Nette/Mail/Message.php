@@ -15,7 +15,6 @@ use Nette,
 	Nette\Utils\Strings;
 
 
-
 /**
  * Mail provides functionality to compose and send both text and MIME-compliant multipart email messages.
  *
@@ -57,7 +56,6 @@ class Message extends MimePart
 	private $html;
 
 
-
 	public function __construct()
 	{
 		foreach (static::$defaultHeaders as $name => $value) {
@@ -65,7 +63,6 @@ class Message extends MimePart
 		}
 		$this->setHeader('Date', date('r'));
 	}
-
 
 
 	/**
@@ -81,7 +78,6 @@ class Message extends MimePart
 	}
 
 
-
 	/**
 	 * Returns the sender of the message.
 	 * @return array
@@ -90,7 +86,6 @@ class Message extends MimePart
 	{
 		return $this->getHeader('From');
 	}
-
 
 
 	/**
@@ -106,7 +101,6 @@ class Message extends MimePart
 	}
 
 
-
 	/**
 	 * Sets the subject of the message.
 	 * @param  string
@@ -119,7 +113,6 @@ class Message extends MimePart
 	}
 
 
-
 	/**
 	 * Returns the subject of the message.
 	 * @return string
@@ -128,7 +121,6 @@ class Message extends MimePart
 	{
 		return $this->getHeader('Subject');
 	}
-
 
 
 	/**
@@ -144,7 +136,6 @@ class Message extends MimePart
 	}
 
 
-
 	/**
 	 * Adds carbon copy email recipient.
 	 * @param  string  email or format "John Doe" <doe@example.com>
@@ -158,7 +149,6 @@ class Message extends MimePart
 	}
 
 
-
 	/**
 	 * Adds blind carbon copy email recipient.
 	 * @param  string  email or format "John Doe" <doe@example.com>
@@ -170,7 +160,6 @@ class Message extends MimePart
 		$this->setHeader('Bcc', $this->formatEmail($email, $name), TRUE);
 		return $this;
 	}
-
 
 
 	/**
@@ -189,7 +178,6 @@ class Message extends MimePart
 	}
 
 
-
 	/**
 	 * Sets the Return-Path header of the message.
 	 * @param  string  email
@@ -202,7 +190,6 @@ class Message extends MimePart
 	}
 
 
-
 	/**
 	 * Returns the Return-Path header.
 	 * @return string
@@ -211,7 +198,6 @@ class Message extends MimePart
 	{
 		return $this->getHeader('From');
 	}
-
 
 
 	/**
@@ -226,7 +212,6 @@ class Message extends MimePart
 	}
 
 
-
 	/**
 	 * Returns email priority.
 	 * @return int
@@ -235,7 +220,6 @@ class Message extends MimePart
 	{
 		return $this->getHeader('X-Priority');
 	}
-
 
 
 	/**
@@ -285,7 +269,6 @@ class Message extends MimePart
 	}
 
 
-
 	/**
 	 * Gets HTML body.
 	 * @return mixed
@@ -294,7 +277,6 @@ class Message extends MimePart
 	{
 		return $this->html;
 	}
-
 
 
 	/**
@@ -311,7 +293,6 @@ class Message extends MimePart
 	}
 
 
-
 	/**
 	 * Adds attachment.
 	 * @param  string
@@ -323,7 +304,6 @@ class Message extends MimePart
 	{
 		return $this->attachments[] = $this->createAttachment($file, $content, $contentType, 'attachment');
 	}
-
 
 
 	/**
@@ -349,9 +329,7 @@ class Message extends MimePart
 	}
 
 
-
 	/********************* building and sending ****************d*g**/
-
 
 
 	/**
@@ -364,7 +342,6 @@ class Message extends MimePart
 	}
 
 
-
 	/**
 	 * @deprecated
 	 */
@@ -374,7 +351,6 @@ class Message extends MimePart
 		$this->mailer = $mailer;
 		return $this;
 	}
-
 
 
 	/**
@@ -390,7 +366,6 @@ class Message extends MimePart
 	}
 
 
-
 	/**
 	 * Returns encoded message.
 	 * @return string
@@ -399,7 +374,6 @@ class Message extends MimePart
 	{
 		return $this->build()->getEncodedMessage();
 	}
-
 
 
 	/**
@@ -450,7 +424,6 @@ class Message extends MimePart
 	}
 
 
-
 	/**
 	 * Builds text content.
 	 * @return string
@@ -467,7 +440,6 @@ class Message extends MimePart
 		$text = Strings::replace($text, '#[ \t]+#', ' ');
 		return trim($text);
 	}
-
 
 
 	/** @return string */

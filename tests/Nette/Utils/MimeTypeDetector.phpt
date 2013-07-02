@@ -10,9 +10,7 @@
 use Nette\Utils\MimeTypeDetector;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Assert::same( 'image/gif', MimeTypeDetector::fromFile('files/images/logo.gif') );

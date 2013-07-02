@@ -12,11 +12,9 @@ use Nette\Latte,
 	Nette\Templating\FileTemplate;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/Template.inc';
-
 
 
 class MyMacros extends Latte\Macros\MacroSet

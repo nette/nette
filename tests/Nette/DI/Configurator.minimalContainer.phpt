@@ -10,9 +10,7 @@
 use Nette\Configurator;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $configurator = new Configurator;

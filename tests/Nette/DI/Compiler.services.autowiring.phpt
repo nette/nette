@@ -10,9 +10,7 @@
 use Nette\DI;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class Factory
@@ -43,8 +41,6 @@ class Lorem
 		Notes::add(__METHOD__);
 	}
 }
-
-
 
 
 $loader = new DI\Config\Loader;

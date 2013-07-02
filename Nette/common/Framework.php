@@ -14,7 +14,6 @@ namespace Nette;
 use Nette;
 
 
-
 /**
  * The Nette Framework (http://nette.org)
  *
@@ -30,7 +29,6 @@ final class Framework
 
 	/** @var bool set to TRUE if your host has disabled function ini_set */
 	public static $iAmUsingBadHost = FALSE;
-
 
 
 	/**

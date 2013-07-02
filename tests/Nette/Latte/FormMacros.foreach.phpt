@@ -11,7 +11,6 @@ use Nette\Latte\Macros\FormMacros;
 use Nette\Application\UI\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 $form = new Form;

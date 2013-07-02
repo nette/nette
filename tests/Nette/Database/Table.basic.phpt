@@ -23,7 +23,6 @@ test(function() use ($dao) {
 });
 
 
-
 test(function() use ($dao) {
 	$book = $dao->table('book')->select('id, title')->where('id = ?', 1)->fetch()->toArray();  // SELECT `id`, `title` FROM `book` WHERE (`id` = ?)
 	Assert::same(array(
@@ -33,14 +32,12 @@ test(function() use ($dao) {
 });
 
 
-
 test(function() use ($dao) {
 	$book = $dao->table('book')->get(1);
 	Assert::exception(function() use ($book) {
 		$book->unknown_column;
 	}, 'Nette\MemberAccessException', 'Cannot read an undeclared column "unknown_column".');
 });
-
 
 
 test(function() use ($dao) {
@@ -75,7 +72,6 @@ test(function() use ($dao) {
 		),
 	), $bookTags);
 });
-
 
 
 test(function() use ($connection, $dao) {

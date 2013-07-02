@@ -11,7 +11,6 @@ use Nette\Loaders\RobotLoader,
 	Nette\Caching\Storages\DevNullStorage;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -31,7 +30,6 @@ Assert::equal(array(
 ), $loader->getIndexedClasses());
 
 
-
 rename($dir . 'file1.php', $dir . 'file3.php');
 
 $loader->rebuild();
@@ -40,7 +38,6 @@ Assert::equal(array(
 	'A' => $dir . 'file3.php',
 	'B' => $dir . 'file2.php',
 ), $loader->getIndexedClasses());
-
 
 
 sleep(2); // filemtime resolution is in seconds

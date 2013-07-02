@@ -13,9 +13,7 @@ use Nette\Latte\IMacro,
 	Nette\Latte\Compiler;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class MockMacro implements IMacro

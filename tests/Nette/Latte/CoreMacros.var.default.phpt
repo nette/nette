@@ -10,7 +10,6 @@
 use Nette\Latte\Macros\CoreMacros;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -29,7 +28,6 @@ test(function() use ($compiler) { // {var ... }
 		$compiler->expandMacro('var', '$var => "123', '');
 	}, 'Nette\Utils\TokenizerException', 'Unexpected %a% on line 1, column 9.');
 });
-
 
 
 test(function() use ($compiler) { // {default ...}

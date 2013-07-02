@@ -10,9 +10,7 @@
 use Nette\Environment;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Assert::null( Environment::getVariable('foo', NULL), "Getting variable 'foo':" );
@@ -35,14 +33,12 @@ test(function() {
 });
 
 
-
 test(function() {
 	// Services
 	Assert::same( 'Nette\Http\Response', get_class(Environment::getHttpResponse()) );
 	Assert::same( 'Nette\Application\Application', get_class(Environment::getApplication()) );
 	Assert::same( 'Nette\Caching\Cache', get_class(Environment::getCache('my')) );
 });
-
 
 
 test(function() {

@@ -10,16 +10,13 @@
 use Nette\Forms\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 before(function() {
 	$_SERVER['REQUEST_METHOD'] = 'POST';
 	$_POST = $_FILES = array();
 });
-
 
 
 test(function() { // trim & new lines
@@ -33,7 +30,6 @@ test(function() { // trim & new lines
 });
 
 
-
 test(function() { // trim & new lines in textarea
 	$_POST = array('text' => "  a\r b \n c ");
 
@@ -42,7 +38,6 @@ test(function() { // trim & new lines in textarea
 
 	Assert::same( "  a\n b \n c ", $input->getValue() );
 });
-
 
 
 test(function() { // empty value
@@ -56,7 +51,6 @@ test(function() { // empty value
 });
 
 
-
 test(function() { // invalid UTF
 	$_POST = array('invalidutf' => "invalid\xAA\xAA\xAAutf");
 
@@ -64,7 +58,6 @@ test(function() { // invalid UTF
 	$input = $form->addText('invalidutf');
 	Assert::same( 'invalidutf', $input->getValue() );
 });
-
 
 
 test(function() { // missing data
@@ -76,7 +69,6 @@ test(function() { // missing data
 });
 
 
-
 test(function() { // malformed data
 	$_POST = array('malformed' => array(NULL));
 
@@ -86,7 +78,6 @@ test(function() { // malformed data
 	Assert::same( '', $input->getValue() );
 	Assert::false( $input->isFilled() );
 });
-
 
 
 test(function() { // setValue() and invalid argument
@@ -102,7 +93,6 @@ test(function() { // setValue() and invalid argument
 });
 
 
-
 test(function() { // float
 	$_POST = array('number' => ' 10,5 ');
 
@@ -112,7 +102,6 @@ test(function() { // float
 
 	Assert::same( '10.5', $input->getValue() );
 });
-
 
 
 test(function() { // non float
@@ -126,7 +115,6 @@ test(function() { // non float
 });
 
 
-
 test(function() { // max length
 	$_POST = array('long' => ' žluťoučký');
 
@@ -138,7 +126,6 @@ test(function() { // max length
 });
 
 
-
 test(function() { // max length
 	$_POST = array('long' => ' žluťoučký');
 
@@ -148,7 +135,6 @@ test(function() { // max length
 
 	Assert::same( ' žluť', $input->getValue() );
 });
-
 
 
 test(function() { // URL

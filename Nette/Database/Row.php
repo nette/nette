@@ -14,7 +14,6 @@ namespace Nette\Database;
 use Nette;
 
 
-
 /**
  * Represents a single table row.
  *
@@ -40,7 +39,6 @@ class Row extends Nette\ArrayHash implements IRow
 		}
 		return $this->$key;
 	}
-
 
 
 	/**

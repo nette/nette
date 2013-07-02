@@ -14,7 +14,6 @@ namespace Nette\Application\Responses;
 use Nette;
 
 
-
 /**
  * String output response.
  *
@@ -28,7 +27,6 @@ class TextResponse extends Nette\Object implements Nette\Application\IResponse
 	private $source;
 
 
-
 	/**
 	 * @param  mixed  renderable variable
 	 */
@@ -38,7 +36,6 @@ class TextResponse extends Nette\Object implements Nette\Application\IResponse
 	}
 
 
-
 	/**
 	 * @return mixed
 	 */
@@ -46,7 +43,6 @@ class TextResponse extends Nette\Object implements Nette\Application\IResponse
 	{
 		return $this->source;
 	}
-
 
 
 	/**

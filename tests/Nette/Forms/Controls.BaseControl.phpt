@@ -10,7 +10,6 @@
 use Nette\Forms\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -32,7 +31,6 @@ test(function() { // error handling
 	$input->cleanErrors();
 	Assert::false( $input->hasErrors() );
 });
-
 
 
 test(function() { // validators
@@ -64,7 +62,6 @@ test(function() { // validators
 });
 
 
-
 test(function() { // validators for array
 	$form = new Form;
 	$input = $form->addMultiSelect('select', NULL, array('a', 'b', 'c', 'd'));
@@ -90,14 +87,12 @@ test(function() { // validators for array
 });
 
 
-
 test(function() { // setHtmlId
 	$form = new Form;
 	$input = $form->addText('text')->setHtmlId('myId');
 
 	Assert::same( '<input type="text" name="text" id="myId" value="" />', (string) $input->getControl() );
 });
-
 
 
 test(function() { // special name

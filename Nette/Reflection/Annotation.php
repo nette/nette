@@ -14,7 +14,6 @@ namespace Nette\Reflection;
 use Nette;
 
 
-
 /**
  * Basic annotation implementation.
  *
@@ -29,7 +28,6 @@ class Annotation extends Nette\Object implements IAnnotation
 			$this->$k = $v;
 		}
 	}
-
 
 
 	/**

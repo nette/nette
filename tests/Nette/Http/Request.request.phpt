@@ -10,9 +10,7 @@
 use Nette\Http;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 // Setup environment
@@ -54,7 +52,6 @@ test(function() {
 	Assert::same( "https://nette.org:8080/file.php?x param=val.&pa%\x72am=val2&param3=v a%26l%3Du%2Be",  $request->getUrl()->absoluteUrl );
 	Assert::same( '',  $request->getUrl()->pathInfo );
 });
-
 
 
 test(function() {

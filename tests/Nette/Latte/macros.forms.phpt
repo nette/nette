@@ -13,11 +13,9 @@ use Nette\Latte,
 	Nette\Forms\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/Template.inc';
-
 
 
 $form = new Form;

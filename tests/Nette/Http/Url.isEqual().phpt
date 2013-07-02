@@ -10,9 +10,7 @@
 use Nette\Http\Url;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $url = new Url('http://exampl%65.COM?text=foo%20bar+foo&value');

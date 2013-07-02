@@ -10,9 +10,7 @@
 use Nette\DI;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class Ipsum
@@ -22,8 +20,6 @@ class Ipsum
 class Lorem
 {
 }
-
-
 
 
 $loader = new DI\Config\Loader;

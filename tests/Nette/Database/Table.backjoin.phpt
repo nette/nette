@@ -36,7 +36,6 @@ test(function() use ($dao) {
 });
 
 
-
 test(function() use ($dao) {
 	$authorsSelection = $dao->table('author')->where(':book.translator_id IS NOT NULL')->wherePrimary(12);
 	Assert::same(reformat('SELECT [author].* FROM [author] LEFT JOIN [book] ON [author].[id] = [book].[author_id] WHERE ([book].[translator_id] IS NOT NULL) AND ([author].[id] = ?)'), $authorsSelection->getSql());
@@ -48,7 +47,6 @@ test(function() use ($dao) {
 
 	Assert::same(array(12 => 'David Grudl'), $authors);
 });
-
 
 
 test(function() use ($dao) {

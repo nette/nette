@@ -10,15 +10,12 @@
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Debugger::$productionMode = FALSE;
 
 Debugger::enable();
-
 
 
 class TestClass

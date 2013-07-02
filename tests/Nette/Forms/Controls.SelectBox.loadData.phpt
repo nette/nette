@@ -10,9 +10,7 @@
 use Nette\Forms\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 before(function() {
@@ -21,14 +19,12 @@ before(function() {
 });
 
 
-
 $series = array(
 	'red-dwarf' => 'Red Dwarf',
 	'the-simpsons' => 'The Simpsons',
 	0 => 'South Park',
 	'' => 'Family Guy',
 );
-
 
 
 test(function() use ($series) { // Select
@@ -44,7 +40,6 @@ test(function() use ($series) { // Select
 });
 
 
-
 test(function() use ($series) { // Select with prompt
 	$_POST = array('select' => 'red-dwarf');
 
@@ -56,7 +51,6 @@ test(function() use ($series) { // Select with prompt
 	Assert::same( 'Red Dwarf', $input->getSelectedItem() );
 	Assert::true( $input->isFilled() );
 });
-
 
 
 test(function() use ($series) { // Select with optgroups
@@ -80,7 +74,6 @@ test(function() use ($series) { // Select with optgroups
 });
 
 
-
 test(function() use ($series) { // Select with invalid input
 	$_POST = array('select' => 'days-of-our-lives');
 
@@ -94,7 +87,6 @@ test(function() use ($series) { // Select with invalid input
 });
 
 
-
 test(function() use ($series) { // Select with prompt and invalid input
 	$form = new Form;
 	$input = $form->addSelect('select', NULL, $series)->setPrompt('Select series');
@@ -104,7 +96,6 @@ test(function() use ($series) { // Select with prompt and invalid input
 	Assert::null( $input->getSelectedItem() );
 	Assert::false( $input->isFilled() );
 });
-
 
 
 test(function() use ($series) { // Indexed arrays
@@ -121,7 +112,6 @@ test(function() use ($series) { // Indexed arrays
 });
 
 
-
 test(function() use ($series) { // empty key
 	$_POST = array('empty' => '');
 
@@ -135,7 +125,6 @@ test(function() use ($series) { // empty key
 });
 
 
-
 test(function() use ($series) { // missing key
 	$form = new Form;
 	$input = $form->addSelect('missing', NULL, $series);
@@ -145,7 +134,6 @@ test(function() use ($series) { // missing key
 	Assert::null( $input->getSelectedItem() );
 	Assert::false( $input->isFilled() );
 });
-
 
 
 test(function() use ($series) { // malformed data
@@ -161,7 +149,6 @@ test(function() use ($series) { // malformed data
 });
 
 
-
 test(function() use ($series) { // setItems without keys
 	$_POST = array('select' => 'red-dwarf');
 
@@ -173,7 +160,6 @@ test(function() use ($series) { // setItems without keys
 	Assert::same( 'red-dwarf', $input->getSelectedItem() );
 	Assert::true( $input->isFilled() );
 });
-
 
 
 test(function() { // setItems without keys with optgroups
@@ -192,7 +178,6 @@ test(function() { // setItems without keys with optgroups
 });
 
 
-
 test(function() {  // doubled item
 	$form = new Form;
 
@@ -209,7 +194,6 @@ test(function() {  // doubled item
 		), FALSE);
 	}, 'Nette\InvalidArgumentException', "Items contain duplication for key 'the-simpsons'.");
 });
-
 
 
 test(function() use ($series) { // setValue() and invalid argument

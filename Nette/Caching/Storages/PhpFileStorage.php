@@ -14,7 +14,6 @@ namespace Nette\Caching\Storages;
 use Nette;
 
 
-
 /**
  * PHP files cache storage.
  *
@@ -38,7 +37,6 @@ class PhpFileStorage extends FileStorage
 			'handle' => $meta[self::HANDLE],
 		);
 	}
-
 
 
 	/**

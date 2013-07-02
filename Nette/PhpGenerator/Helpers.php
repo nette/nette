@@ -14,7 +14,6 @@ namespace Nette\PhpGenerator;
 use Nette;
 
 
-
 /**
  * PHP code generator utils.
  *
@@ -33,7 +32,6 @@ class Helpers
 	{
 		return self::_dump($var);
 	}
-
 
 
 	private static function _dump(& $var, $level = 0)
@@ -129,7 +127,6 @@ class Helpers
 	}
 
 
-
 	/**
 	 * Generates PHP statement.
 	 * @return string
@@ -139,7 +136,6 @@ class Helpers
 		$args = func_get_args();
 		return self::formatArgs(array_shift($args), $args);
 	}
-
 
 
 	/**
@@ -172,7 +168,6 @@ class Helpers
 	}
 
 
-
 	/**
 	 * Returns a PHP representation of a object member.
 	 * @return string
@@ -185,7 +180,6 @@ class Helpers
 	}
 
 
-
 	/**
 	 * @return bool
 	 */
@@ -193,7 +187,6 @@ class Helpers
 	{
 		return is_string($value) && preg_match('#^' . self::PHP_IDENT . '\z#', $value);
 	}
-
 
 
 	public static function createObject($class, array $props)

@@ -14,7 +14,6 @@ namespace Nette\Loaders;
 use Nette;
 
 
-
 /**
  * Nette auto loader is responsible for loading Nette classes and interfaces.
  *
@@ -91,7 +90,6 @@ class NetteLoader extends AutoLoader
 	);
 
 
-
 	/**
 	 * Returns singleton instance with lazy instantiation.
 	 * @return NetteLoader
@@ -103,7 +101,6 @@ class NetteLoader extends AutoLoader
 		}
 		return self::$instance;
 	}
-
 
 
 	/**

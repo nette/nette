@@ -14,7 +14,6 @@ namespace Nette\Application\UI;
 use Nette;
 
 
-
 /**
  * Web form adapted for Presenter.
  *
@@ -38,7 +37,6 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 	}
 
 
-
 	/**
 	 * Returns the presenter where this component belongs to.
 	 * @param  bool   throw exception if presenter doesn't exist?
@@ -48,7 +46,6 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 	{
 		return $this->lookup('Nette\Application\UI\Presenter', $need);
 	}
-
 
 
 	/**
@@ -86,7 +83,6 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 	}
 
 
-
 	/**
 	 * Tells if the form is anchored.
 	 * @return bool
@@ -95,7 +91,6 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 	{
 		return (bool) $this->getPresenter(FALSE);
 	}
-
 
 
 	/**
@@ -123,9 +118,7 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 	}
 
 
-
 	/********************* interface ISignalReceiver ****************d*g**/
-
 
 
 	/**

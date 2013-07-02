@@ -11,7 +11,6 @@ use Nette\Forms\Form,
 	Nette\Utils\Html;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -22,7 +21,6 @@ class Translator implements Nette\Localization\ITranslator
 		return strtoupper($s);
 	}
 }
-
 
 
 test(function() {
@@ -40,7 +38,6 @@ test(function() {
 });
 
 
-
 test(function() { // translator
 	$form = new Form;
 	$input = $form->addText('text', 'Label')
@@ -55,7 +52,6 @@ test(function() { // translator
 });
 
 
-
 test(function() { // Html with translator
 	$form = new Form;
 	$input = $form->addText('text', Html::el('b', 'Label'))
@@ -66,7 +62,6 @@ test(function() { // Html with translator
 });
 
 
-
 test(function() { // password
 	$form = new Form;
 	$input = $form->addPassword('password')
@@ -74,7 +69,6 @@ test(function() { // password
 
 	Assert::same('<input type="password" name="password" id="frm-password" />', (string) $input->getControl());
 });
-
 
 
 test(function() { // validation rule required & PATTERN
@@ -87,7 +81,6 @@ test(function() { // validation rule required & PATTERN
 });
 
 
-
 test(function() { // conditional required
 	$form = new Form;
 	$input = $form->addText('text');
@@ -96,7 +89,6 @@ test(function() { // conditional required
 
 	Assert::same('<input type="text" name="text" id="frm-text" data-nette-rules=\'[{"op":":filled","rules":[{"op":":filled","msg":"Please complete mandatory field."}],"control":"text"}]\' value="" />', (string) $input->getControl());
 });
-
 
 
 test(function() { // validation rule LENGTH
@@ -108,7 +100,6 @@ test(function() { // validation rule LENGTH
 });
 
 
-
 test(function() { // validation rule MAX_LENGTH
 	$form = new Form;
 	$input = $form->addText('text')
@@ -116,7 +107,6 @@ test(function() { // validation rule MAX_LENGTH
 
 	Assert::same('<input type="text" maxlength="10" name="text" id="frm-text" data-nette-rules=\'[{"op":":maxLength","msg":"Please enter a value no longer than 10 characters.","arg":10}]\' value="" />', (string) $input->getControl());
 });
-
 
 
 test(function() { // validation rule RANGE & setType
@@ -129,7 +119,6 @@ test(function() { // validation rule RANGE & setType
 });
 
 
-
 test(function() { // setEmptyValue
 	$form = new Form;
 	$input = $form->addText('text')
@@ -137,7 +126,6 @@ test(function() { // setEmptyValue
 
 	Assert::same('<input type="text" name="text" id="frm-text" data-nette-empty-value="empty" value="empty" />', (string) $input->getControl());
 });
-
 
 
 test(function() { // container
