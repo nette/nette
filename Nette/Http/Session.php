@@ -100,8 +100,10 @@ class Session extends Nette\Object
 			}
 		});
 		session_start();
+		if (!$error) {
+			restore_error_handler();
+		}
 		$this->response->removeDuplicateCookies();
-		restore_error_handler();
 		if ($error && !session_id()) {
 			@session_write_close(); // this is needed
 			throw new Nette\InvalidStateException("session_start(): $error");
