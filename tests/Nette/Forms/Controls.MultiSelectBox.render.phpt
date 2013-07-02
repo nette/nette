@@ -79,7 +79,7 @@ test(function() { // Html with translator & groups
 
 	Assert::same('<label for="frm-list"><b>Label</b></label>', (string) $input->getLabel());
 	Assert::same('<label for="frm-list"><b>Another label</b></label>', (string) $input->getLabel(Html::el('b', 'Another label')));
-	Assert::same('<select name="list[]" id="frm-list" multiple="multiple"><option class="class">First</option><optgroup label="GROUP"><option>Second</option></optgroup></select>', (string) $input->getControl());
+	Assert::same('<select name="list[]" id="frm-list" multiple="multiple"><option class="class" value="a">First</option><optgroup label="GROUP"><option value="0">Second</option></optgroup></select>', (string) $input->getControl());
 });
 
 

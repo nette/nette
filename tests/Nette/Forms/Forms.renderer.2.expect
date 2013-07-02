@@ -24,7 +24,7 @@
 
 	<dt><label for="frm-gender">Your gender:</label></dt>
 
-	<dd><select name="gender" id="frm-gender"><option style="color: #248bd3">male</option><option style="color: #e948d4">female</option></select>
+	<dd><select name="gender" id="frm-gender"><option style="color: #248bd3" value="m">male</option><option style="color: #e948d4" value="f">female</option></select>
 
 	<span class="error">
 		Please select a valid option.

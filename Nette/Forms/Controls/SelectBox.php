@@ -238,13 +238,13 @@ class SelectBox extends BaseControl
 
 			foreach ($value as $key2 => $value2) {
 				if ($value2 instanceof Nette\Utils\Html) {
-					$dest->add((string) $value2->selected(isset($selected[$key2])));
+					$dest->add((string) $value2->value($key2)
+						->selected(isset($selected[$key2])));
 
 				} else {
-					$value2 = $this->translate((string) $value2);
 					$dest->add((string) $option->value($key2)
 						->selected(isset($selected[$key2]))
-						->setText($value2));
+						->setText($this->translate((string) $value2)));
 				}
 			}
 		}
