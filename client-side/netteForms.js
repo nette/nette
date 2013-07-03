@@ -8,10 +8,10 @@
 var Nette = Nette || {};
 
 Nette.EventType = {
-    INVALID_CONTROL: 'nette-invalid-control',
-    VALID_CONTROL: 'nette-valid-control',
-    INVALID_FORM: 'nette-invalid-form',
-    VALID_FORM: 'nette-valid-form'
+	INVALID_CONTROL: 'nette-invalid-control',
+	VALID_CONTROL: 'nette-valid-control',
+	INVALID_FORM: 'nette-invalid-form',
+	VALID_FORM: 'nette-valid-form'
 };
 
 /**
@@ -104,40 +104,40 @@ Nette.validateControl = function(elem, rules, onlyCheck) {
 			if (el.disabled) {
 				continue;
 			}
-            if (!onlyCheck) {
-                var notPrevented = true;
-                var message = rule.msg.replace('%value', Nette.getValue(el));
-                notPrevented = Nette.dispatchEvent(Nette.EventType.INVALID_CONTROL, el, message);
-                if (notPrevented) {
-                    Nette.addError(el, message);
-                }
-            }
-            return false;
-        }
-    }
-    if (el) {
-        Nette.dispatchEvent(Nette.EventType.VALID_CONTROL, el, null);
-    }
-    return true;
+			if (!onlyCheck) {
+				var notPrevented = true;
+				var message = rule.msg.replace('%value', Nette.getValue(el));
+				notPrevented = Nette.dispatchEvent(Nette.EventType.INVALID_CONTROL, el, message);
+				if (notPrevented) {
+					Nette.addError(el, message);
+				}
+			}
+			return false;
+		}
+	}
+	if (el) {
+		Nette.dispatchEvent(Nette.EventType.VALID_CONTROL, el, null);
+	}
+	return true;
 };
 
 Nette.dispatchEvent = function(event, el, message) {
-    // IE8 and old webkit do not dispatch event and always return true
-    try {
-        var params = params || {
-            bubbles: true,
-            cancelable: true,
-            detail: {
-                message: message,
-                element: el
-            }
-        };
-        var evt = document.createEvent('CustomEvent');
-    } catch(e) {
-        return true;
-    }
-    evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
-    return el.dispatchEvent(evt);
+	// IE8 and old webkit do not dispatch event and always return true
+	try {
+		var params = params || {
+			bubbles: true,
+			cancelable: true,
+			detail: {
+				message: message,
+				element: el
+			}
+		};
+		var evt = document.createEvent('CustomEvent');
+	} catch(e) {
+		return true;
+	}
+	evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+	return el.dispatchEvent(evt);
 };
 
 
@@ -163,12 +163,12 @@ Nette.validateForm = function(sender) {
 		) {
 			continue;
 		}
-        if (!Nette.validateControl(elem)) {
-            Nette.dispatchEvent(Nette.EventType.INVALID_FORM, form, null);
-            return false;
-        }
-    }
-    return Nette.dispatchEvent(Nette.EventType.VALID_FORM, form, null);
+		if (!Nette.validateControl(elem)) {
+			Nette.dispatchEvent(Nette.EventType.INVALID_FORM, form, null);
+			return false;
+		}
+	}
+	return Nette.dispatchEvent(Nette.EventType.VALID_FORM, form, null);
 };
 
 
