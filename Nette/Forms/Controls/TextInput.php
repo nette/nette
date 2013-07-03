@@ -75,13 +75,13 @@ class TextInput extends TextBase
 		$input = parent::getControl();
 
 		foreach ($this->getRules() as $rule) {
-			if ($rule->isNegative || $rule->type !== Nette\Forms\Rule::VALIDATOR) {
+			if ($rule->isNegative || $rule->branch) {
 
-			} elseif ($rule->operation === Nette\Forms\Form::RANGE && $input->type !== 'text') {
+			} elseif ($rule->validator === Nette\Forms\Form::RANGE && $input->type !== 'text') {
 				$input->min = isset($rule->arg[0]) && is_scalar($rule->arg[0]) ? $rule->arg[0] : NULL;
 				$input->max = isset($rule->arg[1]) && is_scalar($rule->arg[1]) ? $rule->arg[1] : NULL;
 
-			} elseif ($rule->operation === Nette\Forms\Form::PATTERN && is_scalar($rule->arg)) {
+			} elseif ($rule->validator === Nette\Forms\Form::PATTERN && is_scalar($rule->arg)) {
 				$input->pattern = $rule->arg;
 			}
 		}

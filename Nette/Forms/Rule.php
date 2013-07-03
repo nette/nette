@@ -21,31 +21,22 @@ use Nette;
  */
 final class Rule extends Nette\Object
 {
-	/** type */
-	const CONDITION = 1;
-
-	/** type */
-	const VALIDATOR = 2;
-
 	/** @var IControl */
 	public $control;
 
 	/** @var mixed */
-	public $operation;
+	public $validator;
 
 	/** @var mixed */
 	public $arg;
 
-	/** @var int (CONDITION, VALIDATOR, FILTER) */
-	public $type;
-
 	/** @var bool */
 	public $isNegative = FALSE;
 
-	/** @var string (only for VALIDATOR type) */
+	/** @var string */
 	public $message;
 
-	/** @var Rules (only for CONDITION type)  */
-	public $subRules;
+	/** @var Rules  for conditions */
+	public $branch;
 
 }

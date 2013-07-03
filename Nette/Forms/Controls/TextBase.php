@@ -110,23 +110,23 @@ abstract class TextBase extends BaseControl
 	}
 
 
-	public function addRule($operation, $message = NULL, $arg = NULL)
+	public function addRule($validator, $message = NULL, $arg = NULL)
 	{
-		if ($operation === Form::FLOAT) {
+		if ($validator === Form::FLOAT) {
 			$this->addFilter(function($s) {
 				return str_replace(array(' ', ','), array('', '.'), $s);
 			});
 
-		} elseif ($operation === Form::URL) {
+		} elseif ($validator === Form::URL) {
 			$this->addFilter(function($s) {
 				return Nette\Utils\Validators::isUrl('http://' . $s) ? 'http://' . $s : $s;
 			});
 
-		} elseif ($operation === Form::LENGTH || $operation === Form::MAX_LENGTH) {
+		} elseif ($validator === Form::LENGTH || $validator === Form::MAX_LENGTH) {
 			$tmp = is_array($arg) ? $arg[1] : $arg;
 			$this->control->maxlength = is_scalar($tmp) ? $tmp : NULL;
 		}
-		return parent::addRule($operation, $message, $arg);
+		return parent::addRule($validator, $message, $arg);
 	}
 
 }

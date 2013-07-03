@@ -79,16 +79,15 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	 * @param  mixed      optional rule arguments
 	 * @return self
 	 */
-	public function addRule($operation, $message = NULL, $arg = NULL)
+	public function addRule($validator, $message = NULL, $arg = NULL)
 	{
 		$rule = new Rule;
 		$rule->control = $this->control;
-		$rule->operation = $operation;
+		$rule->validator = $validator;
 		$this->adjustOperation($rule);
 		$rule->arg = $arg;
-		$rule->type = Rule::VALIDATOR;
 		$rule->message = $message;
-		if ($rule->operation === Form::REQUIRED) {
+		if ($rule->validator === Form::REQUIRED) {
 			$this->required = $rule;
 		} else {
 			$this->rules[] = $rule;
@@ -103,9 +102,9 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	 * @param  mixed      optional condition arguments
 	 * @return Rules      new branch
 	 */
-	public function addCondition($operation, $arg = NULL)
+	public function addCondition($validator, $arg = NULL)
 	{
-		return $this->addConditionOn($this->control, $operation, $arg);
+		return $this->addConditionOn($this->control, $validator, $arg);
 	}
 
 
@@ -116,19 +115,18 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	 * @param  mixed      optional condition arguments
 	 * @return Rules      new branch
 	 */
-	public function addConditionOn(IControl $control, $operation, $arg = NULL)
+	public function addConditionOn(IControl $control, $validator, $arg = NULL)
 	{
 		$rule = new Rule;
 		$rule->control = $control;
-		$rule->operation = $operation;
+		$rule->validator = $validator;
 		$this->adjustOperation($rule);
 		$rule->arg = $arg;
-		$rule->type = Rule::CONDITION;
-		$rule->subRules = new static($this->control);
-		$rule->subRules->parent = $this;
+		$rule->branch = new static($this->control);
+		$rule->branch->parent = $this;
 
 		$this->rules[] = $rule;
-		return $rule->subRules;
+		return $rule->branch;
 	}
 
 
@@ -140,10 +138,10 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	{
 		$rule = clone end($this->parent->rules);
 		$rule->isNegative = !$rule->isNegative;
-		$rule->subRules = new static($this->parent->control);
-		$rule->subRules->parent = $this->parent;
+		$rule->branch = new static($this->parent->control);
+		$rule->branch->parent = $this->parent;
 		$this->parent->rules[] = $rule;
-		return $rule->subRules;
+		return $rule->branch;
 	}
 
 
@@ -179,10 +177,10 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 		foreach ($this as $rule) {
 			$success = $this->validateRule($rule);
 
-			if ($rule->type === Rule::CONDITION && $success && !$rule->subRules->validate()) {
+			if ($success && $rule->branch && !$rule->branch->validate()) {
 				return FALSE;
 
-			} elseif ($rule->type === Rule::VALIDATOR && !$success) {
+			} elseif (!$success && !$rule->branch) {
 				$rule->control->addError(Validator::formatMessage($rule, TRUE));
 				return FALSE;
 			}
@@ -228,9 +226,9 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	{
 		$toggles = $this->toggles;
 		foreach ($actual ? $this : array() as $rule) {
-			if ($rule->type === Rule::CONDITION) {
+			if ($rule->branch) {
 				$success = static::validateRule($rule);
-				foreach ($rule->subRules->getToggles(TRUE) as $id => $hide) {
+				foreach ($rule->branch->getToggles(TRUE) as $id => $hide) {
 					$toggles[$id] = empty($toggles[$id]) ? ($success && $hide) : TRUE;
 				}
 			}
@@ -246,21 +244,21 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	 */
 	private function adjustOperation($rule)
 	{
-		if (is_string($rule->operation) && ord($rule->operation[0]) > 127) {
+		if (is_string($rule->validator) && ord($rule->validator[0]) > 127) {
 			$rule->isNegative = TRUE;
-			$rule->operation = ~$rule->operation;
+			$rule->validator = ~$rule->validator;
 		}
 
 		if (!is_callable($this->getCallback($rule))) {
-			$operation = is_scalar($rule->operation) ? " '$rule->operation'" : '';
-			throw new Nette\InvalidArgumentException("Unknown operation$operation for control '{$rule->control->name}'.");
+			$validator = is_scalar($rule->validator) ? " '$rule->validator'" : '';
+			throw new Nette\InvalidArgumentException("Unknown validator$validator for control '{$rule->control->name}'.");
 		}
 	}
 
 
 	private static function getCallback($rule)
 	{
-		$op = $rule->operation;
+		$op = $rule->validator;
 		if (is_string($op) && strncmp($op, ':', 1) === 0) {
 			return 'Nette\Forms\Validator::validate' . ltrim($op, ':');
 		} else {
