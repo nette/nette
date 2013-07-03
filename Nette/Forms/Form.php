@@ -67,7 +67,8 @@ class Form extends Container
 	// file upload
 	const MAX_FILE_SIZE = ':fileSize',
 		MIME_TYPE = ':mimeType',
-		IMAGE = ':image';
+		IMAGE = ':image',
+		MAX_POST_SIZE = ':maxPostSize';
 
 	/** method */
 	const GET = 'get',
@@ -448,7 +449,24 @@ class Form extends Container
 		if ($controls === NULL && $this->submittedBy instanceof ISubmitterControl) {
 			$controls = $this->submittedBy->getValidationScope();
 		}
+		$this->validateMaxPostSize();
 		parent::validate($controls);
+	}
+
+
+	public function validateMaxPostSize()
+	{
+		if ($this->getHttpData() || strcasecmp($this->getMethod(), 'POST') || empty($_SERVER['CONTENT_LENGTH'])) {
+			return;
+		}
+		$maxSize = ini_get('post_max_size');
+		$units = array('k' => 10, 'm' => 20, 'g' => 30);
+		if (isset($units[$ch = strtolower(substr($maxSize, -1))])) {
+			$maxSize <<= $units[$ch];
+		}
+		if ($maxSize > 0 && $maxSize < $_SERVER['CONTENT_LENGTH']) {
+			$this->addError(sprintf(Validator::$messages[self::MAX_FILE_SIZE], $maxSize));
+		}
 	}
 
 
