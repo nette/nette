@@ -52,7 +52,6 @@ class UIMacros extends MacroSet
 		$me->addMacro('snippet', array($me, 'macroBlock'), array($me, 'macroBlockEnd'));
 		$me->addMacro('ifset', array($me, 'macroIfset'), 'endif');
 
-		$me->addMacro('widget', array($me, 'macroControl')); // deprecated - use control
 		$me->addMacro('control', array($me, 'macroControl'));
 
 		$me->addMacro('href', NULL, NULL, function(MacroNode $node, PhpWriter $writer) use ($me) {
@@ -343,9 +342,6 @@ if (!empty($_control->snippetMode)) {
 	 */
 	public function macroControl(MacroNode $node, PhpWriter $writer)
 	{
-		if ($node->name === 'widget') {
-			trigger_error('Macro {widget} is deprecated; use {control} instead.', E_USER_DEPRECATED);
-		}
 		$words = $node->tokenizer->fetchWords();
 		if (!$words) {
 			throw new CompileException("Missing control name in {control}");
