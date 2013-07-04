@@ -36,7 +36,9 @@ class Form extends Container
 	/** validator */
 	const EQUAL = ':equal',
 		IS_IN = self::EQUAL,
+		NOT_EQUAL = ':notEqual',
 		FILLED = ':filled',
+		BLANK = ':blank',
 		REQUIRED = self::FILLED,
 		VALID = ':valid';
 

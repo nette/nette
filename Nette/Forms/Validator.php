@@ -27,7 +27,9 @@ class Validator extends Nette\Object
 	public static $messages = array(
 		Form::PROTECTION => 'Please submit this form again (security token has expired).',
 		Form::EQUAL => 'Please enter %s.',
+		Form::NOT_EQUAL => 'This value should not be %s.',
 		Form::FILLED => 'This field is required.',
+		Form::BLANK => 'This field should be blank.',
 		Form::MIN_LENGTH => 'Please enter at least %d characters.',
 		Form::MAX_LENGTH => 'Please enter no more than %d characters.',
 		Form::LENGTH => 'Please enter a value between %d and %d characters long.',
@@ -97,12 +99,32 @@ class Validator extends Nette\Object
 
 
 	/**
+	 * Is control's value not equal with second parameter?
+	 * @return bool
+	 */
+	public static function validateNotEqual(IControl $control, $arg)
+	{
+		return !static::validateEqual($control, $arg);
+	}
+
+
+	/**
 	 * Is control filled?
 	 * @return bool
 	 */
 	public static function validateFilled(IControl $control)
 	{
 		return $control->isFilled();
+	}
+
+
+	/**
+	 * Is control not filled?
+	 * @return bool
+	 */
+	public static function validateBlank(IControl $control)
+	{
+		return !$control->isFilled();
 	}
 
 
