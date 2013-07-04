@@ -38,6 +38,7 @@ test(function() { // non-multiple
 test(function() { // multiple
 	Assert::same(array('1', '2'), Helpers::extractHttpData(array('multi' => array('1', '2')), 'multi[]', Form::DATA_LINE));
 	Assert::same(array('1', '2'), Helpers::extractHttpData(array('multi' => array('1', '2')), 'multi[]', Form::DATA_TEXT));
+	Assert::same(array('1', '2'), Helpers::extractHttpData(array('multi' => array('x' => '1', 2 => '2')), 'multi[]', Form::DATA_TEXT));
 
 	Assert::same(array('3', '4'), Helpers::extractHttpData(array(
 		'container' => array('image' => array('3', '4')),

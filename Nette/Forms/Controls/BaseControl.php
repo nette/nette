@@ -128,7 +128,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 * Loads HTTP data.
 	 * @return void
 	 */
-	public function getHttpData($type = Nette\Forms\Form::DATA_TEXT, $htmlTail = NULL)
+	public function getHttpData($type = Form::DATA_TEXT, $htmlTail = NULL)
 	{
 		return $this->getForm()->getHttpData($this->getHtmlName() . $htmlTail, $type);
 	}

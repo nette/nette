@@ -37,9 +37,9 @@ class Helpers extends Nette\Object
 
 		if (substr($htmlName, -2) === '[]') {
 			$arr = array();
-			foreach (is_array($data) ? $data : array() as $k => $v) {
-				$arr[$k] = static::sanitize($type, $v);
-				if ($arr[$k] === NULL) {
+			foreach (is_array($data) ? $data : array() as $v) {
+				$arr[] = $v = static::sanitize($type, $v);
+				if ($v === NULL) {
 					return array();
 				}
 			}
