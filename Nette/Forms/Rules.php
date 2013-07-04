@@ -178,10 +178,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	{
 		$errors = array();
 		foreach ($this as $rule) {
-			if ($rule->control->isDisabled()) {
-				continue;
-			}
-
 			$success = $this->validateRule($rule);
 
 			if ($rule->type === Rule::CONDITION && $success) {
