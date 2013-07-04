@@ -47,12 +47,6 @@ interface IControl
 	function getErrors();
 
 	/**
-	 * Is control disabled?
-	 * @return bool
-	 */
-	function isDisabled();
-
-	/**
 	 * Is control value excluded from $form->getValues() result?
 	 * @return bool
 	 */
