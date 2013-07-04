@@ -36,7 +36,10 @@ class Form extends Container
 	/** validator */
 	const EQUAL = ':equal',
 		IS_IN = ':equal',
+		NOT_EQUAL = ':notEqual',
 		FILLED = ':filled',
+		BLANK = ':blank',
+		REQUIRED = self::FILLED,
 		VALID = ':valid';
 
 	// CSRF protection

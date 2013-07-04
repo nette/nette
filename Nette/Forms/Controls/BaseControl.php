@@ -552,12 +552,32 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
+	 * Is control's value not equal with second parameter?
+	 * @return bool
+	 */
+	public static function validateNotEqual(IControl $control, $arg)
+	{
+		return !static::validateEqual($control, $arg);
+	}
+
+
+	/**
 	 * Filled validator: is control filled?
 	 * @return bool
 	 */
 	public static function validateFilled(IControl $control)
 	{
 		return $control->isFilled();
+	}
+
+
+	/**
+	 * Is control not filled?
+	 * @return bool
+	 */
+	public static function validateBlank(IControl $control)
+	{
+		return !$control->isFilled();
 	}
 
 
