@@ -200,8 +200,10 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	public function setDisabled($value = TRUE)
 	{
-		$this->disabled = (bool) $value;
-		$this->omitted = $value || $this->omitted;
+		if ($this->disabled = (bool) $value) {
+			$this->omitted = TRUE;
+			$this->setValue(NULL);
+		}
 		return $this;
 	}
 

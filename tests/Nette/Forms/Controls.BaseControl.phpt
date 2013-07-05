@@ -102,3 +102,39 @@ test(function() { // special name
 
 	Assert::same( '<input type="text" name="_submit" id="frm-submit" value="" />', (string) $input->getControl() );
 });
+
+
+test(function() { // disabled
+	$form = new Form;
+	$form->addText('disabled')
+		->setDisabled()
+		->setDefaultValue('default');
+
+	Assert::false($form->isSubmitted());
+	Assert::true($form['disabled']->isDisabled());
+	Assert::same('default', $form['disabled']->getValue());
+});
+
+
+test(function() { // disabled & submitted
+	$_SERVER['REQUEST_METHOD'] = 'POST';
+	$_POST = array('disabled' => 'submitted value');
+
+	$form = new Form;
+	$form->addText('disabled')
+		->setDisabled()
+		->setDefaultValue('default');
+
+	Assert::true($form->isSubmitted());
+	Assert::same('default', $form['disabled']->getValue());
+
+
+	unset($form['disabled']);
+	$input = new Nette\Forms\Controls\TextInput;
+	$input->setDisabled()
+		->setDefaultValue('default');
+
+	$form['disabled'] = $input;
+
+	Assert::same('default', $input->getValue());
+});
