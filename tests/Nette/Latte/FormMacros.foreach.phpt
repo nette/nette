@@ -23,6 +23,6 @@ Assert::same('<form action="http://example.com/#toc" method="get">', ob_get_clea
 
 ob_start();
 FormMacros::renderFormEnd($form);
-Assert::match('<div><input type="hidden" name="do" value="foo-submit" /><!--[if IE]><input type=IEbug disabled style="display:none"><![endif]--></div>
+Assert::match('<div><input type="hidden" name="do" value="foo-submit"><!--[if IE]><input type=IEbug disabled style="display:none"><![endif]--></div>
 </form>
 ', ob_get_clean());

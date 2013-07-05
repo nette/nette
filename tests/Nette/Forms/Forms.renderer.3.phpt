@@ -25,9 +25,9 @@ Assert::match( '<form action="" method="post">
 <tr>
 	<th></th>
 
-	<td><input type="submit" name="_submit" class="button" id="frm-submit" value="Send" /></td>
+	<td><input type="submit" name="_submit" class="button" id="frm-submit" value="Send"></td>
 </tr>
 </table>
 
-<div><input type="hidden" name="userid" id="frm-userid" value="" /><!--[if IE]><input type=IEbug disabled style="display:none"><![endif]--></div>
+<div><input type="hidden" name="userid" id="frm-userid" value=""><!--[if IE]><input type=IEbug disabled style="display:none"><![endif]--></div>
 </form>', $form->__toString(TRUE) );

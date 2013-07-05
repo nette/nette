@@ -23,7 +23,7 @@ use Nette,
 class Compiler extends Nette\Object
 {
 	/** @var string default content type */
-	public $defaultContentType = self::CONTENT_XHTML;
+	public $defaultContentType = self::CONTENT_HTML;
 
 	/** @var Token[] */
 	private $tokens;

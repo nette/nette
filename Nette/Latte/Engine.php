@@ -32,7 +32,7 @@ class Engine extends Nette\Object
 	{
 		$this->parser = new Parser;
 		$this->compiler = new Compiler;
-		$this->compiler->defaultContentType = Compiler::CONTENT_XHTML;
+		$this->compiler->defaultContentType = Compiler::CONTENT_HTML;
 
 		Macros\CoreMacros::install($this->compiler);
 		$this->compiler->addMacro('cache', new Macros\CacheMacro($this->compiler));

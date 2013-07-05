@@ -23,4 +23,4 @@ $input = $form->addProtection('Security token did not match. Possible CSRF attac
 $form->fireEvents();
 
 Assert::same( array('Security token did not match. Possible CSRF attack.'), $form->getErrors() );
-Assert::match('<input type="hidden" name="_token_" id="frm-_token_" value="%S%" />', (string) $input->getControl());
+Assert::match('<input type="hidden" name="_token_" id="frm-_token_" value="%S%">', (string) $input->getControl());

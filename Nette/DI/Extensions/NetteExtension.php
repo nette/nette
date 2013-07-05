@@ -55,7 +55,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			'messages' => array(),
 		),
 		'latte' => array(
-			'xhtml' => TRUE,
+			'xhtml' => FALSE,
 			'macros' => array(),
 		),
 		'container' => array(
@@ -271,8 +271,8 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			->setClass('Nette\Latte\Engine')
 			->setShared(FALSE);
 
-		if (empty($config['xhtml'])) {
-			$latte->addSetup('$service->getCompiler()->defaultContentType = ?', Nette\Latte\Compiler::CONTENT_HTML);
+		if ($config['xhtml']) {
+			$latte->addSetup('$service->getCompiler()->defaultContentType = ?', Nette\Latte\Compiler::CONTENT_XHTML);
 		}
 
 		$container->addDefinition($this->prefix('template'))
@@ -403,8 +403,8 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			$initialize->addBody('$this->getService("session")->start();');
 		}
 
-		if (empty($config['latte']['xhtml'])) {
-			$initialize->addBody('Nette\Utils\Html::$xhtml = ?;', array((bool) $config['latte']['xhtml']));
+		if ($config['latte']['xhtml']) {
+			$initialize->addBody('Nette\Utils\Html::$xhtml = ?;', array(TRUE));
 		}
 
 		if (isset($config['security']['frames']) && $config['security']['frames'] !== TRUE) {

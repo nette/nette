@@ -29,7 +29,7 @@ test(function() {
 
 	Assert::null($input->getLabel());
 	Assert::type('Nette\Utils\Html', $input->getControl());
-	Assert::same('<input type="image" name="button[]" src="image.gif" id="frm-button" />', (string) $input->getControl());
+	Assert::same('<input type="image" name="button[]" src="image.gif" id="frm-button">', (string) $input->getControl());
 });
 
 
@@ -38,7 +38,7 @@ test(function() { // translator
 	$input = $form->addImage('button', 'image.gif');
 	$input->setTranslator(new Translator);
 
-	Assert::same('<input type="image" name="button[]" src="image.gif" id="frm-button" />', (string) $input->getControl());
+	Assert::same('<input type="image" name="button[]" src="image.gif" id="frm-button">', (string) $input->getControl());
 });
 
 
@@ -46,7 +46,7 @@ test(function() { // validation rules
 	$form = new Form;
 	$input = $form->addImage('button', 'image.gif')->setRequired('required');
 
-	Assert::same('<input type="image" name="button[]" src="image.gif" id="frm-button" required="required" data-nette-rules=\'[{"op":":filled","msg":"required"}]\' />', (string) $input->getControl());
+	Assert::same('<input type="image" name="button[]" src="image.gif" id="frm-button" required data-nette-rules=\'[{"op":":filled","msg":"required"}]\'>', (string) $input->getControl());
 });
 
 
@@ -55,5 +55,5 @@ test(function() { // container
 	$container = $form->addContainer('container');
 	$input = $container->addImage('button', 'image.gif');
 
-	Assert::same('<input type="image" name="container[button][]" src="image.gif" id="frm-container-button" />', (string) $input->getControl());
+	Assert::same('<input type="image" name="container[button][]" src="image.gif" id="frm-container-button">', (string) $input->getControl());
 });

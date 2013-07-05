@@ -18,8 +18,10 @@ require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/Template.inc';
 
 
+$latte = new Latte\Engine;
+$latte->compiler->defaultContentType = Latte\Compiler::CONTENT_XHTML;
 $template = new FileTemplate(__DIR__ . '/templates/general.latte');
-$template->registerFilter(new Latte\Engine);
+$template->registerFilter($latte);
 $template->registerHelper('translate', 'strrev');
 $template->registerHelper('join', 'implode');
 $template->registerHelperLoader('Nette\Templating\Helpers::loader');

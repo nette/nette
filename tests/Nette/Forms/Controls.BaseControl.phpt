@@ -92,7 +92,7 @@ test(function() { // setHtmlId
 	$form = new Form;
 	$input = $form->addText('text')->setHtmlId('myId');
 
-	Assert::same( '<input type="text" name="text" id="myId" value="" />', (string) $input->getControl() );
+	Assert::same( '<input type="text" name="text" id="myId" value="">', (string) $input->getControl() );
 });
 
 
@@ -100,7 +100,7 @@ test(function() { // special name
 	$form = new Form;
 	$input = $form->addText('submit');
 
-	Assert::same( '<input type="text" name="_submit" id="frm-submit" value="" />', (string) $input->getControl() );
+	Assert::same( '<input type="text" name="_submit" id="frm-submit" value="">', (string) $input->getControl() );
 });
 
 

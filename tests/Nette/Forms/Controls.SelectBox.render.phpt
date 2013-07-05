@@ -46,7 +46,7 @@ test(function() { // selected
 		0 => 'Second',
 	))->setValue(0);
 
-	Assert::same('<select name="list" id="frm-list"><option value="a">First</option><option value="0" selected="selected">Second</option></select>', (string) $input->getControl());
+	Assert::same('<select name="list" id="frm-list"><option value="a">First</option><option value="0" selected>Second</option></select>', (string) $input->getControl());
 });
 
 
@@ -85,7 +85,7 @@ test(function() { // validation rules
 		0 => 'Second',
 	))->setRequired('required');
 
-	Assert::same('<select name="list" id="frm-list" required="required" data-nette-rules=\'[{"op":":filled","msg":"required"}]\'><option value="a">First</option><option value="0">Second</option></select>', (string) $input->getControl());
+	Assert::same('<select name="list" id="frm-list" required data-nette-rules=\'[{"op":":filled","msg":"required"}]\'><option value="a">First</option><option value="0">Second</option></select>', (string) $input->getControl());
 });
 
 
@@ -108,7 +108,7 @@ test(function() { // disabled all
 		0 => 'Second',
 	))->setDisabled(TRUE);
 
-	Assert::same('<select name="list" id="frm-list" disabled="disabled"><option value="a">First</option><option value="0">Second</option></select>', (string) $input->getControl());
+	Assert::same('<select name="list" id="frm-list" disabled><option value="a">First</option><option value="0">Second</option></select>', (string) $input->getControl());
 });
 
 
@@ -119,5 +119,5 @@ test(function() { // disabled one
 		0 => 'Second',
 	))->setDisabled(array('a'));
 
-	Assert::same('<select name="list" id="frm-list"><option value="a" disabled="disabled">First</option><option value="0">Second</option></select>', (string) $input->getControl());
+	Assert::same('<select name="list" id="frm-list"><option value="a" disabled>First</option><option value="0">Second</option></select>', (string) $input->getControl());
 });
