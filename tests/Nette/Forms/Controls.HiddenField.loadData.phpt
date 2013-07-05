@@ -63,3 +63,12 @@ test(function() { // setValue() and invalid argument
 		$input->setValue(array());
 	}, 'Nette\InvalidArgumentException', "Value must be scalar or NULL, array given.");
 });
+
+
+test(function() { // object
+	$form = new Form;
+	$input = $form->addHidden('hidden')
+		->setValue(new Nette\DateTime('2013-07-05'));
+
+	Assert::same( '2013-07-05 00:00:00', $input->getValue() );
+});

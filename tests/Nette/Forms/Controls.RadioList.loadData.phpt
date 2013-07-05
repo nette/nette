@@ -7,7 +7,8 @@
  * @package    Nette\Forms
  */
 
-use Nette\Forms\Form;
+use Nette\Forms\Form,
+	Nette\DateTime;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -108,4 +109,23 @@ test(function() use ($series) { // setValue() and invalid argument
 	Assert::exception(function() use ($input) {
 		$input->setValue('unknown');
 	}, 'Nette\InvalidArgumentException', "Value 'unknown' is out of range of current items.");
+});
+
+
+test(function() { // object as value
+	$form = new Form;
+	$input = $form->addRadioList('radio', NULL, array('2013-07-05 00:00:00' => 1))
+		->setValue(new DateTime('2013-07-05'));
+
+	Assert::same( '2013-07-05 00:00:00', $input->getValue() );
+});
+
+
+test(function() { // object as item
+	$form = new Form;
+	$input = $form->addRadioList('radio')
+		->setItems(array(new DateTime('2013-07-05')), FALSE)
+		->setValue(new DateTime('2013-07-05'));
+
+	Assert::same( '2013-07-05 00:00:00', $input->getValue() );
 });

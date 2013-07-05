@@ -75,10 +75,10 @@ class SelectBox extends BaseControl
 	 */
 	public function setValue($value)
 	{
-		if (!isset($this->allowed[$value]) && $value !== NULL) {
+		if ($value !== NULL && !isset($this->allowed[(string) $value])) {
 			throw new Nette\InvalidArgumentException("Value '$value' is out of range of current items.");
 		}
-		$this->value = $value === NULL ? NULL : key(array($value => NULL));
+		$this->value = $value === NULL ? NULL : key(array((string) $value => NULL));
 		return $this;
 	}
 
@@ -150,25 +150,25 @@ class SelectBox extends BaseControl
 	public function setItems(array $items, $useKeys = TRUE)
 	{
 		$allowed = array();
-		foreach ($items as $k => $v) {
-			foreach ((is_array($v) ? $v : array($k => $v)) as $key => $value) {
+		foreach ($items as $key => $value) {
+			$group = is_array($value);
+			foreach ($group ? $value : array($key => $value) as $gkey => $gvalue) {
 				if (!$useKeys) {
-					if (is_array($v)) {
-						unset($v[$key]);
-						$v[$value] = $value;
+					if ($group) {
+						unset($value[$gkey]);
+						$value[(string) $gvalue] = $gvalue;
 					}
-					$key = $value;
+					$gkey = (string) $gvalue;
 				}
 
-				if (isset($allowed[$key])) {
-					throw new Nette\InvalidArgumentException("Items contain duplication for key '$key'.");
+				if (isset($allowed[$gkey])) {
+					throw new Nette\InvalidArgumentException("Items contain duplication for key '$gkey'.");
 				}
-
-				$allowed[$key] = $value;
+				$allowed[$gkey] = $gvalue;
 			}
 			if (!$useKeys) {
-				unset($items[$k]);
-				$items[is_array($v) ? $k : $v] = $v;
+				unset($items[$key]);
+				$items[$group ? $key : (string) $value] = $value;
 			}
 		}
 

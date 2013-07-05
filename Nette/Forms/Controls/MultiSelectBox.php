@@ -46,10 +46,18 @@ class MultiSelectBox extends SelectBox
 		} elseif (!is_array($values)) {
 			throw new Nette\InvalidArgumentException('Value must be array or NULL, ' . gettype($values) . ' given.');
 		}
+		$flip = array();
+		foreach ($values as $value) {
+			if (!is_scalar($value) && !method_exists($value, '__toString')) {
+				throw new Nette\InvalidArgumentException('Values must be scalar, ' . gettype($value) . ' given.');
+			}
+			$flip[(string) $value] = TRUE;
+		}
+		$values = array_keys($flip);
 		if ($diff = array_diff($values, array_keys($this->allowed))) {
 			throw new Nette\InvalidArgumentException("Values '" . implode("', '", $diff) . "' are out of range of current items.");
 		}
-		$this->value = array_keys(array_flip($values));
+		$this->value = $values;
 		return $this;
 	}
 

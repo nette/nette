@@ -146,3 +146,12 @@ test(function() { // URL
 
 	Assert::same( 'http://nette.org', $input->getValue() );
 });
+
+
+test(function() { // object
+	$form = new Form;
+	$input = $form->addText('text')
+		->setValue(new Nette\DateTime('2013-07-05'));
+
+	Assert::same( '2013-07-05 00:00:00', $input->getValue() );
+});

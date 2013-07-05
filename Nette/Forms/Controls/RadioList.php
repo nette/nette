@@ -72,10 +72,10 @@ class RadioList extends BaseControl
 	 */
 	public function setValue($value)
 	{
-		if (!isset($this->items[$value]) && $value !== NULL) {
+		if ($value !== NULL && !isset($this->items[(string) $value])) {
 			throw new Nette\InvalidArgumentException("Value '$value' is out of range of current items.");
 		}
-		$this->value = $value === NULL ? NULL : key(array($value => NULL));
+		$this->value = $value === NULL ? NULL : key(array((string) $value => NULL));
 		return $this;
 	}
 

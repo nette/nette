@@ -7,7 +7,8 @@
  * @package    Nette\Forms
  */
 
-use Nette\Forms\Form;
+use Nette\Forms\Form,
+	Nette\DateTime;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -204,4 +205,26 @@ test(function() use ($series) { // setValue() and invalid argument
 	Assert::exception(function() use ($input) {
 		$input->setValue('unknown');
 	}, 'Nette\InvalidArgumentException', "Value 'unknown' is out of range of current items.");
+});
+
+
+test(function() { // object as value
+	$form = new Form;
+	$input = $form->addSelect('select', NULL, array('2013-07-05 00:00:00' => 1))
+		->setValue(new DateTime('2013-07-05'));
+
+	Assert::same( '2013-07-05 00:00:00', $input->getValue() );
+});
+
+
+test(function() { // object as item
+	$form = new Form;
+	$input = $form->addSelect('select')
+		->setItems(array(
+			'group' => array(new DateTime('2013-07-05')),
+			new DateTime('2013-07-06'),
+		), FALSE)
+		->setValue('2013-07-05 00:00:00');
+
+	Assert::equal( new DateTime('2013-07-05'), $input->getSelectedItem() );
 });
