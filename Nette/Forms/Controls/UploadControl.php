@@ -77,7 +77,7 @@ class UploadControl extends BaseControl
 
 
 	/**
-	 * @return UploadControl  provides a fluent interface
+	 * @return self
 	 */
 	public function setValue($value)
 	{

@@ -72,7 +72,7 @@ class RadioList extends BaseControl
 	/**
 	 * Sets selected radio value.
 	 * @param  string
-	 * @return RadioList  provides a fluent interface
+	 * @return self
 	 */
 	public function setValue($value)
 	{
@@ -122,7 +122,7 @@ class RadioList extends BaseControl
 	 * Sets options from which to choose.
 	 * @param  array
 	 * @param  bool
-	 * @return RadioList  provides a fluent interface
+	 * @return self
 	 */
 	public function setItems(array $items, $useKeys = TRUE)
 	{
@@ -144,7 +144,7 @@ class RadioList extends BaseControl
 	/**
 	 * Disables or enables control or items.
 	 * @param  bool|array
-	 * @return RadioList  provides a fluent interface
+	 * @return self
 	 */
 	public function setDisabled($value = TRUE)
 	{

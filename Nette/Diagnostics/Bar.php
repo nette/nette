@@ -29,7 +29,7 @@ class Bar extends Nette\Object
 	 * Add custom panel.
 	 * @param  IBarPanel
 	 * @param  string
-	 * @return Bar  provides a fluent interface
+	 * @return self
 	 */
 	public function addPanel(IBarPanel $panel, $id = NULL)
 	{

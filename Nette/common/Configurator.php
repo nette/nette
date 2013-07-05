@@ -50,7 +50,7 @@ class Configurator extends Object
 	/**
 	 * Set parameter %debugMode%.
 	 * @param  bool|string|array
-	 * @return Configurator  provides a fluent interface
+	 * @return self
 	 */
 	public function setDebugMode($value = TRUE)
 	{
@@ -71,7 +71,7 @@ class Configurator extends Object
 
 	/**
 	 * Sets path to temporary directory.
-	 * @return Configurator  provides a fluent interface
+	 * @return self
 	 */
 	public function setTempDirectory($path)
 	{
@@ -82,7 +82,7 @@ class Configurator extends Object
 
 	/**
 	 * Adds new parameters. The %params% will be expanded.
-	 * @return Configurator  provides a fluent interface
+	 * @return self
 	 */
 	public function addParameters(array $params)
 	{
@@ -139,7 +139,7 @@ class Configurator extends Object
 
 	/**
 	 * Adds configuration file.
-	 * @return Configurator  provides a fluent interface
+	 * @return self
 	 */
 	public function addConfig($file, $section = NULL)
 	{

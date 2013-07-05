@@ -75,7 +75,7 @@ class SelectBox extends BaseControl
 	/**
 	 * Sets selected items (by keys).
 	 * @param  string
-	 * @return SelectBox  provides a fluent interface
+	 * @return self
 	 */
 	public function setValue($value)
 	{
@@ -121,7 +121,7 @@ class SelectBox extends BaseControl
 	/**
 	 * Sets first prompt item in select box.
 	 * @param  string
-	 * @return SelectBox  provides a fluent interface
+	 * @return self
 	 */
 	public function setPrompt($prompt)
 	{
@@ -149,7 +149,7 @@ class SelectBox extends BaseControl
 	 * Sets items from which to choose.
 	 * @param  array
 	 * @param  bool
-	 * @return SelectBox  provides a fluent interface
+	 * @return self
 	 */
 	public function setItems(array $items, $useKeys = TRUE)
 	{
@@ -206,7 +206,7 @@ class SelectBox extends BaseControl
 	/**
 	 * Disables or enables control or items.
 	 * @param  bool|array
-	 * @return SelectBox  provides a fluent interface
+	 * @return self
 	 */
 	public function setDisabled($value = TRUE)
 	{

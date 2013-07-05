@@ -69,7 +69,7 @@ class Message extends MimePart
 	 * Sets the sender of the message.
 	 * @param  string  email or format "John Doe" <doe@example.com>
 	 * @param  string
-	 * @return Message  provides a fluent interface
+	 * @return self
 	 */
 	public function setFrom($email, $name = NULL)
 	{
@@ -92,7 +92,7 @@ class Message extends MimePart
 	 * Adds the reply-to address.
 	 * @param  string  email or format "John Doe" <doe@example.com>
 	 * @param  string
-	 * @return Message  provides a fluent interface
+	 * @return self
 	 */
 	public function addReplyTo($email, $name = NULL)
 	{
@@ -104,7 +104,7 @@ class Message extends MimePart
 	/**
 	 * Sets the subject of the message.
 	 * @param  string
-	 * @return Message  provides a fluent interface
+	 * @return self
 	 */
 	public function setSubject($subject)
 	{
@@ -127,7 +127,7 @@ class Message extends MimePart
 	 * Adds email recipient.
 	 * @param  string  email or format "John Doe" <doe@example.com>
 	 * @param  string
-	 * @return Message  provides a fluent interface
+	 * @return self
 	 */
 	public function addTo($email, $name = NULL) // addRecipient()
 	{
@@ -140,7 +140,7 @@ class Message extends MimePart
 	 * Adds carbon copy email recipient.
 	 * @param  string  email or format "John Doe" <doe@example.com>
 	 * @param  string
-	 * @return Message  provides a fluent interface
+	 * @return self
 	 */
 	public function addCc($email, $name = NULL)
 	{
@@ -153,7 +153,7 @@ class Message extends MimePart
 	 * Adds blind carbon copy email recipient.
 	 * @param  string  email or format "John Doe" <doe@example.com>
 	 * @param  string
-	 * @return Message  provides a fluent interface
+	 * @return self
 	 */
 	public function addBcc($email, $name = NULL)
 	{
@@ -181,7 +181,7 @@ class Message extends MimePart
 	/**
 	 * Sets the Return-Path header of the message.
 	 * @param  string  email
-	 * @return Message  provides a fluent interface
+	 * @return self
 	 */
 	public function setReturnPath($email)
 	{
@@ -203,7 +203,7 @@ class Message extends MimePart
 	/**
 	 * Sets email priority.
 	 * @param  int
-	 * @return Message  provides a fluent interface
+	 * @return self
 	 */
 	public function setPriority($priority)
 	{
@@ -226,7 +226,7 @@ class Message extends MimePart
 	 * Sets HTML body.
 	 * @param  string|Nette\Templating\ITemplate
 	 * @param  mixed base-path or FALSE to disable parsing
-	 * @return Message  provides a fluent interface
+	 * @return self
 	 */
 	public function setHtmlBody($html, $basePath = NULL)
 	{

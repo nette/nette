@@ -34,7 +34,7 @@ abstract class TextBase extends BaseControl
 	/**
 	 * Sets control's value.
 	 * @param  string
-	 * @return TextBase  provides a fluent interface
+	 * @return self
 	 */
 	public function setValue($value)
 	{
@@ -66,7 +66,7 @@ abstract class TextBase extends BaseControl
 	/**
 	 * Sets the special value which is treated as empty string.
 	 * @param  string
-	 * @return TextBase  provides a fluent interface
+	 * @return self
 	 */
 	public function setEmptyValue($value)
 	{
@@ -88,7 +88,7 @@ abstract class TextBase extends BaseControl
 	/**
 	 * Appends input string filter callback.
 	 * @param  callable
-	 * @return TextBase  provides a fluent interface
+	 * @return self
 	 */
 	public function addFilter($filter)
 	{

@@ -149,7 +149,7 @@ class FileUpload extends Nette\Object
 	/**
 	 * Move uploaded file to new location.
 	 * @param  string
-	 * @return FileUpload  provides a fluent interface
+	 * @return self
 	 */
 	public function move($dest)
 	{

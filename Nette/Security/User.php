@@ -146,7 +146,7 @@ class User extends Nette\Object
 
 	/**
 	 * Sets authentication handler.
-	 * @return User  provides a fluent interface
+	 * @return self
 	 */
 	public function setAuthenticator(IAuthenticator $handler)
 	{
@@ -173,7 +173,7 @@ class User extends Nette\Object
 	 * @param  string|int|DateTime number of seconds or timestamp
 	 * @param  bool  log out when the browser is closed?
 	 * @param  bool  clear the identity from persistent storage?
-	 * @return User  provides a fluent interface
+	 * @return self
 	 */
 	public function setExpiration($time, $whenBrowserIsClosed = TRUE, $clearIdentity = FALSE)
 	{
@@ -243,7 +243,7 @@ class User extends Nette\Object
 
 	/**
 	 * Sets authorization handler.
-	 * @return User  provides a fluent interface
+	 * @return self
 	 */
 	public function setAuthorizator(IAuthorizator $handler)
 	{

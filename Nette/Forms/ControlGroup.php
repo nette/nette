@@ -38,7 +38,7 @@ class ControlGroup extends Nette\Object
 
 
 	/**
-	 * @return ControlGroup  provides a fluent interface
+	 * @return self
 	 */
 	public function add()
 	{
@@ -79,7 +79,7 @@ class ControlGroup extends Nette\Object
 	 *
 	 * @param  string key
 	 * @param  mixed  value
-	 * @return ControlGroup  provides a fluent interface
+	 * @return self
 	 */
 	public function setOption($key, $value)
 	{

@@ -49,7 +49,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	/**
 	 * Makes control mandatory.
 	 * @param  mixed  state or error message
-	 * @return Rules      provides a fluent interface
+	 * @return self
 	 */
 	public function setRequired($value = TRUE)
 	{
@@ -77,7 +77,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	 * @param  mixed      rule type
 	 * @param  string     message to display for invalid data
 	 * @param  mixed      optional rule arguments
-	 * @return Rules      provides a fluent interface
+	 * @return self
 	 */
 	public function addRule($operation, $message = NULL, $arg = NULL)
 	{
@@ -161,7 +161,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	 * Toggles HTML elememnt visibility.
 	 * @param  string     element id
 	 * @param  bool       hide element?
-	 * @return Rules      provides a fluent interface
+	 * @return self
 	 */
 	public function toggle($id, $hide = TRUE)
 	{

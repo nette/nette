@@ -83,7 +83,7 @@ class Compiler extends Nette\Object
 	/**
 	 * Adds new macro.
 	 * @param  string
-	 * @return Compiler  provides a fluent interface
+	 * @return self
 	 */
 	public function addMacro($name, IMacro $macro)
 	{
@@ -147,7 +147,7 @@ class Compiler extends Nette\Object
 
 
 	/**
-	 * @return Compiler  provides a fluent interface
+	 * @return self
 	 */
 	public function setContentType($type)
 	{
@@ -167,7 +167,7 @@ class Compiler extends Nette\Object
 
 
 	/**
-	 * @return Compiler  provides a fluent interface
+	 * @return self
 	 */
 	public function setContext($context, $sub = NULL)
 	{

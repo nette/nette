@@ -53,7 +53,7 @@ class Identity extends Nette\Object implements IIdentity
 	/**
 	 * Sets the ID of user.
 	 * @param  mixed
-	 * @return Identity  provides a fluent interface
+	 * @return self
 	 */
 	public function setId($id)
 	{
@@ -75,7 +75,7 @@ class Identity extends Nette\Object implements IIdentity
 	/**
 	 * Sets a list of roles that the user is a member of.
 	 * @param  array
-	 * @return Identity  provides a fluent interface
+	 * @return self
 	 */
 	public function setRoles(array $roles)
 	{

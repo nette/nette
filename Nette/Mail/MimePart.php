@@ -52,7 +52,7 @@ class MimePart extends Nette\Object
 	 * @param  string
 	 * @param  string|array  value or pair email => name
 	 * @param  bool
-	 * @return MimePart  provides a fluent interface
+	 * @return self
 	 */
 	public function setHeader($name, $value, $append = FALSE)
 	{
@@ -107,7 +107,7 @@ class MimePart extends Nette\Object
 	/**
 	 * Removes a header.
 	 * @param  string
-	 * @return MimePart  provides a fluent interface
+	 * @return self
 	 */
 	public function clearHeader($name)
 	{
@@ -170,7 +170,7 @@ class MimePart extends Nette\Object
 	 * Sets Content-Type header.
 	 * @param  string
 	 * @param  string
-	 * @return MimePart  provides a fluent interface
+	 * @return self
 	 */
 	public function setContentType($contentType, $charset = NULL)
 	{
@@ -182,7 +182,7 @@ class MimePart extends Nette\Object
 	/**
 	 * Sets Content-Transfer-Encoding header.
 	 * @param  string
-	 * @return MimePart  provides a fluent interface
+	 * @return self
 	 */
 	public function setEncoding($encoding)
 	{
@@ -213,7 +213,7 @@ class MimePart extends Nette\Object
 
 	/**
 	 * Sets textual body.
-	 * @return MimePart  provides a fluent interface
+	 * @return self
 	 */
 	public function setBody($body)
 	{

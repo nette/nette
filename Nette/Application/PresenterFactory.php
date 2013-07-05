@@ -133,7 +133,7 @@ class PresenterFactory extends Nette\Object implements IPresenterFactory
 
 	/**
 	 * Sets mapping as pairs [module => mask]
-	 * @return PresenterFactory  provides a fluent interface
+	 * @return self
 	 */
 	public function setMapping(array $mapping)
 	{

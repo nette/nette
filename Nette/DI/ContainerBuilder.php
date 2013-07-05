@@ -355,7 +355,7 @@ class ContainerBuilder extends Nette\Object
 
 	/**
 	 * Adds a file to the list of dependencies.
-	 * @return ContainerBuilder  provides a fluent interface
+	 * @return self
 	 */
 	public function addDependency($file)
 	{

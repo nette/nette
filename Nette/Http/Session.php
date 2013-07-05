@@ -253,7 +253,7 @@ class Session extends Nette\Object
 	/**
 	 * Sets the session name to a specified one.
 	 * @param  string
-	 * @return Session  provides a fluent interface
+	 * @return self
 	 */
 	public function setName($name)
 	{
@@ -367,7 +367,7 @@ class Session extends Nette\Object
 	/**
 	 * Sets session options.
 	 * @param  array
-	 * @return Session  provides a fluent interface
+	 * @return self
 	 * @throws Nette\NotSupportedException
 	 * @throws Nette\InvalidStateException
 	 */
@@ -450,7 +450,7 @@ class Session extends Nette\Object
 	/**
 	 * Sets the amount of time allowed between requests before the session will be terminated.
 	 * @param  string|int|DateTime  time, value 0 means "until the browser is closed"
-	 * @return Session  provides a fluent interface
+	 * @return self
 	 */
 	public function setExpiration($time)
 	{
@@ -475,7 +475,7 @@ class Session extends Nette\Object
 	 * @param  string  path
 	 * @param  string  domain
 	 * @param  bool    secure
-	 * @return Session  provides a fluent interface
+	 * @return self
 	 */
 	public function setCookieParameters($path, $domain = NULL, $secure = NULL)
 	{
@@ -499,7 +499,7 @@ class Session extends Nette\Object
 
 	/**
 	 * Sets path of the directory used to save session data.
-	 * @return Session  provides a fluent interface
+	 * @return self
 	 */
 	public function setSavePath($path)
 	{
@@ -511,7 +511,7 @@ class Session extends Nette\Object
 
 	/**
 	 * Sets user session storage.
-	 * @return Session  provides a fluent interface
+	 * @return self
 	 */
 	public function setStorage(ISessionStorage $storage)
 	{

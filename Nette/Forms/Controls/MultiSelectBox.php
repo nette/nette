@@ -40,7 +40,7 @@ class MultiSelectBox extends SelectBox
 	/**
 	 * Sets selected items (by keys).
 	 * @param  array
-	 * @return MultiSelectBox  provides a fluent interface
+	 * @return self
 	 */
 	public function setValue($values)
 	{

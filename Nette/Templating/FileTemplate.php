@@ -41,7 +41,7 @@ class FileTemplate extends Template implements IFileTemplate
 	/**
 	 * Sets the path to the template file.
 	 * @param  string  template file path
-	 * @return FileTemplate  provides a fluent interface
+	 * @return self
 	 */
 	public function setFile($file)
 	{
