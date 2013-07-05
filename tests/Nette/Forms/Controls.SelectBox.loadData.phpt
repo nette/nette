@@ -137,6 +137,18 @@ test(function() use ($series) { // missing key
 });
 
 
+test(function() use ($series) { // disabled key
+	$_POST = array('disabled' => 'red-dwarf');
+
+	$form = new Form;
+	$input = $form->addSelect('disabled', NULL, $series)
+		->setDisabled();
+
+	Assert::true( $form->isValid() );
+	Assert::same( NULL, $input->getValue() );
+});
+
+
 test(function() use ($series) { // malformed data
 	$_POST = array('malformed' => array(NULL));
 
@@ -227,4 +239,22 @@ test(function() { // object as item
 		->setValue('2013-07-05 00:00:00');
 
 	Assert::equal( new DateTime('2013-07-05'), $input->getSelectedItem() );
+});
+
+
+test(function() use ($series) { // disabled one
+	$_POST = array('select' => 'red-dwarf');
+
+	$form = new Form;
+	$input = $form->addSelect('select', NULL, $series)
+		->setDisabled(array('red-dwarf'));
+
+	Assert::null( $input->getValue() );
+
+	unset($form['select']);
+	$input = new Nette\Forms\Controls\SelectBox(NULL, $series);
+	$input->setDisabled(array('red-dwarf'));
+	$form['select'] = $input;
+
+	Assert::null( $input->getValue() );
 });

@@ -121,3 +121,25 @@ test(function() { // container prototype
 
 	Assert::same('<div><label for="frm-list-a"><input type="radio" name="list" id="frm-list-a" value="a" />b</label><hr /></div>', (string) $input->getControl());
 });
+
+
+test(function() { // disabled all
+	$form = new Form;
+	$input = $form->addRadioList('list', 'Label', array(
+		'a' => 'First',
+		0 => 'Second',
+	))->setDisabled(TRUE);
+
+	Assert::same('<label for="frm-list-a"><input type="radio" name="list" id="frm-list-a" disabled="disabled" value="a" />First</label><br /><label for="frm-list-0"><input type="radio" name="list" id="frm-list-0" disabled="disabled" value="0" />Second</label><br />', (string) $input->getControl());
+});
+
+
+test(function() { // disabled one
+	$form = new Form;
+	$input = $form->addRadioList('list', 'Label', array(
+		'a' => 'First',
+		0 => 'Second',
+	))->setDisabled(array('a'));
+
+	Assert::same('<label for="frm-list-a"><input type="radio" name="list" id="frm-list-a" disabled="disabled" value="a" />First</label><br /><label for="frm-list-0"><input type="radio" name="list" id="frm-list-0" value="0" />Second</label><br />', (string) $input->getControl());
+});

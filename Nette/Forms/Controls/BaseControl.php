@@ -61,7 +61,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	private $errors = array();
 
 	/** @var bool */
-	private $disabled = FALSE;
+	protected $disabled = FALSE;
 
 	/** @var bool */
 	private $omitted = FALSE;
@@ -97,7 +97,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	protected function attached($form)
 	{
-		if (!$this->disabled && $form instanceof Form && $form->isAnchored() && $form->isSubmitted()) {
+		if (!$this->isDisabled() && $form instanceof Form && $form->isAnchored() && $form->isSubmitted()) {
 			$this->loadHttpData();
 		}
 	}
@@ -186,7 +186,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	public function setDefaultValue($value)
 	{
 		$form = $this->getForm(FALSE);
-		if ($this->disabled || !$form || !$form->isAnchored() || !$form->isSubmitted()) {
+		if ($this->isDisabled() || !$form || !$form->isAnchored() || !$form->isSubmitted()) {
 			$this->setValue($value);
 		}
 		return $this;
@@ -214,7 +214,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	public function isDisabled()
 	{
-		return $this->disabled;
+		return $this->disabled === TRUE;
 	}
 
 
@@ -455,7 +455,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	public function validate()
 	{
-		if ($this->disabled) {
+		if ($this->isDisabled()) {
 			return;
 		}
 		$this->cleanErrors();

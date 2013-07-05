@@ -99,3 +99,25 @@ test(function() { // container
 
 	Assert::same('<select name="container[list]" id="frm-container-list"><option value="a">First</option><option value="0">Second</option></select>', (string) $input->getControl());
 });
+
+
+test(function() { // disabled all
+	$form = new Form;
+	$input = $form->addSelect('list', 'Label', array(
+		'a' => 'First',
+		0 => 'Second',
+	))->setDisabled(TRUE);
+
+	Assert::same('<select name="list" id="frm-list" disabled="disabled"><option value="a">First</option><option value="0">Second</option></select>', (string) $input->getControl());
+});
+
+
+test(function() { // disabled one
+	$form = new Form;
+	$input = $form->addSelect('list', 'Label', array(
+		'a' => 'First',
+		0 => 'Second',
+	))->setDisabled(array('a'));
+
+	Assert::same('<select name="list" id="frm-list"><option value="a" disabled="disabled">First</option><option value="0">Second</option></select>', (string) $input->getControl());
+});

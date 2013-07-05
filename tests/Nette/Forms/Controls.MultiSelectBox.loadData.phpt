@@ -80,6 +80,18 @@ test(function() use ($series) { // missing key
 });
 
 
+test(function() use ($series) { // disabled key
+	$_POST = array('disabled' => 'red-dwarf');
+
+	$form = new Form;
+	$input = $form->addMultiSelect('disabled', NULL, $series)
+		->setDisabled();
+
+	Assert::true( $form->isValid() );
+	Assert::same( array(), $input->getValue() );
+});
+
+
 test(function() use ($series) { // malformed data
 	$_POST = array('malformed' => array(array(NULL)));
 
@@ -149,4 +161,22 @@ test(function() { // object as item
 		->setValue('2013-07-05 00:00:00');
 
 	Assert::equal( array('2013-07-05 00:00:00' => new DateTime('2013-07-05')), $input->getSelectedItem() );
+});
+
+
+test(function() use ($series) { // disabled one
+	$_POST = array('select' => array('red-dwarf', 0));
+
+	$form = new Form;
+	$input = $form->addMultiSelect('select', NULL, $series)
+		->setDisabled(array('red-dwarf'));
+
+	Assert::same( array(0), $input->getValue() );
+
+	unset($form['select']);
+	$input = new Nette\Forms\Controls\MultiSelectBox(NULL, $series);
+	$input->setDisabled(array('red-dwarf'));
+	$form['select'] = $input;
+
+	Assert::same( array(0), $input->getValue() );
 });

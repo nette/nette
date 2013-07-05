@@ -63,7 +63,11 @@ class SelectBox extends BaseControl
 	{
 		$this->value = $this->getHttpData();
 		if ($this->value !== NULL) {
-			$this->value = key(array($this->value => NULL));
+			if (is_array($this->disabled) && isset($this->disabled[$this->value])) {
+				$this->value = NULL;
+			} else {
+				$this->value = key(array($this->value => NULL));
+			}
 		}
 	}
 
@@ -200,6 +204,28 @@ class SelectBox extends BaseControl
 
 
 	/**
+	 * Disables or enables control or items.
+	 * @param  bool|array
+	 * @return SelectBox  provides a fluent interface
+	 */
+	public function setDisabled($value = TRUE)
+	{
+		if (!is_array($value)) {
+			return parent::setDisabled($value);
+		}
+
+		parent::setDisabled(FALSE);
+		$this->disabled = array_flip($value);
+		if (is_array($this->value)) {
+			$this->value = array_diff($this->value, $value);
+		} elseif (isset($this->disabled[$this->value])) {
+			$this->value = NULL;
+		}
+		return $this;
+	}
+
+
+	/**
 	 * Generates control's HTML element.
 	 * @return Nette\Utils\Html
 	 */
@@ -225,7 +251,10 @@ class SelectBox extends BaseControl
 			foreach ($subitems as $value => $caption) {
 				$option = $caption instanceof Nette\Utils\Html ? clone $caption
 					: $option->setText($this->translate((string) $caption));
-				$dest->add((string) $option->value($value)->selected(isset($selected[$value])));
+				$dest->add((string) $option->value($value)
+					->selected(isset($selected[$value]))
+					->disabled(is_array($this->disabled) ? isset($this->disabled[$value]) : FALSE)
+				);
 			}
 		}
 		return $select;
@@ -239,7 +268,7 @@ class SelectBox extends BaseControl
 	public function validate()
 	{
 		parent::validate();
-		if ($this->prompt === FALSE && $this->getValue() === NULL) {
+		if (!$this->isDisabled() && $this->prompt === FALSE && $this->getValue() === NULL) {
 			$this->addError(Nette\Forms\Validator::$messages[self::VALID]);
 		}
 	}

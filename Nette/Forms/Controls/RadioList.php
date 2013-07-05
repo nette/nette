@@ -60,7 +60,11 @@ class RadioList extends BaseControl
 	{
 		$this->value = $this->getHttpData();
 		if ($this->value !== NULL) {
-			$this->value = key(array($this->value => NULL));
+			if (is_array($this->disabled) && isset($this->disabled[$this->value])) {
+				$this->value = NULL;
+			} else {
+				$this->value = key(array($this->value => NULL));
+			}
 		}
 	}
 
@@ -88,8 +92,9 @@ class RadioList extends BaseControl
 	{
 		if ($raw) {
 			trigger_error(__METHOD__ . '(TRUE) is deprecated; use getRawValue() instead.', E_USER_DEPRECATED);
+			return $this->getRawValue();
 		}
-		return ($raw || isset($this->items[$this->value])) ? $this->value : NULL;
+		return isset($this->items[$this->value]) ? $this->value : NULL;
 	}
 
 
@@ -133,6 +138,25 @@ class RadioList extends BaseControl
 	final public function getItems()
 	{
 		return $this->items;
+	}
+
+
+	/**
+	 * Disables or enables control or items.
+	 * @param  bool|array
+	 * @return RadioList  provides a fluent interface
+	 */
+	public function setDisabled($value = TRUE)
+	{
+		if (!is_array($value)) {
+			return parent::setDisabled($value);
+		}
+		parent::setDisabled(FALSE);
+		$this->disabled = array_flip($value);
+		if (isset($this->disabled[$this->value])) {
+			$this->value = NULL;
+		}
+		return $this;
 	}
 
 
@@ -182,7 +206,9 @@ class RadioList extends BaseControl
 
 		foreach ($this->items as $value => $caption) {
 			$input->id = $label->for = $idBase . '-' . $value;
-			$input->checked(isset($selected[$value]))->value($value);
+			$input->checked(isset($selected[$value]))
+				->disabled(is_array($this->disabled) ? isset($this->disabled[$value]) : $this->disabled)
+				->value($value);
 			$label->setText($this->translate($caption));
 
 			$container->add($label->insert(0, $input) . $separator);

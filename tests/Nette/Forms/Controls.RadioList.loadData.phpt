@@ -85,6 +85,18 @@ test(function() use ($series) { // missing key
 
 	Assert::true( $form->isValid() );
 	Assert::null( $input->getValue() );
+});
+
+
+test(function() use ($series) { // disabled key
+	$_POST = array('disabled' => 'red-dwarf');
+
+	$form = new Form;
+	$input = $form->addRadioList('disabled', NULL, $series)
+		->setDisabled();
+
+	Assert::true( $form->isValid() );
+	Assert::same( NULL, $input->getValue() );
 	Assert::false( $input->isFilled() );
 });
 
@@ -128,4 +140,22 @@ test(function() { // object as item
 		->setValue(new DateTime('2013-07-05'));
 
 	Assert::same( '2013-07-05 00:00:00', $input->getValue() );
+});
+
+
+test(function() use ($series) { // disabled one
+	$_POST = array('radio' => 'red-dwarf');
+
+	$form = new Form;
+	$input = $form->addRadioList('radio', NULL, $series)
+		->setDisabled(array('red-dwarf'));
+
+	Assert::null( $input->getValue() );
+
+	unset($form['radio']);
+	$input = new Nette\Forms\Controls\RadioList(NULL, $series);
+	$input->setDisabled(array('red-dwarf'));
+	$form['radio'] = $input;
+
+	Assert::null( $input->getValue() );
 });

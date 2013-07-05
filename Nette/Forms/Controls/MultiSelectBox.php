@@ -31,6 +31,9 @@ class MultiSelectBox extends SelectBox
 	public function loadHttpData()
 	{
 		$this->value = array_keys(array_flip($this->getHttpData()));
+		if (is_array($this->disabled)) {
+			$this->value = array_diff($this->value, array_flip($this->disabled));
+		}
 	}
 
 
