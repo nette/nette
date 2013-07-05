@@ -385,7 +385,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/**
 	 * Changes current view. Any name is allowed.
 	 * @param  string
-	 * @return Presenter  provides a fluent interface
+	 * @return self
 	 */
 	public function setView($view)
 	{
@@ -407,7 +407,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/**
 	 * Changes or disables layout.
 	 * @param  string|FALSE
-	 * @return Presenter  provides a fluent interface
+	 * @return self
 	 */
 	public function setLayout($layout)
 	{

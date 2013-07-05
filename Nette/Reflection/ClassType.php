@@ -88,7 +88,7 @@ class ClassType extends \ReflectionClass
 	 * Adds a method to class.
 	 * @param  string  method name
 	 * @param  mixed   callable
-	 * @return ClassType  provides a fluent interface
+	 * @return self
 	 */
 	public function setExtensionMethod($name, $callback)
 	{

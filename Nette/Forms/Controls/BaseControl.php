@@ -141,7 +141,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/**
 	 * Changes control's HTML id.
 	 * @param  string new ID, or FALSE or NULL
-	 * @return BaseControl  provides a fluent interface
+	 * @return self
 	 */
 	public function setHtmlId($id)
 	{
@@ -170,7 +170,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 * Changes control's HTML attribute.
 	 * @param  string name
 	 * @param  mixed  value
-	 * @return BaseControl  provides a fluent interface
+	 * @return self
 	 */
 	public function setAttribute($name, $value = TRUE)
 	{
@@ -186,7 +186,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 *
 	 * @param  string key
 	 * @param  mixed  value
-	 * @return BaseControl  provides a fluent interface
+	 * @return self
 	 */
 	public function setOption($key, $value)
 	{
@@ -227,7 +227,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Sets translate adapter.
-	 * @return BaseControl  provides a fluent interface
+	 * @return self
 	 */
 	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
 	{
@@ -267,7 +267,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Sets control's value.
-	 * @return BaseControl  provides a fluent interface
+	 * @return self
 	 */
 	public function setValue($value)
 	{
@@ -298,7 +298,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Sets control's default value.
-	 * @return BaseControl  provides a fluent interface
+	 * @return self
 	 */
 	public function setDefaultValue($value)
 	{
@@ -324,7 +324,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/**
 	 * Disables or enables control.
 	 * @param  bool
-	 * @return BaseControl  provides a fluent interface
+	 * @return self
 	 */
 	public function setDisabled($value = TRUE)
 	{
@@ -420,7 +420,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 * @param  mixed      rule type
 	 * @param  string     message to display for invalid data
 	 * @param  mixed      optional rule arguments
-	 * @return BaseControl  provides a fluent interface
+	 * @return self
 	 */
 	public function addRule($operation, $message = NULL, $arg = NULL)
 	{
@@ -466,7 +466,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/**
 	 * Makes control mandatory.
 	 * @param  string  error message
-	 * @return BaseControl  provides a fluent interface
+	 * @return self
 	 */
 	final public function setRequired($message = NULL)
 	{

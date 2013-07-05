@@ -47,7 +47,7 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	/**
 	 * Sets 'pressed' indicator.
 	 * @param  bool
-	 * @return SubmitButton  provides a fluent interface
+	 * @return self
 	 */
 	public function setValue($value)
 	{
@@ -71,7 +71,7 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	/**
 	 * Sets the validation scope. Clicking the button validates only the controls within the specified scope.
 	 * @param  mixed
-	 * @return SubmitButton  provides a fluent interface
+	 * @return self
 	 */
 	public function setValidationScope($scope)
 	{

@@ -82,7 +82,7 @@ class Statement extends \PDOStatement
 	/**
 	 * Executes statement.
 	 * @param  array
-	 * @return Statement  provides a fluent interface
+	 * @return self
 	 */
 	public function execute($params = array())
 	{

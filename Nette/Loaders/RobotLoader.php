@@ -62,7 +62,7 @@ class RobotLoader extends AutoLoader
 
 	/**
 	 * Register autoloader.
-	 * @return RobotLoader  provides a fluent interface
+	 * @return self
 	 */
 	public function register()
 	{
@@ -119,7 +119,7 @@ class RobotLoader extends AutoLoader
 	/**
 	 * Add directory (or directories) to list.
 	 * @param  string|array
-	 * @return RobotLoader  provides a fluent interface
+	 * @return self
 	 * @throws Nette\DirectoryNotFoundException if path is not found
 	 */
 	public function addDirectory($path)

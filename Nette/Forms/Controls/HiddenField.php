@@ -47,7 +47,7 @@ class HiddenField extends BaseControl
 	/**
 	 * Sets control's value.
 	 * @param  string
-	 * @return HiddenField  provides a fluent interface
+	 * @return self
 	 */
 	public function setValue($value)
 	{

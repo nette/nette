@@ -52,7 +52,7 @@ class Configurator extends Nette\Object
 	/**
 	 * Set parameter %debugMode%.
 	 * @param  bool|string|array
-	 * @return Configurator  provides a fluent interface
+	 * @return self
 	 */
 	public function setDebugMode($value = TRUE)
 	{
@@ -73,7 +73,7 @@ class Configurator extends Nette\Object
 
 	/**
 	 * Sets path to temporary directory.
-	 * @return Configurator  provides a fluent interface
+	 * @return self
 	 */
 	public function setTempDirectory($path)
 	{
@@ -87,7 +87,7 @@ class Configurator extends Nette\Object
 
 	/**
 	 * Adds new parameters. The %params% will be expanded.
-	 * @return Configurator  provides a fluent interface
+	 * @return self
 	 */
 	public function addParameters(array $params)
 	{
@@ -147,7 +147,7 @@ class Configurator extends Nette\Object
 
 	/**
 	 * Adds configuration file.
-	 * @return Configurator  provides a fluent interface
+	 * @return self
 	 */
 	public function addConfig($file, $section = NULL)
 	{

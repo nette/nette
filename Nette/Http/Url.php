@@ -121,7 +121,7 @@ class Url extends Nette\FreezableObject
 	/**
 	 * Sets the scheme part of URI.
 	 * @param  string
-	 * @return Url  provides a fluent interface
+	 * @return self
 	 */
 	public function setScheme($value)
 	{
@@ -144,7 +144,7 @@ class Url extends Nette\FreezableObject
 	/**
 	 * Sets the user name part of URI.
 	 * @param  string
-	 * @return Url  provides a fluent interface
+	 * @return self
 	 */
 	public function setUser($value)
 	{
@@ -167,7 +167,7 @@ class Url extends Nette\FreezableObject
 	/**
 	 * Sets the password part of URI.
 	 * @param  string
-	 * @return Url  provides a fluent interface
+	 * @return self
 	 */
 	public function setPassword($value)
 	{
@@ -190,7 +190,7 @@ class Url extends Nette\FreezableObject
 	/**
 	 * Sets the host part of URI.
 	 * @param  string
-	 * @return Url  provides a fluent interface
+	 * @return self
 	 */
 	public function setHost($value)
 	{
@@ -213,7 +213,7 @@ class Url extends Nette\FreezableObject
 	/**
 	 * Sets the port part of URI.
 	 * @param  string
-	 * @return Url  provides a fluent interface
+	 * @return self
 	 */
 	public function setPort($value)
 	{
@@ -236,7 +236,7 @@ class Url extends Nette\FreezableObject
 	/**
 	 * Sets the path part of URI.
 	 * @param  string
-	 * @return Url  provides a fluent interface
+	 * @return self
 	 */
 	public function setPath($value)
 	{
@@ -259,7 +259,7 @@ class Url extends Nette\FreezableObject
 	/**
 	 * Sets the query part of URI.
 	 * @param  string|array
-	 * @return Url  provides a fluent interface
+	 * @return self
 	 */
 	public function setQuery($value)
 	{
@@ -295,7 +295,7 @@ class Url extends Nette\FreezableObject
 	/**
 	 * Sets the fragment part of URI.
 	 * @param  string
-	 * @return Url  provides a fluent interface
+	 * @return self
 	 */
 	public function setFragment($value)
 	{

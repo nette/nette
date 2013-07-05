@@ -54,7 +54,7 @@ class UploadControl extends BaseControl
 	/**
 	 * Sets control's value.
 	 * @param  array|Nette\Http\FileUpload
-	 * @return Nette\Http\FileUpload  provides a fluent interface
+	 * @return self
 	 */
 	public function setValue($value)
 	{

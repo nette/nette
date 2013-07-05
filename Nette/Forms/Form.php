@@ -158,7 +158,7 @@ class Form extends Container
 	/**
 	 * Sets form's action.
 	 * @param  mixed URI
-	 * @return Form  provides a fluent interface
+	 * @return self
 	 */
 	public function setAction($url)
 	{
@@ -180,7 +180,7 @@ class Form extends Container
 	/**
 	 * Sets form's method.
 	 * @param  string get | post
-	 * @return Form  provides a fluent interface
+	 * @return self
 	 */
 	public function setMethod($method)
 	{
@@ -299,7 +299,7 @@ class Form extends Container
 
 	/**
 	 * Sets translate adapter.
-	 * @return Form  provides a fluent interface
+	 * @return self
 	 */
 	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
 	{
@@ -356,7 +356,7 @@ class Form extends Container
 
 	/**
 	 * Sets the submittor control.
-	 * @return Form  provides a fluent interface
+	 * @return self
 	 */
 	public function setSubmittedBy(ISubmitterControl $by = NULL)
 	{
@@ -528,7 +528,7 @@ class Form extends Container
 
 	/**
 	 * Sets form renderer.
-	 * @return Form  provides a fluent interface
+	 * @return self
 	 */
 	public function setRenderer(IFormRenderer $renderer)
 	{

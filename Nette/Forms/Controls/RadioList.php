@@ -76,7 +76,7 @@ class RadioList extends BaseControl
 	/**
 	 * Sets options from which to choose.
 	 * @param  array
-	 * @return RadioList  provides a fluent interface
+	 * @return self
 	 */
 	public function setItems(array $items)
 	{

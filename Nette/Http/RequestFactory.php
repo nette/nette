@@ -37,7 +37,7 @@ class RequestFactory extends Nette\Object
 
 	/**
 	 * @param  string
-	 * @return RequestFactory  provides a fluent interface
+	 * @return self
 	 */
 	public function setEncoding($encoding)
 	{

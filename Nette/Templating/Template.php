@@ -47,7 +47,7 @@ class Template extends Nette\Object implements ITemplate
 	/**
 	 * Sets template source code.
 	 * @param  string
-	 * @return Template  provides a fluent interface
+	 * @return self
 	 */
 	public function setSource($source)
 	{
@@ -155,7 +155,7 @@ class Template extends Nette\Object implements ITemplate
 	/**
 	 * Registers callback as template compile-time filter.
 	 * @param  callable
-	 * @return Template  provides a fluent interface
+	 * @return self
 	 */
 	public function registerFilter($callback)
 	{
@@ -182,7 +182,7 @@ class Template extends Nette\Object implements ITemplate
 	 * Registers callback as template run-time helper.
 	 * @param  string
 	 * @param  callable
-	 * @return Template  provides a fluent interface
+	 * @return self
 	 */
 	public function registerHelper($name, $callback)
 	{
@@ -194,7 +194,7 @@ class Template extends Nette\Object implements ITemplate
 	/**
 	 * Registers callback as template run-time helpers loader.
 	 * @param  callable
-	 * @return Template  provides a fluent interface
+	 * @return self
 	 */
 	public function registerHelperLoader($callback)
 	{
@@ -249,7 +249,7 @@ class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Sets translate adapter.
-	 * @return Template  provides a fluent interface
+	 * @return self
 	 */
 	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
 	{
@@ -263,7 +263,7 @@ class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Adds new template parameter.
-	 * @return Template  provides a fluent interface
+	 * @return self
 	 */
 	public function add($name, $value)
 	{
@@ -279,7 +279,7 @@ class Template extends Nette\Object implements ITemplate
 	/**
 	 * Sets all parameters.
 	 * @param  array
-	 * @return Template  provides a fluent interface
+	 * @return self
 	 */
 	public function setParameters(array $params)
 	{
@@ -365,7 +365,7 @@ class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Set cache storage.
-	 * @return Template  provides a fluent interface
+	 * @return self
 	 */
 	public function setCacheStorage(Caching\IStorage $storage)
 	{

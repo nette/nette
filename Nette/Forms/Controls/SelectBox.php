@@ -89,7 +89,7 @@ class SelectBox extends BaseControl
 	/**
 	 * Sets first prompt item in select box.
 	 * @param  string
-	 * @return SelectBox  provides a fluent interface
+	 * @return self
 	 */
 	public function setPrompt($prompt)
 	{
@@ -134,7 +134,7 @@ class SelectBox extends BaseControl
 	 * Sets items from which to choose.
 	 * @param  array
 	 * @param  bool
-	 * @return SelectBox  provides a fluent interface
+	 * @return self
 	 */
 	public function setItems(array $items, $useKeys = TRUE)
 	{

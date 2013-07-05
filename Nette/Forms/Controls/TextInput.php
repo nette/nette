@@ -40,7 +40,7 @@ class TextInput extends TextBase
 	/**
 	 * Changes control's type attribute.
 	 * @param  string
-	 * @return BaseControl  provides a fluent interface
+	 * @return self
 	 */
 	public function setType($type)
 	{

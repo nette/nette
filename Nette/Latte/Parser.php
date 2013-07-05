@@ -270,7 +270,7 @@ class Parser extends Nette\Object
 
 
 	/**
-	 * @return Parser  provides a fluent interface
+	 * @return self
 	 */
 	public function setContext($context, $quote = NULL)
 	{
@@ -282,7 +282,7 @@ class Parser extends Nette\Object
 	/**
 	 * Changes macro tag delimiters.
 	 * @param  string
-	 * @return Parser  provides a fluent interface
+	 * @return self
 	 */
 	public function setSyntax($type)
 	{
@@ -300,7 +300,7 @@ class Parser extends Nette\Object
 	 * Changes macro tag delimiters.
 	 * @param  string  left regular expression
 	 * @param  string  right regular expression
-	 * @return Parser  provides a fluent interface
+	 * @return self
 	 */
 	public function setDelimiters($left, $right)
 	{

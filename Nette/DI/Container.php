@@ -66,7 +66,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	 * @param  string
 	 * @param  mixed   object, class name or callable
 	 * @param  array   service meta information
-	 * @return Container  provides a fluent interface
+	 * @return self
 	 */
 	public function addService($name, $service, array $meta = NULL)
 	{

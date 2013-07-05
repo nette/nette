@@ -28,7 +28,7 @@ class BlueScreen extends Nette\Object
 	/**
 	 * Add custom panel.
 	 * @param  callable
-	 * @return BlueScreen  provides a fluent interface
+	 * @return self
 	 */
 	public function addPanel($panel)
 	{
