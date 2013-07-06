@@ -80,3 +80,21 @@ test(function() { // SubmitButton
 	Assert::same('<input type="submit" name="button" id="frm-button" value="Caption">', (string) $input->getControl());
 	Assert::same('<input type="submit" name="button" id="frm-button" value="Another caption">', (string) $input->getControl('Another caption'));
 });
+
+
+test(function() { // SubmitButton with scope
+	$form = new Form;
+	$input = $form->addSubmit('button', 'Caption')->setValidationScope(FALSE);
+
+	Assert::same('<input type="submit" name="button" id="frm-button" value="Caption" formnovalidate>', (string) $input->getControl());
+});
+
+
+test(function() { // SubmitButton with scope
+	$form = new Form;
+	$text = $form->addText('text');
+	$select = $form->addSelect('select');
+	$input = $form->addSubmit('button', 'Caption')->setValidationScope(array($text, $select));
+
+	Assert::same('<input type="submit" name="button" id="frm-button" value="Caption" formnovalidate data-nette-validation-scope=\'["text","select"]\'>', (string) $input->getControl());
+});

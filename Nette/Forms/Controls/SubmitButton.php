@@ -74,7 +74,6 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	 */
 	public function setValidationScope(/*array*/$scope = NULL)
 	{
-		$htmlNames = array();
 		if ($scope === NULL || $scope === TRUE) {
 			$this->validationScope = NULL;
 		} else {
@@ -84,12 +83,8 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 					throw new Nette\InvalidArgumentException('Validation scope accepts only Nette\Forms\Container or Nette\Forms\IControl instances.');
 				}
 				$this->validationScope[] = $control;
-				$htmlNames[] = $control->lookupPath('Nette\Forms\Form');
 			}
 		}
-
-		$this->control->formnovalidate = $this->validationScope !== NULL;
-		$this->control->data['nette-validation-scope'] = $htmlNames ? json_encode($htmlNames) : NULL;
 		return $this;
 	}
 
@@ -111,6 +106,24 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	public function click()
 	{
 		$this->onClick($this);
+	}
+
+
+	/**
+	 * Generates control's HTML element.
+	 * @param  string
+	 * @return Nette\Utils\Html
+	 */
+	public function getControl($caption = NULL)
+	{
+		$scope = array();
+		foreach ((array) $this->validationScope as $control) {
+			$scope[] = $control->lookupPath('Nette\Forms\Form');
+		}
+		return parent::getControl($caption)->addAttributes(array(
+			'formnovalidate' => $this->validationScope !== NULL,
+			'data-nette-validation-scope' => $scope ? json_encode($scope) : NULL,
+		));
 	}
 
 }
