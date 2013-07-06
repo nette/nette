@@ -29,7 +29,6 @@ class Checkbox extends BaseControl
 	{
 		parent::__construct($label);
 		$this->control->type = 'checkbox';
-		$this->value = FALSE;
 	}
 
 

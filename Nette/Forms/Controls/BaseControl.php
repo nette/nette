@@ -87,6 +87,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 		$this->label = Html::el('label');
 		$this->caption = $caption;
 		$this->rules = new Nette\Forms\Rules($this);
+		$this->setValue(NULL);
 	}
 
 

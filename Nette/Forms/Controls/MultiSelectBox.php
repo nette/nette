@@ -21,8 +21,6 @@ use Nette;
  */
 class MultiSelectBox extends SelectBox
 {
-	protected $value = array();
-
 
 	/**
 	 * Loads HTTP data.
