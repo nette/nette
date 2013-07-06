@@ -28,9 +28,13 @@ class TextArea extends TextBase
 	 */
 	public function getControl()
 	{
+		$value = $this->getValue();
+		if ($value === '') {
+			$value = $this->translate($this->emptyValue);
+		}
 		return parent::getControl()
 			->setName('textarea')
-			->setText($this->getValue() === '' ? $this->translate($this->emptyValue) : $this->value);
+			->setText($value);
 	}
 
 }

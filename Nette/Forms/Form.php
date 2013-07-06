@@ -375,9 +375,10 @@ class Form extends Container
 			$this->httpData = (array) $data;
 			$this->submittedBy = is_array($data);
 		}
-		return $htmlName === NULL
-			? $this->httpData
-			: Helpers::extractHttpData($this->httpData, $htmlName, $type);
+		if ($htmlName === NULL) {
+			return $this->httpData;
+		}
+		return Helpers::extractHttpData($this->httpData, $htmlName, $type);
 	}
 
 

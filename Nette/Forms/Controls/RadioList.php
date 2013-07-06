@@ -126,7 +126,10 @@ class RadioList extends BaseControl
 	 */
 	public function setItems(array $items, $useKeys = TRUE)
 	{
-		$this->items = $useKeys ? $items : array_combine($items, $items);
+		if (!$useKeys) {
+			$items = array_combine($items, $items);
+		}
+		$this->items = $items;
 		return $this;
 	}
 
