@@ -33,11 +33,11 @@ test(function() {
 });
 
 
-test(function() { // validation rules
+test(function() { // no validation rules
 	$form = new Form;
 	$input = $form->addHidden('hidden')->setRequired('required');
 
-	Assert::same('<input type="hidden" name="hidden" id="frm-hidden" required value="">', (string) $input->getControl());
+	Assert::same('<input type="hidden" name="hidden" id="frm-hidden" value="">', (string) $input->getControl());
 });
 
 

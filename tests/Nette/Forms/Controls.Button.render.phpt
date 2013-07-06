@@ -54,11 +54,11 @@ test(function() { // Html with translator
 });
 
 
-test(function() { // validation rules
+test(function() { // no validation rules
 	$form = new Form;
 	$input = $form->addButton('button', 'Caption')->setRequired('required');
 
-	Assert::same('<input type="button" name="button" id="frm-button" required data-nette-rules=\'[{"op":":filled","msg":"required"}]\' value="Caption">', (string) $input->getControl());
+	Assert::same('<input type="button" name="button" id="frm-button" value="Caption">', (string) $input->getControl());
 });
 
 

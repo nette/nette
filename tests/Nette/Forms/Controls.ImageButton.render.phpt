@@ -42,11 +42,11 @@ test(function() { // translator
 });
 
 
-test(function() { // validation rules
+test(function() { // no validation rules
 	$form = new Form;
 	$input = $form->addImage('button', 'image.gif')->setRequired('required');
 
-	Assert::same('<input type="image" name="button[]" src="image.gif" id="frm-button" required data-nette-rules=\'[{"op":":filled","msg":"required"}]\'>', (string) $input->getControl());
+	Assert::same('<input type="image" name="button[]" src="image.gif" id="frm-button">', (string) $input->getControl());
 });
 
 

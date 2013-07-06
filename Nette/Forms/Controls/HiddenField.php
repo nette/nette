@@ -53,9 +53,14 @@ class HiddenField extends BaseControl
 	 */
 	public function getControl()
 	{
-		return parent::getControl()
-			->value($this->value)
-			->data('nette-rules', NULL);
+		$this->setOption('rendered', TRUE);
+		$el = clone $this->control;
+		return $el->addAttributes(array(
+			'name' => $this->getHtmlName(),
+			'id' => $this->getHtmlId(),
+			'disabled' => $this->isDisabled(),
+			'value' => $this->value,
+		));
 	}
 
 
