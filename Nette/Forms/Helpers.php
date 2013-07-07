@@ -12,7 +12,8 @@
 namespace Nette\Forms;
 
 use Nette,
-	Nette\Utils\Strings;
+	Nette\Utils\Strings,
+	Nette\Utils\Html;
 
 
 /**
@@ -124,6 +125,91 @@ class Helpers extends Nette\Object
 		return $json
 			? ($payload ? Nette\Utils\Json::encode($payload) : NULL)
 			: $payload;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public static function createInputList(array $items, array $inputAttrs = NULL, array $labelAttrs = NULL, $translator = NULL, $separator = NULL)
+	{
+		list($inputAttrs, $inputTag) = self::prepareAttrs($inputAttrs, 'input');
+		list($labelAttrs, $labelTag) = self::prepareAttrs($labelAttrs, 'label');
+		$res = '';
+		$input = Html::el();
+		$label = Html::el();
+		foreach ($items as $value => $caption) {
+			foreach ($inputAttrs as $k => $v) {
+				$input->attrs[$k] = isset($v[$value]) ? $v[$value] : NULL;
+			}
+			foreach ($labelAttrs as $k => $v) {
+				$label->attrs[$k] = isset($v[$value]) ? $v[$value] : NULL;
+			}
+			$input->value = $value;
+			$res .= $labelTag . $label->attributes() . '>'
+				. $inputTag . $input->attributes() . (Html::$xhtml ? ' />' : '>')
+				. ($caption instanceof Html ? $caption : htmlspecialchars($translator ? $translator->translate($caption) : $caption))
+				. '</label>'
+				. $separator;
+		}
+		return $res;
+	}
+
+
+	/**
+	 * @return Nette\Utils\Html
+	 */
+	public static function createSelectBox(array $items, array $optionAttrs = NULL, $translator = NULL)
+	{
+		list($optionAttrs, $optionTag) = self::prepareAttrs($optionAttrs, 'option');
+		$option = Html::el();
+		$res = $tmp = '';
+		foreach ($items as $group => $subitems) {
+			if (is_array($subitems)) {
+				$res .= Html::el('optgroup')->label($translator ? $translator->translate($group) : $group)->startTag();
+				$tmp = '</optgroup>';
+			} else {
+				$subitems = array($group => $subitems);
+			}
+			foreach ($subitems as $value => $caption) {
+				$option->value = $value;
+				foreach ($optionAttrs as $k => $v) {
+					$option->attrs[$k] = isset($v[$value]) ? $v[$value] : NULL;
+				}
+				if ($caption instanceof Html) {
+					$caption = clone $caption;
+					$res .= $caption->setName('option')->addAttributes($option->attrs);
+				} else {
+					$res .= $optionTag . $option->attributes() . '>'
+						. htmlspecialchars($translator ? $translator->translate($caption) : $caption)
+						. '</option>';
+				}
+			}
+			$res .= $tmp;
+			$tmp = '';
+		}
+		return Html::el('select')->setHtml($res);
+	}
+
+
+	private static function prepareAttrs($attrs, $name)
+	{
+		$dynamic = array();
+		foreach ((array) $attrs as $k => $v) {
+			$parts = explode('|', $k);
+			if (!isset($parts[1])) {
+				continue;
+			}
+			unset($attrs[$k], $attrs[$parts[0]]);
+			if ($parts[1] === '?') {
+				$dynamic[$parts[0]] = array_fill_keys((array) $v, TRUE);
+			} elseif (is_array($v)) { // *
+				$dynamic[$parts[0]] = $v;
+			} else {
+				$attrs[$parts[0]] = $v;
+			}
+		}
+		return array($dynamic, '<' . $name . Html::el(NULL, $attrs)->attributes());
 	}
 
 }
