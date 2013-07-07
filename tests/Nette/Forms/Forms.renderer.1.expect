@@ -6,15 +6,15 @@
 
 <table>
 <tr class="required">
-	<th><label class="required" for="frm-name">Your name:</label></th>
+	<th><label for="frm-name" class="required">Your name:</label></th>
 
-	<td><input type="text" name="name" class="text" id="frm-name" required data-nette-rules='[{"op":":filled","msg":"Enter your name"}]' value="John Doe"></td>
+	<td><input type="text" name="name" id="frm-name" required data-nette-rules='[{"op":":filled","msg":"Enter your name"}]' value="John Doe" class="text"></td>
 </tr>
 
 <tr class="required">
-	<th><label class="required" for="frm-age">Your age:</label></th>
+	<th><label for="frm-age" class="required">Your age:</label></th>
 
-	<td><input type="text" name="age" class="text" id="frm-age" required data-nette-rules='[{"op":":filled","msg":"Enter your age"},{"op":":integer","msg":"Age must be numeric value"},{"op":":range","msg":"Age must be in range from 10 to 100","arg":[10,100]}]' value="">
+	<td><input type="text" name="age" id="frm-age" required data-nette-rules='[{"op":":filled","msg":"Enter your age"},{"op":":integer","msg":"Age must be numeric value"},{"op":":range","msg":"Age must be in range from 10 to 100","arg":[10,100]}]' value="" class="text">
 
 	<span class="error">
 		Enter your age
@@ -31,7 +31,7 @@
 <tr>
 	<th><label for="frm-email">Email:</label></th>
 
-	<td><input type="text" name="email" class="text" id="frm-email" data-nette-rules='[{"op":":filled","rules":[{"op":":email","msg":"Incorrect email address"}],"control":"email"}]' data-nette-empty-value="&#64;" value="&#64;"></td>
+	<td><input type="text" name="email" id="frm-email" data-nette-rules='[{"op":":filled","rules":[{"op":":email","msg":"Incorrect email address"}],"control":"email"}]' data-nette-empty-value="&#64;" value="&#64;" class="text"></td>
 </tr>
 </table>
 </fieldset>
@@ -52,13 +52,13 @@
 <tr>
 	<th><label for="frm-street">Street:</label></th>
 
-	<td><input type="text" name="street" class="text" id="frm-street" value=""></td>
+	<td><input type="text" name="street" id="frm-street" value="" class="text"></td>
 </tr>
 
 <tr>
 	<th><label for="frm-city">City:</label></th>
 
-	<td><input type="text" name="city" class="text" id="frm-city" data-nette-rules='[{"op":":equal","rules":[{"op":":filled","msg":"Enter your shipping address"}],"control":"send","arg":true}]' value="">
+	<td><input type="text" name="city" id="frm-city" data-nette-rules='[{"op":":equal","rules":[{"op":":filled","msg":"Enter your shipping address"}],"control":"send","arg":true}]' value="" class="text">
 
 	<span class="error">
 		Enter your shipping address
@@ -91,15 +91,15 @@
 
 <table>
 <tr class="required">
-	<th><label class="required" for="frm-password">Choose password:</label></th>
+	<th><label for="frm-password" class="required">Choose password:</label></th>
 
-	<td><input type="password" name="password" class="text" id="frm-password" required data-nette-rules='[{"op":":filled","msg":"Choose your password"},{"op":":minLength","msg":"The password is too short: it must be at least 3 characters","arg":3}]'></td>
+	<td><input type="password" name="password" id="frm-password" required data-nette-rules='[{"op":":filled","msg":"Choose your password"},{"op":":minLength","msg":"The password is too short: it must be at least 3 characters","arg":3}]' class="text"></td>
 </tr>
 
 <tr>
 	<th><label for="frm-password2">Reenter password:</label></th>
 
-	<td><input type="password" name="password2" class="text" id="frm-password2" data-nette-rules='[{"op":":valid","rules":[{"op":":filled","msg":"Reenter your password"},{"op":":equal","msg":"Passwords do not match","arg":{"control":"password"}}],"control":"password"}]'>
+	<td><input type="password" name="password2" id="frm-password2" data-nette-rules='[{"op":":valid","rules":[{"op":":filled","msg":"Reenter your password"},{"op":":equal","msg":"Passwords do not match","arg":{"control":"password"}}],"control":"password"}]' class="text">
 
 	<span class="error">
 		Reenter your password
@@ -110,7 +110,7 @@
 <tr>
 	<th><label for="frm-avatar">Picture:</label></th>
 
-	<td><input type="file" name="avatar" class="text" id="frm-avatar" data-nette-rules='[{"op":":filled","rules":[{"op":":image","msg":"Uploaded file is not image"}],"control":"avatar"}]'></td>
+	<td><input type="file" name="avatar" id="frm-avatar" data-nette-rules='[{"op":":filled","rules":[{"op":":image","msg":"Uploaded file is not image"}],"control":"avatar"}]' class="text"></td>
 </tr>
 
 <tr>
@@ -126,7 +126,7 @@
 <tr>
 	<th></th>
 
-	<td><input type="submit" name="_submit" class="button" id="frm-submit" value="Send"> <input type="button" name="cancel" class="button" id="frm-cancel" value="Cancel"></td>
+	<td><input type="submit" name="_submit" id="frm-submit" value="Send" class="button"> <input type="button" name="cancel" id="frm-cancel" value="Cancel" class="button"></td>
 </tr>
 </table>
 </fieldset>

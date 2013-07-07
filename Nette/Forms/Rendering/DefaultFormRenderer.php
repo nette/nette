@@ -132,7 +132,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	{
 		if ($this->form !== $form) {
 			$this->form = $form;
-			$this->init();
 		}
 
 		$s = '';
@@ -149,27 +148,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 			$s .= $this->renderEnd();
 		}
 		return $s;
-	}
-
-
-	/**
-	 * Initializes form.
-	 * @return void
-	 */
-	protected function init()
-	{
-		// TODO: only for back compatiblity - remove?
-		$wrapper = & $this->wrappers['control'];
-		foreach ($this->form->getControls() as $control) {
-			if ($control->isRequired() && isset($wrapper['.required'])) {
-				$control->getLabelPrototype()->class($wrapper['.required'], TRUE);
-			}
-
-			$el = $control->getControlPrototype();
-			if ($el->getName() === 'input' && isset($wrapper['.' . $el->type])) {
-				$el->class($wrapper['.' . $el->type], TRUE);
-			}
-		}
 	}
 
 
@@ -399,7 +377,11 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 				$description = '';
 			}
 
-			$s[] = $control->getControl() . $description;
+			$el = $control->getControl();
+			if ($el instanceof Html && $el->getName() === 'input') {
+				$el->class($this->getValue("control .$el->type"), TRUE);
+			}
+			$s[] = $el . $description;
 		}
 		$pair = $this->getWrapper('pair container');
 		$pair->add($this->renderLabel($control));
@@ -422,6 +404,9 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 		$label = $control->getLabel();
 		if ($label instanceof Html) {
 			$label->add($suffix);
+			if ($control->isRequired()) {
+				$label->class($this->getValue('control .required'), TRUE);
+			}
 		} elseif ($label != NULL) { // @intentionally ==
 			$label .= $suffix;
 		}
@@ -455,7 +440,13 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 			$description = $this->getValue('control requiredsuffix') . $description;
 		}
 
-		$el = $control instanceof Nette\Forms\Controls\Checkbox ? $control->getLabel()->insert(0, $control->getControl()) : $control->getControl();
+		$el = $control->getControl();
+		if ($el instanceof Html && $el->getName() === 'input') {
+			$el->class($this->getValue("control .$el->type"), TRUE);
+		}
+		if ($control instanceof Nette\Forms\Controls\Checkbox) {
+			$el = $control->getLabel()->insert(0, $el);
+		}
 		return $body->setHtml($el . $description . $this->renderErrors($control));
 	}
 
