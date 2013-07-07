@@ -14,7 +14,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 header('Content-Type: text/plain');
-putenv('TERM=');
+Nette\Diagnostics\Dumper::$terminalColors = NULL;
 
 
 test(function() { // production mode
