@@ -23,16 +23,6 @@ class Button extends BaseControl
 {
 
 	/**
-	 * @param  string  caption
-	 */
-	public function __construct($caption = NULL)
-	{
-		parent::__construct($caption);
-		$this->control->type = 'button';
-	}
-
-
-	/**
 	 * Is button pressed?
 	 * @return bool
 	 */
@@ -62,6 +52,7 @@ class Button extends BaseControl
 		$this->setOption('rendered', TRUE);
 		$el = clone $this->control;
 		return $el->addAttributes(array(
+			'type' => 'button',
 			'name' => $this->getHtmlName(),
 			'id' => $this->getHtmlId(),
 			'disabled' => $this->isDisabled(),

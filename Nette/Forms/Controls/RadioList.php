@@ -43,7 +43,6 @@ class RadioList extends BaseControl
 	public function __construct($label = NULL, array $items = NULL)
 	{
 		parent::__construct($label);
-		$this->control->type = 'radio';
 		$this->container = Html::el();
 		$this->separator = Html::el('br');
 		if ($items !== NULL) {
@@ -191,7 +190,7 @@ class RadioList extends BaseControl
 	public function getControl($key = NULL)
 	{
 		$selected = array_flip((array) $this->value);
-		$input = parent::getControl();
+		$input = parent::getControl()->type('radio');
 
 		if ($key !== NULL) {
 			return $input->addAttributes(array(

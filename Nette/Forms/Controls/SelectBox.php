@@ -47,7 +47,6 @@ class SelectBox extends BaseControl
 	public function __construct($label = NULL, array $items = NULL, $size = NULL)
 	{
 		parent::__construct($label);
-		$this->control->setName('select');
 		$this->control->size = $size > 1 ? (int) $size : NULL;
 		if ($items !== NULL) {
 			$this->setItems($items);
@@ -232,7 +231,7 @@ class SelectBox extends BaseControl
 	public function getControl()
 	{
 		$selected = array_flip((array) $this->value);
-		$select = parent::getControl();
+		$select = parent::getControl()->setName('select');
 		$option = Nette\Utils\Html::el('option');
 		$items = $this->getItems();
 

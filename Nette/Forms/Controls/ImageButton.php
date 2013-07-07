@@ -29,7 +29,6 @@ class ImageButton extends SubmitButton
 	public function __construct($src = NULL, $alt = NULL)
 	{
 		parent::__construct();
-		$this->control->type = 'image';
 		$this->control->src = $src;
 		$this->control->alt = $alt;
 	}
@@ -55,6 +54,16 @@ class ImageButton extends SubmitButton
 	public function getHtmlName()
 	{
 		return parent::getHtmlName() . '[]';
+	}
+
+
+	/**
+	 * Generates control's HTML element.
+	 * @return Nette\Utils\Html
+	 */
+	public function getControl($caption = NULL)
+	{
+		return parent::getControl($caption)->type('image');
 	}
 
 }
