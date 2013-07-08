@@ -100,7 +100,7 @@ class Session extends Nette\Object
 			}
 		});
 		session_start();
-		restore_error_handler();
+		$error || restore_error_handler();
 		$this->response->removeDuplicateCookies();
 		if ($error) {
 			@session_write_close(); // this is needed
