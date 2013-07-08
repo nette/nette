@@ -190,34 +190,37 @@ class RadioList extends BaseControl
 	 */
 	public function getControl($key = NULL)
 	{
-		$selected = array_flip((array) $this->value);
 		$input = parent::getControl();
 
 		if ($key !== NULL) {
+			$selected = array_flip((array) $this->value);
 			return $input->addAttributes(array(
-				'id' => $this->getHtmlId() . "-$key",
+				'id' => $input->id . '-' . $key,
 				'checked' => isset($selected[$key]),
+				'disabled' => is_array($this->disabled) ? isset($this->disabled[$key]) : $this->disabled,
 				'value' => $key,
 			));
 		}
 
-		$idBase = $input->id;
-		$container = clone $this->container;
-		$separator = (string) $this->separator;
-		$label = parent::getLabel();
-
-		foreach ($this->items as $value => $caption) {
-			$input->id = $label->for = $idBase . '-' . $value;
-			$input->checked(isset($selected[$value]))
-				->disabled(is_array($this->disabled) ? isset($this->disabled[$value]) : $this->disabled)
-				->value($value);
-			$label->setText($this->translate($caption));
-
-			$container->add($label->insert(0, $input) . $separator);
-			unset($input->attrs['data-nette-rules']);
+		$ids = $items = array();
+		foreach ($this->items as $value => $label) {
+			$items[$value] = $this->translate($label);
+			$ids[$value] = $input->id . '-' . $value;
 		}
 
-		return $container;
+		return $this->container->setHtml(
+			Nette\Forms\Helpers::createInputList(
+				$items,
+				array_merge($input->attrs, array(
+					'id:' => $ids,
+					'checked?' => $this->value,
+					'disabled:' => $this->disabled,
+					'data-nette-rules:' => array(key($items) => $input->attrs['data-nette-rules']),
+				)),
+				array('for:' => $ids) + $this->label->attrs,
+				$this->separator
+			)
+		);
 	}
 
 

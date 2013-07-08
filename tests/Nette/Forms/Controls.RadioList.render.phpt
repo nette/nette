@@ -94,7 +94,7 @@ test(function() { // validation rules
 		0 => 'Second',
 	))->setRequired('required');
 
-	Assert::same('<label for="frm-list-a"><input type="radio" name="list" id="frm-list-a" required data-nette-rules=\'[{"op":":filled","msg":"required"}]\' value="a">First</label><br><label for="frm-list-0"><input type="radio" name="list" id="frm-list-0" required value="0">Second</label><br>', (string) $input->getControl());
+	Assert::same('<label for="frm-list-a"><input type="radio" name="list" required id="frm-list-a" data-nette-rules=\'[{"op":":filled","msg":"required"}]\' value="a">First</label><br><label for="frm-list-0"><input type="radio" name="list" required id="frm-list-0" value="0">Second</label><br>', (string) $input->getControl());
 	Assert::same('<input type="radio" name="list" id="frm-list-0" required data-nette-rules=\'[{"op":":filled","msg":"required"}]\' value="0">', (string) $input->getControl(0));
 });
 
@@ -130,7 +130,7 @@ test(function() { // disabled all
 		0 => 'Second',
 	))->setDisabled(TRUE);
 
-	Assert::same('<label for="frm-list-a"><input type="radio" name="list" id="frm-list-a" disabled value="a">First</label><br><label for="frm-list-0"><input type="radio" name="list" id="frm-list-0" disabled value="0">Second</label><br>', (string) $input->getControl());
+	Assert::same('<label for="frm-list-a"><input type="radio" name="list" disabled id="frm-list-a" value="a">First</label><br><label for="frm-list-0"><input type="radio" name="list" disabled id="frm-list-0" value="0">Second</label><br>', (string) $input->getControl());
 });
 
 
@@ -142,4 +142,5 @@ test(function() { // disabled one
 	))->setDisabled(array('a'));
 
 	Assert::same('<label for="frm-list-a"><input type="radio" name="list" id="frm-list-a" disabled value="a">First</label><br><label for="frm-list-0"><input type="radio" name="list" id="frm-list-0" value="0">Second</label><br>', (string) $input->getControl());
+	Assert::same('<input type="radio" name="list" id="frm-list-a" disabled value="a">', (string) $input->getControl('a'));
 });

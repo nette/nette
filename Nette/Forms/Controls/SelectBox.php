@@ -231,33 +231,26 @@ class SelectBox extends BaseControl
 	 */
 	public function getControl()
 	{
-		$selected = array_flip((array) $this->value);
-		$select = parent::getControl();
-		$option = Nette\Utils\Html::el('option');
-		$items = $this->getItems();
+		$items = $this->prompt === FALSE ? array() : array('' => $this->translate($this->prompt));
 
-		if ($this->prompt !== FALSE) {
-			$items = array('' => $this->prompt) + $items;
-		}
-
-		foreach ($items as $group => $subitems) {
-			if (!is_array($subitems)) {
-				$subitems = array($group => $subitems);
-				$dest = $select;
+		foreach ($this->items as $key => $value) {
+			if (is_array($value)) {
+				$key = $this->translate($key);
+				foreach ($value as $k => $v) {
+					$items[$key][$k] = $this->translate($v);
+				}
 			} else {
-				$dest = $select->create('optgroup')->label($this->translate($group));
-			}
-
-			foreach ($subitems as $value => $caption) {
-				$option = $caption instanceof Nette\Utils\Html ? clone $caption
-					: $option->setText($this->translate((string) $caption));
-				$dest->add((string) $option->value($value)
-					->selected(isset($selected[$value]))
-					->disabled(is_array($this->disabled) ? isset($this->disabled[$value]) : FALSE)
-				);
+				$items[$key] = $this->translate($value);
 			}
 		}
-		return $select;
+
+		return Nette\Forms\Helpers::createSelectBox(
+			$items,
+			array(
+				'selected?' => $this->value,
+				'disabled:' => is_array($this->disabled) ? $this->disabled : NULL
+			)
+		)->addAttributes(parent::getControl()->attrs);
 	}
 
 
