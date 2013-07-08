@@ -202,7 +202,7 @@ class SqlBuilder extends Nette\Object
 					$replace = $match[2][0] . '(NULL)';
 				} else {
 					$replace = $match[2][0] . '(?)';
-					$this->parameters[] = $arg;
+					$this->parameters[] = array_values($arg);
 				}
 			} else {
 				if ($hasOperator) {
