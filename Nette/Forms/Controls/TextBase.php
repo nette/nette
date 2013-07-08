@@ -101,7 +101,7 @@ abstract class TextBase extends BaseControl
 	{
 		$el = parent::getControl();
 		if ($this->emptyValue !== '') {
-			$el->data('nette-empty-value', $this->translate($this->emptyValue));
+			$el->attrs['data-nette-empty-value'] = $this->translate($this->emptyValue);
 		}
 		if (isset($el->placeholder)) {
 			$el->placeholder = $this->translate($el->placeholder);

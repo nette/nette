@@ -154,7 +154,7 @@ class RadioList extends BaseControl
 			return parent::setDisabled($value);
 		}
 		parent::setDisabled(FALSE);
-		$this->disabled = array_flip($value);
+		$this->disabled = array_fill_keys($value, TRUE);
 		if (isset($this->disabled[$this->value])) {
 			$this->value = NULL;
 		}
@@ -214,7 +214,7 @@ class RadioList extends BaseControl
 			$label->setText($this->translate($caption));
 
 			$container->add($label->insert(0, $input) . $separator);
-			$input->data('nette-rules', NULL);
+			unset($input->attrs['data-nette-rules']);
 		}
 
 		return $container;

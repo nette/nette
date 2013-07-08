@@ -251,15 +251,14 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	public function getControl()
 	{
 		$this->setOption('rendered', TRUE);
-
-		$rules = Nette\Forms\Helpers::exportRules($this->rules);
 		$el = clone $this->control;
 		return $el->addAttributes(array(
 			'name' => $this->getHtmlName(),
 			'id' => $this->getHtmlId(),
 			'required' => $this->isRequired(),
 			'disabled' => $this->isDisabled(),
-		))->data('nette-rules', $rules ? Nette\Utils\Json::encode($rules) : NULL);
+			'data-nette-rules' => Nette\Forms\Helpers::exportRules($this->rules),
+		));
 	}
 
 

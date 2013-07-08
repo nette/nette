@@ -30,7 +30,7 @@ class MultiSelectBox extends SelectBox
 	{
 		$this->value = array_keys(array_flip($this->getHttpData()));
 		if (is_array($this->disabled)) {
-			$this->value = array_diff($this->value, array_flip($this->disabled));
+			$this->value = array_diff($this->value, array_keys($this->disabled));
 		}
 	}
 
@@ -55,7 +55,7 @@ class MultiSelectBox extends SelectBox
 			$flip[(string) $value] = TRUE;
 		}
 		$values = array_keys($flip);
-		if ($diff = array_diff($values, array_keys($this->allowed))) {
+		if ($diff = array_diff($values, array_keys($this->flattenItems))) {
 			throw new Nette\InvalidArgumentException("Values '" . implode("', '", $diff) . "' are out of range of current items.");
 		}
 		$this->value = $values;
@@ -69,7 +69,7 @@ class MultiSelectBox extends SelectBox
 	 */
 	public function getValue()
 	{
-		return array_values(array_intersect($this->value, array_keys($this->allowed)));
+		return array_values(array_intersect($this->value, array_keys($this->flattenItems)));
 	}
 
 
@@ -89,7 +89,7 @@ class MultiSelectBox extends SelectBox
 	 */
 	public function getSelectedItem()
 	{
-		return array_intersect_key($this->allowed, array_flip($this->value));
+		return array_intersect_key($this->flattenItems, array_flip($this->value));
 	}
 
 

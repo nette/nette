@@ -87,7 +87,7 @@ class Helpers extends Nette\Object
 	/**
 	 * @return array
 	 */
-	public static function exportRules(Rules $rules)
+	public static function exportRules(Rules $rules, $json = TRUE)
 	{
 		$payload = array();
 		foreach ($rules as $rule) {
@@ -103,7 +103,7 @@ class Helpers extends Nette\Object
 			} elseif ($rule->type === Rule::CONDITION) {
 				$item = array(
 					'op' => ($rule->isNegative ? '~' : '') . $op,
-					'rules' => static::exportRules($rule->subRules),
+					'rules' => static::exportRules($rule->subRules, FALSE),
 					'control' => $rule->control->getHtmlName()
 				);
 				if ($rule->subRules->getToggles()) {
@@ -121,7 +121,9 @@ class Helpers extends Nette\Object
 
 			$payload[] = $item;
 		}
-		return $payload;
+		return $json
+			? ($payload ? Nette\Utils\Json::encode($payload) : NULL)
+			: $payload;
 	}
 
 }

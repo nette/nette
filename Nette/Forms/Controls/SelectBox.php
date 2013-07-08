@@ -33,7 +33,7 @@ class SelectBox extends BaseControl
 	private $items = array();
 
 	/** @var array */
-	protected $allowed = array();
+	protected $flattenItems = array();
 
 	/** @var mixed */
 	private $prompt = FALSE;
@@ -78,7 +78,7 @@ class SelectBox extends BaseControl
 	 */
 	public function setValue($value)
 	{
-		if ($value !== NULL && !isset($this->allowed[(string) $value])) {
+		if ($value !== NULL && !isset($this->flattenItems[(string) $value])) {
 			throw new Nette\InvalidArgumentException("Value '$value' is out of range of current items.");
 		}
 		$this->value = $value === NULL ? NULL : key(array((string) $value => NULL));
@@ -92,7 +92,7 @@ class SelectBox extends BaseControl
 	 */
 	public function getValue()
 	{
-		return isset($this->allowed[$this->value]) ? $this->value : NULL;
+		return isset($this->flattenItems[$this->value]) ? $this->value : NULL;
 	}
 
 
@@ -127,7 +127,7 @@ class SelectBox extends BaseControl
 		if ($prompt === TRUE) { // back compatibility
 			trigger_error(__METHOD__ . '(TRUE) is deprecated; argument must be string.', E_USER_DEPRECATED);
 			$prompt = reset($this->items);
-			unset($this->allowed[key($this->items)], $this->items[key($this->items)]);
+			unset($this->flattenItems[key($this->items)], $this->items[key($this->items)]);
 		}
 		$this->prompt = $prompt;
 		return $this;
@@ -152,7 +152,7 @@ class SelectBox extends BaseControl
 	 */
 	public function setItems(array $items, $useKeys = TRUE)
 	{
-		$allowed = array();
+		$flattenItems = array();
 		foreach ($items as $key => $value) {
 			$group = is_array($value);
 			foreach ($group ? $value : array($key => $value) as $gkey => $gvalue) {
@@ -164,10 +164,10 @@ class SelectBox extends BaseControl
 					$gkey = (string) $gvalue;
 				}
 
-				if (isset($allowed[$gkey])) {
+				if (isset($flattenItems[$gkey])) {
 					throw new Nette\InvalidArgumentException("Items contain duplication for key '$gkey'.");
 				}
-				$allowed[$gkey] = $gvalue;
+				$flattenItems[$gkey] = $gvalue;
 			}
 			if (!$useKeys) {
 				unset($items[$key]);
@@ -176,7 +176,7 @@ class SelectBox extends BaseControl
 		}
 
 		$this->items = $items;
-		$this->allowed = $allowed;
+		$this->flattenItems = $flattenItems;
 		return $this;
 	}
 
@@ -198,7 +198,7 @@ class SelectBox extends BaseControl
 	public function getSelectedItem()
 	{
 		$value = $this->getValue();
-		return $value === NULL ? NULL : $this->allowed[$value];
+		return $value === NULL ? NULL : $this->flattenItems[$value];
 	}
 
 
@@ -214,7 +214,7 @@ class SelectBox extends BaseControl
 		}
 
 		parent::setDisabled(FALSE);
-		$this->disabled = array_flip($value);
+		$this->disabled = array_fill_keys($value, TRUE);
 		if (is_array($this->value)) {
 			$this->value = array_diff($this->value, $value);
 		} elseif (isset($this->disabled[$this->value])) {
