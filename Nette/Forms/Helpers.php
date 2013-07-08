@@ -92,10 +92,10 @@ class Helpers extends Nette\Object
 		$payload = array();
 		foreach ($rules as $rule) {
 			if (!is_string($op = $rule->operation)) {
-				$op = new Nette\Callback($op);
-				if (!$op->isStatic()) {
+				if (!Nette\Utils\Callback::isStatic($op)) {
 					continue;
 				}
+				$op = Nette\Utils\Callback::toString($op);
 			}
 			if ($rule->type === Rule::VALIDATOR) {
 				$item = array('op' => ($rule->isNegative ? '~' : '') . $op, 'msg' => Validator::formatMessage($rule, FALSE));

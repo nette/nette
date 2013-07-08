@@ -19,7 +19,7 @@ class MyHelpers
 	public static function loader($helper)
 	{
 		if (method_exists(__CLASS__, $helper)) {
-			return new Nette\Callback(__CLASS__, $helper);
+			return array(__CLASS__, $helper);
 		}
 	}
 

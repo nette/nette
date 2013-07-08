@@ -11,7 +11,8 @@
 
 namespace Nette\Caching;
 
-use Nette;
+use Nette,
+	Nette\Utils\Callback;
 
 
 /**
@@ -101,7 +102,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	{
 		$data = $this->storage->read($this->generateKey($key));
 		if ($data === NULL && $fallback) {
-			return $this->save($key, new Nette\Callback($fallback));
+			return $this->save($key, Callback::closure($fallback));
 		}
 		return $data;
 	}
@@ -131,7 +132,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 		if ($data instanceof Nette\Callback || $data instanceof \Closure) {
 			$this->storage->lock($key);
-			$data = Nette\Callback::create($data)->invokeArgs(array(& $dependencies));
+			$data = call_user_func_array($data, array(& $dependencies));
 		}
 
 		if ($data === NULL) {
@@ -219,7 +220,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	{
 		$key = func_get_args();
 		return $this->load($key, function() use ($function, $key) {
-			return Nette\Callback::create($function)->invokeArgs(array_slice($key, 1));
+			return Callback::invokeArgs($function, array_slice($key, 1));
 		});
 	}
 
@@ -237,7 +238,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 			$key = array($function, func_get_args());
 			$data = $cache->load($key);
 			if ($data === NULL) {
-				$data = $cache->save($key, Nette\Callback::create($function)->invokeArgs($key[1]), $dependencies);
+				$data = $cache->save($key, Callback::invokeArgs($function, $key[1]), $dependencies);
 			}
 			return $data;
 		};

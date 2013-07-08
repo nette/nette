@@ -204,7 +204,8 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 		foreach ($args as & $val) {
 			$val = $val instanceof IControl ? $val->getValue() : $val;
 		}
-		return $rule->isNegative xor static::getCallback($rule)->invoke($rule->control, is_array($rule->arg) ? $args : $args[0]);
+		return $rule->isNegative
+			xor call_user_func(self::getCallback($rule), $rule->control, is_array($rule->arg) ? $args : $args[0]);
 	}
 
 
@@ -253,7 +254,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 			$rule->operation = ~$rule->operation;
 		}
 
-		if (!$this->getCallback($rule)->isCallable()) {
+		if (!is_callable($this->getCallback($rule))) {
 			$operation = is_scalar($rule->operation) ? " '$rule->operation'" : '';
 			throw new Nette\InvalidArgumentException("Unknown operation$operation for control '{$rule->control->name}'.");
 		}
@@ -264,9 +265,9 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	{
 		$op = $rule->operation;
 		if (is_string($op) && strncmp($op, ':', 1) === 0) {
-			return new Nette\Callback('Nette\Forms\Validator::validate' . ltrim($op, ':'));
+			return 'Nette\Forms\Validator::validate' . ltrim($op, ':');
 		} else {
-			return new Nette\Callback($op);
+			return $op;
 		}
 	}
 

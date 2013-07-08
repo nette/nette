@@ -57,7 +57,7 @@ abstract class TextBase extends BaseControl
 			$value = Nette\Utils\Strings::substring($value, 0, $this->control->maxlength);
 		}
 		foreach ($this->filters as $filter) {
-			$value = (string) $filter($value);
+			$value = (string) call_user_func($filter, $value);
 		}
 		return $value === $this->translate($this->emptyValue) ? '' : $value;
 	}
@@ -92,7 +92,7 @@ abstract class TextBase extends BaseControl
 	 */
 	public function addFilter($filter)
 	{
-		$this->filters[] = new Nette\Callback($filter);
+		$this->filters[] = Nette\Utils\Callback::check($filter);
 		return $this;
 	}
 

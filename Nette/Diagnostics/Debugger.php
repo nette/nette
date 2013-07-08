@@ -215,7 +215,7 @@ final class Debugger
 			set_error_handler(array(__CLASS__, '_errorHandler'));
 
 			foreach (array('Nette\Diagnostics\Bar', 'Nette\Diagnostics\BlueScreen', 'Nette\Diagnostics\DefaultBarPanel', 'Nette\Diagnostics\Dumper', 'Nette\Diagnostics\FireLogger',
-				'Nette\Diagnostics\Helpers', 'Nette\Diagnostics\Logger', 'Nette\FatalErrorException', 'Nette\Callback', 'Nette\Utils\Html', 'Nette\Utils\Strings') as $class) {
+				'Nette\Diagnostics\Helpers', 'Nette\Diagnostics\Logger', 'Nette\FatalErrorException', 'Nette\Utils\Html', 'Nette\Utils\Strings') as $class) {
 				class_exists($class);
 			}
 			self::$enabled = TRUE;

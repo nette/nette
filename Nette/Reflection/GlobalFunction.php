@@ -52,7 +52,7 @@ class GlobalFunction extends \ReflectionFunction
 
 
 	/**
-	 * @return Nette\Callback
+	 * @deprecated
 	 */
 	public function toCallback()
 	{

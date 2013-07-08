@@ -21,20 +21,20 @@ use Nette;
  */
 class Multiplier extends PresenterComponent
 {
-	/** @var Nette\Callback */
+	/** @var callable */
 	private $factory;
 
 
 	public function __construct($factory)
 	{
 		parent::__construct();
-		$this->factory = new Nette\Callback($factory);
+		$this->factory = Nette\Utils\Callback::check($factory);
 	}
 
 
 	protected function createComponent($name)
 	{
-		return $this->factory->invoke($name, $this);
+		return call_user_func($this->factory, $name, $this);
 	}
 
 }

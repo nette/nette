@@ -271,8 +271,10 @@ class Container extends Nette\Object
 	 */
 	public function callMethod($function, array $args = array())
 	{
-		$callback = new Nette\Callback($function);
-		return $callback->invokeArgs(Helpers::autowireArguments($callback->toReflection(), $args, $this));
+		return call_user_func_array(
+			$function,
+			Helpers::autowireArguments(Nette\Utils\Callback::toReflection($function), $args, $this)
+		);
 	}
 
 

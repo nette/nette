@@ -321,14 +321,13 @@ class ContainerBuilder extends Nette\Object
 					}
 				}
 			}
-			$factory = new Nette\Callback($factory);
-			if (!$factory->isCallable()) {
-				throw new ServiceCreationException("Factory '$factory' is not callable.");
+			if (!is_callable($factory)) {
+				throw new ServiceCreationException("Factory '" . Nette\Utils\Callback::toString($factory) . "' is not callable.");
 			}
 			try {
-				$reflection = $factory->toReflection();
+				$reflection = Nette\Utils\Callback::toReflection($factory);
 			} catch (\ReflectionException $e) {
-				throw new ServiceCreationException("Missing factory '$factory'.");
+				throw new ServiceCreationException("Missing factory '" . Nette\Utils\Callback::toString($factory) . "'.");
 			}
 			$def->class = preg_replace('#[|\s].*#', '', $reflection->getAnnotation('return'));
 			if ($def->class && !class_exists($def->class) && $def->class[0] !== '\\' && $reflection instanceof \ReflectionMethod) {
@@ -575,7 +574,7 @@ class ContainerBuilder extends Nette\Object
 			return $this->formatPhp("$entity[1](?*)", array($arguments));
 
 		} elseif (Strings::contains($entity[1], '$')) { // property setter
-			Validators::assert($arguments, 'list:1', "setup arguments for '" . Nette\Callback::create($entity) . "'");
+			Validators::assert($arguments, 'list:1', "setup arguments for '" . Nette\Utils\Callback::toString($entity) . "'");
 			if ($this->getServiceName($entity[0])) {
 				return $this->formatPhp('?->? = ?', array($entity[0], substr($entity[1], 1), $arguments[0]));
 			} else {

@@ -12,7 +12,8 @@
 namespace Nette\Templating;
 
 use Nette,
-	Nette\Caching;
+	Nette\Caching,
+	Nette\Utils\Callback;
 
 
 /**
@@ -141,7 +142,7 @@ class Template extends Nette\Object implements ITemplate
 		$code = $this->getSource();
 		foreach ($this->filters as $filter) {
 			$code = self::extractPhp($code, $blocks);
-			$code = $filter($code);
+			$code = call_user_func($filter, $code);
 			$code = strtr($code, $blocks); // put PHP code back
 		}
 
@@ -159,7 +160,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function registerFilter($callback)
 	{
-		$this->filters[] = new Nette\Callback($callback);
+		$this->filters[] = Callback::check($callback);
 		return $this;
 	}
 
@@ -182,7 +183,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function registerHelper($name, $callback)
 	{
-		$this->helpers[strtolower($name)] = new Nette\Callback($callback);
+		$this->helpers[strtolower($name)] = $callback;
 		return $this;
 	}
 
@@ -194,7 +195,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function registerHelperLoader($callback)
 	{
-		array_unshift($this->helperLoaders, new Nette\Callback($callback));
+		array_unshift($this->helperLoaders, $callback);
 		return $this;
 	}
 
@@ -230,16 +231,16 @@ class Template extends Nette\Object implements ITemplate
 		$lname = strtolower($name);
 		if (!isset($this->helpers[$lname])) {
 			foreach ($this->helperLoaders as $loader) {
-				$helper = $loader($lname);
+				$helper = Callback::invoke($loader, $lname);
 				if ($helper) {
 					$this->registerHelper($lname, $helper);
-					return $this->helpers[$lname]->invokeArgs($args);
+					return Callback::invokeArgs($this->helpers[$lname], $args);
 				}
 			}
 			return parent::__call($name, $args);
 		}
 
-		return $this->helpers[$lname]->invokeArgs($args);
+		return Callback::invokeArgs($this->helpers[$lname], $args);
 	}
 
 
