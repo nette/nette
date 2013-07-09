@@ -26,11 +26,11 @@ Assert::match( '<form action="link" method="get">
 <tr>
 	<th></th>
 
-	<td><input type="submit" name="_submit" id="frm-submit" value="Send" class="button"></td>
+	<td><input type="submit" name="_submit" value="Send" class="button"></td>
 </tr>
 </table>
 
-<div><input type="hidden" name="userid" id="frm-userid" value=""><!--[if IE]><input type=IEbug disabled style="display:none"><![endif]--></div>
+<div><input type="hidden" name="userid" value=""><!--[if IE]><input type=IEbug disabled style="display:none"><![endif]--></div>
 </form>', $form->__toString(TRUE) );
 
 Assert::same( 'link?a=b&c[]=d', $form->getAction() );

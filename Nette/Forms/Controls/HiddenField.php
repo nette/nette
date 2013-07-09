@@ -57,7 +57,6 @@ class HiddenField extends BaseControl
 		return $el->addAttributes(array(
 			'type' => 'hidden',
 			'name' => $this->getHtmlName(),
-			'id' => $this->getHtmlId(),
 			'disabled' => $this->isDisabled(),
 			'value' => $this->value,
 		));

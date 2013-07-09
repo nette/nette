@@ -29,7 +29,7 @@ test(function() {
 
 	Assert::null($input->getLabel());
 	Assert::type('Nette\Utils\Html', $input->getControl());
-	Assert::same('<input type="hidden" name="hidden" id="frm-hidden" value="value">', (string) $input->getControl());
+	Assert::same('<input type="hidden" name="hidden" value="value">', (string) $input->getControl());
 });
 
 
@@ -37,7 +37,7 @@ test(function() { // no validation rules
 	$form = new Form;
 	$input = $form->addHidden('hidden')->setRequired('required');
 
-	Assert::same('<input type="hidden" name="hidden" id="frm-hidden" value="">', (string) $input->getControl());
+	Assert::same('<input type="hidden" name="hidden" value="">', (string) $input->getControl());
 });
 
 
@@ -46,5 +46,14 @@ test(function() { // container
 	$container = $form->addContainer('container');
 	$input = $container->addHidden('hidden');
 
-	Assert::same('<input type="hidden" name="container[hidden]" id="frm-container-hidden" value="">', (string) $input->getControl());
+	Assert::same('<input type="hidden" name="container[hidden]" value="">', (string) $input->getControl());
+});
+
+
+test(function() { // forced ID
+	$form = new Form;
+	$input = $form->addHidden('hidden')->setRequired('required');
+	$input->setHtmlId( $input->getHtmlId() );
+
+	Assert::same('<input type="hidden" name="hidden" id="frm-hidden" value="">', (string) $input->getControl());
 });
