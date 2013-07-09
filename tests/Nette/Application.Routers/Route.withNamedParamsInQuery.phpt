@@ -29,3 +29,5 @@ testRouteIn($route, '/?act=default', 'Default', array(
 	'action' => 'default',
 	'test' => 'testvalue',
 ), '/?test=testvalue');
+
+testRouteIn($route, '/?action[]=invalid&act=default', NULL);
