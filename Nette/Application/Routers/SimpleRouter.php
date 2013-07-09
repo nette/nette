@@ -78,8 +78,8 @@ class SimpleRouter extends Nette\Object implements Application\IRouter
 		$params = $httpRequest->getQuery();
 		$params += $this->defaults;
 
-		if (!isset($params[self::PRESENTER_KEY])) {
-			throw new Nette\InvalidStateException('Missing presenter.');
+		if (!isset($params[self::PRESENTER_KEY]) || !is_string($params[self::PRESENTER_KEY])) {
+			return NULL;
 		}
 
 		$presenter = $this->module . $params[self::PRESENTER_KEY];
