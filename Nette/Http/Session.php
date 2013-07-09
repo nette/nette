@@ -356,10 +356,6 @@ class Session extends Nette\Object
 		if (empty($nf['DATA'])) {
 			unset($nf['DATA']);
 		}
-
-		if (empty($_SESSION)) {
-			//$this->destroy(); only when shutting down
-		}
 	}
 
 
