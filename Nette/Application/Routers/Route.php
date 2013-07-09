@@ -237,6 +237,8 @@ class Route extends Nette\Object implements Application\IRouter
 		// 5) BUILD Request
 		if (!isset($params[self::PRESENTER_KEY])) {
 			throw new Nette\InvalidStateException('Missing presenter in route definition.');
+		} elseif (!is_string($params[self::PRESENTER_KEY])) {
+			return NULL;
 		}
 		if (isset($this->metadata[self::MODULE_KEY])) {
 			if (!isset($params[self::MODULE_KEY])) {
