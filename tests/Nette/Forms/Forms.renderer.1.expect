@@ -126,10 +126,10 @@
 <tr>
 	<th></th>
 
-	<td><input type="submit" name="_submit" id="frm-submit" value="Send" class="button"> <input type="button" name="cancel" id="frm-cancel" value="Cancel" class="button"></td>
+	<td><input type="submit" name="_submit" value="Send" class="button"> <input type="button" name="cancel" value="Cancel" class="button"></td>
 </tr>
 </table>
 </fieldset>
 
-<div><input type="hidden" name="userid" id="frm-userid" value="231"></div>
+<div><input type="hidden" name="userid" value="231"></div>
 </form>

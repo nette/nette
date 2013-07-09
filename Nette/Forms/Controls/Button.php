@@ -54,7 +54,6 @@ class Button extends BaseControl
 		return $el->addAttributes(array(
 			'type' => 'button',
 			'name' => $this->getHtmlName(),
-			'id' => $this->getHtmlId(),
 			'disabled' => $this->isDisabled(),
 			'value' => $this->translate($caption === NULL ? $this->caption : $caption),
 		));

@@ -114,10 +114,10 @@
 
 	<dt></dt>
 
-	<dd><input type="submit" name="_submit" id="frm-submit" value="Send" class="button"></dd>
+	<dd><input type="submit" name="_submit" value="Send" class="button"></dd>
 
 </dl>
 
 </div>
-<div><input type="hidden" name="userid" id="frm-userid" value="231"></div>
+<div><input type="hidden" name="userid" value="231"></div>
 </form>
