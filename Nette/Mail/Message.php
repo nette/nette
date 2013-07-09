@@ -196,7 +196,7 @@ class Message extends MimePart
 	 */
 	public function getReturnPath()
 	{
-		return $this->getHeader('From');
+		return $this->getHeader('Return-Path');
 	}
 
 
