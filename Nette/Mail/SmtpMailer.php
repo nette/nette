@@ -79,10 +79,10 @@ class SmtpMailer extends Nette\Object implements IMailer
 				$this->connect();
 			}
 
-			$from = $mail->getHeader('From');
-			if ($from) {
-				$from = array_keys($from);
-				$this->write("MAIL FROM:<$from[0]>", 250);
+			if (($from = $mail->getHeader('Return-Path'))
+				|| ($from = key($mail->getHeader('From'))))
+			{
+				$this->write("MAIL FROM:<$from>", 250);
 			}
 
 			foreach (array_merge(
