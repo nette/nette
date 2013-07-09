@@ -13,7 +13,8 @@ namespace Nette\Forms;
 
 use Nette,
 	Nette\Utils\Strings,
-	Nette\Utils\Html;
+	Nette\Utils\Html,
+	Nette\Localization\ITranslator;
 
 
 /**
@@ -131,7 +132,7 @@ class Helpers extends Nette\Object
 	/**
 	 * @return string
 	 */
-	public static function createInputList(array $items, array $inputAttrs = NULL, array $labelAttrs = NULL, $translator = NULL, $separator = NULL)
+	public static function createInputList(array $items, array $inputAttrs = NULL, array $labelAttrs = NULL, ITranslator $translator = NULL, $separator = NULL)
 	{
 		list($inputAttrs, $inputTag) = self::prepareAttrs($inputAttrs, 'input');
 		list($labelAttrs, $labelTag) = self::prepareAttrs($labelAttrs, 'label');
@@ -159,7 +160,7 @@ class Helpers extends Nette\Object
 	/**
 	 * @return Nette\Utils\Html
 	 */
-	public static function createSelectBox(array $items, array $optionAttrs = NULL, $translator = NULL)
+	public static function createSelectBox(array $items, array $optionAttrs = NULL, ITranslator $translator = NULL)
 	{
 		list($optionAttrs, $optionTag) = self::prepareAttrs($optionAttrs, 'option');
 		$option = Html::el();
