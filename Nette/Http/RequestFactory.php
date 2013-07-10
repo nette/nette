@@ -270,11 +270,15 @@ class RequestFactory extends Nette\Object
 			}
 		}
 
-		return new Request($url, $query, $post, $files, $cookies, $headers,
-			isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : NULL,
-			$remoteAddr,
-			$remoteHost
-		);
+
+		$method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : NULL;
+		if ($method === 'POST' && isset($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'])
+			&& preg_match('#^[A-Z]+\z#', $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']))
+		{
+			$method = $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		}
+
+		return new Request($url, $query, $post, $files, $cookies, $headers, $method, $remoteAddr, $remoteHost);
 	}
 
 }
