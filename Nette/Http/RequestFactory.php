@@ -147,7 +147,6 @@ class RequestFactory extends Nette\Object
 		$cookies = $useFilter ? filter_input_array(INPUT_COOKIE, FILTER_UNSAFE_RAW) : (empty($_COOKIE) ? array() : $_COOKIE);
 
 		$gpc = (bool) get_magic_quotes_gpc();
-		$old = error_reporting(error_reporting() ^ E_NOTICE);
 
 		// remove fucking quotes, control characters and check encoding
 		if ($gpc || !$this->binary) {
@@ -171,9 +170,8 @@ class RequestFactory extends Nette\Object
 						if ($gpc && !$useFilter) {
 							$v = stripSlashes($v);
 						}
-						if (!$this->binary) {
-							$v = Strings::fixEncoding($v);
-							$v = preg_replace(self::NONCHARS, '', $v);
+						if (!$this->binary && (preg_match(self::NONCHARS, $v) || preg_last_error())) {
+							$v = '';
 						}
 						$list[$key][$k] = $v;
 					}
@@ -204,8 +202,8 @@ class RequestFactory extends Nette\Object
 				if ($gpc) {
 					$v['name'] = stripSlashes($v['name']);
 				}
-				if (!$this->binary) {
-					$v['name'] = preg_replace(self::NONCHARS, '', Strings::fixEncoding($v['name']));
+				if (!$this->binary && (preg_match(self::NONCHARS, $v['name']) || preg_last_error())) {
+					$v['name'] = '';
 				}
 				$v['@'] = new FileUpload($v);
 				continue;
@@ -225,8 +223,6 @@ class RequestFactory extends Nette\Object
 				);
 			}
 		}
-
-		error_reporting($old);
 
 
 		// HEADERS

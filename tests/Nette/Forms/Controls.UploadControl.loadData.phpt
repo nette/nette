@@ -72,7 +72,7 @@ test(function() { // container
 
 	Assert::true( $form->isValid() );
 	Assert::equal( new FileUpload(array(
-		'name' => 'invalidutf',
+		'name' => '',
 		'type' => '',
 		'size' => 3013,
 		'tmp_name' => 'C:\\PHP\\temp\\php1D5C.tmp',

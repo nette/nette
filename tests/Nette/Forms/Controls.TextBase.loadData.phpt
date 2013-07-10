@@ -56,7 +56,7 @@ test(function() { // invalid UTF
 
 	$form = new Form;
 	$input = $form->addText('invalidutf');
-	Assert::same( 'invalidutf', $input->getValue() );
+	Assert::same( '', $input->getValue() );
 });
 
 
