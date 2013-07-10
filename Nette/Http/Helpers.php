@@ -23,13 +23,26 @@ final class Helpers
 {
 
 	/**
-	 * Is IPv4 address in CIDR block?
+	 * Is IP address in CIDR block?
 	 * @return bool
 	 */
 	public static function ipMatch($ip, $mask)
 	{
-		list($mask, $size) = explode('/', $mask . '/0');
-		return !strncmp(sprintf('%032b', ip2long($ip)), sprintf('%032b', ip2long($mask)), max(0, 32 - $size));
+		list($mask, $size) = explode('/', $mask . '/');
+		$ipv4 = strpos($ip, '.');
+		$max = $ipv4 ? 32 : 128;
+		if (($ipv4 xor strpos($mask, '.')) || $size < 0 || $size > $max) {
+			return FALSE;
+		} elseif ($ipv4) {
+			$arr = array(ip2long($ip), ip2long($mask));
+		} else {
+			$arr = unpack('N*', inet_pton($ip) . inet_pton($mask));
+			$size = $size === '' ? 0 : $max - $size;
+		}
+		$bits = implode('', array_map(function ($n) {
+				return sprintf('%032b', $n);
+		}, $arr));
+		return substr($bits, 0, $max - $size) === substr($bits, $max, $max - $size);
 	}
 
 }
