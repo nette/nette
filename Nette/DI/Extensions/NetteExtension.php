@@ -132,7 +132,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	{
 		$container->addDefinition($this->prefix('httpRequestFactory'))
 			->setClass('Nette\Http\RequestFactory')
-			->addSetup('setEncoding', array('UTF-8'))
 			->addSetup('setProxy', array($config['proxy']));
 
 		$container->addDefinition('httpRequest') // no namespace for back compatibility

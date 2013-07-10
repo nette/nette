@@ -578,7 +578,6 @@ class Form extends Container
 	{
 		if (!$this->httpRequest) {
 			$factory = new Nette\Http\RequestFactory;
-			$factory->setEncoding('UTF-8');
 			$this->httpRequest = $factory->createHttpRequest();
 		}
 		return $this->httpRequest;

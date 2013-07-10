@@ -31,20 +31,20 @@ class RequestFactory extends Nette\Object
 		'url' => array(), // '#[.,)]\z#' => ''
 	);
 
-	/** @var string */
-	private $encoding;
+	/** @var bool */
+	private $binary = FALSE;
 
 	/** @var array */
 	private $proxies = array();
 
 
 	/**
-	 * @param  string
+	 * @param  bool
 	 * @return self
 	 */
-	public function setEncoding($encoding)
+	public function setBinary($binary = TRUE)
 	{
-		$this->encoding = $encoding;
+		$this->binary = (bool) $binary;
 		return $this;
 	}
 
@@ -149,9 +149,8 @@ class RequestFactory extends Nette\Object
 		$gpc = (bool) get_magic_quotes_gpc();
 		$old = error_reporting(error_reporting() ^ E_NOTICE);
 
-		// remove fucking quotes and check (and optionally convert) encoding
-		if ($gpc || $this->encoding) {
-			$utf = strcasecmp($this->encoding, 'UTF-8') === 0;
+		// remove fucking quotes, control characters and check encoding
+		if ($gpc || !$this->binary) {
 			$list = array(& $query, & $post, & $cookies);
 			while (list($key, $val) = each($list)) {
 				foreach ($val as $k => $v) {
@@ -161,7 +160,7 @@ class RequestFactory extends Nette\Object
 						$k = stripslashes($k);
 					}
 
-					if ($this->encoding && is_string($k) && (preg_match(self::NONCHARS, $k) || preg_last_error())) {
+					if (!$this->binary && is_string($k) && (preg_match(self::NONCHARS, $k) || preg_last_error())) {
 						// invalid key -> ignore
 
 					} elseif (is_array($v)) {
@@ -172,16 +171,8 @@ class RequestFactory extends Nette\Object
 						if ($gpc && !$useFilter) {
 							$v = stripSlashes($v);
 						}
-						if ($this->encoding) {
-							if ($utf) {
-								$v = Strings::fixEncoding($v);
-
-							} else {
-								if (!Strings::checkEncoding($v)) {
-									$v = iconv($this->encoding, 'UTF-8//IGNORE', $v);
-								}
-								$v = html_entity_decode($v, ENT_QUOTES, 'UTF-8');
-							}
+						if (!$this->binary) {
+							$v = Strings::fixEncoding($v);
 							$v = preg_replace(self::NONCHARS, '', $v);
 						}
 						$list[$key][$k] = $v;
@@ -197,7 +188,7 @@ class RequestFactory extends Nette\Object
 		$list = array();
 		if (!empty($_FILES)) {
 			foreach ($_FILES as $k => $v) {
-				if ($this->encoding && is_string($k) && (preg_match(self::NONCHARS, $k) || preg_last_error())) {
+				if (!$this->binary && is_string($k) && (preg_match(self::NONCHARS, $k) || preg_last_error())) {
 					continue;
 				}
 				$v['@'] = & $files[$k];
@@ -213,7 +204,7 @@ class RequestFactory extends Nette\Object
 				if ($gpc) {
 					$v['name'] = stripSlashes($v['name']);
 				}
-				if ($this->encoding) {
+				if (!$this->binary) {
 					$v['name'] = preg_replace(self::NONCHARS, '', Strings::fixEncoding($v['name']));
 				}
 				$v['@'] = new FileUpload($v);
@@ -221,7 +212,7 @@ class RequestFactory extends Nette\Object
 			}
 
 			foreach ($v['name'] as $k => $foo) {
-				if ($this->encoding && is_string($k) && (preg_match(self::NONCHARS, $k) || preg_last_error())) {
+				if (!$this->binary && is_string($k) && (preg_match(self::NONCHARS, $k) || preg_last_error())) {
 					continue;
 				}
 				$list[] = array(

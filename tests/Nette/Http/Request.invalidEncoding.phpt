@@ -67,6 +67,7 @@ $_FILES = array(
 
 test(function() { // unfiltered data
 	$factory = new Http\RequestFactory;
+	$factory->setBinary();
 	$request = $factory->createHttpRequest();
 
 	Assert::same( $request->getQuery('invalid'), INVALID );
@@ -95,7 +96,6 @@ test(function() { // unfiltered data
 
 test(function() { // filtered data
 	$factory = new Http\RequestFactory;
-	$factory->setEncoding('UTF-8');
 	$request = $factory->createHttpRequest();
 
 	Assert::same( "v\xc5\xbe", $request->getQuery('invalid') );
