@@ -26,7 +26,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	public $defaults = array(
 		'session' => array(
 			'debugger' => FALSE,
-			'iAmUsingBadHost' => NULL,
 			'autoStart' => 'smart',  // true|false|smart
 			'expiration' => NULL,
 		),
@@ -152,9 +151,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		if (isset($config['expiration'])) {
 			$session->addSetup('setExpiration', array($config['expiration']));
 		}
-		if (isset($config['iAmUsingBadHost'])) {
-			$session->addSetup('Nette\Framework::$iAmUsingBadHost = ?;', array((bool) $config['iAmUsingBadHost']));
-		}
 
 		if ($container->parameters['debugMode'] && $config['debugger']) {
 			$session->addSetup('Nette\Diagnostics\Debugger::getBar()->addPanel(?)', array(
@@ -162,7 +158,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			));
 		}
 
-		unset($config['expiration'], $config['autoStart'], $config['iAmUsingBadHost'], $config['debugger']);
+		unset($config['expiration'], $config['autoStart'], $config['debugger']);
 		if (!empty($config)) {
 			$session->addSetup('setOptions', array($config));
 		}

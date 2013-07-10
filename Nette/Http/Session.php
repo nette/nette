@@ -427,7 +427,7 @@ class Session extends Nette\Object
 				} elseif (function_exists('ini_set')) {
 					ini_set("session.$key", $value);
 
-				} elseif (!Nette\Framework::$iAmUsingBadHost) {
+				} else {
 					throw new Nette\NotSupportedException('Required function ini_set() is disabled.');
 				}
 			}
