@@ -34,6 +34,9 @@ class RequestFactory extends Nette\Object
 	/** @var string */
 	private $encoding;
 
+	/** @var array */
+	private $proxies = array();
+
 
 	/**
 	 * @param  string
@@ -42,6 +45,17 @@ class RequestFactory extends Nette\Object
 	public function setEncoding($encoding)
 	{
 		$this->encoding = $encoding;
+		return $this;
+	}
+
+
+	/**
+	 * @param  array|string
+	 * @return self
+	 */
+	public function setProxy($proxy)
+	{
+		$this->proxies = (array) $proxy;
 		return $this;
 	}
 
@@ -239,10 +253,27 @@ class RequestFactory extends Nette\Object
 			}
 		}
 
+
+		$remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : NULL;
+		$remoteHost = isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : NULL;
+
+		// proxy
+		foreach ($this->proxies as $proxy) {
+			if (Helpers::ipMatch($remoteAddr, $proxy)) {
+				if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+					$remoteAddr = trim(current(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])));
+				}
+				if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+					$remoteHost = trim(current(explode(',', $_SERVER['HTTP_X_FORWARDED_HOST'])));
+				}
+				break;
+			}
+		}
+
 		return new Request($url, $query, $post, $files, $cookies, $headers,
 			isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : NULL,
-			isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : NULL,
-			isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : NULL
+			$remoteAddr,
+			$remoteHost
 		);
 	}
 

@@ -24,6 +24,9 @@ use Nette,
 class NetteExtension extends Nette\DI\CompilerExtension
 {
 	public $defaults = array(
+		'http' => array(
+			'proxy' => array(),
+		),
 		'session' => array(
 			'debugger' => FALSE,
 			'autoStart' => 'smart',  // true|false|smart
@@ -94,7 +97,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		$container->addDefinition('nette')->setClass('Nette\DI\Extensions\NetteAccessor', array('@container'));
 
 		$this->setupCache($container);
-		$this->setupHttp($container);
+		$this->setupHttp($container, $config['http']);
 		$this->setupSession($container, $config['session']);
 		$this->setupSecurity($container, $config['security']);
 		$this->setupApplication($container, $config['application']);
@@ -125,11 +128,12 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	}
 
 
-	private function setupHttp(ContainerBuilder $container)
+	private function setupHttp(ContainerBuilder $container, array $config)
 	{
 		$container->addDefinition($this->prefix('httpRequestFactory'))
 			->setClass('Nette\Http\RequestFactory')
-			->addSetup('setEncoding', array('UTF-8'));
+			->addSetup('setEncoding', array('UTF-8'))
+			->addSetup('setProxy', array($config['proxy']));
 
 		$container->addDefinition('httpRequest') // no namespace for back compatibility
 			->setClass('Nette\Http\Request')
