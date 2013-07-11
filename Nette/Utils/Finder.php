@@ -364,23 +364,24 @@ class Finder extends Nette\Object implements \IteratorAggregate
 	public static function compare($l, $operator, $r)
 	{
 		switch ($operator) {
-		case '>':
-			return $l > $r;
-		case '>=':
-			return $l >= $r;
-		case '<':
-			return $l < $r;
-		case '<=':
-			return $l <= $r;
-		case '=':
-		case '==':
-			return $l == $r;
-		case '!':
-		case '!=':
-		case '<>':
-			return $l != $r;
+			case '>':
+				return $l > $r;
+			case '>=':
+				return $l >= $r;
+			case '<':
+				return $l < $r;
+			case '<=':
+				return $l <= $r;
+			case '=':
+			case '==':
+				return $l == $r;
+			case '!':
+			case '!=':
+			case '<>':
+				return $l != $r;
+			default:
+				throw new Nette\InvalidArgumentException("Unknown operator $operator.");
 		}
-		throw new Nette\InvalidArgumentException("Unknown operator $operator.");
 	}
 
 }

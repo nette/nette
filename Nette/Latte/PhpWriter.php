@@ -69,26 +69,26 @@ class PhpWriter extends Nette\Object
 			list(, $l, $source, $format, $cond, $r) = $m;
 
 			switch ($source) {
-			case 'node.':
-				$arg = $word; break;
-			case '':
-				$arg = next($args); break;
-			default:
-				$arg = $args[$source + 1]; break;
+				case 'node.':
+					$arg = $word; break;
+				case '':
+					$arg = next($args); break;
+				default:
+					$arg = $args[$source + 1]; break;
 			}
 
 			switch ($format) {
-			case 'word':
-				$code = $me->formatWord($arg); break;
-			case 'args':
-				$code = $me->formatArgs(); break; // TODO: only as node.args
-			case 'array':
-				$code = $me->formatArray(); // TODO: only as node.array
-				$code = $cond && $code === 'array()' ? '' : $code; break;
-			case 'var':
-				$code = var_export($arg, TRUE); break;
-			case 'raw':
-				$code = (string) $arg; break;
+				case 'word':
+					$code = $me->formatWord($arg); break;
+				case 'args':
+					$code = $me->formatArgs(); break; // TODO: only as node.args
+				case 'array':
+					$code = $me->formatArray(); // TODO: only as node.array
+					$code = $cond && $code === 'array()' ? '' : $code; break;
+				case 'var':
+					$code = var_export($arg, TRUE); break;
+				case 'raw':
+					$code = (string) $arg; break;
 			}
 
 			if ($cond && $code === '') {
@@ -340,41 +340,41 @@ class PhpWriter extends Nette\Object
 	{
 		$tokens = clone $tokens;
 		switch ($this->compiler->getContentType()) {
-		case Compiler::CONTENT_XHTML:
-		case Compiler::CONTENT_HTML:
-			$context = $this->compiler->getContext();
-			switch ($context[0]) {
-			case Compiler::CONTEXT_SINGLE_QUOTED_ATTR:
-			case Compiler::CONTEXT_DOUBLE_QUOTED_ATTR:
-			case Compiler::CONTEXT_UNQUOTED_ATTR:
-				if ($context[1] === Compiler::CONTENT_JS) {
-					$tokens->prepend('Nette\Templating\Helpers::escapeJs(')->append(')');
-				} elseif ($context[1] === Compiler::CONTENT_CSS) {
-					$tokens->prepend('Nette\Templating\Helpers::escapeCss(')->append(')');
+			case Compiler::CONTENT_XHTML:
+			case Compiler::CONTENT_HTML:
+				$context = $this->compiler->getContext();
+				switch ($context[0]) {
+					case Compiler::CONTEXT_SINGLE_QUOTED_ATTR:
+					case Compiler::CONTEXT_DOUBLE_QUOTED_ATTR:
+					case Compiler::CONTEXT_UNQUOTED_ATTR:
+						if ($context[1] === Compiler::CONTENT_JS) {
+							$tokens->prepend('Nette\Templating\Helpers::escapeJs(')->append(')');
+						} elseif ($context[1] === Compiler::CONTENT_CSS) {
+							$tokens->prepend('Nette\Templating\Helpers::escapeCss(')->append(')');
+						}
+						$tokens->prepend('htmlSpecialChars(')->append($context[0] === Compiler::CONTEXT_SINGLE_QUOTED_ATTR ? ', ENT_QUOTES)' : ')');
+						if ($context[0] === Compiler::CONTEXT_UNQUOTED_ATTR) {
+							$tokens->prepend("'\"' . ")->append(" . '\"'");
+						}
+						return $tokens;
+					case Compiler::CONTEXT_COMMENT:
+						return $tokens->prepend('Nette\Templating\Helpers::escapeHtmlComment(')->append(')');
+						return;
+					case Compiler::CONTENT_JS:
+					case Compiler::CONTENT_CSS:
+						return $tokens->prepend('Nette\Templating\Helpers::escape' . ucfirst($context[0]) . '(')->append(')');
+					default:
+						return $tokens->prepend('Nette\Templating\Helpers::escapeHtml(')->append(', ENT_NOQUOTES)');
 				}
-				$tokens->prepend('htmlSpecialChars(')->append($context[0] === Compiler::CONTEXT_SINGLE_QUOTED_ATTR ? ', ENT_QUOTES)' : ')');
-				if ($context[0] === Compiler::CONTEXT_UNQUOTED_ATTR) {
-					$tokens->prepend("'\"' . ")->append(" . '\"'");
-				}
-				return $tokens;
-			case Compiler::CONTEXT_COMMENT:
-				return $tokens->prepend('Nette\Templating\Helpers::escapeHtmlComment(')->append(')');
-				return;
+			case Compiler::CONTENT_XML:
 			case Compiler::CONTENT_JS:
 			case Compiler::CONTENT_CSS:
-				return $tokens->prepend('Nette\Templating\Helpers::escape' . ucfirst($context[0]) . '(')->append(')');
+			case Compiler::CONTENT_ICAL:
+				return $tokens->prepend('Nette\Templating\Helpers::escape' . ucfirst($this->compiler->getContentType()) . '(')->append(')');
+			case Compiler::CONTENT_TEXT:
+				return $tokens;
 			default:
-				return $tokens->prepend('Nette\Templating\Helpers::escapeHtml(')->append(', ENT_NOQUOTES)');
-			}
-		case Compiler::CONTENT_XML:
-		case Compiler::CONTENT_JS:
-		case Compiler::CONTENT_CSS:
-		case Compiler::CONTENT_ICAL:
-			return $tokens->prepend('Nette\Templating\Helpers::escape' . ucfirst($this->compiler->getContentType()) . '(')->append(')');
-		case Compiler::CONTENT_TEXT:
-			return $tokens;
-		default:
-			return $tokens->prepend('$template->escape(')->append(')');
+				return $tokens->prepend('$template->escape(')->append(')');
 		}
 	}
 

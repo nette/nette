@@ -260,26 +260,26 @@ class MimePart extends Nette\Object
 		$body = (string) $this->body;
 		if ($body !== '') {
 			switch ($this->getEncoding()) {
-			case self::ENCODING_QUOTED_PRINTABLE:
-				$output .= function_exists('quoted_printable_encode') ? quoted_printable_encode($body) : self::encodeQuotedPrintable($body);
-				break;
+				case self::ENCODING_QUOTED_PRINTABLE:
+					$output .= function_exists('quoted_printable_encode') ? quoted_printable_encode($body) : self::encodeQuotedPrintable($body);
+					break;
 
-			case self::ENCODING_BASE64:
-				$output .= rtrim(chunk_split(base64_encode($body), self::LINE_LENGTH, self::EOL));
-				break;
+				case self::ENCODING_BASE64:
+					$output .= rtrim(chunk_split(base64_encode($body), self::LINE_LENGTH, self::EOL));
+					break;
 
-			case self::ENCODING_7BIT:
-				$body = preg_replace('#[\x80-\xFF]+#', '', $body);
-				// break intentionally omitted
+				case self::ENCODING_7BIT:
+					$body = preg_replace('#[\x80-\xFF]+#', '', $body);
+					// break intentionally omitted
 
-			case self::ENCODING_8BIT:
-				$body = str_replace(array("\x00", "\r"), '', $body);
-				$body = str_replace("\n", self::EOL, $body);
-				$output .= $body;
-				break;
+				case self::ENCODING_8BIT:
+					$body = str_replace(array("\x00", "\r"), '', $body);
+					$body = str_replace("\n", self::EOL, $body);
+					$output .= $body;
+					break;
 
-			default:
-				throw new Nette\InvalidStateException('Unknown encoding.');
+				default:
+					throw new Nette\InvalidStateException('Unknown encoding.');
 			}
 		}
 
