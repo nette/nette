@@ -68,17 +68,17 @@ class PhpWriter extends Nette\Object
 			list(, $l, $macro, $cond, $r) = $m;
 
 			switch ($macro) {
-			case 'node.word':
-				$code = $me->formatWord($word); break;
-			case 'node.args':
-				$code = $me->formatArgs(); break;
-			case 'node.array':
-				$code = $me->formatArray();
-				$code = $cond && $code === 'array()' ? '' : $code; break;
-			case 'var':
-				$code = var_export(array_shift($args), TRUE); break;
-			case 'raw':
-				$code = (string) array_shift($args); break;
+				case 'node.word':
+					$code = $me->formatWord($word); break;
+				case 'node.args':
+					$code = $me->formatArgs(); break;
+				case 'node.array':
+					$code = $me->formatArray();
+					$code = $cond && $code === 'array()' ? '' : $code; break;
+				case 'var':
+					$code = var_export(array_shift($args), TRUE); break;
+				case 'raw':
+					$code = (string) array_shift($args); break;
 			}
 
 			if ($cond && $code === '') {
@@ -272,36 +272,36 @@ class PhpWriter extends Nette\Object
 	public function escape($s)
 	{
 		switch ($this->compiler->getContentType()) {
-		case Compiler::CONTENT_XHTML:
-		case Compiler::CONTENT_HTML:
-			$context = $this->compiler->getContext();
-			switch ($context[0]) {
-			case Compiler::CONTEXT_SINGLE_QUOTED:
-			case Compiler::CONTEXT_DOUBLE_QUOTED:
-				if ($context[1] === Compiler::CONTENT_JS) {
-					$s = "Nette\\Templating\\Helpers::escapeJs($s)";
-				} elseif ($context[1] === Compiler::CONTENT_CSS) {
-					$s = "Nette\\Templating\\Helpers::escapeCss($s)";
+			case Compiler::CONTENT_XHTML:
+			case Compiler::CONTENT_HTML:
+				$context = $this->compiler->getContext();
+				switch ($context[0]) {
+					case Compiler::CONTEXT_SINGLE_QUOTED:
+					case Compiler::CONTEXT_DOUBLE_QUOTED:
+						if ($context[1] === Compiler::CONTENT_JS) {
+							$s = "Nette\\Templating\\Helpers::escapeJs($s)";
+						} elseif ($context[1] === Compiler::CONTENT_CSS) {
+							$s = "Nette\\Templating\\Helpers::escapeCss($s)";
+						}
+						$quote = $context[0] === Compiler::CONTEXT_DOUBLE_QUOTED ? '' : ', ENT_QUOTES';
+						return "htmlSpecialChars($s$quote)";
+					case Compiler::CONTEXT_COMMENT:
+						return "Nette\\Templating\\Helpers::escapeHtmlComment($s)";
+					case Compiler::CONTENT_JS:
+					case Compiler::CONTENT_CSS:
+						return 'Nette\Templating\Helpers::escape' . ucfirst($context[0]) . "($s)";
+					default:
+						return "Nette\\Templating\\Helpers::escapeHtml($s, ENT_NOQUOTES)";
 				}
-				$quote = $context[0] === Compiler::CONTEXT_DOUBLE_QUOTED ? '' : ', ENT_QUOTES';
-				return "htmlSpecialChars($s$quote)";
-			case Compiler::CONTEXT_COMMENT:
-				return "Nette\\Templating\\Helpers::escapeHtmlComment($s)";
+			case Compiler::CONTENT_XML:
 			case Compiler::CONTENT_JS:
 			case Compiler::CONTENT_CSS:
-				return 'Nette\Templating\Helpers::escape' . ucfirst($context[0]) . "($s)";
+			case Compiler::CONTENT_ICAL:
+				return 'Nette\Templating\Helpers::escape' . ucfirst($this->compiler->getContentType()) . "($s)";
+			case Compiler::CONTENT_TEXT:
+				return $s;
 			default:
-				return "Nette\\Templating\\Helpers::escapeHtml($s, ENT_NOQUOTES)";
-			}
-		case Compiler::CONTENT_XML:
-		case Compiler::CONTENT_JS:
-		case Compiler::CONTENT_CSS:
-		case Compiler::CONTENT_ICAL:
-			return 'Nette\Templating\Helpers::escape' . ucfirst($this->compiler->getContentType()) . "($s)";
-		case Compiler::CONTENT_TEXT:
-			return $s;
-		default:
-			return "\$template->escape($s)";
+				return "\$template->escape($s)";
 		}
 	}
 
