@@ -96,27 +96,30 @@ Assert::same(reformat('SELECT * FROM [book] WHERE ([id] = ? OR [id] = ? OR [id] 
 Assert::same(reformat('SELECT * FROM [book] WHERE (FOO(?)) AND (FOO([id], ?)) AND ([id] & ? = ?) AND (?) AND (NOT ? OR ?) AND (? + ? - ? / ? * ? % ?)'), $sqlBuilder[8]->buildSelectQuery());
 Assert::same(reformat("SELECT * FROM [book] WHERE ([col1] = ?\nOR [col2] = ?)"), $sqlBuilder[9]->buildSelectQuery());
 
-switch ($driverName) {
-	case 'mysql':
-		Assert::equal('SELECT * FROM `book` WHERE (`id` IN (?))', $sqlBuilder[1]->buildSelectQuery());
-		Assert::equal('SELECT * FROM `book` WHERE (`id` IN (?))', $sqlBuilder[2]->buildSelectQuery());
-		Assert::equal('SELECT * FROM `book` WHERE (`id` IS NULL OR `id` IN (?))', $sqlBuilder[3]->buildSelectQuery());
-		Assert::equal('SELECT * FROM `book` WHERE (`id` NOT IN (?)) AND (`id` NOT IN (?))', $sqlBuilder[10]->buildSelectQuery());
-		break;
-	default:
-		Assert::equal(reformat('SELECT * FROM [book] WHERE ([id] IN (SELECT [id] FROM [book]))'), $sqlBuilder[1]->buildSelectQuery());
-		Assert::equal(reformat('SELECT * FROM [book] WHERE ([id] IN (SELECT [id] FROM [book]))'), $sqlBuilder[2]->buildSelectQuery());
-		Assert::equal(reformat('SELECT * FROM [book] WHERE ([id] IS NULL OR [id] IN (SELECT [id] FROM [book]))'), $sqlBuilder[3]->buildSelectQuery());
-		Assert::equal(reformat('SELECT * FROM [book] WHERE ([id] NOT IN (?)) AND ([id] NOT IN (SELECT [id] FROM [book]))'), $sqlBuilder[10]->buildSelectQuery());
-}
+Assert::equal(reformat(array(
+	'mysql' => 'SELECT * FROM `book` WHERE (`id` IN (?))',
+	'SELECT * FROM [book] WHERE ([id] IN (SELECT [id] FROM [book]))',
+)), $sqlBuilder[1]->buildSelectQuery());
 
-switch ($driverName) {
-	case 'sqlite':
-		Assert::equal('SELECT * FROM [book_tag] WHERE (([book_id] = ? AND [tag_id] = ?) OR ([book_id] = ? AND [tag_id] = ?))', $sqlBuilder[11]->buildSelectQuery());
-		break;
-	default:
-		Assert::equal(reformat('SELECT * FROM [book_tag] WHERE (([book_id], [tag_id]) IN (?))'), $sqlBuilder[11]->buildSelectQuery());
-}
+Assert::equal(reformat(array(
+	'mysql' => 'SELECT * FROM `book` WHERE (`id` IN (?))',
+	'SELECT * FROM [book] WHERE ([id] IN (SELECT [id] FROM [book]))',
+)), $sqlBuilder[2]->buildSelectQuery());
+
+Assert::equal(reformat(array(
+	'mysql' => 'SELECT * FROM `book` WHERE (`id` IS NULL OR `id` IN (?))',
+	'SELECT * FROM [book] WHERE ([id] IS NULL OR [id] IN (SELECT [id] FROM [book]))',
+)), $sqlBuilder[3]->buildSelectQuery());
+
+Assert::equal(reformat(array(
+	'mysql' => 'SELECT * FROM `book` WHERE (`id` NOT IN (?)) AND (`id` NOT IN (?))',
+	'SELECT * FROM [book] WHERE ([id] NOT IN (?)) AND ([id] NOT IN (SELECT [id] FROM [book]))',
+)), $sqlBuilder[10]->buildSelectQuery());
+
+Assert::equal(reformat(array(
+	'sqlite' => 'SELECT * FROM [book_tag] WHERE (([book_id] = ? AND [tag_id] = ?) OR ([book_id] = ? AND [tag_id] = ?))',
+	'SELECT * FROM [book_tag] WHERE (([book_id], [tag_id]) IN (?))',
+)), $sqlBuilder[11]->buildSelectQuery());
 
 
 $books = $dao->table('book')->where('id',

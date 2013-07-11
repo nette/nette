@@ -36,6 +36,12 @@ $dao = new Nette\Database\SelectionFactory($connection);
 function reformat($s)
 {
 	global $driverName;
+	if (is_array($s)) {
+		if (isset($s[$driverName])) {
+			return $s[$driverName];
+		}
+		$s = $s[0];
+	}
 	if ($driverName === 'mysql') {
 		return strtr($s, '[]', '``');
 	} elseif ($driverName === 'pgsql') {

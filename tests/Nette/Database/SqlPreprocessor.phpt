@@ -131,13 +131,10 @@ test(function() use ($preprocessor, $driverName) { // insert
 		array('name' => 'Catelyn Stark', 'born' => new DateTime('2011-11-11')),
 	));
 
-	switch ($driverName) {
-		case 'sqlite':
-			Assert::same( "INSERT INTO author ([name], [born]) SELECT 'Catelyn Stark', 1320966000", $sql );
-			break;
-		default:
-			Assert::same( reformat("INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00')"), $sql );
-	}
+	Assert::same( reformat(array(
+		'sqlite' => "INSERT INTO author ([name], [born]) SELECT 'Catelyn Stark', 1320966000",
+		"INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00')",
+	)), $sql );
 	Assert::same( array(), $params );
 });
 
@@ -148,13 +145,10 @@ test(function() use ($preprocessor, $driverName) { // multi insert
 		array('name' => 'Sansa Stark', 'born' => new DateTime('2021-11-11'))
 	)));
 
-	switch ($driverName) {
-		case 'sqlite':
-			Assert::same( "INSERT INTO author ([name], [born]) SELECT 'Catelyn Stark', 1320966000 UNION ALL SELECT 'Sansa Stark', 1636585200", $sql );
-			break;
-		default:
-			Assert::same( reformat("INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00'), ('Sansa Stark', '2021-11-11 00:00:00')"), $sql );
-	}
+	Assert::same( reformat(array(
+		'sqlite' => "INSERT INTO author ([name], [born]) SELECT 'Catelyn Stark', 1320966000 UNION ALL SELECT 'Sansa Stark', 1636585200",
+		"INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00'), ('Sansa Stark', '2021-11-11 00:00:00')",
+	)), $sql );
 	Assert::same( array(), $params );
 });
 
@@ -175,12 +169,9 @@ test(function() use ($preprocessor, $driverName) { // multi & update
 		array('web' => 'http://nette.org', 'name' => 'Dave Lister'),
 	));
 
-	switch ($driverName) {
-		case 'sqlite':
-			Assert::same( "INSERT INTO author ([id], [name]) SELECT 12, 'John Doe' ON DUPLICATE KEY UPDATE [web]='http://nette.org', [name]='Dave Lister'", $sql );
-			break;
-		default:
-			Assert::same( reformat("INSERT INTO author ([id], [name]) VALUES (12, 'John Doe') ON DUPLICATE KEY UPDATE [web]='http://nette.org', [name]='Dave Lister'"), $sql );
-	}
+	Assert::same( reformat(array(
+	'sqlite' => "INSERT INTO author ([id], [name]) SELECT 12, 'John Doe' ON DUPLICATE KEY UPDATE [web]='http://nette.org', [name]='Dave Lister'",
+	"INSERT INTO author ([id], [name]) VALUES (12, 'John Doe') ON DUPLICATE KEY UPDATE [web]='http://nette.org', [name]='Dave Lister'",
+	)), $sql );
 	Assert::same( array(), $params );
 });
