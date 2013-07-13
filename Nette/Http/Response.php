@@ -161,13 +161,6 @@ final class Response extends Nette\Object implements IResponse
 	 */
 	public function redirect($url, $code = self::S302_FOUND)
 	{
-		if (isset($_SERVER['SERVER_SOFTWARE']) && preg_match('#^Microsoft-IIS/[1-5]#', $_SERVER['SERVER_SOFTWARE'])
-			&& $this->getHeader('Set-Cookie') !== NULL
-		) {
-			$this->setHeader('Refresh', "0;url=$url");
-			return;
-		}
-
 		$this->setCode($code);
 		$this->setHeader('Location', $url);
 		echo "<h1>Redirect</h1>\n\n<p><a href=\"" . htmlSpecialChars($url, ENT_IGNORE | ENT_QUOTES) . "\">Please click here to continue</a>.</p>";
