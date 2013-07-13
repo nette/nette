@@ -569,7 +569,8 @@ class Permission extends Nette\Object implements IAuthorizator
 					} else {
 						foreach ($privileges as $privilege) {
 							if (isset($rules['byPrivilege'][$privilege]) &&
-								$type === $rules['byPrivilege'][$privilege]['type']) {
+								$type === $rules['byPrivilege'][$privilege]['type']
+							) {
 								unset($rules['byPrivilege'][$privilege]);
 							}
 						}

@@ -80,8 +80,8 @@ class SmtpMailer extends Nette\Object implements IMailer
 			}
 
 			if (($from = $mail->getHeader('Return-Path'))
-				|| ($from = key($mail->getHeader('From'))))
-			{
+				|| ($from = key($mail->getHeader('From')))
+			) {
 				$this->write("MAIL FROM:<$from>", 250);
 			}
 

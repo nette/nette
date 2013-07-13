@@ -222,8 +222,8 @@ class Compiler extends Nette\Object
 	private function processText(Token $token)
 	{
 		if (($this->context[0] === self::CONTEXT_SINGLE_QUOTED_ATTR || $this->context[0] === self::CONTEXT_DOUBLE_QUOTED_ATTR)
-			&& $token->text === $this->context[0])
-		{
+			&& $token->text === $this->context[0]
+		) {
 			$this->setContext(self::CONTEXT_UNQUOTED_ATTR);
 		}
 		$this->output .= $token->text;

@@ -57,8 +57,11 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 		$trace = $result instanceof \PDOException ? $result->getTrace() : debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : FALSE);
 		foreach ($trace as $row) {
 			if (isset($row['file']) && is_file($row['file']) && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) !== 0) {
-				if (isset($row['function']) && strpos($row['function'], 'call_user_func') === 0) continue;
-				if (isset($row['class']) && is_subclass_of($row['class'], '\\Nette\\Database\\Connection')) continue;
+				if ((isset($row['function']) && strpos($row['function'], 'call_user_func') === 0)
+					|| (isset($row['class']) && is_subclass_of($row['class'], '\\Nette\\Database\\Connection'))
+				) {
+					continue;
+				}
 				$source = array($row['file'], (int) $row['line']);
 				break;
 			}
