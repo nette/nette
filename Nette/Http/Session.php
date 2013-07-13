@@ -65,7 +65,7 @@ class Session extends Nette\Object
 	private $request;
 
 	/** @var IResponse */
-	private $response;
+	protected $response;
 
 
 	public function __construct(IRequest $request, IResponse $response)
@@ -527,7 +527,7 @@ class Session extends Nette\Object
 	 * Sends the session cookies.
 	 * @return void
 	 */
-	private function sendCookie()
+	protected function sendCookie()
 	{
 		if (!headers_sent() && ob_get_level() && ob_get_length()) {
 			trigger_error("Possible problem: you are starting session while already having some data in output buffer. This may not work if the outputted data grows. Try starting the session earlier.", E_USER_NOTICE);
