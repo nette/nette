@@ -52,6 +52,9 @@ class FormMacros extends MacroSet
 	 */
 	public function macroForm(MacroNode $node, PhpWriter $writer)
 	{
+		if ($node->htmlNode && strtolower($node->htmlNode->name) === 'form') {
+			throw new CompileException('Did you mean <form n:name=...> ?');
+		}
 		$name = $node->tokenizer->fetchWord();
 		if ($name === FALSE) {
 			throw new CompileException("Missing form name in {{$node->name}}.");
