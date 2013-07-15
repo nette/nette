@@ -30,7 +30,18 @@ class SQLiteStorage extends Nette\Object implements Nette\Caching\IStorage
 	{
 		$this->pdo = new \PDO('sqlite:' . $path, NULL, NULL, array(\PDO::ATTR_PERSISTENT => TRUE));
 		$this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-		$this->pdo->exec('CREATE TABLE IF NOT EXISTS cache (key BLOB NOT NULL PRIMARY KEY, data BLOB NOT NULL)');
+		$this->pdo->exec('
+			PRAGMA foreign_keys = ON;
+			CREATE TABLE IF NOT EXISTS cache (
+				key BLOB NOT NULL PRIMARY KEY, data BLOB NOT NULL
+			);
+			CREATE TABLE IF NOT EXISTS tags (
+				key BLOB NOT NULL REFERENCES cache ON DELETE CASCADE,
+				tag BLOB NOT NULL
+			);
+			CREATE INDEX IF NOT EXISTS tags_key ON tags(key);
+			CREATE INDEX IF NOT EXISTS tags_tag ON tags(tag);
+		');
 	}
 
 
@@ -68,8 +79,19 @@ class SQLiteStorage extends Nette\Object implements Nette\Caching\IStorage
 	 */
 	public function write($key, $data, array $dependencies)
 	{
+		$this->pdo->prepare('BEGIN TRANSACTION');
 		$this->pdo->prepare('REPLACE INTO cache (key, data) VALUES (?, ?)')
 			->execute(array($key, serialize($data)));
+
+		if (!empty($dependencies[Cache::TAGS])) {
+			foreach ((array) $dependencies[Cache::TAGS] as $tag) {
+				$arr[] = $key;
+				$arr[] = $tag;
+			}
+			$this->pdo->prepare('INSERT INTO tags (key, tag) SELECT ?, ?' . str_repeat('UNION SELECT ?, ?', count($arr) / 2 - 1))
+				->execute($arr);
+		}
+		$this->pdo->prepare('COMMIT');
 	}
 
 
@@ -94,6 +116,11 @@ class SQLiteStorage extends Nette\Object implements Nette\Caching\IStorage
 	{
 		if (!empty($conditions[Cache::ALL])) {
 			$this->pdo->prepare('DELETE FROM cache');
+
+		} elseif (!empty($conditions[Cache::TAGS])) {
+			$tags = (array) $conditions[Cache::TAGS];
+			$this->pdo->prepare('DELETE FROM cache WHERE key IN (SELECT key FROM tags WHERE tag IN (?'
+				. str_repeat(',?', count($tags) - 1) . '))')->execute($tags);
 		}
 	}
 
