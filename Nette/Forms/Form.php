@@ -516,7 +516,7 @@ class Form extends Container
 	 * Sets form renderer.
 	 * @return self
 	 */
-	public function setRenderer(IFormRenderer $renderer)
+	public function setRenderer(IFormRenderer $renderer = NULL)
 	{
 		$this->renderer = $renderer;
 		return $this;
