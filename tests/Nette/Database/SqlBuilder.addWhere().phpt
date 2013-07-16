@@ -81,11 +81,11 @@ test(function() use ($connection, $reflection) { // test empty array
 	$sqlBuilder->addWhere('id NOT', array());
 	$sqlBuilder->addWhere('NOT (id ?)', array());
 
-	Assert::throws(function() use ($sqlBuilder) {
+	Assert::exception(function() use ($sqlBuilder) {
 		$sqlBuilder->addWhere('TRUE AND id', array());
 	}, 'Nette\InvalidArgumentException', 'Possible SQL query corruption. Add parentheses around operators.');
 
-	Assert::throws(function() use ($sqlBuilder) {
+	Assert::exception(function() use ($sqlBuilder) {
 		$sqlBuilder->addWhere('NOT id', array());
 	}, 'Nette\InvalidArgumentException', 'Possible SQL query corruption. Add parentheses around operators.');
 

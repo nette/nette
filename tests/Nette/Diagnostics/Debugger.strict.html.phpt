@@ -5,7 +5,7 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
- * @assertCode 500
+ * @httpCode   500
  */
 
 use Nette\Diagnostics\Debugger;
