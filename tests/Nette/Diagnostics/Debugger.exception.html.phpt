@@ -13,6 +13,10 @@ use Nette\Diagnostics\Debugger;
 
 require __DIR__ . '/../bootstrap.php';
 
+if (PHP_SAPI === 'cli') {
+	Tester\Helpers::skip();
+}
+
 
 Debugger::$productionMode = FALSE;
 header('Content-Type: text/html');

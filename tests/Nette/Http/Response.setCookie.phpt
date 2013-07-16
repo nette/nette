@@ -12,6 +12,10 @@ use Nette\Http;
 
 require __DIR__ . '/../bootstrap.php';
 
+if (PHP_SAPI === 'cli') {
+	Tester\Helpers::skip();
+}
+
 
 $old = headers_list();
 $response = new Http\Response;

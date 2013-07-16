@@ -12,6 +12,10 @@ use Nette\Diagnostics\Debugger;
 
 require __DIR__ . '/../bootstrap.php';
 
+if (PHP_SAPI === 'cli') {
+	Tester\Helpers::skip();
+}
+
 
 // Setup environment
 $_SERVER['HTTP_X_FIRELOGGER'] = TRUE;

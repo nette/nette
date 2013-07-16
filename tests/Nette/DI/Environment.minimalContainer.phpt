@@ -43,6 +43,6 @@ test(function() {
 
 test(function() {
 	// Modes
-	Assert::false( Environment::isConsole() ); // Is console?
+	Assert::same( PHP_SAPI === 'cli', Environment::isConsole() ); // Is console?
 	Assert::true( Environment::isProduction() ); // Is production mode?
 });
