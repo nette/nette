@@ -30,4 +30,4 @@ $mail->addAttachment(__DIR__ . '/files/example.zip', NULL, 'application/zip');
 $mailer = new TestMailer();
 $mailer->send($mail);
 
-Assert::match(file_get_contents(__DIR__ . '/Mail.textualAndHtmlBody.attachment.expect'), TestMailer::$output);
+Assert::matchFile(__DIR__ . '/Mail.textualAndHtmlBody.attachment.expect', TestMailer::$output);

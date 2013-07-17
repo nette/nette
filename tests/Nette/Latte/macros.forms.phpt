@@ -33,5 +33,5 @@ $template->_control = array('myForm' => $form);
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 //echo $template->compile(); exit;
-Assert::match(file_get_contents("$path.phtml"), codefix($template->compile()));
-Assert::match(file_get_contents("$path.html"), $template->__toString(TRUE));
+Assert::matchFile("$path.phtml", codefix($template->compile()));
+Assert::matchFile("$path.html", $template->__toString(TRUE));

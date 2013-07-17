@@ -28,11 +28,11 @@ $template->registerHelperLoader('Nette\Templating\Helpers::loader');
 $template->hello = '<i>Hello</i>';
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::match(file_get_contents("$path.phtml"), codefix($template->compile()));
-Assert::match(file_get_contents("$path.html"), $template->__toString(TRUE));
-Assert::match(file_get_contents("$path.inc1.phtml"), $cache->phtml['include1.latte']);
-Assert::match(file_get_contents("$path.inc2.phtml"), $cache->phtml['include2.latte']);
-Assert::match(file_get_contents("$path.inc3.phtml"), $cache->phtml['include3.latte']);
+Assert::matchFile("$path.phtml", codefix($template->compile()));
+Assert::matchFile("$path.html", $template->__toString(TRUE));
+Assert::matchFile("$path.inc1.phtml", $cache->phtml['include1.latte']);
+Assert::matchFile("$path.inc2.phtml", $cache->phtml['include2.latte']);
+Assert::matchFile("$path.inc3.phtml", $cache->phtml['include3.latte']);
 
 
 $template = new Template;

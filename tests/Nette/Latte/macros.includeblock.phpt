@@ -23,6 +23,6 @@ $template->setCacheStorage($cache = new MockCacheStorage);
 $template->registerFilter(new Latte\Engine);
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::match(file_get_contents("$path.phtml"), codefix($template->compile()));
-Assert::match(file_get_contents("$path.html"), $template->__toString(TRUE));
-Assert::match(file_get_contents("$path.inc.phtml"), $cache->phtml['includeblock.inc.latte']);
+Assert::matchFile("$path.phtml", codefix($template->compile()));
+Assert::matchFile("$path.html", $template->__toString(TRUE));
+Assert::matchFile("$path.inc.phtml", $cache->phtml['includeblock.inc.latte']);

@@ -28,4 +28,4 @@ $mail->htmlBody = $template;
 $mailer = new TestMailer();
 $mailer->send($mail);
 
-Assert::match(file_get_contents(__DIR__ . '/Mail.template.expect'), TestMailer::$output);
+Assert::matchFile(__DIR__ . '/Mail.template.expect', TestMailer::$output);
