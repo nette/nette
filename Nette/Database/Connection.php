@@ -54,7 +54,7 @@ class Connection extends Nette\Object
 
 	public function __construct($dsn, $user = NULL, $password = NULL, array $options = NULL)
 	{
-		if (func_num_args() > 4) { // compatiblity
+		if (func_num_args() > 4) { // compatibility
 			$options['driverClass'] = func_get_arg(4);
 		}
 		$this->params = array($dsn, $user, $password);
