@@ -81,6 +81,22 @@ $_FILES = array(
 			1 => 3519,
 		),
 	),
+
+	'empty1' => array(
+		'name' => '',
+		'type' => '',
+		'tmp_name' => '',
+		'error' => UPLOAD_ERR_NO_FILE,
+		'size' => 0,
+	),
+
+	'empty2' => array(
+		'name' => array(''),
+		'type' => array(''),
+		'tmp_name' => array(''),
+		'error' => array(UPLOAD_ERR_NO_FILE),
+		'size' => array(0),
+	),
 );
 
 $factory = new Http\RequestFactory;
@@ -95,3 +111,6 @@ Assert::false( isset($request->files['file0']) );
 Assert::true( isset($request->files['file1']) );
 
 Assert::null( $request->getFile('file1', 'a') );
+
+Assert::null( $request->getFile('empty1') );
+Assert::same( array(NULL), $request->getFile('empty2') );

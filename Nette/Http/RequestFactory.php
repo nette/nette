@@ -205,7 +205,9 @@ class RequestFactory extends Nette\Object
 				if (!$this->binary && (preg_match(self::NONCHARS, $v['name']) || preg_last_error())) {
 					$v['name'] = '';
 				}
-				$v['@'] = new FileUpload($v);
+				if ($v['error'] !== UPLOAD_ERR_NO_FILE) {
+					$v['@'] = new FileUpload($v);
+				}
 				continue;
 			}
 

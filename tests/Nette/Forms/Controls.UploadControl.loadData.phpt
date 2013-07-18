@@ -39,6 +39,13 @@ $_FILES = array(
 		'error' => array('avatar' => array(0, 0)),
 		'size' => array('avatar' => array(100, 200)),
 	),
+	'empty' => array(
+		'name' => array(''),
+		'type' => array(''),
+		'tmp_name' => array(''),
+		'error' => array(UPLOAD_ERR_NO_FILE),
+		'size' => array(0),
+	),
 	'invalid1' => array(
 		'name' => array(NULL),
 		'type' => array(NULL),
@@ -105,6 +112,17 @@ test(function() { // multiple (in container)
 
 
 test(function() { // missing data
+	$form = new Form;
+	$input = $form->addUpload('empty', NULL, TRUE)
+		->setRequired();
+
+	Assert::false( $form->isValid() );
+	Assert::equal( array(), $input->getValue() );
+	Assert::false( $input->isFilled() );
+});
+
+
+test(function() { // empty data
 	$form = new Form;
 	$input = $form->addUpload('missing')
 		->setRequired();
