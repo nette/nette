@@ -5,6 +5,9 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
+ * @exitCode   255
+ * @httpCode   500
+ * @outputMatch ERROR:%A%
  */
 
 use Nette\Diagnostics\Debugger;
@@ -17,12 +20,5 @@ Debugger::$productionMode = TRUE;
 header('Content-Type: text/plain');
 
 Debugger::enable();
-
-Debugger::$onFatalError[] = function() {
-	Assert::match('ERROR:%A%', ob_get_clean());
-	die(0);
-};
-ob_start();
-
 
 missing_funcion();

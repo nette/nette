@@ -5,6 +5,9 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
+ * @exitCode   254
+ * @httpCode   500
+ * @outputMatch ERROR:%A%
  */
 
 use Nette\Diagnostics\Debugger;
@@ -17,12 +20,5 @@ Debugger::$productionMode = TRUE;
 header('Content-Type: text/plain');
 
 Debugger::enable();
-
-register_shutdown_function(function() {
-	Assert::match('ERROR:%A%', ob_get_clean());
-	die(0);
-});
-ob_start();
-
 
 throw new Exception('The my exception', 123);

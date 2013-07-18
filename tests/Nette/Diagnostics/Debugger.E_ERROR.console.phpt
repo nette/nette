@@ -5,6 +5,9 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
+ * @exitCode   255
+ * @httpCode   500
+ * @outputMatch OK!
  */
 
 use Nette\Diagnostics\Debugger;
@@ -34,7 +37,7 @@ Stack trace:
 #0 [internal function]: Nette\\Diagnostics\\Debugger::_shutdownHandler()
 #1 {main}
 ", ob_get_clean());
-	die(0);
+	echo 'OK!';
 };
 ob_start();
 

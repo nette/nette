@@ -6,6 +6,8 @@
  * @author     David Grudl
  * @package    Nette\Diagnostics
  * @httpCode   500
+ * @exitCode   254
+ * @outputMatchFile Debugger.error-in-eval.expect
  */
 
 use Nette\Diagnostics\Debugger;
@@ -22,13 +24,6 @@ Debugger::$productionMode = FALSE;
 header('Content-Type: text/html');
 
 Debugger::enable();
-
-register_shutdown_function(function() {
-	Assert::matchFile(__DIR__ . '/Debugger.error-in-eval.expect', ob_get_clean());
-	die(0);
-});
-ob_start();
-
 
 function first($user, $pass)
 {

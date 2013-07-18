@@ -6,6 +6,8 @@
  * @author     David Grudl
  * @package    Nette\Diagnostics
  * @httpCode   500
+ * @exitCode   255
+ * @outputMatch %A%<h1>Server Error</h1>%A%
  */
 
 use Nette\Diagnostics\Debugger;
@@ -22,12 +24,5 @@ Debugger::$productionMode = TRUE;
 header('Content-Type: text/html');
 
 Debugger::enable();
-
-Debugger::$onFatalError[] = function() {
-	Assert::match('%A%<h1>Server Error</h1>%A%', ob_get_clean());
-	die(0);
-};
-ob_start();
-
 
 missing_funcion();

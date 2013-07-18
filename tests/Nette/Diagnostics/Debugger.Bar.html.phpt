@@ -5,6 +5,7 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
+ * @output     %A%<!-- Nette Debug Bar -->%A%
  */
 
 use Nette\Diagnostics\Debugger;
@@ -21,8 +22,3 @@ Debugger::$productionMode = FALSE;
 header('Content-Type: text/html');
 
 Debugger::enable();
-
-register_shutdown_function(function() {
-	Assert::match('%A%<!-- Nette Debug Bar -->%A%', ob_get_clean());
-});
-ob_start();

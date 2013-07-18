@@ -5,6 +5,7 @@
  *
  * @author     David Grudl
  * @package    Nette\Config
+ * @httpCode   -
  */
 
 use Nette\Application\Responses\FileResponse,

@@ -5,6 +5,9 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
+ * @exitCode   255
+ * @httpCode   500
+ * @outputMatch exception 'Nette\FatalErrorException' with message 'Call to undefined function missing_funcion()' in %A%
  */
 
 use Nette\Diagnostics\Debugger;
@@ -17,19 +20,5 @@ Debugger::$productionMode = FALSE;
 header('Content-Type: text/plain');
 
 Debugger::enable();
-
-Debugger::$onFatalError[] = function() {
-	Assert::match(extension_loaded('xdebug') ? "exception 'Nette\\FatalErrorException' with message 'Call to undefined function missing_funcion()' in %a%:%d%
-Stack trace:
-#0 {main}
-" : "exception 'Nette\\FatalErrorException' with message 'Call to undefined function missing_funcion()' in %a%:%d%
-Stack trace:
-#0 [internal function]: Nette\\Diagnostics\\Debugger::_shutdownHandler()
-#1 {main}
-", ob_get_clean());
-	die(0);
-};
-ob_start();
-
 
 @missing_funcion();
