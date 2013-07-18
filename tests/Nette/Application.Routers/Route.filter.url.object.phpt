@@ -48,7 +48,7 @@ Assert::same('http://example.com/1', testRouteOut($route, 'presenter', array(
 // Doesn't match
 testRouteIn($route, '/3/');
 
-Assert::same(NULL, testRouteOut($route, 'presenter', array(
+Assert::null( testRouteOut($route, 'presenter', array(
     'parameter' => NULL,
 )));
 

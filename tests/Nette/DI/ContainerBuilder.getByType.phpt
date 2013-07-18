@@ -33,7 +33,7 @@ $builder->addDefinition('two')
 $builder->prepareClassList();
 
 Assert::same( 'one', $builder->getByType('service') );
-Assert::same( NULL, $builder->getByType('unknown') );
+Assert::null( $builder->getByType('unknown') );
 Assert::exception(function() use ($builder) {
 	$builder->getByType('Nette\Object');
 }, 'Nette\DI\ServiceCreationException', 'Multiple services of type Nette\Object found: one, two');
@@ -47,7 +47,7 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 Assert::type( 'Service', $container->getByType('service') );
-Assert::same( NULL, $container->getByType('unknown', FALSE) );
+Assert::null( $container->getByType('unknown', FALSE) );
 
 Assert::same( array('one'), $container->findByType('service') );
 Assert::same( array(), $container->findByType('unknown') );

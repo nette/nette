@@ -39,7 +39,7 @@ foreach ($datasets as $case) {
 
 	$form->setSubmittedBy($form[$case[0]]);
 
-	Assert::true((bool) $form->isSubmitted());
+	Assert::truthy($form->isSubmitted());
 	$form->validate();
 	Assert::equal($case[1], $form->getAllErrors());
 

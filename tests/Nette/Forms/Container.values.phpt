@@ -63,7 +63,7 @@ $invalid->addText('name');
 $form->addSubmit('send');
 
 
-Assert::true( (bool) $form->isSubmitted() );
+Assert::truthy( $form->isSubmitted() );
 Assert::equal( ArrayHash::from(array(
 	'name' => 'jim',
 	'first' => ArrayHash::from(array(

@@ -15,7 +15,7 @@ if (@!include __DIR__ . '/../../vendor/autoload.php') {
 
 
 // configure environment
-Tester\Helpers::setup();
+Tester\Environment::setup();
 class_alias('Tester\Assert', 'Assert');
 date_default_timezone_set('Europe/Prague');
 

@@ -25,7 +25,7 @@ test(function() {
 	$form->setMethod($form::GET);
 	$form->addSubmit('send', 'Send');
 
-	Assert::true( (bool) $form->isSubmitted() );
+	Assert::truthy( $form->isSubmitted() );
 	Assert::same( array('item'), $form->getHttpData() );
 	Assert::same( array(), $form->getValues(TRUE) );
 });

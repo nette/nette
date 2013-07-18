@@ -13,7 +13,7 @@ use Nette\Http;
 require __DIR__ . '/../bootstrap.php';
 
 if (PHP_SAPI === 'cli') {
-	Tester\Helpers::skip();
+	Tester\Environment::skip();
 }
 
 

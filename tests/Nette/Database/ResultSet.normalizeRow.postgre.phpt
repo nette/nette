@@ -17,7 +17,7 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/files/pgsql-nette_
 $res = $connection->query('SELECT * FROM types');
 
 $row = $res->fetch();
-Assert::true( is_string($row->money) );
+Assert::type( 'string', $row->money );
 unset($row->money);
 
 Assert::equal( array(

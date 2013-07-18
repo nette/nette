@@ -12,7 +12,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 if (!is_file(__DIR__ . '/databases.ini')) {
-	Tester\Helpers::skip();
+	Tester\Environment::skip();
 }
 
 $options = Tester\DataProvider::load(__DIR__ . '/databases.ini', isset($query) ? $query : NULL);
@@ -22,11 +22,11 @@ $options += array('user' => NULL, 'password' => NULL);
 try {
 	$connection = new Nette\Database\Connection($options['dsn'], $options['user'], $options['password']);
 } catch (PDOException $e) {
-	Tester\Helpers::skip("Connection to '$options[dsn]' failed. Reason: " . $e->getMessage());
+	Tester\Environment::skip("Connection to '$options[dsn]' failed. Reason: " . $e->getMessage());
 }
 
 if (strpos($options['dsn'], 'sqlite::memory:') === FALSE) {
-	Tester\Helpers::lock($options['dsn'], dirname(TEMP_DIR));
+	Tester\Environment::lock($options['dsn'], dirname(TEMP_DIR));
 }
 $driverName = $connection->getPdo()->getAttribute(PDO::ATTR_DRIVER_NAME);
 $dao = new Nette\Database\SelectionFactory($connection);

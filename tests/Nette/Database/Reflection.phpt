@@ -28,7 +28,7 @@ Assert::same( array(
 
 $columns = $driver->getColumns('author');
 array_walk($columns, function(& $item) {
-	Assert::true( is_array($item['vendor']) );
+	Assert::type( 'array', $item['vendor'] );
 	unset($item['vendor']);
 });
 

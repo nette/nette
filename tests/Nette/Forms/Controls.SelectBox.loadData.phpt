@@ -145,7 +145,7 @@ test(function() use ($series) { // disabled key
 		->setDisabled();
 
 	Assert::true( $form->isValid() );
-	Assert::same( NULL, $input->getValue() );
+	Assert::null( $input->getValue() );
 });
 
 
