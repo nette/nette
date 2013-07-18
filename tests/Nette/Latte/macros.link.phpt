@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Latte\Engine: {link ...}, {plink ...}
+ * Test: Nette\Latte\Engine: {link ...}, {plink ...}, n:href, n:phref
  *
  * @author     David Grudl
  * @package    Nette\Latte
@@ -75,6 +75,12 @@ LINK(login)
 PLINK(login, 123)
 
 LINK(default, 10, 20, 30)
+
+<a href="LINK(foo)">Nette</a>
+
+<a href="PLINK(Homepage:)">Nette</a>
+
+<a href="PLINK(Homepage:action)">Nette</a>
 EOD
 
 , (string) $template->setSource(<<<EOD
@@ -97,5 +103,11 @@ EOD
 {plink \$arr['link'], \$arr['param']}
 
 {link default 10, 'a' => 20, 'b' => 30}
+
+<a n:href="foo">Nette</a>
+
+<a n:phref="Homepage:">Nette</a>
+
+<a n:phref="Homepage:action">Nette</a>
 EOD
 ));

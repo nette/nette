@@ -55,6 +55,9 @@ class UIMacros extends MacroSet
 		$me->addMacro('widget', array($me, 'macroControl')); // deprecated - use control
 		$me->addMacro('control', array($me, 'macroControl'));
 
+		$me->addMacro('phref', NULL, NULL, function(MacroNode $node, PhpWriter $writer) use ($me) {
+			return ' ?> href="<?php ' . $me->macroLink($node, $writer) . ' ?>"<?php ';
+		});
 		$me->addMacro('href', NULL, NULL, function(MacroNode $node, PhpWriter $writer) use ($me) {
 			return ' ?> href="<?php ' . $me->macroLink($node, $writer) . ' ?>"<?php ';
 		});
@@ -371,7 +374,7 @@ if (!empty($_control->snippetMode)) {
 	 */
 	public function macroLink(MacroNode $node, PhpWriter $writer)
 	{
-		return $writer->write('echo %escape(%modify(' . ($node->name === 'plink' ? '$_presenter' : '$_control') . '->link(%node.word, %node.array?)))');
+		return $writer->write('echo %escape(%modify(' . ($node->name === 'plink' || $node->name === 'phref' ? '$_presenter' : '$_control') . '->link(%node.word, %node.array?)))');
 	}
 
 
