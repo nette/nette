@@ -398,7 +398,7 @@ final class Debugger
 
 		$error = error_get_last();
 		if (in_array($error['type'], array(E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE))) {
-			self::_exceptionHandler(Helpers::fixStack(new Nette\FatalErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'], NULL)));
+			self::_exceptionHandler(Helpers::fixStack(new Nette\FatalErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'], NULL)), TRUE);
 		}
 
 		if (!connection_aborted() && !self::$productionMode && self::isHtmlMode()) {
@@ -413,7 +413,7 @@ final class Debugger
 	 * @return void
 	 * @internal
 	 */
-	public static function _exceptionHandler(\Exception $exception)
+	public static function _exceptionHandler(\Exception $exception, $shutdown = FALSE)
 	{
 		if (!headers_sent()) {
 			$protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
@@ -466,8 +466,10 @@ final class Debugger
 			}
 		}
 
-		self::$enabled = FALSE; // un-register shutdown function
-		exit(254);
+		self::$enabled = FALSE; // prevent double rendering
+		if (!$shutdown) {
+			exit(254);
+		}
 	}
 
 
