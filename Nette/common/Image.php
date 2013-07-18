@@ -309,6 +309,9 @@ class Image extends Object
 		if ($flags & self::EXACT) {
 			return $this->resize($width, $height, self::FILL)->crop('50%', '50%', $width, $height);
 		}
+		
+		// Correct gamma of orginal from 2.2 to 1.0.
+        	imagegammacorrect($this->getImageResource(), 2.2, 1.0);
 
 		list($newWidth, $newHeight) = static::calculateSize($this->getWidth(), $this->getHeight(), $width, $height, $flags);
 
@@ -331,6 +334,10 @@ class Image extends Object
 			);
 			$this->image = $newImage;
 		}
+		
+		// Correct gamma of new from 1.0 to 2.2.
+        	imagegammacorrect($this->getImageResource(), 1.0, 2.2);
+        	
 		return $this;
 	}
 
