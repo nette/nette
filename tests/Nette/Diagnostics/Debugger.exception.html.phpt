@@ -5,7 +5,9 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
- * @assertCode 500
+ * @exitCode   254
+ * @httpCode   500
+ * @outputMatchFile Debugger.exception.html.expect
  */
 
 use Nette\Diagnostics\Debugger;
@@ -19,13 +21,6 @@ Debugger::$productionMode = FALSE;
 header('Content-Type: text/html');
 
 Debugger::enable();
-
-register_shutdown_function(function(){
-	Assert::match(file_get_contents(__DIR__ . '/Debugger.exception.html.expect'), ob_get_clean());
-	die(0);
-});
-ob_start();
-
 
 function first($arg1, $arg2)
 {

@@ -5,6 +5,7 @@
  *
  * @author     David Grudl
  * @package    Nette\Config
+ * @httpCode   206
  */
 
 use Nette\Application\Responses\FileResponse,

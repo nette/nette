@@ -5,6 +5,9 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
+ * @exitCode   254
+ * @httpCode   500
+ * @outputMatch OK!
  */
 
 use Nette\Diagnostics\Debugger;
@@ -23,11 +26,11 @@ Debugger::$onFatalError[] = function() {
 Fatal error: Call to undefined function missing_funcion() in %a%
 exception 'Nette\\FatalErrorException' with message 'Call to undefined function missing_funcion()' in %a%
 Stack trace:
-#0 [internal function]: %ns%Debugger::_shutdownHandler()
+#0 [internal function]: %a%Debugger::_shutdownHandler()
 #1 {main}
 (stored in %a%)
 ", ob_get_clean());
-	die(0);
+	echo 'OK!';
 };
 ob_start();
 

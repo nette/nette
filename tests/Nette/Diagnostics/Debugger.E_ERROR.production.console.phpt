@@ -5,6 +5,9 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
+ * @exitCode   254
+ * @httpCode   500
+ * @outputMatch OK!
  */
 
 use Nette\Diagnostics\Debugger;
@@ -20,7 +23,7 @@ Debugger::enable();
 
 Debugger::$onFatalError[] = function() {
 	Assert::match('ERROR:%A%', ob_get_clean());
-	die(0);
+	echo 'OK!';
 };
 ob_start();
 

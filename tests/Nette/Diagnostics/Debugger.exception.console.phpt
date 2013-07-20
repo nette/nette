@@ -5,6 +5,9 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
+ * @exitCode   254
+ * @httpCode   500
+ * @outputMatch OK!
  */
 
 use Nette\Diagnostics\Debugger;
@@ -27,7 +30,7 @@ Stack trace:
 #3 {main}
 (stored in %a%)
 ", ob_get_clean());
-	die(0);
+	echo 'OK!';
 }
 ob_start();
 Debugger::$onFatalError[] = 'shutdown';

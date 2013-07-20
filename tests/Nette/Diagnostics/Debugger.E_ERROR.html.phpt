@@ -5,6 +5,9 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
+ * @exitCode   254
+ * @httpCode   500
+ * @outputMatchFile Debugger.E_ERROR.html.expect
  */
 
 use Nette\Diagnostics\Debugger;
@@ -16,14 +19,9 @@ require __DIR__ . '/../bootstrap.php';
 Debugger::$consoleMode = FALSE;
 Debugger::$productionMode = FALSE;
 header('Content-Type: text/html');
+ob_start(); // fatal error can write to output
 
 Debugger::enable();
-
-Debugger::$onFatalError[] = function() {
-	Assert::match(file_get_contents(__DIR__ . '/Debugger.E_ERROR.html.expect'), ob_get_clean());
-	die(0);
-};
-ob_start();
 
 
 function first($arg1, $arg2)
