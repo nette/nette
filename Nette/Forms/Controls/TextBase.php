@@ -110,6 +110,19 @@ abstract class TextBase extends BaseControl
 	}
 
 
+	/**
+	 * Adds input string filter for URLs.
+	 * @return self
+	 */
+	public function addUrlFilter()
+	{
+		$this->addFilter(function($s) {
+			return Nette\Utils\Validators::isUrl('http://' . $s) ? 'http://' . $s : $s;
+		});
+		return $this;
+	}
+
+
 	public function getControl()
 	{
 		$el = parent::getControl();
@@ -129,9 +142,7 @@ abstract class TextBase extends BaseControl
 			$this->addFloatFilter();
 
 		} elseif ($operation === Form::URL) {
-			$this->addFilter(function($s) {
-				return Nette\Utils\Validators::isUrl('http://' . $s) ? 'http://' . $s : $s;
-			});
+			$this->addUrlFilter();
 
 		} elseif ($operation === Form::LENGTH || $operation === Form::MAX_LENGTH) {
 			$tmp = is_array($arg) ? $arg[1] : $arg;
