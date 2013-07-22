@@ -97,6 +97,11 @@ switch ($driverName) {
 }
 
 
+$sqlBuilder = new SqlBuilder('book', $connection, $reflection);
+$sqlBuilder->addWhere('id <> ? OR id >= ?', 1, 2);
+Assert::same(reformat("SELECT * FROM [book] WHERE ([id] <> ? OR [id] >= ?)"), $sqlBuilder->buildSelectQuery());
+
+
 $books = $connection->table('book')->where('id',
 	$connection->table('book_tag')->select('book_id')->where('tag_id', 21)
 );
