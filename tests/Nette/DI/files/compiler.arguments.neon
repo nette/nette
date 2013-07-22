@@ -1,0 +1,6 @@
+services:
+	lorem:
+		class: Lorem(::MY_CONSTANT_TEST, Lorem::DOLOR_SIT, MY_FAILING_CONSTANT_TEST)
+
+	dolor:
+		class: Lorem(::MY_FAILING_CONSTANT_TEST)
