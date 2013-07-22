@@ -606,20 +606,31 @@ class ContainerBuilder extends Nette\Object
 	{
 		$that = $this;
 		array_walk_recursive($args, function(& $val) use ($that) {
-			list($val) = $that->normalizeEntity(array($val));
-
 			if ($val instanceof Statement) {
 				$val = ContainerBuilder::literal($that->formatStatement($val));
 
-			} elseif ($val === '@' . ContainerBuilder::THIS_CONTAINER) {
+			} elseif ($val === $that) {
 				$val = ContainerBuilder::literal('$this');
 
-			} elseif ($service = $that->getServiceName($val)) {
-				$val = $service === $that->current ? '$service' : $that->formatStatement(new Statement($val));
-				$val = ContainerBuilder::literal($val);
+			} elseif ($val instanceof ServiceDefinition) {
+				$val = '@' . current(array_keys($that->definitions, $val, TRUE));
 
 			} elseif (is_string($val) && preg_match('#^[\w\\\\]*::[A-Z][A-Z0-9_]*\z#', $val, $m)) {
 				$val = ContainerBuilder::literal(ltrim($val, ':'));
+			}
+
+			if (is_string($val) && substr($val, 0, 1) === '@') {
+				$pair = explode('::', $val, 2);
+				$name = $that->getServiceName($pair[0]);
+				if (isset($pair[1]) && preg_match('#^[A-Z][A-Z0-9_]*\z#', $pair[1], $m)) {
+					$val = $that->definitions[$name]->class . '::' . $pair[1];
+				} else {
+					$val = ($name === ContainerBuilder::THIS_CONTAINER
+						? '$this'
+						: ($name === $that->current ? '$service' : $that->formatStatement(new Statement("@$name"))))
+						. (isset($pair[1]) ? PhpHelpers::formatArgs('->?', array($pair[1])) : '');
+				}
+				$val = ContainerBuilder::literal($val);
 			}
 		});
 		return PhpHelpers::formatArgs($statement, $args);
@@ -653,12 +664,10 @@ class ContainerBuilder extends Nette\Object
 		}
 
 		if (is_array($entity) && $entity[0] instanceof ServiceDefinition) { // [ServiceDefinition, ...] -> [@serviceName, ...]
-			$tmp = array_keys($this->definitions, $entity[0], TRUE);
-			$entity[0] = "@$tmp[0]";
+			$entity[0] = '@' . current(array_keys($this->definitions, $entity[0], TRUE));
 
 		} elseif ($entity instanceof ServiceDefinition) { // ServiceDefinition -> @serviceName
-			$tmp = array_keys($this->definitions, $entity, TRUE);
-			$entity = "@$tmp[0]";
+			$entity = '@' . current(array_keys($this->definitions, $entity, TRUE));
 
 		} elseif (is_array($entity) && $entity[0] === $this) { // [$this, ...] -> [@container, ...]
 			$entity[0] = '@' . ContainerBuilder::THIS_CONTAINER;

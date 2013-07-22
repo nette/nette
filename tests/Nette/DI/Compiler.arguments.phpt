@@ -19,6 +19,8 @@ class Lorem
 
 	public $args;
 
+	public $var = 123;
+
 	function __construct()
 	{
 		$this->args[] = func_get_args();
@@ -47,6 +49,7 @@ file_put_contents(TEMP_DIR . '/code.php', "<?php\n\n$code");
 require TEMP_DIR . '/code.php';
 
 $container = new Container;
+$container->parameters = array('something');
 
 
 $lorem = $container->getService('lorem');
@@ -68,3 +71,9 @@ Assert::same( array(array('Lorem', 'method'), 'Lorem::add', 'Lorem::add'), $lore
 
 // special
 Assert::same( array(FALSE), $lorem->args[4] );
+
+// service variables
+Assert::same( array($lorem->var, $lorem->var, $container->parameters), $lorem->args[5] );
+
+// service constant
+Assert::same( array(Lorem::DOLOR_SIT, Lorem::DOLOR_SIT, Container::TAGS), $lorem->args[6] );
