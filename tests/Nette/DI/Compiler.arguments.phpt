@@ -23,6 +23,17 @@ class Lorem
 	{
 		$this->args[] = func_get_args();
 	}
+
+	function method()
+	{
+		$this->args[]  = func_get_args();
+	}
+
+	function add($a, $b)
+	{
+		return $a + $b;
+	}
+
 }
 
 define('MY_CONSTANT_TEST', "one");
@@ -45,3 +56,15 @@ Assert::same( array('one', Lorem::DOLOR_SIT, 'MY_FAILING_CONSTANT_TEST'), $lorem
 Assert::error(function () use ($container) {
 	$container->getService('dolor');
 }, E_NOTICE, "Use of undefined constant MY_FAILING_CONSTANT_TEST - assumed 'MY_FAILING_CONSTANT_TEST'");
+
+// services
+Assert::same( array($lorem, $lorem, $container), $lorem->args[1] );
+
+// statements
+Assert::same( array(3, 'HELLO'), $lorem->args[2] );
+
+// non-statements
+Assert::same( array(array('Lorem', 'method'), 'Lorem::add', 'Lorem::add'), $lorem->args[3] );
+
+// special
+Assert::same( array(FALSE), $lorem->args[4] );
