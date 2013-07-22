@@ -222,7 +222,7 @@ class SqlBuilder extends Nette\Object
 		$replace = NULL;
 		$placeholderNum = 0;
 		foreach ($args as $arg) {
-			preg_match('#(?:.*?\?.*?){' . $placeholderNum . '}(((?:&|\||^|~|\+|-|\*|/|%|\(|,|<|>|=|(?<=\W|^)(?:ALL|AND|ANY|BETWEEN|EXISTS|IN|LIKE|OR|NOT|SOME))\s*)?\?)#s', $condition, $match, PREG_OFFSET_CAPTURE);
+			preg_match('#(?:.*?\?.*?){' . $placeholderNum . '}(((?:&|\||^|~|\+|-|\*|/|%|\(|,|<|>|=|(?<=\W|^)(?:ALL|AND|ANY|BETWEEN|EXISTS|IN|LIKE|OR|NOT|SOME))\s*)?(?:\(\?\)|\?))#s', $condition, $match, PREG_OFFSET_CAPTURE);
 			$hasOperator = ($match[1][0] === '?' && $match[1][1] === 0) ? TRUE : !empty($match[2][0]);
 
 			if ($arg === NULL) {
@@ -286,9 +286,7 @@ class SqlBuilder extends Nette\Object
 			} elseif ($arg instanceof SqlLiteral) {
 				$this->parameters['where'][] = $arg;
 			} else {
-				if ($hasOperator) {
-					$replace = $match[2][0] . '?';
-				} else {
+				if (!$hasOperator) {
 					$replace = '= ?';
 				}
 				$this->parameters['where'][] = $arg;

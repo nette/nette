@@ -98,7 +98,8 @@ test(function() use ($connection, $reflection) { // backward compatibility
 	$sqlBuilder->addWhere('id = ? OR id ? OR id IN ? OR id LIKE ? OR id > ?', 1, 2, array(1, 2), "%test", 3);
 	$sqlBuilder->addWhere('name', "var");
 	$sqlBuilder->addWhere('MAIN', 0); // "IN" is not considered as the operator
-	Assert::same(reformat('SELECT * FROM [book] WHERE ([id] = ? OR [id] = ? OR [id] IN (?) OR [id] LIKE ? OR [id] > ?) AND ([name] = ?) AND (MAIN = ?)'), $sqlBuilder->buildSelectQuery());
+	$sqlBuilder->addWhere('id IN (?)', array(1, 2));
+	Assert::same(reformat('SELECT * FROM [book] WHERE ([id] = ? OR [id] = ? OR [id] IN (?) OR [id] LIKE ? OR [id] > ?) AND ([name] = ?) AND (MAIN = ?) AND ([id] IN (?))'), $sqlBuilder->buildSelectQuery());
 });
 
 
