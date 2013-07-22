@@ -58,6 +58,7 @@ $sqlBuilder[7] = new SqlBuilder('book', $connection, $reflection);
 $sqlBuilder[7]->addWhere('id = ? OR id ? OR id IN ? OR id LIKE ? OR id > ?', 1, 2, array(1, 2), "%test", 3);
 $sqlBuilder[7]->addWhere('name', "var");
 $sqlBuilder[7]->addWhere('MAIN', 0); // "IN" is not considered as the operator
+$sqlBuilder[7]->addWhere('id IN (?)', array(1, 2));
 
 // auto operator tests
 $sqlBuilder[8] = new SqlBuilder('book', $connection, $reflection);
@@ -76,7 +77,7 @@ Assert::same(reformat('SELECT * FROM [book] WHERE ([id] = ? OR [id] IS NULL)'), 
 Assert::same(reformat('SELECT * FROM [book] WHERE ([id] IN (?))'), $sqlBuilder[4]->buildSelectQuery());
 Assert::same(reformat('SELECT * FROM [book] WHERE ([id] = ? OR [id] = ? OR [id] IN (?))'), $sqlBuilder[5]->buildSelectQuery());
 Assert::same(reformat('SELECT * FROM [book] WHERE ([id] IN (NULL))'), $sqlBuilder[6]->buildSelectQuery());
-Assert::same(reformat('SELECT * FROM [book] WHERE ([id] = ? OR [id] = ? OR [id] IN (?) OR [id] LIKE ? OR [id] > ?) AND ([name] = ?) AND (MAIN = ?)'), $sqlBuilder[7]->buildSelectQuery());
+Assert::same(reformat('SELECT * FROM [book] WHERE ([id] = ? OR [id] = ? OR [id] IN (?) OR [id] LIKE ? OR [id] > ?) AND ([name] = ?) AND (MAIN = ?) AND ([id] IN (?))'), $sqlBuilder[7]->buildSelectQuery());
 Assert::same(reformat('SELECT * FROM [book] WHERE (FOO(?)) AND (FOO([id], ?)) AND ([id] & ? = ?) AND (?) AND (NOT ? OR ?) AND (? + ? - ? / ? * ? % ?)'), $sqlBuilder[8]->buildSelectQuery());
 Assert::same(reformat("SELECT * FROM [book] WHERE ([col1] = ?\nOR [col2] = ?)"), $sqlBuilder[9]->buildSelectQuery());
 
