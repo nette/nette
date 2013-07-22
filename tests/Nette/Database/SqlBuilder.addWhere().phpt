@@ -20,7 +20,6 @@ use Nette\Database\Table\SqlBuilder;
 
 $reflection = new DiscoveredReflection($connection);
 $dao = new Nette\Database\SelectionFactory($connection, $reflection);
-$sqlBuilder = array();
 
 
 test(function() use ($connection, $reflection) { // test paramateres with NULL
@@ -140,6 +139,13 @@ test(function() use ($connection, $reflection) { // tests multi column IN clause
 		'sqlite' => 'SELECT * FROM [book_tag] WHERE (([book_id] = ? AND [tag_id] = ?) OR ([book_id] = ? AND [tag_id] = ?))',
 		'SELECT * FROM [book_tag] WHERE (([book_id], [tag_id]) IN (?))',
 	)), $sqlBuilder->buildSelectQuery());
+});
+
+
+test(function() use ($connection, $reflection) { // tests operator suffix
+	$sqlBuilder = new SqlBuilder('book', $connection, $reflection);
+	$sqlBuilder->addWhere('id <> ? OR id >= ?', 1, 2);
+	Assert::same(reformat("SELECT * FROM [book] WHERE ([id] <> ? OR [id] >= ?)"), $sqlBuilder->buildSelectQuery());
 });
 
 
