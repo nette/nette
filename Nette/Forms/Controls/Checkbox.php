@@ -23,6 +23,16 @@ class Checkbox extends BaseControl
 {
 
 	/**
+	 * @param  string  label
+	 */
+	public function __construct($label = NULL)
+	{
+		parent::__construct($label);
+		$this->control->type = 'checkbox';
+	}
+
+
+	/**
 	 * Sets control's value.
 	 * @param  bool
 	 * @return self
@@ -53,7 +63,7 @@ class Checkbox extends BaseControl
 	 */
 	public function getControl()
 	{
-		return parent::getControl()->type('checkbox')->checked($this->value);
+		return parent::getControl()->checked($this->value);
 	}
 
 }

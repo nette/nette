@@ -28,6 +28,7 @@ class HiddenField extends BaseControl
 			throw new Nette\DeprecatedException('The "forced value" has been deprecated.');
 		}
 		parent::__construct();
+		$this->control->type = 'hidden';
 	}
 
 
@@ -55,7 +56,6 @@ class HiddenField extends BaseControl
 		$this->setOption('rendered', TRUE);
 		$el = clone $this->control;
 		return $el->addAttributes(array(
-			'type' => 'hidden',
 			'name' => $this->getHtmlName(),
 			'disabled' => $this->isDisabled(),
 			'value' => $this->value,
