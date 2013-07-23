@@ -39,5 +39,5 @@ test(function() use ($compiler) { // {default ...}
 
 	Assert::exception(function() use ($compiler) {
 		$compiler->expandMacro('default', '$temp->var1 = 123', '');
-	}, 'Nette\Latte\CompileException', "Unexpected '-' in {default \$temp->var1 = 123}");
+	}, 'Nette\Latte\CompileException', "Unexpected '->' in {default \$temp->var1 = 123}");
 });
