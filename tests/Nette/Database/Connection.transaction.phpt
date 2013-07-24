@@ -22,11 +22,10 @@ test(function() use ($connection) {
 });
 
 
-
 test(function() use ($connection) {
 	$connection->beginTransaction();
 	$connection->query('DELETE FROM book');
 	$connection->commit();
 
-	Assert::same( FALSE, $connection->fetchField('SELECT id FROM book WHERE id = ', 3) );
+	Assert::false( $connection->fetchField('SELECT id FROM book WHERE id = ', 3) );
 });

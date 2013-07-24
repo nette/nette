@@ -10,9 +10,7 @@
 use Nette\DI\Container;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class Service
@@ -22,7 +20,6 @@ class Service
 		return new static;
 	}
 }
-
 
 
 $container = new Container;
@@ -43,7 +40,6 @@ test(function() use ($container) {
 });
 
 
-
 test(function() use ($container) { // class name (deprecated)
 	Assert::error(function () use ($container) {
 		$container->addService('three', 'Service');
@@ -55,14 +51,12 @@ test(function() use ($container) { // class name (deprecated)
 });
 
 
-
 test(function() use ($container) { // factory (deprecated)
 	@$container->addService('factory1', 'Service::create'); // triggers E_USER_DEPRECATED
 	Assert::true( $container->hasService('factory1') );
 	Assert::true( $container->isCreated('factory1') );
 	Assert::type( 'Service', $container->getService('factory1') );
 });
-
 
 
 test(function() use ($container) { // factory (deprecated)
@@ -73,9 +67,8 @@ test(function() use ($container) { // factory (deprecated)
 });
 
 
-
 test(function() use ($container) { // closure factory (deprecated)
-	@$container->addService('factory3', function($container){ // triggers E_USER_DEPRECATED
+	@$container->addService('factory3', function($container) { // triggers E_USER_DEPRECATED
 		Assert::type( 'Nette\DI\Container', $container );
 		return new Service;
 	});
@@ -85,9 +78,8 @@ test(function() use ($container) { // closure factory (deprecated)
 });
 
 
-
 test(function() use ($container) { // bad factory (deprecated)
 	Assert::exception(function() use ($container) {
-		@$container->addService('five', function($container){}); // triggers E_USER_DEPRECATED
+		@$container->addService('five', function($container) {}); // triggers E_USER_DEPRECATED
 	}, 'Nette\InvalidArgumentException', 'Service must be a object, NULL given.');
 });

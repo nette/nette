@@ -12,15 +12,12 @@ use Nette\Security\IAuthenticator,
 	Nette\Security\IAuthorizator;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 // Setup environment
 $_COOKIE = array();
 ob_start();
-
 
 
 class Authenticator implements IAuthenticator
@@ -47,7 +44,6 @@ class Authenticator implements IAuthenticator
 }
 
 
-
 class Authorizator implements IAuthorizator
 {
 	/**
@@ -64,7 +60,6 @@ class Authorizator implements IAuthorizator
 }
 
 
-
 $container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
 
 $user = $container->getService('user');
@@ -76,7 +71,6 @@ Assert::false( $user->isLoggedIn() );
 Assert::same( array('guest'), $user->getRoles() );
 Assert::false( $user->isInRole('admin') );
 Assert::true( $user->isInRole('guest') );
-
 
 
 // authenticated
@@ -102,7 +96,6 @@ $user->setAuthorizator($handler);
 
 Assert::true( $user->isAllowed('delete_file') );
 Assert::false( $user->isAllowed('sleep_with_jany') );
-
 
 
 // log out

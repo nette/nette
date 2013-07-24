@@ -14,7 +14,6 @@ namespace Nette\Forms\Controls;
 use Nette;
 
 
-
 /**
  * @author Filip Procházka
  */
@@ -22,26 +21,20 @@ class CsrfProtection extends HiddenField
 {
 	const PROTECTION = 'Nette\Forms\Controls\CsrfProtection::validateCsrf';
 
-	/** @var int */
-	private $timeout;
-
 	/** @var Nette\Http\Session */
 	public $session;
-
 
 
 	/**
 	 * @param string
 	 * @param int
 	 */
-	public function __construct($message, $timeout)
+	public function __construct($message)
 	{
 		parent::__construct();
-		$this->timeout = $timeout;
 		$this->setOmitted()->addRule(self::PROTECTION, $message);
 		$this->monitor('Nette\Application\UI\Presenter');
 	}
-
 
 
 	protected function attached($parent)
@@ -53,21 +46,17 @@ class CsrfProtection extends HiddenField
 	}
 
 
-
 	/**
 	 * @return string
 	 */
 	public function getToken()
 	{
-		$key = 'key' . $this->timeout;
 		$session = $this->getSession()->getSection(__CLASS__);
-		$session->setExpiration($this->timeout, $key);
-		if (!isset($session->$key)) {
-			$session->$key = Nette\Utils\Strings::random();
+		if (!isset($session->token)) {
+			$session->token = Nette\Utils\Strings::random();
 		}
-		return $session->$key;
+		return $session->token;
 	}
-
 
 
 	/**
@@ -81,19 +70,16 @@ class CsrfProtection extends HiddenField
 	}
 
 
-
 	/**
 	 * @return bool
 	 */
 	public static function validateCsrf(CsrfProtection $control)
 	{
-		return (string) $control->getValue() === (string) $control->getToken();
+		return $control->getValue() === $control->getToken();
 	}
 
 
-
 	/********************* backend ****************d*g**/
-
 
 
 	/**

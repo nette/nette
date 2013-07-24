@@ -5,15 +5,19 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
- * @assertCode 500
+ * @httpCode   500
+ * @exitCode   254
+ * @outputMatchFile Debugger.exception.html.expect
  */
 
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
+if (PHP_SAPI === 'cli') {
+	Tester\Environment::skip();
+}
 
 
 Debugger::$productionMode = FALSE;
@@ -21,18 +25,10 @@ header('Content-Type: text/html');
 
 Debugger::enable();
 
-register_shutdown_function(function(){
-	Assert::match(file_get_contents(__DIR__ . '/Debugger.exception.html.expect'), ob_get_clean());
-	die(0);
-});
-ob_start();
-
-
 function first($arg1, $arg2)
 {
 	second(TRUE, FALSE);
 }
-
 
 
 function second($arg1, $arg2)

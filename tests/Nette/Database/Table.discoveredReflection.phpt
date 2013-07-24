@@ -52,7 +52,6 @@ test(function() use ($dao) {
 });
 
 
-
 test(function() use ($dao) {
 	$books = array();
 	foreach ($dao->table('author') as $author) {
@@ -70,12 +69,10 @@ test(function() use ($dao) {
 });
 
 
-
 test(function() use ($dao) {
 	$book = $dao->table('book')->get(1);
 	Assert::same('Jakub Vrana', $book->translator->name);
 });
-
 
 
 test(function() use ($dao) {
@@ -92,7 +89,6 @@ test(function() use ($dao) {
 	Assert::true(empty($book->author));
 	Assert::true(empty($book->translator));
 });
-
 
 
 test(function() use ($connection, $dao) {
@@ -117,7 +113,6 @@ test(function() use ($connection, $dao) {
 		), $books);
 	}
 });
-
 
 
 test(function() use ($dao) {

@@ -5,28 +5,25 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
- * @assertCode 500
+ * @httpCode   500
+ * @exitCode   254
+ * @outputMatch %A%<title>User Error</title><!-- Test::__toString -->%A%
  */
 
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
+if (PHP_SAPI === 'cli') {
+	Tester\Environment::skip();
+}
 
 
 Debugger::$productionMode = FALSE;
 header('Content-Type: text/html');
 
 Debugger::enable();
-
-register_shutdown_function(function(){
-	Assert::match('%A%<title>User Error</title><!-- Test::__toString -->%A%', ob_get_clean());
-	die(0);
-});
-ob_start();
-
 
 class Test
 {

@@ -10,9 +10,7 @@
 use Nette\Latte;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $template = new Nette\Templating\Template;
@@ -33,9 +31,9 @@ EOD
 Assert::match(<<<EOD
 <head>
 	<script src="nette.js"></script>
-	<link rel="alternate" />
+	<link rel="alternate">
 </head>
 
-	<link rel="alternate" />
+	<link rel="alternate">
 EOD
 , (string) $template);

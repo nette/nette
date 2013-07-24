@@ -11,9 +11,7 @@ use Nette\Application\Responses\FileResponse,
 	Nette\Http;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 test(function() {

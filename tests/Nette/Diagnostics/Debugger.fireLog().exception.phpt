@@ -10,9 +10,11 @@
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
+if (PHP_SAPI === 'cli') {
+	Tester\Environment::skip();
+}
 
 
 // Setup environment
@@ -21,12 +23,10 @@ $_SERVER['HTTP_X_FIRELOGGER'] = TRUE;
 Debugger::$productionMode = FALSE;
 
 
-
 function first($arg1, $arg2)
 {
 	second(TRUE, FALSE);
 }
-
 
 
 function second($arg1, $arg2)

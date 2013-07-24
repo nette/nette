@@ -15,7 +15,6 @@ use Nette,
 	Nette\Utils\Html;
 
 
-
 /**
  * Set of radio button controls.
  *
@@ -37,7 +36,6 @@ class RadioList extends BaseControl
 	protected $items = array();
 
 
-
 	/**
 	 * @param  string  label
 	 * @param  array   options from which to choose
@@ -54,20 +52,36 @@ class RadioList extends BaseControl
 	}
 
 
+	/**
+	 * Loads HTTP data.
+	 * @return void
+	 */
+	public function loadHttpData()
+	{
+		$this->value = $this->getHttpData();
+		if ($this->value !== NULL) {
+			if (is_array($this->disabled) && isset($this->disabled[$this->value])) {
+				$this->value = NULL;
+			} else {
+				$this->value = key(array($this->value => NULL));
+			}
+		}
+	}
+
 
 	/**
 	 * Sets selected radio value.
 	 * @param  string
-	 * @return RadioList  provides a fluent interface
+	 * @return self
 	 */
 	public function setValue($value)
 	{
-		if (!isset($this->items[$value]) && $value !== NULL) {
+		if ($value !== NULL && !isset($this->items[(string) $value])) {
 			throw new Nette\InvalidArgumentException("Value '$value' is out of range of current items.");
 		}
-		return $this->setRawValue($value);
+		$this->value = $value === NULL ? NULL : key(array((string) $value => NULL));
+		return $this;
 	}
-
 
 
 	/**
@@ -78,23 +92,10 @@ class RadioList extends BaseControl
 	{
 		if ($raw) {
 			trigger_error(__METHOD__ . '(TRUE) is deprecated; use getRawValue() instead.', E_USER_DEPRECATED);
+			return $this->getRawValue();
 		}
-		return ($raw || isset($this->items[$this->value])) ? $this->value : NULL;
+		return isset($this->items[$this->value]) ? $this->value : NULL;
 	}
-
-
-
-	protected function setRawValue($value)
-	{
-		if (is_scalar($value)) {
-			$foo = array($value => NULL);
-			$this->value = key($foo);
-		} else {
-			$this->value = NULL;
-		}
-		return $this;
-	}
-
 
 
 	/**
@@ -107,7 +108,6 @@ class RadioList extends BaseControl
 	}
 
 
-
 	/**
 	 * Is any radio button selected?
 	 * @return bool
@@ -118,19 +118,20 @@ class RadioList extends BaseControl
 	}
 
 
-
 	/**
 	 * Sets options from which to choose.
 	 * @param  array
 	 * @param  bool
-	 * @return RadioList  provides a fluent interface
+	 * @return self
 	 */
 	public function setItems(array $items, $useKeys = TRUE)
 	{
-		$this->items = $useKeys ? $items : array_combine($items, $items);
+		if (!$useKeys) {
+			$items = array_combine($items, $items);
+		}
+		$this->items = $items;
 		return $this;
 	}
-
 
 
 	/**
@@ -143,6 +144,24 @@ class RadioList extends BaseControl
 	}
 
 
+	/**
+	 * Disables or enables control or items.
+	 * @param  bool|array
+	 * @return self
+	 */
+	public function setDisabled($value = TRUE)
+	{
+		if (!is_array($value)) {
+			return parent::setDisabled($value);
+		}
+		parent::setDisabled(FALSE);
+		$this->disabled = array_fill_keys($value, TRUE);
+		if (isset($this->disabled[$this->value])) {
+			$this->value = NULL;
+		}
+		return $this;
+	}
+
 
 	/**
 	 * Returns separator HTML element template.
@@ -152,7 +171,6 @@ class RadioList extends BaseControl
 	{
 		return $this->separator;
 	}
-
 
 
 	/**
@@ -165,7 +183,6 @@ class RadioList extends BaseControl
 	}
 
 
-
 	/**
 	 * Generates control's HTML element.
 	 * @param  mixed
@@ -173,34 +190,36 @@ class RadioList extends BaseControl
 	 */
 	public function getControl($key = NULL)
 	{
-		$selectedValue = $this->value === NULL ? NULL : (string) $this->getValue();
-		$control = parent::getControl();
+		$selected = array_flip((array) $this->value);
+		$input = parent::getControl();
 
 		if ($key !== NULL) {
-			$control->id .= '-' . $key;
-			$control->checked = (string) $key === $selectedValue;
-			$control->value = $key;
-			return $control;
+			return $input->addAttributes(array(
+				'type' => 'radio',
+				'id' => $this->getHtmlId() . "-$key",
+				'checked' => isset($selected[$key]),
+				'value' => $key,
+			));
 		}
 
-		$idBase = $control->id;
+		$idBase = $input->id;
 		$container = clone $this->container;
 		$separator = (string) $this->separator;
 		$label = parent::getLabel();
 
-		foreach ($this->items as $k => $val) {
-			$control->id = $label->for = $idBase . '-' . $k;
-			$control->checked = (string) $k === $selectedValue;
-			$control->value = $k;
-			$label->setText($this->translate($val));
+		foreach ($this->items as $value => $caption) {
+			$input->id = $label->for = $idBase . '-' . $value;
+			$input->checked(isset($selected[$value]))
+				->disabled(is_array($this->disabled) ? isset($this->disabled[$value]) : $this->disabled)
+				->value($value);
+			$label->setText($this->translate($caption));
 
-			$container->add($label->insert(0, $control) . $separator);
-			$control->data('nette-rules', NULL);
+			$container->add($label->insert(0, $input) . $separator);
+			unset($input->attrs['data-nette-rules']);
 		}
 
 		return $container;
 	}
-
 
 
 	/**

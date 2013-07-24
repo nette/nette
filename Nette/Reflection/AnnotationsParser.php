@@ -15,7 +15,6 @@ use Nette,
 	Nette\Utils\Strings;
 
 
-
 /**
  * Annotations support for PHP.
  *
@@ -46,7 +45,6 @@ final class AnnotationsParser
 	private static $cacheStorage;
 
 
-
 	/**
 	 * Static class - cannot be instantiated.
 	 */
@@ -54,7 +52,6 @@ final class AnnotationsParser
 	{
 		throw new Nette\StaticClassException;
 	}
-
 
 
 	/**
@@ -122,8 +119,8 @@ final class AnnotationsParser
 		}
 
 		if ($r instanceof \ReflectionMethod && !$r->isPrivate()
-			&& (!$r->isConstructor() || !empty($annotations['inheritdoc'][0])))
-		{
+			&& (!$r->isConstructor() || !empty($annotations['inheritdoc'][0]))
+		) {
 			try {
 				$inherited = self::getAll(new \ReflectionMethod(get_parent_class($type), $member));
 			} catch (\ReflectionException $e) {
@@ -138,7 +135,6 @@ final class AnnotationsParser
 
 		return self::$cache[$type][$member] = $annotations;
 	}
-
 
 
 	/**
@@ -229,7 +225,6 @@ final class AnnotationsParser
 	}
 
 
-
 	/**
 	 * Parses PHP file.
 	 * @param  string
@@ -250,64 +245,64 @@ final class AnnotationsParser
 
 			if (is_array($token)) {
 				switch ($token[0]) {
-				case T_DOC_COMMENT:
-					$docComment = $token[1];
-				case T_WHITESPACE:
-				case T_COMMENT:
-					continue 2;
+					case T_DOC_COMMENT:
+						$docComment = $token[1];
+					case T_WHITESPACE:
+					case T_COMMENT:
+						continue 2;
 
-				case T_STRING:
-				case T_NS_SEPARATOR:
-				case T_VARIABLE:
-					if ($expected) {
-						$name .= $token[1];
-					}
-					continue 2;
+					case T_STRING:
+					case T_NS_SEPARATOR:
+					case T_VARIABLE:
+						if ($expected) {
+							$name .= $token[1];
+						}
+						continue 2;
 
-				case T_FUNCTION:
-				case T_VAR:
-				case T_PUBLIC:
-				case T_PROTECTED:
-				case T_NAMESPACE:
-				case T_CLASS:
-				case T_INTERFACE:
-					$expected = $token[0];
-					$name = NULL;
-					continue 2;
+					case T_FUNCTION:
+					case T_VAR:
+					case T_PUBLIC:
+					case T_PROTECTED:
+					case T_NAMESPACE:
+					case T_CLASS:
+					case T_INTERFACE:
+						$expected = $token[0];
+						$name = NULL;
+						continue 2;
 
-				case T_STATIC:
-				case T_ABSTRACT:
-				case T_FINAL:
-					continue 2; // ignore in expectation
+					case T_STATIC:
+					case T_ABSTRACT:
+					case T_FINAL:
+						continue 2; // ignore in expectation
 
-				case T_CURLY_OPEN:
-				case T_DOLLAR_OPEN_CURLY_BRACES:
-					$level++;
+					case T_CURLY_OPEN:
+					case T_DOLLAR_OPEN_CURLY_BRACES:
+						$level++;
 				}
 			}
 
 			if ($expected) {
 				switch ($expected) {
-				case T_CLASS:
-				case T_INTERFACE:
-					$class = $namespace . $name;
-					$classLevel = $level;
-					$name = '';
-					// break intentionally omitted
-				case T_FUNCTION:
-					if ($token === '&') {
-						continue 2; // ignore
-					}
-				case T_VAR:
-				case T_PUBLIC:
-				case T_PROTECTED:
-					if ($class && $name !== NULL && $docComment) {
-						self::$cache[$class][$name] = self::parseComment($docComment);
-					}
-					break;
+					case T_CLASS:
+					case T_INTERFACE:
+						$class = $namespace . $name;
+						$classLevel = $level;
+						$name = '';
+						// break intentionally omitted
+					case T_FUNCTION:
+						if ($token === '&') {
+							continue 2; // ignore
+						}
+					case T_VAR:
+					case T_PUBLIC:
+					case T_PROTECTED:
+						if ($class && $name !== NULL && $docComment) {
+							self::$cache[$class][$name] = self::parseComment($docComment);
+						}
+						break;
 
-				case T_NAMESPACE:
-					$namespace = $name . '\\';
+					case T_NAMESPACE:
+						$namespace = $name . '\\';
 				}
 
 				$expected = $docComment = NULL;
@@ -328,9 +323,7 @@ final class AnnotationsParser
 	}
 
 
-
 	/********************* backend ****************d*g**/
-
 
 
 	/**
@@ -340,7 +333,6 @@ final class AnnotationsParser
 	{
 		self::$cacheStorage = $storage;
 	}
-
 
 
 	/**

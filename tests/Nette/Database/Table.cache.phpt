@@ -14,14 +14,12 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
 
 
-
 $cacheStorage = new Nette\Caching\Storages\MemoryStorage;
 $dao = new Nette\Database\SelectionFactory(
 	$connection,
 	new Nette\Database\Reflection\DiscoveredReflection($connection, $cacheStorage),
 	$cacheStorage
 );
-
 
 
 test(function() use ($dao) { // Testing Selection caching
@@ -45,7 +43,6 @@ test(function() use ($dao) { // Testing Selection caching
 	$bookSelection = $dao->table('book')->wherePrimary(2);
 	Assert::same(reformat('SELECT [id], [title], [translator_id], [author_id] FROM [book] WHERE ([book].[id] = ?)'), $bookSelection->getSql());
 });
-
 
 
 test(function() use ($dao) { // Testing GroupedSelection reinvalidation caching
@@ -75,11 +72,9 @@ test(function() use ($dao) { // Testing GroupedSelection reinvalidation caching
 });
 
 
-
 before(function() use ($cacheStorage) {
 	$cacheStorage->clean(array(Nette\Caching\Cache::ALL => TRUE));
 });
-
 
 
 test(function() use ($dao) {
@@ -104,7 +99,6 @@ test(function() use ($dao) {
 });
 
 
-
 test(function() use ($dao) {
 	$relatedStack = array();
 	foreach ($dao->table('author') as $author) {
@@ -121,7 +115,6 @@ test(function() use ($dao) {
 		Assert::same(array('id', 'author_id'), array_keys((array) $property->getValue($related)));
 	}
 });
-
 
 
 test(function() use ($dao) {

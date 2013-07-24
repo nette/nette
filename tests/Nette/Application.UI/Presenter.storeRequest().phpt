@@ -13,9 +13,7 @@ use Nette\Http,
 	Nette\Security;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class TestPresenter extends Application\UI\Presenter

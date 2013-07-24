@@ -5,25 +5,18 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
+ * @outputMatch
  */
 
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Debugger::$productionMode = TRUE;
 
 Debugger::enable();
-
-register_shutdown_function(function(){
-	Assert::same('', ob_get_clean());
-});
-ob_start();
-
 
 mktime(); // E_STRICT
 mktime(0, 0, 0, 1, 23, 1978, 1); // E_DEPRECATED

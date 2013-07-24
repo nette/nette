@@ -58,14 +58,19 @@
 		return this.elem.hasClass(mode);
 	};
 
-	Panel.prototype.focus = function() {
+	Panel.prototype.focus = function(callback) {
 		var elem = this.elem;
 		if (this.is(Panel.WINDOW)) {
 			elem.data().win.focus();
 		} else {
-			clearTimeout(elem.data().blurTimeout);
-			elem.addClass(Panel.FOCUSED).show();
-			elem[0].style.zIndex = Panel.zIndex++;
+			clearTimeout(elem.data().displayTimeout);
+			elem.data().displayTimeout = setTimeout(function() {
+				elem.addClass(Panel.FOCUSED).show();
+				elem[0].style.zIndex = Panel.zIndex++;
+				if (callback) {
+					callback();
+				}
+			}, 50);
 		}
 	};
 
@@ -73,7 +78,8 @@
 		var elem = this.elem;
 		elem.removeClass(Panel.FOCUSED);
 		if (this.is(Panel.PEEK)) {
-			elem.data().blurTimeout = setTimeout(function() {
+			clearTimeout(elem.data().displayTimeout);
+			elem.data().displayTimeout = setTimeout(function() {
 				elem.hide();
 			}, 50);
 		}
@@ -166,7 +172,6 @@
 	};
 
 
-
 	var Bar = Nette.DebugBar = function() {
 	};
 
@@ -214,13 +219,14 @@
 		}).bind('mouseenter', function(e) {
 			if (this.rel && this.rel !== 'close' && !elem.hasClass('nette-dragged')) {
 				var panel = Debug.getPanel(this.rel), link = $(this);
-				panel.focus();
-				if (panel.is(Panel.PEEK)) {
-					panel.elem.position({
-						right: panel.elem.position().right - link.offset().left + panel.elem.position().width - link.position().width - 4 + panel.elem.offset().left,
-						bottom: panel.elem.position().bottom - elem.offset().top + panel.elem.position().height + 4 + panel.elem.offset().top
-					});
-				}
+				panel.focus(function() {
+					if (panel.is(Panel.PEEK)) {
+						panel.elem.position({
+							right: panel.elem.position().right - link.offset().left + panel.elem.position().width - link.position().width - 4 + panel.elem.offset().left,
+							bottom: panel.elem.position().bottom - elem.offset().top + panel.elem.position().height + 4 + panel.elem.offset().top
+						});
+					}
+				});
 			}
 
 		}).bind('mouseleave', function(e) {
@@ -257,7 +263,6 @@
 			$('#' + this.id).position({right: m[1], bottom: m[2]});
 		}
 	};
-
 
 
 	var Debug = Nette.Debug = {};

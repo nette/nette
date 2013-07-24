@@ -14,7 +14,6 @@ namespace Nette\Diagnostics;
 use Nette;
 
 
-
 /**
  * Logger.
  *
@@ -41,7 +40,6 @@ class Logger extends Nette\Object
 	public $email;
 
 
-
 	/**
 	 * Logs message or exception to file and sends email notification.
 	 * @param  string|array
@@ -64,11 +62,10 @@ class Logger extends Nette\Object
 			&& @filemtime($this->directory . '/email-sent') + $this->emailSnooze < time() // @ - file may not exist
 			&& @file_put_contents($this->directory . '/email-sent', 'sent') // @ - file may not be writable
 		) {
-			Nette\Callback::create($this->mailer)->invoke($message, implode(', ', (array) $this->email));
+			call_user_func($this->mailer, $message, implode(', ', (array) $this->email));
 		}
 		return $res;
 	}
-
 
 
 	/**

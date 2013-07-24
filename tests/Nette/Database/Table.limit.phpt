@@ -21,7 +21,6 @@ test(function() use ($dao) {
 });
 
 
-
 test(function() use ($dao) {
 	$authors = $dao->table('author')->order('name')->limit(2);
 	$names = array();

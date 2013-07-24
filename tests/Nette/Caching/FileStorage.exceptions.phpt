@@ -11,15 +11,12 @@ use Nette\Caching\Cache,
 	Nette\Caching\Storages\FileStorage;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Assert::exception(function() {
 	new FileStorage(TEMP_DIR . '/missing');
 }, 'Nette\DirectoryNotFoundException', "Directory '%a%' not found.");
-
 
 
 Assert::exception(function() {

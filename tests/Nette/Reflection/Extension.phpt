@@ -10,15 +10,12 @@
 use Nette\Reflection;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $ext = new Reflection\Extension('standard');
 $funcs = $ext->getFunctions();
 Assert::equal( new Reflection\GlobalFunction('sleep'), $funcs['sleep'] );
-
 
 
 $ext = new Reflection\Extension('pdo');

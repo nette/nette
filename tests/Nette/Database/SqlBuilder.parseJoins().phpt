@@ -17,7 +17,6 @@ use Nette\Database\Reflection\DiscoveredReflection;
 use Nette\Database\Table\SqlBuilder;
 
 
-
 class SqlBuilderMock extends SqlBuilder
 {
 	public function parseJoins(& $joins, & $query, $inner = FALSE)
@@ -32,7 +31,6 @@ class SqlBuilderMock extends SqlBuilder
 
 $reflection = new DiscoveredReflection($connection);
 $sqlBuilder = new SqlBuilderMock('nUsers', $connection, $reflection);
-
 
 
 $joins = array();

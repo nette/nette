@@ -10,9 +10,7 @@
 use Nette\Utils\Finder;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 function export($iterator)
@@ -24,14 +22,12 @@ function export($iterator)
 }
 
 
-
 test(function() { // size filter
 	$finder = Finder::findFiles('*')->size('>8kB')->from('files');
 	Assert::same(array(
 		'files/images/logo.gif',
 	), export($finder));
 });
-
 
 
 test(function() {
@@ -42,7 +38,6 @@ test(function() {
 		'files/subdir/readme',
 	), export($finder));
 });
-
 
 
 test(function() {
@@ -58,19 +53,16 @@ test(function() {
 });
 
 
-
 test(function() {
 	$finder = Finder::findDirectories('*')->size('>', 10)->size('< 100b')->from('files');
 	Assert::same(array(), export($finder));
 });
 
 
-
 test(function() { // date filter
 	$finder = Finder::findFiles('*')->date('> 2020-01-02')->from('files');
 	Assert::same(array(), export($finder));
 });
-
 
 
 test(function() { // custom filters
@@ -80,7 +72,6 @@ test(function() { // custom filters
 		});
 	});
 });
-
 
 
 test(function() {

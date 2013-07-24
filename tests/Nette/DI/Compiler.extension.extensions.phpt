@@ -10,9 +10,7 @@
 use Nette\DI;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class FooExtension extends DI\CompilerExtension
@@ -22,8 +20,6 @@ class FooExtension extends DI\CompilerExtension
 		$this->getContainerBuilder()->parameters['foo'] = 'hello';
 	}
 }
-
-
 
 
 $loader = new DI\Config\Loader;

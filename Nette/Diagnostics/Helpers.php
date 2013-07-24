@@ -14,7 +14,6 @@ namespace Nette\Diagnostics;
 use Nette;
 
 
-
 /**
  * Rendering helpers for Debugger.
  *
@@ -45,7 +44,6 @@ final class Helpers
 	}
 
 
-
 	public static function findTrace(array $trace, $method, & $index = NULL)
 	{
 		$m = explode('::', $method);
@@ -59,7 +57,6 @@ final class Helpers
 			}
 		}
 	}
-
 
 
 	public static function fixStack($exception)
@@ -85,7 +82,6 @@ final class Helpers
 		}
 		return $exception;
 	}
-
 
 
 	/** @deprecated */

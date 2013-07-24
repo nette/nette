@@ -11,9 +11,7 @@
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 // Setup environment
@@ -40,7 +38,6 @@ test(function() {
 	$e = new Exception('First');
 	Debugger::log($e);
 });
-
 
 
 test(function() {

@@ -13,11 +13,9 @@ use Nette\Latte,
 	Nette\Utils\Html;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/Template.inc';
-
 
 
 $latte = new Latte\Engine;
@@ -28,4 +26,4 @@ $template->gt = '>';
 $template->dash = '-';
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::match(file_get_contents("$path.html"), $template->__toString(TRUE));
+Assert::matchFile("$path.html", $template->__toString(TRUE));

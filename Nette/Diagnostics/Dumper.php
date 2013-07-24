@@ -14,7 +14,6 @@ namespace Nette\Diagnostics;
 use Nette;
 
 
-
 /**
  * Dumps a variable.
  *
@@ -46,7 +45,6 @@ class Dumper
 	public static $resources = array('stream' => 'stream_get_meta_data', 'stream-context' => 'stream_context_get_options', 'curl' => 'curl_getinfo');
 
 
-
 	/**
 	 * Dumps variable to the output.
 	 * @return mixed  variable
@@ -55,16 +53,13 @@ class Dumper
 	{
 		if (PHP_SAPI !== 'cli' && !preg_match('#^Content-Type: (?!text/html)#im', implode("\n", headers_list()))) {
 			echo self::toHtml($var, $options);
-		} elseif (self::$terminalColors && preg_match('#^xterm|^screen#', getenv('TERM'))
-			&& (defined('STDOUT') && function_exists('posix_isatty') ? posix_isatty(STDOUT) : TRUE))
-		{
+		} elseif (self::detectColors()) {
 			echo self::toTerminal($var, $options);
 		} else {
 			echo self::toText($var, $options);
 		}
 		return $var;
 	}
-
 
 
 	/**
@@ -87,7 +82,6 @@ class Dumper
 	}
 
 
-
 	/**
 	 * Dumps variable to plain text.
 	 * @return string
@@ -96,7 +90,6 @@ class Dumper
 	{
 		return htmlspecialchars_decode(strip_tags(self::toHtml($var, $options)), ENT_QUOTES);
 	}
-
 
 
 	/**
@@ -109,7 +102,6 @@ class Dumper
 			return "\033[" . (isset($m[1], Dumper::$terminalColors[$m[1]]) ? Dumper::$terminalColors[$m[1]] : '0') . "m";
 		}, self::toHtml($var, $options))), ENT_QUOTES);
 	}
-
 
 
 	/**
@@ -129,12 +121,10 @@ class Dumper
 	}
 
 
-
 	private static function dumpNull()
 	{
 		return "<span class=\"nette-dump-null\">NULL</span>\n";
 	}
-
 
 
 	private static function dumpBoolean(& $var)
@@ -143,12 +133,10 @@ class Dumper
 	}
 
 
-
 	private static function dumpInteger(& $var)
 	{
 		return "<span class=\"nette-dump-number\">$var</span>\n";
 	}
-
 
 
 	private static function dumpDouble(& $var)
@@ -158,14 +146,12 @@ class Dumper
 	}
 
 
-
 	private static function dumpString(& $var, $options)
 	{
 		return '<span class="nette-dump-string">'
 			. self::encodeString($options[self::TRUNCATE] && strlen($var) > $options[self::TRUNCATE] ? substr($var, 0, $options[self::TRUNCATE]) . ' ... ' : $var)
 			. '</span>' . (strlen($var) > 1 ? ' (' . strlen($var) . ')' : '') . "\n";
 	}
-
 
 
 	private static function dumpArray(& $var, $options, $level)
@@ -178,7 +164,7 @@ class Dumper
 		$out = '<span class="nette-dump-array">array</span> (';
 
 		if (empty($var)) {
-			return $out . "0)\n";
+			return $out . ")\n";
 
 		} elseif (isset($var[$marker])) {
 			return $out . (count($var) - 1) . ") [ <i>RECURSION</i> ]\n";
@@ -203,7 +189,6 @@ class Dumper
 	}
 
 
-
 	private static function dumpObject(& $var, $options, $level)
 	{
 		if ($var instanceof \Closure) {
@@ -212,7 +197,10 @@ class Dumper
 			foreach ($rc->getParameters() as $param) {
 				$fields[] = '$' . $param->getName();
 			}
-			$fields = array('file' => $rc->getFileName(), 'line' => $rc->getStartLine(), 'parameters' => implode(', ', $fields));
+			$fields = array(
+				'file' => $rc->getFileName(), 'line' => $rc->getStartLine(),
+				'variables' => $rc->getStaticVariables(), 'parameters' => implode(', ', $fields)
+			);
 		} elseif ($var instanceof \SplFileInfo) {
 			$fields = array('path' => $var->getPathname());
 		} elseif ($var instanceof \SplObjectStorage) {
@@ -225,7 +213,7 @@ class Dumper
 		}
 
 		static $list = array();
-		$out = '<span class="nette-dump-object">' . get_class($var) . "</span> (" . count($fields) . ')';
+		$out = '<span class="nette-dump-object">' . get_class($var) . '</span> <span class="nette-dump-hash">#' . substr(md5(spl_object_hash($var)), 0, 4) . '</span>';
 
 		if (empty($fields)) {
 			return $out . "\n";
@@ -256,7 +244,6 @@ class Dumper
 	}
 
 
-
 	private static function dumpResource(& $var, $options, $level)
 	{
 		$type = get_resource_type($var);
@@ -271,7 +258,6 @@ class Dumper
 		}
 		return "$out\n";
 	}
-
 
 
 	private static function encodeString($s)
@@ -292,7 +278,6 @@ class Dumper
 		}
 		return '"' . htmlSpecialChars($s, ENT_NOQUOTES) . '"';
 	}
-
 
 
 	/**
@@ -318,6 +303,18 @@ class Dumper
 				);
 			}
 		}
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	private static function detectColors()
+	{
+		return self::$terminalColors &&
+			(getenv('ConEmuANSI') === 'ON'
+			|| getenv('ANSICON') !== FALSE
+			|| (defined('STDOUT') && function_exists('posix_isatty') && posix_isatty(STDOUT)));
 	}
 
 }

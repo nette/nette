@@ -25,7 +25,6 @@ test(function() use ($dao) {
 });
 
 
-
 test(function() use ($dao) {
 	$ids = $dao->table('book')->order('id')->fetchPairs('id', 'id');  // SELECT * FROM `book` ORDER BY `id`
 	Assert::same(array(
@@ -35,7 +34,6 @@ test(function() use ($dao) {
 		4 => 4,
 	), $ids);
 });
-
 
 
 test(function() use ($dao) {

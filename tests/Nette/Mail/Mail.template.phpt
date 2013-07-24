@@ -12,11 +12,9 @@ use Nette\Latte,
 	Nette\Templating\FileTemplate;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/Mail.inc';
-
 
 
 $mail = new Message();
@@ -30,4 +28,4 @@ $mail->htmlBody = $template;
 $mailer = new TestMailer();
 $mailer->send($mail);
 
-Assert::match(file_get_contents(__DIR__ . '/Mail.template.expect'), TestMailer::$output);
+Assert::matchFile(__DIR__ . '/Mail.template.expect', TestMailer::$output);

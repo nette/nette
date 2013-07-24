@@ -14,7 +14,6 @@ namespace Nette;
 use Nette;
 
 
-
 /**
  * Nette environment and configuration.
  *
@@ -38,7 +37,6 @@ final class Environment
 	private static $context;
 
 
-
 	/**
 	 * Static class - cannot be instantiated.
 	 */
@@ -48,9 +46,7 @@ final class Environment
 	}
 
 
-
 	/********************* environment modes ****************d*g**/
-
 
 
 	/**
@@ -61,7 +57,6 @@ final class Environment
 	{
 		return PHP_SAPI === 'cli';
 	}
-
 
 
 	/**
@@ -77,7 +72,6 @@ final class Environment
 	}
 
 
-
 	/**
 	 * Enables or disables production mode.
 	 * @param  bool
@@ -89,9 +83,7 @@ final class Environment
 	}
 
 
-
 	/********************* environment variables ****************d*g**/
-
 
 
 	/**
@@ -108,7 +100,6 @@ final class Environment
 		}
 		self::getContext()->parameters[$name] = $value;
 	}
-
 
 
 	/**
@@ -130,7 +121,6 @@ final class Environment
 	}
 
 
-
 	/**
 	 * Returns the all environment variables.
 	 * @return array
@@ -139,7 +129,6 @@ final class Environment
 	{
 		return self::getContext()->parameters;
 	}
-
 
 
 	/**
@@ -154,9 +143,7 @@ final class Environment
 	}
 
 
-
 	/********************* context ****************d*g**/
-
 
 
 	/**
@@ -172,7 +159,6 @@ final class Environment
 	}
 
 
-
 	/**
 	 * Get initial instance of context.
 	 * @return \SystemContainer|Nette\DI\Container
@@ -186,7 +172,6 @@ final class Environment
 	}
 
 
-
 	/**
 	 * Gets the service object of the specified type.
 	 * @param  string service name
@@ -196,7 +181,6 @@ final class Environment
 	{
 		return self::getContext()->getService($name);
 	}
-
 
 
 	/**
@@ -215,7 +199,6 @@ final class Environment
 	}
 
 
-
 	/**
 	 * @return Nette\Http\Request
 	 */
@@ -223,7 +206,6 @@ final class Environment
 	{
 		return self::getContext()->getByType('Nette\Http\IRequest');
 	}
-
 
 
 	/**
@@ -235,7 +217,6 @@ final class Environment
 	}
 
 
-
 	/**
 	 * @return Nette\Http\Response
 	 */
@@ -243,7 +224,6 @@ final class Environment
 	{
 		return self::getContext()->getByType('Nette\Http\IResponse');
 	}
-
 
 
 	/**
@@ -255,7 +235,6 @@ final class Environment
 	}
 
 
-
 	/**
 	 * @return Nette\Security\User
 	 */
@@ -263,7 +242,6 @@ final class Environment
 	{
 		return self::getContext()->getByType('Nette\Security\User');
 	}
-
 
 
 	/**
@@ -275,9 +253,7 @@ final class Environment
 	}
 
 
-
 	/********************* service factories ****************d*g**/
-
 
 
 	/**
@@ -288,7 +264,6 @@ final class Environment
 	{
 		return new Caching\Cache(self::getService('cacheStorage'), $namespace);
 	}
-
 
 
 	/**
@@ -304,9 +279,7 @@ final class Environment
 	}
 
 
-
 	/********************* global configuration ****************d*g**/
-
 
 
 	/**
@@ -340,7 +313,6 @@ final class Environment
 		}
 		return self::getConfig();
 	}
-
 
 
 	/**

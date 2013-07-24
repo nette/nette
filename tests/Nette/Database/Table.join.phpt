@@ -29,19 +29,16 @@ test(function() use ($dao) {
 });
 
 
-
 test(function() use ($dao) {
 	$joinSql = $dao->table('book_tag')->where('book_id', 1)->select('tag.*')->getSql();
 	Assert::same(reformat('SELECT [tag].* FROM [book_tag] LEFT JOIN [tag] ON [book_tag].[tag_id] = [tag].[id] WHERE ([book_id] = ?)'), $joinSql);
 });
 
 
-
 test(function() use ($dao) {
 	$joinSql = $dao->table('book_tag')->where('book_id', 1)->select('Tag.id')->getSql();
 	Assert::same(reformat('SELECT [Tag].[id] FROM [book_tag] LEFT JOIN [Tag] ON [book_tag].[Tag_id] = [Tag].[id] WHERE ([book_id] = ?)'), $joinSql);
 });
-
 
 
 test(function() use ($dao) {
@@ -58,12 +55,9 @@ test(function() use ($dao) {
 });
 
 
-
 test(function() use ($dao) {
 	Assert::same(2, $dao->table('author')->where('author_id', 11)->count(':book.id')); // SELECT COUNT(book.id) FROM `author` LEFT JOIN `book` ON `author`.`id` = `book`.`author_id` WHERE (`author_id` = 11)
 });
-
-
 
 
 test(function() use ($connection) {

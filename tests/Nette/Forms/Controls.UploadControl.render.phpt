@@ -11,7 +11,6 @@ use Nette\Forms\Form,
 	Nette\Utils\Html;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -24,7 +23,6 @@ class Translator implements Nette\Localization\ITranslator
 }
 
 
-
 test(function() {
 	$form = new Form;
 	$input = $form->addUpload('file', 'Label');
@@ -34,18 +32,16 @@ test(function() {
 	Assert::same('<label for="frm-file">Another label</label>', (string) $input->getLabel('Another label'));
 
 	Assert::type('Nette\Utils\Html', $input->getControl());
-	Assert::same('<input type="file" name="file" id="frm-file" />', (string) $input->getControl());
+	Assert::same('<input type="file" name="file" id="frm-file">', (string) $input->getControl());
 });
-
 
 
 test(function() { // multiple
 	$form = new Form;
 	$input = $form->addUpload('file', 'Label', TRUE);
 
-	Assert::same('<input type="file" multiple="multiple" name="file[]" id="frm-file" />', (string) $input->getControl());
+	Assert::same('<input type="file" name="file[]" multiple id="frm-file">', (string) $input->getControl());
 });
-
 
 
 test(function() { // Html with translator
@@ -59,14 +55,12 @@ test(function() { // Html with translator
 });
 
 
-
 test(function() { // validation rules
 	$form = new Form;
 	$input = $form->addUpload('file')->setRequired('required');
 
-	Assert::same('<input type="file" name="file" id="frm-file" required="required" data-nette-rules=\'[{"op":":filled","msg":"required"}]\' />', (string) $input->getControl());
+	Assert::same('<input type="file" name="file" id="frm-file" required data-nette-rules=\'[{"op":":filled","msg":"required"}]\'>', (string) $input->getControl());
 });
-
 
 
 test(function() { // container
@@ -74,5 +68,5 @@ test(function() { // container
 	$container = $form->addContainer('container');
 	$input = $container->addUpload('file');
 
-	Assert::same('<input type="file" name="container[file]" id="frm-container-file" />', (string) $input->getControl());
+	Assert::same('<input type="file" name="container[file]" id="frm-container-file">', (string) $input->getControl());
 });

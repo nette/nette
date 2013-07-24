@@ -5,14 +5,15 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
+ * @exitCode   255
+ * @httpCode   500
+ * @outputMatch OK!
  */
 
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Debugger::$productionMode = FALSE;
@@ -33,10 +34,10 @@ Stack trace:
 Fatal error: Call to undefined function missing_funcion() in %a%
 exception 'Nette\\FatalErrorException' with message 'Call to undefined function missing_funcion()' in %a%
 Stack trace:
-#0 [internal function]: %ns%Debugger::_shutdownHandler()
+#0 [internal function]: Nette\\Diagnostics\\Debugger::_shutdownHandler()
 #1 {main}
 ", ob_get_clean());
-	die(0);
+	echo 'OK!';
 };
 ob_start();
 

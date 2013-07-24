@@ -10,11 +10,9 @@
 use Nette\Mail\Message;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/Mail.inc';
-
 
 
 $mailer = new TestMailer();
@@ -50,7 +48,6 @@ EOD
 , TestMailer::$output );
 
 
-
 $mail = new Message();
 $mail->addAttachment(__DIR__ . '/files/example.zip', NULL, 'application/zip')
 	->setEncoding(Message::ENCODING_QUOTED_PRINTABLE);
@@ -78,7 +75,6 @@ PK=03=04=14=00=00=00=08=00'=882;&=91*g@=00=00=00A=00=00=00=0B=00=00=00versi=%A%0
 ----------%S%--
 EOD
 , TestMailer::$output );
-
 
 
 $mail = new Message();

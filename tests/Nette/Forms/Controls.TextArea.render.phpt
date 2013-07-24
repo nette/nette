@@ -11,7 +11,6 @@ use Nette\Forms\Form,
 	Nette\Utils\Html;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -22,7 +21,6 @@ class Translator implements Nette\Localization\ITranslator
 		return strtoupper($s);
 	}
 }
-
 
 
 test(function() {
@@ -36,9 +34,8 @@ test(function() {
 	Assert::same('<label for="frm-text">Another label</label>', (string) $input->getLabel('Another label'));
 
 	Assert::type('Nette\Utils\Html', $input->getControl());
-	Assert::same('<textarea autocomplete="off" name="text" id="frm-text">&amp;text</textarea>', (string) $input->getControl());
+	Assert::same('<textarea name="text" autocomplete="off" id="frm-text">&amp;text</textarea>', (string) $input->getControl());
 });
-
 
 
 test(function() { // translator
@@ -50,9 +47,8 @@ test(function() { // translator
 
 	Assert::same('<label for="frm-text">LABEL</label>', (string) $input->getLabel());
 	Assert::same('<label for="frm-text">ANOTHER LABEL</label>', (string) $input->getLabel('Another label'));
-	Assert::same('<textarea placeholder="PLACE" name="text" id="frm-text">text</textarea>', (string) $input->getControl());
+	Assert::same('<textarea name="text" placeholder="PLACE" id="frm-text">text</textarea>', (string) $input->getControl());
 });
-
 
 
 test(function() { // Html with translator
@@ -65,15 +61,13 @@ test(function() { // Html with translator
 });
 
 
-
 test(function() { // validation rule LENGTH
 	$form = new Form;
 	$input = $form->addTextArea('text')
 		->addRule($form::LENGTH, NULL, array(10, 20));
 
-	Assert::same('<textarea maxlength="20" name="text" id="frm-text" data-nette-rules=\'[{"op":":length","msg":"Please enter a value between 10 and 20 characters long.","arg":[10,20]}]\'></textarea>', (string) $input->getControl());
+	Assert::same('<textarea name="text" maxlength="20" id="frm-text" data-nette-rules=\'[{"op":":length","msg":"Please enter a value between 10 and 20 characters long.","arg":[10,20]}]\'></textarea>', (string) $input->getControl());
 });
-
 
 
 test(function() { // validation rule MAX_LENGTH
@@ -81,9 +75,8 @@ test(function() { // validation rule MAX_LENGTH
 	$input = $form->addTextArea('text')
 		->addRule($form::MAX_LENGTH, NULL, 10);
 
-	Assert::same('<textarea maxlength="10" name="text" id="frm-text" data-nette-rules=\'[{"op":":maxLength","msg":"Please enter a value no longer than 10 characters.","arg":10}]\'></textarea>', (string) $input->getControl());
+	Assert::same('<textarea name="text" maxlength="10" id="frm-text" data-nette-rules=\'[{"op":":maxLength","msg":"Please enter a value no longer than 10 characters.","arg":10}]\'></textarea>', (string) $input->getControl());
 });
-
 
 
 test(function() { // container

@@ -15,7 +15,6 @@ use Nette,
 	Nette\Http\FileUpload;
 
 
-
 /**
  * Text box and browse button that allow users to select a file to upload to the server.
  *
@@ -36,7 +35,6 @@ class UploadControl extends BaseControl
 	}
 
 
-
 	/**
 	 * This method will be called when the component (or component's parent)
 	 * becomes attached to a monitored object. Do not call this method yourself.
@@ -55,46 +53,17 @@ class UploadControl extends BaseControl
 	}
 
 
-
 	/**
-	 * Sets control's value.
-	 * @return UploadControl  provides a fluent interface
+	 * Loads HTTP data.
+	 * @return void
 	 */
-	public function setValue($value)
+	public function loadHttpData()
 	{
-		return $this;
-	}
-
-
-
-	protected function setRawValue($value)
-	{
-		if ($this->control->multiple) {
-			$this->value = array();
-			foreach (is_array($value) ? $value : array() as $item) {
-				if ($item instanceof FileUpload) {
-					$this->value[] = $item;
-				}
-			}
-		} elseif (!$value instanceof FileUpload) {
+		$this->value = $this->getHttpData(Nette\Forms\Form::DATA_FILE);
+		if ($this->value === NULL) {
 			$this->value = new FileUpload(NULL);
-		} else {
-			$this->value = $value;
 		}
-		return $this;
 	}
-
-
-
-	/**
-	 * Has been any file uploaded?
-	 * @return bool
-	 */
-	public function isFilled()
-	{
-		return $this->value instanceof FileUpload ? $this->value->isOk() : (bool) $this->value; // ignore NULL object
-	}
-
 
 
 	/**
@@ -107,67 +76,22 @@ class UploadControl extends BaseControl
 	}
 
 
-
 	/**
-	 * FileSize validator: is file size in limit?
-	 * @param  UploadControl
-	 * @param  int  file size limit
-	 * @return bool
+	 * @return self
 	 */
-	public static function validateFileSize(UploadControl $control, $limit)
+	public function setValue($value)
 	{
-		foreach (static::toArray($control->getValue()) as $file) {
-			if ($file->getSize() > $limit || $file->getError() === UPLOAD_ERR_INI_SIZE) {
-				return FALSE;
-			}
-		}
-		return TRUE;
+		return $this;
 	}
 
 
-
 	/**
-	 * MimeType validator: has file specified mime type?
-	 * @param  UploadControl
-	 * @param  array|string  mime type
+	 * Has been any file uploaded?
 	 * @return bool
 	 */
-	public static function validateMimeType(UploadControl $control, $mimeType)
+	public function isFilled()
 	{
-		$mimeTypes = is_array($mimeType) ? $mimeType : explode(',', $mimeType);
-		foreach (static::toArray($control->getValue()) as $file) {
-			$type = strtolower($file->getContentType());
-			if (!in_array($type, $mimeTypes, TRUE) && !in_array(preg_replace('#/.*#', '/*', $type), $mimeTypes, TRUE)) {
-				return FALSE;
-			}
-		}
-		return TRUE;
-	}
-
-
-
-	/**
-	 * Image validator: is file image?
-	 * @return bool
-	 */
-	public static function validateImage(UploadControl $control)
-	{
-		foreach (static::toArray($control->getValue()) as $file) {
-			if (!$file->isImage()) {
-				return FALSE;
-			}
-		}
-		return TRUE;
-	}
-
-
-
-	/**
-	 * @return array
-	 */
-	public static function toArray($value)
-	{
-		return $value instanceof FileUpload ? array($value) : (array) $value;
+		return $this->value instanceof FileUpload ? $this->value->isOk() : (bool) $this->value; // ignore NULL object
 	}
 
 }

@@ -10,9 +10,7 @@
 use Nette\DI;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class Foo
@@ -39,7 +37,6 @@ class M1 extends M
 class M2 extends M
 {
 }
-
 
 
 $builder = new DI\ContainerBuilder;

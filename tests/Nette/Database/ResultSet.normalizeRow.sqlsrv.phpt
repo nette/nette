@@ -14,7 +14,6 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/files/sqlsrv-nette_test3.sql');
 
 
-
 $res = $connection->query('SELECT * FROM types');
 
 Assert::equal( array(
@@ -117,13 +116,11 @@ Assert::same( array(
 ), (array) $res->fetch() );
 
 
-
 $res = $connection->query('SELECT [int] AS a, [text] AS a FROM types');
 
 Assert::same( array(
 	'a' => 'a',
 ), (array) @$res->fetch() );
-
 
 
 function isTimestamp($str) {

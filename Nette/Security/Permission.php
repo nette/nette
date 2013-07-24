@@ -14,7 +14,6 @@ namespace Nette\Security;
 use Nette;
 
 
-
 /**
  * Access control list (ACL) functionality and privileges management.
  *
@@ -55,9 +54,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	private $queriedRole, $queriedResource;
 
 
-
 	/********************* roles ****************d*g**/
-
 
 
 	/**
@@ -67,7 +64,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string|array
 	 * @throws Nette\InvalidArgumentException
 	 * @throws Nette\InvalidStateException
-	 * @return Permission  provides a fluent interface
+	 * @return self
 	 */
 	public function addRole($role, $parents = NULL)
 	{
@@ -99,7 +96,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Returns TRUE if the Role exists in the list.
 	 * @param  string
@@ -110,7 +106,6 @@ class Permission extends Nette\Object implements IAuthorizator
 		$this->checkRole($role, FALSE);
 		return isset($this->roles[$role]);
 	}
-
 
 
 	/**
@@ -131,7 +126,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Returns all Roles.
 	 * @return array
@@ -140,7 +134,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	{
 		return array_keys($this->roles);
 	}
-
 
 
 	/**
@@ -153,7 +146,6 @@ class Permission extends Nette\Object implements IAuthorizator
 		$this->checkRole($role);
 		return array_keys($this->roles[$role]['parents']);
 	}
-
 
 
 	/**
@@ -186,13 +178,12 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Removes the Role from the list.
 	 *
 	 * @param  string
 	 * @throws Nette\InvalidStateException
-	 * @return Permission  provides a fluent interface
+	 * @return self
 	 */
 	public function removeRole($role)
 	{
@@ -228,11 +219,10 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Removes all Roles from the list.
 	 *
-	 * @return Permission  provides a fluent interface
+	 * @return self
 	 */
 	public function removeAllRoles()
 	{
@@ -252,9 +242,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/********************* resources ****************d*g**/
-
 
 
 	/**
@@ -264,7 +252,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string
 	 * @throws Nette\InvalidArgumentException
 	 * @throws Nette\InvalidStateException
-	 * @return Permission  provides a fluent interface
+	 * @return self
 	 */
 	public function addResource($resource, $parent = NULL)
 	{
@@ -288,7 +276,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Returns TRUE if the Resource exists in the list.
 	 * @param  string
@@ -299,7 +286,6 @@ class Permission extends Nette\Object implements IAuthorizator
 		$this->checkResource($resource, FALSE);
 		return isset($this->resources[$resource]);
 	}
-
 
 
 	/**
@@ -320,7 +306,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Returns all Resources.
 	 * @return array
@@ -329,7 +314,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	{
 		return array_keys($this->resources);
 	}
-
 
 
 	/**
@@ -370,13 +354,12 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Removes a Resource and all of its children.
 	 *
 	 * @param  string
 	 * @throws Nette\InvalidStateException
-	 * @return Permission  provides a fluent interface
+	 * @return self
 	 */
 	public function removeResource($resource)
 	{
@@ -406,10 +389,9 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Removes all Resources.
-	 * @return Permission  provides a fluent interface
+	 * @return self
 	 */
 	public function removeAllResources()
 	{
@@ -426,9 +408,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/********************* defining rules ****************d*g**/
-
 
 
 	/**
@@ -439,14 +419,13 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string|array|Permission::ALL  resources
 	 * @param  string|array|Permission::ALL  privileges
 	 * @param  callable    assertion
-	 * @return Permission  provides a fluent interface
+	 * @return self
 	 */
 	public function allow($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, $assertion = NULL)
 	{
 		$this->setRule(TRUE, self::ALLOW, $roles, $resources, $privileges, $assertion);
 		return $this;
 	}
-
 
 
 	/**
@@ -457,7 +436,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string|array|Permission::ALL  resources
 	 * @param  string|array|Permission::ALL  privileges
 	 * @param  callable    assertion
-	 * @return Permission  provides a fluent interface
+	 * @return self
 	 */
 	public function deny($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, $assertion = NULL)
 	{
@@ -466,14 +445,13 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Removes "allow" permissions from the list in the context of the given Roles, Resources, and privileges.
 	 *
 	 * @param  string|array|Permission::ALL  roles
 	 * @param  string|array|Permission::ALL  resources
 	 * @param  string|array|Permission::ALL  privileges
-	 * @return Permission  provides a fluent interface
+	 * @return self
 	 */
 	public function removeAllow($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL)
 	{
@@ -482,21 +460,19 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Removes "deny" restrictions from the list in the context of the given Roles, Resources, and privileges.
 	 *
 	 * @param  string|array|Permission::ALL  roles
 	 * @param  string|array|Permission::ALL  resources
 	 * @param  string|array|Permission::ALL  privileges
-	 * @return Permission  provides a fluent interface
+	 * @return self
 	 */
 	public function removeDeny($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL)
 	{
 		$this->setRule(FALSE, self::DENY, $roles, $resources, $privileges);
 		return $this;
 	}
-
 
 
 	/**
@@ -508,7 +484,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string|array|Permission::ALL  privileges
 	 * @param  callable    assertion
 	 * @throws Nette\InvalidStateException
-	 * @return Permission  provides a fluent interface
+	 * @return self
 	 */
 	protected function setRule($toAdd, $type, $roles, $resources, $privileges, $assertion = NULL)
 	{
@@ -547,8 +523,6 @@ class Permission extends Nette\Object implements IAuthorizator
 		} elseif (!is_array($privileges)) {
 			$privileges = array($privileges);
 		}
-
-		$assertion = $assertion ? new Nette\Callback($assertion) : NULL;
 
 		if ($toAdd) { // add to the rules
 			foreach ($resources as $resource) {
@@ -595,7 +569,8 @@ class Permission extends Nette\Object implements IAuthorizator
 					} else {
 						foreach ($privileges as $privilege) {
 							if (isset($rules['byPrivilege'][$privilege]) &&
-								$type === $rules['byPrivilege'][$privilege]['type']) {
+								$type === $rules['byPrivilege'][$privilege]['type']
+							) {
 								unset($rules['byPrivilege'][$privilege]);
 							}
 						}
@@ -607,9 +582,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/********************* querying the ACL ****************d*g**/
-
 
 
 	/**
@@ -678,7 +651,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Returns real currently queried Role. Use by assertion.
 	 * @return mixed
@@ -687,7 +659,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	{
 		return $this->queriedRole;
 	}
-
 
 
 	/**
@@ -700,9 +671,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/********************* internals ****************d*g**/
-
 
 
 	/**
@@ -754,7 +723,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	}
 
 
-
 	/**
 	 * Returns the rule type associated with the specified Resource, Role, and privilege.
 	 * @param  string|Permission::ALL
@@ -781,7 +749,7 @@ class Permission extends Nette\Object implements IAuthorizator
 			$rule = $rules['byPrivilege'][$privilege];
 		}
 
-		if ($rule['assert'] === NULL || $rule['assert']->__invoke($this, $role, $resource, $privilege)) {
+		if ($rule['assert'] === NULL || Nette\Utils\Callback::invoke($rule['assert'], $this, $role, $resource, $privilege)) {
 			return $rule['type'];
 
 		} elseif ($resource !== self::ALL || $role !== self::ALL || $privilege !== self::ALL) {
@@ -794,7 +762,6 @@ class Permission extends Nette\Object implements IAuthorizator
 			return self::ALLOW;
 		}
 	}
-
 
 
 	/**

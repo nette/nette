@@ -10,9 +10,7 @@
 use Nette\Http\FileUpload;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 test(function() {
@@ -34,7 +32,6 @@ test(function() {
 	Assert::false( $upload->isImage() );
 	Assert::same( file_get_contents(__DIR__ . '/files/file.txt'), $upload->getContents() );
 });
-
 
 
 test(function() {

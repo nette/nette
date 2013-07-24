@@ -5,14 +5,19 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
+ * @httpCode   500
+ * @exitCode   255
+ * @outputMatch OK!%A%
  */
 
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
+if (PHP_SAPI === 'cli') {
+	Tester\Environment::skip();
+}
 
 
 Debugger::$productionMode = FALSE;
@@ -21,12 +26,10 @@ header('Content-Type: text/html');
 Debugger::enable();
 
 Debugger::$onFatalError[] = function() {
-	Assert::match(file_get_contents(__DIR__ . (extension_loaded('xdebug') ? '/Debugger.E_ERROR.html.xdebug.expect' : '/Debugger.E_ERROR.html.expect')), ob_get_clean());
-	die(0);
+	Assert::matchFile(__DIR__ . (extension_loaded('xdebug') ? '/Debugger.E_ERROR.html.xdebug.expect' : '/Debugger.E_ERROR.html.expect'), ob_get_clean());
+	echo 'OK!';
 };
 ob_start();
-
-
 
 
 function first($arg1, $arg2)

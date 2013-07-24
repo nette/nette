@@ -14,7 +14,6 @@ namespace Nette\DI;
 use Nette;
 
 
-
 /**
  * The dependency injection container default implementation.
  *
@@ -38,12 +37,10 @@ class Container extends Nette\Object
 	private $creating;
 
 
-
 	public function __construct(array $params = array())
 	{
 		$this->parameters = $params + $this->parameters;
 	}
-
 
 
 	/**
@@ -55,12 +52,11 @@ class Container extends Nette\Object
 	}
 
 
-
 	/**
 	 * Adds the service to the container.
 	 * @param  string
 	 * @param  object
-	 * @return Container  provides a fluent interface
+	 * @return self
 	 */
 	public function addService($name, $service)
 	{
@@ -87,7 +83,6 @@ class Container extends Nette\Object
 	}
 
 
-
 	/**
 	 * Removes the service from the container.
 	 * @param  string
@@ -97,7 +92,6 @@ class Container extends Nette\Object
 	{
 		unset($this->registry[$name]);
 	}
-
 
 
 	/**
@@ -115,7 +109,6 @@ class Container extends Nette\Object
 	}
 
 
-
 	/**
 	 * Does the service exist?
 	 * @param  string service name
@@ -126,7 +119,6 @@ class Container extends Nette\Object
 		return isset($this->registry[$name])
 			|| method_exists($this, $method = Container::getMethodName($name)) && $this->getReflection()->getMethod($method)->getName() === $method;
 	}
-
 
 
 	/**
@@ -141,7 +133,6 @@ class Container extends Nette\Object
 		}
 		return isset($this->registry[$name]);
 	}
-
 
 
 	/**
@@ -178,7 +169,6 @@ class Container extends Nette\Object
 	}
 
 
-
 	/**
 	 * Resolves service by type.
 	 * @param  string  class or interface
@@ -201,7 +191,6 @@ class Container extends Nette\Object
 	}
 
 
-
 	/**
 	 * Gets the service names of the specified type.
 	 * @param  string
@@ -212,7 +201,6 @@ class Container extends Nette\Object
 		$class = ltrim(strtolower($class), '\\');
 		return isset($this->meta[self::TYPES][$class]) ? $this->meta[self::TYPES][$class] : array();
 	}
-
 
 
 	/**
@@ -226,9 +214,7 @@ class Container extends Nette\Object
 	}
 
 
-
 	/********************* autowiring ****************d*g**/
-
 
 
 	/**
@@ -254,7 +240,6 @@ class Container extends Nette\Object
 	}
 
 
-
 	/**
 	 * Calls all methods starting with with "inject" using autowiring.
 	 * @param  object
@@ -278,7 +263,6 @@ class Container extends Nette\Object
 	}
 
 
-
 	/**
 	 * Calls method using autowiring.
 	 * @param  mixed   class, object, function, callable
@@ -287,14 +271,14 @@ class Container extends Nette\Object
 	 */
 	public function callMethod($function, array $args = array())
 	{
-		$callback = new Nette\Callback($function);
-		return $callback->invokeArgs(Helpers::autowireArguments($callback->toReflection(), $args, $this));
+		return call_user_func_array(
+			$function,
+			Helpers::autowireArguments(Nette\Utils\Callback::toReflection($function), $args, $this)
+		);
 	}
 
 
-
 	/********************* shortcuts ****************d*g**/
-
 
 
 	/**
@@ -308,7 +292,6 @@ class Container extends Nette\Object
 	}
 
 
-
 	/** @deprecated */
 	public function &__get($name)
 	{
@@ -316,7 +299,6 @@ class Container extends Nette\Object
 		$tmp = $this->getService($name);
 		return $tmp;
 	}
-
 
 
 	/** @deprecated */
@@ -327,14 +309,12 @@ class Container extends Nette\Object
 	}
 
 
-
 	/** @deprecated */
 	public function __isset($name)
 	{
 		$this->error(__METHOD__, 'hasService');
 		return $this->hasService($name);
 	}
-
 
 
 	/** @deprecated */
@@ -345,14 +325,12 @@ class Container extends Nette\Object
 	}
 
 
-
 	private function error($oldName, $newName)
 	{
 		if (empty($this->parameters['container']['accessors'])) {
 			trigger_error("$oldName() is deprecated; use $newName() or enable nette.accessors in configuration.", E_USER_DEPRECATED);
 		}
 	}
-
 
 
 	public static function getMethodName($name)

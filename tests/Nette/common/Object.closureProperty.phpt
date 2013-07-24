@@ -8,10 +8,7 @@
  */
 
 
-
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class TestClass extends Nette\Object
@@ -29,7 +26,6 @@ class TestClass extends Nette\Object
 }
 
 
-
 test(function() {
 	$obj = new TestClass(function($a, $b) {
 		return "$a $b";
@@ -40,7 +36,6 @@ test(function() {
 });
 
 
-
 test(function() {
 	Assert::exception(function() {
 		$obj = new TestClass(123);
@@ -49,13 +44,13 @@ test(function() {
 
 
 	Assert::exception(function() {
-		$obj = new TestClass(function(){});
+		$obj = new TestClass(function() {});
 		$obj->protected();
 	}, 'Nette\MemberAccessException', 'Call to undefined method TestClass::protected().');
 
 
 	Assert::exception(function() {
-		$obj = new TestClass(function(){});
+		$obj = new TestClass(function() {});
 		$obj->private();
 	}, 'Nette\MemberAccessException', 'Call to undefined method TestClass::private().');
 });

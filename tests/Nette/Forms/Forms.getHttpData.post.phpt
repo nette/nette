@@ -7,12 +7,11 @@
  * @package    Nette\Forms
  */
 
-use Nette\Forms\Form;
-
+use Nette\Forms\Form,
+	Nette\Forms\Validator;
 
 
 require __DIR__ . '/../bootstrap.php';
-
 
 
 before(function() {
@@ -21,17 +20,15 @@ before(function() {
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$form->addSubmit('send', 'Send');
 
-	Assert::true( (bool) $form->isSubmitted() );
-	Assert::true( (bool) $form->isSuccess() );
+	Assert::truthy( $form->isSubmitted() );
+	Assert::true( $form->isSuccess() );
 	Assert::same( array(), $form->getHttpData() );
 	Assert::same( array(), $form->getValues(TRUE) );
 });
-
 
 
 test(function() {
@@ -39,12 +36,11 @@ test(function() {
 	$form->setMethod($form::GET);
 	$form->addSubmit('send', 'Send');
 
-	Assert::false( (bool) $form->isSubmitted() );
-	Assert::false( (bool) $form->isSuccess() );
+	Assert::false( $form->isSubmitted() );
+	Assert::false( $form->isSuccess() );
 	Assert::same( array(), $form->getHttpData() );
 	Assert::same( array(), $form->getValues(TRUE) );
 });
-
 
 
 test(function() {
@@ -54,23 +50,22 @@ test(function() {
 	$form = new Form($name);
 	$form->addSubmit('send', 'Send');
 
-	Assert::true( (bool) $form->isSubmitted() );
+	Assert::truthy( $form->isSubmitted() );
 	Assert::same( array(Form::TRACKER_ID => $name), $form->getHttpData() );
 	Assert::same( array(), $form->getValues(TRUE) );
 	Assert::same( $name, $form[Form::TRACKER_ID]->getValue() );
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$input = $form->addSubmit('send', 'Send');
 	Assert::false( $input->isSubmittedBy() );
-	Assert::false( $input::validateSubmitted($input) );
+	Assert::false( Validator::validateSubmitted($input) );
 
 	$_POST = array('send' => '');
 	$form = new Form;
 	$input = $form->addSubmit('send', 'Send');
 	Assert::true( $input->isSubmittedBy() );
-	Assert::true( $input::validateSubmitted($input) );
+	Assert::true( Validator::validateSubmitted($input) );
 });

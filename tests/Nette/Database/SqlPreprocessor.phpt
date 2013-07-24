@@ -13,7 +13,6 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 use Nette\Database\SqlLiteral;
 
 
-
 $preprocessor = new Nette\Database\SqlPreprocessor($connection);
 
 test(function() use ($preprocessor) { // basic
@@ -23,13 +22,11 @@ test(function() use ($preprocessor) { // basic
 });
 
 
-
 test(function() use ($preprocessor) {
 	list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE id =', 11));
 	Assert::same( 'SELECT id FROM author WHERE id = 11', $sql );
 	Assert::same( array(), $params );
 });
-
 
 
 test(function() use ($preprocessor) {
@@ -39,13 +36,11 @@ test(function() use ($preprocessor) {
 });
 
 
-
 test(function() use ($preprocessor) {
 	list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE id = ?', 11, 'OR id = ?', 12));
 	Assert::same( 'SELECT id FROM author WHERE id = 11 OR id = 12', $sql );
 	Assert::same( array(), $params );
 });
-
 
 
 test(function() use ($preprocessor) {
@@ -55,13 +50,11 @@ test(function() use ($preprocessor) {
 });
 
 
-
 test(function() use ($preprocessor) {
 	list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE id =', '? OR id = ?', 11, 12));
 	Assert::same( 'SELECT id FROM author WHERE id = 11 OR id = 12', $sql );
 	Assert::same( array(), $params );
 });
-
 
 
 test(function() use ($preprocessor) { // where
@@ -77,7 +70,6 @@ test(function() use ($preprocessor) { // where
 });
 
 
-
 test(function() use ($preprocessor) {
 	list($sql, $params) = $preprocessor->process(array('SELECT * FROM book_tag WHERE (book_id, tag_id) IN (?)', array(
 		array(1, 2),
@@ -88,7 +80,6 @@ test(function() use ($preprocessor) {
 	Assert::same( reformat("SELECT * FROM book_tag WHERE (book_id, tag_id) IN ((1, 2), (3, 4), (5, 6))"), $sql );
 	Assert::same( array(), $params );
 });
-
 
 
 test(function() use ($preprocessor) { // order
@@ -102,13 +93,11 @@ test(function() use ($preprocessor) { // order
 });
 
 
-
 test(function() use ($preprocessor) { // missing parameters
 	Assert::exception(function() use ($preprocessor) {
 		$preprocessor->process(array('SELECT id FROM author WHERE id =', '? OR id = ?', 11));
 	}, 'Nette\InvalidArgumentException', 'There are more placeholders than passed parameters.');
 });
-
 
 
 test(function() use ($preprocessor) { // SqlLiteral
@@ -118,13 +107,11 @@ test(function() use ($preprocessor) { // SqlLiteral
 });
 
 
-
 test(function() use ($preprocessor) {
 	list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE', new SqlLiteral('id=11'), 'OR', new SqlLiteral('id=?', array(12))));
 	Assert::same( 'SELECT id FROM author WHERE id=11 OR id=?', $sql );
 	Assert::same( array(12), $params );
 });
-
 
 
 test(function() use ($preprocessor) {
@@ -139,22 +126,17 @@ test(function() use ($preprocessor) {
 });
 
 
-
 test(function() use ($preprocessor, $driverName) { // insert
 	list($sql, $params) = $preprocessor->process(array('INSERT INTO author',
 		array('name' => 'Catelyn Stark', 'born' => new DateTime('2011-11-11')),
 	));
 
-	switch ($driverName) {
-		case 'sqlite':
-			Assert::same( "INSERT INTO author ([name], [born]) SELECT 'Catelyn Stark', 1320966000", $sql );
-			break;
-		default:
-			Assert::same( reformat("INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00')"), $sql );
-	}
+	Assert::same( reformat(array(
+		'sqlite' => "INSERT INTO author ([name], [born]) SELECT 'Catelyn Stark', 1320966000",
+		"INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00')",
+	)), $sql );
 	Assert::same( array(), $params );
 });
-
 
 
 test(function() use ($preprocessor, $driverName) { // multi insert
@@ -163,16 +145,12 @@ test(function() use ($preprocessor, $driverName) { // multi insert
 		array('name' => 'Sansa Stark', 'born' => new DateTime('2021-11-11'))
 	)));
 
-	switch ($driverName) {
-		case 'sqlite':
-			Assert::same( "INSERT INTO author ([name], [born]) SELECT 'Catelyn Stark', 1320966000 UNION ALL SELECT 'Sansa Stark', 1636585200", $sql );
-			break;
-		default:
-			Assert::same( reformat("INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00'), ('Sansa Stark', '2021-11-11 00:00:00')"), $sql );
-	}
+	Assert::same( reformat(array(
+		'sqlite' => "INSERT INTO author ([name], [born]) SELECT 'Catelyn Stark', 1320966000 UNION ALL SELECT 'Sansa Stark', 1636585200",
+		"INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00'), ('Sansa Stark', '2021-11-11 00:00:00')",
+	)), $sql );
 	Assert::same( array(), $params );
 });
-
 
 
 test(function() use ($preprocessor) { // update
@@ -185,19 +163,15 @@ test(function() use ($preprocessor) { // update
 });
 
 
-
 test(function() use ($preprocessor, $driverName) { // multi & update
 	list($sql, $params) = $preprocessor->process(array('INSERT INTO author ? ON DUPLICATE KEY UPDATE ?',
 		array('id' => 12, 'name' => 'John Doe'),
 		array('web' => 'http://nette.org', 'name' => 'Dave Lister'),
 	));
 
-	switch ($driverName) {
-		case 'sqlite':
-			Assert::same( "INSERT INTO author ([id], [name]) SELECT 12, 'John Doe' ON DUPLICATE KEY UPDATE [web]='http://nette.org', [name]='Dave Lister'", $sql );
-			break;
-		default:
-			Assert::same( reformat("INSERT INTO author ([id], [name]) VALUES (12, 'John Doe') ON DUPLICATE KEY UPDATE [web]='http://nette.org', [name]='Dave Lister'"), $sql );
-	}
+	Assert::same( reformat(array(
+	'sqlite' => "INSERT INTO author ([id], [name]) SELECT 12, 'John Doe' ON DUPLICATE KEY UPDATE [web]='http://nette.org', [name]='Dave Lister'",
+	"INSERT INTO author ([id], [name]) VALUES (12, 'John Doe') ON DUPLICATE KEY UPDATE [web]='http://nette.org', [name]='Dave Lister'",
+	)), $sql );
 	Assert::same( array(), $params );
 });

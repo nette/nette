@@ -10,9 +10,7 @@
 use Nette\Environment;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Environment::loadConfig('files/environment.ini', 'production');

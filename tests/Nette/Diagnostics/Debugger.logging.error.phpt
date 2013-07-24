@@ -5,14 +5,15 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
+ * @exitCode   255
+ * @httpCode   500
+ * @outputMatch %A%OK!
  */
 
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 // Setup environment
@@ -30,7 +31,7 @@ function testMailer() {}
 Debugger::$onFatalError[] = function() {
 	Assert::match('%a%Fatal error: Call to undefined function missing_funcion() in %a%', file_get_contents(Debugger::$logDirectory . '/error.log'));
 	Assert::true(is_file(Debugger::$logDirectory . '/email-sent'));
-	die(0);
+	echo 'OK!';
 };
 ob_start();
 

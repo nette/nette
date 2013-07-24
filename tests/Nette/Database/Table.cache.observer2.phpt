@@ -48,10 +48,8 @@ foreach ($authors as $author) {
 $authors->__destruct();
 
 
-
 $authors = $dao->table('author');
 Assert::equal(reformat('SELECT [id], [name] FROM [author]'), $authors->getSql());
-
 
 
 Assert::same(2, $cacheStorage->writes);

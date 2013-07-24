@@ -14,7 +14,6 @@ namespace Nette\DI\Extensions;
 use Nette;
 
 
-
 /**
  * @deprecated, for back compatiblity
  */
@@ -29,7 +28,6 @@ class NetteAccessor extends Nette\Object
 	}
 
 
-
 	public function __call($name, $args)
 	{
 		if (substr($name, 0, 6) === 'create') {
@@ -39,7 +37,6 @@ class NetteAccessor extends Nette\Object
 		}
 		throw new Nette\NotSupportedException;
 	}
-
 
 
 	public function &__get($name)

@@ -14,7 +14,6 @@ namespace Nette\Database\Drivers;
 use Nette;
 
 
-
 /**
  * Supplemental MySQL database driver.
  *
@@ -28,7 +27,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 
 	/** @var Nette\Database\Connection */
 	private $connection;
-
 
 
 	/**
@@ -49,9 +47,7 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/********************* SQL ****************d*g**/
-
 
 
 	/**
@@ -64,7 +60,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Formats boolean for use in a SQL statement.
 	 */
@@ -72,7 +67,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	{
 		return $value ? '1' : '0';
 	}
-
 
 
 	/**
@@ -84,7 +78,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Encodes string for use in a LIKE statement.
 	 */
@@ -93,7 +86,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 		$value = addcslashes(str_replace('\\', '\\\\', $value), "\x00\n\r\\'%_");
 		return ($pos <= 0 ? "'%" : "'") . $value . ($pos >= 0 ? "%'" : "'");
 	}
-
 
 
 	/**
@@ -109,7 +101,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Normalizes result row.
 	 */
@@ -119,9 +110,7 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/********************* reflection ****************d*g**/
-
 
 
 	/**
@@ -143,7 +132,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 		}
 		return $tables;
 	}
-
 
 
 	/**
@@ -176,7 +164,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Returns metadata for all indexes in a table.
 	 */
@@ -199,7 +186,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Returns metadata for all foreign keys in a table.
 	 */
@@ -220,7 +206,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Returns associative array of detected types (IReflection::FIELD_*) in result set.
 	 */
@@ -228,7 +213,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	{
 		return Nette\Database\Helpers::detectTypes($statement);
 	}
-
 
 
 	/**

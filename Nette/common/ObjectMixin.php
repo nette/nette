@@ -14,7 +14,6 @@ namespace Nette;
 use Nette;
 
 
-
 /**
  * Nette\Object behaviour mixin.
  *
@@ -32,7 +31,6 @@ final class ObjectMixin
 	private static $extMethods;
 
 
-
 	/**
 	 * Static class - cannot be instantiated.
 	 */
@@ -40,7 +38,6 @@ final class ObjectMixin
 	{
 		throw new StaticClassException;
 	}
-
 
 
 	/**
@@ -66,7 +63,7 @@ final class ObjectMixin
 		} elseif ($isProp === 'event') { // calling event handlers
 			if (is_array($_this->$name) || $_this->$name instanceof \Traversable) {
 				foreach ($_this->$name as $handler) {
-					Callback::create($handler)->invokeArgs($args);
+					Nette\Utils\Callback::invokeArgs($handler, $args);
 				}
 			} elseif ($_this->$name !== NULL) {
 				throw new UnexpectedValueException("Property $class::$$name must be array or NULL, " . gettype($_this->$name) ." given.");
@@ -97,13 +94,12 @@ final class ObjectMixin
 
 		} elseif ($cb = self::getExtensionMethod($class, $name)) { // extension methods
 			array_unshift($args, $_this);
-			return $cb->invokeArgs($args);
+			return Nette\Utils\Callback::invokeArgs($cb, $args);
 
 		} else {
 			throw new MemberAccessException("Call to undefined method $class::$name().");
 		}
 	}
-
 
 
 	/**
@@ -118,7 +114,6 @@ final class ObjectMixin
 	{
 		throw new MemberAccessException("Call to undefined static method $class::$method().");
 	}
-
 
 
 	/**
@@ -150,7 +145,12 @@ final class ObjectMixin
 			}
 
 		} elseif (isset($methods[$name])) { // public method as closure getter
-			$val = Callback::create($_this, $name);
+			if (PHP_VERSION_ID >= 50400) {
+				$rm = new \ReflectionMethod($class, $name);
+				$val = $rm->getClosure($_this);
+			} else {
+				$val = Nette\Utils\Callback::closure($_this, $name);
+			}
 			return $val;
 
 		} else { // strict class
@@ -158,7 +158,6 @@ final class ObjectMixin
 			throw new MemberAccessException("Cannot read $type property $class::\$$name.");
 		}
 	}
-
 
 
 	/**
@@ -192,7 +191,6 @@ final class ObjectMixin
 	}
 
 
-
 	/**
 	 * __unset() implementation.
 	 * @param  object
@@ -209,7 +207,6 @@ final class ObjectMixin
 	}
 
 
-
 	/**
 	 * __isset() implementation.
 	 * @param  object
@@ -222,7 +219,6 @@ final class ObjectMixin
 		$methods = & self::getMethods(get_class($_this));
 		return $name !== '' && (isset($methods['get' . $name]) || isset($methods['is' . $name]));
 	}
-
 
 
 	/**
@@ -245,7 +241,6 @@ final class ObjectMixin
 	}
 
 
-
 	/**
 	 * Returns array of public (static, non-static and magic) methods.
 	 * @return array
@@ -260,7 +255,6 @@ final class ObjectMixin
 		}
 		return self::$methods[$class];
 	}
-
 
 
 	/**
@@ -299,7 +293,6 @@ final class ObjectMixin
 		}
 		return $methods;
 	}
-
 
 
 	/**
@@ -368,7 +361,6 @@ final class ObjectMixin
 	}
 
 
-
 	/**
 	 * Adds a method to class.
 	 * @param  string
@@ -379,10 +371,9 @@ final class ObjectMixin
 	public static function setExtensionMethod($class, $name, $callback)
 	{
 		$name = strtolower($name);
-		self::$extMethods[$name][$class] = new Callback($callback);
+		self::$extMethods[$name][$class] = Nette\Utils\Callback::closure($callback);
 		self::$extMethods[$name][''] = NULL;
 	}
-
 
 
 	/**

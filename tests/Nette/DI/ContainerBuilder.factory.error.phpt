@@ -10,9 +10,7 @@
 use Nette\DI;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 interface Bad1
@@ -27,7 +25,6 @@ Assert::exception(function() {
 }, 'Nette\InvalidStateException', "Interface Bad1 must have just one non-static method create() or get().");
 
 
-
 interface Bad2
 {
 	function createx();
@@ -38,7 +35,6 @@ Assert::exception(function() {
 	$builder->addDefinition('one')->setImplement('Bad2')->setFactory('stdClass');
 	$builder->generateClasses();
 }, 'Nette\InvalidStateException', "Interface Bad2 must have just one non-static method create() or get().");
-
 
 
 interface Bad3
@@ -54,7 +50,6 @@ Assert::exception(function() {
 }, 'Nette\InvalidStateException', "Interface Bad3 must have just one non-static method create() or get().");
 
 
-
 interface Bad4
 {
 	function create();
@@ -65,7 +60,6 @@ Assert::exception(function() {
 	$builder->addDefinition('one')->setImplement('Bad4');
 	$builder->generateClasses();
 }, 'Nette\InvalidStateException', "Method Bad4::create() has not @return annotation.");
-
 
 
 interface Bad5

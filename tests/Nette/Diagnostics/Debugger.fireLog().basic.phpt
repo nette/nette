@@ -10,16 +10,17 @@
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
+if (PHP_SAPI === 'cli') {
+	Tester\Environment::skip();
+}
 
 
 // Setup environment
 $_SERVER['HTTP_X_FIRELOGGER'] = TRUE;
 
 Debugger::$productionMode = FALSE;
-
 
 
 $arr = array(10, 20.2, TRUE, FALSE, NULL, 'hello', array('key1' => 'val1', 'key2' => TRUE), (object) array('key1' => 'val1', 'key2' => TRUE));

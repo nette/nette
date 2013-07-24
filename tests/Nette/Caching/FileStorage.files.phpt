@@ -11,9 +11,7 @@ use Nette\Caching\Cache,
 	Nette\Caching\Storages\FileStorage;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $key = 'nette';
@@ -37,7 +35,9 @@ Assert::true( isset($cache[$key]) );
 
 
 // Modifing dependent file
+sleep(2);
 file_put_contents($dependentFile, 'a');
+clearstatcache();
 
 Assert::false( isset($cache[$key]) );
 

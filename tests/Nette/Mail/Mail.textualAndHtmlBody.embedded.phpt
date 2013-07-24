@@ -10,11 +10,9 @@
 use Nette\Mail\Message;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/Mail.inc';
-
 
 
 $mail = new Message();
@@ -31,4 +29,4 @@ $mail->setHTMLBody('<b>Sample text</b> <img src="background.png">', __DIR__ . '/
 $mailer = new TestMailer();
 $mailer->send($mail);
 
-Assert::match(file_get_contents(__DIR__ . '/Mail.textualAndHtmlBody.embedded.expect'), TestMailer::$output);
+Assert::matchFile(__DIR__ . '/Mail.textualAndHtmlBody.embedded.expect', TestMailer::$output);

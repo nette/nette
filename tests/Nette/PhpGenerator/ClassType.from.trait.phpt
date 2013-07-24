@@ -11,9 +11,7 @@
 use Nette\PhpGenerator\ClassType;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 /**
@@ -45,4 +43,4 @@ $res[] = ClassType::from(new ReflectionClass('Trait2'));
 $res[] = ClassType::from(new ReflectionClass('Class1'));
 $res[] = ClassType::from(new ReflectionClass('Class2'));
 
-Assert::match(file_get_contents(__DIR__ . '/ClassType.from.trait.expect'), implode("\n", $res));
+Assert::matchFile(__DIR__ . '/ClassType.from.trait.expect', implode("\n", $res));

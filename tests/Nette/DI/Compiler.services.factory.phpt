@@ -10,9 +10,7 @@
 use Nette\DI;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class Factory
@@ -40,8 +38,6 @@ class Ipsum
 		$this->arg = $arg;
 	}
 }
-
-
 
 
 $loader = new DI\Config\Loader;

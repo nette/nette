@@ -14,7 +14,6 @@ namespace Nette\Database\Drivers;
 use Nette;
 
 
-
 /**
  * Supplemental Oracle database driver.
  *
@@ -29,7 +28,6 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	private $fmtDateTime;
 
 
-
 	public function __construct(Nette\Database\Connection $connection, array $options)
 	{
 		$this->connection = $connection;
@@ -37,9 +35,7 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	}
 
 
-
 	/********************* SQL ****************d*g**/
-
 
 
 	/**
@@ -52,7 +48,6 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	}
 
 
-
 	/**
 	 * Formats boolean for use in a SQL statement.
 	 */
@@ -60,7 +55,6 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	{
 		return $value ? '1' : '0';
 	}
-
 
 
 	/**
@@ -72,7 +66,6 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	}
 
 
-
 	/**
 	 * Encodes string for use in a LIKE statement.
 	 */
@@ -80,7 +73,6 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	{
 		throw new Nette\NotImplementedException;
 	}
-
 
 
 	/**
@@ -100,7 +92,6 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	}
 
 
-
 	/**
 	 * Normalizes result row.
 	 */
@@ -110,9 +101,7 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	}
 
 
-
 	/********************* reflection ****************d*g**/
-
 
 
 	/**
@@ -133,7 +122,6 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	}
 
 
-
 	/**
 	 * Returns metadata for all columns in a table.
 	 */
@@ -141,7 +129,6 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	{
 		throw new Nette\NotImplementedException;
 	}
-
 
 
 	/**
@@ -153,7 +140,6 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	}
 
 
-
 	/**
 	 * Returns metadata for all foreign keys in a table.
 	 */
@@ -163,7 +149,6 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	}
 
 
-
 	/**
 	 * Returns associative array of detected types (IReflection::FIELD_*) in result set.
 	 */
@@ -171,7 +156,6 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	{
 		return Nette\Database\Helpers::detectTypes($statement);
 	}
-
 
 
 	/**

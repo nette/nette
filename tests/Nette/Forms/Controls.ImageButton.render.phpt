@@ -11,7 +11,6 @@ use Nette\Forms\Form,
 	Nette\Utils\Html;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -24,16 +23,14 @@ class Translator implements Nette\Localization\ITranslator
 }
 
 
-
 test(function() {
 	$form = new Form;
 	$input = $form->addImage('button', 'image.gif');
 
 	Assert::null($input->getLabel());
 	Assert::type('Nette\Utils\Html', $input->getControl());
-	Assert::same('<input type="image" src="image.gif" name="button[]" id="frm-button" />', (string) $input->getControl());
+	Assert::same('<input type="image" name="button[]" src="image.gif">', (string) $input->getControl());
 });
-
 
 
 test(function() { // translator
@@ -41,18 +38,16 @@ test(function() { // translator
 	$input = $form->addImage('button', 'image.gif');
 	$input->setTranslator(new Translator);
 
-	Assert::same('<input type="image" src="image.gif" name="button[]" id="frm-button" />', (string) $input->getControl());
+	Assert::same('<input type="image" name="button[]" src="image.gif">', (string) $input->getControl());
 });
 
 
-
-test(function() { // validation rules
+test(function() { // no validation rules
 	$form = new Form;
 	$input = $form->addImage('button', 'image.gif')->setRequired('required');
 
-	Assert::same('<input type="image" src="image.gif" name="button[]" id="frm-button" required="required" data-nette-rules=\'[{"op":":filled","msg":"required"}]\' />', (string) $input->getControl());
+	Assert::same('<input type="image" name="button[]" src="image.gif">', (string) $input->getControl());
 });
-
 
 
 test(function() { // container
@@ -60,5 +55,5 @@ test(function() { // container
 	$container = $form->addContainer('container');
 	$input = $container->addImage('button', 'image.gif');
 
-	Assert::same('<input type="image" src="image.gif" name="container[button][]" id="frm-container-button" />', (string) $input->getControl());
+	Assert::same('<input type="image" name="container[button][]" src="image.gif">', (string) $input->getControl());
 });

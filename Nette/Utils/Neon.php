@@ -14,7 +14,6 @@ namespace Nette\Utils;
 use Nette;
 
 
-
 /**
  * Simple parser & generator for Nette Object Notation.
  *
@@ -55,6 +54,12 @@ class Neon extends Nette\Object
 		'(' => ')',
 	);
 
+	/** @var string */
+	private $input;
+
+	/** @var array */
+	private $tokens;
+
 	/** @var int */
 	private $n = 0;
 
@@ -88,7 +93,7 @@ class Neon extends Nette\Object
 			$isList = Arrays::isList($var);
 			$s = '';
 			if ($options & self::BLOCK) {
-				if (count($var) === 0){
+				if (count($var) === 0) {
 					return "[]";
 				}
 				foreach ($var as $k => $v) {
@@ -123,7 +128,6 @@ class Neon extends Nette\Object
 	}
 
 
-
 	/**
 	 * Decodes a NEON string.
 	 * @param  string
@@ -142,13 +146,14 @@ class Neon extends Nette\Object
 			$input = substr($input, 3);
 		}
 		$input = str_replace("\r", '', $input);
-		self::$tokenizer->tokenize($input);
 
 		$parser = new static;
+		$parser->input = $input;
+		$parser->tokens = self::$tokenizer->tokenize($input);
 		$res = $parser->parse(0);
 
-		while (isset(self::$tokenizer->tokens[$parser->n])) {
-			if (self::$tokenizer->tokens[$parser->n][0] === "\n") {
+		while (isset($parser->tokens[$parser->n])) {
+			if ($parser->tokens[$parser->n][0][0] === "\n") {
 				$parser->n++;
 			} else {
 				$parser->error();
@@ -156,7 +161,6 @@ class Neon extends Nette\Object
 		}
 		return $res;
 	}
-
 
 
 	/**
@@ -169,12 +173,12 @@ class Neon extends Nette\Object
 		$inlineParser = $indent === NULL;
 		$value = $key = $object = NULL;
 		$hasValue = $hasKey = FALSE;
-		$tokens = self::$tokenizer->tokens;
+		$tokens = $this->tokens;
 		$n = & $this->n;
 		$count = count($tokens);
 
 		for (; $n < $count; $n++) {
-			$t = $tokens[$n];
+			$t = $tokens[$n][0];
 
 			if ($t === ',') { // ArrayEntry separator
 				if ((!$hasKey && !$hasValue) || !$inlineParser) {
@@ -216,7 +220,7 @@ class Neon extends Nette\Object
 					$value = $this->parse(NULL, array());
 				}
 				$hasValue = TRUE;
-				if (!isset($tokens[$n]) || $tokens[$n] !== self::$brackets[$t]) { // unexpected type of bracket or block-parser
+				if (!isset($tokens[$n]) || $tokens[$n][0] !== self::$brackets[$t]) { // unexpected type of bracket or block-parser
 					$this->error();
 				}
 
@@ -234,20 +238,22 @@ class Neon extends Nette\Object
 					}
 
 				} else {
-					while (isset($tokens[$n+1]) && $tokens[$n+1][0] === "\n") $n++; // skip to last indent
+					while (isset($tokens[$n+1]) && $tokens[$n+1][0][0] === "\n") {
+						$n++; // skip to last indent
+					}
 					if (!isset($tokens[$n+1])) {
 						break;
 					}
 
-					$newIndent = strlen($tokens[$n]) - 1;
+					$newIndent = strlen($tokens[$n][0]) - 1;
 					if ($indent === NULL) { // first iteration
 						$indent = $newIndent;
 					}
 					if ($newIndent) {
 						if ($this->indentTabs === NULL) {
-							$this->indentTabs = $tokens[$n][1] === "\t";
+							$this->indentTabs = $tokens[$n][0][1] === "\t";
 						}
-						if (strpos($tokens[$n], $this->indentTabs ? ' ' : "\t")) {
+						if (strpos($tokens[$n][0], $this->indentTabs ? ' ' : "\t")) {
 							$n++;
 							$this->error('Either tabs or spaces may be used as indenting chars, but not both.');
 						}
@@ -260,7 +266,7 @@ class Neon extends Nette\Object
 						} else {
 							$this->addValue($result, $key !== NULL, $key, $this->parse($newIndent));
 						}
-						$newIndent = isset($tokens[$n]) ? strlen($tokens[$n]) - 1 : 0;
+						$newIndent = isset($tokens[$n]) ? strlen($tokens[$n][0]) - 1 : 0;
 						$hasKey = FALSE;
 
 					} else {
@@ -324,7 +330,6 @@ class Neon extends Nette\Object
 	}
 
 
-
 	private function addValue(& $result, $hasKey, $key, $value)
 	{
 		if ($hasKey) {
@@ -336,7 +341,6 @@ class Neon extends Nette\Object
 			$result[] = $value;
 		}
 	}
-
 
 
 	private function cbString($m)
@@ -355,18 +359,15 @@ class Neon extends Nette\Object
 	}
 
 
-
 	private function error($message = "Unexpected '%s'")
 	{
-		list(, $line, $col) = self::$tokenizer->getOffset($this->n);
-		$token = isset(self::$tokenizer->tokens[$this->n])
-			? str_replace("\n", '<new line>', Strings::truncate(self::$tokenizer->tokens[$this->n], 40))
-			: 'end';
+		$last = isset($this->tokens[$this->n]) ? $this->tokens[$this->n] : NULL;
+		list($line, $col) = Tokenizer::getCoordinates($this->input, $last ? $last[Tokenizer::OFFSET] : strlen($this->input));
+		$token = $last ? str_replace("\n", '<new line>', Strings::truncate($last[0], 40)) : 'end';
 		throw new NeonException(str_replace('%s', $token, $message) . " on line $line, column $col.");
 	}
 
 }
-
 
 
 /**
@@ -377,7 +378,6 @@ class NeonEntity extends \stdClass
 	public $value;
 	public $attributes;
 }
-
 
 
 /**

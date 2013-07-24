@@ -18,7 +18,6 @@ $dao = new Nette\Database\SelectionFactory(
 );
 
 
-
 test(function() use ($dao) {
 	$titles = array();
 	foreach ($dao->table('nUsers')->order('nUserId') as $user) {

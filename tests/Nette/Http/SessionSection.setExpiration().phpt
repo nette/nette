@@ -10,7 +10,6 @@
 use Nette\Http\Session;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -38,7 +37,6 @@ test(function() use ($session) { // try to expire whole namespace
 });
 
 
-
 test(function() use ($session) { // try to expire only 1 of the keys
 	$namespace = $session->getSection('expireSingle');
 	$namespace->setExpiration(1, 'g');
@@ -52,7 +50,6 @@ test(function() use ($session) { // try to expire only 1 of the keys
 	$namespace = $session->getSection('expireSingle');
 	Assert::same( 'p=plum', http_build_query($namespace->getIterator()) );
 });
-
 
 
 // small expiration

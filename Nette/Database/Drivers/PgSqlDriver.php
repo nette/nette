@@ -14,7 +14,6 @@ namespace Nette\Database\Drivers;
 use Nette;
 
 
-
 /**
  * Supplemental PostgreSQL database driver.
  *
@@ -26,16 +25,13 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	private $connection;
 
 
-
 	public function __construct(Nette\Database\Connection $connection, array $options)
 	{
 		$this->connection = $connection;
 	}
 
 
-
 	/********************* SQL ****************d*g**/
-
 
 
 	/**
@@ -48,7 +44,6 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Formats boolean for use in a SQL statement.
 	 */
@@ -56,7 +51,6 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	{
 		return $value ? 'TRUE' : 'FALSE';
 	}
-
 
 
 	/**
@@ -68,7 +62,6 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Encodes string for use in a LIKE statement.
 	 */
@@ -77,7 +70,6 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 		$value = strtr($value, array("'" => "''", '\\' => '\\\\', '%' => '\\\\%', '_' => '\\\\_'));
 		return ($pos <= 0 ? "'%" : "'") . $value . ($pos >= 0 ? "%'" : "'");
 	}
-
 
 
 	/**
@@ -94,7 +86,6 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Normalizes result row.
 	 */
@@ -104,9 +95,7 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/********************* reflection ****************d*g**/
-
 
 
 	/**
@@ -133,7 +122,6 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 
 		return $tables;
 	}
-
 
 
 	/**
@@ -181,7 +169,6 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Returns metadata for all indexes in a table.
 	 */
@@ -215,7 +202,6 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Returns metadata for all foreign keys in a table.
 	 */
@@ -243,7 +229,6 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Returns associative array of detected types (IReflection::FIELD_*) in result set.
 	 */
@@ -251,7 +236,6 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	{
 		return Nette\Database\Helpers::detectTypes($statement);
 	}
-
 
 
 	/**

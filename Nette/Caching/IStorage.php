@@ -14,7 +14,6 @@ namespace Nette\Caching;
 use Nette;
 
 
-
 /**
  * Cache storage.
  *

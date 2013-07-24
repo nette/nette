@@ -10,9 +10,7 @@
 use Nette\PhpGenerator\Method;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $function = new Method;
@@ -26,4 +24,4 @@ $function->addUse('this');
 $function->addUse('vars')
 	->setReference(TRUE);
 
-Assert::match(file_get_contents(__DIR__ . '/Method.closure.expect'), (string) $function);
+Assert::matchFile(__DIR__ . '/Method.closure.expect', (string) $function);

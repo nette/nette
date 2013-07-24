@@ -14,7 +14,6 @@ namespace Nette\Forms;
 use Nette;
 
 
-
 /**
  * Creates, validates and renders HTML forms.
  *
@@ -71,6 +70,11 @@ class Form extends Container
 	/** method */
 	const GET = 'get',
 		POST = 'post';
+
+	/** submitted data types */
+	const DATA_TEXT = 1;
+	const DATA_LINE = 2;
+	const DATA_FILE = 3;
 
 	/** @internal tracker ID */
 	const TRACKER_ID = '_form_';
@@ -133,7 +137,6 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * This method will be called when the component (or component's parent)
 	 * becomes attached to a monitored object. Do not call this method yourself.
@@ -148,7 +151,6 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * Returns self.
 	 * @return Form
@@ -159,18 +161,16 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * Sets form's action.
 	 * @param  mixed URI
-	 * @return Form  provides a fluent interface
+	 * @return self
 	 */
 	public function setAction($url)
 	{
 		$this->element->action = $url;
 		return $this;
 	}
-
 
 
 	/**
@@ -183,11 +183,10 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * Sets form's method.
 	 * @param  string get | post
-	 * @return Form  provides a fluent interface
+	 * @return self
 	 */
 	public function setMethod($method)
 	{
@@ -197,7 +196,6 @@ class Form extends Container
 		$this->element->method = strtolower($method);
 		return $this;
 	}
-
 
 
 	/**
@@ -210,18 +208,15 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * Cross-Site Request Forgery (CSRF) form protection.
 	 * @param  string
-	 * @param  int
 	 * @return Controls\CsrfProtection
 	 */
-	public function addProtection($message = NULL, $timeout = NULL)
+	public function addProtection($message = NULL)
 	{
-		return $this[self::PROTECTOR_ID] = new Controls\CsrfProtection($message, $timeout);
+		return $this[self::PROTECTOR_ID] = new Controls\CsrfProtection($message);
 	}
-
 
 
 	/**
@@ -240,13 +235,12 @@ class Form extends Container
 			$this->setCurrentGroup($group);
 		}
 
-		if (isset($this->groups[$caption])) {
+		if (!is_scalar($caption) || isset($this->groups[$caption])) {
 			return $this->groups[] = $group;
 		} else {
 			return $this->groups[$caption] = $group;
 		}
 	}
-
 
 
 	/**
@@ -275,7 +269,6 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * Returns all defined groups.
 	 * @return FormGroup[]
@@ -284,7 +277,6 @@ class Form extends Container
 	{
 		return $this->groups;
 	}
-
 
 
 	/**
@@ -298,21 +290,18 @@ class Form extends Container
 	}
 
 
-
 	/********************* translator ****************d*g**/
-
 
 
 	/**
 	 * Sets translate adapter.
-	 * @return Form  provides a fluent interface
+	 * @return self
 	 */
 	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
 	{
 		$this->translator = $translator;
 		return $this;
 	}
-
 
 
 	/**
@@ -325,9 +314,7 @@ class Form extends Container
 	}
 
 
-
 	/********************* submission ****************d*g**/
-
 
 
 	/**
@@ -338,7 +325,6 @@ class Form extends Container
 	{
 		return TRUE;
 	}
-
 
 
 	/**
@@ -354,7 +340,6 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * Tells if the form was submitted and successfully validated.
 	 * @return bool
@@ -365,10 +350,9 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * Sets the submittor control.
-	 * @return Form  provides a fluent interface
+	 * @return self
 	 */
 	public function setSubmittedBy(ISubmitterControl $by = NULL)
 	{
@@ -377,12 +361,11 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * Returns submitted HTTP data.
 	 * @return array
 	 */
-	final public function getHttpData()
+	final public function getHttpData($htmlName = NULL, $type = self::DATA_TEXT)
 	{
 		if ($this->httpData === NULL) {
 			if (!$this->isAnchored()) {
@@ -392,9 +375,11 @@ class Form extends Container
 			$this->httpData = (array) $data;
 			$this->submittedBy = is_array($data);
 		}
-		return $this->httpData;
+		if ($htmlName === NULL) {
+			return $this->httpData;
+		}
+		return Helpers::extractHttpData($this->httpData, $htmlName, $type);
 	}
-
 
 
 	/**
@@ -421,7 +406,6 @@ class Form extends Container
 		}
 		$this->onSubmit($this);
 	}
-
 
 
 	/**
@@ -454,9 +438,7 @@ class Form extends Container
 	}
 
 
-
 	/********************* validation ****************d*g**/
-
 
 
 	public function validate(array $controls = NULL)
@@ -466,7 +448,6 @@ class Form extends Container
 		}
 		parent::validate($controls);
 	}
-
 
 
 	/**
@@ -480,7 +461,6 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * Returns global validation errors.
 	 * @return array
@@ -489,7 +469,6 @@ class Form extends Container
 	{
 		return array_unique($this->errors);
 	}
-
 
 
 	/**
@@ -501,7 +480,6 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * @return void
 	 */
@@ -509,7 +487,6 @@ class Form extends Container
 	{
 		$this->errors = array();
 	}
-
 
 
 	/**
@@ -522,9 +499,7 @@ class Form extends Container
 	}
 
 
-
 	/********************* rendering ****************d*g**/
-
 
 
 	/**
@@ -537,17 +512,15 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * Sets form renderer.
-	 * @return Form  provides a fluent interface
+	 * @return self
 	 */
-	public function setRenderer(IFormRenderer $renderer)
+	public function setRenderer(IFormRenderer $renderer = NULL)
 	{
 		$this->renderer = $renderer;
 		return $this;
 	}
-
 
 
 	/**
@@ -563,7 +536,6 @@ class Form extends Container
 	}
 
 
-
 	/**
 	 * Renders form.
 	 * @return void
@@ -574,7 +546,6 @@ class Form extends Container
 		array_unshift($args, $this);
 		echo call_user_func_array(array($this->getRenderer(), 'render'), $args);
 	}
-
 
 
 	/**
@@ -597,9 +568,7 @@ class Form extends Container
 	}
 
 
-
 	/********************* backend ****************d*g**/
-
 
 
 	/**
@@ -609,12 +578,10 @@ class Form extends Container
 	{
 		if (!$this->httpRequest) {
 			$factory = new Nette\Http\RequestFactory;
-			$factory->setEncoding('UTF-8');
 			$this->httpRequest = $factory->createHttpRequest();
 		}
 		return $this->httpRequest;
 	}
-
 
 
 	/**

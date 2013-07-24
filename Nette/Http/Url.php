@@ -14,7 +14,6 @@ namespace Nette\Http;
 use Nette;
 
 
-
 /**
  * URI Syntax (RFC 3986).
  *
@@ -87,7 +86,6 @@ class Url extends Nette\Object
 	private $fragment = '';
 
 
-
 	/**
 	 * @param  string  URL
 	 * @throws Nette\InvalidArgumentException
@@ -120,18 +118,16 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Sets the scheme part of URI.
 	 * @param  string
-	 * @return Url  provides a fluent interface
+	 * @return self
 	 */
 	public function setScheme($value)
 	{
 		$this->scheme = (string) $value;
 		return $this;
 	}
-
 
 
 	/**
@@ -144,18 +140,16 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Sets the user name part of URI.
 	 * @param  string
-	 * @return Url  provides a fluent interface
+	 * @return self
 	 */
 	public function setUser($value)
 	{
 		$this->user = (string) $value;
 		return $this;
 	}
-
 
 
 	/**
@@ -168,18 +162,16 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Sets the password part of URI.
 	 * @param  string
-	 * @return Url  provides a fluent interface
+	 * @return self
 	 */
 	public function setPassword($value)
 	{
 		$this->pass = (string) $value;
 		return $this;
 	}
-
 
 
 	/**
@@ -192,18 +184,16 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Sets the host part of URI.
 	 * @param  string
-	 * @return Url  provides a fluent interface
+	 * @return self
 	 */
 	public function setHost($value)
 	{
 		$this->host = (string) $value;
 		return $this;
 	}
-
 
 
 	/**
@@ -216,18 +206,16 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Sets the port part of URI.
 	 * @param  string
-	 * @return Url  provides a fluent interface
+	 * @return self
 	 */
 	public function setPort($value)
 	{
 		$this->port = (int) $value;
 		return $this;
 	}
-
 
 
 	/**
@@ -240,18 +228,16 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Sets the path part of URI.
 	 * @param  string
-	 * @return Url  provides a fluent interface
+	 * @return self
 	 */
 	public function setPath($value)
 	{
 		$this->path = (string) $value;
 		return $this;
 	}
-
 
 
 	/**
@@ -264,18 +250,16 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Sets the query part of URI.
 	 * @param  string|array
-	 * @return Url  provides a fluent interface
+	 * @return self
 	 */
 	public function setQuery($value)
 	{
 		$this->query = (string) (is_array($value) ? http_build_query($value, '', '&') : $value);
 		return $this;
 	}
-
 
 
 	/**
@@ -291,7 +275,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the query part of URI.
 	 * @return string
@@ -302,18 +285,16 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Sets the fragment part of URI.
 	 * @param  string
-	 * @return Url  provides a fluent interface
+	 * @return self
 	 */
 	public function setFragment($value)
 	{
 		$this->fragment = (string) $value;
 		return $this;
 	}
-
 
 
 	/**
@@ -326,7 +307,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the entire URI including query string and fragment.
 	 * @return string
@@ -337,7 +317,6 @@ class Url extends Nette\Object
 			. ($this->query === '' ? '' : '?' . $this->query)
 			. ($this->fragment === '' ? '' : '#' . $this->fragment);
 	}
-
 
 
 	/**
@@ -359,7 +338,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the scheme and authority part of URI.
 	 * @return string
@@ -368,7 +346,6 @@ class Url extends Nette\Object
 	{
 		return ($this->scheme ? $this->scheme . ':' : '') . '//' . $this->getAuthority();
 	}
-
 
 
 	/**
@@ -382,7 +359,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the base-URI.
 	 * @return string
@@ -393,7 +369,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the relative-URI.
 	 * @return string
@@ -402,7 +377,6 @@ class Url extends Nette\Object
 	{
 		return (string) substr($this->getAbsoluteUrl(), strlen($this->getBaseUrl()));
 	}
-
 
 
 	/**
@@ -439,7 +413,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * Transform to canonical form.
 	 * @return Url
@@ -453,7 +426,6 @@ class Url extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return string
 	 */
@@ -461,7 +433,6 @@ class Url extends Nette\Object
 	{
 		return $this->getAbsoluteUrl();
 	}
-
 
 
 	/**

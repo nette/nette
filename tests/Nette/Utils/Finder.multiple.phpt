@@ -10,9 +10,7 @@
 use Nette\Utils\Finder;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 function export($iterator)
@@ -22,7 +20,6 @@ function export($iterator)
 	sort($arr);
 	return $arr;
 }
-
 
 
 test(function() { // recursive
@@ -43,7 +40,6 @@ test(function() { // recursive
 		Finder::find('*')->from('files/subdir/subdir2')->from('files/images');
 	}, 'Nette\InvalidStateException', '');
 });
-
 
 
 test(function() { // non-recursive

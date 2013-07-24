@@ -11,9 +11,7 @@ use Nette\Http,
 	Nette\Application\Routers\CliRouter;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 // php.exe app.phpc homepage:default name --verbose -user "john doe" "-pass=se cret" /wait

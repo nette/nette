@@ -14,7 +14,6 @@ namespace Nette\Diagnostics;
 use Nette;
 
 
-
 /**
  * IDebugPanel implementation helper.
  *
@@ -32,7 +31,6 @@ final class DefaultBarPanel extends Nette\Object implements IBarPanel
 	{
 		$this->id = $id;
 	}
-
 
 
 	/**
@@ -54,7 +52,6 @@ final class DefaultBarPanel extends Nette\Object implements IBarPanel
 		}
 		return ob_get_clean();
 	}
-
 
 
 	/**

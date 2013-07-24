@@ -14,7 +14,6 @@ namespace Nette\Database\Drivers;
 use Nette;
 
 
-
 /**
  * Supplemental SQLite2 database driver.
  *
@@ -30,7 +29,6 @@ class Sqlite2Driver extends SqliteDriver
 	{
 		throw new Nette\NotSupportedException;
 	}
-
 
 
 	/**

@@ -10,9 +10,7 @@
 use Nette\Utils\Paginator;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 test(function() {
@@ -32,7 +30,6 @@ test(function() {
 });
 
 
-
 test(function() {
 	$paginator = new Paginator;
 	$paginator->itemCount = 7;
@@ -45,7 +42,6 @@ test(function() {
 	Assert::same( 1, $paginator->countdownOffset );
 	Assert::same( 6, $paginator->length );
 });
-
 
 
 test(function() {
@@ -65,7 +61,6 @@ test(function() {
 });
 
 
-
 test(function() {
 	$paginator = new Paginator;
 	$paginator->itemCount = -1;
@@ -83,7 +78,6 @@ test(function() {
 });
 
 
-
 test(function() {
 	$paginator = new Paginator;
 	$paginator->itemCount = 7;
@@ -99,7 +93,6 @@ test(function() {
 	Assert::same( 0, $paginator->countdownOffset );
 	Assert::same( 1, $paginator->length );
 });
-
 
 
 test(function() {
@@ -129,7 +122,6 @@ test(function() {
 });
 
 
-
 test(function() {
 	$paginator = new Paginator;
 	$paginator->itemsPerPage = 6;
@@ -137,10 +129,10 @@ test(function() {
 	$paginator->page = 3;
 
 	Assert::same( 3, $paginator->page );
-	Assert::same( NULL, $paginator->pageCount );
+	Assert::null( $paginator->pageCount );
 	Assert::same( 0, $paginator->firstPage );
-	Assert::same( NULL, $paginator->lastPage );
+	Assert::null( $paginator->lastPage );
 	Assert::same( 18, $paginator->offset );
-	Assert::same( NULL, $paginator->countdownOffset );
+	Assert::null( $paginator->countdownOffset );
 	Assert::same( 6, $paginator->length );
 });

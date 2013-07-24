@@ -14,7 +14,6 @@ namespace Nette\Forms;
 use Nette;
 
 
-
 /**
  * A user group of form controls.
  *
@@ -32,16 +31,14 @@ class ControlGroup extends Nette\Object
 	private $options = array();
 
 
-
 	public function __construct()
 	{
 		$this->controls = new \SplObjectStorage;
 	}
 
 
-
 	/**
-	 * @return ControlGroup  provides a fluent interface
+	 * @return self
 	 */
 	public function add()
 	{
@@ -62,7 +59,6 @@ class ControlGroup extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return array IFormControl
 	 */
@@ -70,7 +66,6 @@ class ControlGroup extends Nette\Object
 	{
 		return iterator_to_array($this->controls);
 	}
-
 
 
 	/**
@@ -84,7 +79,7 @@ class ControlGroup extends Nette\Object
 	 *
 	 * @param  string key
 	 * @param  mixed  value
-	 * @return ControlGroup  provides a fluent interface
+	 * @return self
 	 */
 	public function setOption($key, $value)
 	{
@@ -98,7 +93,6 @@ class ControlGroup extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns user-specific option.
 	 * @param  string key
@@ -109,7 +103,6 @@ class ControlGroup extends Nette\Object
 	{
 		return isset($this->options[$key]) ? $this->options[$key] : $default;
 	}
-
 
 
 	/**

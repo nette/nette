@@ -10,9 +10,7 @@
 use Nette\Diagnostics\Dumper;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Assert::match( '"Hello" (5)

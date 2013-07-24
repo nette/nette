@@ -11,9 +11,7 @@ use Nette\Caching\Cache,
 	Nette\Caching\Storages\DevNullStorage;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 // key and data with special chars

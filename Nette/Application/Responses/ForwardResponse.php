@@ -14,7 +14,6 @@ namespace Nette\Application\Responses;
 use Nette;
 
 
-
 /**
  * Forwards to new request.
  *
@@ -28,12 +27,10 @@ class ForwardResponse extends Nette\Object implements Nette\Application\IRespons
 	private $request;
 
 
-
 	public function __construct(Nette\Application\Request $request)
 	{
 		$this->request = $request;
 	}
-
 
 
 	/**
@@ -43,7 +40,6 @@ class ForwardResponse extends Nette\Object implements Nette\Application\IRespons
 	{
 		return $this->request;
 	}
-
 
 
 	/**

@@ -10,9 +10,7 @@
 use Nette\Utils\Strings;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Assert::exception(function() {
@@ -34,5 +32,5 @@ Assert::exception(function() {
 function cb() { return 'x'; }
 
 Assert::exception(function() {
-	Strings::replace("0123456789\xFF", '#\d#u', new Nette\Callback('cb'));
+	Strings::replace("0123456789\xFF", '#\d#u', Nette\Utils\Callback::closure('cb'));
 }, 'Nette\Utils\RegexpException', 'Malformed UTF-8 data (pattern: #\d#u)');

@@ -14,35 +14,22 @@ namespace Nette\Utils;
 use Nette;
 
 
-
 /**
- * Simple lexical analyser.
+ * Simple lexical analyser. Internal class.
  *
  * @author     David Grudl
  */
 class Tokenizer extends Nette\Object
 {
-	/** @var array */
-	public $tokens;
-
-	/** @var int */
-	public $position = 0;
-
-	/** @var array */
-	public $ignored = array();
-
-	/** @var string */
-	private $input;
+	const VALUE = 0,
+		OFFSET = 1,
+		TYPE = 2;
 
 	/** @var string */
 	private $re;
 
 	/** @var array */
 	private $types;
-
-	/** @var array|string */
-	public $current;
-
 
 
 	/**
@@ -57,7 +44,6 @@ class Tokenizer extends Nette\Object
 	}
 
 
-
 	/**
 	 * Tokenize string.
 	 * @param  string
@@ -65,13 +51,11 @@ class Tokenizer extends Nette\Object
 	 */
 	public function tokenize($input)
 	{
-		$this->input = $input;
 		if ($this->types) {
-			$this->tokens = Strings::matchAll($input, $this->re);
+			$tokens = Strings::matchAll($input, $this->re);
 			$len = 0;
 			$count = count($this->types);
-			$line = 1;
-			foreach ($this->tokens as & $match) {
+			foreach ($tokens as & $match) {
 				$type = NULL;
 				for ($i = 1; $i <= $count; $i++) {
 					if (!isset($match[$i])) {
@@ -80,211 +64,42 @@ class Tokenizer extends Nette\Object
 						$type = $this->types[$i - 1]; break;
 					}
 				}
-				$match = self::createToken($match[0], $type, $line);
-				$len += strlen($match['value']);
-				$line += substr_count($match['value'], "\n");
+				$match = array(self::VALUE => $match[0], self::OFFSET => $len, self::TYPE => $type);
+				$len += strlen($match[self::VALUE]);
 			}
 			if ($len !== strlen($input)) {
 				$errorOffset = $len;
 			}
 
 		} else {
-			$this->tokens = Strings::split($input, $this->re, PREG_SPLIT_NO_EMPTY);
-			if ($this->tokens && !Strings::match(end($this->tokens), $this->re)) {
-				$tmp = Strings::split($this->input, $this->re, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_OFFSET_CAPTURE);
-				list(, $errorOffset) = end($tmp);
+			$tokens = Strings::split($input, $this->re, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_OFFSET_CAPTURE);
+			$last = end($tokens);
+			if ($tokens && !Strings::match($last[0], $this->re)) {
+				$errorOffset = $last[1];
 			}
 		}
 
 		if (isset($errorOffset)) {
-			$line = $errorOffset ? substr_count($this->input, "\n", 0, $errorOffset) + 1 : 1;
-			$col = $errorOffset - strrpos(substr($this->input, 0, $errorOffset), "\n") + 1;
+			list($line, $col) = $this->getCoordinates($input, $errorOffset);
 			$token = str_replace("\n", '\n', substr($input, $errorOffset, 10));
 			throw new TokenizerException("Unexpected '$token' on line $line, column $col.");
 		}
-		return $this->tokens;
+		return $tokens;
 	}
-
-
-
-	public static function createToken($value, $type = NULL, $line = NULL)
-	{
-		return array('value' => $value, 'type' => $type, 'line' => $line);
-	}
-
 
 
 	/**
 	 * Returns position of token in input string.
 	 * @param  int token number
-	 * @return array [offset, line, column]
+	 * @return array [line, column]
 	 */
-	public function getOffset($i)
+	public static function getCoordinates($text, $offset)
 	{
-		$tokens = Strings::split($this->input, $this->re, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_OFFSET_CAPTURE);
-		$offset = isset($tokens[$i]) ? $tokens[$i][1] : strlen($this->input);
-		return array(
-			$offset,
-			($offset ? substr_count($this->input, "\n", 0, $offset) + 1 : 1),
-			$offset - strrpos(substr($this->input, 0, $offset), "\n"),
-		);
-	}
-
-
-
-	/**
-	 * Returns next token as string.
-	 * @param  desired token
-	 * @return string
-	 */
-	public function fetch()
-	{
-		return $this->scan(func_get_args(), TRUE);
-	}
-
-
-
-	/**
-	 * Returns next token.
-	 * @param  desired token
-	 * @return array|string
-	 */
-	public function fetchToken()
-	{
-		return $this->scan(func_get_args(), TRUE) === FALSE ? FALSE : $this->current;
-	}
-
-
-
-	/**
-	 * Returns concatenation of all next tokens.
-	 * @param  desired token
-	 * @return string
-	 */
-	public function fetchAll()
-	{
-		return $this->scan(func_get_args(), FALSE);
-	}
-
-
-
-	/**
-	 * Returns concatenation of all next tokens until it sees a token with the given value.
-	 * @param  tokens
-	 * @return string
-	 */
-	public function fetchUntil($arg)
-	{
-		return $this->scan(func_get_args(), FALSE, TRUE, TRUE);
-	}
-
-
-
-	/**
-	 * Checks the next token.
-	 * @param  token
-	 * @return string
-	 */
-	public function isNext($arg)
-	{
-		return (bool) $this->scan(func_get_args(), TRUE, FALSE);
-	}
-
-
-
-	/**
-	 * Checks the previous token.
-	 * @param  token
-	 * @return string
-	 */
-	public function isPrev($arg)
-	{
-		return (bool) $this->scan(func_get_args(), TRUE, FALSE, FALSE, TRUE);
-	}
-
-
-
-	/**
-	 * Checks existence of next token.
-	 * @return bool
-	 */
-	public function hasNext()
-	{
-		return isset($this->tokens[$this->position]);
-	}
-
-
-
-	/**
-	 * Checks existence of previous token.
-	 * @return bool
-	 */
-	public function hasPrev()
-	{
-		return $this->position > 1;
-	}
-
-
-
-	/**
-	 * Checks the current token.
-	 * @param  token
-	 * @return string
-	 */
-	public function isCurrent($arg)
-	{
-		$args = func_get_args();
-		if (is_array($this->current)) {
-			return in_array($this->current['value'], $args, TRUE)
-				|| in_array($this->current['type'], $args, TRUE);
-		} else {
-			return in_array($this->current, $args, TRUE);
-		}
-	}
-
-
-
-	public function reset()
-	{
-		$this->position = 0;
-		$this->current = NULL;
-	}
-
-
-
-	/**
-	 * Looks for (first) (not) wanted tokens.
-	 * @param  int token number
-	 * @return array
-	 */
-	private function scan($wanted, $first, $advance = TRUE, $neg = FALSE, $prev = FALSE)
-	{
-		$res = FALSE;
-		$pos = $this->position + ($prev ? -2 : 0);
-		while (isset($this->tokens[$pos])) {
-			$token = $this->tokens[$pos];
-			$pos += $prev ? -1 : 1;
-			$value = is_array($token) ? $token['value'] : $token;
-			$type = is_array($token) ? $token['type'] : $token;
-			if (!$wanted || (in_array($value, $wanted, TRUE) || in_array($type, $wanted, TRUE)) ^ $neg) {
-				if ($advance) {
-					$this->position = $pos;
-					$this->current = $token;
-				}
-				$res .= $value;
-				if ($first) {
-					break;
-				}
-
-			} elseif ($neg || !in_array($type, $this->ignored, TRUE)) {
-				break;
-			}
-		}
-		return $res;
+		$text = substr($text, 0, $offset);
+		return array(substr_count($text, "\n") + 1, $offset - strrpos("\n" . $text, "\n") + 1);
 	}
 
 }
-
 
 
 /**

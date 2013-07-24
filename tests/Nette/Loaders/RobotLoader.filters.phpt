@@ -12,9 +12,7 @@ use Nette\Loaders\RobotLoader,
 	Nette\Caching\Storages\PhpFileStorage;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $loader = new RobotLoader;

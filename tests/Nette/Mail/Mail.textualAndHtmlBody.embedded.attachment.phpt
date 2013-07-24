@@ -10,11 +10,9 @@
 use Nette\Mail\Message;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/Mail.inc';
-
 
 
 $mail = new Message();
@@ -33,4 +31,4 @@ $mail->addAttachment('files/example.zip');
 $mailer = new TestMailer();
 $mailer->send($mail);
 
-Assert::match(file_get_contents(__DIR__ . '/Mail.textualAndHtmlBody.embedded.attachment.expect'), TestMailer::$output);
+Assert::matchFile(__DIR__ . '/Mail.textualAndHtmlBody.embedded.attachment.expect', TestMailer::$output);

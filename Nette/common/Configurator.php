@@ -15,7 +15,6 @@ use Nette,
 	Nette\DI;
 
 
-
 /**
  * Initial system DI container generator.
  *
@@ -42,18 +41,16 @@ class Configurator extends Object
 	protected $files = array();
 
 
-
 	public function __construct()
 	{
 		$this->parameters = $this->getDefaultParameters();
 	}
 
 
-
 	/**
 	 * Set parameter %debugMode%.
 	 * @param  bool|string|array
-	 * @return Configurator  provides a fluent interface
+	 * @return self
 	 */
 	public function setDebugMode($value = TRUE)
 	{
@@ -61,7 +58,6 @@ class Configurator extends Object
 		$this->parameters['productionMode'] = !$this->parameters['debugMode']; // compatibility
 		return $this;
 	}
-
 
 
 	/**
@@ -73,10 +69,9 @@ class Configurator extends Object
 	}
 
 
-
 	/**
 	 * Sets path to temporary directory.
-	 * @return Configurator  provides a fluent interface
+	 * @return self
 	 */
 	public function setTempDirectory($path)
 	{
@@ -85,17 +80,15 @@ class Configurator extends Object
 	}
 
 
-
 	/**
 	 * Adds new parameters. The %params% will be expanded.
-	 * @return Configurator  provides a fluent interface
+	 * @return self
 	 */
 	public function addParameters(array $params)
 	{
 		$this->parameters = DI\Config\Helpers::merge($params, $this->parameters);
 		return $this;
 	}
-
 
 
 	/**
@@ -120,7 +113,6 @@ class Configurator extends Object
 	}
 
 
-
 	/**
 	 * @param  string        error log directory
 	 * @param  string        administrator email
@@ -131,7 +123,6 @@ class Configurator extends Object
 		Nette\Diagnostics\Debugger::$strictMode = TRUE;
 		Nette\Diagnostics\Debugger::enable(!$this->parameters['debugMode'], $logDirectory, $email);
 	}
-
 
 
 	/**
@@ -146,17 +137,15 @@ class Configurator extends Object
 	}
 
 
-
 	/**
 	 * Adds configuration file.
-	 * @return Configurator  provides a fluent interface
+	 * @return self
 	 */
 	public function addConfig($file, $section = NULL)
 	{
 		$this->files[] = array($file, $section === self::AUTO ? $this->parameters['environment'] : $section);
 		return $this;
 	}
-
 
 
 	/**
@@ -180,7 +169,6 @@ class Configurator extends Object
 		Nette\Environment::setContext($container); // back compatibility
 		return $container;
 	}
-
 
 
 	/**
@@ -226,7 +214,6 @@ class Configurator extends Object
 	}
 
 
-
 	/**
 	 * @return Compiler
 	 */
@@ -241,7 +228,6 @@ class Configurator extends Object
 	}
 
 
-
 	/**
 	 * @return Loader
 	 */
@@ -249,7 +235,6 @@ class Configurator extends Object
 	{
 		return new DI\Config\Loader;
 	}
-
 
 
 	protected function getCacheDirectory()
@@ -265,9 +250,7 @@ class Configurator extends Object
 	}
 
 
-
 	/********************* tools ****************d*g**/
-
 
 
 	/**
@@ -286,7 +269,6 @@ class Configurator extends Object
 	}
 
 
-
 	/** @deprecated */
 	public function setProductionMode($value = TRUE)
 	{
@@ -295,14 +277,12 @@ class Configurator extends Object
 	}
 
 
-
 	/** @deprecated */
 	public function isProductionMode()
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use !isDebugMode() instead.', E_USER_DEPRECATED);
 		return !$this->isDebugMode();
 	}
-
 
 
 	/** @deprecated */

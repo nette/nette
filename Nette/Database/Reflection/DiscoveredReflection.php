@@ -14,7 +14,6 @@ namespace Nette\Database\Reflection;
 use Nette;
 
 
-
 /**
  * Reflection metadata class with discovery for a database.
  *
@@ -35,7 +34,6 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 	protected $loadedStructure;
 
 
-
 	/**
 	 * Create autodiscovery structure.
 	 */
@@ -49,14 +47,12 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 	}
 
 
-
 	public function __destruct()
 	{
 		if ($this->cache && $this->structure !== $this->loadedStructure) {
 			$this->cache->save('structure', $this->structure);
 		}
 	}
-
 
 
 	public function getPrimary($table)
@@ -82,7 +78,6 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 
 		return $primary;
 	}
-
 
 
 	public function getHasManyReference($table, $key, $refresh = TRUE)
@@ -131,7 +126,6 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 	}
 
 
-
 	public function getBelongsToReference($table, $key, $refresh = TRUE)
 	{
 		if (isset($this->structure['belongsTo'][strtolower($table)])) {
@@ -151,7 +145,6 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 	}
 
 
-
 	protected function reloadAllForeignKeys()
 	{
 		$this->structure['hasMany'] = $this->structure['belongsTo'] = array();
@@ -168,7 +161,6 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 			});
 		}
 	}
-
 
 
 	protected function reloadForeignKeys($table)

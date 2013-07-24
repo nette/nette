@@ -11,15 +11,12 @@ use Nette\Caching\Storages\MemcachedStorage,
 	Nette\Caching\Cache;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
-
 if (!MemcachedStorage::isAvailable()) {
-	Tester\Helpers::skip('Requires PHP extension Memcache.');
+	Tester\Environment::skip('Requires PHP extension Memcache.');
 }
-
 
 
 $key = 'nette-files-key';
@@ -43,7 +40,9 @@ Assert::true( isset($cache[$key]) );
 
 
 // Modifing dependent file
+sleep(2);
 file_put_contents($dependentFile, 'a');
+clearstatcache();
 
 Assert::false( isset($cache[$key]) );
 

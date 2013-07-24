@@ -10,9 +10,7 @@
 use Nette\Forms\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 before(function() {
@@ -21,14 +19,13 @@ before(function() {
 });
 
 
-
 test(function() {
 	$_GET = array('item');
 	$form = new Form;
 	$form->setMethod($form::GET);
 	$form->addSubmit('send', 'Send');
 
-	Assert::true( (bool) $form->isSubmitted() );
+	Assert::truthy( $form->isSubmitted() );
 	Assert::same( array('item'), $form->getHttpData() );
 	Assert::same( array(), $form->getValues(TRUE) );
 });

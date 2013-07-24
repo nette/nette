@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Utils\Html basic usage.
+ * Test: Nette\Utils\Html children usage.
  *
  * @author     David Grudl
  * @package    Nette\Utils
@@ -10,9 +10,7 @@
 use Nette\Utils\Html;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 test(function() { // add
@@ -33,7 +31,6 @@ test(function() { // add
 });
 
 
-
 test(function() {
 	$el = Html::el(NULL);
 	$el->add( Html::el('p')->setText('one') );
@@ -46,7 +43,6 @@ test(function() {
 	Assert::same( '<p>two</p>', (string) $el[1] );
 	Assert::false( isset($el[2]) );
 });
-
 
 
 test(function() { // ==> Iterator:

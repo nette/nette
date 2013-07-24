@@ -10,9 +10,7 @@
 use Nette\DI;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class LoremIpsumMacros extends Nette\Latte\Macros\MacroSet
@@ -28,7 +26,6 @@ class LoremIpsumMacros extends Nette\Latte\Macros\MacroSet
 }
 
 
-
 class IpsumLoremMacros extends Nette\Latte\Macros\MacroSet
 {
 
@@ -40,8 +37,6 @@ class IpsumLoremMacros extends Nette\Latte\Macros\MacroSet
 	}
 
 }
-
-
 
 
 $loader = new DI\Config\Loader;

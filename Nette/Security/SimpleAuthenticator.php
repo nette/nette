@@ -14,7 +14,6 @@ namespace Nette\Security;
 use Nette;
 
 
-
 /**
  * Trivial implementation of IAuthenticator.
  *
@@ -33,7 +32,6 @@ class SimpleAuthenticator extends Nette\Object implements IAuthenticator
 	{
 		$this->userlist = $userlist;
 	}
-
 
 
 	/**

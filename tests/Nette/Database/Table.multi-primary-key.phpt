@@ -38,7 +38,6 @@ test(function() use ($dao) {
 });
 
 
-
 test(function() use ($dao) {
 	$book = $dao->table('book')->get(3);
 	foreach ($related = $book->related('book_tag_alt') as $bookTag) {
@@ -58,7 +57,6 @@ test(function() use ($dao) {
 		'public',
 	), $states);
 });
-
 
 
 test(function() use ($dao) {

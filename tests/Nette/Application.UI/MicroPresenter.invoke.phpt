@@ -10,9 +10,7 @@
 use Nette\Application\Request;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class Invokable extends Nette\Object
@@ -40,7 +38,6 @@ test(function() use ($container) {
 		'Callback id 1 page 2'
 	), Notes::fetch());
 });
-
 
 
 test(function() use ($container) {

@@ -7,12 +7,11 @@
  * @package    Nette\Forms
  */
 
-use Nette\Forms\Form;
-
+use Nette\Forms\Form,
+	Nette\DateTime;
 
 
 require __DIR__ . '/../bootstrap.php';
-
 
 
 before(function() {
@@ -21,14 +20,12 @@ before(function() {
 });
 
 
-
 $series = array(
 	'red-dwarf' => 'Red Dwarf',
 	'the-simpsons' => 'The Simpsons',
 	0 => 'South Park',
 	'' => 'Family Guy',
 );
-
 
 
 test(function() use ($series) { // Radio list
@@ -43,7 +40,6 @@ test(function() use ($series) { // Radio list
 });
 
 
-
 test(function() use ($series) { // Radio list with invalid input
 	$_POST = array('radio' => 'days-of-our-lives');
 
@@ -54,7 +50,6 @@ test(function() use ($series) { // Radio list with invalid input
 	Assert::null( $input->getValue() );
 	Assert::false( $input->isFilled() );
 });
-
 
 
 test(function() use ($series) { // Indexed arrays
@@ -70,7 +65,6 @@ test(function() use ($series) { // Indexed arrays
 });
 
 
-
 test(function() use ($series) { // empty key
 	$_POST = array('empty' => '');
 
@@ -83,7 +77,6 @@ test(function() use ($series) { // empty key
 });
 
 
-
 test(function() use ($series) { // missing key
 	$_POST = array('malformed' => array(NULL));
 
@@ -92,9 +85,20 @@ test(function() use ($series) { // missing key
 
 	Assert::true( $form->isValid() );
 	Assert::null( $input->getValue() );
-	Assert::false( $input->isFilled() );
 });
 
+
+test(function() use ($series) { // disabled key
+	$_POST = array('disabled' => 'red-dwarf');
+
+	$form = new Form;
+	$input = $form->addRadioList('disabled', NULL, $series)
+		->setDisabled();
+
+	Assert::true( $form->isValid() );
+	Assert::null( $input->getValue() );
+	Assert::false( $input->isFilled() );
+});
 
 
 test(function() use ($series) { // malformed data
@@ -109,7 +113,6 @@ test(function() use ($series) { // malformed data
 });
 
 
-
 test(function() use ($series) { // setValue() and invalid argument
 	$form = new Form;
 	$input = $form->addRadioList('radio', NULL, $series);
@@ -118,4 +121,41 @@ test(function() use ($series) { // setValue() and invalid argument
 	Assert::exception(function() use ($input) {
 		$input->setValue('unknown');
 	}, 'Nette\InvalidArgumentException', "Value 'unknown' is out of range of current items.");
+});
+
+
+test(function() { // object as value
+	$form = new Form;
+	$input = $form->addRadioList('radio', NULL, array('2013-07-05 00:00:00' => 1))
+		->setValue(new DateTime('2013-07-05'));
+
+	Assert::same( '2013-07-05 00:00:00', $input->getValue() );
+});
+
+
+test(function() { // object as item
+	$form = new Form;
+	$input = $form->addRadioList('radio')
+		->setItems(array(new DateTime('2013-07-05')), FALSE)
+		->setValue(new DateTime('2013-07-05'));
+
+	Assert::same( '2013-07-05 00:00:00', $input->getValue() );
+});
+
+
+test(function() use ($series) { // disabled one
+	$_POST = array('radio' => 'red-dwarf');
+
+	$form = new Form;
+	$input = $form->addRadioList('radio', NULL, $series)
+		->setDisabled(array('red-dwarf'));
+
+	Assert::null( $input->getValue() );
+
+	unset($form['radio']);
+	$input = new Nette\Forms\Controls\RadioList(NULL, $series);
+	$input->setDisabled(array('red-dwarf'));
+	$form['radio'] = $input;
+
+	Assert::null( $input->getValue() );
 });

@@ -10,9 +10,7 @@
 use Nette\Forms\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 before(function() {
@@ -21,15 +19,13 @@ before(function() {
 });
 
 
-
 test(function() {
 	$_POST = array('text' => "  a\r b \n c ");
 	$form = new Form;
 	$input = $form->addHidden('text');
-	Assert::same( "  a\r b \n c ", $input->getValue() );
+	Assert::same( "  a\n b \n c ", $input->getValue() );
 	Assert::true( $input->isFilled() );
 });
-
 
 
 test(function() {
@@ -38,7 +34,6 @@ test(function() {
 	Assert::same( '', $input->getValue() );
 	Assert::false( $input->isFilled() );
 });
-
 
 
 test(function() { // invalid data
@@ -50,7 +45,6 @@ test(function() { // invalid data
 });
 
 
-
 test(function() { // errors are moved to form
 	$form = new Form;
 	$input = $form->addHidden('hidden');
@@ -58,7 +52,6 @@ test(function() { // errors are moved to form
 	Assert::same( array(), $input->getErrors() );
 	Assert::same( array('error'), $form->getErrors() );
 });
-
 
 
 test(function() { // setValue() and invalid argument
@@ -69,4 +62,13 @@ test(function() { // setValue() and invalid argument
 	Assert::exception(function() use ($input) {
 		$input->setValue(array());
 	}, 'Nette\InvalidArgumentException', "Value must be scalar or NULL, array given.");
+});
+
+
+test(function() { // object
+	$form = new Form;
+	$input = $form->addHidden('hidden')
+		->setValue(new Nette\DateTime('2013-07-05'));
+
+	Assert::same( '2013-07-05 00:00:00', $input->getValue() );
 });

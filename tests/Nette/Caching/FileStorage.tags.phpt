@@ -12,9 +12,7 @@ use Nette\Caching\Storages\FileStorage,
 	Nette\Caching\Cache;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $storage = new FileStorage(TEMP_DIR, new FileJournal(TEMP_DIR));

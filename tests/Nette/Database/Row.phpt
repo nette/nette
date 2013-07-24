@@ -11,7 +11,6 @@
 require __DIR__ . '/connect.inc.php'; // create $connection
 
 
-
 test(function() use ($connection) {
 	// numeric field
 	$row = $connection->fetch("SELECT 123 AS {$connection->supplementalDriver->delimite('123')}");

@@ -11,7 +11,6 @@ use Nette\Forms\Form,
 	Nette\ArrayHash;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 

@@ -14,7 +14,6 @@ namespace Nette\Forms\Controls;
 use Nette;
 
 
-
 /**
  * Hidden form control used to store a non-displayed value.
  *
@@ -33,6 +32,36 @@ class HiddenField extends BaseControl
 	}
 
 
+	/**
+	 * Sets control's value.
+	 * @param  string
+	 * @return self
+	 */
+	public function setValue($value)
+	{
+		if (!is_scalar($value) && $value !== NULL && !method_exists($value, '__toString')) {
+			throw new Nette\InvalidArgumentException('Value must be scalar or NULL, ' . gettype($value) . ' given.');
+		}
+		$this->value = (string) $value;
+		return $this;
+	}
+
+
+	/**
+	 * Generates control's HTML element.
+	 * @return Nette\Utils\Html
+	 */
+	public function getControl()
+	{
+		$this->setOption('rendered', TRUE);
+		$el = clone $this->control;
+		return $el->addAttributes(array(
+			'name' => $this->getHtmlName(),
+			'disabled' => $this->isDisabled(),
+			'value' => $this->value,
+		));
+	}
+
 
 	/**
 	 * Bypasses label generation.
@@ -42,43 +71,6 @@ class HiddenField extends BaseControl
 	{
 		return NULL;
 	}
-
-
-
-	/**
-	 * Sets control's value.
-	 * @param  string
-	 * @return HiddenField  provides a fluent interface
-	 */
-	public function setValue($value)
-	{
-		if (!is_scalar($value) && $value !== NULL) {
-			throw new Nette\InvalidArgumentException('Value must be scalar or NULL, ' . gettype($value) . ' given.');
-		}
-		$this->value = (string) $value;
-		return $this;
-	}
-
-
-
-	protected function setRawValue($value)
-	{
-		return $this->setValue(is_scalar($value) ? (string) $value : '');
-	}
-
-
-
-	/**
-	 * Generates control's HTML element.
-	 * @return Nette\Utils\Html
-	 */
-	public function getControl()
-	{
-		return parent::getControl()
-			->value($this->value)
-			->data('nette-rules', NULL);
-	}
-
 
 
 	/**

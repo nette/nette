@@ -16,7 +16,6 @@ use Nette,
 	PDO;
 
 
-
 /**
  * Represents a connection between PHP and a database server.
  *
@@ -53,7 +52,6 @@ class Connection extends Nette\Object
 	public $onQuery;
 
 
-
 	public function __construct($dsn, $user = NULL, $password = NULL, array $options = NULL)
 	{
 		if (func_num_args() > 4) { // compatiblity
@@ -66,7 +64,6 @@ class Connection extends Nette\Object
 			$this->connect();
 		}
 	}
-
 
 
 	private function connect()
@@ -86,13 +83,11 @@ class Connection extends Nette\Object
 	}
 
 
-
 	/** @return string */
 	public function getDsn()
 	{
 		return $this->params[0];
 	}
-
 
 
 	/** @return PDO */
@@ -103,14 +98,12 @@ class Connection extends Nette\Object
 	}
 
 
-
 	/** @return ISupplementalDriver */
 	public function getSupplementalDriver()
 	{
 		$this->connect();
 		return $this->driver;
 	}
-
 
 
 	/** @return void */
@@ -120,7 +113,6 @@ class Connection extends Nette\Object
 	}
 
 
-
 	/** @return void */
 	public function commit()
 	{
@@ -128,13 +120,11 @@ class Connection extends Nette\Object
 	}
 
 
-
 	/** @return void */
 	public function rollBack()
 	{
 		$this->queryArgs('::rollBack', array());
 	}
-
 
 
 	/**
@@ -145,7 +135,6 @@ class Connection extends Nette\Object
 	{
 		return $this->getPdo()->lastInsertId($name);
 	}
-
 
 
 	/**
@@ -159,7 +148,6 @@ class Connection extends Nette\Object
 	}
 
 
-
 	/**
 	 * Generates and executes SQL query.
 	 * @param  string  statement
@@ -171,7 +159,6 @@ class Connection extends Nette\Object
 		$args = func_get_args();
 		return $this->queryArgs(array_shift($args), $args);
 	}
-
 
 
 	/**
@@ -199,9 +186,7 @@ class Connection extends Nette\Object
 	}
 
 
-
 	/********************* shortcuts ****************d*g**/
-
 
 
 	/**
@@ -217,7 +202,6 @@ class Connection extends Nette\Object
 	}
 
 
-
 	/**
 	 * Shortcut for query()->fetchField()
 	 * @param  string  statement
@@ -229,7 +213,6 @@ class Connection extends Nette\Object
 		$args = func_get_args();
 		return $this->queryArgs(array_shift($args), $args)->fetchField();
 	}
-
 
 
 	/**
@@ -245,7 +228,6 @@ class Connection extends Nette\Object
 	}
 
 
-
 	/**
 	 * Shortcut for query()->fetchAll()
 	 * @param  string  statement
@@ -259,7 +241,6 @@ class Connection extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return SqlLiteral
 	 */
@@ -270,9 +251,7 @@ class Connection extends Nette\Object
 	}
 
 
-
 	/********************* Selection ****************d*g**/
-
 
 
 	/** @deprecated */
@@ -286,7 +265,6 @@ class Connection extends Nette\Object
 	}
 
 
-
 	/** @deprecated */
 	public function setSelectionFactory(SelectionFactory $selectionFactory)
 	{
@@ -295,13 +273,11 @@ class Connection extends Nette\Object
 	}
 
 
-
 	/** @deprecated */
 	public function getSelectionFactory()
 	{
 		return $this->selectionFactory;
 	}
-
 
 
 	/** @deprecated */
@@ -312,13 +288,11 @@ class Connection extends Nette\Object
 	}
 
 
-
 	/** @deprecated */
 	function setCacheStorage()
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use setSelectionFactory() instead.', E_USER_DEPRECATED);
 	}
-
 
 
 	/** @deprecated */

@@ -15,7 +15,6 @@ use Nette,
 	Nette\ObjectMixin;
 
 
-
 /**
  * Reports information about a classes variable.
  *
@@ -43,9 +42,7 @@ class Property extends \ReflectionProperty
 	}
 
 
-
 	/********************* Reflection layer ****************d*g**/
-
 
 
 	/**
@@ -57,9 +54,7 @@ class Property extends \ReflectionProperty
 	}
 
 
-
 	/********************* Nette\Annotations support ****************d*g**/
-
 
 
 	/**
@@ -74,7 +69,6 @@ class Property extends \ReflectionProperty
 	}
 
 
-
 	/**
 	 * Returns an annotation value.
 	 * @param  string
@@ -87,7 +81,6 @@ class Property extends \ReflectionProperty
 	}
 
 
-
 	/**
 	 * Returns all annotations.
 	 * @return IAnnotation[][]
@@ -96,7 +89,6 @@ class Property extends \ReflectionProperty
 	{
 		return AnnotationsParser::getAll($this);
 	}
-
 
 
 	/**
@@ -109,9 +101,7 @@ class Property extends \ReflectionProperty
 	}
 
 
-
 	/********************* Nette\Object behaviour ****************d*g**/
-
 
 
 	/**
@@ -123,12 +113,10 @@ class Property extends \ReflectionProperty
 	}
 
 
-
 	public function __call($name, $args)
 	{
 		return ObjectMixin::call($this, $name, $args);
 	}
-
 
 
 	public function &__get($name)
@@ -137,19 +125,16 @@ class Property extends \ReflectionProperty
 	}
 
 
-
 	public function __set($name, $value)
 	{
 		return ObjectMixin::set($this, $name, $value);
 	}
 
 
-
 	public function __isset($name)
 	{
 		return ObjectMixin::has($this, $name);
 	}
-
 
 
 	public function __unset($name)

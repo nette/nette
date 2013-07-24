@@ -14,7 +14,6 @@ namespace Nette\Latte;
 use Nette;
 
 
-
 /**
  * Templating engine Latte.
  *
@@ -29,19 +28,17 @@ class Engine extends Nette\Object
 	private $compiler;
 
 
-
 	public function __construct()
 	{
 		$this->parser = new Parser;
 		$this->compiler = new Compiler;
-		$this->compiler->defaultContentType = Compiler::CONTENT_XHTML;
+		$this->compiler->defaultContentType = Compiler::CONTENT_HTML;
 
 		Macros\CoreMacros::install($this->compiler);
 		$this->compiler->addMacro('cache', new Macros\CacheMacro($this->compiler));
 		Macros\UIMacros::install($this->compiler);
 		Macros\FormMacros::install($this->compiler);
 	}
-
 
 
 	/**
@@ -55,7 +52,6 @@ class Engine extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return Parser
 	 */
@@ -63,7 +59,6 @@ class Engine extends Nette\Object
 	{
 		return $this->parser;
 	}
-
 
 
 	/**

@@ -5,7 +5,6 @@
  */
 
 
-
 function testRouteIn(Nette\Application\Routers\Route $route, $url, $expectedPresenter=NULL, $expectedParams=NULL, $expectedUrl=NULL)
 {
 	// ==> $url
@@ -37,7 +36,6 @@ function testRouteIn(Nette\Application\Routers\Route $route, $url, $expectedPres
 		Assert::null( $expectedPresenter );
 	}
 }
-
 
 
 function testRouteOut(Nette\Application\Routers\Route $route, $presenter, $params = array())

@@ -10,16 +10,13 @@
 use Nette\Security\Permission;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 function falseAssertion()
 {
 	return FALSE;
 }
-
 
 
 $acl = new Permission;

@@ -20,7 +20,6 @@ use Nette,
 	Nette\Utils\Strings;
 
 
-
 /**
  * Macros for Nette\Forms.
  *
@@ -45,9 +44,7 @@ class FormMacros extends MacroSet
 	}
 
 
-
 	/********************* macros ****************d*g**/
-
 
 
 	/**
@@ -55,6 +52,9 @@ class FormMacros extends MacroSet
 	 */
 	public function macroForm(MacroNode $node, PhpWriter $writer)
 	{
+		if ($node->htmlNode && strtolower($node->htmlNode->name) === 'form') {
+			throw new CompileException('Did you mean <form n:name=...> ?');
+		}
 		$name = $node->tokenizer->fetchWord();
 		if ($name === FALSE) {
 			throw new CompileException("Missing form name in {{$node->name}}.");
@@ -66,7 +66,6 @@ class FormMacros extends MacroSet
 			. '$_control[%node.word], %node.array)'
 		);
 	}
-
 
 
 	/**
@@ -83,7 +82,6 @@ class FormMacros extends MacroSet
 			'$_formStack[] = $_form; $formContainer = $_form = ' . ($name[0] === '$' ? 'is_object(%node.word) ? %node.word : ' : '') . '$_form[%node.word]'
 		);
 	}
-
 
 
 	/**
@@ -105,7 +103,6 @@ class FormMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * {/label}
 	 */
@@ -116,7 +113,6 @@ class FormMacros extends MacroSet
 			return $writer->write('?></label><?php');
 		}
 	}
-
 
 
 	/**
@@ -138,7 +134,6 @@ class FormMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * deprecated n:input
 	 */
@@ -150,7 +145,6 @@ class FormMacros extends MacroSet
 			throw new CompileException("Use n:name instead of n:input.");
 		}
 	}
-
 
 
 	/**
@@ -188,7 +182,6 @@ class FormMacros extends MacroSet
 	}
 
 
-
 	public function macroName(MacroNode $node, PhpWriter $writer)
 	{
 		if (!$node->htmlNode) {
@@ -197,7 +190,6 @@ class FormMacros extends MacroSet
 			throw new CompileException("Unknown attribute n:{$node->prefix}-{$node->name}, use n:{$node->name} attribute.");
 		}
 	}
-
 
 
 	public function macroNameEnd(MacroNode $node, PhpWriter $writer)
@@ -211,9 +203,7 @@ class FormMacros extends MacroSet
 	}
 
 
-
 	/********************* run-time writers ****************d*g**/
-
 
 
 	/**
@@ -234,7 +224,6 @@ class FormMacros extends MacroSet
 		$el->addAttributes($attrs);
 		echo $withTags ? $el->startTag() : $el->attributes();
 	}
-
 
 
 	/**

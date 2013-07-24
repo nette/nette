@@ -14,7 +14,6 @@ namespace Nette\DI\Config;
 use Nette;
 
 
-
 /**
  * Configuration helpers.
  *
@@ -58,7 +57,6 @@ class Helpers
 	}
 
 
-
 	/**
 	 * Finds out and removes information about the parent.
 	 * @return mixed
@@ -73,7 +71,6 @@ class Helpers
 	}
 
 
-
 	/**
 	 * @return bool
 	 */
@@ -81,7 +78,6 @@ class Helpers
 	{
 		return is_array($data) && isset($data[self::EXTENDS_KEY]) && $data[self::EXTENDS_KEY] === self::OVERWRITE;
 	}
-
 
 
 	/**

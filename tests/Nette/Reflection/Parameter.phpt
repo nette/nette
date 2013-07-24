@@ -10,9 +10,7 @@
 use Nette\Reflection;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 test(function() {
@@ -30,7 +28,6 @@ test(function() {
 	Assert::null( $params[1]->class );
 	Assert::null( $params[1]->declaringClass );
 });
-
 
 
 test(function() {

@@ -10,9 +10,7 @@
 use Nette\DI;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 interface ILoremFactory
@@ -91,8 +89,6 @@ interface IFooFactory
 	 */
 	public function create(Baz $baz);
 }
-
-
 
 
 $loader = new DI\Config\Loader;

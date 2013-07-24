@@ -10,9 +10,11 @@
 use Nette\Http;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
+if (PHP_SAPI === 'cli') {
+	Tester\Environment::skip();
+}
 
 
 $old = headers_list();

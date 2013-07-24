@@ -14,7 +14,6 @@ namespace Nette;
 use Nette;
 
 
-
 /**
  * Basic manipulation with images.
  *
@@ -131,7 +130,6 @@ class Image extends Object
 	private $image;
 
 
-
 	/**
 	 * Returns RGB color.
 	 * @param  int  red 0..255
@@ -151,7 +149,6 @@ class Image extends Object
 	}
 
 
-
 	/**
 	 * Opens image from file.
 	 * @param  string
@@ -167,20 +164,19 @@ class Image extends Object
 		$info = @getimagesize($file); // @ - files smaller than 12 bytes causes read error
 
 		switch ($format = $info[2]) {
-		case self::JPEG:
-			return new static(imagecreatefromjpeg($file));
+			case self::JPEG:
+				return new static(imagecreatefromjpeg($file));
 
-		case self::PNG:
-			return new static(imagecreatefrompng($file));
+			case self::PNG:
+				return new static(imagecreatefrompng($file));
 
-		case self::GIF:
-			return new static(imagecreatefromgif($file));
+			case self::GIF:
+				return new static(imagecreatefromgif($file));
 
-		default:
-			throw new UnknownImageFileException("Unknown image type or file '$file' not found.");
+			default:
+				throw new UnknownImageFileException("Unknown image type or file '$file' not found.");
 		}
 	}
-
 
 
 	/**
@@ -194,7 +190,6 @@ class Image extends Object
 		$type = Utils\MimeTypeDetector::fromString($s);
 		return isset($types[$type]) ? $types[$type] : NULL;
 	}
-
 
 
 	/**
@@ -213,7 +208,6 @@ class Image extends Object
 
 		return new static(imagecreatefromstring($s));
 	}
-
 
 
 	/**
@@ -247,7 +241,6 @@ class Image extends Object
 	}
 
 
-
 	/**
 	 * Wraps GD image.
 	 * @param  resource
@@ -257,7 +250,6 @@ class Image extends Object
 		$this->setImageResource($image);
 		imagesavealpha($image, TRUE);
 	}
-
 
 
 	/**
@@ -270,7 +262,6 @@ class Image extends Object
 	}
 
 
-
 	/**
 	 * Returns image height.
 	 * @return int
@@ -281,11 +272,10 @@ class Image extends Object
 	}
 
 
-
 	/**
 	 * Sets image resource.
 	 * @param  resource
-	 * @return Image  provides a fluent interface
+	 * @return self
 	 */
 	protected function setImageResource($image)
 	{
@@ -295,7 +285,6 @@ class Image extends Object
 		$this->image = $image;
 		return $this;
 	}
-
 
 
 	/**
@@ -308,13 +297,12 @@ class Image extends Object
 	}
 
 
-
 	/**
 	 * Resizes image.
 	 * @param  mixed  width in pixels or percent
 	 * @param  mixed  height in pixels or percent
 	 * @param  int    flags
-	 * @return Image  provides a fluent interface
+	 * @return self
 	 */
 	public function resize($width, $height, $flags = self::FIT)
 	{
@@ -345,7 +333,6 @@ class Image extends Object
 		}
 		return $this;
 	}
-
 
 
 	/**
@@ -414,14 +401,13 @@ class Image extends Object
 	}
 
 
-
 	/**
 	 * Crops image.
 	 * @param  mixed  x-offset in pixels or percent
 	 * @param  mixed  y-offset in pixels or percent
 	 * @param  mixed  width in pixels or percent
 	 * @param  mixed  height in pixels or percent
-	 * @return Image  provides a fluent interface
+	 * @return self
 	 */
 	public function crop($left, $top, $width, $height)
 	{
@@ -431,7 +417,6 @@ class Image extends Object
 		$this->image = $newImage;
 		return $this;
 	}
-
 
 
 	/**
@@ -470,10 +455,9 @@ class Image extends Object
 	}
 
 
-
 	/**
 	 * Sharpen image.
-	 * @return Image  provides a fluent interface
+	 * @return self
 	 */
 	public function sharpen()
 	{
@@ -486,14 +470,13 @@ class Image extends Object
 	}
 
 
-
 	/**
 	 * Puts another image into this image.
 	 * @param  Image
 	 * @param  mixed  x-coordinate in pixels or percent
 	 * @param  mixed  y-coordinate in pixels or percent
 	 * @param  int  opacity 0..100
-	 * @return Image  provides a fluent interface
+	 * @return self
 	 */
 	public function place(Image $image, $left = 0, $top = 0, $opacity = 100)
 	{
@@ -524,7 +507,6 @@ class Image extends Object
 	}
 
 
-
 	/**
 	 * Saves image to the file.
 	 * @param  string  filename
@@ -536,35 +518,34 @@ class Image extends Object
 	{
 		if ($type === NULL) {
 			switch (strtolower(pathinfo($file, PATHINFO_EXTENSION))) {
-			case 'jpg':
-			case 'jpeg':
-				$type = self::JPEG;
-				break;
-			case 'png':
-				$type = self::PNG;
-				break;
-			case 'gif':
-				$type = self::GIF;
+				case 'jpg':
+				case 'jpeg':
+					$type = self::JPEG;
+					break;
+				case 'png':
+					$type = self::PNG;
+					break;
+				case 'gif':
+					$type = self::GIF;
 			}
 		}
 
 		switch ($type) {
-		case self::JPEG:
-			$quality = $quality === NULL ? 85 : max(0, min(100, (int) $quality));
-			return imagejpeg($this->getImageResource(), $file, $quality);
+			case self::JPEG:
+				$quality = $quality === NULL ? 85 : max(0, min(100, (int) $quality));
+				return imagejpeg($this->getImageResource(), $file, $quality);
 
-		case self::PNG:
-			$quality = $quality === NULL ? 9 : max(0, min(9, (int) $quality));
-			return imagepng($this->getImageResource(), $file, $quality);
+			case self::PNG:
+				$quality = $quality === NULL ? 9 : max(0, min(9, (int) $quality));
+				return imagepng($this->getImageResource(), $file, $quality);
 
-		case self::GIF:
-			return imagegif($this->getImageResource(), $file);
+			case self::GIF:
+				return imagegif($this->getImageResource(), $file);
 
-		default:
-			throw new InvalidArgumentException("Unsupported image type.");
+			default:
+				throw new InvalidArgumentException("Unsupported image type.");
 		}
 	}
-
 
 
 	/**
@@ -579,7 +560,6 @@ class Image extends Object
 		$this->save(NULL, $quality, $type);
 		return ob_get_clean();
 	}
-
 
 
 	/**
@@ -597,7 +577,6 @@ class Image extends Object
 	}
 
 
-
 	/**
 	 * Outputs image to browser.
 	 * @param  int  image type
@@ -612,7 +591,6 @@ class Image extends Object
 		header('Content-Type: ' . image_type_to_mime_type($type));
 		return $this->save(NULL, $quality, $type);
 	}
-
 
 
 	/**
@@ -648,7 +626,6 @@ class Image extends Object
 	}
 
 }
-
 
 
 /**

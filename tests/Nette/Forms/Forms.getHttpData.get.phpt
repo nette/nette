@@ -10,9 +10,7 @@
 use Nette\Forms\Form;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 before(function() {
@@ -21,29 +19,26 @@ before(function() {
 });
 
 
-
 test(function() {
 	$form = new Form;
 	$form->setMethod($form::GET);
 	$form->addSubmit('send', 'Send');
 
-	Assert::false( (bool) $form->isSubmitted() );
-	Assert::false( (bool) $form->isSuccess() );
+	Assert::false( $form->isSubmitted() );
+	Assert::false( $form->isSuccess() );
 	Assert::same( array(), $form->getHttpData() );
 	Assert::same( array(), $form->getValues(TRUE) );
 });
-
 
 
 test(function() {
 	$form = new Form;
 	$form->addSubmit('send', 'Send');
 
-	Assert::false( (bool) $form->isSubmitted() );
+	Assert::false( $form->isSubmitted() );
 	Assert::same( array(), $form->getHttpData() );
 	Assert::same( array(), $form->getValues(TRUE) );
 });
-
 
 
 test(function() {
@@ -54,7 +49,7 @@ test(function() {
 	$form->setMethod($form::GET);
 	$form->addSubmit('send', 'Send');
 
-	Assert::true( (bool) $form->isSubmitted() );
+	Assert::truthy( $form->isSubmitted() );
 	Assert::same( array(Form::TRACKER_ID => $name), $form->getHttpData() );
 	Assert::same( array(), $form->getValues(TRUE) );
 	Assert::same( $name, $form[Form::TRACKER_ID]->getValue() );

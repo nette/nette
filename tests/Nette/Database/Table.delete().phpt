@@ -22,14 +22,12 @@ test(function() use ($dao) {
 });
 
 
-
 test(function() use ($dao) {
 	$book = $dao->table('book')->get(3);  // SELECT * FROM `book` WHERE (`id` = ?)
 	$book->related('book_tag_alt')->where('tag_id', 21)->delete();  // DELETE FROM `book_tag_alt` WHERE (`book_id` = ?) AND (`tag_id` = ?)
 
 	$count = $dao->table('book_tag_alt')->where('book_id', 3)->count();  // SELECT * FROM `book_tag_alt` WHERE (`book_id` = ?)
 	Assert::same(3, $count);
-
 
 
 	$book->delete();  // DELETE FROM `book` WHERE (`id` = ?)

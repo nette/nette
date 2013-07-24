@@ -10,12 +10,11 @@
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
 header('Content-Type: text/plain');
-putenv('TERM=');
+Nette\Diagnostics\Dumper::$terminalColors = NULL;
 
 
 test(function() { // production mode
@@ -29,7 +28,6 @@ test(function() { // production mode
 });
 
 
-
 test(function() { // development mode
 	Debugger::$productionMode = FALSE;
 
@@ -40,7 +38,6 @@ test(function() { // development mode
 
 	Assert::match( '"forced" (6)', Debugger::dump('forced', TRUE) );
 });
-
 
 
 test(function() { // returned value

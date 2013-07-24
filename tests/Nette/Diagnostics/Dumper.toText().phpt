@@ -10,9 +10,7 @@
 use Nette\Diagnostics\Dumper;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class Test
@@ -48,7 +46,7 @@ Assert::match( '"\\x00"', Dumper::toText("\x00") );
 Assert::match( 'array (5)
    0 => 1
    1 => "hello" (5)
-   2 => array (0)
+   2 => array ()
    3 => array (2)
    |  0 => 1
    |  1 => 2
@@ -64,9 +62,9 @@ Assert::match( 'array (5)
 
 Assert::match( "stream resource\n   wrapper_type%A%", Dumper::toText(fopen(__FILE__, 'r')) );
 
-Assert::match( 'stdClass (0)', Dumper::toText(new stdClass) );
+Assert::match( 'stdClass #%a%', Dumper::toText(new stdClass) );
 
-Assert::match( 'Test (3)
+Assert::match( 'Test #%a%
    x => array (2)
    |  0 => 10
    |  1 => NULL
@@ -84,12 +82,12 @@ $objStorage[$o2] = 'o2';
 $objStorage->next();
 $key = $objStorage->key();
 
-Assert::match( 'SplObjectStorage (2)
+Assert::match( 'SplObjectStorage #%a%
    0 => array (2)
-   |  object => stdClass (0)
+   |  object => stdClass #%a%
    |  data => "o1" (2)
    1 => array (2)
-   |  object => stdClass (1)
+   |  object => stdClass #%a%
    |  |  foo => "bar" (3)
    |  data => "o2" (2)
 ', Dumper::toText($objStorage) );

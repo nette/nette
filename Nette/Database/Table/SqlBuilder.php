@@ -18,7 +18,6 @@ use Nette,
 	Nette\Database\SqlLiteral;
 
 
-
 /**
  * Builds SQL query.
  * SqlBuilder is based on great library NotORM http://www.notorm.com written by Jakub Vrana.
@@ -74,7 +73,6 @@ class SqlBuilder extends Nette\Object
 	protected $having = '';
 
 
-
 	public function __construct($tableName, Connection $connection, IReflection $reflection)
 	{
 		$this->tableName = $tableName;
@@ -84,12 +82,10 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	public function buildInsertQuery()
 	{
 		return "INSERT INTO {$this->delimitedTable}";
 	}
-
 
 
 	public function buildUpdateQuery()
@@ -101,7 +97,6 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	public function buildDeleteQuery()
 	{
 		if ($this->limit !== NULL || $this->offset) {
@@ -109,7 +104,6 @@ class SqlBuilder extends Nette\Object
 		}
 		return $this->tryDelimite("DELETE FROM {$this->tableName}" . $this->buildConditions());
 	}
-
 
 
 	/**
@@ -159,7 +153,6 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	public function getParameters()
 	{
 		return array_merge(
@@ -172,7 +165,6 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	public function importConditions(SqlBuilder $builder)
 	{
 		$this->where = $builder->where;
@@ -181,9 +173,7 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	/********************* SQL selectors ****************d*g**/
-
 
 
 	public function addSelect($columns)
@@ -196,12 +186,10 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	public function getSelect()
 	{
 		return $this->select;
 	}
-
 
 
 	public function addWhere($condition, $parameters = array())
@@ -234,7 +222,7 @@ class SqlBuilder extends Nette\Object
 		$replace = NULL;
 		$placeholderNum = 0;
 		foreach ($args as $arg) {
-			preg_match('#(?:.*?\?.*?){' . $placeholderNum . '}(((?:&|\||^|~|\+|-|\*|/|%|\(|,|<|>|=|(?<=\W|^)(?:ALL|AND|ANY|BETWEEN|EXISTS|IN|LIKE|OR|NOT|SOME))\s*)?\?)#s', $condition, $match, PREG_OFFSET_CAPTURE);
+			preg_match('#(?:.*?\?.*?){' . $placeholderNum . '}(((?:&|\||^|~|\+|-|\*|/|%|\(|,|<|>|=|(?<=\W|^)(?:REGEXP|ALL|AND|ANY|BETWEEN|EXISTS|IN|R?LIKE|OR|NOT|SOME))\s*)?(?:\(\?\)|\?))#s', $condition, $match, PREG_OFFSET_CAPTURE);
 			$hasOperator = ($match[1][0] === '?' && $match[1][1] === 0) ? TRUE : !empty($match[2][0]);
 
 			if ($arg === NULL) {
@@ -298,9 +286,7 @@ class SqlBuilder extends Nette\Object
 			} elseif ($arg instanceof SqlLiteral) {
 				$this->parameters['where'][] = $arg;
 			} else {
-				if ($hasOperator) {
-					$replace = $match[2][0] . '?';
-				} else {
+				if (!$hasOperator) {
 					$replace = '= ?';
 				}
 				$this->parameters['where'][] = $arg;
@@ -321,12 +307,10 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	public function getConditions()
 	{
 		return array_values($this->conditions);
 	}
-
 
 
 	public function addOrder($columns)
@@ -336,12 +320,10 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	public function getOrder()
 	{
 		return $this->order;
 	}
-
 
 
 	public function setLimit($limit, $offset)
@@ -351,19 +333,16 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	public function getLimit()
 	{
 		return $this->limit;
 	}
 
 
-
 	public function getOffset()
 	{
 		return $this->offset;
 	}
-
 
 
 	public function setGroup($columns)
@@ -373,12 +352,10 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	public function getGroup()
 	{
 		return $this->group;
 	}
-
 
 
 	public function setHaving($having)
@@ -388,23 +365,19 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	public function getHaving()
 	{
 		return $this->having;
 	}
 
 
-
 	/********************* SQL building ****************d*g**/
-
 
 
 	protected function buildSelect(array $columns)
 	{
 		return 'SELECT ' . implode(', ', $columns);
 	}
-
 
 
 	protected function parseJoins(& $joins, & $query)
@@ -421,7 +394,6 @@ class SqlBuilder extends Nette\Object
 			return $builder->parseJoinsCb($joins, $match);
 		}, $query);
 	}
-
 
 
 	public function parseJoinsCb(& $joins, $match)
@@ -461,7 +433,6 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	protected function buildQueryJoins(array $joins)
 	{
 		$return = '';
@@ -477,12 +448,10 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	protected function buildConditions()
 	{
 		return $this->where ? ' WHERE (' . implode(') AND (', $this->where) . ')' : '';
 	}
-
 
 
 	protected function buildQueryEnd()
@@ -501,7 +470,6 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-
 	protected function tryDelimite($s)
 	{
 		$driver = $this->driver;
@@ -509,7 +477,6 @@ class SqlBuilder extends Nette\Object
 			return strtoupper($m[0]) === $m[0] ? $m[0] : $driver->delimite($m[0]);
 		}, $s);
 	}
-
 
 
 	protected function addWhereComposition(array $columns, array $parameters)

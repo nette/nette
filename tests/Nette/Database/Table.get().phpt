@@ -14,7 +14,6 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
 
 
-
 test(function() use ($dao) {
 	$book = $dao->table('book')->get(1);  // SELECT * FROM `book` WHERE (`id` = ?)
 

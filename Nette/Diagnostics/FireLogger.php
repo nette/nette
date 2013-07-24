@@ -14,7 +14,6 @@ namespace Nette\Diagnostics;
 use Nette;
 
 
-
 /**
  * FireLogger console logger.
  *
@@ -30,7 +29,6 @@ class FireLogger extends Nette\Object
 		CRITICAL = 'critical';
 
 	private static $payload = array('logs' => array());
-
 
 
 	/**
@@ -112,7 +110,6 @@ class FireLogger extends Nette\Object
 		}
 		return TRUE;
 	}
-
 
 
 	/**

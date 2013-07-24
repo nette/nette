@@ -10,9 +10,7 @@
 use Nette\Application\PresenterFactory;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
@@ -36,10 +34,9 @@ test(function() use ($factory) {
 	Assert::same( 'Foo3:Bar', $factory->unformatPresenterClass('My\App\BarPresenter') );
 	Assert::same( 'Foo3:Bar:Baz', $factory->unformatPresenterClass('My\App\BarMod\BazPresenter') );
 
-	Assert::same( NULL, $factory->unformatPresenterClass('Foo') );
-	Assert::same( NULL, $factory->unformatPresenterClass('FooMod\BarPresenter') );
+	Assert::null( $factory->unformatPresenterClass('Foo') );
+	Assert::null( $factory->unformatPresenterClass('FooMod\BarPresenter') );
 });
-
 
 
 test(function() use ($factory) {
@@ -55,6 +52,6 @@ test(function() use ($factory) {
 	Assert::same( 'Foo3:Bar', $factory->unformatPresenterClass('My\App\BarPresenter') );
 	Assert::same( 'Foo3:Bar:Baz', $factory->unformatPresenterClass('My\App\BarModule\BazPresenter') );
 
-	Assert::same( NULL, $factory->unformatPresenterClass('App2\Bar\BazPresenter') );
-	Assert::same( NULL, $factory->unformatPresenterClass('My\App\BarMod\BazPresenter') );
+	Assert::null( $factory->unformatPresenterClass('App2\Bar\BazPresenter') );
+	Assert::null( $factory->unformatPresenterClass('My\App\BarMod\BazPresenter') );
 });

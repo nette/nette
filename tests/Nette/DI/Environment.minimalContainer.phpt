@@ -10,9 +10,7 @@
 use Nette\Environment;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Assert::null( Environment::getVariable('foo', NULL), "Getting variable 'foo':" );
@@ -35,7 +33,6 @@ test(function() {
 });
 
 
-
 test(function() {
 	// Services
 	Assert::same( 'Nette\Http\Response', get_class(Environment::getHttpResponse()) );
@@ -44,9 +41,8 @@ test(function() {
 });
 
 
-
 test(function() {
 	// Modes
-	Assert::false( Environment::isConsole() ); // Is console?
+	Assert::same( PHP_SAPI === 'cli', Environment::isConsole() ); // Is console?
 	Assert::true( Environment::isProduction() ); // Is production mode?
 });

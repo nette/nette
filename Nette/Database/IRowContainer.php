@@ -12,7 +12,6 @@
 namespace Nette\Database;
 
 
-
 /**
  * Container of database result fetched into IRow.
  *

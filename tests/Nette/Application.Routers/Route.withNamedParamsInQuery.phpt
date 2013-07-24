@@ -10,11 +10,9 @@
 use Nette\Application\Routers\Route;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/Route.inc';
-
 
 
 $route = new Route('?action=<presenter> & act=<action [a-z]+>', array(
@@ -31,3 +29,5 @@ testRouteIn($route, '/?act=default', 'Default', array(
 	'action' => 'default',
 	'test' => 'testvalue',
 ), '/?test=testvalue');
+
+testRouteIn($route, '/?action[]=invalid&act=default', NULL);

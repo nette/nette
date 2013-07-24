@@ -8,16 +8,14 @@
  */
 
 use Nette\Latte\PhpWriter,
-	Nette\Latte\MacroTokenizer;
-
+	Nette\Latte\MacroTokens;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-
 function formatArgs($args) {
-	$writer = new PhpWriter(new MacroTokenizer($args));
+	$writer = new PhpWriter(new MacroTokens($args));
 	return $writer->formatArgs();
 }
 
@@ -27,8 +25,10 @@ test(function() { // symbols
 	Assert::same( '1',  formatArgs('1') );
 	Assert::same( "'symbol'",  formatArgs('symbol') );
 	Assert::same( "1, 2, 'symbol1', 'symbol-2'",  formatArgs('1, 2, symbol1, symbol-2') );
+	Assert::same( "('a', 'b', 'c' => 'd', 'e' ? 'f' : 'g', h['i'], j('k'))",  formatArgs('(a, b, c => d, e ? f : g, h[i], j(k))') );
+	Assert::same( "'x' && 'y', 'x' || 'y', 'x' < 'y', 'x' <= 'y', 'x' > 'y', 'x' => 'y', 'x' == 'y', 'x' === 'y', 'x' != 'y', 'x' !== 'y', 'x' <> 'y'",  formatArgs('x && y, x || y, x < y, x <= y, x > y, x => y, x == y, x === y, x != y, x !== y, x <> y') );
+	Assert::same( "\$x = 'x', x = 1, 'x' . 'y'",  formatArgs('$x = x, x = 1, x . y') ); //
 });
-
 
 
 test(function() { // strings
@@ -41,12 +41,10 @@ test(function() { // strings
 });
 
 
-
 test(function() { // key words
 	Assert::same( 'TRUE, false, null, 1 or 1 and 2 xor 3, clone $obj, new Class',  formatArgs('TRUE, false, null, 1 or 1 and 2 xor 3, clone $obj, new Class') );
 	Assert::same( 'func (10)',  formatArgs('func (10)') );
 });
-
 
 
 test(function() { // associative arrays
@@ -55,18 +53,16 @@ test(function() { // associative arrays
 });
 
 
-
 test(function() { // simplified arrays
 	Assert::same( 'array(\'item\', 123, array(), $item[1])',  formatArgs('[item, 123, [], $item[1]]') );
 	Assert::same( "ITEM['id']",  formatArgs('ITEM[id]') );
 });
 
 
-
 test(function() { // short ternary operators
-	Assert::same( '($first ? \'first\':null), $var ? \'foo\' : \'bar\', $var ? \'foo\':null',  formatArgs('($first ? first), $var ? foo : bar, $var ? foo') );
+	Assert::same( "(\$first ? 'first' : NULL), \$var ? 'foo' : 'bar', \$var ? 'foo' : NULL",  formatArgs('($first ? first), $var ? foo : bar, $var ? foo') );
+	Assert::same( "('a' ? 'b' : NULL) ? ('c' ? 'd' : NULL) : NULL",  formatArgs('(a ? b) ? (c ? d)') );
 });
-
 
 
 test(function() { // special
@@ -86,7 +82,6 @@ test(function() { // special
 	Assert::same( "(array)",  formatArgs('(array)') );
 	Assert::same( 'func()[1]',  formatArgs('func()[1]') );
 });
-
 
 
 test(function() { // special UTF-8

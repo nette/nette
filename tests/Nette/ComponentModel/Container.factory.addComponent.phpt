@@ -10,9 +10,7 @@
 use Nette\ComponentModel\Container;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class TestClass extends Container
@@ -28,7 +26,6 @@ class TestClass extends Container
 
 $a = new TestClass;
 Assert::same( 'b', $a->getComponent('b')->name );
-
 
 
 Assert::exception(function() use ($a) {

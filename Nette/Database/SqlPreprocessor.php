@@ -14,7 +14,6 @@ namespace Nette\Database;
 use Nette;
 
 
-
 /**
  * SQL preprocessor.
  *
@@ -44,7 +43,6 @@ class SqlPreprocessor extends Nette\Object
 	private $arrayModes;
 
 
-
 	public function __construct(Connection $connection)
 	{
 		$this->connection = $connection;
@@ -59,7 +57,6 @@ class SqlPreprocessor extends Nette\Object
 			'GROUP BY' => 'order',
 		);
 	}
-
 
 
 	/**
@@ -92,7 +89,6 @@ class SqlPreprocessor extends Nette\Object
 	}
 
 
-
 	/** @internal */
 	public function callback($m)
 	{
@@ -111,7 +107,6 @@ class SqlPreprocessor extends Nette\Object
 			return $m;
 		}
 	}
-
 
 
 	private function formatValue($value)

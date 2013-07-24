@@ -55,7 +55,6 @@ namespace
 	require __DIR__ . '/../bootstrap.php';
 
 
-
 	$refA = ClassType::from('A\AClass');
 	$refB = ClassType::from('A\B\BClass');
 

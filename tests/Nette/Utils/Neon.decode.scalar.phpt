@@ -10,9 +10,7 @@
 use Nette\Utils\Neon;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Assert::null( Neon::decode('') );

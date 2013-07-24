@@ -16,7 +16,6 @@ use Nette,
 	Nette\Utils\Validators;
 
 
-
 /**
  * Core Nette Framework services.
  *
@@ -25,9 +24,11 @@ use Nette,
 class NetteExtension extends Nette\DI\CompilerExtension
 {
 	public $defaults = array(
+		'http' => array(
+			'proxy' => array(),
+		),
 		'session' => array(
 			'debugger' => FALSE,
-			'iAmUsingBadHost' => NULL,
 			'autoStart' => 'smart',  // true|false|smart
 			'expiration' => NULL,
 		),
@@ -56,7 +57,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			'messages' => array(),
 		),
 		'latte' => array(
-			'xhtml' => TRUE,
+			'xhtml' => FALSE,
 			'macros' => array(),
 		),
 		'container' => array(
@@ -84,7 +85,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	);
 
 
-
 	public function loadConfiguration()
 	{
 		$container = $this->getContainerBuilder();
@@ -97,7 +97,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		$container->addDefinition('nette')->setClass('Nette\DI\Extensions\NetteAccessor', array('@container'));
 
 		$this->setupCache($container);
-		$this->setupHttp($container);
+		$this->setupHttp($container, $config['http']);
 		$this->setupSession($container, $config['session']);
 		$this->setupSecurity($container, $config['security']);
 		$this->setupApplication($container, $config['application']);
@@ -108,7 +108,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		$this->setupDatabase($container, $config['database']);
 		$this->setupContainer($container, $config['container']);
 	}
-
 
 
 	private function setupCache(ContainerBuilder $container)
@@ -129,12 +128,11 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	}
 
 
-
-	private function setupHttp(ContainerBuilder $container)
+	private function setupHttp(ContainerBuilder $container, array $config)
 	{
 		$container->addDefinition($this->prefix('httpRequestFactory'))
 			->setClass('Nette\Http\RequestFactory')
-			->addSetup('setEncoding', array('UTF-8'));
+			->addSetup('setProxy', array($config['proxy']));
 
 		$container->addDefinition('httpRequest') // no namespace for back compatibility
 			->setClass('Nette\Http\Request')
@@ -148,7 +146,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	}
 
 
-
 	private function setupSession(ContainerBuilder $container, array $config)
 	{
 		$session = $container->addDefinition('session') // no namespace for back compatibility
@@ -157,9 +154,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		if (isset($config['expiration'])) {
 			$session->addSetup('setExpiration', array($config['expiration']));
 		}
-		if (isset($config['iAmUsingBadHost'])) {
-			$session->addSetup('Nette\Framework::$iAmUsingBadHost = ?;', array((bool) $config['iAmUsingBadHost']));
-		}
 
 		if ($container->parameters['debugMode'] && $config['debugger']) {
 			$session->addSetup('Nette\Diagnostics\Debugger::getBar()->addPanel(?)', array(
@@ -167,12 +161,11 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			));
 		}
 
-		unset($config['expiration'], $config['autoStart'], $config['iAmUsingBadHost'], $config['debugger']);
+		unset($config['expiration'], $config['autoStart'], $config['debugger']);
 		if (!empty($config)) {
 			$session->addSetup('setOptions', array($config));
 		}
 	}
-
 
 
 	private function setupSecurity(ContainerBuilder $container, array $config)
@@ -207,7 +200,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	}
 
 
-
 	private function setupApplication(ContainerBuilder $container, array $config)
 	{
 		$application = $container->addDefinition('application') // no namespace for back compatibility
@@ -230,7 +222,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	}
 
 
-
 	private function setupRouting(ContainerBuilder $container, array $config)
 	{
 		$router = $container->addDefinition('router') // no namespace for back compatibility
@@ -246,7 +237,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			));
 		}
 	}
-
 
 
 	private function setupMailer(ContainerBuilder $container, array $config)
@@ -266,7 +256,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	}
 
 
-
 	private function setupForms(ContainerBuilder $container)
 	{
 		$container->addDefinition($this->prefix('basicForm'))
@@ -275,15 +264,14 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	}
 
 
-
 	private function setupTemplating(ContainerBuilder $container, array $config)
 	{
 		$latte = $container->addDefinition($this->prefix('latte'))
 			->setClass('Nette\Latte\Engine')
 			->setShared(FALSE);
 
-		if (empty($config['xhtml'])) {
-			$latte->addSetup('$service->getCompiler()->defaultContentType = ?', Nette\Latte\Compiler::CONTENT_HTML);
+		if ($config['xhtml']) {
+			$latte->addSetup('$service->getCompiler()->defaultContentType = ?', Nette\Latte\Compiler::CONTENT_XHTML);
 		}
 
 		$container->addDefinition($this->prefix('template'))
@@ -303,7 +291,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			$latte->addSetup($macro . '(?->compiler)', array('@self'));
 		}
 	}
-
 
 
 	private function setupDatabase(ContainerBuilder $container, array $config)
@@ -360,14 +347,12 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	}
 
 
-
 	private function setupContainer(ContainerBuilder $container, array $config)
 	{
 		if ($config['accessors']) {
 			$container->parameters['container']['accessors'] = TRUE;
 		}
 	}
-
 
 
 	public function afterCompile(Nette\PhpGenerator\ClassType $class)
@@ -417,8 +402,8 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			$initialize->addBody('$this->getService("session")->start();');
 		}
 
-		if (empty($config['latte']['xhtml'])) {
-			$initialize->addBody('Nette\Utils\Html::$xhtml = ?;', array((bool) $config['latte']['xhtml']));
+		if ($config['latte']['xhtml']) {
+			$initialize->addBody('Nette\Utils\Html::$xhtml = ?;', array(TRUE));
 		}
 
 		if (isset($config['security']['frames']) && $config['security']['frames'] !== TRUE) {
@@ -448,7 +433,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			}
 		}
 	}
-
 
 
 	private function checkTempDir($dir)

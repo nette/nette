@@ -10,16 +10,13 @@
 use Nette\Application\UI;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class TestControl extends UI\Control
 {
 
 }
-
 
 
 test(function() {
@@ -31,7 +28,6 @@ test(function() {
 	$child->invalidateControl();
 	Assert::true($control->isControlInvalid());
 });
-
 
 
 test(function() {

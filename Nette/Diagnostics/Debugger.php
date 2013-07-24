@@ -14,7 +14,6 @@ namespace Nette\Diagnostics;
 use Nette;
 
 
-
 /**
  * Debugger: displays and logs errors.
  *
@@ -135,8 +134,6 @@ final class Debugger
 	public static $bar;
 
 
-
-
 	/**
 	 * Static class - cannot be instantiated.
 	 */
@@ -144,7 +141,6 @@ final class Debugger
 	{
 		throw new Nette\StaticClassException;
 	}
-
 
 
 	/**
@@ -217,12 +213,14 @@ final class Debugger
 			register_shutdown_function(array(__CLASS__, '_shutdownHandler'));
 			set_exception_handler(array(__CLASS__, '_exceptionHandler'));
 			set_error_handler(array(__CLASS__, '_errorHandler'));
-			class_exists('Nette\Diagnostics\Helpers');
-			class_exists('Nette\Utils\Html');
+
+			foreach (array('Nette\Diagnostics\Bar', 'Nette\Diagnostics\BlueScreen', 'Nette\Diagnostics\DefaultBarPanel', 'Nette\Diagnostics\Dumper', 'Nette\Diagnostics\FireLogger',
+				'Nette\Diagnostics\Helpers', 'Nette\Diagnostics\Logger', 'Nette\FatalErrorException', 'Nette\Utils\Html', 'Nette\Utils\Strings') as $class) {
+				class_exists($class);
+			}
 			self::$enabled = TRUE;
 		}
 	}
-
 
 
 	/**
@@ -260,7 +258,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * @return Bar
 	 */
@@ -277,7 +274,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * @return void
 	 */
@@ -285,7 +281,6 @@ final class Debugger
 	{
 		self::$logger = $logger;
 	}
-
 
 
 	/**
@@ -304,7 +299,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * @return FireLogger
 	 */
@@ -317,7 +311,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Is Debug enabled?
 	 * @return bool
@@ -326,7 +319,6 @@ final class Debugger
 	{
 		return self::$enabled;
 	}
-
 
 
 	/**
@@ -393,7 +385,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Shutdown handler to catch fatal errors and execute of the planned activities.
 	 * @return void
@@ -407,7 +398,7 @@ final class Debugger
 
 		$error = error_get_last();
 		if (in_array($error['type'], array(E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE))) {
-			self::_exceptionHandler(Helpers::fixStack(new Nette\FatalErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'], NULL)));
+			self::_exceptionHandler(Helpers::fixStack(new Nette\FatalErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'], NULL)), TRUE);
 		}
 
 		if (!connection_aborted() && !self::$productionMode && self::isHtmlMode()) {
@@ -416,14 +407,13 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Handler to catch uncaught exception.
 	 * @param  \Exception
 	 * @return void
 	 * @internal
 	 */
-	public static function _exceptionHandler(\Exception $exception)
+	public static function _exceptionHandler(\Exception $exception, $shutdown = FALSE)
 	{
 		if (!headers_sent()) {
 			$protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
@@ -476,10 +466,11 @@ final class Debugger
 			}
 		}
 
-		self::$enabled = FALSE; // un-register shutdown function
-		exit(254);
+		self::$enabled = FALSE; // prevent double rendering
+		if (!$shutdown) {
+			exit(254);
+		}
 	}
-
 
 
 	/**
@@ -537,7 +528,6 @@ final class Debugger
 	}
 
 
-
 	/** @deprecated */
 	public static function toStringException(\Exception $exception)
 	{
@@ -549,7 +539,6 @@ final class Debugger
 	}
 
 
-
 	/** @deprecated */
 	public static function tryError()
 	{
@@ -559,7 +548,6 @@ final class Debugger
 		}
 		self::$lastError = NULL;
 	}
-
 
 
 	/** @deprecated */
@@ -575,9 +563,7 @@ final class Debugger
 	}
 
 
-
 	/********************* useful tools ****************d*g**/
-
 
 
 	/**
@@ -608,7 +594,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Starts/stops stopwatch.
 	 * @param  string  name
@@ -622,7 +607,6 @@ final class Debugger
 		$time[$name] = $now;
 		return $delta;
 	}
-
 
 
 	/**
@@ -644,7 +628,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Sends message to FireLogger console.
 	 * @param  mixed   message to log
@@ -658,14 +641,12 @@ final class Debugger
 	}
 
 
-
 	private static function isHtmlMode()
 	{
 		return empty($_SERVER['HTTP_X_REQUESTED_WITH'])
 			&& PHP_SAPI !== 'cli'
 			&& !preg_match('#^Content-Type: (?!text/html)#im', implode("\n", headers_list()));
 	}
-
 
 
 	public static function addPanel(IBarPanel $panel, $id = NULL)

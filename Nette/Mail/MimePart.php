@@ -15,7 +15,6 @@ use Nette,
 	Nette\Utils\Strings;
 
 
-
 /**
  * MIME message part.
  *
@@ -48,13 +47,12 @@ class MimePart extends Nette\Object
 	private $body;
 
 
-
 	/**
 	 * Sets a header.
 	 * @param  string
 	 * @param  string|array  value or pair email => name
 	 * @param  bool
-	 * @return MimePart  provides a fluent interface
+	 * @return self
 	 */
 	public function setHeader($name, $value, $append = FALSE)
 	{
@@ -95,7 +93,6 @@ class MimePart extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns a header.
 	 * @param  string
@@ -107,18 +104,16 @@ class MimePart extends Nette\Object
 	}
 
 
-
 	/**
 	 * Removes a header.
 	 * @param  string
-	 * @return MimePart  provides a fluent interface
+	 * @return self
 	 */
 	public function clearHeader($name)
 	{
 		unset($this->headers[$name]);
 		return $this;
 	}
-
 
 
 	/**
@@ -161,7 +156,6 @@ class MimePart extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns all headers.
 	 * @return array
@@ -172,12 +166,11 @@ class MimePart extends Nette\Object
 	}
 
 
-
 	/**
 	 * Sets Content-Type header.
 	 * @param  string
 	 * @param  string
-	 * @return MimePart  provides a fluent interface
+	 * @return self
 	 */
 	public function setContentType($contentType, $charset = NULL)
 	{
@@ -186,18 +179,16 @@ class MimePart extends Nette\Object
 	}
 
 
-
 	/**
 	 * Sets Content-Transfer-Encoding header.
 	 * @param  string
-	 * @return MimePart  provides a fluent interface
+	 * @return self
 	 */
 	public function setEncoding($encoding)
 	{
 		$this->setHeader('Content-Transfer-Encoding', $encoding);
 		return $this;
 	}
-
 
 
 	/**
@@ -210,7 +201,6 @@ class MimePart extends Nette\Object
 	}
 
 
-
 	/**
 	 * Adds or creates new multipart.
 	 * @return MimePart
@@ -221,10 +211,9 @@ class MimePart extends Nette\Object
 	}
 
 
-
 	/**
 	 * Sets textual body.
-	 * @return MimePart  provides a fluent interface
+	 * @return self
 	 */
 	public function setBody($body)
 	{
@@ -237,7 +226,6 @@ class MimePart extends Nette\Object
 	}
 
 
-
 	/**
 	 * Gets textual body.
 	 * @return mixed
@@ -248,9 +236,7 @@ class MimePart extends Nette\Object
 	}
 
 
-
 	/********************* building ****************d*g**/
-
 
 
 	/**
@@ -274,26 +260,26 @@ class MimePart extends Nette\Object
 		$body = (string) $this->body;
 		if ($body !== '') {
 			switch ($this->getEncoding()) {
-			case self::ENCODING_QUOTED_PRINTABLE:
-				$output .= function_exists('quoted_printable_encode') ? quoted_printable_encode($body) : self::encodeQuotedPrintable($body);
-				break;
+				case self::ENCODING_QUOTED_PRINTABLE:
+					$output .= function_exists('quoted_printable_encode') ? quoted_printable_encode($body) : self::encodeQuotedPrintable($body);
+					break;
 
-			case self::ENCODING_BASE64:
-				$output .= rtrim(chunk_split(base64_encode($body), self::LINE_LENGTH, self::EOL));
-				break;
+				case self::ENCODING_BASE64:
+					$output .= rtrim(chunk_split(base64_encode($body), self::LINE_LENGTH, self::EOL));
+					break;
 
-			case self::ENCODING_7BIT:
-				$body = preg_replace('#[\x80-\xFF]+#', '', $body);
-				// break intentionally omitted
+				case self::ENCODING_7BIT:
+					$body = preg_replace('#[\x80-\xFF]+#', '', $body);
+					// break intentionally omitted
 
-			case self::ENCODING_8BIT:
-				$body = str_replace(array("\x00", "\r"), '', $body);
-				$body = str_replace("\n", self::EOL, $body);
-				$output .= $body;
-				break;
+				case self::ENCODING_8BIT:
+					$body = str_replace(array("\x00", "\r"), '', $body);
+					$body = str_replace("\n", self::EOL, $body);
+					$output .= $body;
+					break;
 
-			default:
-				throw new Nette\InvalidStateException('Unknown encoding.');
+				default:
+					throw new Nette\InvalidStateException('Unknown encoding.');
 			}
 		}
 
@@ -311,9 +297,7 @@ class MimePart extends Nette\Object
 	}
 
 
-
 	/********************* QuotedPrintable helpers ****************d*g**/
-
 
 
 	/**

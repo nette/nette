@@ -13,9 +13,7 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
 
 
-
 Assert::same('Jakub Vrana', $dao->table('book')->get(1)->ref('author')->name);
-
 
 
 test(function() use ($dao) {
@@ -25,12 +23,10 @@ test(function() use ($dao) {
 	));
 
 
-
 	$book = $dao->table('book')->get(1);
 	Assert::same('David Grudl', $book->ref('author', 'translator_id')->name);
 	Assert::same('Jakub Vrana', $book->ref('author', 'author_id')->name);
 });
-
 
 
 test(function() use ($dao) {

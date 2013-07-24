@@ -14,7 +14,6 @@ namespace Nette\Database\Drivers;
 use Nette;
 
 
-
 /**
  * Supplemental SQL Server 2005 and later database driver.
  *
@@ -27,16 +26,13 @@ class SqlsrvDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	private $connection;
 
 
-
 	public function __construct(Nette\Database\Connection $connection, array $options)
 	{
 		$this->connection = $connection;
 	}
 
 
-
 	/********************* SQL ****************d*g**/
-
 
 
 	/**
@@ -49,7 +45,6 @@ class SqlsrvDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	}
 
 
-
 	/**
 	 * Formats boolean for use in a SQL statement.
 	 */
@@ -57,7 +52,6 @@ class SqlsrvDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	{
 		return $value ? '1' : '0';
 	}
-
 
 
 	/**
@@ -70,7 +64,6 @@ class SqlsrvDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	}
 
 
-
 	/**
 	 * Encodes string for use in a LIKE statement.
 	 */
@@ -80,7 +73,6 @@ class SqlsrvDriver extends Nette\Object implements Nette\Database\ISupplementalD
 		$value = strtr($value, array("'" => "''", '%' => '[%]', '_' => '[_]', '[' => '[[]'));
 		return ($pos <= 0 ? "'%" : "'") . $value . ($pos >= 0 ? "%'" : "'");
 	}
-
 
 
 	/**
@@ -101,7 +93,6 @@ class SqlsrvDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	}
 
 
-
 	/**
 	 * Normalizes result row.
 	 */
@@ -111,9 +102,7 @@ class SqlsrvDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	}
 
 
-
 	/********************* reflection ****************d*g**/
-
 
 
 	/**
@@ -142,7 +131,6 @@ class SqlsrvDriver extends Nette\Object implements Nette\Database\ISupplementalD
 
 		return $tables;
 	}
-
 
 
 	/**
@@ -189,7 +177,6 @@ class SqlsrvDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	}
 
 
-
 	/**
 	 * Returns metadata for all indexes in a table.
 	 */
@@ -226,7 +213,6 @@ class SqlsrvDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	}
 
 
-
 	/**
 	 * Returns metadata for all foreign keys in a table.
 	 */
@@ -257,7 +243,6 @@ class SqlsrvDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	}
 
 
-
 	/**
 	 * Returns associative array of detected types (IReflection::FIELD_*) in result set.
 	 */
@@ -275,7 +260,6 @@ class SqlsrvDriver extends Nette\Object implements Nette\Database\ISupplementalD
 		}
 		return $types;
 	}
-
 
 
 	/**

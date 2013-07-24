@@ -14,7 +14,6 @@ namespace Nette\Database\Drivers;
 use Nette;
 
 
-
 /**
  * Supplemental SQLite3 database driver.
  *
@@ -29,7 +28,6 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	private $fmtDateTime;
 
 
-
 	public function __construct(Nette\Database\Connection $connection, array $options)
 	{
 		$this->connection = $connection;
@@ -38,9 +36,7 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	}
 
 
-
 	/********************* SQL ****************d*g**/
-
 
 
 	/**
@@ -52,7 +48,6 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	}
 
 
-
 	/**
 	 * Formats boolean for use in a SQL statement.
 	 */
@@ -62,7 +57,6 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	}
 
 
-
 	/**
 	 * Formats date-time for use in a SQL statement.
 	 */
@@ -70,7 +64,6 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	{
 		return $value->format($this->fmtDateTime);
 	}
-
 
 
 	/**
@@ -83,7 +76,6 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	}
 
 
-
 	/**
 	 * Injects LIMIT/OFFSET to the SQL query.
 	 */
@@ -93,7 +85,6 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 			$sql .= ' LIMIT ' . (int) $limit . ($offset > 0 ? ' OFFSET ' . (int) $offset : '');
 		}
 	}
-
 
 
 	/**
@@ -112,9 +103,7 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	}
 
 
-
 	/********************* reflection ****************d*g**/
-
 
 
 	/**
@@ -137,7 +126,6 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 
 		return $tables;
 	}
-
 
 
 	/**
@@ -171,7 +159,6 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 		}
 		return $columns;
 	}
-
 
 
 	/**
@@ -221,7 +208,6 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	}
 
 
-
 	/**
 	 * Returns metadata for all foreign keys in a table.
 	 */
@@ -242,7 +228,6 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 		}
 		return array_values($keys);
 	}
-
 
 
 	/**
@@ -266,7 +251,6 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 		}
 		return $types;
 	}
-
 
 
 	/**

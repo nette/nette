@@ -10,9 +10,7 @@
 use Nette\Latte;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $template = new Nette\Templating\Template;
@@ -29,7 +27,6 @@ EOD
 , (string) $template);
 
 
-
 $template->setSource(<<<EOD
 <p n:#="abc">hello</p>
 EOD
@@ -39,7 +36,6 @@ Assert::match(<<<EOD
 <p>hello</p>
 EOD
 , (string) $template);
-
 
 
 $template->setSource(<<<EOD

@@ -12,7 +12,6 @@
 namespace Nette\Database;
 
 
-
 /**
  * Row interface.
  *

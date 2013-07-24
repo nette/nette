@@ -10,9 +10,7 @@
 use Nette\DI;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class Factory
@@ -111,9 +109,6 @@ class FooExtension extends Nette\DI\CompilerExtension
 	}
 
 }
-
-
-
 
 
 $loader = new DI\Config\Loader;

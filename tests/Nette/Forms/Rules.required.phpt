@@ -11,9 +11,7 @@ use Nette\Forms\Form,
 	Nette\Forms\Rule;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 test(function() { // BaseControl
@@ -24,7 +22,6 @@ test(function() { // BaseControl
 	Assert::same( $input, $input->setRequired() );
 	Assert::true( $input->isRequired() );
 });
-
 
 
 test(function() { // Rules
@@ -41,8 +38,9 @@ test(function() { // Rules
 	Assert::same( Form::REQUIRED, $items[0]->operation );
 	Assert::same( Rule::VALIDATOR, $items[0]->type );
 	Assert::false( $items[0]->isNegative );
-});
 
+	Assert::same( array('Please complete mandatory field.'), $rules->validate() );
+});
 
 
 test(function() { // 'required' is always the first rule
@@ -63,8 +61,9 @@ test(function() { // 'required' is always the first rule
 	Assert::same( Form::REQUIRED, $items[0]->operation );
 	Assert::true( $items[0]->isNegative );
 	Assert::same( Form::EMAIL, $items[1]->operation );
-});
 
+	Assert::same( array('Please enter a valid email address.'), $rules->validate() );
+});
 
 
 test(function() { // setRequired(FALSE)
@@ -78,4 +77,6 @@ test(function() { // setRequired(FALSE)
 	$items = iterator_to_array($rules);
 	Assert::same( 1, count($items) );
 	Assert::same( Form::EMAIL, $items[0]->operation );
+
+	Assert::same( array('Please enter a valid email address.'), $rules->validate() );
 });

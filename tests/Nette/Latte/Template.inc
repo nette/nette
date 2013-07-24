@@ -7,7 +7,6 @@
 use Nette\Caching\Storages\PhpFileStorage;
 
 
-
 class MockCacheStorage extends PhpFileStorage
 {
 	public $phtml = array();
@@ -28,7 +27,6 @@ class MockCacheStorage extends PhpFileStorage
 	}
 
 }
-
 
 
 function codefix($s)

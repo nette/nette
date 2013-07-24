@@ -14,7 +14,6 @@ namespace Nette\Http;
 use Nette;
 
 
-
 /**
  * HTTP-specific tasks.
  *
@@ -33,13 +32,11 @@ class Context extends Nette\Object
 	private $response;
 
 
-
 	public function __construct(IRequest $request, IResponse $response)
 	{
 		$this->request = $request;
 		$this->response = $response;
 	}
-
 
 
 	/**
@@ -92,7 +89,6 @@ class Context extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return IRequest
 	 */
@@ -100,7 +96,6 @@ class Context extends Nette\Object
 	{
 		return $this->request;
 	}
-
 
 
 	/**

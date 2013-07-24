@@ -14,7 +14,6 @@ namespace Nette\Application\Routers;
 use Nette;
 
 
-
 /**
  * The router broker.
  *
@@ -30,12 +29,10 @@ class RouteList extends Nette\ArrayList implements Nette\Application\IRouter
 	private $module;
 
 
-
 	public function __construct($module = NULL)
 	{
 		$this->module = $module ? $module . ':' : '';
 	}
-
 
 
 	/**
@@ -53,7 +50,6 @@ class RouteList extends Nette\ArrayList implements Nette\Application\IRouter
 		}
 		return NULL;
 	}
-
 
 
 	/**
@@ -115,7 +111,6 @@ class RouteList extends Nette\ArrayList implements Nette\Application\IRouter
 	}
 
 
-
 	/**
 	 * Adds the router.
 	 * @param  mixed
@@ -129,7 +124,6 @@ class RouteList extends Nette\ArrayList implements Nette\Application\IRouter
 		}
 		parent::offsetSet($index, $route);
 	}
-
 
 
 	/**

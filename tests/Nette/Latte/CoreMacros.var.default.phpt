@@ -10,7 +10,6 @@
 use Nette\Latte\Macros\CoreMacros;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -31,7 +30,6 @@ test(function() use ($compiler) { // {var ... }
 });
 
 
-
 test(function() use ($compiler) { // {default ...}
 	Assert::same( "<?php extract(array('var' => 'hello'), EXTR_SKIP) ?>",  $compiler->expandMacro('default', 'var => hello', '')->openingCode );
 	Assert::same( "<?php extract(array('var' => 123), EXTR_SKIP) ?>",  $compiler->expandMacro('default', '$var => 123', '')->openingCode );
@@ -41,5 +39,5 @@ test(function() use ($compiler) { // {default ...}
 
 	Assert::exception(function() use ($compiler) {
 		$compiler->expandMacro('default', '$temp->var1 = 123', '');
-	}, 'Nette\Latte\CompileException', "Unexpected '-' in {default \$temp->var1 = 123}");
+	}, 'Nette\Latte\CompileException', "Unexpected '->' in {default \$temp->var1 = 123}");
 });

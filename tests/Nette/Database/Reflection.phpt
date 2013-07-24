@@ -13,7 +13,6 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
 
 
-
 $driver = $connection->getSupplementalDriver();
 $tables = $driver->getTables();
 $tables = array_filter($tables, function($t) { return in_array($t['name'], array('author', 'book', 'book_tag', 'tag')); });
@@ -27,10 +26,9 @@ Assert::same( array(
 ), $tables );
 
 
-
 $columns = $driver->getColumns('author');
 array_walk($columns, function(& $item) {
-	Assert::true( is_array($item['vendor']) );
+	Assert::type( 'array', $item['vendor'] );
 	unset($item['vendor']);
 });
 
@@ -111,7 +109,6 @@ switch ($driverName) {
 Assert::same($expectedColumns, $columns);
 
 
-
 $indexes = $driver->getIndexes('book_tag');
 switch ($driverName) {
 	case 'pgsql':
@@ -177,7 +174,6 @@ switch ($driverName) {
 	default:
 		Assert::fail("Unsupported driver $driverName");
 }
-
 
 
 $reflection = new Nette\Database\Reflection\DiscoveredReflection($connection);

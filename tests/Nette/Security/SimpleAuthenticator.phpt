@@ -10,9 +10,7 @@
 use Nette\Security\SimpleAuthenticator;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $users = array(

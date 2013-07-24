@@ -14,7 +14,6 @@ namespace Nette\Forms\Controls;
 use Nette;
 
 
-
 /**
  * Multiline text input control.
  *
@@ -24,25 +23,18 @@ class TextArea extends TextBase
 {
 
 	/**
-	 * @param  string  label
-	 */
-	public function __construct($label = NULL)
-	{
-		parent::__construct($label);
-		$this->control->setName('textarea');
-	}
-
-
-
-	/**
 	 * Generates control's HTML element.
 	 * @return Nette\Utils\Html
 	 */
 	public function getControl()
 	{
-		$control = parent::getControl();
-		$control->setText($this->getValue() === '' ? $this->translate($this->emptyValue) : $this->value);
-		return $control;
+		$value = $this->getValue();
+		if ($value === '') {
+			$value = $this->translate($this->emptyValue);
+		}
+		return parent::getControl()
+			->setName('textarea')
+			->setText($value);
 	}
 
 }

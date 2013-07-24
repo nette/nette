@@ -10,9 +10,7 @@
 use Nette\ComponentModel\Container;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class TestClass extends Container

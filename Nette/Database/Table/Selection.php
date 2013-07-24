@@ -15,7 +15,6 @@ use Nette,
 	Nette\Database\ISupplementalDriver;
 
 
-
 /**
  * Filtered table representation.
  * Selection is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
@@ -85,7 +84,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	protected $keys = array();
 
 
-
 	/**
 	 * Creates filtered table representation.
 	 * @param  Nette\Database\Connection
@@ -103,19 +101,16 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	public function __destruct()
 	{
 		$this->saveCacheState();
 	}
 
 
-
 	public function __clone()
 	{
 		$this->sqlBuilder = clone $this->sqlBuilder;
 	}
-
 
 
 	/**
@@ -127,7 +122,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * @return Nette\Database\IReflection
 	 */
@@ -135,7 +129,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	{
 		return $this->reflection;
 	}
-
 
 
 	/**
@@ -147,18 +140,17 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
+	 * @param  bool
 	 * @return string|array
 	 */
-	public function getPrimary()
+	public function getPrimary($need = TRUE)
 	{
-		if ($this->primary === NULL) {
+		if ($this->primary === NULL && $need) {
 			throw new \LogicException("Table \"{$this->name}\" does not have a primary key.");
 		}
 		return $this->primary;
 	}
-
 
 
 	/**
@@ -168,12 +160,10 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	{
 		if ($this->primarySequence === FALSE) {
 			$this->primarySequence = NULL;
-
-			$primary = $this->getPrimary();
 			$driver = $this->connection->getSupplementalDriver();
-			if ($driver->isSupported(ISupplementalDriver::SUPPORT_SEQUENCE)) {
+			if ($driver->isSupported(ISupplementalDriver::SUPPORT_SEQUENCE) && $this->primary !== NULL) {
 				foreach ($driver->getColumns($this->name) as $column) {
-					if ($column['name'] === $primary) {
+					if ($column['name'] === $this->primary) {
 						$this->primarySequence = $column['vendor']['sequence'];
 						break;
 					}
@@ -185,17 +175,15 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * @param  string
-	 * @return Selection provides a fluent interface
+	 * @return self
 	 */
 	public function setPrimarySequence($sequence)
 	{
 		$this->primarySequence = $sequence;
 		return $this;
 	}
-
 
 
 	/**
@@ -205,7 +193,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	{
 		return $this->sqlBuilder->buildSelectQuery($this->getPreviousAccessedColumns());
 	}
-
 
 
 	/**
@@ -226,7 +213,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * @internal
 	 * @return SqlBuilder
@@ -237,9 +223,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/********************* quick access ****************d*g**/
-
 
 
 	/**
@@ -254,7 +238,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * @inheritDoc
 	 */
@@ -265,7 +248,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 		next($this->data);
 		return $return;
 	}
-
 
 
 	/**
@@ -281,7 +263,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * @inheritDoc
 	 */
@@ -291,15 +272,13 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/********************* sql selectors ****************d*g**/
-
 
 
 	/**
 	 * Adds select clause, more calls appends to the end.
 	 * @param  string for example "column, MD5(column) AS column_md5"
-	 * @return Selection provides a fluent interface
+	 * @return self
 	 */
 	public function select($columns)
 	{
@@ -307,7 +286,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 		call_user_func_array(array($this->sqlBuilder, 'addSelect'), func_get_args());
 		return $this;
 	}
-
 
 
 	/**
@@ -320,11 +298,10 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * Adds condition for primary key.
 	 * @param  mixed
-	 * @return Selection provides a fluent interface
+	 * @return self
 	 */
 	public function wherePrimary($key)
 	{
@@ -346,13 +323,12 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * Adds where condition, more calls appends with AND.
 	 * @param  string condition possibly containing ?
 	 * @param  mixed
 	 * @param  mixed ...
-	 * @return Selection provides a fluent interface
+	 * @return self
 	 */
 	public function where($condition, $parameters = array())
 	{
@@ -373,11 +349,10 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * Adds order clause, more calls appends to the end.
 	 * @param  string for example 'column1, column2 DESC'
-	 * @return Selection provides a fluent interface
+	 * @return self
 	 */
 	public function order($columns)
 	{
@@ -387,12 +362,11 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * Sets limit clause, more calls rewrite old values.
 	 * @param  int
 	 * @param  int
-	 * @return Selection provides a fluent interface
+	 * @return self
 	 */
 	public function limit($limit, $offset = NULL)
 	{
@@ -402,12 +376,11 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * Sets offset using page number, more calls rewrite old values.
 	 * @param  int
 	 * @param  int
-	 * @return Selection provides a fluent interface
+	 * @return self
 	 */
 	public function page($page, $itemsPerPage)
 	{
@@ -415,11 +388,10 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * Sets group clause, more calls rewrite old value.
 	 * @param  string
-	 * @return Selection provides a fluent interface
+	 * @return self
 	 */
 	public function group($columns)
 	{
@@ -435,11 +407,10 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * Sets having clause, more calls rewrite old value.
 	 * @param  string
-	 * @return Selection provides a fluent interface
+	 * @return self
 	 */
 	public function having($having)
 	{
@@ -449,9 +420,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/********************* aggregations ****************d*g**/
-
 
 
 	/**
@@ -470,7 +439,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * Counts number of rows.
 	 * @param  string  if it is not provided returns count of result rows, otherwise runs new sql counting query
@@ -486,7 +454,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * Returns minimum value from a column.
 	 * @param  string
@@ -496,7 +463,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	{
 		return $this->aggregation("MIN($column)");
 	}
-
 
 
 	/**
@@ -510,7 +476,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * Returns sum of values in a column.
 	 * @param  string
@@ -522,9 +487,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/********************* internal ****************d*g**/
-
 
 
 	protected function execute()
@@ -570,12 +533,10 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	protected function createRow(array $row)
 	{
 		return new ActiveRow($row, $this);
 	}
-
 
 
 	public function createSelectionInstance($table = NULL)
@@ -584,19 +545,16 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	protected function createGroupedSelectionInstance($table, $column)
 	{
 		return new GroupedSelection($this, $table, $column);
 	}
 
 
-
 	protected function query($query)
 	{
 		return $this->connection->queryArgs($query, $this->sqlBuilder->getParameters());
 	}
-
 
 
 	protected function emptyResultSet($saveCache = TRUE)
@@ -611,7 +569,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	protected function saveCacheState()
 	{
 		if ($this->observeCache === $this && $this->cache && !$this->sqlBuilder->getSelect() && $this->accessedColumns !== $this->previousAccessedColumns) {
@@ -619,7 +576,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 			$this->previousAccessedColumns = NULL;
 		}
 	}
-
 
 
 	/**
@@ -632,14 +588,12 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * Loads refCache references
 	 */
 	protected function loadRefCache()
 	{
 	}
-
 
 
 	/**
@@ -657,7 +611,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * Returns object specific cache key dependent on query parameters
 	 * Used e.g. for reference memory caching
@@ -671,7 +624,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 		return $this->specificCacheKey = md5($this->getSql() . json_encode($this->sqlBuilder->getParameters()));
 	}
-
 
 
 	/**
@@ -721,7 +673,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * @internal
 	 * @param  string
@@ -734,7 +685,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * Returns if selection requeried for more columns.
 	 * @return bool
@@ -745,9 +695,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/********************* manipulation ****************d*g**/
-
 
 
 	/**
@@ -806,7 +754,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * Updates all rows in result set.
 	 * Joins in UPDATE are supported only in MySQL
@@ -833,7 +780,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * Deletes all rows in result set.
 	 * @return int number of affected rows or FALSE in case of an error
@@ -844,9 +790,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/********************* references ****************d*g**/
-
 
 
 	/**
@@ -885,7 +829,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * Returns referencing rows.
 	 * @param  string
@@ -907,9 +850,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/********************* interface Iterator ****************d*g**/
-
 
 
 	public function rewind()
@@ -918,7 +859,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 		$this->keys = array_keys($this->data);
 		reset($this->keys);
 	}
-
 
 
 	/** @return IRow */
@@ -932,7 +872,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * @return string row ID
 	 */
@@ -942,12 +881,10 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	public function next()
 	{
 		next($this->keys);
 	}
-
 
 
 	public function valid()
@@ -956,9 +893,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/********************* interface ArrayAccess ****************d*g**/
-
 
 
 	/**
@@ -974,7 +909,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * Returns specified row.
 	 * @param  string row ID
@@ -987,7 +921,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
-
 	/**
 	 * Tests if row exists.
 	 * @param  string row ID
@@ -998,7 +931,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 		$this->execute();
 		return isset($this->rows[$key]);
 	}
-
 
 
 	/**

@@ -12,9 +12,7 @@ use Nette\Http,
 	Nette\ArrayHash;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $_SERVER['REQUEST_METHOD'] = 'POST';
@@ -57,7 +55,6 @@ Assert::equal( ArrayHash::from(array(
 )), $first->getValues() );
 
 
-
 $form = new Form;
 $form->addText('name');
 $form['first'] = $first;
@@ -66,7 +63,7 @@ $invalid->addText('name');
 $form->addSubmit('send');
 
 
-Assert::true( (bool) $form->isSubmitted() );
+Assert::truthy( $form->isSubmitted() );
 Assert::equal( ArrayHash::from(array(
 	'name' => 'jim',
 	'first' => ArrayHash::from(array(

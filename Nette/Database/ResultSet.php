@@ -16,7 +16,6 @@ use Nette,
 	Nette\ObjectMixin;
 
 
-
 /**
  * Represents a result set.
  *
@@ -55,7 +54,6 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	private $types;
 
 
-
 	public function __construct(Connection $connection, $queryString, array $params)
 	{
 		$time = microtime(TRUE);
@@ -74,7 +72,6 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	}
 
 
-
 	/**
 	 * @return Connection
 	 */
@@ -82,7 +79,6 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	{
 		return $this->connection;
 	}
-
 
 
 	/**
@@ -95,7 +91,6 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	}
 
 
-
 	/**
 	 * @return string
 	 */
@@ -103,7 +98,6 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	{
 		return $this->queryString;
 	}
-
 
 
 	/**
@@ -115,7 +109,6 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	}
 
 
-
 	/**
 	 * @return int
 	 */
@@ -123,7 +116,6 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	{
 		return $this->pdoStatement ? $this->pdoStatement->columnCount() : NULL;
 	}
-
 
 
 	/**
@@ -135,7 +127,6 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	}
 
 
-
 	/**
 	 * @return float
 	 */
@@ -143,7 +134,6 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	{
 		return $this->time;
 	}
-
 
 
 	/**
@@ -186,9 +176,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	}
 
 
-
 	/********************* misc tools ****************d*g**/
-
 
 
 	/**
@@ -201,9 +189,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	}
 
 
-
 	/********************* interface Iterator ****************d*g**/
-
 
 
 	public function rewind()
@@ -214,12 +200,10 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	}
 
 
-
 	public function current()
 	{
 		return $this->result;
 	}
-
 
 
 	public function key()
@@ -228,12 +212,10 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	}
 
 
-
 	public function next()
 	{
 		$this->result = FALSE;
 	}
-
 
 
 	public function valid()
@@ -246,9 +228,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	}
 
 
-
 	/********************* interface IRowContainer ****************d*g**/
-
 
 
 	/**
@@ -276,7 +256,6 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	}
 
 
-
 	/**
 	 * Fetches single field.
 	 * @return mixed|FALSE
@@ -286,7 +265,6 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 		$row = $this->fetch();
 		return $row ? $row[$column] : FALSE;
 	}
-
 
 
 	/**
@@ -302,7 +280,6 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	}
 
 
-
 	/**
 	 * @inheritDoc
 	 */
@@ -316,14 +293,12 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	}
 
 
-
 	/** @deprecated */
 	function columnCount()
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use getColumnCount() instead.', E_USER_DEPRECATED);
 		return $this->getColumnCount();
 	}
-
 
 
 	/** @deprecated */

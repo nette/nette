@@ -12,9 +12,7 @@ use Nette\Latte,
 	Nette\Templating\Template;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $template = new Template;
@@ -31,4 +29,4 @@ $result = $template->setSource(
 ')->compile();
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::match(file_get_contents("$path.phtml"), $result);
+Assert::matchFile("$path.phtml", $result);

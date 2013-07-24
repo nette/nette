@@ -10,7 +10,6 @@
 use Nette\Templating\Template;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -20,10 +19,9 @@ class MyHelpers
 	public static function loader($helper)
 	{
 		if (method_exists(__CLASS__, $helper)) {
-			return new Nette\Callback(__CLASS__, $helper);
+			return array(__CLASS__, $helper);
 		}
 	}
-
 
 
 	public static function date($s)
@@ -33,7 +31,6 @@ class MyHelpers
 	}
 
 }
-
 
 
 $template = new Template();

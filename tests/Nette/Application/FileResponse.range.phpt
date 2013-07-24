@@ -5,15 +5,14 @@
  *
  * @author     David Grudl
  * @package    Nette\Config
+ * @httpCode   -
  */
 
 use Nette\Application\Responses\FileResponse,
 	Nette\Http;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $file = __FILE__;
@@ -31,7 +30,6 @@ test(function() use ($fileResponse, $origData) {
 });
 
 
-
 test(function() use ($fileResponse, $origData) {
 	ob_start();
 	$fileResponse->send(
@@ -40,7 +38,6 @@ test(function() use ($fileResponse, $origData) {
 	);
 	Assert::same( substr($origData, 10, 1), ob_get_clean() );
 });
-
 
 
 test(function() use ($fileResponse, $origData, $file) {
@@ -53,7 +50,6 @@ test(function() use ($fileResponse, $origData, $file) {
 });
 
 
-
 test(function() use ($fileResponse, $origData) { // prefix
 	ob_start();
 	$fileResponse->send(
@@ -64,7 +60,6 @@ test(function() use ($fileResponse, $origData) { // prefix
 });
 
 
-
 test(function() use ($fileResponse, $origData, $file) { // prefix
 	ob_start();
 	$fileResponse->send(
@@ -73,7 +68,6 @@ test(function() use ($fileResponse, $origData, $file) { // prefix
 	);
 	Assert::same( substr($origData, -1), ob_get_clean() );
 });
-
 
 
 test(function() use ($fileResponse, $file) { // prefix
@@ -87,7 +81,6 @@ test(function() use ($fileResponse, $file) { // prefix
 });
 
 
-
 test(function() use ($fileResponse, $origData) { // suffix
 	ob_start();
 	$fileResponse->send(
@@ -96,7 +89,6 @@ test(function() use ($fileResponse, $origData) { // suffix
 	);
 	Assert::same( substr($origData, -20), ob_get_clean() );
 });
-
 
 
 test(function() use ($fileResponse, $origData, $file) { // suffix

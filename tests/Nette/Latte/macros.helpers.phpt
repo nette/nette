@@ -12,11 +12,9 @@ use Nette\Latte,
 	Nette\Templating\FileTemplate;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/Template.inc';
-
 
 
 class MyHelper
@@ -38,7 +36,6 @@ function types()
 }
 
 
-
 $template = new FileTemplate(__DIR__ . '/templates/helpers.latte');
 $template->registerFilter(new Latte\Engine);
 $template->registerHelper('nl2br', 'nl2br');
@@ -52,5 +49,5 @@ $template->hello = 'Hello World';
 $template->date = strtotime('2008-01-02');
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::match(file_get_contents("$path.phtml"), codefix($template->compile()));
-Assert::match(file_get_contents("$path.html"), $template->__toString(TRUE));
+Assert::matchFile("$path.phtml", codefix($template->compile()));
+Assert::matchFile("$path.html", $template->__toString(TRUE));

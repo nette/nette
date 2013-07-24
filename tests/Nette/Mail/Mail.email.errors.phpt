@@ -10,9 +10,7 @@
 use Nette\Mail\Message;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 $mail = new Message();

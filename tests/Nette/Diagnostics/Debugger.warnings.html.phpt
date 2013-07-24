@@ -10,9 +10,11 @@
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
+if (PHP_SAPI === 'cli') {
+	Tester\Environment::skip();
+}
 
 
 Debugger::$productionMode = FALSE;
@@ -20,7 +22,7 @@ header('Content-Type: text/html');
 
 Debugger::enable();
 
-register_shutdown_function(function(){
+register_shutdown_function(function() {
 	preg_match('#debug.innerHTML = (".*");#', $output = ob_get_clean(), $m);
 	Assert::match('
 Warning: Unsupported declare \'foo\' in %a% on line %d%%A%', $output);

@@ -12,9 +12,7 @@ use Nette\ComponentModel\Container,
 	Nette\ComponentModel\IContainer;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 class TestClass extends Container implements ArrayAccess
@@ -86,7 +84,6 @@ Assert::same( array(
 Assert::same( 'b-c-d-e', $a['b']['c']['d']['e']->lookupPath('A', FALSE) );
 
 
-
 // ==> clone 'c'
 $dolly = clone $a['b']['c'];
 
@@ -99,7 +96,6 @@ Assert::null( $dolly['d']['e']->lookupPath('A', FALSE) );
 Assert::same( 'd-e', $dolly['d']['e']->lookupPath('C', FALSE) );
 
 
-
 // ==> clone 'b'
 $dolly = clone $a['b'];
 
@@ -107,7 +103,6 @@ Assert::same( array(
 	'C::detached(A)',
 	'B::detached(A)',
 ), Notes::fetch());
-
 
 
 // ==> a['dolly'] = 'b'
