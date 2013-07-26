@@ -25,7 +25,7 @@ Assert::match( <<<EOD
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
-Message-ID: <%S%@localhost>
+Message-ID: <%S%@%S%>
 Content-Type: multipart/mixed;
 	boundary="--------%S%"
 
@@ -57,7 +57,7 @@ Assert::match( <<<EOD
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
-Message-ID: <%S%@localhost>
+Message-ID: <%S%@%S%>
 Content-Type: multipart/mixed;
 	boundary="--------%S%"
 
@@ -86,7 +86,7 @@ Assert::match( <<<EOD
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
-Message-ID: <%S%@localhost>
+Message-ID: <%S%@%S%>
 Content-Type: multipart/mixed;
 	boundary="--------%S%"
 
