@@ -2,7 +2,7 @@ MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
 To: Lady Jane <jane@example.com>
-Message-ID: <%S%@localhost>
+Message-ID: <%S%@%S%>
 From: John Doe <doe@example.com>
 Subject: Hello Jane!
 Content-Type: multipart/alternative;
