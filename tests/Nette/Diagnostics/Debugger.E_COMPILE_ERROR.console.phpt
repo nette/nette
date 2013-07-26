@@ -21,7 +21,10 @@ header('Content-Type: text/plain');
 
 Debugger::enable();
 
-Debugger::$onFatalError[] = function() {
+$onFatalErrorCalled = FALSE;
+
+register_shutdown_function(function() use (& $onFatalErrorCalled) {
+	Assert::true($onFatalErrorCalled);
 	Assert::match(extension_loaded('xdebug') ? "
 Fatal error: Cannot re-assign \$this in %a%
 exception 'Nette\\FatalErrorException' with message 'Cannot re-assign \$this' in %a%
@@ -38,6 +41,11 @@ Stack trace:
 #1 {main}
 ", ob_get_clean());
 	echo 'OK!';
+});
+
+
+Debugger::$onFatalError[] = function() use (& $onFatalErrorCalled) {
+	$onFatalErrorCalled = TRUE;
 };
 ob_start();
 

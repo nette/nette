@@ -7,7 +7,7 @@
  * @package    Nette\Diagnostics
  * @httpCode   500
  * @exitCode   255
- * @outputMatch OK!%A%
+ * @outputMatch OK!
  */
 
 use Nette\Diagnostics\Debugger;
@@ -25,9 +25,18 @@ header('Content-Type: text/html');
 
 Debugger::enable();
 
-Debugger::$onFatalError[] = function() {
+
+$onFatalErrorCalled = FALSE;
+
+register_shutdown_function(function() use (& $onFatalErrorCalled) {
+	Assert::true($onFatalErrorCalled);
 	Assert::matchFile(__DIR__ . (extension_loaded('xdebug') ? '/Debugger.E_ERROR.html.xdebug.expect' : '/Debugger.E_ERROR.html.expect'), ob_get_clean());
 	echo 'OK!';
+});
+
+
+Debugger::$onFatalError[] = function() use (& $onFatalErrorCalled) {
+	$onFatalErrorCalled = TRUE;
 };
 ob_start();
 
