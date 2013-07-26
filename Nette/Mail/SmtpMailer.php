@@ -129,7 +129,7 @@ class SmtpMailer extends Nette\Object implements IMailer
 		stream_set_timeout($this->connection, $this->timeout, 0);
 		$this->read(); // greeting
 
-		$self = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost';
+		$self = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost';
 		$this->write("EHLO $self");
 		if ((int) $this->read() !== 250) {
 			$this->write("HELO $self", 250);
