@@ -52,4 +52,4 @@ $_SERVER = array(
 	'HTTP_HOST' => 'AB',
 );
 $factory = new RequestFactory;
-Assert::same( 'http:///', (string) $factory->createHttpRequest()->getUrl() );
+Assert::same( 'http://ab/', (string) $factory->createHttpRequest()->getUrl() );

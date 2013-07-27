@@ -74,7 +74,7 @@ class RequestFactory extends Nette\Object
 
 		// host & port
 		if ((isset($_SERVER[$tmp = 'HTTP_HOST']) || isset($_SERVER[$tmp = 'SERVER_NAME']))
-			&& preg_match('#^([a-z0-9_.-]+|\[[a-fA-F0-9:]+\])(:\d+)?\z#', $_SERVER[$tmp], $pair)
+			&& preg_match('#^([a-z0-9_.-]+|\[[a-f0-9:]+\])(:\d+)?\z#i', $_SERVER[$tmp], $pair)
 		) {
 			$url->host = strtolower($pair[1]);
 			if (isset($pair[2])) {
