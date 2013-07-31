@@ -64,14 +64,7 @@ final class Response extends Nette\Object implements IResponse
 	{
 		$code = (int) $code;
 
-		static $allowed = array(
-			200=>1, 201=>1, 202=>1, 203=>1, 204=>1, 205=>1, 206=>1,
-			300=>1, 301=>1, 302=>1, 303=>1, 304=>1, 307=>1,
-			400=>1, 401=>1, 403=>1, 404=>1, 405=>1, 406=>1, 408=>1, 410=>1, 412=>1, 415=>1, 416=>1,
-			500=>1, 501=>1, 503=>1, 505=>1
-		);
-
-		if (!isset($allowed[$code])) {
+		if ($code < 100 || $code > 599) {
 			throw new Nette\InvalidArgumentException("Bad HTTP response '$code'.");
 
 		} elseif (headers_sent($file, $line)) {
