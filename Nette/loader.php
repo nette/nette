@@ -37,19 +37,5 @@ require_once __DIR__ . '/Loaders/NetteLoader.php';
 
 Nette\Loaders\NetteLoader::getInstance()->register();
 
-require_once __DIR__ . '/Diagnostics/shortcuts.php';
-
 Nette\Utils\SafeStream::register();
 class_alias('Nette\Configurator', 'Nette\Config\Configurator');
-
-
-/**
- * Nette\Callback factory.
- * @param  mixed   class, object, callable
- * @param  string  method
- * @return Nette\Callback
- */
-function callback($callback, $m = NULL)
-{
-	return new Nette\Callback($callback, $m);
-}
