@@ -38,7 +38,7 @@ Nette.getValue = function(elem) {
 		return null;
 
 	} else if (elem.nodeName.toLowerCase() === 'select') {
-		var index = elem.selectedIndex, options = elem.options;
+		var index = elem.selectedIndex, options = elem.options, values = [];
 
 		if (index < 0) {
 			return null;
@@ -47,7 +47,7 @@ Nette.getValue = function(elem) {
 			return options[index].value;
 		}
 
-		for (i = 0, values = [], len = options.length; i < len; i++) {
+		for (i = 0, len = options.length; i < len; i++) {
 			if (options[i].selected) {
 				values.push(options[i].value);
 			}
