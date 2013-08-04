@@ -230,7 +230,7 @@ final class Debugger
 	{
 		if (!self::$blueScreen) {
 			self::$blueScreen = new BlueScreen;
-			self::$blueScreen->collapsePaths[] = NETTE_DIR;
+			self::$blueScreen->collapsePaths[] = dirname(__DIR__);
 			self::$blueScreen->addPanel(function($e) {
 				if ($e instanceof Nette\Templating\FilterException) {
 					return array(

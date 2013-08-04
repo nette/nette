@@ -12,8 +12,7 @@
 namespace Nette\Database\Diagnostics;
 
 use Nette,
-	Nette\Database\Helpers,
-	Nette\Diagnostics\Debugger;
+	Nette\Database\Helpers;
 
 
 /**
@@ -56,7 +55,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 		$source = NULL;
 		$trace = $result instanceof \PDOException ? $result->getTrace() : debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : FALSE);
 		foreach ($trace as $row) {
-			if (isset($row['file']) && is_file($row['file']) && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) !== 0) {
+			if (isset($row['file']) && is_file($row['file']) && !Nette\Diagnostics\Debugger::getBluescreen()->isCollapsed($row['file'])) {
 				if ((isset($row['function']) && strpos($row['function'], 'call_user_func') === 0)
 					|| (isset($row['class']) && is_subclass_of($row['class'], '\\Nette\\Database\\Connection'))
 				) {

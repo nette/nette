@@ -307,7 +307,7 @@ final class Environment
 
 		self::$createdAt = '?';
 		foreach (debug_backtrace(FALSE) as $row) {
-			if (isset($row['file']) && is_file($row['file']) && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) !== 0) {
+			if (isset($row['file']) && $row['file'] !== __FILE__ && is_file($row['file'])) {
 				self::$createdAt = "$row[file]:$row[line]";
 				break;
 			}
