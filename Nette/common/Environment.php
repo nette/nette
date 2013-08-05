@@ -298,7 +298,8 @@ final class Environment
 		$configurator = new Nette\Configurator;
 		$configurator
 			->setDebugMode(!self::isProduction())
-			->setTempDirectory(TEMP_DIR);
+			->setTempDirectory(TEMP_DIR)
+			->addParameters(array('container' => array('class' => 'EnvironmentContainer')));
 		if ($file) {
 			$configurator->addConfig($file, $section);
 		}
