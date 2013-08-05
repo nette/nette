@@ -5,6 +5,7 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
+ * @outputMatch OK!
  */
 
 use Nette\Diagnostics\Debugger;
@@ -13,7 +14,7 @@ use Nette\Diagnostics\Debugger;
 require __DIR__ . '/../bootstrap.php';
 
 if (PHP_SAPI === 'cli') {
-	Tester\Environment::skip();
+	Tester\Environment::skip('Debugger Bar is not rendered in CLI mode');
 }
 
 
@@ -46,6 +47,7 @@ Warning: Unsupported declare \'foo\' in %a% on line %d%%A%', $output);
 </tr>
 </table>
 </div>%A%', json_decode($m[1]));
+	echo 'OK!'; // prevents PHP bug #62725
 });
 ob_start();
 

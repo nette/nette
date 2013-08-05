@@ -13,7 +13,7 @@ use Nette\Diagnostics\Debugger;
 require __DIR__ . '/../bootstrap.php';
 
 if (PHP_SAPI === 'cli') {
-	Tester\Environment::skip();
+	Tester\Environment::skip('FireLogger is not available in CLI mode');
 }
 
 

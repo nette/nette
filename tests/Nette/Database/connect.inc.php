@@ -12,7 +12,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 if (!is_file(__DIR__ . '/databases.ini')) {
-	Tester\Environment::skip();
+	Tester\Environment::skip('Missing file databases.ini');
 }
 
 $options = Tester\DataProvider::load(__DIR__ . '/databases.ini', isset($query) ? $query : NULL);

@@ -5,7 +5,7 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
- * @output     %A%<!-- Nette Debug Bar -->%A%
+ * @outputMatch %A%<!-- Nette Debug Bar -->%A%
  */
 
 use Nette\Diagnostics\Debugger;
@@ -14,7 +14,7 @@ use Nette\Diagnostics\Debugger;
 require __DIR__ . '/../bootstrap.php';
 
 if (PHP_SAPI === 'cli') {
-	Tester\Environment::skip();
+	Tester\Environment::skip('Debugger Bar is not rendered in CLI mode');
 }
 
 
