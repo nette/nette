@@ -17,8 +17,6 @@ if (PHP_VERSION_ID < 50301) {
 	throw new Exception('Nette Framework requires PHP 5.3.1 or newer.');
 }
 
-@header('Content-Type: text/html; charset=utf-8'); // @ - headers may be sent
-
 
 /**
  * Load and configure Nette Framework.
@@ -38,7 +36,6 @@ Nette\Loaders\NetteLoader::getInstance()->register();
 
 require_once __DIR__ . '/Diagnostics/shortcuts.php';
 
-Nette\Utils\SafeStream::register();
 class_alias('Nette\Configurator', 'Nette\Config\Configurator');
 class_alias('Nette\Database\Context', 'Nette\Database\SelectionFactory');
 

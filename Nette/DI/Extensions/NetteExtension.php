@@ -431,6 +431,9 @@ class NetteExtension extends Nette\DI\CompilerExtension
 				}
 			}
 		}
+
+		$initialize->addBody("@header('Content-Type: text/html; charset=utf-8');");
+		$initialize->addBody('Nette\Utils\SafeStream::register();');
 	}
 
 

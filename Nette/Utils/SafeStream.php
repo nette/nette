@@ -58,6 +58,7 @@ final class SafeStream
 	 */
 	public static function register()
 	{
+		@stream_wrapper_unregister(self::PROTOCOL); // intentionally @
 		return stream_wrapper_register(self::PROTOCOL, __CLASS__);
 	}
 
