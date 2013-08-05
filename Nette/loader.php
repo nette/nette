@@ -30,7 +30,6 @@ define('NETTE_VERSION_ID', 20100); // v2.1.0
 
 require_once __DIR__ . '/common/exceptions.php';
 require_once __DIR__ . '/common/Object.php';
-require_once __DIR__ . '/Utils/LimitedScope.php';
 require_once __DIR__ . '/Loaders/AutoLoader.php';
 require_once __DIR__ . '/Loaders/NetteLoader.php';
 

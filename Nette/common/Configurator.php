@@ -164,7 +164,7 @@ class Configurator extends Object
 			$cache->save($cacheKey, $code, array($cache::FILES => $dependencies));
 			$cached = $cache->load($cacheKey);
 		}
-		Nette\Utils\LimitedScope::load($cached['file'], TRUE);
+		require $cached['file'];
 
 		$container = new $this->parameters['container']['class'];
 		$container->initialize();

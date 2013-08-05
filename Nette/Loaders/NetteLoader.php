@@ -116,11 +116,11 @@ class NetteLoader extends AutoLoader
 			trigger_error("Class $type has been renamed to {$this->renamed[$type]}.", E_USER_WARNING);
 
 		} elseif (isset($this->list[$type])) {
-			Nette\Utils\LimitedScope::load(NETTE_DIR . $this->list[$type] . '.php', TRUE);
+			require NETTE_DIR . $this->list[$type] . '.php';
 			self::$count++;
 
 		} elseif (substr($type, 0, 6) === 'Nette\\' && is_file($file = NETTE_DIR . strtr(substr($type, 5), '\\', '/') . '.php')) {
-			Nette\Utils\LimitedScope::load($file, TRUE);
+			require $file;
 			self::$count++;
 		}
 	}

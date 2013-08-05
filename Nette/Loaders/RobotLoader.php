@@ -113,12 +113,11 @@ class RobotLoader extends AutoLoader
 		}
 
 		if (isset($this->classes[$type]['file'])) {
-			if (empty($this->classes[$type]['filter'])) {
-				Nette\Utils\LimitedScope::load($this->classes[$type]['file'], TRUE);
-			} else {
-				$item = $this->getPhpCache()->load($this->classes[$type]['file']);
-				Nette\Utils\LimitedScope::load($item['file'], TRUE);
+			$info = $this->classes[$type];
+			if (!empty($info['filter'])) {
+				$info = $this->getPhpCache()->load($info['file']);
 			}
+			call_user_func(function() use ($info) { require $info['file']; });
 			self::$count++;
 		} else {
 			$this->missing[$type] = TRUE;
