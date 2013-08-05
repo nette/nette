@@ -24,9 +24,6 @@ abstract class AutoLoader extends Nette\Object
 	/** @var array  list of registered loaders */
 	static private $loaders = array();
 
-	/** @var int  for profiling purposes */
-	public static $count = 0;
-
 
 	/**
 	 * Try to load the requested class.

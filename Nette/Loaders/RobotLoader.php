@@ -118,7 +118,6 @@ class RobotLoader extends AutoLoader
 				$info = $this->getPhpCache()->load($info['file']);
 			}
 			call_user_func(function() use ($info) { require $info['file']; });
-			self::$count++;
 		} else {
 			$this->missing[$type] = TRUE;
 		}
