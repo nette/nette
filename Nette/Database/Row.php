@@ -25,7 +25,7 @@ class Row extends Nette\ArrayHash
 	public function __construct(Statement $statement)
 	{
 		$data = array();
-		foreach ($this as $key => $value) {
+		foreach ((array) $this as $key => $value) {
 			$data[$key] = $value;
 			unset($this->$key);
 		}
