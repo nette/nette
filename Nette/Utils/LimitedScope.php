@@ -63,11 +63,11 @@ final class LimitedScope
 		if (func_num_args() > 1) {
 			self::$vars = func_get_arg(1);
 			if (self::$vars === TRUE) {
-				return include_once func_get_arg(0);
+				return require func_get_arg(0);
 			}
 			extract(self::$vars);
 		}
-		return include func_get_arg(0);
+		return require func_get_arg(0);
 	}
 
 }
