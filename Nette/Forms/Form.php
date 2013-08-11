@@ -249,7 +249,7 @@ class Form extends Container
 
 	/**
 	 * Removes fieldset group from form.
-	 * @param  string|FormGroup
+	 * @param  string|ControlGroup
 	 * @return void
 	 */
 	public function removeGroup($name)
@@ -275,7 +275,7 @@ class Form extends Container
 
 	/**
 	 * Returns all defined groups.
-	 * @return FormGroup[]
+	 * @return ControlGroup[]
 	 */
 	public function getGroups()
 	{
