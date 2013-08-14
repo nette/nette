@@ -96,13 +96,14 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 * Reads the specified item from the cache or generate it.
 	 * @param  mixed key
 	 * @param  callable
+	 * @param  array  dependencies @see save()
 	 * @return mixed|NULL
 	 */
-	public function load($key, $fallback = NULL)
+	public function load($key, $fallback = NULL, array $dependencies = NULL)
 	{
 		$data = $this->storage->read($this->generateKey($key));
 		if ($data === NULL && $fallback) {
-			return $this->save($key, Callback::closure($fallback));
+			return $this->save($key, Callback::closure($fallback), $dependencies);
 		}
 		return $data;
 	}
