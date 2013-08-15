@@ -199,6 +199,12 @@ Nette.validators = {
 		for (var i = 0, len = arg.length; i < len; i++) {
 			if (val == arg[i]) {
 				return true;
+			} else if (elem.type === 'select-multiple' && Nette.isArray(val)) {
+				for (var j = 0, len2 = val.length; j < len2; j++) {
+					if (val[j] == arg[i]) {
+						return true;
+					}
+				}
 			}
 		}
 		return false;
