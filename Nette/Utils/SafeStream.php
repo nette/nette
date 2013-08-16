@@ -223,6 +223,17 @@ final class SafeStream
 
 
 	/**
+	 * Truncates a file to a given length.
+	 * @param  int    The size to truncate to.
+	 * @return bool
+	 */
+	public function stream_truncate($size)
+	{
+		return ftruncate($this->tempHandle, $size);
+	}
+
+
+	/**
 	 * Returns the position of the file.
 	 * @return int
 	 */
