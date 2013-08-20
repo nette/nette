@@ -501,7 +501,7 @@ final class Debugger
 		);
 
 		$message = 'PHP ' . (isset($types[$severity]) ? $types[$severity] : 'Unknown error') . ": $message";
-		$count = & self::$errorPanel->data["$message|$file|$line"];
+		$count = & self::$errorPanel->data["$file|$line|$message"];
 
 		if ($count++) { // repeated error
 			return NULL;
