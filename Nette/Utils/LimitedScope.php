@@ -58,7 +58,7 @@ final class LimitedScope
 	 */
 	public static function load(/*$file, array $vars = NULL*/)
 	{
-		if (func_num_args() > 1) {
+		if (func_num_args() > 1 && is_array(func_get_arg(1))) {
 			extract(func_get_arg(1));
 		}
 		return include func_get_arg(0);
