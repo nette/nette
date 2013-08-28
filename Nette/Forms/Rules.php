@@ -68,7 +68,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	 */
 	public function isRequired()
 	{
-		return (bool) $this->required;
+		return $this->required instanceof Rule ? !$this->required->isNegative : FALSE;
 	}
 
 
