@@ -43,7 +43,7 @@ class DateTime extends \DateTime
 	 */
 	public static function from($time)
 	{
-		if ($time instanceof \DateTime) {
+		if ($time instanceof \DateTime || $time instanceof \DateTimeInterface) {
 			return new static($time->format('Y-m-d H:i:s'), $time->getTimezone());
 
 		} elseif (is_numeric($time)) {
