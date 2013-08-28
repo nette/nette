@@ -1060,18 +1060,26 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * Stores current request to session.
-	 * @param  mixed  optional expiration time
+	 * Stores request to session.
+	 * @param  Application\Request  optional request to store 
+	 * @param  mixed                optional expiration time
 	 * @return string key
 	 */
-	public function storeRequest($expiration = '+ 10 minutes')
+	public function storeRequest($request = NULL, $expiration = '+ 10 minutes')
 	{
+		if ($request === NULL) {
+			$request = $this->request;
+		} elseif (!$request instanceof Application\Request) { // first parameter is optional
+			$expiration = $request;
+			$request = $this->request;
+		}
+
 		$session = $this->session->getSection('Nette.Application/requests');
 		do {
 			$key = Nette\Utils\Strings::random(5);
 		} while (isset($session[$key]));
 
-		$session[$key] = array($this->user->getId(), $this->request);
+		$session[$key] = array($this->user->getId(), $request);
 		$session->setExpiration($expiration, $key);
 		return $key;
 	}
