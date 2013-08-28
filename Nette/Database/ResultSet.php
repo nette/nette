@@ -167,6 +167,11 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 			} elseif ($type === IReflection::FIELD_DATETIME || $type === IReflection::FIELD_DATE || $type === IReflection::FIELD_TIME) {
 				$row[$key] = new Nette\DateTime($value);
 
+			} elseif ($type === IReflection::FIELD_TIME_INTERVAL) {
+				preg_match('#^(-?)(\d+)\D(\d+)\D(\d+)\z#', $value, $m);
+				$row[$key] = new \DateInterval("PT$m[2]H$m[3]M$m[4]S");
+				$row[$key]->invert = (int) (bool) $m[1];
+
 			} elseif ($type === IReflection::FIELD_UNIX_TIMESTAMP) {
 				$row[$key] = Nette\DateTime::from($value);
 			}
