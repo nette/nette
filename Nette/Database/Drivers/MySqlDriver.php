@@ -72,7 +72,7 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	/**
 	 * Formats date-time for use in a SQL statement.
 	 */
-	public function formatDateTime(\DateTime $value)
+	public function formatDateTime(/*\DateTimeInterface*/ $value)
 	{
 		return $value->format("'Y-m-d H:i:s'");
 	}

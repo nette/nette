@@ -60,7 +60,7 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	/**
 	 * Formats date-time for use in a SQL statement.
 	 */
-	public function formatDateTime(\DateTime $value)
+	public function formatDateTime(/*\DateTimeInterface*/ $value)
 	{
 		return $value->format($this->fmtDateTime);
 	}

@@ -208,7 +208,7 @@ class SqlPreprocessor extends Nette\Object
 				return implode(', ', $vx);
 			}
 
-		} elseif ($value instanceof \DateTime) {
+		} elseif ($value instanceof \DateTime || $value instanceof \DateTimeInterface) {
 			return $this->driver->formatDateTime($value);
 
 		} elseif ($value instanceof SqlLiteral) {

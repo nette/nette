@@ -43,10 +43,9 @@ interface ISupplementalDriver
 
 	/**
 	 * Formats date-time for use in a SQL statement.
-	 * @param  \DateTime
 	 * @return string
 	 */
-	function formatDateTime(\DateTime $value);
+	function formatDateTime(/*\DateTimeInterface*/ $value);
 
 	/**
 	 * Encodes string for use in a LIKE statement.
