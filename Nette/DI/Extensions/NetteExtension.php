@@ -392,7 +392,11 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		}
 
 		foreach ((array) $config['forms']['messages'] as $name => $text) {
-			$initialize->addBody('Nette\Forms\Rules::$defaultMessages[Nette\Forms\Form::?] = ?;', array($name, $text));
+			if (strpos($name, ':') === FALSE) {
+				$initialize->addBody('Nette\Forms\Validator::$messages[Nette\Forms\Form::?] = ?;', array($name, $text));
+			} else {
+				$initialize->addBody('Nette\Forms\Validator::$messages[' . $name . '] = ?;', array($text));
+			}
 		}
 
 		if ($config['session']['autoStart'] === 'smart') {
