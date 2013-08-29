@@ -232,6 +232,9 @@ class Route extends Nette\Object implements Application\IRouter
 
 		if (isset($this->metadata[NULL][self::FILTER_IN])) {
 			$params = call_user_func($this->metadata[NULL][self::FILTER_IN], $params);
+			if ($params === NULL) {
+				return NULL;
+			}
 		}
 
 		// 5) BUILD Request
@@ -281,6 +284,9 @@ class Route extends Nette\Object implements Application\IRouter
 
 		if (isset($metadata[NULL][self::FILTER_OUT])) {
 			$params = call_user_func($metadata[NULL][self::FILTER_OUT], $params);
+			if ($params === NULL) {
+				return NULL;
+			}
 		}
 
 		if (isset($metadata[self::MODULE_KEY])) { // try split into module and [submodule:]presenter parts
