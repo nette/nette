@@ -42,6 +42,7 @@ class IpsumLoremMacros extends Nette\Latte\Macros\MacroSet
 $loader = new DI\Config\Loader;
 $config = $loader->load('files/compiler.extension.nette.neon');
 $config['parameters']['debugMode'] = FALSE;
+$config['parameters']['productionMode'] = TRUE;
 $config['parameters']['tempDir'] = '';
 
 $compiler = new DI\Compiler;
