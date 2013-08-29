@@ -167,7 +167,7 @@ class Application extends Nette\Object
 			$this->httpResponse->setCode($e instanceof BadRequestException ? ($e->getCode() ?: 404) : 500);
 		}
 
-		$args = array('exception' => $e, 'request' => end($this->requests));
+		$args = array('exception' => $e, 'request' => end($this->requests) ?: NULL);
 		if ($this->presenter instanceof UI\Presenter) {
 			try {
 				$this->presenter->forward(":$this->errorPresenter:", $args);
