@@ -6,7 +6,7 @@ list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
 //
 // block content
 //
-if (!function_exists($_l->blocks['content'][] = '_xxx_content')) { function _xxx_content($_l, $_args) { extract($_args)
+if (!function_exists($_l->blocks['content'][] = '_xxx_content')) { function _xxx_content($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
 ?>	Content
 <?php
 }}

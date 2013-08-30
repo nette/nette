@@ -6,7 +6,7 @@ list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
 //
 // block _outer
 //
-if (!function_exists($_l->blocks['_outer'][] = '_xxx__outer')) { function _xxx__outer($_l, $_args) { extract($_args); $_control->validateControl('outer')
+if (!function_exists($_l->blocks['_outer'][] = '_xxx__outer')) { function _xxx__outer($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->validateControl('outer')
 ?>	<p>Outer</p>
 <?php
 }}
@@ -14,7 +14,7 @@ if (!function_exists($_l->blocks['_outer'][] = '_xxx__outer')) { function _xxx__
 //
 // block _inner
 //
-if (!function_exists($_l->blocks['_inner'][] = '_xxx__inner')) { function _xxx__inner($_l, $_args) { extract($_args); $_control->validateControl('inner')
+if (!function_exists($_l->blocks['_inner'][] = '_xxx__inner')) { function _xxx__inner($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->validateControl('inner')
 ?>	<p>Inner</p>
 <?php
 }}
@@ -22,7 +22,7 @@ if (!function_exists($_l->blocks['_inner'][] = '_xxx__inner')) { function _xxx__
 //
 // block _gallery
 //
-if (!function_exists($_l->blocks['_gallery'][] = '_xxx__gallery')) { function _xxx__gallery($_l, $_args) { extract($_args); $_control->validateControl('gallery')
+if (!function_exists($_l->blocks['_gallery'][] = '_xxx__gallery')) { function _xxx__gallery($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->validateControl('gallery')
 ;
 }}
 

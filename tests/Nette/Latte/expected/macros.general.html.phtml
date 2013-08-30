@@ -6,7 +6,7 @@ list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
 //
 // block menu
 //
-if (!function_exists($_l->blocks['menu'][] = '_xxx_menu')) { function _xxx_menu($_l, $_args) { extract($_args)
+if (!function_exists($_l->blocks['menu'][] = '_xxx_menu')) { function _xxx_menu($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
 ?><ul>
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($menu) as $item): ?>
 	<li><?php echo Nette\Templating\Helpers::escapeHtml($counter++, ENT_NOQUOTES) ?>
@@ -20,7 +20,7 @@ if (!function_exists($_l->blocks['menu'][] = '_xxx_menu')) { function _xxx_menu(
 //
 // block bl
 //
-if (!function_exists($_l->blocks['bl'][] = '_xxx_bl')) { function _xxx_bl($_l, $_args) { extract($_args)
+if (!function_exists($_l->blocks['bl'][] = '_xxx_bl')) { function _xxx_bl($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
 ?><ul title="block + if + foreach">
 <?php $iterations = 0; foreach ($people as $person): if (strlen($person)===4): ?>
 	<li><?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></li>

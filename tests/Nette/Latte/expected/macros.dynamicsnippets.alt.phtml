@@ -6,7 +6,7 @@ list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
 //
 // block _outer1
 //
-if (!function_exists($_l->blocks['_outer1'][] = '_xxx__outer1')) { function _xxx__outer1($_l, $_args) { extract($_args); $_control->validateControl('outer1')
+if (!function_exists($_l->blocks['_outer1'][] = '_xxx__outer1')) { function _xxx__outer1($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->validateControl('outer1')
 ;$iterations = 0; foreach (array(1,2,3) as $id): ?>
 		<div<?php echo ' id="' . ($_dynSnippetId = $_control->getSnippetId("inner-$id")) . '"' ?>>
 <?php ob_start() ?>				#<?php echo Nette\Templating\Helpers::escapeHtml($id, ENT_NOQUOTES) ?>
@@ -19,7 +19,7 @@ if (!function_exists($_l->blocks['_outer1'][] = '_xxx__outer1')) { function _xxx
 //
 // block _outer2
 //
-if (!function_exists($_l->blocks['_outer2'][] = '_xxx__outer2')) { function _xxx__outer2($_l, $_args) { extract($_args); $_control->validateControl('outer2')
+if (!function_exists($_l->blocks['_outer2'][] = '_xxx__outer2')) { function _xxx__outer2($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->validateControl('outer2')
 ;$iterations = 0; foreach (array(1,2,3) as $id): ?>
 		<div<?php echo ' id="' . ($_dynSnippetId = $_control->getSnippetId("inner-$id")) . '"' ?>>
 <?php ob_start() ?>				#<?php echo Nette\Templating\Helpers::escapeHtml($id, ENT_NOQUOTES) ?>
