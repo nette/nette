@@ -21,7 +21,6 @@ use Nette;
  */
 final class LimitedScope
 {
-	private static $vars;
 
 	/**
 	 * Static class - cannot be instantiated.
@@ -41,8 +40,8 @@ final class LimitedScope
 	public static function evaluate(/*$code, array $vars = NULL*/)
 	{
 		if (func_num_args() > 1) {
-			self::$vars = func_get_arg(1);
-			extract(self::$vars);
+			foreach (func_get_arg(1) as $__k => $__v) $$__k = $__v;
+			unset($__k, $__v);
 		}
 		$res = eval('?>' . func_get_arg(0));
 		if ($res === FALSE && ($error = error_get_last()) && $error['type'] === E_PARSE) {
@@ -61,11 +60,11 @@ final class LimitedScope
 	public static function load(/*$file, array $vars = NULL*/)
 	{
 		if (func_num_args() > 1) {
-			self::$vars = func_get_arg(1);
-			if (self::$vars === TRUE) {
+			if (func_get_arg(1) === TRUE) {
 				return require func_get_arg(0);
 			}
-			extract(self::$vars);
+			foreach (func_get_arg(1) as $__k => $__v) $$__k = $__v;
+			unset($__k, $__v);
 		}
 		return require func_get_arg(0);
 	}

@@ -10,14 +10,14 @@ list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
 //
 // block title
 //
-if (!function_exists($_l->blocks['title'][] = '_xxx_title')) { function _xxx_title($_l, $_args) { extract($_args)
+if (!function_exists($_l->blocks['title'][] = '_xxx_title')) { function _xxx_title($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
 ?>My website<?php
 }}
 
 //
 // block sidebar
 //
-if (!function_exists($_l->blocks['sidebar'][] = '_xxx_sidebar')) { function _xxx_sidebar($_l, $_args) { extract($_args)
+if (!function_exists($_l->blocks['sidebar'][] = '_xxx_sidebar')) { function _xxx_sidebar($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
 ?>		<ul>
 			<li><a href="/">Homepage</a></li>
 			<li><a href="/contact">Contact</a></li>
