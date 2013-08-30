@@ -31,11 +31,11 @@ test(function() use ($compiler) { // {var ... }
 
 
 test(function() use ($compiler) { // {default ...}
-	Assert::same( "<?php extract(array('var' => 'hello'), EXTR_SKIP) ?>",  $compiler->expandMacro('default', 'var => hello', '')->openingCode );
-	Assert::same( "<?php extract(array('var' => 123), EXTR_SKIP) ?>",  $compiler->expandMacro('default', '$var => 123', '')->openingCode );
-	Assert::same( "<?php extract(array('var' => 123), EXTR_SKIP) ?>",  $compiler->expandMacro('default', '$var = 123', '')->openingCode );
-	Assert::same( "<?php extract(array('var' => 123), EXTR_SKIP) ?>",  $compiler->expandMacro('default', '$var => 123', 'filter')->openingCode );
-	Assert::same( "<?php extract(array('var1' => 123, 'var2' => \"nette framework\"), EXTR_SKIP) ?>",  $compiler->expandMacro('default', 'var1 = 123, $var2 => "nette framework"', '')->openingCode );
+	Assert::same( "<?php foreach (array('var' => 'hello') as \$__k => \$__v) if (!isset($\$__k)) $\$__k = \$__v ?>",  $compiler->expandMacro('default', 'var => hello', '')->openingCode );
+	Assert::same( "<?php foreach (array('var' => 123) as \$__k => \$__v) if (!isset($\$__k)) $\$__k = \$__v ?>",  $compiler->expandMacro('default', '$var => 123', '')->openingCode );
+	Assert::same( "<?php foreach (array('var' => 123) as \$__k => \$__v) if (!isset($\$__k)) $\$__k = \$__v ?>",  $compiler->expandMacro('default', '$var = 123', '')->openingCode );
+	Assert::same( "<?php foreach (array('var' => 123) as \$__k => \$__v) if (!isset($\$__k)) $\$__k = \$__v ?>",  $compiler->expandMacro('default', '$var => 123', 'filter')->openingCode );
+	Assert::same( "<?php foreach (array('var1' => 123, 'var2' => \"nette framework\") as \$__k => \$__v) if (!isset($\$__k)) $\$__k = \$__v ?>",  $compiler->expandMacro('default', 'var1 = 123, $var2 => "nette framework"', '')->openingCode );
 
 	Assert::exception(function() use ($compiler) {
 		$compiler->expandMacro('default', '$temp->var1 = 123', '');

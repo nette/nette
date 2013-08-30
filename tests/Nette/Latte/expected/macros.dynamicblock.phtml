@@ -6,7 +6,7 @@ list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
 //
 // block static
 //
-if (!function_exists($_l->blocks['static'][] = '_xxx_static')) { function _xxx_static($_l, $_args) { extract($_args)
+if (!function_exists($_l->blocks['static'][] = '_xxx_static')) { function _xxx_static($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
 ?>	Static block #<?php echo Nette\Templating\Helpers::escapeHtml($var, ENT_NOQUOTES) ?>
 
 <?php
@@ -38,7 +38,7 @@ call_user_func(reset($_l->blocks['static']), $_l, get_defined_vars())  ?>
 //
 // block $name
 //
-if (!function_exists($_l->blocks[$name]['xxx'] = '_xxx__name')) { function _xxx__name($_l, $_args) { extract($_args) ?>
+if (!function_exists($_l->blocks[$name]['xxx'] = '_xxx__name')) { function _xxx__name($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v ?>
 		Dynamic block #<?php echo Nette\Templating\Helpers::escapeHtml($var, ENT_NOQUOTES) ?>
 
 <?php }} call_user_func(reset($_l->blocks[$name]), $_l, get_defined_vars()) ;$iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
@@ -54,11 +54,11 @@ if (!function_exists($_l->blocks[$name]['xxx'] = '_xxx__name')) { function _xxx_
 //
 // block word$name
 //
-if (!function_exists($_l->blocks["word$name"]['xxx'] = '_xxx_word_name')) { function _xxx_word_name($_l, $_args) { extract($_args) ;}} call_user_func(reset($_l->blocks["word$name"]), $_l, get_defined_vars()) ?>
+if (!function_exists($_l->blocks["word$name"]['xxx'] = '_xxx_word_name')) { function _xxx_word_name($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v ;}} call_user_func(reset($_l->blocks["word$name"]), $_l, get_defined_vars()) ?>
 
 <?php
 
 //
 // block "word$name"
 //
-if (!function_exists($_l->blocks["word$name"]['xxx'] = '_xxx__word_name_')) { function _xxx__word_name_($_l, $_args) { extract($_args) ;}} call_user_func(reset($_l->blocks["word$name"]), $_l, get_defined_vars()) ?>
+if (!function_exists($_l->blocks["word$name"]['xxx'] = '_xxx__word_name_')) { function _xxx__word_name_($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v ;}} call_user_func(reset($_l->blocks["word$name"]), $_l, get_defined_vars()) ?>

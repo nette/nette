@@ -367,7 +367,7 @@ class CoreMacros extends MacroSet
 			}
 		}
 		$out = $writer->quoteFilter($res)->joinAll();
-		return $node->name === 'default' ? "extract(array($out), EXTR_SKIP)" : $out;
+		return $node->name === 'default' ? "foreach (array($out) as \$__k => \$__v) if (!isset(\$\$__k)) \$\$__k = \$__v" : $out;
 	}
 
 

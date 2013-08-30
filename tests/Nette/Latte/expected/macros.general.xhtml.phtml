@@ -6,7 +6,7 @@ list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
 //
 // block menu
 //
-if (!function_exists($_l->blocks['menu'][] = '_xxx_menu')) { function _xxx_menu($_l, $_args) { extract($_args)
+if (!function_exists($_l->blocks['menu'][] = '_xxx_menu')) { function _xxx_menu($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
 ?><ul>
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($menu) as $item): ?>
 	<li><?php echo Nette\Templating\Helpers::escapeHtml($counter++, ENT_NOQUOTES) ?>
@@ -20,7 +20,7 @@ if (!function_exists($_l->blocks['menu'][] = '_xxx_menu')) { function _xxx_menu(
 //
 // block bl
 //
-if (!function_exists($_l->blocks['bl'][] = '_xxx_bl')) { function _xxx_bl($_l, $_args) { extract($_args)
+if (!function_exists($_l->blocks['bl'][] = '_xxx_bl')) { function _xxx_bl($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
 ?><ul title="block + if + foreach">
 <?php $iterations = 0; foreach ($people as $person): if (strlen($person)===4): ?>
 	<li><?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></li>
@@ -153,9 +153,9 @@ var prop2 = <?php echo Nette\Templating\Helpers::escapeJs($people) ?>;
 call_user_func(reset($_l->blocks['menu']), $_l, get_defined_vars())  ?>
 
 
-<?php extract(array('varx' => 2), EXTR_SKIP) ;echo Nette\Templating\Helpers::escapeHtml($varx, ENT_NOQUOTES) ?>
+<?php foreach (array('varx' => 2) as $__k => $__v) if (!isset($$__k)) $$__k = $__v ;echo Nette\Templating\Helpers::escapeHtml($varx, ENT_NOQUOTES) ?>
 
-<?php extract(array('varx' => 4), EXTR_SKIP) ;echo Nette\Templating\Helpers::escapeHtml($varx, ENT_NOQUOTES) ?>
+<?php foreach (array('varx' => 4) as $__k => $__v) if (!isset($$__k)) $$__k = $__v ;echo Nette\Templating\Helpers::escapeHtml($varx, ENT_NOQUOTES) ?>
 
 
 <?php $varx = 8 ;echo Nette\Templating\Helpers::escapeHtml($varx, ENT_NOQUOTES) ?>
@@ -163,7 +163,7 @@ call_user_func(reset($_l->blocks['menu']), $_l, get_defined_vars())  ?>
 <?php $varx = 9 ;echo Nette\Templating\Helpers::escapeHtml($varx, ENT_NOQUOTES) ?>
 
 
-<?php $now = new DateTime ;$foo = $now->format('u') ;extract(array('foo' => $now->format('u')), EXTR_SKIP) ?>
+<?php $now = new DateTime ;$foo = $now->format('u') ;foreach (array('foo' => $now->format('u')) as $__k => $__v) if (!isset($$__k)) $$__k = $__v ?>
 
 
 
