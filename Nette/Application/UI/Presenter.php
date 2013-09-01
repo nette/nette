@@ -1374,7 +1374,8 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * @return Nette\Http\Session
+	 * @param  string
+	 * @return Nette\Http\Session|Nette\Http\SessionSection
 	 */
 	public function getSession($namespace = NULL)
 	{
