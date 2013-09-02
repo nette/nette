@@ -188,7 +188,7 @@ class PhpWriter extends Nette\Object
 
 
 	/**
-	 * Simplified ternary expressions withnout third part.
+	 * Simplified ternary expressions without third part.
 	 * @return MacroTokens
 	 */
 	public function shortTernaryFilter(MacroTokens $tokens)
@@ -245,6 +245,7 @@ class PhpWriter extends Nette\Object
 
 	/**
 	 * Pseudocast (expand).
+	 * @return MacroTokens
 	 */
 	public function expandFilter(MacroTokens $tokens)
 	{
@@ -290,6 +291,9 @@ class PhpWriter extends Nette\Object
 
 	/**
 	 * Formats modifiers calling.
+	 * @param  MacroTokens
+	 * @param  string
+	 * @throws CompileException
 	 * @return MacroTokens
 	 */
 	public function modifiersFilter(MacroTokens $tokens, $var)
