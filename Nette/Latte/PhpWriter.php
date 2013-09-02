@@ -135,9 +135,9 @@ class PhpWriter extends Nette\Object
 	 * Formats macro arguments to PHP array. (It advances tokenizer to the end as a side effect.)
 	 * @return string
 	 */
-	public function formatArray()
+	public function formatArray(MacroTokens $tokens = NULL)
 	{
-		$tokens = $this->preprocess();
+		$tokens = $this->preprocess($tokens);
 		$tokens = $this->expandFilter($tokens);
 		$tokens = $this->quoteFilter($tokens);
 		return $tokens->joinAll();
