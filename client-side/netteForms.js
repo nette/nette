@@ -116,7 +116,7 @@ Nette.validateControl = function(elem, rules, onlyCheck) {
  */
 Nette.validateForm = function(sender) {
 	var form = sender.form || sender, scope = false;
-	if (form['nette-submittedBy'] && form['nette-submittedBy'].getAttribute('formnovalidate')) {
+	if (form['nette-submittedBy'] && form['nette-submittedBy'].getAttribute('formnovalidate') !== null) {
 		var scopeArr = Nette.parseJSON(form['nette-submittedBy'].getAttribute('data-nette-validation-scope'));
 		if (scopeArr.length) {
 			scope = new RegExp('^(' + scopeArr.join('-|') + '-)');
