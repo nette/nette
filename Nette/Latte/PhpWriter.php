@@ -135,9 +135,9 @@ class PhpWriter extends Nette\Object
 	 * Formats macro arguments to PHP array. (It advances tokenizer to the end as a side effect.)
 	 * @return string
 	 */
-	public function formatArray()
+	public function formatArray(MacroTokens $tokens = NULL)
 	{
-		$tokens = $this->preprocess();
+		$tokens = $this->preprocess($tokens);
 		$tokens = $this->expandFilter($tokens);
 		$tokens = $this->quoteFilter($tokens);
 		return $tokens->joinAll();
@@ -188,7 +188,7 @@ class PhpWriter extends Nette\Object
 
 
 	/**
-	 * Simplified ternary expressions withnout third part.
+	 * Simplified ternary expressions without third part.
 	 * @return MacroTokens
 	 */
 	public function shortTernaryFilter(MacroTokens $tokens)
@@ -245,6 +245,7 @@ class PhpWriter extends Nette\Object
 
 	/**
 	 * Pseudocast (expand).
+	 * @return MacroTokens
 	 */
 	public function expandFilter(MacroTokens $tokens)
 	{
@@ -290,6 +291,9 @@ class PhpWriter extends Nette\Object
 
 	/**
 	 * Formats modifiers calling.
+	 * @param MacroTokens $tokens
+	 * @param string $var
+	 * @throws CompileException
 	 * @return MacroTokens
 	 */
 	public function modifiersFilter(MacroTokens $tokens, $var)
