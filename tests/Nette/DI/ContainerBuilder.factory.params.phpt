@@ -23,13 +23,13 @@ $builder = new DI\ContainerBuilder;
 $builder->addDefinition('one')
 	->setImplement('stdClassFactory')
 	->setFactory('stdClass')
-	->addSetup('$a', $builder::literal('$a'));
+	->addSetup('$a', array($builder::literal('$a')));
 
 $builder->addDefinition('two')
 	->setParameters(array('stdClass foo', 'array bar', 'foobar' => NULL))
 	->setImplement('stdClassFactory')
 	->setFactory('stdClass')
-	->addSetup('$a', $builder::literal('$foo'));
+	->addSetup('$a', array($builder::literal('$foo')));
 
 $builder->addDefinition('three')
 	->setClass('stdClass');

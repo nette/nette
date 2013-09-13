@@ -33,7 +33,7 @@ class Test2 extends Test1
 $builder = new DI\ContainerBuilder;
 $builder->addDefinition('test')
 	->setClass('Test2')
-	->addSetup('$varX', 123);
+	->addSetup('$varX', array(123));
 
 $builder->addDefinition('stdClass')
 	->setClass('stdClass');

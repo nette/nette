@@ -203,9 +203,9 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	{
 		$application = $container->addDefinition('application') // no namespace for back compatibility
 			->setClass('Nette\Application\Application')
-			->addSetup('$catchExceptions', $config['catchExceptions'])
-			->addSetup('$errorPresenter', $config['errorPresenter'])
-			->addSetup('!headers_sent() && header(?);', 'X-Powered-By: Nette Framework');
+			->addSetup('$catchExceptions', array($config['catchExceptions']))
+			->addSetup('$errorPresenter', array($config['errorPresenter']))
+			->addSetup('!headers_sent() && header(?);', array('X-Powered-By: Nette Framework'));
 
 		if ($config['debugger']) {
 			$application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initializePanel');
@@ -270,7 +270,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			->setShared(FALSE);
 
 		if ($config['xhtml']) {
-			$latte->addSetup('$service->getCompiler()->defaultContentType = ?', Nette\Latte\Compiler::CONTENT_XHTML);
+			$latte->addSetup('$service->getCompiler()->defaultContentType = ?', array(Nette\Latte\Compiler::CONTENT_XHTML));
 		}
 
 		$container->addDefinition($this->prefix('template'))
