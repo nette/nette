@@ -195,7 +195,6 @@ class RadioList extends BaseControl
 
 		if ($key !== NULL) {
 			return $input->addAttributes(array(
-				'type' => 'radio',
 				'id' => $this->getHtmlId() . "-$key",
 				'checked' => isset($selected[$key]),
 				'value' => $key,
