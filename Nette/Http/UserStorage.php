@@ -18,7 +18,8 @@ use Nette,
 /**
  * Session storage for user object.
  *
- * @author David Grudl, Jan Tichý
+ * @author	David Grudl
+ * @author	Jan Tichý
  */
 class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 {
