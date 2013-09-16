@@ -31,9 +31,9 @@ test(function() use ($connection) {
 
 	Assert::error(function () use ($row) {
 		$row->{2};
-	}, E_NOTICE, 'Undefined property: Nette\Database\Row::$2');
+	}, 'Nette\MemberAccessException', 'Cannot read an undeclared column "2".');
 
 	Assert::error(function () use ($row) {
 		$row[2];
-	}, E_USER_NOTICE, 'Undefined offset: Nette\Database\Row[2]');
+	}, 'Nette\MemberAccessException', 'Cannot read an undeclared column "2".');
 });
