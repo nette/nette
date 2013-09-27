@@ -52,4 +52,11 @@ class SelectionFactory extends Nette\Object
 		return $this->connection;
 	}
 
+
+	/** @return IReflection */
+	public function getDatabaseReflection()
+	{
+		return $this->reflection;
+	}
+
 }
