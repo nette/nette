@@ -36,15 +36,13 @@ class ImageButton extends SubmitButton
 
 
 	/**
-	 * Loads HTTP data.
-	 * @return void
+	 * Sets control's value.
+	 * @return self
 	 */
-	public function loadHttpData()
+	public function setValue($value)
 	{
-		parent::loadHttpData();
-		$this->value = $this->value
-			? array((int) array_shift($this->value), (int) array_shift($this->value))
-			: FALSE;
+		$this->value = $value ? array((int) array_shift($value), (int) array_shift($value)) : NULL;
+		return $this;
 	}
 
 
