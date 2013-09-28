@@ -25,6 +25,7 @@ use Nette;
  * @property-read \ArrayIterator $iterator
  * @property   array $options
  * @property-write $savePath
+ * @property-write \SessionHandlerInterface $handler
  * @property-write ISessionStorage $storage
  */
 class Session extends Nette\Object
@@ -508,18 +509,33 @@ class Session extends Nette\Object
 
 
 	/**
+	 * Sets user session save handler.
+	 * @param  \SessionHandlerInterface
+	 * @return self
+	 */
+	public function setHandler(\SessionHandlerInterface $handler)
+	{
+		if (self::$started) {
+			throw new Nette\InvalidStateException("Unable to set handler when session has been started.");
+		}
+		session_set_save_handler(
+			array($handler, 'open'), array($handler, 'close'), array($handler, 'read'),
+			array($handler, 'write'), array($handler, 'destroy'), array($handler, 'gc')
+		);
+		return $this;
+	}
+
+
+	/**
 	 * Sets user session storage.
+	 * @param  ISessionStorage
 	 * @return self
 	 */
 	public function setStorage(ISessionStorage $storage)
 	{
-		if (self::$started) {
-			throw new Nette\InvalidStateException("Unable to set storage when session has been started.");
-		}
-		session_set_save_handler(
-			array($storage, 'open'), array($storage, 'close'), array($storage, 'read'),
-			array($storage, 'write'), array($storage, 'remove'), array($storage, 'clean')
-		);
+		$handler = new SessionStorageAdapter($storage);
+		$this->setHandler($handler);
+		return $this;
 	}
 
 
