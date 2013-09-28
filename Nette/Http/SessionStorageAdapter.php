@@ -22,9 +22,13 @@ use Nette;
  */
 final class SessionStorageAdapter extends Nette\Object implements \SessionHandlerInterface
 {
+	/** @var ISessionStorage */
 	private $sessionStorage;
 
 
+	/**
+	 * @param ISessionStorage
+	 */
 	public function __construct(ISessionStorage $sessionStorage)
 	{
 		$this->sessionStorage = $sessionStorage;
