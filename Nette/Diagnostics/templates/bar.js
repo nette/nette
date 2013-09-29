@@ -18,7 +18,7 @@
 	Panel.FLOAT = 'nette-mode-float';
 	Panel.WINDOW = 'nette-mode-window';
 	Panel.FOCUSED = 'nette-focused';
-	Panel.zIndex = 20000;
+	Panel.zIndex = 24000;
 
 	Panel.prototype.init = function() {
 		var _this = this;
