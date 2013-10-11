@@ -29,6 +29,9 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	/** @var Connection */
 	private $connection;
 
+	/** @var ISupplementalDriver */
+	private $supllementalDriver;
+
 	/** @var \PDOStatement|NULL */
 	private $pdoStatement;
 
@@ -58,6 +61,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	{
 		$time = microtime(TRUE);
 		$this->connection = $connection;
+		$this->supllementalDriver = $connection->getSupplementalDriver();
 		$this->queryString = $queryString;
 		$this->params = $params;
 
@@ -144,7 +148,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	public function normalizeRow($row)
 	{
 		if ($this->types === NULL) {
-			$this->types = (array) $this->connection->getSupplementalDriver()->getColumnTypes($this->pdoStatement);
+			$this->types = (array) $this->supllementalDriver->getColumnTypes($this->pdoStatement);
 		}
 
 		foreach ($this->types as $key => $type) {
@@ -177,7 +181,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 			}
 		}
 
-		return $this->connection->getSupplementalDriver()->normalizeRow($row);
+		return $this->supllementalDriver->normalizeRow($row);
 	}
 
 
