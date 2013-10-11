@@ -137,6 +137,7 @@ test(function() use ($connection, $reflection) { // tests multi column IN clause
 	$sqlBuilder->addWhere(array('book_id', 'tag_id'), array(array(1, 11), array(2, 12)));
 	Assert::equal(reformat(array(
 		'sqlite' => 'SELECT * FROM [book_tag] WHERE (([book_id] = ? AND [tag_id] = ?) OR ([book_id] = ? AND [tag_id] = ?))',
+		'mysql' => 'SELECT * FROM `book_tag` WHERE ((`book_id` = ? AND `tag_id` = ?) OR (`book_id` = ? AND `tag_id` = ?))',
 		'SELECT * FROM [book_tag] WHERE (([book_id], [tag_id]) IN (?))',
 	)), $sqlBuilder->buildSelectQuery());
 });

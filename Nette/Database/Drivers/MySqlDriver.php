@@ -231,7 +231,11 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function isSupported($item)
 	{
-		return $item === self::SUPPORT_SELECT_UNGROUPED_COLUMNS;
+		// MULTI_COLUMN_AS_OR_COND due to mysql bugs:
+		// - http://bugs.mysql.com/bug.php?id=31188
+		// - http://bugs.mysql.com/bug.php?id=35819
+		// and more.
+		return $item === self::SUPPORT_SELECT_UNGROUPED_COLUMNS || $item === self::SUPPORT_MULTI_COLUMN_AS_OR_COND;
 	}
 
 }
