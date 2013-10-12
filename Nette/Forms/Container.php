@@ -43,7 +43,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 
 	/**
 	 * Fill-in with default values.
-	 * @param  array|Traversable  values used to fill the form
+	 * @param  array|\Traversable  values used to fill the form
 	 * @param  bool     erase other default values?
 	 * @return self
 	 */
@@ -59,7 +59,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 
 	/**
 	 * Fill-in with values.
-	 * @param  array|Traversable  values used to fill the form
+	 * @param  array|\Traversable  values used to fill the form
 	 * @param  bool     erase other controls?
 	 * @return self
 	 */

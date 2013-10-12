@@ -99,7 +99,7 @@ class Form extends Container
 	/** @var array */
 	private $httpData;
 
-	/** @var Html  <form> element */
+	/** @var Nette\Utils\Html  <form> element */
 	private $element;
 
 	/** @var IFormRenderer */
