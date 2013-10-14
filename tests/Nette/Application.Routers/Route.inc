@@ -32,7 +32,6 @@ function testRouteIn(Nette\Application\Routers\Route $route, $url, $expectedPres
 		Assert::same( $expectedUrl, $result );
 
 	} else { // not matched
-		// not matched
 		Assert::null( $expectedPresenter );
 	}
 }
