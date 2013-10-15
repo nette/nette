@@ -27,7 +27,7 @@ $template->registerHelperLoader('Nette\Templating\Helpers::loader');
 
 $template->hello = '<i>Hello</i>';
 $template->id = ':/item';
-$template->people = array('John', 'Mary', 'Paul', ']]>');
+$template->people = array('John', 'Mary', 'Paul', ']]> <!--');
 $template->comment = 'test -- comment';
 $template->netteHttpResponse = new Nette\Http\Response;
 $template->el = Html::el('div')->title('1/2"');

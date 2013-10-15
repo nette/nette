@@ -118,7 +118,7 @@ final class Helpers
 
 
 	/**
-	 * Escapes string for use inside JavaScript template.
+	 * Escapes variables for use inside <script>.
 	 * @param  mixed  UTF-8 encoding
 	 * @return string
 	 */
@@ -127,7 +127,7 @@ final class Helpers
 		if (is_object($s) && ($s instanceof ITemplate || $s instanceof Html || $s instanceof Form)) {
 			$s = $s->__toString(TRUE);
 		}
-		return str_replace(']]>', ']]\x3E', Nette\Utils\Json::encode($s));
+		return str_replace(array(']]>', '<!'), array(']]\x3E', '\x3C!'), Nette\Utils\Json::encode($s));
 	}
 
 
