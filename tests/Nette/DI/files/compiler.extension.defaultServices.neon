@@ -1,0 +1,9 @@
+services:
+	one: Foo
+	two: Bar
+	three: Factory::createLorem()
+
+factories:
+	four:
+		create: Ipsum
+		implement: IIpsumFactory
