@@ -8,6 +8,7 @@
  */
 
 use Nette\DI;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -90,9 +91,25 @@ interface IFooFactory
 	public function create(Baz $baz);
 }
 
+class TestExtension extends DI\CompilerExtension
+{
+	public function loadConfiguration()
+	{
+		$builder = $this->getContainerBuilder();
+		$builder->addDefinition('fooFactory')
+			->setFactory('Foo')
+			->setParameters(array('Baz baz'))
+			->setImplement('IFooFactory')
+			->setArguments(array($builder::literal('$baz')));
+
+		// needed order: parameters, implement because of setting shared = true
+		// see definition by config in Compiler::parseService()
+	}
+}
 
 $loader = new DI\Config\Loader;
 $compiler = new DI\Compiler;
+$compiler->addExtension('test', new TestExtension);
 $code = $compiler->compile($loader->load('files/compiler.generatedFactory.neon'), 'Container', 'Nette\DI\Container');
 
 file_put_contents(TEMP_DIR . '/code.php', "<?php\n\n$code");

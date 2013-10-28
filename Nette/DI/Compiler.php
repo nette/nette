@@ -196,8 +196,8 @@ class Compiler extends Nette\Object
 				);
 			} elseif ($container->hasDefinition($name)) {
 				$definition = $container->getDefinition($name);
-				if ($definition->shared !== $shared) {
-					throw new ServiceCreationException("It is not allowed to use service and factory with the same name '$name'.");
+				if (!($definition->shared === $shared || ($definition->implement !== NULL && $shared === FALSE))) {
+					throw new ServiceCreationException("It is not allowed to use services and factories with the same name: '$name'.");
 				}
 			} else {
 				$definition = $container->addDefinition($name);

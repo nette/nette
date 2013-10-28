@@ -15,3 +15,8 @@ factories:
 		create: Foo(..., %baz%)
 		implement: IFooFactory
 		parameters: [Baz baz]
+
+	fooFactory:
+		create: Foo(..., %baz%)
+		implement: IFooFactory
+		parameters: [Baz baz]
