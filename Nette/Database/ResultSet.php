@@ -35,7 +35,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	/** @var \PDOStatement|NULL */
 	private $pdoStatement;
 
-	/** @var IRow */
+	/** @var IRow|mixed */
 	private $result;
 
 	/** @var int */
@@ -66,7 +66,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 		$this->params = $params;
 
 		if (substr($queryString, 0, 2) === '::') {
-			$connection->getPdo()->{substr($queryString, 2)}();
+			$this->result = $connection->getPdo()->{substr($queryString, 2)}();
 		} elseif ($queryString !== NULL) {
 			$this->pdoStatement = $connection->getPdo()->prepare($queryString);
 			$this->pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
