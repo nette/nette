@@ -39,7 +39,7 @@ class Connection extends Nette\Object
 	/** @var SqlPreprocessor */
 	private $preprocessor;
 
-	/** @var SelectionFactory */
+	/** @var Selector */
 	private $selectionFactory;
 
 	/** @var PDO */
@@ -257,16 +257,16 @@ class Connection extends Nette\Object
 	/** @deprecated */
 	public function table($table)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use SelectionFactory::table() instead.', E_USER_DEPRECATED);
+		trigger_error(__METHOD__ . '() is deprecated; use Selector::table() instead.', E_USER_DEPRECATED);
 		if (!$this->selectionFactory) {
-			$this->selectionFactory = new SelectionFactory($this);
+			$this->selectionFactory = new Selector($this);
 		}
 		return $this->selectionFactory->table($table);
 	}
 
 
 	/** @deprecated */
-	public function setSelectionFactory(SelectionFactory $selectionFactory)
+	public function setSelector(Selector $selectionFactory)
 	{
 		$this->selectionFactory = $selectionFactory;
 		return $this;
@@ -274,7 +274,7 @@ class Connection extends Nette\Object
 
 
 	/** @deprecated */
-	public function getSelectionFactory()
+	public function getSelector()
 	{
 		return $this->selectionFactory;
 	}
@@ -283,7 +283,7 @@ class Connection extends Nette\Object
 	/** @deprecated */
 	function setDatabaseReflection()
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use setSelectionFactory() instead.', E_USER_DEPRECATED);
+		trigger_error(__METHOD__ . '() is deprecated; use setSelector() instead.', E_USER_DEPRECATED);
 		return $this;
 	}
 
@@ -291,7 +291,7 @@ class Connection extends Nette\Object
 	/** @deprecated */
 	function setCacheStorage()
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use setSelectionFactory() instead.', E_USER_DEPRECATED);
+		trigger_error(__METHOD__ . '() is deprecated; use setSelector() instead.', E_USER_DEPRECATED);
 	}
 
 
