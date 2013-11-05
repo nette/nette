@@ -24,6 +24,11 @@ use Nette,
  */
 class Helpers extends Nette\Object
 {
+	private static $unsafeNames = array(
+		'attributes', 'children', 'elements', 'focus', 'length', 'reset', 'style', 'submit', 'onsubmit', 'form',
+		'presenter', 'action',
+	);
+
 
 	/**
 	 * Extracts and sanitizes submitted form data for single control.
@@ -79,7 +84,7 @@ class Helpers extends Nette\Object
 		if ($count) {
 			$name = substr_replace($name, '', strpos($name, ']'), 1) . ']';
 		}
-		if (is_numeric($name) || in_array($name, array('attributes','children','elements','focus','length','reset','style','submit','onsubmit'))) {
+		if (is_numeric($name) || in_array($name, self::$unsafeNames)) {
 			$name = '_' . $name;
 		}
 		return $name;
