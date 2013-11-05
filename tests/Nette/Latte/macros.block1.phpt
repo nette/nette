@@ -23,7 +23,7 @@ $template->setSource(<<<EOD
 	</div> <!-- /main -->
 	{/block}
 
-	{include #sidebar}
+	{include sidebar}
 
 {include #main}
 EOD

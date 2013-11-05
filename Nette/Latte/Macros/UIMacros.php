@@ -140,7 +140,7 @@ if (!empty($_control->snippetMode)) {
 	public function macroInclude(MacroNode $node, PhpWriter $writer)
 	{
 		$destination = $node->tokenizer->fetchWord(); // destination [,] [params]
-		if (substr($destination, 0, 1) !== '#') {
+		if (!preg_match('~#|[\w-]+\z~A', $destination)) {
 			return FALSE;
 		}
 
