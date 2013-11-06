@@ -21,14 +21,19 @@ use Nette;
  */
 class HiddenField extends BaseControl
 {
+	/** @var bool */
+	private $persistValue;
 
-	public function __construct()
+
+	public function __construct($persistentValue = NULL)
 	{
-		if (func_num_args()) {
-			throw new Nette\DeprecatedException('The "forced value" has been deprecated.');
-		}
 		parent::__construct();
 		$this->control->type = 'hidden';
+		if ($persistentValue !== NULL) {
+			$this->unmonitor('Nette\Forms\Form');
+			$this->persistValue = TRUE;
+			$this->value = (string) $persistentValue;
+		}
 	}
 
 
@@ -42,7 +47,9 @@ class HiddenField extends BaseControl
 		if (!is_scalar($value) && $value !== NULL && !method_exists($value, '__toString')) {
 			throw new Nette\InvalidArgumentException('Value must be scalar or NULL, ' . gettype($value) . ' given.');
 		}
-		$this->value = (string) $value;
+		if (!$this->persistValue) {
+			$this->value = (string) $value;
+		}
 		return $this;
 	}
 
