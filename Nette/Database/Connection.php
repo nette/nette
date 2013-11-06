@@ -106,24 +106,24 @@ class Connection extends Nette\Object
 	}
 
 
-	/** @return void */
+	/** @return bool */
 	public function beginTransaction()
 	{
-		$this->queryArgs('::beginTransaction', array());
+		return $this->queryArgs('::beginTransaction', array())->current();
 	}
 
 
-	/** @return void */
+	/** @return bool */
 	public function commit()
 	{
-		$this->queryArgs('::commit', array());
+		return $this->queryArgs('::commit', array())->current();
 	}
 
 
-	/** @return void */
+	/** @return bool */
 	public function rollBack()
 	{
-		$this->queryArgs('::rollBack', array());
+		return $this->queryArgs('::rollBack', array())->current();
 	}
 
 
