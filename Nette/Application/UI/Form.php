@@ -75,9 +75,7 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 				}
 			}
 
-			$signal = new Nette\Forms\Controls\HiddenField;
-			$signal->setValue($name . self::NAME_SEPARATOR . 'submit')->setOmitted()->setHtmlId(FALSE)->unmonitor('Nette\Forms\Form');
-			$this[Presenter::SIGNAL_KEY] = $signal;
+			$this[Presenter::SIGNAL_KEY] = new Nette\Forms\Controls\PersistentField($name . self::NAME_SEPARATOR . 'submit');
 		}
 		parent::attached($presenter);
 	}
