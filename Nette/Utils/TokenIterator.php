@@ -18,6 +18,7 @@ use Nette;
  * Traversing helper. Internal class.
  *
  * @author     David Grudl
+ * @internal
  */
 class TokenIterator extends Nette\Object
 {

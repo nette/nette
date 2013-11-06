@@ -18,6 +18,7 @@ use Nette;
  * Simple lexical analyser. Internal class.
  *
  * @author     David Grudl
+ * @internal
  */
 class Tokenizer extends Nette\Object
 {
