@@ -131,8 +131,8 @@ class Form extends Container
 
 		$this->monitor(__CLASS__);
 		if ($name !== NULL) {
-			$tracker = new Controls\HiddenField;
-			$tracker->setValue($name)->setOmitted()->unmonitor(__CLASS__);
+			$tracker = new Controls\HiddenField($name);
+			$tracker->setOmitted();
 			$this[self::TRACKER_ID] = $tracker;
 		}
 		parent::__construct(NULL, $name);
