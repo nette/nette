@@ -19,7 +19,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class SelectionFactory extends Nette\Object
+class Selector extends Nette\Object
 {
 	/** @var Connection */
 	private $connection;
