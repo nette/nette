@@ -27,7 +27,7 @@ class CacheMock extends MemoryStorage
 	}
 }
 
-$dao = new Nette\Database\SelectionFactory(
+$dao = new Nette\Database\Container(
 	$connection,
 	new Nette\Database\Reflection\DiscoveredReflection($connection, new Nette\Caching\Storages\MemoryStorage),
 	($cacheStorage = new CacheMock)

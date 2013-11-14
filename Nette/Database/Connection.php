@@ -12,7 +12,6 @@
 namespace Nette\Database;
 
 use Nette,
-	Nette\ObjectMixin,
 	PDO;
 
 
@@ -27,6 +26,12 @@ use Nette,
  */
 class Connection extends Nette\Object
 {
+	/** @var array of function(Connection $connection); Occurs after connection is established */
+	public $onConnect;
+
+	/** @var array of function(Connection $connection, ResultSet|Exception $result); Occurs after query is executed */
+	public $onQuery;
+
 	/** @var array */
 	private $params;
 
@@ -39,17 +44,11 @@ class Connection extends Nette\Object
 	/** @var SqlPreprocessor */
 	private $preprocessor;
 
-	/** @var SelectionFactory */
-	private $selectionFactory;
+	/** @var Container */
+	private $container;
 
 	/** @var PDO */
 	private $pdo;
-
-	/** @var array of function(Connection $connection); Occurs after connection is established */
-	public $onConnect;
-
-	/** @var array of function(Connection $connection, ResultSet|Exception $result); Occurs after query is executed */
-	public $onQuery;
 
 
 	public function __construct($dsn, $user = NULL, $password = NULL, array $options = NULL)
@@ -66,7 +65,7 @@ class Connection extends Nette\Object
 	}
 
 
-	private function connect()
+	public function connect()
 	{
 		if ($this->pdo) {
 			return;
@@ -106,27 +105,6 @@ class Connection extends Nette\Object
 	}
 
 
-	/** @return void */
-	public function beginTransaction()
-	{
-		$this->queryArgs('::beginTransaction', array());
-	}
-
-
-	/** @return void */
-	public function commit()
-	{
-		$this->queryArgs('::commit', array());
-	}
-
-
-	/** @return void */
-	public function rollBack()
-	{
-		$this->queryArgs('::rollBack', array());
-	}
-
-
 	/**
 	 * @param  string  sequence object
 	 * @return string
@@ -148,26 +126,40 @@ class Connection extends Nette\Object
 	}
 
 
-	/**
-	 * Generates and executes SQL query.
-	 * @param  string  statement
-	 * @param  mixed   [parameters, ...]
-	 * @return ResultSet
-	 */
+	/** @deprecated */
+	function beginTransaction()
+	{
+		$this->queryArgs('::beginTransaction', array());
+	}
+
+
+	/** @deprecated */
+	function commit()
+	{
+		$this->queryArgs('::commit', array());
+	}
+
+
+	/** @deprecated */
+	public function rollBack()
+	{
+		$this->queryArgs('::rollBack', array());
+	}
+
+
+	/** @deprecated */
 	public function query($statement)
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use Database\Container::query() instead.', E_USER_DEPRECATED);
 		$args = func_get_args();
 		return $this->queryArgs(array_shift($args), $args);
 	}
 
 
-	/**
-	 * @param  string  statement
-	 * @param  array
-	 * @return ResultSet
-	 */
-	public function queryArgs($statement, array $params)
+	/** @deprecated */
+	function queryArgs($statement, array $params)
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use Database\Container::queryArgs() instead.', E_USER_DEPRECATED);
 		$this->connect();
 		if ($params) {
 			array_unshift($params, $statement);
@@ -189,65 +181,47 @@ class Connection extends Nette\Object
 	/********************* shortcuts ****************d*g**/
 
 
-	/**
-	 * Shortcut for query()->fetch()
-	 * @param  string  statement
-	 * @param  mixed   [parameters, ...]
-	 * @return Row
-	 */
-	public function fetch($args)
+	/** @deprecated */
+	function fetch($args)
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use Database\Container::' . __METHOD__ . '() instead.', E_USER_DEPRECATED);
 		$args = func_get_args();
 		return $this->queryArgs(array_shift($args), $args)->fetch();
 	}
 
 
-	/**
-	 * Shortcut for query()->fetchField()
-	 * @param  string  statement
-	 * @param  mixed   [parameters, ...]
-	 * @return mixed
-	 */
-	public function fetchField($args)
+	/** @deprecated */
+	function fetchField($args)
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use Database\Container::' . __METHOD__ . '() instead.', E_USER_DEPRECATED);
 		$args = func_get_args();
 		return $this->queryArgs(array_shift($args), $args)->fetchField();
 	}
 
 
-	/**
-	 * Shortcut for query()->fetchPairs()
-	 * @param  string  statement
-	 * @param  mixed   [parameters, ...]
-	 * @return array
-	 */
-	public function fetchPairs($args)
+	/** @deprecated */
+	function fetchPairs($args)
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use Database\Container::' . __METHOD__ . '() instead.', E_USER_DEPRECATED);
 		$args = func_get_args();
 		return $this->queryArgs(array_shift($args), $args)->fetchPairs(0, 1);
 	}
 
 
-	/**
-	 * Shortcut for query()->fetchAll()
-	 * @param  string  statement
-	 * @param  mixed   [parameters, ...]
-	 * @return array
-	 */
-	public function fetchAll($args)
+	/** @deprecated */
+	function fetchAll($args)
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use Database\Container::' . __METHOD__ . '() instead.', E_USER_DEPRECATED);
 		$args = func_get_args();
 		return $this->queryArgs(array_shift($args), $args)->fetchAll();
 	}
 
 
-	/**
-	 * @return SqlLiteral
-	 */
-	public static function literal($value)
+	/** @deprecated */
+	static function literal($value)
 	{
-		$args = func_get_args();
-		return new SqlLiteral(array_shift($args), $args);
+		trigger_error(__METHOD__ . '() is deprecated; use Database\Container::' . __METHOD__ . '() instead.', E_USER_DEPRECATED);
+		return Container::literal($value);
 	}
 
 
@@ -255,35 +229,35 @@ class Connection extends Nette\Object
 
 
 	/** @deprecated */
-	public function table($table)
+	function table($table)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use SelectionFactory::table() instead.', E_USER_DEPRECATED);
-		if (!$this->selectionFactory) {
-			$this->selectionFactory = new SelectionFactory($this);
+		trigger_error(__METHOD__ . '() is deprecated; use Database\Container::' . __METHOD__ . '() instead.', E_USER_DEPRECATED);
+		if (!$this->container) {
+			$this->container = new Container($this);
 		}
-		return $this->selectionFactory->table($table);
+		return $this->container->table($table);
 	}
 
 
 	/** @deprecated */
-	public function setSelectionFactory(SelectionFactory $selectionFactory)
+	function setContainer(Container $container)
 	{
-		$this->selectionFactory = $selectionFactory;
+		$this->container = $container;
 		return $this;
 	}
 
 
 	/** @deprecated */
-	public function getSelectionFactory()
+	function getContainer()
 	{
-		return $this->selectionFactory;
+		return $this->container;
 	}
 
 
 	/** @deprecated */
 	function setDatabaseReflection()
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use setSelectionFactory() instead.', E_USER_DEPRECATED);
+		trigger_error(__METHOD__ . '() is deprecated; use Database\Container instead.', E_USER_DEPRECATED);
 		return $this;
 	}
 
@@ -291,7 +265,7 @@ class Connection extends Nette\Object
 	/** @deprecated */
 	function setCacheStorage()
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use setSelectionFactory() instead.', E_USER_DEPRECATED);
+		trigger_error(__METHOD__ . '() is deprecated; use Database\Container instead.', E_USER_DEPRECATED);
 	}
 
 
@@ -306,7 +280,7 @@ class Connection extends Nette\Object
 	/** @deprecated */
 	function exec($statement)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use query()->getRowCount() instead.', E_USER_DEPRECATED);
+		trigger_error(__METHOD__ . '() is deprecated; use Database\Container::query()->getRowCount() instead.', E_USER_DEPRECATED);
 		$args = func_get_args();
 		return $this->queryArgs(array_shift($args), $args)->getRowCount();
 	}
