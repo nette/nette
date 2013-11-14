@@ -26,6 +26,12 @@ use Nette,
  */
 class Connection extends Nette\Object
 {
+	/** @var array of function(Connection $connection); Occurs after connection is established */
+	public $onConnect;
+
+	/** @var array of function(Connection $connection, ResultSet|Exception $result); Occurs after query is executed */
+	public $onQuery;
+
 	/** @var array */
 	private $params;
 
@@ -44,12 +50,6 @@ class Connection extends Nette\Object
 	/** @var PDO */
 	private $pdo;
 
-	/** @var array of function(Connection $connection); Occurs after connection is established */
-	public $onConnect;
-
-	/** @var array of function(Connection $connection, ResultSet|Exception $result); Occurs after query is executed */
-	public $onQuery;
-
 
 	public function __construct($dsn, $user = NULL, $password = NULL, array $options = NULL)
 	{
@@ -65,7 +65,7 @@ class Connection extends Nette\Object
 	}
 
 
-	private function connect()
+	public function connect()
 	{
 		if ($this->pdo) {
 			return;
@@ -105,27 +105,6 @@ class Connection extends Nette\Object
 	}
 
 
-	/** @return void */
-	public function beginTransaction()
-	{
-		$this->queryArgs('::beginTransaction', array());
-	}
-
-
-	/** @return void */
-	public function commit()
-	{
-		$this->queryArgs('::commit', array());
-	}
-
-
-	/** @return void */
-	public function rollBack()
-	{
-		$this->queryArgs('::rollBack', array());
-	}
-
-
 	/**
 	 * @param  string  sequence object
 	 * @return string
@@ -147,12 +126,28 @@ class Connection extends Nette\Object
 	}
 
 
-	/**
-	 * Generates and executes SQL query.
-	 * @param  string  statement
-	 * @param  mixed   [parameters, ...]
-	 * @return ResultSet
-	 */
+	/** @deprecated */
+	function beginTransaction()
+	{
+		$this->queryArgs('::beginTransaction', array());
+	}
+
+
+	/** @deprecated */
+	function commit()
+	{
+		$this->queryArgs('::commit', array());
+	}
+
+
+	/** @deprecated */
+	public function rollBack()
+	{
+		$this->queryArgs('::rollBack', array());
+	}
+
+
+	/** @deprecated */
 	public function query($statement)
 	{
 		$args = func_get_args();
@@ -160,12 +155,8 @@ class Connection extends Nette\Object
 	}
 
 
-	/**
-	 * @param  string  statement
-	 * @param  array
-	 * @return ResultSet
-	 */
-	public function queryArgs($statement, array $params)
+	/** @deprecated */
+	function queryArgs($statement, array $params)
 	{
 		$this->connect();
 		if ($params) {
@@ -188,62 +179,40 @@ class Connection extends Nette\Object
 	/********************* shortcuts ****************d*g**/
 
 
-	/**
-	 * Shortcut for query()->fetch()
-	 * @param  string  statement
-	 * @param  mixed   [parameters, ...]
-	 * @return Row
-	 */
-	public function fetch($args)
+	/** @deprecated */
+	function fetch($args)
 	{
 		$args = func_get_args();
 		return $this->queryArgs(array_shift($args), $args)->fetch();
 	}
 
 
-	/**
-	 * Shortcut for query()->fetchField()
-	 * @param  string  statement
-	 * @param  mixed   [parameters, ...]
-	 * @return mixed
-	 */
-	public function fetchField($args)
+	/** @deprecated */
+	function fetchField($args)
 	{
 		$args = func_get_args();
 		return $this->queryArgs(array_shift($args), $args)->fetchField();
 	}
 
 
-	/**
-	 * Shortcut for query()->fetchPairs()
-	 * @param  string  statement
-	 * @param  mixed   [parameters, ...]
-	 * @return array
-	 */
-	public function fetchPairs($args)
+	/** @deprecated */
+	function fetchPairs($args)
 	{
 		$args = func_get_args();
 		return $this->queryArgs(array_shift($args), $args)->fetchPairs(0, 1);
 	}
 
 
-	/**
-	 * Shortcut for query()->fetchAll()
-	 * @param  string  statement
-	 * @param  mixed   [parameters, ...]
-	 * @return array
-	 */
-	public function fetchAll($args)
+	/** @deprecated */
+	function fetchAll($args)
 	{
 		$args = func_get_args();
 		return $this->queryArgs(array_shift($args), $args)->fetchAll();
 	}
 
 
-	/**
-	 * @return SqlLiteral
-	 */
-	public static function literal($value)
+	/** @deprecated */
+	static function literal($value)
 	{
 		$args = func_get_args();
 		return new SqlLiteral(array_shift($args), $args);
@@ -254,7 +223,7 @@ class Connection extends Nette\Object
 
 
 	/** @deprecated */
-	public function table($table)
+	function table($table)
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use Context::table() instead.', E_USER_DEPRECATED);
 		if (!$this->context) {
@@ -265,7 +234,7 @@ class Connection extends Nette\Object
 
 
 	/** @deprecated */
-	public function setContext(Context $context)
+	function setContext(Context $context)
 	{
 		$this->context = $context;
 		return $this;
@@ -273,7 +242,7 @@ class Connection extends Nette\Object
 
 
 	/** @deprecated */
-	public function getContext()
+	function getContext()
 	{
 		return $this->context;
 	}
@@ -282,7 +251,7 @@ class Connection extends Nette\Object
 	/** @deprecated */
 	function setDatabaseReflection()
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use setContext() instead.', E_USER_DEPRECATED);
+		trigger_error(__METHOD__ . '() is deprecated; use Database\Context instead.', E_USER_DEPRECATED);
 		return $this;
 	}
 
@@ -290,7 +259,7 @@ class Connection extends Nette\Object
 	/** @deprecated */
 	function setCacheStorage()
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use setContext() instead.', E_USER_DEPRECATED);
+		trigger_error(__METHOD__ . '() is deprecated; use Database\Context instead.', E_USER_DEPRECATED);
 	}
 
 
@@ -305,7 +274,7 @@ class Connection extends Nette\Object
 	/** @deprecated */
 	function exec($statement)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use query()->getRowCount() instead.', E_USER_DEPRECATED);
+		trigger_error(__METHOD__ . '() is deprecated; use Database\Context::query()->getRowCount() instead.', E_USER_DEPRECATED);
 		$args = func_get_args();
 		return $this->queryArgs(array_shift($args), $args)->getRowCount();
 	}
