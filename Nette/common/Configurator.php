@@ -164,7 +164,7 @@ class Configurator extends Object
 			$cache->save($cacheKey, $code, array($cache::FILES => $dependencies));
 			$cached = $cache->load($cacheKey);
 		}
-		require $cached['file'];
+		require_once $cached['file'];
 
 		$container = new $this->parameters['container']['class'];
 		$container->initialize();
