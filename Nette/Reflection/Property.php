@@ -127,7 +127,7 @@ class Property extends \ReflectionProperty
 
 	public function __set($name, $value)
 	{
-		return ObjectMixin::set($this, $name, $value);
+		ObjectMixin::set($this, $name, $value);
 	}
 
 

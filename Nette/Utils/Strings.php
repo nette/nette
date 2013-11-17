@@ -461,7 +461,7 @@ class Strings
 			restore_error_handler();
 			throw new RegexpException("$message in pattern: $pattern");
 		});
-		$res = preg_match_all(
+		preg_match_all(
 			$pattern, $subject, $m,
 			($flags & PREG_PATTERN_ORDER) ? $flags : ($flags | PREG_SET_ORDER),
 			$offset

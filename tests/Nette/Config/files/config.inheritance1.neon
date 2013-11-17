@@ -1,5 +1,5 @@
 services:
-	app2 < application: # inherites from extended application
+	app2 < application: # inherits from extended application
 		autowired: no
 
 	application: # extends original application

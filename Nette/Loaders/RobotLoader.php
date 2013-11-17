@@ -141,7 +141,7 @@ class RobotLoader extends AutoLoader
 	public function getIndexedClasses()
 	{
 		$res = array();
-		foreach ($this->classes as $class => $info) {
+		foreach ($this->classes as $info) {
 			if (is_array($info)) {
 				$res[$info['orig']] = $info['file'];
 			}

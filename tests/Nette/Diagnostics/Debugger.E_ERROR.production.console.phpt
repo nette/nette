@@ -28,4 +28,4 @@ Debugger::$onFatalError[] = function() {
 ob_start();
 
 
-missing_funcion();
+missing_function();

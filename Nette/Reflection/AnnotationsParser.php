@@ -250,6 +250,7 @@ final class AnnotationsParser
 				switch ($token[0]) {
 					case T_DOC_COMMENT:
 						$docComment = $token[1];
+						// break intentionally omitted
 					case T_WHITESPACE:
 					case T_COMMENT:
 						continue 2;

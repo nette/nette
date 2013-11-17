@@ -143,7 +143,7 @@ class SqlPreprocessor extends Nette\Object
 				return implode(', ', $vx);
 
 			} elseif ($this->arrayMode === 'multi') { // multiple insert (value, value, ...), ...
-				foreach ($value as $k => $v) {
+				foreach ($value as $v) {
 					$vx[] = $this->formatValue($v);
 				}
 				return '(' . implode(', ', $vx) . ')';

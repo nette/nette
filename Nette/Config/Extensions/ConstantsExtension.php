@@ -11,8 +11,7 @@
 
 namespace Nette\Config\Extensions;
 
-use Nette,
-	Nette\DI\ContainerBuilder;
+use Nette;
 
 
 /**

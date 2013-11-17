@@ -239,7 +239,7 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 				unset($this->meta[$variable]['T'], $this->meta[$variable]['B']);
 			}
 		} else {
-			unset($this->meta[$variables]['T'], $this->meta[$variable]['B']);
+			unset($this->meta[$variables]['T'], $this->meta[$variables]['B']);
 		}
 	}
 

@@ -221,7 +221,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 
 		if (!$this->getCallback($rule)->isCallable()) {
 			$operation = is_scalar($rule->operation) ? " '$rule->operation'" : '';
-			throw new Nette\InvalidArgumentException("Unknown operation$operation for control '{$rule->control->name}'.");
+			throw new Nette\InvalidArgumentException("Unknown operation$operation for control '{$rule->control->getName()}'.");
 		}
 	}
 
@@ -244,7 +244,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 			return $message;
 		}
 		if ($message == NULL) { // intentionally ==
-			trigger_error("Missing validation message for control '{$rule->control->name}'.", E_USER_WARNING);
+			trigger_error("Missing validation message for control '{$rule->control->getName()}'.", E_USER_WARNING);
 		}
 		if ($translator = $rule->control->getForm()->getTranslator()) {
 			$message = $translator->translate($message, is_int($rule->arg) ? $rule->arg : NULL);

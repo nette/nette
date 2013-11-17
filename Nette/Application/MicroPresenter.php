@@ -123,7 +123,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	 * Redirects to another URL.
 	 * @param  string
 	 * @param  int HTTP code
-	 * @return void
+	 * @return Nette\Application\Responses\RedirectResponse
 	 */
 	public function redirectUrl($url, $code = Http\IResponse::S302_FOUND)
 	{

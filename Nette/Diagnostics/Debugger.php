@@ -514,8 +514,6 @@ final class Debugger
 			$ok = self::fireLog(new \ErrorException($message, 0, $severity, $file, $line));
 			return !self::isHtmlMode() || (!self::$bar && !$ok) ? FALSE : NULL;
 		}
-
-		return FALSE; // call normal error handler
 	}
 
 
