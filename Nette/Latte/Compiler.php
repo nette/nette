@@ -448,7 +448,6 @@ class Compiler extends Nette\Object
 	{
 		$attrs = $this->htmlNode->macroAttrs;
 		$left = $right = array();
-		$attrCode = '';
 
 		foreach ($this->macros as $name => $foo) {
 			$attrName = MacroNode::PREFIX_INNER . "-$name";

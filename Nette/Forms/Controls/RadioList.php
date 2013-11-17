@@ -226,7 +226,7 @@ class RadioList extends BaseControl
 	 * Generates label's HTML element.
 	 * @param  string
 	 * @param  mixed
-	 * @return void
+	 * @return Nette\Utils\Html
 	 */
 	public function getLabel($caption = NULL, $key = NULL)
 	{

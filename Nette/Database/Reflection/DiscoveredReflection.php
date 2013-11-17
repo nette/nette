@@ -106,8 +106,7 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 			}
 
 			foreach ($candidates as $candidate) {
-				list($targetTable, $targetColumn) = $candidate;
-				if (strtolower($targetTable) === strtolower($key)) {
+				if (strtolower($candidate[0]) === strtolower($key)) {
 					return $candidate;
 				}
 			}

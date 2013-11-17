@@ -281,7 +281,7 @@ final class Helpers
 	 * @param  mixed
 	 * @return string
 	 */
-	public static function null($value)
+	public static function null()
 	{
 		return '';
 	}

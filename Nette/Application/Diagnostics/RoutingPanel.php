@@ -13,7 +13,7 @@ namespace Nette\Application\Diagnostics;
 
 use Nette,
 	Nette\Application\Routers,
-	Nette\Application\UI\Presenter, // templates
+	Nette\Application\UI\Presenter, // used in templates
 	Nette\Diagnostics\Dumper;
 
 

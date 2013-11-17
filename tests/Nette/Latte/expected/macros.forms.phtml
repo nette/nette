@@ -3,12 +3,12 @@
 Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array('id' => 'myForm', 'class'=>"ajax")) ;$iterations = 0; foreach ($form->controls as $name => $field): ?>
 		<?php $_input = is_object($name) ? $name : $_form[$name]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array())  ?>
 
-<?php $_input = is_object($name) ? $name : $_form[$name]; echo $_input->getControl()->addAttributes(array('title' => 'Hello', 'cols' => 10)) ?>
+<?php $_input = is_object($name) ? $name : $_form[$name]; echo $_input->getControl()->addAttributes(array('title' => 'Hello', 'size' => 10)) ?>
 
 		<br>
 
 		<?php $_input = is_object($field) ? $field : $_form[$field]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array('title' => 'hello'))->startTag() ?>
- <?php $_input = is_object($field) ? $field : $_form[$field]; echo $_input->getControl()->addAttributes(array('title' => 'Hello', 'cols' => 10)) ?>
+ <?php $_input = is_object($field) ? $field : $_form[$field]; echo $_input->getControl()->addAttributes(array('title' => 'Hello', 'size' => 10)) ?>
  </label>
 <?php $iterations++; endforeach ?>
 

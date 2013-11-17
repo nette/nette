@@ -107,7 +107,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 	{
 		$this->disabled = TRUE;
 		$s = '';
-		foreach ($this->queries as $i => $query) {
+		foreach ($this->queries as $query) {
 			list($connection, $sql, $params, $source, $time, $rows, $error) = $query;
 
 			$explain = NULL; // EXPLAIN is called here to work SELECT FOUND_ROWS()

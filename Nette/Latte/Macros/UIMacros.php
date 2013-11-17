@@ -263,7 +263,6 @@ if (!empty($_control->snippetMode)) {
 		}
 
 		$prolog = $this->namedBlocks ? '' : "if (\$_l->extends) { ob_end_clean(); return Nette\\Latte\\Macros\\CoreMacros::includeTemplate(\$_l->extends, get_defined_vars(), \$template)->render(); }\n";
-		$top = empty($node->parentNode);
 		$this->namedBlocks[$name] = TRUE;
 
 		$include = 'call_user_func(reset($_l->blocks[%var]), $_l, ' . ($node->name === 'snippet' ? '$template->getParameters()' : 'get_defined_vars()') . ')';

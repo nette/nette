@@ -16,8 +16,7 @@ use Nette,
 	Nette\Latte\MacroNode,
 	Nette\Latte\PhpWriter,
 	Nette\Latte\CompileException,
-	Nette\Forms\Form,
-	Nette\Utils\Strings;
+	Nette\Forms\Form;
 
 
 /**

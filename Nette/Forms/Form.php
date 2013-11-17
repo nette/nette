@@ -365,7 +365,7 @@ class Form extends Container
 
 	/**
 	 * Returns submitted HTTP data.
-	 * @return array
+	 * @return mixed
 	 */
 	final public function getHttpData($htmlName = NULL, $type = self::DATA_TEXT)
 	{

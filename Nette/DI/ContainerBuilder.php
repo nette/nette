@@ -416,7 +416,7 @@ class ContainerBuilder extends Nette\Object
 				if (!PhpHelpers::isIdentifier($methodName)) {
 					throw new ServiceCreationException('Name contains invalid characters.');
 				}
-				$method = $containerClass->addMethod($methodName)
+				$containerClass->addMethod($methodName)
 					->addDocument("@return " . ($def->implement ?: $def->class))
 					->setBody($name === self::THIS_CONTAINER ? 'return $this;' : $this->generateService($name))
 					->setParameters($def->implement ? array() : $this->convertParameters($def->parameters));

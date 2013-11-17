@@ -1,11 +1,11 @@
 {form myForm id => myForm, class=>"ajax"}
 	{foreach $form->controls as $name => $field}
 		{label $name /}
-		{input $name title => Hello, cols => 10}
+		{input $name title => Hello, size => 10}
 
 		<br>
 
-		{label $field title => hello} {input $field title => Hello, cols => 10} {/label}
+		{label $field title => hello} {input $field title => Hello, size => 10} {/label}
 	{/foreach}
 
 	{label $form[username]/}

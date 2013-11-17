@@ -7,7 +7,7 @@
  * @package    Nette\Diagnostics
  * @exitCode   255
  * @httpCode   500
- * @outputMatch exception 'Nette\FatalErrorException' with message 'Call to undefined function missing_funcion()' in %A%
+ * @outputMatch exception 'Nette\FatalErrorException' with message 'Call to undefined function missing_function()' in %A%
  */
 
 use Nette\Diagnostics\Debugger;
@@ -21,4 +21,4 @@ header('Content-Type: text/plain');
 
 Debugger::enable();
 
-@missing_funcion();
+@missing_function();

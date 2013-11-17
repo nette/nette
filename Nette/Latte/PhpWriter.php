@@ -364,7 +364,6 @@ class PhpWriter extends Nette\Object
 						return $tokens;
 					case Compiler::CONTEXT_COMMENT:
 						return $tokens->prepend('Nette\Templating\Helpers::escapeHtmlComment(')->append(')');
-						return;
 					case Compiler::CONTENT_JS:
 					case Compiler::CONTENT_CSS:
 						return $tokens->prepend('Nette\Templating\Helpers::escape' . ucfirst($context[0]) . '(')->append(')');

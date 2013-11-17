@@ -81,5 +81,5 @@ Assert::equal((object) array(
 	'snippets' => array(
 		'snippet-multi-1-testA' => 'Hello',
 		'snippet-multi-1-testB' => 'world',
-   ),
+	),
 ), $control->payload);

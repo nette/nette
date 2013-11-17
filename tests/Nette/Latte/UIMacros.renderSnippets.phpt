@@ -61,7 +61,7 @@ $control->snippetMode = true;
 $control->render();
 
 Assert::equal((object) array(
-   'snippets' => array(
-      'snippet-multi-1-test' => 'world',
-   ),
+	'snippets' => array(
+		'snippet-multi-1-test' => 'world',
+	),
 ), $control->payload);

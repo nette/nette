@@ -401,7 +401,7 @@ class Message extends MimePart
 			if ($mail->inlines) {
 				$tmp = $alt->setContentType('multipart/related');
 				$alt = $alt->addPart();
-				foreach ($mail->inlines as $name => $value) {
+				foreach ($mail->inlines as $value) {
 					$tmp->addPart($value);
 				}
 			}
