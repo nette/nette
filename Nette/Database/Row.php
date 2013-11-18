@@ -23,12 +23,6 @@ use Nette;
 class Row extends Nette\ArrayHash implements IRow
 {
 
-	public function __get($key)
-	{
-		throw new Nette\MemberAccessException("Cannot read an undeclared column \"$key\".");
-	}
-
-
 	/**
 	 * Returns a item.
 	 * @param  mixed  key or index
@@ -39,7 +33,7 @@ class Row extends Nette\ArrayHash implements IRow
 		if (is_int($key)) {
 			$arr = array_slice((array) $this, $key, 1);
 			if (!$arr) {
-				throw new Nette\MemberAccessException("Cannot read an undeclared column \"$key\".");
+				trigger_error('Undefined offset: ' . __CLASS__ . "[$key]", E_USER_NOTICE);
 			}
 			return current($arr);
 		}
