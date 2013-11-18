@@ -62,8 +62,8 @@ class PresenterFactory extends Nette\Object implements IPresenterFactory
 			$presenter = $this->container->createService($services[0]);
 		} else {
 			$presenter = $this->container->createInstance($class);
-			$this->container->callInjects($presenter);
 		}
+		$this->container->callInjects($presenter);
 
 		if ($presenter instanceof UI\Presenter && $presenter->invalidLinkMode === NULL) {
 			$presenter->invalidLinkMode = $this->container->parameters['debugMode'] ? UI\Presenter::INVALID_LINK_WARNING : UI\Presenter::INVALID_LINK_SILENT;

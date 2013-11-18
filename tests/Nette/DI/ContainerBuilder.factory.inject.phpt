@@ -41,6 +41,7 @@ interface LoremFactory
 
 $builder = new DI\ContainerBuilder;
 $builder->addDefinition('lorem')
+	->setInject(TRUE)
 	->setImplement('LoremFactory');
 
 $builder->addDefinition('ipsum')
