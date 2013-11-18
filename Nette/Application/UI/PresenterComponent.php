@@ -135,9 +135,9 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 				if (!$reflection->convertType($params[$name], $type)) {
 					throw new Nette\Application\BadRequestException("Invalid value for persistent parameter '$name' in '{$this->getName()}', expected " . ($type === 'NULL' ? 'scalar' : $type) . ".");
 				}
-				$this->$name = $params[$name];
+				$this->$name = & $params[$name];
 			} else {
-				$params[$name] = $this->$name;
+				$params[$name] = & $this->$name;
 			}
 		}
 		$this->params = $params;
