@@ -183,7 +183,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 				return FALSE;
 
 			} elseif ($rule->type === Rule::VALIDATOR && !$success) {
-				$rule->control->addError(Validator::formatMessage($rule, TRUE));
+				$rule->control->addError($rule->control->formatMessage($rule, TRUE));
 				return FALSE;
 			}
 		}
