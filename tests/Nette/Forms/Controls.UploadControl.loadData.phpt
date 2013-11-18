@@ -9,7 +9,6 @@
 
 use Nette\Forms\Form,
 	Nette\Http\FileUpload,
-	Nette\Forms\Validator,
 	Tester\Assert;
 
 
@@ -170,17 +169,17 @@ test(function() { // validators
 	$input = $form->addUpload('avatar')
 		->addRule($form::MAX_FILE_SIZE, NULL, 3000);
 
-	Assert::false( Validator::validateFileSize($input, 3012) );
-	Assert::true( Validator::validateFileSize($input, 3013) );
+	Assert::false( $input::validateFileSize($input, 3012) );
+	Assert::true( $input::validateFileSize($input, 3013) );
 
-	Assert::true( Validator::validateMimeType($input, 'image/gif') );
-	Assert::true( Validator::validateMimeType($input, 'image/*') );
-	Assert::false( Validator::validateMimeType($input, 'text/*') );
-	Assert::true( Validator::validateMimeType($input, 'text/css,image/*') );
-	Assert::true( Validator::validateMimeType($input, array('text/css', 'image/*')) );
-	Assert::false( Validator::validateMimeType($input, array()) );
+	Assert::true( $input::validateMimeType($input, 'image/gif') );
+	Assert::true( $input::validateMimeType($input, 'image/*') );
+	Assert::false( $input::validateMimeType($input, 'text/*') );
+	Assert::true( $input::validateMimeType($input, 'text/css,image/*') );
+	Assert::true( $input::validateMimeType($input, array('text/css', 'image/*')) );
+	Assert::false( $input::validateMimeType($input, array()) );
 
-	Assert::true( Validator::validateImage($input) );
+	Assert::true( $input::validateImage($input) );
 });
 
 
@@ -189,15 +188,15 @@ test(function() { // validators on multiple files
 	$input = $form->addContainer('multiple')->addUpload('avatar', NULL, TRUE)
 		->addRule($form::MAX_FILE_SIZE, NULL, 3000);
 
-	Assert::false( Validator::validateFileSize($input, 150) );
-	Assert::true( Validator::validateFileSize($input, 300) );
+	Assert::false( $input::validateFileSize($input, 150) );
+	Assert::true( $input::validateFileSize($input, 300) );
 
-	Assert::true( Validator::validateMimeType($input, 'image/gif') );
-	Assert::true( Validator::validateMimeType($input, 'image/*') );
-	Assert::false( Validator::validateMimeType($input, 'text/*') );
-	Assert::true( Validator::validateMimeType($input, 'text/css,image/*') );
-	Assert::true( Validator::validateMimeType($input, array('text/css', 'image/*')) );
-	Assert::false( Validator::validateMimeType($input, array()) );
+	Assert::true( $input::validateMimeType($input, 'image/gif') );
+	Assert::true( $input::validateMimeType($input, 'image/*') );
+	Assert::false( $input::validateMimeType($input, 'text/*') );
+	Assert::true( $input::validateMimeType($input, 'text/css,image/*') );
+	Assert::true( $input::validateMimeType($input, array('text/css', 'image/*')) );
+	Assert::false( $input::validateMimeType($input, array()) );
 
-	Assert::true( Validator::validateImage($input) );
+	Assert::true( $input::validateImage($input) );
 });
