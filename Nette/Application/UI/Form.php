@@ -64,7 +64,11 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 			}
 
 			if (!$this->getAction()) {
-				$this->setAction(new Link($presenter, 'this', array()));
+				$this->setAction(new Link(
+					$presenter,
+					$name . self::NAME_SEPARATOR . 'submit!',
+					array()
+				));
 			}
 
 			if (iterator_count($this->getControls()) && $this->isSubmitted()) {
@@ -74,10 +78,6 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 					}
 				}
 			}
-
-			$signal = new Nette\Forms\Controls\HiddenField($name . self::NAME_SEPARATOR . 'submit');
-			$signal->setOmitted()->setHtmlId(FALSE);
-			$this[Presenter::SIGNAL_KEY] = $signal;
 		}
 		parent::attached($presenter);
 	}
