@@ -23,6 +23,16 @@ class TextArea extends TextBase
 {
 
 	/**
+	 * @param  string  label
+	 */
+	public function __construct($label = NULL)
+	{
+		parent::__construct($label);
+		$this->control->setName('textarea');
+	}
+
+
+	/**
 	 * Generates control's HTML element.
 	 * @return Nette\Utils\Html
 	 */
@@ -33,7 +43,6 @@ class TextArea extends TextBase
 			$value = $this->translate($this->emptyValue);
 		}
 		return parent::getControl()
-			->setName('textarea')
 			->setText($value);
 	}
 
