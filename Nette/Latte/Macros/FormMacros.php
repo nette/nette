@@ -38,7 +38,7 @@ class FormMacros extends MacroSet
 		$me->addMacro('form',
 			'Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object(%node.word) ? %node.word : $_control[%node.word]), %node.array)',
 			'Nette\Latte\Macros\FormMacros::renderFormEnd($_form)');
-		$me->addMacro('label', array($me, 'macroLabel'), '?></label><?php');
+		$me->addMacro('label', array($me, 'macroLabel'), 'if ($_label) echo $_label->endTag()');
 		$me->addMacro('input', '$_input = (is_object(%node.word) ? %node.word : $_form[%node.word]); echo $_input->getControl()->addAttributes(%node.array)', NULL, array($me, 'macroAttrName'));
 		$me->addMacro('formContainer', '$_formStack[] = $_form; $formContainer = $_form = (is_object(%node.word) ? %node.word : $_form[%node.word])', '$_form = array_pop($_formStack)');
 		$me->addMacro('name', NULL, NULL, array($me, 'macroAttrName'));
