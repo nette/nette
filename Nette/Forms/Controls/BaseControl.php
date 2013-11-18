@@ -391,9 +391,9 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 * @param  mixed      optional rule arguments
 	 * @return self
 	 */
-	public function addRule($validator, $message = NULL, $arg = NULL)
+	public function addRule($operation, $message = NULL, $arg = NULL)
 	{
-		$this->rules->addRule($validator, $message, $arg);
+		$this->rules->addRule($operation, $message, $arg);
 		return $this;
 	}
 
@@ -404,9 +404,9 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 * @param  mixed     optional condition arguments
 	 * @return Nette\Forms\Rules      new branch
 	 */
-	public function addCondition($validator, $value = NULL)
+	public function addCondition($operation, $value = NULL)
 	{
-		return $this->rules->addCondition($validator, $value);
+		return $this->rules->addCondition($operation, $value);
 	}
 
 
@@ -417,9 +417,9 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 * @param  mixed      optional condition arguments
 	 * @return Nette\Forms\Rules      new branch
 	 */
-	public function addConditionOn(IControl $control, $validator, $value = NULL)
+	public function addConditionOn(IControl $control, $operation, $value = NULL)
 	{
-		return $this->rules->addConditionOn($control, $validator, $value);
+		return $this->rules->addConditionOn($control, $operation, $value);
 	}
 
 

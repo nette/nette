@@ -115,13 +115,13 @@ abstract class TextBase extends BaseControl
 	}
 
 
-	public function addRule($validator, $message = NULL, $arg = NULL)
+	public function addRule($operation, $message = NULL, $arg = NULL)
 	{
-		if ($validator === Form::LENGTH || $validator === Form::MAX_LENGTH) {
+		if ($operation === Form::LENGTH || $operation === Form::MAX_LENGTH) {
 			$tmp = is_array($arg) ? $arg[1] : $arg;
 			$this->control->maxlength = is_scalar($tmp) ? $tmp : NULL;
 		}
-		return parent::addRule($validator, $message, $arg);
+		return parent::addRule($operation, $message, $arg);
 	}
 
 }

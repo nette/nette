@@ -97,23 +97,24 @@ class Helpers extends Nette\Object
 	{
 		$payload = array();
 		foreach ($rules as $rule) {
-			if (!is_string($op = $rule->validator)) {
+			if (!is_string($op = $rule->operation)) {
 				if (!Nette\Utils\Callback::isStatic($op)) {
 					continue;
 				}
 				$op = Nette\Utils\Callback::toString($op);
 			}
-			if ($rule->branch) {
+			if ($rule->type === Rule::VALIDATOR) {
+				$item = array('op' => ($rule->isNegative ? '~' : '') . $op, 'msg' => Validator::formatMessage($rule, FALSE));
+
+			} elseif ($rule->type === Rule::CONDITION) {
 				$item = array(
 					'op' => ($rule->isNegative ? '~' : '') . $op,
-					'rules' => static::exportRules($rule->branch, FALSE),
+					'rules' => static::exportRules($rule->subRules, FALSE),
 					'control' => $rule->control->getHtmlName()
 				);
-				if ($rule->branch->getToggles()) {
-					$item['toggle'] = $rule->branch->getToggles();
+				if ($rule->subRules->getToggles()) {
+					$item['toggle'] = $rule->subRules->getToggles();
 				}
-			} else {
-				$item = array('op' => ($rule->isNegative ? '~' : '') . $op, 'msg' => Validator::formatMessage($rule, FALSE));
 			}
 
 			if (is_array($rule->arg)) {

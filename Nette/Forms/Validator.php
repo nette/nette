@@ -51,8 +51,8 @@ class Validator extends Nette\Object
 		if ($message instanceof Nette\Utils\Html) {
 			return $message;
 
-		} elseif ($message === NULL && is_string($rule->validator) && isset(static::$messages[$rule->validator])) {
-			$message = static::$messages[$rule->validator];
+		} elseif ($message === NULL && is_string($rule->operation) && isset(static::$messages[$rule->operation])) {
+			$message = static::$messages[$rule->operation];
 
 		} elseif ($message == NULL) { // intentionally ==
 			trigger_error("Missing validation message for control '{$rule->control->getName()}'.", E_USER_WARNING);
