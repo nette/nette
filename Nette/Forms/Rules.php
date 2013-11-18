@@ -204,7 +204,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 				return FALSE;
 
 			} elseif ($rule->type === Rule::VALIDATOR && !$success) {
-				$rule->control->addError($rule->control->formatMessage($rule, TRUE));
+				$rule->control->addError(static::formatMessage($rule, TRUE));
 				return FALSE;
 			}
 		}
@@ -288,5 +288,39 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 			return $op;
 		}
 	}
+
+
+	public static function formatMessage($rule, $withValue)
+	{
+		$message = $rule->message;
+		if ($message instanceof Nette\Utils\Html) {
+			return $message;
+
+		} elseif ($message === NULL && is_string($rule->operation) && isset(self::$defaultMessages[$rule->operation])) {
+			$message = self::$defaultMessages[$rule->operation];
+
+		} elseif ($message == NULL) { // intentionally ==
+			trigger_error("Missing validation message for control '{$rule->control->name}'.", E_USER_WARNING);
+		}
+
+		if ($translator = $rule->control->getForm()->getTranslator()) {
+			$message = $translator->translate($message, is_int($rule->arg) ? $rule->arg : NULL);
+		}
+
+		$message = preg_replace_callback('#%(name|label|value|\d+\$[ds]|[ds])#', function($m) use ($rule, $withValue) {
+			static $i = -1;
+			switch ($m[1]) {
+				case 'name': return $rule->control->getName();
+				case 'label': return $rule->control->translate($rule->control->caption);
+				case 'value': return $withValue ? $rule->control->getValue() : $m[0];
+				default:
+					$args = is_array($rule->arg) ? $rule->arg : array($rule->arg);
+					$i = (int) $m[1] ? $m[1] - 1 : $i + 1;
+					return isset($args[$i]) ? ($args[$i] instanceof IControl ? ($withValue ? $args[$i]->getValue() : "%$i") : $args[$i]) : '';
+			}
+		}, $message);
+		return $message;
+	}
+
 
 }
