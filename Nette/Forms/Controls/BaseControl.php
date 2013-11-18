@@ -119,6 +119,17 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
+	 * Loads HTTP data.
+	 * @return void
+	 */
+	public function loadHttpData()
+	{
+		$path = explode('[', strtr(str_replace(array('[]', ']'), '', $this->getHtmlName()), '.', '_'));
+		$this->setValue(Nette\Utils\Arrays::get($this->getForm()->getHttpData(), $path, NULL));
+	}
+
+
+	/**
 	 * Returns HTML name of control.
 	 * @return string
 	 */
@@ -135,130 +146,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 			$this->htmlName = $name;
 		}
 		return $this->htmlName;
-	}
-
-
-	/**
-	 * Changes control's HTML id.
-	 * @param  string new ID, or FALSE or NULL
-	 * @return self
-	 */
-	public function setHtmlId($id)
-	{
-		$this->htmlId = $id;
-		return $this;
-	}
-
-
-	/**
-	 * Returns control's HTML id.
-	 * @return string
-	 */
-	public function getHtmlId()
-	{
-		if ($this->htmlId === FALSE) {
-			return NULL;
-
-		} elseif ($this->htmlId === NULL) {
-			$this->htmlId = sprintf(self::$idMask, $this->getForm()->getName(), $this->lookupPath('Nette\Forms\Form'));
-		}
-		return $this->htmlId;
-	}
-
-
-	/**
-	 * Changes control's HTML attribute.
-	 * @param  string name
-	 * @param  mixed  value
-	 * @return self
-	 */
-	public function setAttribute($name, $value = TRUE)
-	{
-		$this->control->$name = $value;
-		return $this;
-	}
-
-
-	/**
-	 * Sets user-specific option.
-	 * Options recognized by DefaultFormRenderer
-	 * - 'description' - textual or Html object description
-	 *
-	 * @param  string key
-	 * @param  mixed  value
-	 * @return self
-	 */
-	public function setOption($key, $value)
-	{
-		if ($value === NULL) {
-			unset($this->options[$key]);
-
-		} else {
-			$this->options[$key] = $value;
-		}
-		return $this;
-	}
-
-
-	/**
-	 * Returns user-specific option.
-	 * @param  string key
-	 * @param  mixed  default value
-	 * @return mixed
-	 */
-	final public function getOption($key, $default = NULL)
-	{
-		return isset($this->options[$key]) ? $this->options[$key] : $default;
-	}
-
-
-	/**
-	 * Returns user-specific options.
-	 * @return array
-	 */
-	final public function getOptions()
-	{
-		return $this->options;
-	}
-
-
-	/********************* translator ****************d*g**/
-
-
-	/**
-	 * Sets translate adapter.
-	 * @return self
-	 */
-	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
-	{
-		$this->translator = $translator;
-		return $this;
-	}
-
-
-	/**
-	 * Returns translate adapter.
-	 * @return Nette\Localization\ITranslator|NULL
-	 */
-	final public function getTranslator()
-	{
-		if ($this->translator === TRUE) {
-			return $this->getForm(FALSE) ? $this->getForm()->getTranslator() : NULL;
-		}
-		return $this->translator;
-	}
-
-
-	/**
-	 * Returns translated string.
-	 * @param  string
-	 * @param  int      plural count
-	 * @return string
-	 */
-	public function translate($s, $count = NULL)
-	{
-		$translator = $this->getTranslator();
-		return $translator === NULL || $s == NULL ? $s : $translator->translate($s, $count); // intentionally ==
 	}
 
 
@@ -307,17 +194,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 			$this->setValue($value);
 		}
 		return $this;
-	}
-
-
-	/**
-	 * Loads HTTP data.
-	 * @return void
-	 */
-	public function loadHttpData()
-	{
-		$path = explode('[', strtr(str_replace(array('[]', ']'), '', $this->getHtmlName()), '.', '_'));
-		$this->setValue(Nette\Utils\Arrays::get($this->getForm()->getHttpData(), $path, NULL));
 	}
 
 
@@ -412,6 +288,87 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
+	/**
+	 * Changes control's HTML id.
+	 * @param  string new ID, or FALSE or NULL
+	 * @return self
+	 */
+	public function setHtmlId($id)
+	{
+		$this->htmlId = $id;
+		return $this;
+	}
+
+
+	/**
+	 * Returns control's HTML id.
+	 * @return string
+	 */
+	public function getHtmlId()
+	{
+		if ($this->htmlId === FALSE) {
+			return NULL;
+
+		} elseif ($this->htmlId === NULL) {
+			$this->htmlId = sprintf(self::$idMask, $this->getForm()->getName(), $this->lookupPath('Nette\Forms\Form'));
+		}
+		return $this->htmlId;
+	}
+
+
+	/**
+	 * Changes control's HTML attribute.
+	 * @param  string name
+	 * @param  mixed  value
+	 * @return self
+	 */
+	public function setAttribute($name, $value = TRUE)
+	{
+		$this->control->$name = $value;
+		return $this;
+	}
+
+
+	/********************* translator ****************d*g**/
+
+
+	/**
+	 * Sets translate adapter.
+	 * @return self
+	 */
+	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
+	{
+		$this->translator = $translator;
+		return $this;
+	}
+
+
+	/**
+	 * Returns translate adapter.
+	 * @return Nette\Localization\ITranslator|NULL
+	 */
+	final public function getTranslator()
+	{
+		if ($this->translator === TRUE) {
+			return $this->getForm(FALSE) ? $this->getForm()->getTranslator() : NULL;
+		}
+		return $this->translator;
+	}
+
+
+	/**
+	 * Returns translated string.
+	 * @param  string
+	 * @param  int      plural count
+	 * @return string
+	 */
+	public function translate($s, $count = NULL)
+	{
+		$translator = $this->getTranslator();
+		return $translator === NULL || $s == NULL ? $s : $translator->translate($s, $count); // intentionally ==
+	}
+
+
 	/********************* rules ****************d*g**/
 
 
@@ -490,6 +447,48 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
+	 * Adds error message to the list.
+	 * @param  string  error message
+	 * @return void
+	 */
+	public function addError($message)
+	{
+		if (!in_array($message, $this->errors, TRUE)) {
+			$this->errors[] = $message;
+		}
+		$this->getForm()->addError($message);
+	}
+
+
+	/**
+	 * Returns errors corresponding to control.
+	 * @return array
+	 */
+	public function getErrors()
+	{
+		return $this->errors;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function hasErrors()
+	{
+		return (bool) $this->errors;
+	}
+
+
+	/**
+	 * @return void
+	 */
+	public function cleanErrors()
+	{
+		$this->errors = array();
+	}
+
+
+	/**
 	 * @return array
 	 */
 	protected static function exportRules($rules)
@@ -530,7 +529,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-	/********************* validation ****************d*g**/
+	/********************* validators ****************d*g**/
 
 
 	/**
@@ -591,45 +590,43 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
+	/********************* user data ****************d*g**/
+
+
 	/**
-	 * Adds error message to the list.
-	 * @param  string  error message
-	 * @return void
+	 * Sets user-specific option.
+	 * Options recognized by DefaultFormRenderer
+	 * - 'description' - textual or Html object description
+	 * @return self
 	 */
-	public function addError($message)
+	public function setOption($key, $value)
 	{
-		if (!in_array($message, $this->errors, TRUE)) {
-			$this->errors[] = $message;
+		if ($value === NULL) {
+			unset($this->options[$key]);
+		} else {
+			$this->options[$key] = $value;
 		}
-		$this->getForm()->addError($message);
+		return $this;
 	}
 
 
 	/**
-	 * Returns errors corresponding to control.
+	 * Returns user-specific option.
+	 * @return mixed
+	 */
+	final public function getOption($key, $default = NULL)
+	{
+		return isset($this->options[$key]) ? $this->options[$key] : $default;
+	}
+
+
+	/**
+	 * Returns user-specific options.
 	 * @return array
 	 */
-	public function getErrors()
+	final public function getOptions()
 	{
-		return $this->errors;
-	}
-
-
-	/**
-	 * @return bool
-	 */
-	public function hasErrors()
-	{
-		return (bool) $this->errors;
-	}
-
-
-	/**
-	 * @return void
-	 */
-	public function cleanErrors()
-	{
-		$this->errors = array();
+		return $this->options;
 	}
 
 }

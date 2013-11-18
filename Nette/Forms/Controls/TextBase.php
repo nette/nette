@@ -149,6 +149,9 @@ abstract class TextBase extends BaseControl
 	}
 
 
+	/********************* validators ****************d*g**/
+
+
 	/**
 	 * Min-length validator: has control's value minimal length?
 	 * @param  TextBase
