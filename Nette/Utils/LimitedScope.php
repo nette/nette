@@ -54,12 +54,15 @@ final class LimitedScope
 	/**
 	 * Includes script in a limited scope.
 	 * @param  string  file to include
-	 * @param  array   local variables
+	 * @param  array   local variables or TRUE meaning include once
 	 * @return mixed   the return value of the included file
 	 */
 	public static function load(/*$file, array $vars = NULL*/)
 	{
-		if (func_num_args() > 1 && is_array(func_get_arg(1))) {
+		if (func_num_args() > 1) {
+			if (func_get_arg(1) === TRUE) {
+				return include_once func_get_arg(0);
+			}
 			foreach (func_get_arg(1) as $__k => $__v) $$__k = $__v;
 			unset($__k, $__v);
 		}
