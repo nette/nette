@@ -109,7 +109,7 @@ class FormMacros extends MacroSet
 	{
 		if ($node->content != NULL) {
 			$node->openingCode = substr_replace($node->openingCode, '->startTag()', strrpos($node->openingCode, ')') + 1, 0);
-			return $writer->write('?></label><?php');
+			return $writer->write('if ($_label) echo $_label->endTag()');
 		}
 	}
 
