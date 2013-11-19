@@ -77,16 +77,15 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function applyLimit(& $sql, $limit, $offset)
 	{
-		if ($limit >= 0) {
-			$sql = preg_replace('#^\s*(SELECT|UPDATE|DELETE)#i', '$0 TOP ' . (int) $limit, $sql, 1, $count);
-			if (!$count) {
-				throw new Nette\InvalidArgumentException('SQL query must begin with SELECT, UPDATE or DELETE command.');
-			}
-		}
-
-		if ($offset) {
-			throw new Nette\NotSupportedException('Offset is not supported by this database.');
-		}
+		if ($limit >= 0 && $offset == 0) {
+                        $sql = preg_replace('#^\s*(SELECT|UPDATE|DELETE)#i', '$0 TOP ' . (int) $limit, $sql, 1, $count);
+                        if (!$count) {
+                                throw new Nette\InvalidArgumentException('SQL query must begin with SELECT, UPDATE or DELETE command.');
+                        }
+                } elseif ($limit >= 0 && $offset > 0) {
+                        $sql .= ' OFFSET ' . (int) $offset . ' ROWS'
+			      . ' FETCH NEXT ' (int) $limit . ' ROWS ONLY';
+                }
 	}
 
 
