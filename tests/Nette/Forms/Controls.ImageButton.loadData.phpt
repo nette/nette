@@ -41,7 +41,7 @@ test(function() { // missing data
 	$form = new Form;
 	$input = $form->addImage('missing');
 	Assert::false( $input->isFilled() );
-	Assert::false( $input->getValue() );
+	Assert::null( $input->getValue() );
 });
 
 
@@ -58,5 +58,5 @@ test(function() { // malformed data
 
 	$input = $form->addImage('malformed2');
 	Assert::false( $input->isFilled() );
-	Assert::false( $input->getValue() );
+	Assert::null( $input->getValue() );
 });
