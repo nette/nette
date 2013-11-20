@@ -508,18 +508,31 @@ class Session extends Nette\Object
 
 
 	/**
-	 * Sets user session storage.
+	 * Sets user session storage for PHP < 5.4. For PHP >= 5.4, use setHandler().
 	 * @return self
 	 */
 	public function setStorage(ISessionStorage $storage)
 	{
 		if (self::$started) {
-			throw new Nette\InvalidStateException("Unable to set storage when session has been started.");
+			throw new Nette\InvalidStateException('Unable to set storage when session has been started.');
 		}
 		session_set_save_handler(
 			array($storage, 'open'), array($storage, 'close'), array($storage, 'read'),
 			array($storage, 'write'), array($storage, 'remove'), array($storage, 'clean')
 		);
+	}
+
+
+	/**
+	 * Sets user session handler.
+	 * @return self
+	 */
+	public function setHandler(\SessionHandlerInterface $handler)
+	{
+		if (self::$started) {
+			throw new Nette\InvalidStateException('Unable to set handler when session has been started.');
+		}
+		session_set_save_handler($handler);
 	}
 
 
@@ -530,7 +543,7 @@ class Session extends Nette\Object
 	private function sendCookie()
 	{
 		if (!headers_sent() && ob_get_level() && ob_get_length()) {
-			trigger_error("Possible problem: you are starting session while already having some data in output buffer. This may not work if the outputted data grows. Try starting the session earlier.", E_USER_NOTICE);
+			trigger_error('Possible problem: you are starting session while already having some data in output buffer. This may not work if the outputted data grows. Try starting the session earlier.', E_USER_NOTICE);
 		}
 
 		$cookie = $this->getCookieParameters();
