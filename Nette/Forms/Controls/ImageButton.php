@@ -44,7 +44,7 @@ class ImageButton extends SubmitButton
 		parent::loadHttpData();
 		$this->value = $this->value
 			? array((int) array_shift($this->value), (int) array_shift($this->value))
-			: FALSE;
+			: NULL;
 	}
 
 

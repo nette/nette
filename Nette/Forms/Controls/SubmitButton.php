@@ -52,7 +52,7 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	public function loadHttpData()
 	{
 		parent::loadHttpData();
-		if ($this->value !== NULL) {
+		if ($this->isFilled()) {
 			$this->getForm()->setSubmittedBy($this);
 		}
 	}

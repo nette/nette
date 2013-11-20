@@ -38,7 +38,8 @@ class Button extends BaseControl
 	 */
 	public function isFilled()
 	{
-		return (bool) $this->getValue();
+		$value = $this->getValue();
+		return $value !== NULL && $value !== array();
 	}
 
 
