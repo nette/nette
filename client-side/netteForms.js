@@ -70,6 +70,20 @@ Nette.getValue = function(elem) {
 
 
 /**
+ * Returns the effective value of form element.
+ */
+Nette.getEffectiveValue = function(elem) {
+	var val = Nette.getValue(elem);
+	if (elem.getAttribute) {
+		if (val === elem.getAttribute('data-nette-empty-value')) {
+			val = '';
+		}
+	}
+	return val;
+};
+
+
+/**
  * Validates form element against given rules.
  */
 Nette.validateControl = function(elem, rules, onlyCheck) {
@@ -155,16 +169,21 @@ Nette.addError = function(elem, message) {
 
 
 /**
+ * Expand rule argument.
+ */
+Nette.expandRuleArgument = function(elem, arg) {
+	if (arg && arg.control) {
+		arg = Nette.getEffectiveValue(elem.form.elements[arg.control]);
+	}
+	return arg;
+};
+
+
+/**
  * Validates single rule.
  */
 Nette.validateRule = function(elem, op, arg) {
-	var val = Nette.getValue(elem);
-
-	if (elem.getAttribute) {
-		if (val === elem.getAttribute('data-nette-empty-value')) {
-			val = '';
-		}
-	}
+	var val = Nette.getEffectiveValue(elem);
 
 	if (op.charAt(0) === ':') {
 		op = op.substr(1);
@@ -174,9 +193,7 @@ Nette.validateRule = function(elem, op, arg) {
 
 	var arr = Nette.isArray(arg) ? arg.slice(0) : [arg];
 	for (var i = 0, len = arr.length; i < len; i++) {
-		if (arr[i] && arr[i].control) {
-			arr[i] = Nette.getValue(elem.form.elements[arr[i].control]);
-		}
+		arr[i] = Nette.expandRuleArgument(elem, arr[i]);
 	}
 	return Nette.validators[op] ? Nette.validators[op](elem, Nette.isArray(arg) ? arr : arr[0], val) : null;
 };
