@@ -87,6 +87,7 @@ class NetteLoader extends AutoLoader
 		'Nette\Utils\NeonException' => '/Utils/Neon',
 		'Nette\Utils\RegexpException' => '/Utils/Strings',
 		'Nette\Utils\TokenizerException' => '/Utils/Tokenizer',
+		'SessionHandlerInterface' => '/common/SessionHandlerInterface',
 	);
 
 
