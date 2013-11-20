@@ -1318,6 +1318,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/**
 	 * Gets the context.
 	 * @return \SystemContainer|Nette\DI\Container
+	 * @deprecated
 	 */
 	final public function getContext()
 	{
