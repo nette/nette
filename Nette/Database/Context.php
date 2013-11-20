@@ -15,11 +15,11 @@ use Nette;
 
 
 /**
- * Table\Selection factory.
+ * Database context.
  *
  * @author     David Grudl
  */
-class SelectionFactory extends Nette\Object
+class Context extends Nette\Object
 {
 	/** @var Connection */
 	private $connection;

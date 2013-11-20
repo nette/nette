@@ -19,7 +19,7 @@ use Nette\Database\Table\SqlBuilder;
 
 
 $reflection = new DiscoveredReflection($connection);
-$dao = new Nette\Database\SelectionFactory($connection, $reflection);
+$dao = new Nette\Database\Context($connection, $reflection);
 
 
 test(function() use ($connection, $reflection) { // test paramateres with NULL
@@ -214,7 +214,7 @@ test(function() use ($driverName, $connection, $reflection) {
 	}
 
 	$reflection = new DiscoveredReflection($connection);
-	$dao = new Nette\Database\SelectionFactory($connection, $reflection);
+	$dao = new Nette\Database\Context($connection, $reflection);
 
 	$e = Assert::exception(function() use ($dao) {
 		$books = $dao->table('book')->where('id',

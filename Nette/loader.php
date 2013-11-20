@@ -40,6 +40,7 @@ require_once __DIR__ . '/Diagnostics/shortcuts.php';
 
 Nette\Utils\SafeStream::register();
 class_alias('Nette\Configurator', 'Nette\Config\Configurator');
+class_alias('Nette\Database\Context', 'Nette\Database\SelectionFactory');
 
 
 /**

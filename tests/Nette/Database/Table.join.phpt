@@ -61,7 +61,7 @@ test(function() use ($dao) {
 
 
 test(function() use ($connection) {
-	$dao = new Nette\Database\SelectionFactory(
+	$dao = new Nette\Database\Context(
 		$connection,
 		new Nette\Database\Reflection\DiscoveredReflection($connection)
 	);

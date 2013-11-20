@@ -38,8 +38,8 @@ class Connection extends Nette\Object
 	/** @var SqlPreprocessor */
 	private $preprocessor;
 
-	/** @var SelectionFactory */
-	private $selectionFactory;
+	/** @var Context */
+	private $context;
 
 	/** @var PDO */
 	private $pdo;
@@ -256,33 +256,33 @@ class Connection extends Nette\Object
 	/** @deprecated */
 	public function table($table)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use SelectionFactory::table() instead.', E_USER_DEPRECATED);
-		if (!$this->selectionFactory) {
-			$this->selectionFactory = new SelectionFactory($this);
+		trigger_error(__METHOD__ . '() is deprecated; use Context::table() instead.', E_USER_DEPRECATED);
+		if (!$this->context) {
+			$this->context = new Context($this);
 		}
-		return $this->selectionFactory->table($table);
+		return $this->context->table($table);
 	}
 
 
 	/** @deprecated */
-	public function setSelectionFactory(SelectionFactory $selectionFactory)
+	public function setContext(Context $context)
 	{
-		$this->selectionFactory = $selectionFactory;
+		$this->context = $context;
 		return $this;
 	}
 
 
 	/** @deprecated */
-	public function getSelectionFactory()
+	public function getContext()
 	{
-		return $this->selectionFactory;
+		return $this->context;
 	}
 
 
 	/** @deprecated */
 	function setDatabaseReflection()
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use setSelectionFactory() instead.', E_USER_DEPRECATED);
+		trigger_error(__METHOD__ . '() is deprecated; use setContext() instead.', E_USER_DEPRECATED);
 		return $this;
 	}
 
@@ -290,7 +290,7 @@ class Connection extends Nette\Object
 	/** @deprecated */
 	function setCacheStorage()
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use setSelectionFactory() instead.', E_USER_DEPRECATED);
+		trigger_error(__METHOD__ . '() is deprecated; use setContext() instead.', E_USER_DEPRECATED);
 	}
 
 

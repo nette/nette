@@ -19,7 +19,7 @@ use Nette\Database\Table\SqlBuilder;
 
 
 $reflection = new DiscoveredReflection($connection);
-$dao = new Nette\Database\SelectionFactory($connection, $reflection);
+$dao = new Nette\Database\Context($connection, $reflection);
 
 
 test(function() use ($dao, $driverName) {

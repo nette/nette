@@ -74,7 +74,7 @@ Assert::equal(4, $dao->table('book')->where('title LIKE', "Biography%")->count('
 
 
 // Insert into table without primary key
-$dao = new Nette\Database\SelectionFactory(
+$dao = new Nette\Database\Context(
 	$connection,
 	new Nette\Database\Reflection\DiscoveredReflection($connection)
 );

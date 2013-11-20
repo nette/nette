@@ -13,7 +13,7 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
 
 $cacheStorage = new Nette\Caching\Storages\MemoryStorage;
-$dao = new Nette\Database\SelectionFactory(
+$dao = new Nette\Database\Context(
 	$connection,
 	new Nette\Database\Reflection\DiscoveredReflection($connection, $cacheStorage),
 	$cacheStorage
