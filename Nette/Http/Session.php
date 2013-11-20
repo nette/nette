@@ -331,7 +331,8 @@ class Session extends Nette\Object
 
 
 	/**
-	 * Cleans and minimizes meta structures.
+	 * Cleans and minimizes meta structures. This method is called automatically on shutdown, do not call it directly.
+	 * @internal
 	 * @return void
 	 */
 	public function clean()
