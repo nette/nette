@@ -37,7 +37,6 @@ Nette\Loaders\NetteLoader::getInstance()->register();
 require_once __DIR__ . '/Diagnostics/shortcuts.php';
 
 class_alias('Nette\Configurator', 'Nette\Config\Configurator');
-class_alias('Nette\Database\Context', 'Nette\Database\SelectionFactory');
 
 
 if (!function_exists('callback')) {
