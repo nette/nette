@@ -94,10 +94,10 @@ class Context extends Nette\Object
 			$result = new ResultSet($this->connection, $statement, $params);
 		} catch (\PDOException $e) {
 			$e->queryString = $statement;
-			$this->connection->onQuery($this, $e);
+			$this->connection->onQuery($this->connection, $e);
 			throw $e;
 		}
-		$this->connection->onQuery($this, $result);
+		$this->connection->onQuery($this->connection, $result);
 		return $result;
 	}
 
