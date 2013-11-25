@@ -78,7 +78,7 @@ class Logger extends Nette\Object
 		$host = php_uname('n');
 		foreach (array('HTTP_HOST','SERVER_NAME', 'HOSTNAME') as $item) {
 			if (isset($_SERVER[$item])) {
-				$host = $_SERVER[$item]; break;
+				$host = preg_replace('#[^\w.-]+#', '', $_SERVER[$item]); break;
 			}
 		}
 
