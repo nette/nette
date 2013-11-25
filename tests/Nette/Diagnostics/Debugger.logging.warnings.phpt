@@ -14,8 +14,6 @@ require __DIR__ . '/../bootstrap.php';
 
 
 // Setup environment
-$_SERVER['HTTP_HOST'] = 'nette.org';
-
 $logDirectory = TEMP_DIR . '/log';
 Tester\Helpers::purge($logDirectory);
 
