@@ -30,3 +30,15 @@ Assert::same( 'arg=value&arg2=value2&arg3=value3',  $url->query );
 
 $url->setQuery(array('arg3' => 'value3'));
 Assert::same( 'arg3=value3',  $url->query );
+
+$url->setQuery(array('arg' => 'value'));
+Assert::same( 'value', $url->getQueryParameter('arg') );
+Assert::same( NULL, $url->getQueryParameter('invalid') );
+Assert::same( 123, $url->getQueryParameter('invalid', 123) );
+
+$url->setQueryParameter('arg2', 'abc');
+Assert::same( 'abc', $url->getQueryParameter('arg2') );
+$url->setQueryParameter('arg2', 'def');
+Assert::same( 'def', $url->getQueryParameter('arg2') );
+$url->setQueryParameter('arg2', NULL);
+Assert::same( NULL, $url->getQueryParameter('arg2') );

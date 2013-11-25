@@ -286,6 +286,36 @@ class Url extends Nette\Object
 
 
 	/**
+	 * @param string
+	 * @param mixed
+	 * @return mixed
+	 */
+	public function getQueryParameter($name, $default = NULL)
+	{
+		parse_str($this->query, $params);
+		return isset($params[$name]) ? $params[$name] : $default;
+	}
+
+
+	/**
+	 * @param string
+	 * @param mixed NULL unsets the parameter
+	 * @return self
+	 */
+	public function setQueryParameter($name, $value)
+	{
+		parse_str($this->query, $params);
+		if ($value === NULL) {
+			unset($params[$name]);
+		} else {
+			$params[$name] = $value;
+		}
+		$this->setQuery($params);
+		return $this;
+	}
+
+
+	/**
 	 * Sets the fragment part of URI.
 	 * @param  string
 	 * @return self
