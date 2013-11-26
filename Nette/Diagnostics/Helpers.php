@@ -80,7 +80,7 @@ final class Helpers
 			return "<span class=\"php-int\">$var</span>\n";
 
 		} elseif (is_float($var)) {
-			$var = var_export($var, TRUE);
+			$var = json_encode($var);
 			if (strpos($var, '.') === FALSE) {
 				$var .= '.0';
 			}
