@@ -346,14 +346,11 @@ Nette.toggleControl = function(elem, rules, topSuccess, firsttime) {
 		if (Nette.toggleControl(elem, rule.rules, success, firsttime) || rule.toggle) {
 			has = true;
 			if (firsttime) {
-				if (!el.nodeName) { // radio
-					for (var i = 0; i < el.length; i++) {
-						Nette.addEvent(el[i], 'click', handler);
-					}
-				} else if (el.nodeName.toLowerCase() === 'select') {
-					Nette.addEvent(el, 'change', handler);
-				} else {
-					Nette.addEvent(el, 'click', handler);
+				var oldIE = !document.addEventListener, // IE < 9
+					els = el.nodeName ? [el] : el; // is radiolist?
+
+				for (var i = 0; i < els.length; i++) {
+					Nette.addEvent(els[i], oldIE && el.type in {checkbox: 1, radio: 1} ? 'click' : 'change', handler);
 				}
 			}
 			for (var id2 in rule.toggle || []) {
