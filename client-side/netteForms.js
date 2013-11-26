@@ -113,7 +113,7 @@ Nette.validateControl = function(elem, rules, onlyCheck) {
 				var message = rule.msg.replace(/%(value|\d+)/g, function(foo, m) {
 					return Nette.getValue(m === 'value' ? el : elem.form.elements[arr[m].control]);
 				});
-				Nette.addError(el, message);
+				Nette.formErrors.push({element: el, message: message});
 			}
 			return false;
 		}
@@ -127,40 +127,71 @@ Nette.validateControl = function(elem, rules, onlyCheck) {
  */
 Nette.validateForm = function(sender) {
 	var form = sender.form || sender, scope = false;
+	Nette.formErrors = [];
+
 	if (form['nette-submittedBy'] && form['nette-submittedBy'].getAttribute('formnovalidate') !== null) {
 		var scopeArr = Nette.parseJSON(form['nette-submittedBy'].getAttribute('data-nette-validation-scope'));
 		if (scopeArr.length) {
 			scope = new RegExp('^(' + scopeArr.join('-|') + '-)');
 		} else {
+			Nette.showFormErrors(form, Nette.formErrors);
 			return true;
 		}
 	}
+
 	for (var i = 0; i < form.elements.length; i++) {
 		var elem = form.elements[i];
-		if (!(elem.nodeName.toLowerCase() in {input: 1, select: 1, textarea: 1}) ||
-			(elem.type in {hidden: 1, submit: 1, image: 1, reset: 1}) ||
-			(scope && !elem.name.replace(/]\[|\[|]|$/g, '-').match(scope)) ||
-			elem.disabled || elem.readonly
+		if ((elem.nodeName.toLowerCase() in {input: 1, select: 1, textarea: 1}) &
+			!(elem.type in {hidden: 1, submit: 1, image: 1, reset: 1}) &&
+			(!scope || elem.name.replace(/]\[|\[|]|$/g, '-').match(scope)) &&
+			!elem.disabled && !elem.readonly
 		) {
-			continue;
-		}
-		if (!Nette.validateControl(elem)) {
-			return false;
+			Nette.validateControl(elem);
 		}
 	}
-	return true;
+
+	Nette.showFormErrors(form, Nette.formErrors);
+	return Nette.formErrors.length === 0;
 };
 
 
 /**
- * Display error message.
+ * CSS class.
  */
-Nette.addError = function(elem, message) {
-	if (elem.focus) {
-		elem.focus();
+Nette.formErrorClass = 'nette-form-error';
+
+
+/**
+ * Display all error messages.
+ */
+Nette.showFormErrors = function(form, errors) {
+	if (errors.length && Nette.addError) {
+		Nette.addError(errors[0].element, errors[0].message); // back compatibility
 	}
-	if (message) {
-		alert(message);
+
+	var boxes = form.getElementsByTagName('span');
+	for (var i = boxes.length - 1; i >= 0; i--) {
+		if (boxes[i].getAttribute('class') === Nette.formErrorClass) {
+			boxes[i].parentNode.removeChild(boxes[i]);
+		}
+	}
+
+	for (var i = 0; i < errors.length; i++) {
+		if (i === 0 && errors[i].element.focus) {
+			errors[i].element.focus();
+		}
+
+		if (errors[i].message) {
+			var box = document.createElement('span');
+			box.setAttribute('class', Nette.formErrorClass);
+			box.textContent = errors[i].message;
+			errors[i].element.parentNode.insertBefore(box, errors[i].element.nextSibling);
+			Nette.addEvent(errors[i].element, 'keypress', function() {
+				if (this.nextSibling && this.nextSibling.getAttribute('class') === Nette.formErrorClass) {
+					this.parentNode.removeChild(this.nextSibling);
+				}
+			});
+		}
 	}
 };
 
