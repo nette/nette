@@ -14,6 +14,11 @@ use Nette\Caching\Cache,
 require __DIR__ . '/../bootstrap.php';
 
 
+if (!extension_loaded('pdo_sqlite')) {
+	Tester\Environment::skip('Requires PHP extension pdo_sqlite.');
+}
+
+
 // key and data with special chars
 $key = array(1, TRUE);
 $value = range("\x00", "\xFF");
