@@ -119,7 +119,7 @@ class Neon extends Nette\Object
 			return $var;
 
 		} elseif (is_float($var)) {
-			$var = var_export($var, TRUE);
+			$var = json_encode($var);
 			return Strings::contains($var, '.') ? $var : $var . '.0';
 
 		} else {
