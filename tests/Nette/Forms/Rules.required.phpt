@@ -85,3 +85,13 @@ test(function() { // setRequired(FALSE)
 	Assert::false( $rules->validate() );
 	Assert::same( array('Please enter a valid email address.'), $input->getErrors() );
 });
+
+
+test(function () { // addRule(~Form::REQUIRED)
+	$form = new Form;
+	$input = $form->addText('text');
+
+	Assert::false( $input->isRequired() );
+	Assert::same( $input, $input->addRule(~Form::REQUIRED) );
+	Assert::false( $input->isRequired() );
+});
