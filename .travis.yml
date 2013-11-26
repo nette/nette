@@ -6,8 +6,8 @@ php:
 
 script: VERBOSE=true ./tests/run-tests.sh -s tests/
 
-#services:
-#    - memcached
+services:
+    - memcached
 
 before_script:
     # Install Nette Tester
