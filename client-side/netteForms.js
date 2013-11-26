@@ -40,11 +40,8 @@ Nette.getValue = function(elem) {
 	} else if (elem.nodeName.toLowerCase() === 'select') {
 		var index = elem.selectedIndex, options = elem.options, values = [];
 
-		if (index < 0) {
-			return null;
-
-		} else if (elem.type === 'select-one') {
-			return options[index].value;
+		if (elem.type === 'select-one') {
+			return index < 0 ? null : options[index].value;
 		}
 
 		for (i = 0, len = options.length; i < len; i++) {
