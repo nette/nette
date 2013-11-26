@@ -68,9 +68,8 @@ test(function() { // validators for array
 	$input = $form->addMultiSelect('select', NULL, array('a', 'b', 'c', 'd'));
 	$input->setValue(array(1, 2, 3));
 
-	Assert::true( Validator::validateEqual($input, 1) );
-	Assert::true( Validator::validateEqual($input, '1') );
-	Assert::true( Validator::validateEqual($input, array(123, 3)) ); // "is in"
+	Assert::true( Validator::validateEqual($input, array(1, 2, 3, 4)) );
+	Assert::true( Validator::validateEqual($input, array('1', '2', '3')) );
 	Assert::false( Validator::validateEqual($input, array('x')) );
 
 	Assert::true( Validator::validateFilled($input) );

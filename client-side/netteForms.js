@@ -213,13 +213,18 @@ Nette.validators = {
 		if (arg === undefined) {
 			return null;
 		}
+		val = Nette.isArray(val) ? val : [val];
 		arg = Nette.isArray(arg) ? arg : [arg];
-		for (var i = 0, len = arg.length; i < len; i++) {
-			if (val == arg[i]) {
-				return true;
+		loop:
+		for (var i1 = 0, len1 = val.length; i1 < len1; i1++) {
+			for (var i2 = 0, len2 = arg.length; i2 < len2; i2++) {
+				if (val[i1] == arg[i2]) {
+					continue loop;
+				}
 			}
+			return false;
 		}
-		return false;
+		return true;
 	},
 
 	notEqual: function(elem, arg, val) {

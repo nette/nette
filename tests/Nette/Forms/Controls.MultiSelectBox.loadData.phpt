@@ -124,10 +124,10 @@ test(function() use ($series) { // validateEqual
 	$form = new Form;
 	$input = $form->addMultiSelect('multi', NULL, $series);
 
-	Assert::true( Validator::validateEqual($input, 'red-dwarf') );
+	Assert::true( Validator::validateEqual($input, array('red-dwarf', 0)) );
 	Assert::false( Validator::validateEqual($input, 'unknown') );
 	Assert::false( Validator::validateEqual($input, array('unknown')) );
-	Assert::true( Validator::validateEqual($input, array(0)) );
+	Assert::false( Validator::validateEqual($input, array(0)) );
 });
 
 

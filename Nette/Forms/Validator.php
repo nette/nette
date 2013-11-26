@@ -90,11 +90,12 @@ class Validator extends Nette\Object
 		foreach ((is_array($value) ? $value : array($value)) as $val) {
 			foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
 				if ((string) $val === (string) $item) {
-					return TRUE;
+					continue 2;
 				}
 			}
+			return FALSE;
 		}
-		return FALSE;
+		return TRUE;
 	}
 
 
