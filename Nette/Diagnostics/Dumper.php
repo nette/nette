@@ -143,7 +143,9 @@ class Dumper
 
 	private static function dumpDouble(& $var)
 	{
-		$var = var_export($var, TRUE);
+		ob_start();
+		var_dump($var);
+		$var = trim(ob_get_clean(), "doublefat()\r\n");
 		return '<span class="nette-dump-number">' . $var . (strpos($var, '.') === FALSE ? '.0' : '') . "</span>\n";
 	}
 
