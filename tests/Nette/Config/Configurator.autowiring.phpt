@@ -36,7 +36,7 @@ class Model
 class Lorem
 {
 	/** autowiring using parameters */
-	static function test(Nette\Database\Connection $arg)
+	static function test(Nette\Security\SimpleAuthenticator $arg)
 	{
 		Notes::add(__METHOD__);
 	}
