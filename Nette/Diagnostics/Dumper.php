@@ -25,7 +25,7 @@ class Dumper
 		TRUNCATE = 'truncate', // how truncate long strings? (defaults to 150)
 		COLLAPSE = 'collapse', // always collapse? (defaults to false)
 		COLLAPSE_COUNT = 'collapsecount', // how big array/object are collapsed? (defaults to 7)
-		CODE_LOCATION = 'codelocation', // show code location link for classes (defaults to true for HTML mode, false for text and terminal)
+		CODE_LOCATION = 'codelocation', // show code location link for classes and closures (defaults to true for HTML mode, false for text and terminal)
 		LOCATION = 'location'; // show location string? (defaults to false)
 
 	/** @var array */
@@ -227,6 +227,7 @@ class Dumper
 		$out = '<span class="nette-dump-object">' . get_class($var) . '</span>';
 		if ($options[self::CODE_LOCATION]) {
 			$reflection = new \ReflectionClass($var);
+			$reflection = $var instanceof \Closure ? new \ReflectionFunction($var) : new \ReflectionClass($var);
 			$file = $reflection->getFileName();
 			$line = $reflection->getStartLine();
 
