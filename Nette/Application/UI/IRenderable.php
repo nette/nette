@@ -26,7 +26,7 @@ interface IRenderable
 	 * Forces control to repaint.
 	 * @return void
 	 */
-	function redrawControl();
+	function invalidateControl();
 
 	/**
 	 * Is required to repaint the control?
