@@ -40,39 +40,13 @@ use Nette,
 <?php endif ?>
 </h1>
 
-<?php if (!empty($this->request)): ?>
-	<?php $params = $this->request->getParameters() ?>
-	<?php if (empty($params)): ?>
-		<p>No parameters.</p>
-
-	<?php else: ?>
-		<table>
-		<thead>
-		<tr>
-			<th>Parameter</th>
-			<th>Value</th>
-		</tr>
-		</thead>
-		<tbody>
-		<?php unset($params[Presenter::ACTION_KEY], $params[Presenter::SIGNAL_KEY]) ?>
-		<?php foreach ($params as $key => $value): ?>
-		<tr>
-			<td><code><?php echo htmlSpecialChars($key) ?></code></td>
-			<td><?php if (is_string($value)):?><code><?php echo htmlSpecialChars($value) ?></code><?php else: echo Dumper::toHtml($value); endif ?></td>
-		</tr>
-		<?php endforeach ?>
-		</tbody>
-		</table>
-	<?php endif ?>
-<?php endif ?>
-
-<h2>Routers</h2>
+<div class="nette-inner">
+	<p><code><?php echo htmlSpecialChars($this->httpRequest->getUrl()) ?></code></p>
 
 <?php if (empty($this->routers)): ?>
 	<p>No routers defined.</p>
 
 <?php else: ?>
-	<div class="nette-inner">
 	<table>
 	<thead>
 	<tr>
@@ -114,6 +88,6 @@ use Nette,
 	<?php endforeach ?>
 	</tbody>
 	</table>
-	</div>
 <?php endif ?>
+</div>
 </div>
