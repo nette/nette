@@ -381,7 +381,7 @@ class ContainerBuilder extends Nette\Object
 	 * Generates PHP classes. First class is the container.
 	 * @return Nette\PhpGenerator\ClassType[]
 	 */
-	public function generateClasses()
+	public function generateClasses($className = 'Container', $parentName = 'Nette\DI\Container')
 	{
 		unset($this->definitions[self::THIS_CONTAINER]);
 		$this->addDefinition(self::THIS_CONTAINER)->setClass('Nette\DI\Container');
@@ -389,8 +389,8 @@ class ContainerBuilder extends Nette\Object
 		$this->generatedClasses = array();
 		$this->prepareClassList();
 
-		$containerClass = $this->generatedClasses[] = new Nette\PhpGenerator\ClassType('Container');
-		$containerClass->addExtend('Nette\DI\Container');
+		$containerClass = $this->generatedClasses[] = new Nette\PhpGenerator\ClassType($className);
+		$containerClass->setExtends($parentName);
 		$containerClass->addMethod('__construct')
 			->addBody('parent::__construct(?);', array($this->parameters));
 
@@ -485,7 +485,7 @@ class ContainerBuilder extends Nette\Object
 		}
 
 		$factoryClass = $this->generatedClasses[] = new Nette\PhpGenerator\ClassType;
-		$factoryClass->setName(str_replace(array('\\', '.'), '_', "{$def->implement}Impl_{$name}"))
+		$factoryClass->setName(str_replace(array('\\', '.'), '_', "{$this->generatedClasses[0]->name}_{$def->implement}Impl_{$name}"))
 			->addImplement($def->implement)
 			->setFinal(TRUE);
 
