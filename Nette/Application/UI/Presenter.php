@@ -1061,7 +1061,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * Restores current request to session.
+	 * Restores request from session.
 	 * @param  string key
 	 * @return void
 	 */
