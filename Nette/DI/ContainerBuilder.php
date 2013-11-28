@@ -46,7 +46,7 @@ class ContainerBuilder extends Nette\Object
 	private $generatedClasses = array();
 
 	/** @var string */
-	/*private in 5.4*/public $current;
+	/*private in 5.4*/public $currentService;
 
 
 	/**
@@ -123,8 +123,8 @@ class ContainerBuilder extends Nette\Object
 	 */
 	public function getByType($class)
 	{
-		if ($this->current !== NULL && Reflection\ClassType::from($this->definitions[$this->current]->class)->is($class)) {
-			return $this->current;
+		if ($this->currentService !== NULL && Reflection\ClassType::from($this->definitions[$this->currentService]->class)->is($class)) {
+			return $this->currentService;
 		}
 
 		$lower = ltrim(strtolower($class), '\\');
@@ -435,10 +435,10 @@ class ContainerBuilder extends Nette\Object
 	 */
 	private function generateService($name)
 	{
-		$this->current = NULL;
+		$this->currentService = NULL;
 		$def = $this->definitions[$name];
 		$code = '$service = ' . $this->formatStatement($def->factory) . ";\n";
-		$this->current = $name;
+		$this->currentService = $name;
 
 		if ($def->class && $def->class !== $def->factory->entity && !$this->getServiceName($def->factory->entity)) {
 			$code .= PhpHelpers::formatArgs("if (!\$service instanceof $def->class) {\n"
@@ -627,7 +627,7 @@ class ContainerBuilder extends Nette\Object
 				} else {
 					$val = ($name === ContainerBuilder::THIS_CONTAINER
 						? '$this'
-						: ($name === $that->current ? '$service' : $that->formatStatement(new Statement("@$name"))))
+						: ($name === $that->currentService ? '$service' : $that->formatStatement(new Statement("@$name"))))
 						. (isset($pair[1]) ? PhpHelpers::formatArgs('->?', array($pair[1])) : '');
 				}
 				$val = ContainerBuilder::literal($val);
@@ -687,7 +687,7 @@ class ContainerBuilder extends Nette\Object
 		}
 		$service = substr($arg, 1);
 		if ($service === self::THIS_SERVICE) {
-			$service = $this->current;
+			$service = $this->currentService;
 		}
 		if (Strings::contains($service, '\\')) {
 			if ($this->classes === FALSE) { // may be disabled by prepareClassList
