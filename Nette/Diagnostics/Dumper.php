@@ -25,6 +25,7 @@ class Dumper
 		TRUNCATE = 'truncate', // how truncate long strings? (defaults to 150)
 		COLLAPSE = 'collapse', // always collapse? (defaults to false)
 		COLLAPSE_COUNT = 'collapsecount', // how big array/object are collapsed? (defaults to 7)
+		CODE_LOCATION = 'codelocation', // show code location link for classes and closures (defaults to true for HTML mode, false for text and terminal)
 		LOCATION = 'location'; // show location string? (defaults to false)
 
 	/** @var array */
@@ -74,6 +75,7 @@ class Dumper
 			self::COLLAPSE => FALSE,
 			self::COLLAPSE_COUNT => 7,
 			self::LOCATION => FALSE,
+			self::CODE_LOCATION => TRUE,
 		);
 		list($file, $line, $code) = $options[self::LOCATION] ? self::findLocation() : NULL;
 		return '<pre class="nette-dump"'
@@ -90,6 +92,9 @@ class Dumper
 	 */
 	public static function toText($var, array $options = NULL)
 	{
+		$options = (array) $options + array(
+			self::CODE_LOCATION => FALSE,
+		);
 		return htmlspecialchars_decode(strip_tags(self::toHtml($var, $options)), ENT_QUOTES);
 	}
 
@@ -100,6 +105,9 @@ class Dumper
 	 */
 	public static function toTerminal($var, array $options = NULL)
 	{
+		$options = (array) $options + array(
+			self::CODE_LOCATION => FALSE,
+		);
 		return htmlspecialchars_decode(strip_tags(preg_replace_callback('#<span class="nette-dump-(\w+)">|</span>#', function($m) {
 			return "\033[" . (isset($m[1], Dumper::$terminalColors[$m[1]]) ? Dumper::$terminalColors[$m[1]] : '0') . "m";
 		}, self::toHtml($var, $options))), ENT_QUOTES);
@@ -215,7 +223,19 @@ class Dumper
 		}
 
 		static $list = array();
-		$out = '<span class="nette-dump-object">' . get_class($var) . '</span> <span class="nette-dump-hash">#' . substr(md5(spl_object_hash($var)), 0, 4) . '</span>';
+
+		$out = '<span class="nette-dump-object">' . get_class($var) . '</span>';
+		if ($options[self::CODE_LOCATION]) {
+			$reflection = new \ReflectionClass($var);
+			$reflection = $var instanceof \Closure ? new \ReflectionFunction($var) : new \ReflectionClass($var);
+			$file = $reflection->getFileName();
+			$line = $reflection->getStartLine();
+
+			if ($file) {
+				$out .= ' <span class="nette-toggle-stop"><a href="editor://open/?file=' . rawurlencode($file) . "&amp;line=$line\" title=\"Open source file\">(source)</a></span>";
+			}
+		}
+		$out .= ' <span class="nette-dump-hash">#' . substr(md5(spl_object_hash($var)), 0, 4) . '</span>';
 
 		if (empty($fields)) {
 			return $out . "\n";

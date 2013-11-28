@@ -15,7 +15,7 @@
 	Dumper.init = function() {
 		$(document.body).bind('click', function(e) {
 			for (var link = e.target; link && (!link.tagName || link.className.indexOf('nette-toggle') < 0); link = link.parentNode) {}
-			if (!link) {
+			if (!link || $(link).hasClass('nette-toggle-stop')) {
 				return;
 			}
 			var collapsed = $(link).hasClass('nette-toggle-collapsed'),
