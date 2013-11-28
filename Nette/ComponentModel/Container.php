@@ -186,7 +186,7 @@ class Container extends Component implements IContainer
 
 
 	/**
-	 * Iterates over a components.
+	 * Iterates over components.
 	 * @param  bool    recursive?
 	 * @param  string  class types filter
 	 * @return \ArrayIterator
