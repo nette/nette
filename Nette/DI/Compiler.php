@@ -139,10 +139,8 @@ class Compiler extends Nette\Object
 			$this->container->addDependency(Nette\Reflection\ClassType::from($extension)->getFileName());
 		}
 
-		$classes = $this->container->generateClasses();
-		$classes[0]->setName($className)
-			->setExtends($parentName)
-			->addMethod('initialize');
+		$classes = $this->container->generateClasses($className, $parentName);
+		$classes[0]->addMethod('initialize');
 
 		foreach ($this->extensions as $extension) {
 			$extension->afterCompile($classes[0]);
