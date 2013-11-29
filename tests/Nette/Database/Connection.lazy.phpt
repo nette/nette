@@ -11,6 +11,11 @@
 require __DIR__ . '/../bootstrap.php';
 
 
+if (!class_exists('PDO')) {
+	Tester\Environment::skip('Requires PHP extension PDO.');
+}
+
+
 test(function() { // non lazy
 	Assert::exception(function() {
 		$connection = new Nette\Database\Connection('dsn', 'user', 'password');

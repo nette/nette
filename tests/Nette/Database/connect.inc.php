@@ -11,6 +11,10 @@
 require __DIR__ . '/../bootstrap.php';
 
 
+if (!class_exists('PDO')) {
+	Tester\Environment::skip('Requires PHP extension PDO.');
+}
+
 if (!is_file(__DIR__ . '/databases.ini')) {
 	Tester\Environment::skip('Missing file databases.ini');
 }
