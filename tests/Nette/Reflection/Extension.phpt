@@ -18,6 +18,11 @@ $funcs = $ext->getFunctions();
 Assert::equal( new Reflection\GlobalFunction('sleep'), $funcs['sleep'] );
 
 
+if (!class_exists('PDO')) {
+	Tester\Environment::skip('For full test requires PHP extension PDO.');
+}
+
+
 $ext = new Reflection\Extension('pdo');
 Assert::equal( array(
 	'PDOException' => new Reflection\ClassType('PDOException'),
