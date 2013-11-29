@@ -29,7 +29,7 @@ Nette.getValue = function(elem) {
 	if (!elem) {
 		return null;
 
-	} else if (!elem.nodeName) { // radio
+	} else if (!elem.nodeName) { // RadioNodeList
 		for (i = 0, len = elem.length; i < len; i++) {
 			if (elem[i].checked) {
 				return elem[i].value;
@@ -84,13 +84,20 @@ Nette.getEffectiveValue = function(elem) {
  * Validates form element against given rules.
  */
 Nette.validateControl = function(elem, rules, onlyCheck) {
+	if (!elem.nodeName) { // RadioNodeList
+		elem = elem[0];
+	}
 	rules = rules || Nette.parseJSON(elem.getAttribute('data-nette-rules'));
+
 	for (var id = 0, len = rules.length; id < len; id++) {
 		var rule = rules[id], op = rule.op.match(/(~)?([^?]+)/);
 		rule.neg = op[1];
 		rule.op = op[2];
 		rule.condition = !!rule.rules;
 		var el = rule.control ? elem.form.elements[rule.control] : elem;
+		if (!el.nodeName) { // RadioNodeList
+			el = el[0];
+		}
 
 		var success = Nette.validateRule(el, rule.op, rule.arg);
 		if (success === null) {
@@ -105,7 +112,7 @@ Nette.validateControl = function(elem, rules, onlyCheck) {
 				return false;
 			}
 		} else if (!rule.condition && !success) {
-			if (el.disabled) {
+			if (Nette.isDisabled(el)) {
 				continue;
 			}
 			if (!onlyCheck) {
@@ -135,20 +142,45 @@ Nette.validateForm = function(sender) {
 			return true;
 		}
 	}
-	for (var i = 0; i < form.elements.length; i++) {
-		var elem = form.elements[i];
-		if (!(elem.nodeName.toLowerCase() in {input: 1, select: 1, textarea: 1}) ||
-			(elem.type in {hidden: 1, submit: 1, image: 1, reset: 1}) ||
-			(scope && !elem.name.replace(/]\[|\[|]|$/g, '-').match(scope)) ||
-			elem.disabled || elem.readonly
-		) {
+
+	var radios = {}, i, elem;
+
+	for (i = 0; i < form.elements.length; i++) {
+		elem = form.elements[i];
+
+		if (elem.type === 'radio') {
+			if (radios[elem.name]) {
+				continue;
+			}
+			radios[elem.name] = true;
+		}
+
+		if ((scope && !elem.name.replace(/]\[|\[|]|$/g, '-').match(scope)) || Nette.isDisabled(elem)) {
 			continue;
 		}
+
 		if (!Nette.validateControl(elem)) {
 			return false;
 		}
 	}
 	return true;
+};
+
+
+/**
+ * Check if input is disabled.
+ */
+Nette.isDisabled = function(elem) {
+	if (elem.type === 'radio') {
+		elem = elem.form.elements[elem.name].nodeName ? [elem] : elem.form.elements[elem.name];
+		for (var i = 0; i < elem.length; i++) {
+			if (!elem[i].disabled) {
+				return false;
+			}
+		}
+		return true;
+	}
+	return elem.disabled;
 };
 
 
