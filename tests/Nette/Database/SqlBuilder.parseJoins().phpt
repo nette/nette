@@ -55,3 +55,18 @@ if (!in_array($tables[0]['name'], array('npriorities', 'ntopics', 'nusers', 'nus
 		trim($join)
 	);
 }
+
+
+Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
+
+$sqlBuilder = new SqlBuilderMock('author', $connection, $reflection);
+
+$joins = array();
+$query = 'WHERE :book(translator).next_volume IS NULL';
+$sqlBuilder->parseJoins($joins, $query);
+$join = $sqlBuilder->buildQueryJoins($joins);
+Assert::same('WHERE book.next_volume IS NULL', $query);
+Assert::same(
+	'LEFT JOIN book ON author.id = book.translator_id',
+	trim($join)
+);

@@ -387,7 +387,7 @@ class SqlBuilder extends Nette\Object
 			(?(DEFINE)
 				(?P<word> [a-z][\w_]* )
 				(?P<del> [.:] )
-				(?P<node> (?&del)? (?&word) )
+				(?P<node> (?&del)? (?&word) (\((?&word)\))? )
 			)
 			(?P<chain> (?!\.) (?&node)*)  \. (?P<column> (?&word) | \*  )
 		~xi', function($match) use (& $joins, $builder) {
@@ -412,12 +412,17 @@ class SqlBuilder extends Nette\Object
 			(?(DEFINE)
 				(?P<word> [a-z][\w_]* )
 			)
-			(?P<del> [.:])?(?P<key> (?&word))
+			(?P<del> [.:])?(?P<key> (?&word))(\((?P<throughtColumn> (?&word))\))?
 		~xi', $chain, $keyMatches, PREG_SET_ORDER);
 
 		foreach ($keyMatches as $keyMatch) {
 			if ($keyMatch['del'] === ':') {
-				list($table, $primary) = $this->databaseReflection->getHasManyReference($parent, $keyMatch['key']);
+				if (isset($keyMatch['throughtColumn'])) {
+					$table = $keyMatch['key'];
+					list(, $primary) = $this->databaseReflection->getBelongsToReference($table, $keyMatch['throughtColumn']);
+				} else {					
+					list($table, $primary) = $this->databaseReflection->getHasManyReference($parent, $keyMatch['key']);
+				}
 				$column = $this->databaseReflection->getPrimary($parent);
 			} else {
 				list($table, $column) = $this->databaseReflection->getBelongsToReference($parent, $keyMatch['key']);
