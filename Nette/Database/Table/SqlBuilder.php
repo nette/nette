@@ -412,14 +412,14 @@ class SqlBuilder extends Nette\Object
 			(?(DEFINE)
 				(?P<word> [a-z][\w_]* )
 			)
-			(?P<del> [.:])?(?P<key> (?&word))(\((?P<throughtColumn> (?&word))\))?
+			(?P<del> [.:])?(?P<key> (?&word))(\((?P<throughColumn> (?&word))\))?
 		~xi', $chain, $keyMatches, PREG_SET_ORDER);
 
 		foreach ($keyMatches as $keyMatch) {
 			if ($keyMatch['del'] === ':') {
-				if (isset($keyMatch['throughtColumn'])) {
+				if (isset($keyMatch['throughColumn'])) {
 					$table = $keyMatch['key'];
-					list(, $primary) = $this->databaseReflection->getBelongsToReference($table, $keyMatch['throughtColumn']);
+					list(, $primary) = $this->databaseReflection->getBelongsToReference($table, $keyMatch['throughColumn']);
 				} else {					
 					list($table, $primary) = $this->databaseReflection->getHasManyReference($parent, $keyMatch['key']);
 				}
