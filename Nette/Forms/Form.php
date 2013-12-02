@@ -393,8 +393,11 @@ class Form extends Container
 	{
 		if (!$this->isSubmitted()) {
 			return;
+		}
 
-		} elseif ($this->submittedBy instanceof ISubmitterControl) {
+		$this->validate();
+
+		if ($this->submittedBy instanceof ISubmitterControl) {
 			if ($this->isValid()) {
 				$this->submittedBy->onClick($this->submittedBy);
 			} else {
@@ -446,6 +449,7 @@ class Form extends Container
 
 	public function validate(array $controls = NULL)
 	{
+		$this->cleanErrors();
 		if ($controls === NULL && $this->submittedBy instanceof ISubmitterControl) {
 			$controls = $this->submittedBy->getValidationScope();
 		}
