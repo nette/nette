@@ -17,7 +17,8 @@ $_SERVER['REQUEST_METHOD'] = 'POST';
 $_SERVER['CONTENT_LENGTH'] = PHP_INT_MAX;
 
 $form = new Form;
-$form->validate();
+$form->addHidden('x');
+$form->isSuccess();
 
 $errors = $form->getErrors();
 Assert::same( 1, count($errors) );

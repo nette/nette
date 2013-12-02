@@ -456,7 +456,7 @@ class Form extends Container
 
 	public function validateMaxPostSize()
 	{
-		if ($this->getHttpData() || strcasecmp($this->getMethod(), 'POST') || empty($_SERVER['CONTENT_LENGTH'])) {
+		if (!$this->submittedBy || strcasecmp($this->getMethod(), 'POST') || empty($_SERVER['CONTENT_LENGTH'])) {
 			return;
 		}
 		$maxSize = ini_get('post_max_size');
