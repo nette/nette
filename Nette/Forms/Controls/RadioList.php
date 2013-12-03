@@ -58,7 +58,7 @@ class RadioList extends BaseControl
 	 */
 	public function loadHttpData()
 	{
-		$this->value = $this->getHttpData();
+		$this->value = $this->getHttpData(Nette\Forms\Form::DATA_TEXT);
 		if ($this->value !== NULL) {
 			if (is_array($this->disabled) && isset($this->disabled[$this->value])) {
 				$this->value = NULL;

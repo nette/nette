@@ -368,7 +368,7 @@ class Form extends Container
 	 * Returns submitted HTTP data.
 	 * @return mixed
 	 */
-	final public function getHttpData($htmlName = NULL, $type = self::DATA_TEXT)
+	final public function getHttpData($type = NULL, $htmlName = NULL)
 	{
 		if ($this->httpData === NULL) {
 			if (!$this->isAnchored()) {
