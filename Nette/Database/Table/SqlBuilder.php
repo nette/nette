@@ -420,7 +420,7 @@ class SqlBuilder extends Nette\Object
 				if (isset($keyMatch['throughColumn'])) {
 					$table = $keyMatch['key'];
 					list(, $primary) = $this->databaseReflection->getBelongsToReference($table, $keyMatch['throughColumn']);
-				} else {					
+				} else {
 					list($table, $primary) = $this->databaseReflection->getHasManyReference($parent, $keyMatch['key']);
 				}
 				$column = $this->databaseReflection->getPrimary($parent);

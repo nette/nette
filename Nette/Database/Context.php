@@ -39,7 +39,6 @@ class Context extends Nette\Object
 		$this->connection = $connection;
 		$this->reflection = $reflection ?: new Reflection\ConventionalReflection;
 		$this->cacheStorage = $cacheStorage;
-		$this->preprocessor = new SqlPreprocessor($this->connection);
 	}
 
 
@@ -86,6 +85,9 @@ class Context extends Nette\Object
 	{
 		$this->connection->connect();
 		if ($params) {
+			if (!$this->preprocessor) {
+				$this->preprocessor = new SqlPreprocessor($this->connection);
+			}
 			array_unshift($params, $statement);
 			list($statement, $params) = $this->preprocessor->process($params);
 		}
