@@ -130,7 +130,11 @@ class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	{
 		$request = $this->request;
 		$presenter = $request->getPresenterName();
-		$class = $this->presenterFactory->getPresenterClass($presenter);
+		try {
+			$class = $this->presenterFactory->getPresenterClass($presenter);
+		} catch (Nette\Application\InvalidPresenterException $e) {
+			return;
+		}
 		$rc = Nette\Reflection\ClassType::from($class);
 
 		if ($rc->isSubclassOf('Nette\Application\UI\Presenter')) {

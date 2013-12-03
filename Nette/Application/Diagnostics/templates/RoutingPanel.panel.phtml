@@ -91,6 +91,6 @@ use Nette,
 	</table>
 <?php endif ?>
 
-	<p><?php echo $this->source ?> in <?php echo Helpers::editorLink($this->source->getFileName(), $this->source->getStartLine()) ?></p>
+	<?php if ($this->source): ?><p><?php echo $this->source ?> in <?php echo Helpers::editorLink($this->source->getFileName(), $this->source->getStartLine()) ?></p><?php endif ?>
 </div>
 </div>
