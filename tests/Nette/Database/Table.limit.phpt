@@ -15,21 +15,39 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
 
 
-test(function() use ($dao) {
-	$count = $dao->table('author')->limit(2)->count();
-	Assert::equal(2, $count);
-});
+Assert::same(
+	reformat('SELECT * FROM [author] LIMIT 2'),
+	$dao->table('author')->limit(2)->getSql()
+);
 
+Assert::same(
+	reformat('SELECT * FROM [author] LIMIT 2 OFFSET 10'),
+	$dao->table('author')->limit(2, 10)->getSql()
+);
 
-test(function() use ($dao) {
-	$authors = $dao->table('author')->order('name')->limit(2);
-	$names = array();
-	foreach ($authors as $user) {
-		$names[] = $user->name;
-	}
+Assert::same(
+	reformat('SELECT * FROM [author] ORDER BY [name] LIMIT 2'),
+	$dao->table('author')->order('name')->limit(2)->getSql()
+);
 
-	Assert::equal(array(
-		'David Grudl',
-		'Geek',
-	), $names);
-});
+Assert::same(
+	reformat('SELECT * FROM [author] LIMIT 10'),
+	$dao->table('author')->page(1, 10)->getSql()
+);
+
+Assert::same(
+	reformat('SELECT * FROM [author] LIMIT 10'),
+	$dao->table('author')->page(0, 10)->getSql()
+);
+
+Assert::same(
+	reformat('SELECT * FROM [author] LIMIT 10 OFFSET 10'),
+	$dao->table('author')->page(2, 10, $count)->getSql()
+);
+Assert::same(1, $count);
+
+Assert::same(
+	reformat('SELECT * FROM [author] LIMIT 2 OFFSET 2'),
+	$dao->table('author')->page(2, 2, $count)->getSql()
+);
+Assert::same(2, $count);
