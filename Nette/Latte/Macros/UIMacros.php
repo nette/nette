@@ -255,6 +255,9 @@ if (!empty($_control->snippetMode)) {
 
 		// static block/snippet
 		if ($node->name === 'snippet') {
+			if ($node->prefix && isset($node->htmlNode->attrs['id'])) {
+				throw new CompileException('Cannot combine HTML attribute id with n:snippet.');
+			}
 			$node->data->name = $name = '_' . $name;
 		}
 
