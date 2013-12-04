@@ -28,7 +28,7 @@ services:
 
 	eight: @factory()
 
-	stdClass: self
+	stdClass: stdClass
 
 
 factories:
