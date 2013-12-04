@@ -280,11 +280,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	 */
 	public function fetchPairs($key, $value = NULL)
 	{
-		$return = array();
-		foreach ($this->fetchAll() as $row) {
-			$return[is_object($row[$key]) ? (string) $row[$key] : $row[$key]] = ($value === NULL ? $row : $row[$value]);
-		}
-		return $return;
+		return Helpers::toPairs($this->fetchAll(), $key, $value);
 	}
 
 
@@ -296,7 +292,6 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 		if ($this->results === NULL) {
 			$this->results = iterator_to_array($this);
 		}
-
 		return $this->results;
 	}
 

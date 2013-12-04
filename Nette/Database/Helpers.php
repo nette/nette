@@ -222,4 +222,18 @@ class Helpers
 		return $panel;
 	}
 
+
+	/**
+	 * Reformat source to key -> value pairs.
+	 * @return array
+	 */
+	public static function toPairs(array $rows, $key = NULL, $value = NULL)
+	{
+		$return = array();
+		foreach ($rows as $row) {
+			$return[is_object($row[$key]) ? (string) $row[$key] : $row[$key]] = ($value === NULL ? $row : $row[$value]);
+		}
+		return $return;
+	}
+
 }
