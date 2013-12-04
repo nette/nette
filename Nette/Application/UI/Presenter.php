@@ -975,9 +975,9 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 		// make URL relative if possible
 		if ($mode === 'link' && $scheme === FALSE && !$this->absoluteUrls) {
-			$hostUrl = $refUrl->getHostUrl();
+			$hostUrl = $refUrl->getHostUrl() . '/';
 			if (strncmp($url, $hostUrl, strlen($hostUrl)) === 0) {
-				$url = substr($url, strlen($hostUrl));
+				$url = substr($url, strlen($hostUrl) - 1);
 			}
 		}
 
