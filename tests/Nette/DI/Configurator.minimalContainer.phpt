@@ -54,7 +54,5 @@ Assert::type( 'Nette\Mail\SendmailMailer', $container->getService('nette.mailer'
 
 Assert::type( 'Nette\Caching\Cache', $container->createService('nette.cache') );
 Assert::same( 'nm', $container->createService('nette.cache', array('nm'))->getNamespace() );
-Assert::type( 'Nette\Forms\Form', $container->createService('nette.basicForm') );
 Assert::type( 'Nette\Latte\Engine', $container->createService('nette.latte') );
 Assert::type( 'Nette\Templating\FileTemplate', $container->createService('nette.template') );
-Assert::type( 'Nette\Mail\Message', $container->createService('nette.mail') );

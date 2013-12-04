@@ -250,6 +250,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 
 		$container->addDefinition($this->prefix('mail'))
 			->setClass('Nette\Mail\Message')
+			->addSetup('::trigger_error', array('Service nette.mail is deprecated.', E_USER_DEPRECATED))
 			->addSetup('setMailer')
 			->setShared(FALSE);
 	}
@@ -259,6 +260,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	{
 		$container->addDefinition($this->prefix('basicForm'))
 			->setClass('Nette\Forms\Form')
+			->addSetup('::trigger_error', array('Service nette.basicForm is deprecated.', E_USER_DEPRECATED))
 			->setShared(FALSE);
 	}
 
