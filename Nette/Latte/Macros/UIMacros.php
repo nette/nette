@@ -47,7 +47,7 @@ class UIMacros extends MacroSet
 		$me->addMacro('extends', array($me, 'macroExtends'));
 		$me->addMacro('layout', array($me, 'macroExtends'));
 		$me->addMacro('block', array($me, 'macroBlock'), array($me, 'macroBlockEnd'));
-		$me->addMacro('#', array($me, 'macroBlock'), array($me, 'macroBlockEnd'));
+		$me->addMacro('#', array($me, 'macroBlock'), array($me, 'macroBlockEnd')); // deprecated
 		$me->addMacro('define', array($me, 'macroBlock'), array($me, 'macroBlockEnd'));
 		$me->addMacro('snippet', array($me, 'macroBlock'), array($me, 'macroBlockEnd'));
 		$me->addMacro('snippetArea', array($me, 'macroBlock'), array($me, 'macroBlockEnd'));
@@ -214,7 +214,10 @@ if (!empty($_control->snippetMode)) {
 	{
 		$name = $node->tokenizer->fetchWord();
 
-		if ($node->name === 'block' && $name === FALSE) { // anonymous block
+		if ($node->name === '#') {
+			trigger_error('Shortcut {#block} is deprecated.', E_USER_DEPRECATED);
+
+		} elseif ($node->name === 'block' && $name === FALSE) { // anonymous block
 			return $node->modifiers === '' ? '' : 'ob_start()';
 		}
 
