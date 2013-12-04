@@ -163,6 +163,15 @@ test(function() use ($preprocessor) { // update
 });
 
 
+test(function() use ($preprocessor) { // update +=
+	list($sql, $params) = $preprocessor->process(array('UPDATE author SET ?',
+		array('id+=' => 1, 'id-=' => -1),
+	));
+
+	Assert::same( reformat("UPDATE author SET [id]=[id] + 1, [id]=[id] - -1"), $sql );
+});
+
+
 test(function() use ($preprocessor, $driverName) { // multi & update
 	list($sql, $params) = $preprocessor->process(array('INSERT INTO author ? ON DUPLICATE KEY UPDATE ?',
 		array('id' => 12, 'name' => 'John Doe'),

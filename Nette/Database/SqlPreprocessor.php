@@ -173,7 +173,12 @@ class SqlPreprocessor extends Nette\Object
 
 			} elseif ($this->arrayMode === 'assoc') { // key=value, key=value, ...
 				foreach ($value as $k => $v) {
-					$vx[] = $this->driver->delimite($k) . '=' . $this->formatValue($v);
+					if (substr($k, -1) === '=') {
+						$k2 = $this->driver->delimite(substr($k, 0, -2));
+						$vx[] = $k2 . '=' . $k2 . ' ' . substr($k, -2, 1) . ' ' . $this->formatValue($v);
+					} else {
+						$vx[] = $this->driver->delimite($k) . '=' . $this->formatValue($v);
+					}
 				}
 				return implode(', ', $vx);
 
