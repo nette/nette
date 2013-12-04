@@ -63,7 +63,7 @@ final class AnnotationsParser
 	{
 		if ($r instanceof \ReflectionClass) {
 			$type = $r->getName();
-			$member = '';
+			$member = 'class';
 
 		} elseif ($r instanceof \ReflectionMethod) {
 			$type = $r->getDeclaringClass()->getName();
@@ -101,13 +101,17 @@ final class AnnotationsParser
 			$outerCache = new Nette\Caching\Cache(self::$cacheStorage, 'Nette.Reflection.Annotations');
 
 			if (self::$cache === NULL) {
-				self::$cache = (array) $outerCache->offsetGet('list');
+				self::$cache = (array) $outerCache->load('list');
 				self::$timestamps = isset(self::$cache['*']) ? self::$cache['*'] : array();
 			}
 
 			if (!isset(self::$cache[$type]) && $file) {
 				self::$cache['*'][$file] = filemtime($file);
-				self::parseScript($file);
+				foreach (self::parsePhp($file) as $class => $info) {
+					foreach ($info as $prop => $comment) {
+						self::$cache[$class][$prop] = self::parseComment($comment);
+					}
+				}
 				$outerCache->save('list', self::$cache);
 			}
 
@@ -228,9 +232,9 @@ final class AnnotationsParser
 	/**
 	 * Parses PHP file.
 	 * @param  string
-	 * @return void
+	 * @return array [class => [prop => comment]]
 	 */
-	private static function parseScript($file)
+	public static function parsePhp($file)
 	{
 		$s = file_get_contents($file);
 
@@ -238,89 +242,82 @@ final class AnnotationsParser
 			return; // TODO: allways ignore?
 		}
 
-		$expected = $namespace = $class = $docComment = NULL;
-		$level = $classLevel = 0;
+		$tokens = @token_get_all($s);
+		$namespace = $class = $classLevel = $level = $docComment = NULL;
+		$res = array();
 
-		foreach (token_get_all($s) as $token) {
+		while (list($key, $token) = each($tokens)) {
+			switch (is_array($token) ? $token[0] : $token) {
+				case T_DOC_COMMENT:
+					$docComment = $token[1];
+					break;
 
-			if (is_array($token)) {
-				switch ($token[0]) {
-					case T_DOC_COMMENT:
-						$docComment = $token[1];
-						// break intentionally omitted
-					case T_WHITESPACE:
-					case T_COMMENT:
-						continue 2;
+				case T_NAMESPACE:
+					$namespace = self::fetch($tokens, array(T_STRING, T_NS_SEPARATOR)) . '\\';
+					break;
 
-					case T_STRING:
-					case T_NS_SEPARATOR:
-					case T_VARIABLE:
-						if ($expected) {
-							$name .= $token[1];
-						}
-						continue 2;
-
-					case T_FUNCTION:
-					case T_VAR:
-					case T_PUBLIC:
-					case T_PROTECTED:
-					case T_NAMESPACE:
-					case T_CLASS:
-					case T_INTERFACE:
-						$expected = $token[0];
-						$name = NULL;
-						continue 2;
-
-					case T_STATIC:
-					case T_ABSTRACT:
-					case T_FINAL:
-						continue 2; // ignore in expectation
-
-					case T_CURLY_OPEN:
-					case T_DOLLAR_OPEN_CURLY_BRACES:
-						$level++;
-				}
-			}
-
-			if ($expected) {
-				switch ($expected) {
-					case T_CLASS:
-					case T_INTERFACE:
+				case T_CLASS:
+				case T_INTERFACE:
+				case PHP_VERSION_ID < 50400 ? -1 : T_TRAIT:
+					if ($name = self::fetch($tokens, T_STRING)) {
 						$class = $namespace . $name;
-						$classLevel = $level;
-						$name = '';
-						// break intentionally omitted
-					case T_FUNCTION:
-						if ($token === '&') {
-							continue 2; // ignore
+						$classLevel = $level + 1;
+						if ($docComment) {
+							$res[$class]['class'] = $docComment;
 						}
-					case T_VAR:
-					case T_PUBLIC:
-					case T_PROTECTED:
-						if ($class && $name !== NULL && $docComment) {
-							self::$cache[$class][$name] = self::parseComment($docComment);
-						}
-						break;
+					}
+					break;
 
-					case T_NAMESPACE:
-						$namespace = $name . '\\';
-				}
+				case T_FUNCTION:
+					self::fetch($tokens, '&');
+					if ($level === $classLevel && $docComment && ($name = self::fetch($tokens, T_STRING))) {
+						$res[$class][$name] = $docComment;
+					}
+					break;
 
-				$expected = $docComment = NULL;
-			}
+				case T_VAR:
+				case T_PUBLIC:
+				case T_PROTECTED:
+					self::fetch($tokens, T_STATIC);
+					if ($level === $classLevel && $docComment && ($name = self::fetch($tokens, T_VARIABLE))) {
+						$res[$class][$name] = $docComment;
+					}
+					break;
 
-			if ($token === ';') {
-				$docComment = NULL;
-			} elseif ($token === '{') {
-				$docComment = NULL;
-				$level++;
-			} elseif ($token === '}') {
-				$level--;
-				if ($level === $classLevel) {
-					$class = NULL;
-				}
+				case T_CURLY_OPEN:
+				case T_DOLLAR_OPEN_CURLY_BRACES:
+				case '{':
+					$level++;
+					break;
+
+				case '}':
+					if ($level === $classLevel) {
+						$class = $classLevel = NULL;
+					}
+					$level--;
+					// break omitted
+				case ';':
+					$docComment = NULL;
 			}
 		}
+
+		return $res;
+	}
+
+
+	private static function fetch(& $tokens, $take)
+	{
+		$res = NULL;
+		while ($token = current($tokens)) {
+			list($token, $s) = is_array($token) ? $token : array($token, $token);
+			if (in_array($token, (array) $take, TRUE)) {
+				$res .= $s;
+			} elseif (!in_array($token, array(T_DOC_COMMENT, T_WHITESPACE, T_COMMENT), TRUE)) {
+				break;
+			}
+			next($tokens);
+		}
+		return $res;
 	}
 
 
