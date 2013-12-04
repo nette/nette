@@ -18,7 +18,7 @@ function check($method, $args)
 	$method = new Reflection\Method($method);
 	foreach ($method->getParameters() as $param) {
 		echo "{$method->getName()}(\${$param->getName()})\n";
-		@list($isOptional, $isDefaultValueAvailable, $defaultValue) = array_shift($args);
+		list($isOptional, $isDefaultValueAvailable, $defaultValue) = array_shift($args) + array(NULL, NULL, NULL);
 		Assert::same( $isOptional, $param->isOptional() );
 		Assert::same( $isDefaultValueAvailable, $param->isDefaultValueAvailable() );
 
@@ -36,8 +36,8 @@ class Test
 	function func3($a, $b = NULL, $c = NULL) {}
 	function func4($a, array $b = NULL, array $c) {}
 	function func5($a, $b = NULL, array $c = NULL) {}
-	function func6($a, PDO $b = NULL, PDO $c) {}
-	function func7($a, $b = NULL, PDO $c = NULL) {}
+	function func6($a, Exception $b = NULL, Exception $c) {}
+	function func7($a, $b = NULL, Exception $c = NULL) {}
 }
 
 
@@ -76,9 +76,12 @@ check( 'Test::func7', array(
 	/* $b */ array(TRUE, TRUE, NULL),
 	/* $c */ array(TRUE, TRUE, NULL)
 ));
-check( 'PDO::__construct', array(
-	/* $dsn */ array(FALSE, FALSE),
-	/* $username */ array(FALSE, FALSE),
-	/* $passwd */ array(FALSE, FALSE),
-	/* $options */ array(TRUE, FALSE)
+check( 'Exception::__construct', array(
+	/* $message */ array(TRUE, FALSE),
+	/* $code */ array(TRUE, FALSE),
+	/* $previous */ array(TRUE, FALSE),
+));
+check( 'FilesystemIterator::__construct', array(
+	/* $path */ array(FALSE, FALSE),
+	/* $flags */ array(TRUE, FALSE),
 ));

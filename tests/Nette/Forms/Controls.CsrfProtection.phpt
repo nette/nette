@@ -13,6 +13,9 @@ use Nette\Forms\Form;
 require __DIR__ . '/../bootstrap.php';
 
 
+ini_set('session.save_path', TEMP_DIR);
+
+
 $_SERVER['REQUEST_METHOD'] = 'POST';
 
 
