@@ -40,6 +40,26 @@ Assert::exception(function() use ($preprocessor) {
 }, 'Nette\InvalidArgumentException', 'There are more placeholders than passed parameters.');
 
 
+// comments
+list($sql, $params) = $preprocessor->process("SELECT id --?\nFROM author WHERE id = ?", array(11));
+Assert::same( "SELECT id --?\nFROM author WHERE id = 11", $sql );
+Assert::same( array(), $params );
+
+list($sql, $params) = $preprocessor->process("SELECT id /* ? \n */FROM author WHERE id = ? --*/", array(11));
+Assert::same( "SELECT id /* ? \n */FROM author WHERE id = 11 --*/", $sql );
+Assert::same( array(), $params );
+
+
+// strings
+list($sql, $params) = $preprocessor->process("SELECT id, '?' FROM author WHERE id = ?", array(11));
+Assert::same( "SELECT id, '?' FROM author WHERE id = 11", $sql );
+Assert::same( array(), $params );
+
+list($sql, $params) = $preprocessor->process('SELECT id, "?" FROM author WHERE id = ?', array(11));
+Assert::same( 'SELECT id, "?" FROM author WHERE id = 11', $sql );
+Assert::same( array(), $params );
+
+
 // SqlLiteral
 list($sql, $params) = $preprocessor->process('SELECT id FROM author WHERE id =', array(new SqlLiteral('NOW()') ));
 Assert::same( 'SELECT id FROM author WHERE id = NOW()', $sql );
@@ -50,6 +70,7 @@ Assert::same( array(), $params );
 list($sql, $params) = $preprocessor->process('INSERT INTO author', array(array(
 	array('name' => 'Catelyn Stark', 'born' => new DateTime('2011-11-11')),
 )));
+
 
 Assert::same( reformat("INSERT INTO author ([name], [born]) VALUES ('Catelyn Stark', '2011-11-11 00:00:00')"), $sql );
 Assert::same( array(), $params );
