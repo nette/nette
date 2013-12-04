@@ -24,10 +24,6 @@
 {form myForm /}
 
 
-{* alias form n:name *}
-<input n:input="$form[username]">
-
-
 {* partial rendering of RadioList *}
 {foreach $form[sex]->items as $key => $label}
 	{label sex:$key} {input sex:$key} {$label}{/label}

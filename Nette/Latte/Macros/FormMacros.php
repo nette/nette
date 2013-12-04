@@ -142,11 +142,7 @@ class FormMacros extends MacroSet
 	 */
 	public function macroInputAttr(MacroNode $node, PhpWriter $writer)
 	{
-		if (strtolower($node->htmlNode->name) === 'input') {
-			return $this->macroNameAttr($node, $writer);
-		} else {
-			throw new CompileException("Use n:name instead of n:input.");
-		}
+		throw new CompileException("Use n:name instead of n:input.");
 	}
 
 

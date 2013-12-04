@@ -37,9 +37,6 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 
 
 
-<input<?php $_input = is_object($form['username']) ? $form['username'] : $_form[$form['username']]; echo $_input->getControl()->attributes() ?>>
-
-
 <?php $iterations = 0; foreach ($form['sex']->items as $key => $label) { ?>
 	<?php if ($_label = $_form["sex"]->getLabelPart($key)) echo $_label->startTag() ?>
  <?php echo $_form["sex"]->getControlPart($key) ?> <?php echo Nette\Templating\Helpers::escapeHtml($label, ENT_NOQUOTES) ;if ($_label) echo $_label->endTag() ?>
