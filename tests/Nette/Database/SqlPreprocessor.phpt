@@ -57,6 +57,28 @@ test(function() use ($preprocessor) {
 });
 
 
+test(function() use ($preprocessor) { // comments
+	list($sql, $params) = $preprocessor->process(array("SELECT id --?\nFROM author WHERE id = ?", 11));
+	Assert::same( "SELECT id --?\nFROM author WHERE id = 11", $sql );
+	Assert::same( array(), $params );
+
+	list($sql, $params) = $preprocessor->process(array("SELECT id /* ? \n */FROM author WHERE id = ? --*/", 11));
+	Assert::same( "SELECT id /* ? \n */FROM author WHERE id = 11 --*/", $sql );
+	Assert::same( array(), $params );
+});
+
+
+test(function() use ($preprocessor) { // strings
+	list($sql, $params) = $preprocessor->process(array("SELECT id, '?' FROM author WHERE id = ?", 11));
+	Assert::same( "SELECT id, '?' FROM author WHERE id = 11", $sql );
+	Assert::same( array(), $params );
+
+	list($sql, $params) = $preprocessor->process(array('SELECT id, "?" FROM author WHERE id = ?', 11));
+	Assert::same( 'SELECT id, "?" FROM author WHERE id = 11', $sql );
+	Assert::same( array(), $params );
+});
+
+
 test(function() use ($preprocessor) { // where
 	list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE', array(
 		'id' => NULL,

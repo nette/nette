@@ -79,7 +79,7 @@ class SqlPreprocessor extends Nette\Object
 			} else {
 				$res[] = Nette\Utils\Strings::replace(
 					$param,
-					'~\'.*?\'|".*?"|\?|\b(?:INSERT|REPLACE|UPDATE|WHERE|HAVING|ORDER BY|GROUP BY)\b~si',
+					'~\'.*?\'|".*?"|\?|\b(?:INSERT|REPLACE|UPDATE|WHERE|HAVING|ORDER BY|GROUP BY)\b|/\*.*?\*/|--[^\n]*~si',
 					array($this, 'callback')
 				);
 			}
@@ -93,7 +93,7 @@ class SqlPreprocessor extends Nette\Object
 	public function callback($m)
 	{
 		$m = $m[0];
-		if ($m[0] === "'" || $m[0] === '"') { // string
+		if ($m[0] === "'" || $m[0] === '"' || $m[0] === '/' || $m[0] === '-') { // string or comment
 			return $m;
 
 		} elseif ($m === '?') { // placeholder
