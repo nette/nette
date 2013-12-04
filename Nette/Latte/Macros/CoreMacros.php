@@ -67,7 +67,6 @@ class CoreMacros extends MacroSet
 		$me->addMacro('sep', 'if (!$iterator->isLast(%node.args)) {', '}');
 
 		$me->addMacro('var', array($me, 'macroVar'));
-		$me->addMacro('assign', array($me, 'macroVar')); // deprecated
 		$me->addMacro('default', array($me, 'macroVar'));
 		$me->addMacro('dump', array($me, 'macroDump'));
 		$me->addMacro('debugbreak', array($me, 'macroDebugbreak'));
@@ -83,7 +82,7 @@ class CoreMacros extends MacroSet
 		$me->addMacro('use', array($me, 'macroUse'));
 
 		$me->addMacro('class', NULL, NULL, array($me, 'macroClass'));
-		$me->addMacro('attr', array($me, 'macroOldAttr'), '', array($me, 'macroAttr'));
+		$me->addMacro('attr', NULL, NULL, array($me, 'macroAttr'));
 		$me->addMacro('href', NULL); // TODO: placeholder
 	}
 
@@ -298,17 +297,6 @@ class CoreMacros extends MacroSet
 
 
 	/**
-	 * {attr ...}
-	 * @deprecated
-	 */
-	public function macroOldAttr(MacroNode $node)
-	{
-		trigger_error('Macro {attr} is deprecated; use n:attr="..." instead.', E_USER_DEPRECATED);
-		return Nette\Utils\Strings::replace($node->args . ' ', '#\)\s+#', ')->');
-	}
-
-
-	/**
 	 * {dump ...}
 	 */
 	public function macroDump(MacroNode $node, PhpWriter $writer)
@@ -335,10 +323,6 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroVar(MacroNode $node, PhpWriter $writer)
 	{
-		if ($node->name === 'assign') {
-			trigger_error('Macro {assign} is deprecated; use {var} instead.', E_USER_DEPRECATED);
-		}
-
 		$var = TRUE;
 		$tokens = $writer->preprocess();
 		$res = new Latte\MacroTokens;

@@ -25,7 +25,6 @@ use Nette,
  * @property   string $returnPath
  * @property   int $priority
  * @property   mixed $htmlBody
- * @property   IMailer $mailer
  */
 class Message extends MimePart
 {
@@ -34,17 +33,11 @@ class Message extends MimePart
 		NORMAL = 3,
 		LOW = 5;
 
-	/** @deprecated */
-	public static $defaultMailer = 'Nette\Mail\SendmailMailer';
-
 	/** @var array */
 	public static $defaultHeaders = array(
 		'MIME-Version' => '1.0',
 		'X-Mailer' => 'Nette Framework',
 	);
-
-	/** @var IMailer */
-	private $mailer;
 
 	/** @var array */
 	private $attachments = array();
@@ -330,40 +323,6 @@ class Message extends MimePart
 
 
 	/********************* building and sending ****************d*g**/
-
-
-	/**
-	 * @deprecated
-	 */
-	public function send()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use IMailer::send() instead.', E_USER_DEPRECATED);
-		$this->getMailer()->send($this);
-	}
-
-
-	/**
-	 * @deprecated
-	 */
-	public function setMailer(IMailer $mailer)
-	{
-		//trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
-		$this->mailer = $mailer;
-		return $this;
-	}
-
-
-	/**
-	 * @deprecated
-	 */
-	public function getMailer()
-	{
-		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
-		if ($this->mailer === NULL) {
-			$this->mailer = is_object(static::$defaultMailer) ? static::$defaultMailer : new static::$defaultMailer;
-		}
-		return $this->mailer;
-	}
 
 
 	/**

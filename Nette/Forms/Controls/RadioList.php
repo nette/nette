@@ -49,12 +49,8 @@ class RadioList extends ChoiceControl
 	 * Returns selected radio value.
 	 * @return mixed
 	 */
-	public function getValue($raw = FALSE)
+	public function getValue()
 	{
-		if ($raw) {
-			trigger_error(__METHOD__ . '(TRUE) is deprecated; use getRawValue() instead.', E_USER_DEPRECATED);
-			return $this->getRawValue();
-		}
 		return parent::getValue();
 	}
 

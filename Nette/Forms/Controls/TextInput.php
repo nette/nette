@@ -57,15 +57,6 @@ class TextInput extends TextBase
 	}
 
 
-	/** @deprecated */
-	public function setPasswordMode($mode = TRUE)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use setType("password") instead.', E_USER_DEPRECATED);
-		$this->control->type = $mode ? 'password' : 'text';
-		return $this;
-	}
-
-
 	/**
 	 * Generates control's HTML element.
 	 * @return Nette\Utils\Html

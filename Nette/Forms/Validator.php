@@ -221,14 +221,6 @@ class Validator extends Nette\Object
 	}
 
 
-	/** @deprecated */
-	public static function validateRegexp(IControl $control, $regexp)
-	{
-		trigger_error('Validator REGEXP is deprecated; use PATTERN instead (which is matched against the entire value and is case sensitive).', E_USER_DEPRECATED);
-		return (bool) Strings::match($control->getValue(), $regexp);
-	}
-
-
 	/**
 	 * Matches control's value regular expression?
 	 * @return bool

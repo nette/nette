@@ -79,9 +79,6 @@ final class Debugger
 	/** @var bool {@link Debugger::enable()} */
 	private static $enabled = FALSE;
 
-	/** @var mixed {@link Debugger::tryError()} FALSE means catching is disabled */
-	private static $lastError = FALSE;
-
 	/** @internal */
 	public static $errorTypes = array(
 		E_ERROR => 'Fatal Error',
@@ -493,11 +490,6 @@ final class Debugger
 			error_reporting(E_ALL | E_STRICT);
 		}
 
-		if (self::$lastError !== FALSE && ($severity & error_reporting()) === $severity) { // tryError mode
-			self::$lastError = new \ErrorException($message, 0, $severity, $file, $line);
-			return NULL;
-		}
-
 		if ($severity === E_RECOVERABLE_ERROR || $severity === E_USER_ERROR) {
 			if (Helpers::findTrace(debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : FALSE), '*::__toString')) {
 				$previous = isset($context['e']) && $context['e'] instanceof \Exception ? $context['e'] : NULL;
@@ -526,41 +518,6 @@ final class Debugger
 			self::fireLog(new \ErrorException($message, 0, $severity, $file, $line));
 			return self::isHtmlMode() ? NULL : FALSE; // FALSE calls normal error handler
 		}
-	}
-
-
-	/** @deprecated */
-	public static function toStringException(\Exception $exception)
-	{
-		if (self::$enabled) {
-			self::_exceptionHandler($exception);
-		} else {
-			trigger_error($exception->getMessage(), E_USER_ERROR);
-		}
-	}
-
-
-	/** @deprecated */
-	public static function tryError()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use own error handler instead.', E_USER_DEPRECATED);
-		if (!self::$enabled && self::$lastError === FALSE) {
-			set_error_handler(array(__CLASS__, '_errorHandler'));
-		}
-		self::$lastError = NULL;
-	}
-
-
-	/** @deprecated */
-	public static function catchError(& $error)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use own error handler instead.', E_USER_DEPRECATED);
-		if (!self::$enabled && self::$lastError !== FALSE) {
-			restore_error_handler();
-		}
-		$error = self::$lastError;
-		self::$lastError = FALSE;
-		return (bool) $error;
 	}
 
 

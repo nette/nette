@@ -285,16 +285,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 
 	/**
-	 * @deprecated
-	 */
-	public function find($key)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use $selection->wherePrimary() instead.', E_USER_DEPRECATED);
-		return $this->wherePrimary($key);
-	}
-
-
-	/**
 	 * Adds condition for primary key.
 	 * @param  mixed
 	 * @return self
@@ -395,13 +385,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	public function group($columns)
 	{
 		$this->emptyResultSet();
-		if (func_num_args() === 2 && strpos($columns, '?') === FALSE) {
-			trigger_error('Calling ' . __METHOD__ . '() with second argument is deprecated; use $selection->having() instead.', E_USER_DEPRECATED);
-			$this->having(func_get_arg(1));
-			$this->sqlBuilder->setGroup($columns);
-		} else {
-			call_user_func_array(array($this->sqlBuilder, 'setGroup'), func_get_args());
-		}
+		call_user_func_array(array($this->sqlBuilder, 'setGroup'), func_get_args());
 		return $this;
 	}
 

@@ -20,11 +20,9 @@ Assert::false( $configurator->isDebugMode() );
 
 $configurator->setDebugMode(TRUE);
 Assert::true( $configurator->isDebugMode() );
-Assert::false( @$configurator->isProductionMode() );
 
 $configurator->setDebugMode(FALSE);
 Assert::false( $configurator->isDebugMode() );
-Assert::true( @$configurator->isProductionMode() );
 
 $configurator->setDebugMode(php_uname('n'));
 Assert::true( $configurator->isDebugMode() );

@@ -22,9 +22,6 @@ use Nette,
  */
 class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 {
-	/** @deprecated */
-	static public $maxLength;
-
 	/** @var int logged time */
 	private $totalTime = 0;
 

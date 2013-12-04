@@ -83,26 +83,4 @@ final class Helpers
 		return $exception;
 	}
 
-
-	/** @deprecated */
-	public static function htmlDump($var)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use Nette\Diagnostics\Dumper::toHtml() instead.', E_USER_DEPRECATED);
-		return Dumper::toHtml($var);
-	}
-
-	/** @deprecated */
-	public static function clickableDump($var)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use Nette\Diagnostics\Dumper::toHtml() instead.', E_USER_DEPRECATED);
-		return Dumper::toHtml($var);
-	}
-
-	/** @deprecated */
-	public static function textDump($var)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use Nette\Diagnostics\Dumper::toText() instead.', E_USER_DEPRECATED);
-		return Dumper::toText($var);
-	}
-
 }

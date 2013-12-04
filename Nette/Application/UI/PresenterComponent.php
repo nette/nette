@@ -186,13 +186,9 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 * @param  mixed  default value
 	 * @return mixed
 	 */
-	final public function getParameter($name = NULL, $default = NULL)
+	final public function getParameter($name, $default = NULL)
 	{
-		if (func_num_args() === 0) {
-			trigger_error('Calling ' . __METHOD__ . ' with no arguments to get all parameters is deprecated, use getParameters() instead.', E_USER_DEPRECATED);
-			return $this->params;
-
-		} elseif (isset($this->params[$name])) {
+		if (isset($this->params[$name])) {
 			return $this->params[$name];
 
 		} else {

@@ -60,21 +60,13 @@ class Container extends Nette\Object
 	 */
 	public function addService($name, $service)
 	{
-		if (func_num_args() > 2) {
-			throw new Nette\DeprecatedException('Parameter $meta has been removed.');
-
-		} elseif (!is_string($name) || !$name) {
+		if (!is_string($name) || !$name) {
 			throw new Nette\InvalidArgumentException('Service name must be a non-empty string, ' . gettype($name) . ' given.');
 
 		} elseif (isset($this->registry[$name])) {
 			throw new Nette\InvalidStateException("Service '$name' already exists.");
 
-		} elseif (is_string($service) || is_array($service) || $service instanceof \Closure || $service instanceof Nette\Callback) {
-			trigger_error('Passing factories to ' . __METHOD__ . '() is deprecated; pass the object itself.', E_USER_DEPRECATED);
-			$service = is_string($service) && !preg_match('#\x00|:#', $service) ? new $service : call_user_func($service, $this);
-		}
-
-		if (!is_object($service)) {
+		} elseif (!is_object($service)) {
 			throw new Nette\InvalidArgumentException('Service must be a object, ' . gettype($service) . ' given.');
 		}
 

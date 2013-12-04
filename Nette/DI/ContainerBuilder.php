@@ -705,11 +705,4 @@ class ContainerBuilder extends Nette\Object
 		return $service;
 	}
 
-
-	/** @deprecated */
-	function generateClass()
-	{
-		throw new Nette\DeprecatedException(__METHOD__ . '() is deprecated; use generateClasses()[0] instead.');
-	}
-
 }

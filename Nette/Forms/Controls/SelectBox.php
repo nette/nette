@@ -40,13 +40,6 @@ class SelectBox extends ChoiceControl
 	 */
 	public function setPrompt($prompt)
 	{
-		if ($prompt === TRUE) { // back compatibility
-			trigger_error(__METHOD__ . '(TRUE) is deprecated; argument must be string.', E_USER_DEPRECATED);
-			$items = $this->getItems();
-			$prompt = reset($items);
-			unset($this->options[key($items)], $items[key($items)]);
-			$this->setItems($items);
-		}
 		$this->prompt = $prompt;
 		return $this;
 	}

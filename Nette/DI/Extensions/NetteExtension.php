@@ -93,7 +93,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		if (isset($config['xhtml'])) {
 			$config['latte']['xhtml'] = $config['xhtml'];
 		}
-		$container->addDefinition('nette')->setClass('Nette\DI\Extensions\NetteAccessor', array('@container'));
 
 		$this->setupCache($container);
 		$this->setupHttp($container, $config['http']);
@@ -102,7 +101,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		$this->setupApplication($container, $config['application']);
 		$this->setupRouting($container, $config['routing']);
 		$this->setupMailer($container, $config['mailer']);
-		$this->setupForms($container);
 		$this->setupTemplating($container, $config['latte']);
 		$this->setupDatabase($container, $config['database']);
 		$this->setupContainer($container, $config['container']);
@@ -248,21 +246,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			$container->addDefinition($this->prefix('mailer'))
 				->setClass('Nette\Mail\SmtpMailer', array($config));
 		}
-
-		$container->addDefinition($this->prefix('mail'))
-			->setClass('Nette\Mail\Message')
-			->addSetup('::trigger_error', array('Service nette.mail is deprecated.', E_USER_DEPRECATED))
-			->addSetup('setMailer')
-			->setAutowired(FALSE);
-	}
-
-
-	private function setupForms(ContainerBuilder $container)
-	{
-		$container->addDefinition($this->prefix('basicForm'))
-			->setClass('Nette\Forms\Form')
-			->addSetup('::trigger_error', array('Service nette.basicForm is deprecated.', E_USER_DEPRECATED))
-			->setAutowired(FALSE);
 	}
 
 
@@ -330,16 +313,12 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			$connection = $container->addDefinition($this->prefix("database.$name"))
 				->setClass('Nette\Database\Connection', array($info['dsn'], $info['user'], $info['password'], $info['options']))
 				->setAutowired($info['autowired'])
-				->addSetup('setContext', array(
-					new Nette\DI\Statement('Nette\Database\Context', array('@self', $reflection)),
-				))
 				->addSetup('Nette\Diagnostics\Debugger::getBlueScreen()->addPanel(?)', array(
 					'Nette\Database\Diagnostics\ConnectionPanel::renderException'
 				));
 
 			$container->addDefinition($this->prefix("database.$name.context"))
-				->setClass('Nette\Database\Context')
-				->setFactory(array($connection, 'getContext'))
+				->setClass('Nette\Database\Context', array($connection, $reflection))
 				->setAutowired($info['autowired']);
 
 			if ($container->parameters['debugMode'] && $info['debugger']) {
