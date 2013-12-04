@@ -109,7 +109,9 @@ final class AnnotationsParser
 				self::$cache['*'][$file] = filemtime($file);
 				foreach (self::parsePhp($file) as $class => $info) {
 					foreach ($info as $prop => $comment) {
-						self::$cache[$class][$prop] = self::parseComment($comment);
+						if ($prop !== 'use') {
+							self::$cache[$class][$prop] = self::parseComment($comment);
+						}
 					}
 				}
 				$outerCache->save('list', self::$cache);
@@ -232,7 +234,7 @@ final class AnnotationsParser
 	/**
 	 * Parses PHP file.
 	 * @param  string
-	 * @return array [class => [prop => comment]]
+	 * @return array [class => [prop => comment (or 'use' => [alias => class])]
 	 */
 	public static function parsePhp($file)
 	{
@@ -244,7 +246,7 @@ final class AnnotationsParser
 
 		$tokens = @token_get_all($s);
 		$namespace = $class = $classLevel = $level = $docComment = NULL;
-		$res = array();
+		$res = $uses = array();
 
 		while (list($key, $token) = each($tokens)) {
 			switch (is_array($token) ? $token[0] : $token) {
@@ -254,6 +256,7 @@ final class AnnotationsParser
 
 				case T_NAMESPACE:
 					$namespace = self::fetch($tokens, array(T_STRING, T_NS_SEPARATOR)) . '\\';
+					$uses = array();
 					break;
 
 				case T_CLASS:
@@ -264,6 +267,9 @@ final class AnnotationsParser
 						$classLevel = $level + 1;
 						if ($docComment) {
 							$res[$class]['class'] = $docComment;
+						}
+						if ($uses) {
+							$res[$class]['use'] = $uses;
 						}
 					}
 					break;
@@ -281,6 +287,20 @@ final class AnnotationsParser
 					self::fetch($tokens, T_STATIC);
 					if ($level === $classLevel && $docComment && ($name = self::fetch($tokens, T_VARIABLE))) {
 						$res[$class][$name] = $docComment;
+					}
+					break;
+
+				case T_USE:
+					while (!$class && ($name = self::fetch($tokens, array(T_STRING, T_NS_SEPARATOR)))) {
+						if (self::fetch($tokens, T_AS)) {
+							$uses[self::fetch($tokens, T_STRING)] = $name;
+						} else {
+							$tmp = explode('\\', $name);
+							$uses[end($tmp)] = $name;
+						}
+						if (!self::fetch($tokens, ',')) {
+							break;
+						}
 					}
 					break;
 
