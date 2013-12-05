@@ -54,12 +54,12 @@ test(function() {
 		Helpers::createInputList(
 			array('a' => 'First', 'b' => 'Second'),
 			array(
-				'type|*' => array('a' => 'checkbox', 'b' => 'radio'),
-				'checked|?' => array('a'),
+				'type:' => array('a' => 'checkbox', 'b' => 'radio'),
+				'checked?' => array('a'),
 				'title' => 'Hello',
 			),
 			array(
-				'class|*' => array('a' => array('class1', 'class2')),
+				'class:' => array('a' => array('class1', 'class2')),
 				'style' => array('color' => 'blue'),
 			)
 		)

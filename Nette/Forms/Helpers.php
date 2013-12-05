@@ -143,6 +143,7 @@ class Helpers extends Nette\Object
 		$res = '';
 		$input = Html::el();
 		$label = Html::el();
+		$separator = (string) $separator;
 		foreach ($items as $value => $caption) {
 			foreach ($inputAttrs as $k => $v) {
 				$input->attrs[$k] = isset($v[$value]) ? $v[$value] : NULL;
@@ -201,17 +202,16 @@ class Helpers extends Nette\Object
 	{
 		$dynamic = array();
 		foreach ((array) $attrs as $k => $v) {
-			$parts = explode('|', $k);
-			if (!isset($parts[1])) {
-				continue;
-			}
-			unset($attrs[$k], $attrs[$parts[0]]);
-			if ($parts[1] === '?') {
-				$dynamic[$parts[0]] = array_fill_keys((array) $v, TRUE);
-			} elseif (is_array($v)) { // *
-				$dynamic[$parts[0]] = $v;
-			} else {
-				$attrs[$parts[0]] = $v;
+			$p = str_split($k, strlen($k) - 1);
+			if ($p[1] === '?' || $p[1] === ':') {
+				unset($attrs[$k], $attrs[$p[0]]);
+				if ($p[1] === '?') {
+					$dynamic[$p[0]] = array_fill_keys((array) $v, TRUE);
+				} elseif (is_array($v)) {
+					$dynamic[$p[0]] = $v;
+				} else {
+					$attrs[$p[0]] = $v;
+				}
 			}
 		}
 		return array($dynamic, '<' . $name . Html::el(NULL, $attrs)->attributes());

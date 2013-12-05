@@ -71,8 +71,8 @@ test(function() {
 		(string) Helpers::createSelectBox(
 			array('a' => 'First', 'b' => 'Second'),
 			array(
-				'disabled|*' => array('b' => TRUE),
-				'selected|?' => array('a'),
+				'disabled:' => array('b' => TRUE),
+				'selected?' => array('a'),
 				'title' => 'Hello',
 				'style' => array('color' => 'blue'),
 			)
@@ -83,7 +83,7 @@ test(function() {
 		'<select><option disabled value="a">First</option><option disabled value="b" selected>Second</option></select>',
 		(string) Helpers::createSelectBox(
 			array('a' => 'First', 'b' => 'Second'),
-			array('disabled|*' => TRUE, 'selected|?' => 'b')
+			array('disabled:' => TRUE, 'selected?' => 'b')
 		)
 	);
 
