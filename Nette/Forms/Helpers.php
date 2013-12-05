@@ -13,8 +13,7 @@ namespace Nette\Forms;
 
 use Nette,
 	Nette\Utils\Strings,
-	Nette\Utils\Html,
-	Nette\Localization\ITranslator;
+	Nette\Utils\Html;
 
 
 /**
@@ -136,7 +135,7 @@ class Helpers extends Nette\Object
 	/**
 	 * @return string
 	 */
-	public static function createInputList(array $items, array $inputAttrs = NULL, array $labelAttrs = NULL, ITranslator $translator = NULL, $separator = NULL)
+	public static function createInputList(array $items, array $inputAttrs = NULL, array $labelAttrs = NULL, $separator = NULL)
 	{
 		list($inputAttrs, $inputTag) = self::prepareAttrs($inputAttrs, 'input');
 		list($labelAttrs, $labelTag) = self::prepareAttrs($labelAttrs, 'label');
@@ -154,7 +153,7 @@ class Helpers extends Nette\Object
 			$input->value = $value;
 			$res .= $labelTag . $label->attributes() . '>'
 				. $inputTag . $input->attributes() . (Html::$xhtml ? ' />' : '>')
-				. ($caption instanceof Html ? $caption : htmlspecialchars($translator ? $translator->translate($caption) : $caption))
+				. ($caption instanceof Html ? $caption : htmlspecialchars($caption))
 				. '</label>'
 				. $separator;
 		}
@@ -165,14 +164,14 @@ class Helpers extends Nette\Object
 	/**
 	 * @return Nette\Utils\Html
 	 */
-	public static function createSelectBox(array $items, array $optionAttrs = NULL, ITranslator $translator = NULL)
+	public static function createSelectBox(array $items, array $optionAttrs = NULL)
 	{
 		list($optionAttrs, $optionTag) = self::prepareAttrs($optionAttrs, 'option');
 		$option = Html::el();
 		$res = $tmp = '';
 		foreach ($items as $group => $subitems) {
 			if (is_array($subitems)) {
-				$res .= Html::el('optgroup')->label($translator ? $translator->translate($group) : $group)->startTag();
+				$res .= Html::el('optgroup')->label($group)->startTag();
 				$tmp = '</optgroup>';
 			} else {
 				$subitems = array($group => $subitems);
@@ -187,7 +186,7 @@ class Helpers extends Nette\Object
 					$res .= $caption->setName('option')->addAttributes($option->attrs);
 				} else {
 					$res .= $optionTag . $option->attributes() . '>'
-						. htmlspecialchars($translator ? $translator->translate($caption) : $caption)
+						. htmlspecialchars($caption)
 						. '</option>';
 				}
 			}
@@ -207,7 +206,7 @@ class Helpers extends Nette\Object
 				unset($attrs[$k], $attrs[$p[0]]);
 				if ($p[1] === '?') {
 					$dynamic[$p[0]] = array_fill_keys((array) $v, TRUE);
-				} elseif (is_array($v)) {
+				} elseif (is_array($v) && $v) {
 					$dynamic[$p[0]] = $v;
 				} else {
 					$attrs[$p[0]] = $v;

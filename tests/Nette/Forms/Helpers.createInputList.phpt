@@ -13,15 +13,6 @@ use Nette\Forms\Helpers;
 require __DIR__ . '/../bootstrap.php';
 
 
-class Translator implements Nette\Localization\ITranslator
-{
-	function translate($s, $plural = NULL)
-	{
-		return strtoupper($s);
-	}
-}
-
-
 test(function() {
 	Assert::same(
 		'',
@@ -66,20 +57,9 @@ test(function() {
 	);
 
 	Assert::same(
-		'<label><input value="a">FIRST</label><label><input value="b">SECOND</label>',
-		Helpers::createInputList(
-			array('a' => 'First', 'b' => 'Second'),
-			NULL,
-			NULL,
-			new Translator
-		)
-	);
-
-	Assert::same(
 		'<label><input value="a">First</label><br><label><input value="b">Second</label><br>',
 		Helpers::createInputList(
 			array('a' => 'First', 'b' => 'Second'),
-			NULL,
 			NULL,
 			NULL,
 			'<br>'

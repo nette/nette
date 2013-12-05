@@ -14,15 +14,6 @@ use Nette\Forms\Helpers,
 require __DIR__ . '/../bootstrap.php';
 
 
-class Translator implements Nette\Localization\ITranslator
-{
-	function translate($s, $plural = NULL)
-	{
-		return strtoupper($s);
-	}
-}
-
-
 test(function() {
 	Assert::type(
 		'Nette\Utils\Html',
@@ -84,15 +75,6 @@ test(function() {
 		(string) Helpers::createSelectBox(
 			array('a' => 'First', 'b' => 'Second'),
 			array('disabled:' => TRUE, 'selected?' => 'b')
-		)
-	);
-
-	Assert::same(
-		'<select><option value="a">FIRST</option><option value="b">SECOND</option></select>',
-		(string) Helpers::createSelectBox(
-			array('a' => 'First', 'b' => 'Second'),
-			NULL,
-			new Translator
 		)
 	);
 });
