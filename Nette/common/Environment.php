@@ -262,7 +262,7 @@ final class Environment
 	 */
 	public static function getCache($namespace = '')
 	{
-		return new Caching\Cache(self::getService('cacheStorage'), $namespace);
+		return new Caching\Cache(self::getContext()->getByType('Nette\Caching\IStorage'), $namespace);
 	}
 
 
@@ -274,8 +274,8 @@ final class Environment
 	public static function getSession($namespace = NULL)
 	{
 		return $namespace === NULL
-			? self::getService('session')
-			: self::getService('session')->getSection($namespace);
+			? self::getContext()->getByType('Nette\Http\Session')
+			: self::getContext()->getByType('Nette\Http\Session')->getSection($namespace);
 	}
 
 

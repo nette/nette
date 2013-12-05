@@ -59,7 +59,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 		$httpRequest = $this->context->getByType('Nette\Http\IRequest');
 		if (!$httpRequest->isAjax() && ($request->isMethod('get') || $request->isMethod('head'))) {
 			$refUrl = clone $httpRequest->getUrl();
-			$url = $this->context->getService('router')->constructUrl($request, $refUrl->setPath($refUrl->getScriptPath()));
+			$url = $this->context->getByType('Nette\Application\IRouter')->constructUrl($request, $refUrl->setPath($refUrl->getScriptPath()));
 			if ($url !== NULL && !$httpRequest->getUrl()->isEqual($url)) {
 				return new Responses\RedirectResponse($url, Http\IResponse::S301_MOVED_PERMANENTLY);
 			}

@@ -399,9 +399,9 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		}
 
 		if ($config['session']['autoStart'] === 'smart') {
-			$initialize->addBody('$this->getService("session")->exists() && $this->getService("session")->start();');
+			$initialize->addBody('$this->getByType("Nette\Http\Session")->exists() && $this->getByType("Nette\Http\Session")->start();');
 		} elseif ($config['session']['autoStart']) {
-			$initialize->addBody('$this->getService("session")->start();');
+			$initialize->addBody('$this->getByType("Nette\Http\Session")->start();');
 		}
 
 		if ($config['latte']['xhtml']) {
