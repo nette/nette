@@ -52,7 +52,5 @@ Assert::type( 'Nette\Application\Routers\RouteList', $container->getService('rou
 Assert::type( 'Nette\Application\PresenterFactory', $container->getService('nette.presenterFactory') );
 Assert::type( 'Nette\Mail\SendmailMailer', $container->getService('nette.mailer') );
 
-Assert::type( 'Nette\Caching\Cache', $container->createService('nette.cache') );
-Assert::same( 'nm', $container->createService('nette.cache', array('nm'))->getNamespace() );
 Assert::type( 'Nette\Latte\Engine', $container->createService('nette.latte') );
 Assert::type( 'Nette\Templating\FileTemplate', $container->createService('nette.template') );
