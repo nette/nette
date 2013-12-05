@@ -37,6 +37,29 @@ test(function() use ($dao) {
 });
 
 
+test(function() use ($dao) {
+	$authors = $dao->table('author')->where('id', 11);
+	$books = array();
+	foreach ($authors as $author) {
+		foreach ($author->related('book')->where('translator_id', NULL) as $book) {
+			foreach ($book->related('book_tag') as $bookTag) {
+				$books[] = $bookTag->tag->name;
+			}
+		}
+	}
+	Assert::same(array('JavaScript'), $books);
+
+	foreach ($authors as $author) {
+		foreach ($author->related('book')->where('NOT translator_id', NULL) as $book) {
+			foreach ($book->related('book_tag')->order('tag_id') as $bookTag) {
+				$books[] = $bookTag->tag->name;
+			}
+		}
+	}
+	Assert::same(array('JavaScript', 'PHP', 'MySQL'), $books);
+});
+
+
 test(function() use ($connection, $dao) {
 	$connection->query('UPDATE book SET translator_id = 12 WHERE id = 2');
 	$author = $dao->table('author')->get(11);

@@ -565,6 +565,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 		$this->rows = NULL;
 		$this->specificCacheKey = NULL;
 		$this->generalCacheKey = NULL;
+		$this->refCache['referencingPrototype'] = array();
 	}
 
 
