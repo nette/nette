@@ -7,7 +7,8 @@
  * @package    Nette\Forms
  */
 
-use Nette\Forms\Helpers;
+use Nette\Forms\Helpers,
+	Nette\Utils\Html;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -63,6 +64,26 @@ test(function() {
 			NULL,
 			NULL,
 			'<br>'
+		)
+	);
+
+	Assert::same(
+		'<div><label><input value="a">First</label></div><div><label><input value="b">Second</label></div>',
+		Helpers::createInputList(
+			array('a' => 'First', 'b' => 'Second'),
+			NULL,
+			NULL,
+			Html::el('div')
+		)
+	);
+
+	Assert::same(
+		'<label><input value="a">First</label><label><input value="b">Second</label>',
+		Helpers::createInputList(
+			array('a' => 'First', 'b' => 'Second'),
+			NULL,
+			NULL,
+			Html::el(NULL)
 		)
 	);
 });

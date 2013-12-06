@@ -135,14 +135,14 @@ class Helpers extends Nette\Object
 	/**
 	 * @return string
 	 */
-	public static function createInputList(array $items, array $inputAttrs = NULL, array $labelAttrs = NULL, $separator = NULL)
+	public static function createInputList(array $items, array $inputAttrs = NULL, array $labelAttrs = NULL, $wrapper = NULL)
 	{
 		list($inputAttrs, $inputTag) = self::prepareAttrs($inputAttrs, 'input');
 		list($labelAttrs, $labelTag) = self::prepareAttrs($labelAttrs, 'label');
 		$res = '';
 		$input = Html::el();
 		$label = Html::el();
-		$separator = (string) $separator;
+		list($wrapper, $wrapperEnd) = $wrapper instanceof Html ? array($wrapper->startTag(), $wrapper->endTag()) : array((string) $wrapper, '');
 
 		foreach ($items as $value => $caption) {
 			foreach ($inputAttrs as $k => $v) {
@@ -152,11 +152,12 @@ class Helpers extends Nette\Object
 				$label->attrs[$k] = isset($v[$value]) ? $v[$value] : NULL;
 			}
 			$input->value = $value;
-			$res .= ($res === '' ? '' : $separator)
+			$res .= ($res === '' && $wrapperEnd === '' ? '' : $wrapper)
 				. $labelTag . $label->attributes() . '>'
 				. $inputTag . $input->attributes() . (Html::$xhtml ? ' />' : '>')
 				. ($caption instanceof Html ? $caption : htmlspecialchars($caption))
-				. '</label>';
+				. '</label>'
+				. $wrapperEnd;
 		}
 		return $res;
 	}
