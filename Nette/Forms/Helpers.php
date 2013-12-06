@@ -143,6 +143,7 @@ class Helpers extends Nette\Object
 		$input = Html::el();
 		$label = Html::el();
 		$separator = (string) $separator;
+
 		foreach ($items as $value => $caption) {
 			foreach ($inputAttrs as $k => $v) {
 				$input->attrs[$k] = isset($v[$value]) ? $v[$value] : NULL;
@@ -151,11 +152,11 @@ class Helpers extends Nette\Object
 				$label->attrs[$k] = isset($v[$value]) ? $v[$value] : NULL;
 			}
 			$input->value = $value;
-			$res .= $labelTag . $label->attributes() . '>'
+			$res .= ($res === '' ? '' : $separator)
+				. $labelTag . $label->attributes() . '>'
 				. $inputTag . $input->attributes() . (Html::$xhtml ? ' />' : '>')
 				. ($caption instanceof Html ? $caption : htmlspecialchars($caption))
-				. '</label>'
-				. $separator;
+				. '</label>';
 		}
 		return $res;
 	}

@@ -57,7 +57,7 @@ test(function() {
 	);
 
 	Assert::same(
-		'<label><input value="a">First</label><br><label><input value="b">Second</label><br>',
+		'<label><input value="a">First</label><br><label><input value="b">Second</label>',
 		Helpers::createInputList(
 			array('a' => 'First', 'b' => 'Second'),
 			NULL,
