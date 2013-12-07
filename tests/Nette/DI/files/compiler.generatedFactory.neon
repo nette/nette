@@ -5,6 +5,8 @@ services:
 
 	lorem: \ILoremFactory(Lorem)
 
+	finder: IFinderFactory
+
 	article:
 		create: Article(%title%)
 		implement: IArticleFactory
