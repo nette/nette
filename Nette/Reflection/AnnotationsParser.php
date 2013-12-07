@@ -144,6 +144,39 @@ final class AnnotationsParser
 
 
 	/**
+	 * Expands class name into FQN.
+	 * @param  string
+	 * @return string  fully qualified class name
+	 * @throws Nette\InvalidArgumentException
+	 */
+	public static function expandClassName($name, \ReflectionClass $reflector)
+	{
+		if (empty($name)) {
+			throw new Nette\InvalidArgumentException('Class name must not be empty.');
+		}
+
+		if ($name[0] === '\\') { // already fully qualified
+			return ltrim($name, '\\');
+		}
+
+		$parsed = static::parsePhp(file_get_contents($reflector->getFileName()));
+		$uses = array_change_key_case((array) $tmp = & $parsed[$reflector->getName()]['use']);
+		$parts = explode('\\', $name, 2);
+		$parts[0] = strtolower($parts[0]);
+		if (isset($uses[$parts[0]])) {
+			$parts[0] = $uses[$parts[0]];
+			return implode('\\', $parts);
+
+		} elseif ($reflector->inNamespace()) {
+			return $reflector->getNamespaceName() . '\\' . $name;
+
+		} else {
+			return $name;
+		}
+	}
+
+
+	/**
 	 * Parses phpDoc comment.
 	 * @param  string
 	 * @return array
