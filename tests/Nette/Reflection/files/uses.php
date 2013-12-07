@@ -14,6 +14,7 @@ namespace Test {
 	}
 
 	use D, E;
+	use \F\G as H;
 
 	class TestClass2
 	{

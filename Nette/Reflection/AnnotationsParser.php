@@ -291,7 +291,7 @@ final class AnnotationsParser
 				case T_USE:
 					while (!$class && ($name = self::fetch($tokens, array(T_STRING, T_NS_SEPARATOR)))) {
 						if (self::fetch($tokens, T_AS)) {
-							$uses[self::fetch($tokens, T_STRING)] = $name;
+							$uses[self::fetch($tokens, T_STRING)] = ltrim($name, '\\');
 						} else {
 							$tmp = explode('\\', $name);
 							$uses[end($tmp)] = $name;
