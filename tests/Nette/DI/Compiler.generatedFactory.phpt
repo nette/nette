@@ -9,6 +9,7 @@
 
 use Nette\DI;
 use Tester\Assert;
+use Nette\Utils as NU;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -33,6 +34,14 @@ class Lorem
 		$this->ipsum = $ipsum;
 	}
 
+}
+
+interface IFinderFactory
+{
+	/**
+	 * @return NU\Finder
+	 */
+	function create();
 }
 
 interface IArticleFactory
@@ -123,6 +132,11 @@ $lorem = $container->getService('lorem')->create();
 Assert::type( 'Lorem', $lorem );
 Assert::type( 'Ipsum', $lorem->ipsum );
 Assert::same( $container->getService('ipsum'), $lorem->ipsum );
+
+
+Assert::type( 'IFinderFactory', $container->getService('finder') );
+$finder = $container->getService('finder')->create();
+Assert::type( 'Nette\Utils\Finder', $finder );
 
 
 Assert::type( 'IArticleFactory', $container->getService('article') );
