@@ -33,7 +33,7 @@ Assert::same( array(
 
 
 Assert::same( array(
-	'Test\TestClass1' => array('use' => array('C' => 'A\B')),
-	'Test\TestClass2' => array('use' => array('C' => 'A\B', 'D' => 'D', 'E' => 'E')),
-	'Test2\TestClass4' => array('use' => array('C' => 'A\B\C')),
+	'Test\TestClass1' => array('use' => array('c' => 'A\B')),
+	'Test\TestClass2' => array('use' => array('c' => 'A\B', 'd' => 'D', 'e' => 'E', 'h' => 'F\G')),
+	'Test2\TestClass4' => array('use' => array('c' => 'A\B\C')),
 ), AnnotationsParser::parsePhp(__DIR__ . '/files/uses.php') );

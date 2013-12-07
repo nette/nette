@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @phpversion 5.4
- */
-
 namespace Test {
 
 	use A\B as C;
@@ -14,6 +10,7 @@ namespace Test {
 	}
 
 	use D, E;
+	use \F\G as H;
 
 	class TestClass2
 	{
