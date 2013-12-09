@@ -107,7 +107,7 @@ final class AnnotationsParser
 
 			if (!isset(self::$cache[$type]) && $file) {
 				self::$cache['*'][$file] = filemtime($file);
-				foreach (self::parsePhp($file) as $class => $info) {
+				foreach (self::parsePhp(file_get_contents($file)) as $class => $info) {
 					foreach ($info as $prop => $comment) {
 						if ($prop !== 'use') {
 							self::$cache[$class][$prop] = self::parseComment($comment);
@@ -236,15 +236,13 @@ final class AnnotationsParser
 	 * @param  string
 	 * @return array [class => [prop => comment (or 'use' => [alias => class])]
 	 */
-	public static function parsePhp($file)
+	public static function parsePhp($code)
 	{
-		$s = file_get_contents($file);
-
-		if (Strings::match($s, '#//nette'.'loader=(\S*)#')) {
+		if (Strings::match($code, '#//nette'.'loader=(\S*)#')) {
 			return; // TODO: allways ignore?
 		}
 
-		$tokens = @token_get_all($s);
+		$tokens = @token_get_all($code);
 		$namespace = $class = $classLevel = $level = $docComment = NULL;
 		$res = $uses = array();
 

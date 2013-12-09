@@ -15,7 +15,7 @@ require __DIR__ . '/../bootstrap.php';
 
 Assert::same( array(
 	'Test\AnnotatedClass1' => array(
-		'class' => "/** @author john */",
+		'class' => '/** @author john */',
 		'$a' => '/** @var a */',
 		'$b' => '/** @var b */',
 		'$c' => '/** @var c */',
@@ -28,12 +28,12 @@ Assert::same( array(
 		'e' => '/** @return e */',
 		'g' => '/** @return g */',
 	),
-	'Test\AnnotatedClass2' => array('class' => "/** @author jack */"),
-), AnnotationsParser::parsePhp(__DIR__ . '/files/annotations.php') );
+	'Test\AnnotatedClass2' => array('class' => '/** @author jack */'),
+), AnnotationsParser::parsePhp(file_get_contents(__DIR__ . '/files/annotations.php')) );
 
 
 Assert::same( array(
 	'Test\TestClass1' => array('use' => array('C' => 'A\B')),
 	'Test\TestClass2' => array('use' => array('C' => 'A\B', 'D' => 'D', 'E' => 'E')),
 	'Test2\TestClass4' => array('use' => array('C' => 'A\B\C')),
-), AnnotationsParser::parsePhp(__DIR__ . '/files/uses.php') );
+), AnnotationsParser::parsePhp(file_get_contents(__DIR__ . '/files/uses.php')) );
