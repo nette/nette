@@ -334,6 +334,16 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 
 
 	/**
+	 * Adds set of checkbox controls to the form.
+	 * @return Nette\Forms\Controls\CheckboxList
+	 */
+	public function addCheckboxList($name, $label = NULL, array $items = NULL)
+	{
+		return $this[$name] = new Controls\CheckboxList($label, $items);
+	}
+
+
+	/**
 	 * Adds select box control that allows single item selection.
 	 * @param  string  control name
 	 * @param  string  label
