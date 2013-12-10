@@ -23,8 +23,7 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 		<td>
 <?php $_formStack[] = $_form; $formContainer = $_form = $_form["cont2"] ?>			<ol>
 <?php $iterations = 0; foreach ($formContainer->controls AS $name => $field): ?>
-				<li><?php $_input = is_object($field) ? $field : $_form[$field]; echo $_input->getControl()->addAttributes(array()) ?>
- - <?php $_input = is_object($field) ? $field : $_form[$field]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array())  ?></li>
+				<li><?php $_input = is_object($field) ? $field : $_form[$field]; echo $_input->getControl()->addAttributes(array()) ?></li>
 <?php $iterations++; endforeach ?>			</ol>
 <?php $_form = array_pop($_formStack) ?>
 		</td>

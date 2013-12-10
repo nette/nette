@@ -47,6 +47,14 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 <?php $iterations++; endforeach ?>
 
 
+<?php if ($_label = $_form["checkbox"]->getLabelPart("")) echo $_label->addAttributes(array())->startTag() ?>
+ <?php echo $_form["checkbox"]->getControlPart("")->addAttributes(array()) ?> Label<?php if ($_label) echo $_label->endTag() ?>
+
+<label title=hello<?php $_input = $_form["checkbox"]; echo $_input->getLabelPart("")->addAttributes(array (
+  'title' => NULL,
+))->attributes() ?>> <input<?php $_input = $_form["checkbox"]; echo $_input->getControlPart("")->attributes() ?>> </label>
+
+
 <?php $iterations = 0; foreach ($form['checklist']->items as $key => $label): ?>
 	<?php if ($_label = $_form["checklist"]->getLabelPart($key)) echo $_label->addAttributes(array())->startTag() ?>
  <?php echo $_form["checklist"]->getControlPart($key)->addAttributes(array()) ?>

@@ -27,15 +27,20 @@ test(function() {
 	$form = new Form;
 	$input = $form->addCheckbox('on', 'Label');
 
-	Assert::type('Nette\Utils\Html', $input->getLabel());
-	Assert::same('<label for="frm-on">Label</label>', (string) $input->getLabel());
-	Assert::same('<label for="frm-on">Another label</label>', (string) $input->getLabel('Another label'));
+	Assert::null($input->getLabel());
 
 	Assert::type('Nette\Utils\Html', $input->getControl());
-	Assert::same('<input type="checkbox" name="on" id="frm-on">', (string) $input->getControl());
+	Assert::same('<label for="frm-on"><input type="checkbox" name="on" id="frm-on">Label</label>', (string) $input->getControl());
+
+	Assert::type('Nette\Utils\Html', $input->getLabelPart());
+	Assert::same('<label for="frm-on">Label</label>', (string) $input->getLabelPart());
+
+	Assert::type('Nette\Utils\Html', $input->getControlPart());
+	Assert::same('<input type="checkbox" name="on" id="frm-on">', (string) $input->getControlPart());
 
 	$input->setValue(TRUE);
-	Assert::same('<input type="checkbox" name="on" id="frm-on" checked>', (string) $input->getControl());
+	Assert::same('<label for="frm-on"><input type="checkbox" name="on" id="frm-on" checked>Label</label>', (string) $input->getControl());
+	Assert::same('<input type="checkbox" name="on" id="frm-on" checked>', (string) $input->getControlPart());
 });
 
 
@@ -44,9 +49,7 @@ test(function() { // Html with translator
 	$input = $form->addCheckbox('on', 'Label');
 	$input->setTranslator(new Translator);
 
-	Assert::same('<label for="frm-on">LABEL</label>', (string) $input->getLabel());
-	Assert::same('<label for="frm-on">ANOTHER LABEL</label>', (string) $input->getLabel('Another label'));
-	Assert::same('<label for="frm-on"><b>Another label</b></label>', (string) $input->getLabel(Html::el('b', 'Another label')));
+	Assert::same('<label for="frm-on"><input type="checkbox" name="on" id="frm-on">LABEL</label>', (string) $input->getControl());
 });
 
 
@@ -54,7 +57,7 @@ test(function() { // validation rules
 	$form = new Form;
 	$input = $form->addCheckbox('on')->setRequired('required');
 
-	Assert::same('<input type="checkbox" name="on" id="frm-on" required data-nette-rules=\'[{"op":":filled","msg":"required"}]\'>', (string) $input->getControl());
+	Assert::same('<label for="frm-on"><input type="checkbox" name="on" id="frm-on" required data-nette-rules=\'[{"op":":filled","msg":"required"}]\'></label>', (string) $input->getControl());
 });
 
 
@@ -63,5 +66,5 @@ test(function() { // container
 	$container = $form->addContainer('container');
 	$input = $container->addCheckbox('on');
 
-	Assert::same('<input type="checkbox" name="container[on]" id="frm-container-on">', (string) $input->getControl());
+	Assert::same('<label for="frm-container-on"><input type="checkbox" name="container[on]" id="frm-container-on"></label>', (string) $input->getControl());
 });

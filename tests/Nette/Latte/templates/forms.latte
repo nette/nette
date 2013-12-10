@@ -32,6 +32,11 @@
 {/foreach}
 
 
+{* partial rendering of Checkbox *}
+{label checkbox:} {input checkbox:} Label{/label}
+<label n:name="checkbox:" title=hello> <input n:name="checkbox:"> </label>
+
+
 {* partial rendering of CheckboxList *}
 {foreach $form[checklist]->items as $key => $label}
 	{label checklist:$key} {input checklist:$key} {$label}{/label}

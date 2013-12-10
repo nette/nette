@@ -63,7 +63,35 @@ class Checkbox extends BaseControl
 	 */
 	public function getControl()
 	{
+		return $this->getLabelPart()->insert(0, $this->getControlPart());
+	}
+
+
+	/**
+	 * Bypasses label generation.
+	 * @return void
+	 */
+	public function getLabel($caption = NULL)
+	{
+		return NULL;
+	}
+
+
+	/**
+	 * @return Nette\Utils\Html
+	 */
+	public function getControlPart()
+	{
 		return parent::getControl()->checked($this->value);
+	}
+
+
+	/**
+	 * @return Nette\Utils\Html
+	 */
+	public function getLabelPart()
+	{
+		return parent::getLabel();
 	}
 
 }

@@ -396,10 +396,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	 */
 	public function renderLabel(Nette\Forms\IControl $control)
 	{
-		if ($control instanceof Nette\Forms\Controls\Checkbox) {
-			return $this->getWrapper('label container');
-		}
-
 		$suffix = $this->getValue('label suffix') . ($control->isRequired() ? $this->getValue('label requiredsuffix') : '');
 		$label = $control->getLabel();
 		if ($label instanceof Html) {
@@ -443,9 +439,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 		$el = $control->getControl();
 		if ($el instanceof Html && $el->getName() === 'input') {
 			$el->class($this->getValue("control .$el->type"), TRUE);
-		}
-		if ($control instanceof Nette\Forms\Controls\Checkbox) {
-			$el = $control->getLabel()->insert(0, $el);
 		}
 		return $body->setHtml($el . $description . $this->renderErrors($control));
 	}
