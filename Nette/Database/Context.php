@@ -64,6 +64,16 @@ class Context extends Nette\Object
 
 
 	/**
+	 * @param  string  sequence object
+	 * @return string
+	 */
+	public function getInsertId($name = NULL)
+	{
+		return $this->connection->lastInsertId($name);
+	}
+
+
+	/**
 	 * Generates and executes SQL query.
 	 * @param  string  statement
 	 * @param  mixed   [parameters, ...]
