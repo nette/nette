@@ -84,6 +84,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 			'.required' => 'required',
 			'.optional' => NULL,
 			'.odd' => NULL,
+			'.error' => NULL,
 		),
 
 		'control' => array(
@@ -345,6 +346,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 		$pair->add($this->renderLabel($control));
 		$pair->add($this->renderControl($control));
 		$pair->class($this->getValue($control->isRequired() ? 'pair .required' : 'pair .optional'), TRUE);
+		$pair->class($control->hasErrors() ? $this->getValue('pair .error') : NULL, TRUE);
 		$pair->class($control->getOption('class'), TRUE);
 		if (++$this->counter % 2) {
 			$pair->class($this->getValue('pair .odd'), TRUE);
