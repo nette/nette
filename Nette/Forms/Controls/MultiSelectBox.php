@@ -15,91 +15,36 @@ use Nette;
 
 
 /**
- * Select box control that allows multiple item selection.
+ * Select box control that allows multiple items selection.
  *
  * @author     David Grudl
  */
-class MultiSelectBox extends SelectBox
+class MultiSelectBox extends MultiChoiceControl
 {
-
-	/**
-	 * Loads HTTP data.
-	 * @return void
-	 */
-	public function loadHttpData()
-	{
-		$this->value = array_keys(array_flip($this->getHttpData(Nette\Forms\Form::DATA_TEXT)));
-		if (is_array($this->disabled)) {
-			$this->value = array_diff($this->value, array_keys($this->disabled));
-		}
-	}
+	/** @var array of option / optgroup */
+	private $options = array();
 
 
 	/**
-	 * Sets selected items (by keys).
-	 * @param  array
+	 * Sets options and option groups from which to choose.
 	 * @return self
 	 */
-	public function setValue($values)
+	public function setItems(array $items, $useKeys = TRUE)
 	{
-		if (is_scalar($values) || $values === NULL) {
-			$values = (array) $values;
-		} elseif (!is_array($values)) {
-			throw new Nette\InvalidArgumentException('Value must be array or NULL, ' . gettype($values) . ' given.');
-		}
-		$flip = array();
-		foreach ($values as $value) {
-			if (!is_scalar($value) && !method_exists($value, '__toString')) {
-				throw new Nette\InvalidArgumentException('Values must be scalar, ' . gettype($value) . ' given.');
+		if (!$useKeys) {
+			foreach ($items as $key => $value) {
+				unset($items[$key]);
+				if (is_array($value)) {
+					foreach ($value as $val) {
+						$items[$key][(string) $val] = $val;
+					}
+				} else {
+					$items[(string) $value] = $value;
+				}
 			}
-			$flip[(string) $value] = TRUE;
 		}
-		$values = array_keys($flip);
-		if ($diff = array_diff($values, array_keys($this->flattenItems))) {
-			throw new Nette\InvalidArgumentException("Values '" . implode("', '", $diff) . "' are out of range of current items.");
-		}
-		$this->value = $values;
-		return $this;
-	}
-
-
-	/**
-	 * Returns selected keys.
-	 * @return array
-	 */
-	public function getValue()
-	{
-		return array_values(array_intersect($this->value, array_keys($this->flattenItems)));
-	}
-
-
-	/**
-	 * Returns selected keys (not checked).
-	 * @return array
-	 */
-	public function getRawValue()
-	{
-		return $this->value;
-	}
-
-
-	/**
-	 * Returns selected values.
-	 * @return array
-	 */
-	public function getSelectedItem()
-	{
-		return array_intersect_key($this->flattenItems, array_flip($this->value));
-	}
-
-
-	/**
-	 * Returns HTML name of control.
-	 * @return string
-	 */
-	public function getHtmlName()
-	{
-		return parent::getHtmlName() . '[]';
+		$this->options = $items;
+		return parent::setItems(Nette\Utils\Arrays::flatten($items, TRUE));
 	}
 
 
@@ -109,7 +54,33 @@ class MultiSelectBox extends SelectBox
 	 */
 	public function getControl()
 	{
-		return parent::getControl()->multiple(TRUE);
+		$items = array();
+		foreach ($this->options as $key => $value) {
+			if (is_array($value)) {
+				$key = $this->translate($key);
+				foreach ($value as $k => $v) {
+					$items[$key][$k] = $this->translate($v);
+				}
+			} else {
+				$items[$key] = $this->translate($value);
+			}
+		}
+
+		return Nette\Forms\Helpers::createSelectBox(
+			$items,
+			array(
+				'selected?' => $this->value,
+				'disabled:' => is_array($this->disabled) ? $this->disabled : NULL
+			)
+		)->addAttributes(parent::getControl()->attrs)->multiple(TRUE);
+	}
+
+
+	/** @deprecated */
+	function getSelectedItem()
+	{
+		trigger_error(__METHOD__ . '(TRUE) is deprecated; use getSelectedItems() instead.', E_USER_DEPRECATED);
+		return $this->getSelectedItems();
 	}
 
 }

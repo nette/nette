@@ -20,20 +20,16 @@ use Nette,
  *
  * @author     David Grudl
  *
- * @property   array $items
  * @property-read Nette\Utils\Html $separatorPrototype
  * @property-read Nette\Utils\Html $containerPrototype
  */
-class RadioList extends BaseControl
+class RadioList extends ChoiceControl
 {
 	/** @var Nette\Utils\Html  separator element template */
 	protected $separator;
 
 	/** @var Nette\Utils\Html  container element template */
 	protected $container;
-
-	/** @var array */
-	protected $items = array();
 
 
 	/**
@@ -42,45 +38,10 @@ class RadioList extends BaseControl
 	 */
 	public function __construct($label = NULL, array $items = NULL)
 	{
-		parent::__construct($label);
+		parent::__construct($label, $items);
 		$this->control->type = 'radio';
 		$this->container = Html::el();
 		$this->separator = Html::el('br');
-		if ($items !== NULL) {
-			$this->setItems($items);
-		}
-	}
-
-
-	/**
-	 * Loads HTTP data.
-	 * @return void
-	 */
-	public function loadHttpData()
-	{
-		$this->value = $this->getHttpData(Nette\Forms\Form::DATA_TEXT);
-		if ($this->value !== NULL) {
-			if (is_array($this->disabled) && isset($this->disabled[$this->value])) {
-				$this->value = NULL;
-			} else {
-				$this->value = key(array($this->value => NULL));
-			}
-		}
-	}
-
-
-	/**
-	 * Sets selected radio value.
-	 * @param  string
-	 * @return self
-	 */
-	public function setValue($value)
-	{
-		if ($value !== NULL && !isset($this->items[(string) $value])) {
-			throw new Nette\InvalidArgumentException("Value '$value' is out of range of current items.");
-		}
-		$this->value = $value === NULL ? NULL : key(array((string) $value => NULL));
-		return $this;
 	}
 
 
@@ -94,72 +55,7 @@ class RadioList extends BaseControl
 			trigger_error(__METHOD__ . '(TRUE) is deprecated; use getRawValue() instead.', E_USER_DEPRECATED);
 			return $this->getRawValue();
 		}
-		return isset($this->items[$this->value]) ? $this->value : NULL;
-	}
-
-
-	/**
-	 * Returns selected radio value (not checked).
-	 * @return mixed
-	 */
-	public function getRawValue()
-	{
-		return $this->value;
-	}
-
-
-	/**
-	 * Is any radio button selected?
-	 * @return bool
-	 */
-	public function isFilled()
-	{
-		return $this->getValue() !== NULL;
-	}
-
-
-	/**
-	 * Sets options from which to choose.
-	 * @param  array
-	 * @param  bool
-	 * @return self
-	 */
-	public function setItems(array $items, $useKeys = TRUE)
-	{
-		if (!$useKeys) {
-			$items = array_combine($items, $items);
-		}
-		$this->items = $items;
-		return $this;
-	}
-
-
-	/**
-	 * Returns options from which to choose.
-	 * @return array
-	 */
-	final public function getItems()
-	{
-		return $this->items;
-	}
-
-
-	/**
-	 * Disables or enables control or items.
-	 * @param  bool|array
-	 * @return self
-	 */
-	public function setDisabled($value = TRUE)
-	{
-		if (!is_array($value)) {
-			return parent::setDisabled($value);
-		}
-		parent::setDisabled(FALSE);
-		$this->disabled = array_fill_keys($value, TRUE);
-		if (isset($this->disabled[$this->value])) {
-			$this->value = NULL;
-		}
-		return $this;
+		return parent::getValue();
 	}
 
 
@@ -203,7 +99,7 @@ class RadioList extends BaseControl
 		}
 
 		$ids = $items = array();
-		foreach ($this->items as $value => $label) {
+		foreach ($this->getItems() as $value => $label) {
 			$items[$value] = $this->translate($label);
 			$ids[$value] = $input->id . '-' . $value;
 		}

@@ -29,6 +29,27 @@ $series = array(
 );
 
 
+test(function() use ($series) { // Select with optgroups
+	$_POST = array('multi' => array('red-dwarf'));
+
+	$form = new Form;
+	$input = $form->addMultiSelect('multi', NULL, array(
+		'usa' => array(
+			'the-simpsons' => 'The Simpsons',
+			0 => 'South Park',
+		),
+		'uk' => array(
+			'red-dwarf' => 'Red Dwarf',
+		),
+	));
+
+	Assert::true( $form->isValid() );
+	Assert::same( array('red-dwarf'), $input->getValue() );
+	Assert::same( array('red-dwarf' => 'Red Dwarf'), $input->getSelectedItems() );
+	Assert::true( $input->isFilled() );
+});
+
+
 test(function() use ($series) { // invalid input
 	$_POST = array('select' => 'red-dwarf');
 
@@ -37,7 +58,7 @@ test(function() use ($series) { // invalid input
 
 	Assert::true( $form->isValid() );
 	Assert::same( array(), $input->getValue() );
-	Assert::same( array(), $input->getSelectedItem() );
+	Assert::same( array(), $input->getSelectedItems() );
 	Assert::false( $input->isFilled() );
 });
 
@@ -51,7 +72,7 @@ test(function() use ($series) { // multiple selected items, zero item
 	Assert::true( $form->isValid() );
 	Assert::same( array('red-dwarf', 0), $input->getValue() );
 	Assert::same( array('red-dwarf', 'unknown', 0), $input->getRawValue() );
-	Assert::same( array('red-dwarf' => 'Red Dwarf', 0 => 'South Park'), $input->getSelectedItem() );
+	Assert::same( array('red-dwarf' => 'Red Dwarf', 0 => 'South Park'), $input->getSelectedItems() );
 	Assert::true( $input->isFilled() );
 });
 
@@ -64,7 +85,7 @@ test(function() use ($series) { // empty key
 
 	Assert::true( $form->isValid() );
 	Assert::same( array(''), $input->getValue() );
-	Assert::same( array('' => 'Family Guy'), $input->getSelectedItem() );
+	Assert::same( array('' => 'Family Guy'), $input->getSelectedItems() );
 	Assert::true( $input->isFilled() );
 });
 
@@ -75,7 +96,7 @@ test(function() use ($series) { // missing key
 
 	Assert::true( $form->isValid() );
 	Assert::same( array(), $input->getValue() );
-	Assert::same( array(), $input->getSelectedItem() );
+	Assert::same( array(), $input->getSelectedItems() );
 	Assert::false( $input->isFilled() );
 });
 
@@ -100,7 +121,7 @@ test(function() use ($series) { // malformed data
 
 	Assert::true( $form->isValid() );
 	Assert::same( array(), $input->getValue() );
-	Assert::same( array(), $input->getSelectedItem() );
+	Assert::same( array(), $input->getSelectedItems() );
 	Assert::false( $input->isFilled() );
 });
 
@@ -128,6 +149,35 @@ test(function() use ($series) { // validateEqual
 	Assert::false( Validator::validateEqual($input, 'unknown') );
 	Assert::false( Validator::validateEqual($input, array('unknown')) );
 	Assert::false( Validator::validateEqual($input, array(0)) );
+});
+
+
+test(function() use ($series) { // setItems without keys
+	$_POST = array('multi' => array('red-dwarf'));
+
+	$form = new Form;
+	$input = $form->addMultiSelect('multi')->setItems(array_keys($series), FALSE);
+
+	Assert::true( $form->isValid() );
+	Assert::same( array('red-dwarf'), $input->getValue() );
+	Assert::same( array('red-dwarf' => 'red-dwarf'), $input->getSelectedItems() );
+	Assert::true( $input->isFilled() );
+});
+
+
+test(function() { // setItems without keys with optgroups
+	$_POST = array('multi' => array('red-dwarf'));
+
+	$form = new Form;
+	$input = $form->addMultiSelect('multi')->setItems(array(
+		'usa' => array('the-simpsons', 0),
+		'uk' => array('red-dwarf'),
+	), FALSE);
+
+	Assert::true( $form->isValid() );
+	Assert::same( array('red-dwarf'), $input->getValue() );
+	Assert::same( array('red-dwarf' => 'red-dwarf'), $input->getSelectedItems() );
+	Assert::true( $input->isFilled() );
 });
 
 
@@ -160,7 +210,7 @@ test(function() { // object as item
 		), FALSE)
 		->setValue('2013-07-05 00:00:00');
 
-	Assert::equal( array('2013-07-05 00:00:00' => new DateTime('2013-07-05')), $input->getSelectedItem() );
+	Assert::equal( array('2013-07-05 00:00:00' => new DateTime('2013-07-05')), $input->getSelectedItems() );
 });
 
 

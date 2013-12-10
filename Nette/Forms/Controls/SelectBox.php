@@ -19,97 +19,18 @@ use Nette;
  *
  * @author     David Grudl
  *
- * @property-read mixed $rawValue
  * @property   bool $prompt
- * @property   array $items
- * @property-read string $selectedItem
  */
-class SelectBox extends BaseControl
+class SelectBox extends ChoiceControl
 {
 	/** validation rule */
 	const VALID = ':selectBoxValid';
 
-	/** @var array */
-	private $items = array();
-
-	/** @var array */
-	protected $flattenItems = array();
+	/** @var array of option / optgroup */
+	private $options = array();
 
 	/** @var mixed */
 	private $prompt = FALSE;
-
-
-	public function __construct($label = NULL, array $items = NULL)
-	{
-		parent::__construct($label);
-		$this->control->setName('select');
-		if ($items !== NULL) {
-			$this->setItems($items);
-		}
-	}
-
-
-	/**
-	 * Loads HTTP data.
-	 * @return void
-	 */
-	public function loadHttpData()
-	{
-		$this->value = $this->getHttpData(Nette\Forms\Form::DATA_TEXT);
-		if ($this->value !== NULL) {
-			if (is_array($this->disabled) && isset($this->disabled[$this->value])) {
-				$this->value = NULL;
-			} else {
-				$this->value = key(array($this->value => NULL));
-			}
-		}
-	}
-
-
-	/**
-	 * Sets selected items (by keys).
-	 * @param  string
-	 * @return self
-	 */
-	public function setValue($value)
-	{
-		if ($value !== NULL && !isset($this->flattenItems[(string) $value])) {
-			throw new Nette\InvalidArgumentException("Value '$value' is out of range of current items.");
-		}
-		$this->value = $value === NULL ? NULL : key(array((string) $value => NULL));
-		return $this;
-	}
-
-
-	/**
-	 * Returns selected item key.
-	 * @return mixed
-	 */
-	public function getValue()
-	{
-		return isset($this->flattenItems[$this->value]) ? $this->value : NULL;
-	}
-
-
-	/**
-	 * Returns selected item key (not checked).
-	 * @return mixed
-	 */
-	public function getRawValue()
-	{
-		return $this->value;
-	}
-
-
-	/**
-	 * Is any item selected?
-	 * @return bool
-	 */
-	public function isFilled()
-	{
-		$value = $this->getValue();
-		return $value !== NULL && $value !== array();
-	}
 
 
 	/**
@@ -121,8 +42,10 @@ class SelectBox extends BaseControl
 	{
 		if ($prompt === TRUE) { // back compatibility
 			trigger_error(__METHOD__ . '(TRUE) is deprecated; argument must be string.', E_USER_DEPRECATED);
-			$prompt = reset($this->items);
-			unset($this->flattenItems[key($this->items)], $this->items[key($this->items)]);
+			$items = $this->getItems();
+			$prompt = reset($items);
+			unset($this->options[key($items)], $items[key($items)]);
+			$this->setItems($items);
 		}
 		$this->prompt = $prompt;
 		return $this;
@@ -140,9 +63,7 @@ class SelectBox extends BaseControl
 
 
 	/**
-	 * Sets items from which to choose.
-	 * @param  array
-	 * @param  bool
+	 * Sets options and option groups from which to choose.
 	 * @return self
 	 */
 	public function setItems(array $items, $useKeys = TRUE)
@@ -159,52 +80,8 @@ class SelectBox extends BaseControl
 				}
 			}
 		}
-		$this->items = $items;
-		$this->flattenItems = Nette\Utils\Arrays::flatten($items, TRUE);
-		return $this;
-	}
-
-
-	/**
-	 * Returns items from which to choose.
-	 * @return array
-	 */
-	final public function getItems()
-	{
-		return $this->items;
-	}
-
-
-	/**
-	 * Returns selected value.
-	 * @return string
-	 */
-	public function getSelectedItem()
-	{
-		$value = $this->getValue();
-		return $value === NULL ? NULL : $this->flattenItems[$value];
-	}
-
-
-	/**
-	 * Disables or enables control or items.
-	 * @param  bool|array
-	 * @return self
-	 */
-	public function setDisabled($value = TRUE)
-	{
-		if (!is_array($value)) {
-			return parent::setDisabled($value);
-		}
-
-		parent::setDisabled(FALSE);
-		$this->disabled = array_fill_keys($value, TRUE);
-		if (is_array($this->value)) {
-			$this->value = array_diff($this->value, $value);
-		} elseif (isset($this->disabled[$this->value])) {
-			$this->value = NULL;
-		}
-		return $this;
+		$this->options = $items;
+		return parent::setItems(Nette\Utils\Arrays::flatten($items, TRUE));
 	}
 
 
@@ -216,7 +93,7 @@ class SelectBox extends BaseControl
 	{
 		$items = $this->prompt === FALSE ? array() : array('' => $this->translate($this->prompt));
 
-		foreach ($this->items as $key => $value) {
+		foreach ($this->options as $key => $value) {
 			if (is_array($value)) {
 				$key = $this->translate($key);
 				foreach ($value as $k => $v) {
