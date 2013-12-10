@@ -343,7 +343,11 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 */
 	public function addSelect($name, $label = NULL, array $items = NULL, $size = NULL)
 	{
-		return $this[$name] = new Controls\SelectBox($label, $items, $size);
+		$control = new Controls\SelectBox($label, $items);
+		if ($size > 1) {
+			$control->setAttribute('size', (int) $size);
+		}
+		return $this[$name] = $control;
 	}
 
 
@@ -357,7 +361,11 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 */
 	public function addMultiSelect($name, $label = NULL, array $items = NULL, $size = NULL)
 	{
-		return $this[$name] = new Controls\MultiSelectBox($label, $items, $size);
+		$control = new Controls\MultiSelectBox($label, $items);
+		if ($size > 1) {
+			$control->setAttribute('size', (int) $size);
+		}
+		return $this[$name] = $control;
 	}
 
 
