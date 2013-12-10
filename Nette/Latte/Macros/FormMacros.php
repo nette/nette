@@ -95,9 +95,9 @@ class FormMacros extends MacroSet
 		$name = array_shift($words);
 		return $writer->write(
 			($name[0] === '$' ? '$_input = is_object(%0.word) ? %0.word : $_form[%0.word]; if ($_label = $_input' : 'if ($_label = $_form[%0.word]')
-			. '->getLabel(%1.raw)) echo $_label->addAttributes(%node.array)',
+			. '->%1.raw) echo $_label->addAttributes(%node.array)',
 			$name,
-			($words ? 'NULL, ' : '') . implode(', ', array_map(array($writer, 'formatWord'), $words))
+			$words ? ('getLabelPart(' . implode(', ', array_map(array($writer, 'formatWord'), $words)) . ')') : 'getLabel()'
 		);
 	}
 
@@ -126,9 +126,9 @@ class FormMacros extends MacroSet
 		$name = array_shift($words);
 		return $writer->write(
 			($name[0] === '$' ? '$_input = is_object(%0.word) ? %0.word : $_form[%0.word]; echo $_input' : 'echo $_form[%0.word]')
-			. '->getControl(%1.raw)->addAttributes(%node.array)',
+			. '->%1.raw->addAttributes(%node.array)',
 			$name,
-			implode(', ', array_map(array($writer, 'formatWord'), $words))
+			$words ? 'getControlPart(' . implode(', ', array_map(array($writer, 'formatWord'), $words)) . ')' : 'getControl()'
 		);
 	}
 
@@ -171,10 +171,10 @@ class FormMacros extends MacroSet
 			return $writer->write(
 				'$_input = ' . ($name[0] === '$' ? 'is_object(%0.word) ? %0.word : ' : '')
 				. '$_form[%0.word]; echo $_input'
-				. ($tagName === 'label' ? '->getLabel(%1.raw)' : '->getControl(%1.raw)')
+				. ($tagName === 'label' ? '->getLabel%1.raw' : '->getControl%1.raw')
 				. ($node->htmlNode->attrs ? '->addAttributes(%2.var)' : '') . '->attributes()',
 				$name,
-				implode(', ', array_map(array($writer, 'formatWord'), $words)),
+				$words ? 'Part(' . implode(', ', array_map(array($writer, 'formatWord'), $words)) . ')' : '()',
 				array_fill_keys(array_keys($node->htmlNode->attrs), NULL)
 			);
 		}

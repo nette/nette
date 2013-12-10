@@ -28,6 +28,7 @@
 {* partial rendering of RadioList *}
 {foreach $form[sex]->items as $key => $label}
 	{label sex:$key} {input sex:$key} {$label}{/label}
+	<label n:name="sex:$key" title=hello> <input n:name="sex:$key"> </label>
 {/foreach}
 
 

@@ -81,23 +81,16 @@ class RadioList extends ChoiceControl
 
 	/**
 	 * Generates control's HTML element.
-	 * @param  mixed
 	 * @return Nette\Utils\Html
 	 */
 	public function getControl($key = NULL)
 	{
-		$input = parent::getControl();
-
 		if ($key !== NULL) {
-			$selected = array_flip((array) $this->value);
-			return $input->addAttributes(array(
-				'id' => $input->id . '-' . $key,
-				'checked' => isset($selected[$key]),
-				'disabled' => is_array($this->disabled) ? isset($this->disabled[$key]) : $this->disabled,
-				'value' => $key,
-			));
+			trigger_error('Partial ' . __METHOD__ . '() is deprecated; use getControlPart() instead.', E_USER_DEPRECATED);
+			return $this->getControlPart($key);
 		}
 
+		$input = parent::getControl();
 		$ids = array();
 		foreach ($this->getItems() as $value => $label) {
 			$ids[$value] = $input->id . '-' . $value;
@@ -122,19 +115,38 @@ class RadioList extends ChoiceControl
 	/**
 	 * Generates label's HTML element.
 	 * @param  string
-	 * @param  mixed
 	 * @return Nette\Utils\Html
 	 */
 	public function getLabel($caption = NULL, $key = NULL)
 	{
-		if ($key === NULL) {
-			$label = parent::getLabel($caption);
-			$label->for = NULL;
-		} else {
-			$label = parent::getLabel($caption === NULL ? $this->items[$key] : $caption);
-			$label->for .= '-' . $key;
+		if ($key !== NULL) {
+			trigger_error('Partial ' . __METHOD__ . '() is deprecated; use getLabelPart() instead.', E_USER_DEPRECATED);
+			return $this->getLabelPart($key);
 		}
-		return $label;
+		return parent::getLabel($caption)->for(NULL);
+	}
+
+
+	/**
+	 * @return Nette\Utils\Html
+	 */
+	public function getControlPart($key)
+	{
+		return parent::getControl()->addAttributes(array(
+			'id' => $this->getHtmlId() . '-' . $key,
+			'checked' => in_array($key, (array) $this->value),
+			'disabled' => is_array($this->disabled) ? isset($this->disabled[$key]) : $this->disabled,
+			'value' => $key,
+		));
+	}
+
+
+	/**
+	 * @return Nette\Utils\Html
+	 */
+	public function getLabelPart($key)
+	{
+		return parent::getLabel($this->items[$key])->for($this->getHtmlId() . '-' . $key);
 	}
 
 }
