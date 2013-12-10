@@ -191,24 +191,6 @@ test(function() { // setItems without keys with optgroups
 });
 
 
-test(function() {  // doubled item
-	$form = new Form;
-
-	Assert::exception(function() use ($form) {
-		$form->addSelect('select', NULL, array(
-			'usa' => array('the-simpsons' => 'The Simpsons'),
-			'uk' => array('the-simpsons' => 'Red Dwarf'),
-		));
-	}, 'Nette\InvalidArgumentException', "Items contain duplication for key 'the-simpsons'.");
-
-	Assert::exception(function() use ($form) {
-		$form->addSelect('select')->setItems(array(
-			'the-simpsons', 'the-simpsons',
-		), FALSE);
-	}, 'Nette\InvalidArgumentException', "Items contain duplication for key 'the-simpsons'.");
-});
-
-
 test(function() use ($series) { // setValue() and invalid argument
 	$form = new Form;
 	$input = $form->addSelect('select', NULL, $series);

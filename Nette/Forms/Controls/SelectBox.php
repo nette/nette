@@ -147,31 +147,20 @@ class SelectBox extends BaseControl
 	 */
 	public function setItems(array $items, $useKeys = TRUE)
 	{
-		$flattenItems = array();
-		foreach ($items as $key => $value) {
-			$group = is_array($value);
-			foreach ($group ? $value : array($key => $value) as $gkey => $gvalue) {
-				if (!$useKeys) {
-					if ($group) {
-						unset($value[$gkey]);
-						$value[(string) $gvalue] = $gvalue;
-					}
-					$gkey = (string) $gvalue;
-				}
-
-				if (isset($flattenItems[$gkey])) {
-					throw new Nette\InvalidArgumentException("Items contain duplication for key '$gkey'.");
-				}
-				$flattenItems[$gkey] = $gvalue;
-			}
-			if (!$useKeys) {
+		if (!$useKeys) {
+			foreach ($items as $key => $value) {
 				unset($items[$key]);
-				$items[$group ? $key : (string) $value] = $value;
+				if (is_array($value)) {
+					foreach ($value as $val) {
+						$items[$key][(string) $val] = $val;
+					}
+				} else {
+					$items[(string) $value] = $value;
+				}
 			}
 		}
-
 		$this->items = $items;
-		$this->flattenItems = $flattenItems;
+		$this->flattenItems = Nette\Utils\Arrays::flatten($items, TRUE);
 		return $this;
 	}
 
