@@ -405,9 +405,15 @@ class Form extends Container
 			}
 		}
 
-		if ($this->isValid()) {
-			$this->onSuccess($this);
-		} else {
+		if ($this->onSuccess) {
+			foreach ($this->onSuccess as $handler) {
+				if (!$this->isValid()) {
+					$this->onError($this);
+					break;
+				}
+				Nette\Utils\Callback::invoke($handler, $this);
+			}
+		} elseif (!$this->isValid()) {
 			$this->onError($this);
 		}
 		$this->onSubmit($this);
