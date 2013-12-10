@@ -32,7 +32,6 @@ class CheckboxList extends MultiChoiceControl
 	{
 		parent::__construct($label, $items);
 		$this->control->type = 'checkbox';
-		$this->control->id = FALSE;
 		$this->separator = Html::el('br');
 	}
 
@@ -49,6 +48,7 @@ class CheckboxList extends MultiChoiceControl
 		return Nette\Forms\Helpers::createInputList(
 			$this->translate($items),
 			array_merge($input->attrs, array(
+				'id' => NULL,
 				'checked?' => $this->value,
 				'disabled:' => $this->disabled,
 				'data-nette-rules:' => array(key($items) => $input->attrs['data-nette-rules']),
@@ -60,12 +60,46 @@ class CheckboxList extends MultiChoiceControl
 
 
 	/**
+	 * Generates label's HTML element.
+	 * @param  string
+	 * @return Nette\Utils\Html
+	 */
+	public function getLabel($caption = NULL)
+	{
+		return parent::getLabel($caption)->for(NULL);
+	}
+
+
+	/**
 	 * Returns separator HTML element template.
 	 * @return Nette\Utils\Html
 	 */
 	public function getSeparatorPrototype()
 	{
 		return $this->separator;
+	}
+
+
+	/**
+	 * @return Nette\Utils\Html
+	 */
+	public function getControlPart($key)
+	{
+		return parent::getControl()->addAttributes(array(
+			'id' => $this->getHtmlId() . '-' . $key,
+			'checked' => in_array($key, (array) $this->value),
+			'disabled' => is_array($this->disabled) ? isset($this->disabled[$key]) : $this->disabled,
+			'value' => $key,
+		));
+	}
+
+
+	/**
+	 * @return Nette\Utils\Html
+	 */
+	public function getLabelPart($key)
+	{
+		return parent::getLabel($this->items[$key])->for($this->getHtmlId() . '-' . $key);
 	}
 
 }

@@ -47,6 +47,18 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 <?php $iterations++; endforeach ?>
 
 
+<?php $iterations = 0; foreach ($form['checklist']->items as $key => $label): ?>
+	<?php if ($_label = $_form["checklist"]->getLabelPart($key)) echo $_label->addAttributes(array())->startTag() ?>
+ <?php echo $_form["checklist"]->getControlPart($key)->addAttributes(array()) ?>
+ <?php echo Nette\Templating\Helpers::escapeHtml($label, ENT_NOQUOTES) ;if ($_label) echo $_label->endTag() ?>
+
+	<label<?php $_input = $_form["checklist"]; echo $_input->getLabelPart($key)->attributes() ?>
+> <input title=hello<?php $_input = $_form["checklist"]; echo $_input->getControlPart($key)->addAttributes(array (
+  'title' => NULL,
+))->attributes() ?>> </label>
+<?php $iterations++; endforeach ?>
+
+
 <form id="myForm" class="ajax"<?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array (
   'id' => NULL,
   'class' => NULL,

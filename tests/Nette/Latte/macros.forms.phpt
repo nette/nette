@@ -24,6 +24,7 @@ $form->addText('username', 'Username:'); // must have just one textfield to gene
 $form->addRadioList('sex', 'Sex:', array('m' => 'male', 'f' => 'female'));
 $form->addSelect('select', NULL, array('m' => 'male', 'f' => 'female'));
 $form->addTextArea('area', NULL)->setValue('one<two');
+$form->addCheckboxList('checklist', NULL, array('m' => 'male', 'f' => 'female'));
 $form->addSubmit('send', 'Sign in');
 
 $template = new FileTemplate(__DIR__ . '/templates/forms.latte');

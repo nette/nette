@@ -34,8 +34,14 @@ test(function() {
 	Assert::same('<label>Label</label>', (string) $input->getLabel());
 	Assert::same('<label>Another label</label>', (string) $input->getLabel('Another label'));
 
+	Assert::type('Nette\Utils\Html', $input->getLabelPart(0));
+	Assert::same('<label for="frm-list-0">Second</label>', (string) $input->getLabelPart(0));
+
 	Assert::type('string', $input->getControl());
 	Assert::same('<label><input type="checkbox" name="list[]" value="a">First</label><br><label><input type="checkbox" name="list[]" value="0">Second</label>', $input->getControl());
+
+	Assert::type('Nette\Utils\Html', $input->getControlPart(0));
+	Assert::same('<input type="checkbox" name="list[]" id="frm-list-0" value="0">', (string) $input->getControlPart(0));
 });
 
 
@@ -60,8 +66,10 @@ test(function() { // translator
 
 	Assert::same('<label>LABEL</label>', (string) $input->getLabel());
 	Assert::same('<label>ANOTHER LABEL</label>', (string) $input->getLabel('Another label'));
+	Assert::same('<label for="frm-list-0">SECOND</label>', (string) $input->getLabelPart(0));
 
 	Assert::same('<label><input type="checkbox" name="list[]" value="a">FIRST</label><br><label><input type="checkbox" name="list[]" value="0">SECOND</label>', $input->getControl());
+	Assert::same('<input type="checkbox" name="list[]" id="frm-list-0" value="0">', (string) $input->getControlPart(0));
 });
 
 
@@ -76,6 +84,7 @@ test(function() { // Html
 	Assert::same('<label><b>Another label</b></label>', (string) $input->getLabel(Html::el('b', 'Another label')));
 
 	Assert::same('<label><input type="checkbox" name="list[]" value="a"><b>First</b></label>', $input->getControl());
+	Assert::same('<input type="checkbox" name="list[]" id="frm-list-a" value="a">', (string) $input->getControlPart('a'));
 });
 
 
@@ -87,6 +96,7 @@ test(function() { // validation rules
 	))->setRequired('required');
 
 	Assert::same('<label><input type="checkbox" name="list[]" required data-nette-rules=\'[{"op":":filled","msg":"required"}]\' value="a">First</label><br><label><input type="checkbox" name="list[]" required value="0">Second</label>', $input->getControl());
+	Assert::same('<input type="checkbox" name="list[]" id="frm-list-0" required data-nette-rules=\'[{"op":":filled","msg":"required"}]\' value="0">', (string) $input->getControlPart(0));
 });
 
 
@@ -132,4 +142,5 @@ test(function() { // disabled one
 	))->setDisabled(array('a'));
 
 	Assert::same('<label><input type="checkbox" name="list[]" disabled value="a">First</label><br><label><input type="checkbox" name="list[]" value="0">Second</label>', $input->getControl());
+	Assert::same('<input type="checkbox" name="list[]" id="frm-list-a" disabled value="a">', (string) $input->getControlPart('a'));
 });
