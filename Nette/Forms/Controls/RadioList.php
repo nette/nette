@@ -98,20 +98,19 @@ class RadioList extends ChoiceControl
 			));
 		}
 
-		$ids = $items = array();
+		$ids = array();
 		foreach ($this->getItems() as $value => $label) {
-			$items[$value] = $this->translate($label);
 			$ids[$value] = $input->id . '-' . $value;
 		}
 
 		return $this->container->setHtml(
 			Nette\Forms\Helpers::createInputList(
-				$items,
+				$this->translate($this->getItems()),
 				array_merge($input->attrs, array(
 					'id:' => $ids,
 					'checked?' => $this->value,
 					'disabled:' => $this->disabled,
-					'data-nette-rules:' => array(key($items) => $input->attrs['data-nette-rules']),
+					'data-nette-rules:' => array(key($ids) => $input->attrs['data-nette-rules']),
 				)),
 				array('for:' => $ids) + $this->label->attrs,
 				$this->separator

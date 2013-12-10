@@ -56,14 +56,7 @@ class MultiSelectBox extends MultiChoiceControl
 	{
 		$items = array();
 		foreach ($this->options as $key => $value) {
-			if (is_array($value)) {
-				$key = $this->translate($key);
-				foreach ($value as $k => $v) {
-					$items[$key][$k] = $this->translate($v);
-				}
-			} else {
-				$items[$key] = $this->translate($value);
-			}
+			$items[is_array($value) ? $this->translate($key) : $key] = $this->translate($value);
 		}
 
 		return Nette\Forms\Helpers::createSelectBox(

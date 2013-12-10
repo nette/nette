@@ -363,16 +363,21 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Returns translated string.
-	 * @param  string
+	 * @param  mixed
 	 * @param  int      plural count
 	 * @return string
 	 */
-	public function translate($s, $count = NULL)
+	public function translate($value, $count = NULL)
 	{
-		$translator = $this->getTranslator();
-		return $translator === NULL || $s == NULL || $s instanceof Html  // intentionally ==
-			? $s
-			: $translator->translate((string) $s, $count);
+		if ($translator = $this->getTranslator()) {
+			$tmp = is_array($value) ? array(& $value) : array(array(& $value));
+			foreach ($tmp[0] as & $v) {
+				if ($v != NULL && !$v instanceof Html) { // intentionally ==
+					$v = $translator->translate((string) $v, $count);
+				}
+			}
+		}
+		return $value;
 	}
 
 

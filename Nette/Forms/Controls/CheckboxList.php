@@ -43,14 +43,11 @@ class CheckboxList extends MultiChoiceControl
 	 */
 	public function getControl()
 	{
-		$items = array();
-		foreach ($this->getItems() as $key => $label) {
-			$items[$key] = $this->translate($label);
-		}
-
+		$items = $this->getItems();
+		reset($items);
 		$input = parent::getControl();
 		return Nette\Forms\Helpers::createInputList(
-			$items,
+			$this->translate($items),
 			array_merge($input->attrs, array(
 				'checked?' => $this->value,
 				'disabled:' => $this->disabled,
