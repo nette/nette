@@ -8,13 +8,13 @@
  * @dataProvider? databases.ini
  */
 
-use Nette\Caching\Storages\MemoryStorage;
-use Nette\Database\ResultSet;
 use Tester\Assert;
+use Nette\Caching\Storages\MemoryStorage;
 
 require __DIR__ . '/connect.inc.php'; // create $connection
 
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
+
 
 class CacheMock extends MemoryStorage
 {
@@ -27,14 +27,14 @@ class CacheMock extends MemoryStorage
 	}
 }
 
-$dao = new Nette\Database\Context(
+$context = new Nette\Database\Context(
 	$connection,
 	new Nette\Database\Reflection\DiscoveredReflection($connection, new Nette\Caching\Storages\MemoryStorage),
 	($cacheStorage = new CacheMock)
 );
 
 
-$authors = $dao->table('author');
+$authors = $context->table('author');
 foreach ($authors as $author) {
 	$author->name;
 }
@@ -48,7 +48,7 @@ foreach ($authors as $author) {
 $authors->__destruct();
 
 
-$authors = $dao->table('author');
+$authors = $context->table('author');
 Assert::equal(reformat('SELECT [id], [name] FROM [author]'), $authors->getSql());
 
 

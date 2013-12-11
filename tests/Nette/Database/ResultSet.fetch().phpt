@@ -16,8 +16,8 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
 
 
-test(function() use ($connection) {
-	$res = $connection->query('SELECT name, name FROM author');
+test(function() use ($context) {
+	$res = $context->query('SELECT name, name FROM author');
 
 	Assert::error(function () use ($res) {
 		$res->fetch();
@@ -27,15 +27,15 @@ test(function() use ($connection) {
 });
 
 
-test(function() use ($connection, $driverName) { // tests closeCursor()
+test(function() use ($context, $driverName) { // tests closeCursor()
 	if ($driverName === 'mysql') {
-		$connection->query('CREATE DEFINER = CURRENT_USER PROCEDURE `testProc`(IN param int(10) unsigned) BEGIN SELECT * FROM book WHERE id != param; END;;');
-		$connection->getPdo()->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, FALSE);
+		$context->query('CREATE DEFINER = CURRENT_USER PROCEDURE `testProc`(IN param int(10) unsigned) BEGIN SELECT * FROM book WHERE id != param; END;;');
+		$context->getConnection()->getPdo()->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, FALSE);
 
-		$res = $connection->query('CALL testProc(1)');
+		$res = $context->query('CALL testProc(1)');
 		foreach ($res as $row) {}
 
-		$res = $connection->query('SELECT * FROM book');
+		$res = $context->query('SELECT * FROM book');
 		foreach ($res as $row) {}
 	}
 });

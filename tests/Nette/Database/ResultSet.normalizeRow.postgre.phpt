@@ -8,13 +8,15 @@
  * @dataProvider? databases.ini  postgresql
  */
 
+use Tester\Assert;
+
 $query = 'postgresql';
 require __DIR__ . '/connect.inc.php'; // create $connection
 
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/files/pgsql-nette_test3.sql');
 
 
-$res = $connection->query('SELECT * FROM types');
+$res = $context->query('SELECT * FROM types');
 
 $row = $res->fetch();
 Assert::type( 'string', $row->money );
@@ -122,7 +124,7 @@ Assert::same( array(
 ), (array) $res->fetch() );
 
 
-$res = $connection->query('SELECT "integer" AS a, "text" AS a FROM types');
+$res = $context->query('SELECT "integer" AS a, "text" AS a FROM types');
 
 Assert::same( array(
 	'a' => 'a',
