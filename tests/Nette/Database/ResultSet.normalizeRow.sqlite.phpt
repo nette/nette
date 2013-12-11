@@ -8,6 +8,8 @@
  * @dataProvider? databases.ini  sqlite
  */
 
+use Tester\Assert;
+
 $query = 'sqlite';
 require __DIR__ . '/connect.inc.php'; // create $connection
 

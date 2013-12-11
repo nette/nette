@@ -8,6 +8,8 @@
  * @dataProvider? databases.ini  sqlsrv
  */
 
+use Tester\Assert;
+
 $query = 'sqlsrv';
 require __DIR__ . '/connect.inc.php'; // create $connection
 

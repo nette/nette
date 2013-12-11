@@ -8,13 +8,13 @@
  * @dataProvider? databases.ini
  */
 
-use Nette\Caching\Storages\MemoryStorage;
-use Nette\Database\ResultSet;
 use Tester\Assert;
+use Nette\Caching\Storages\MemoryStorage;
 
 require __DIR__ . '/connect.inc.php'; // create $connection
 
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
+
 
 class CacheMock extends MemoryStorage
 {

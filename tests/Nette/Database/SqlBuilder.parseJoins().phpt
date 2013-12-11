@@ -8,13 +8,13 @@
  * @dataProvider? databases.ini
  */
 
-require __DIR__ . '/connect.inc.php'; // create $connection
-
-Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test2.sql");
-
 use Tester\Assert;
 use Nette\Database\Reflection\DiscoveredReflection;
 use Nette\Database\Table\SqlBuilder;
+
+require __DIR__ . '/connect.inc.php'; // create $connection
+
+Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test2.sql");
 
 
 class SqlBuilderMock extends SqlBuilder

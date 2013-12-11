@@ -8,9 +8,10 @@
  * @dataProvider? databases.ini
  */
 
-require __DIR__ . '/connect.inc.php'; // create $connection
-
+use Tester\Assert;
 use Nette\Database\SqlLiteral;
+
+require __DIR__ . '/connect.inc.php'; // create $connection
 
 
 $preprocessor = new Nette\Database\SqlPreprocessor($connection);
