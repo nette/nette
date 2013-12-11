@@ -51,10 +51,10 @@ class CoreMacros extends MacroSet
 		$me = new static($compiler);
 
 		$me->addMacro('if', array($me, 'macroIf'), array($me, 'macroEndIf'));
-		$me->addMacro('elseif', 'elseif (%node.args):');
+		$me->addMacro('elseif', '; elseif (%node.args):');
 		$me->addMacro('else', array($me, 'macroElse'));
 		$me->addMacro('ifset', 'if (isset(%node.args)):', 'endif');
-		$me->addMacro('elseifset', 'elseif (isset(%node.args)):');
+		$me->addMacro('elseifset', '; elseif (isset(%node.args)):');
 		$me->addMacro('ifcontent', array($me, 'macroIfContent'), array($me, 'macroEndIfContent'));
 
 		$me->addMacro('foreach', '', array($me, 'macroEndForeach'));
@@ -149,7 +149,7 @@ class CoreMacros extends MacroSet
 			$ifNode->data->else = TRUE;
 			return 'ob_start()';
 		}
-		return 'else:';
+		return '; else:';
 	}
 
 

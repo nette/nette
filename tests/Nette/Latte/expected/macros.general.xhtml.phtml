@@ -11,7 +11,7 @@ if (!function_exists($_l->blocks['menu'][] = '_xxx_menu')) { function _xxx_menu(
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($menu) as $item): ?>
 	<li><?php echo Nette\Templating\Helpers::escapeHtml($counter++, ENT_NOQUOTES) ?>
  <?php if (is_array($item)): ?> <?php call_user_func(reset($_l->blocks['menu']), $_l, array('menu' => $item) + get_defined_vars()) ?>
- <?php else: echo Nette\Templating\Helpers::escapeHtml($item, ENT_NOQUOTES) ;endif ?></li>
+ <?php ; else: echo Nette\Templating\Helpers::escapeHtml($item, ENT_NOQUOTES) ;endif ?></li>
 <?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
 </ul>
 <?php
@@ -71,7 +71,7 @@ if ($_l->extends) {
 
 <p<?php echo Nette\Utils\Html::el(NULL, array('title' => $hello, 'lang' => isset($lang) ? $lang : NULL))->attributes() ?>> </p>
 
-<p val = <?php if (true): ?>"a"<?php else: ?>"b"<?php endif ?>> </p>
+<p val = <?php if (true): ?>"a"<?php ; else: ?>"b"<?php endif ?>> </p>
 
 <p val0 val1 = tmp val2=tmp val3="x"></p> </p>
 
@@ -85,10 +85,10 @@ if ($_l->extends) {
 <?php if ($hello): ?>
 	<?php echo Nette\Templating\Helpers::escapeHtml($hello, ENT_NOQUOTES) ?>
 
-<?php elseif ($any): ?>
+<?php ; elseif ($any): ?>
 	<?php echo Nette\Templating\Helpers::escapeHtml($any, ENT_NOQUOTES) ?>
 
-<?php else: ?>
+<?php ; else: ?>
 	none
 <?php endif ?>
 
