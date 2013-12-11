@@ -50,7 +50,7 @@ if (!function_exists($_l->blocks['_title2'][] = '_xxx__title2')) { function _xxx
 </div>
 
 
-	@<?php if (true): ?> Hello World @<?php endif ?>
+	@<?php if (true) { ?> Hello World @<?php } ?>
 
 
 	<h2 id="<?php echo $_control->getSnippetId('title') ?>"><?php call_user_func(reset($_l->blocks['_title']), $_l, $template->getParameters()) ?>
