@@ -34,21 +34,7 @@ require_once __DIR__ . '/Loaders/NetteLoader.php';
 
 Nette\Loaders\NetteLoader::getInstance()->register();
 
-require_once __DIR__ . '/Diagnostics/shortcuts.php';
+require_once __DIR__ . '/common/shortcuts.php';
 
 class_alias('Nette\Configurator', 'Nette\Config\Configurator');
 class_alias('Nette\Database\Context', 'Nette\Database\SelectionFactory');
-
-
-if (!function_exists('callback')) {
-	/**
-	 * Nette\Callback factory.
-	 * @param  mixed   class, object, callable
-	 * @param  string  method
-	 * @return Nette\Callback
-	 */
-	function callback($callback, $m = NULL)
-	{
-		return new Nette\Callback($callback, $m);
-	}
-}
