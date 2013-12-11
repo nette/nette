@@ -8,7 +8,8 @@
  */
 
 use Nette\Forms\Form,
-	Nette\Forms\Rule;
+	Nette\Forms\Rule,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

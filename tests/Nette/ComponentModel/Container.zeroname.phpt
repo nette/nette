@@ -7,7 +7,8 @@
  * @package    Nette\ComponentModel
  */
 
-use Nette\ComponentModel\Container;
+use Nette\ComponentModel\Container,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

@@ -9,7 +9,8 @@
 
 use Nette\Loaders\RobotLoader,
 	Nette\Caching\Storages\DevNullStorage,
-	Nette\Caching\Storages\PhpFileStorage;
+	Nette\Caching\Storages\PhpFileStorage,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

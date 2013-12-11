@@ -7,7 +7,8 @@
  * @package    Nette\Http
  */
 
-use Nette\Http\Session;
+use Nette\Http\Session,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

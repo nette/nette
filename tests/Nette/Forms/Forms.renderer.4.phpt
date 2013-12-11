@@ -7,6 +7,7 @@
  * @package    Nette\Forms
  */
 
+use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 

@@ -4,6 +4,8 @@
  * Common code for Route test cases.
  */
 
+use Tester\Assert;
+
 
 function testRouteIn(Nette\Application\Routers\Route $route, $url, $expectedPresenter=NULL, $expectedParams=NULL, $expectedUrl=NULL)
 {

@@ -10,7 +10,8 @@
  * @outputMatchFile Debugger.exception.html.expect
  */
 
-use Nette\Diagnostics\Debugger;
+use Nette\Diagnostics\Debugger,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

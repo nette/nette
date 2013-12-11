@@ -9,7 +9,8 @@
 
 use Nette\Forms\Form,
 	Nette\Forms\Validator,
-	Nette\DateTime;
+	Nette\DateTime,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

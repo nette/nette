@@ -10,7 +10,8 @@
  * @outputMatch %A%<h1>Server Error</h1>%A%
  */
 
-use Nette\Diagnostics\Debugger;
+use Nette\Diagnostics\Debugger,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

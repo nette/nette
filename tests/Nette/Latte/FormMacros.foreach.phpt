@@ -9,6 +9,7 @@
 
 use Nette\Latte\Macros\FormMacros;
 use Nette\Application\UI\Form;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

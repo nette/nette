@@ -10,7 +10,8 @@
  * @outputMatch %A%<title>User Error</title><!-- Test::__toString -->%A%
  */
 
-use Nette\Diagnostics\Debugger;
+use Nette\Diagnostics\Debugger,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

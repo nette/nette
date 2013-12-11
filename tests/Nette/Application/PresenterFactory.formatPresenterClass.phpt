@@ -7,7 +7,8 @@
  * @package    Nette\Application
  */
 
-use Nette\Application\PresenterFactory;
+use Nette\Application\PresenterFactory,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

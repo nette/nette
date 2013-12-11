@@ -8,7 +8,8 @@
  */
 
 use Nette\Caching\Storages\SQLiteStorage,
-	Nette\Caching\Cache;
+	Nette\Caching\Cache,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

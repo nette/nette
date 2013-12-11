@@ -9,7 +9,8 @@
  */
 
 use Nette\Latte,
-	Nette\Object;
+	Nette\Object,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

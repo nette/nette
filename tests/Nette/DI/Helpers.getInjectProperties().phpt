@@ -51,6 +51,7 @@ namespace
 {
 	use Nette\DI\Helpers;
 	use Nette\Reflection\ClassType;
+	use Tester\Assert;
 
 	require __DIR__ . '/../bootstrap.php';
 

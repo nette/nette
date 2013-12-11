@@ -8,7 +8,8 @@
  */
 
 use Nette\Caching\Cache,
-	Nette\Caching\Storages\PhpFileStorage;
+	Nette\Caching\Storages\PhpFileStorage,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

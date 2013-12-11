@@ -9,7 +9,8 @@
 
 use Nette\Forms\Form,
 	Nette\Http\FileUpload,
-	Nette\Forms\Validator;
+	Nette\Forms\Validator,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

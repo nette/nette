@@ -7,7 +7,8 @@
  * @package    Nette\Latte
  */
 
-use Nette\Latte\MacroTokens;
+use Nette\Latte\MacroTokens,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

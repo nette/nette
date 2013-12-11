@@ -7,7 +7,8 @@
  * @package    Nette\Http
  */
 
-use Nette\Http;
+use Nette\Http,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

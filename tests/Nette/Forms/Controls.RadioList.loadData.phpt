@@ -8,7 +8,8 @@
  */
 
 use Nette\Forms\Form,
-	Nette\DateTime;
+	Nette\DateTime,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

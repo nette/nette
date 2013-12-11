@@ -7,7 +7,8 @@
  * @package    Nette\Application\Routers
  */
 
-use Nette\Application\Routers\Route;
+use Nette\Application\Routers\Route,
+	Tester\Assert;
 
 
 

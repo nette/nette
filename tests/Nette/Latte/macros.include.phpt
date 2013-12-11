@@ -11,7 +11,8 @@
 use Nette\Latte,
 	Nette\Utils\Html,
 	Nette\Templating\FileTemplate,
-	Nette\Templating\Template;
+	Nette\Templating\Template,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

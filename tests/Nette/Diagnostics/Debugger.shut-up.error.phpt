@@ -10,7 +10,8 @@
  * @outputMatch exception 'Nette\FatalErrorException' with message 'Call to undefined function missing_function()' in %A%
  */
 
-use Nette\Diagnostics\Debugger;
+use Nette\Diagnostics\Debugger,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

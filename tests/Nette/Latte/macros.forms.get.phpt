@@ -10,7 +10,8 @@
 
 use Nette\Latte,
 	Nette\Templating\FileTemplate,
-	Nette\Forms\Form;
+	Nette\Forms\Form,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

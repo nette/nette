@@ -7,7 +7,8 @@
  * @package    Nette\Templating
  */
 
-use Nette\Templating\Template;
+use Nette\Templating\Template,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

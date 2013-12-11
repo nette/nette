@@ -8,7 +8,8 @@
  */
 
 use Nette\Http,
-	Nette\Application\Routers\CliRouter;
+	Nette\Application\Routers\CliRouter,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
