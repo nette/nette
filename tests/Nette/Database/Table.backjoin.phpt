@@ -50,8 +50,6 @@ test(function() use ($context) {
 
 
 test(function() use ($context) {
-	/*
-	$count = $dao->table('author')->where(':book.title LIKE ?', '%PHP%')->count('*'); // by translator_id
-	Assert::same(1, $count);
-	*/
+	$count = $context->table('author')->where(':book(translator).title LIKE ?', '%JUSH%')->count('*'); // by translator_id
+	Assert::same(0, $count);
 });
