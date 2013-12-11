@@ -280,7 +280,7 @@ class PhpWriter extends Nette\Object
 		while ($tokens->nextToken()) {
 			$res->append($tokens->isCurrent(MacroTokens::T_SYMBOL)
 				&& (!$tokens->isPrev() || $tokens->isPrev(',', '(', '[', '=>', ':', '?', '.', '<', '>', '<=', '>=', '===', '!==', '==', '!=', '<>', '&&', '||', '='))
-				&& (!$tokens->isNext() || $tokens->isNext(',', ')', ']', '=>', ':', '?', '.', '<', '>', '<=', '>=', '===', '!==', '==', '!=', '<>', '&&', '||'))
+				&& (!$tokens->isNext() || $tokens->isNext(',', ';', ')', ']', '=>', ':', '?', '.', '<', '>', '<=', '>=', '===', '!==', '==', '!=', '<>', '&&', '||'))
 				? "'" . $tokens->currentValue() . "'"
 				: $tokens->currentToken()
 			);
