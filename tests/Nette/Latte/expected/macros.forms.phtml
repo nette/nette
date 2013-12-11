@@ -1,7 +1,7 @@
 <?php
 %A%
 Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array('id' => 'myForm', 'class'=>"ajax")) ;$iterations = 0; foreach (array('id', 'username', 'select', 'area', 'send') as $name) { ?>
-		<?php $_input = is_object($name) ? $name : $_form[$name]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array())  ?>
+		<?php $_input = is_object($name) ? $name : $_form[$name]; if ($_label = $_input->getLabel()) echo $_label  ?>
 
 <?php $_input = is_object($name) ? $name : $_form[$name]; echo $_input->getControl()->addAttributes(array('title' => 'Hello', 'size' => 10)) ?>
 
@@ -13,7 +13,7 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 
 <?php $iterations++; } ?>
 
-	<?php $_input = is_object($form['username']) ? $form['username'] : $_form[$form['username']]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array())  ?>
+	<?php $_input = is_object($form['username']) ? $form['username'] : $_form[$form['username']]; if ($_label = $_input->getLabel()) echo $_label  ?>
 
 
 	<LABEL title=hello<?php $_input = $_form["username"]; echo $_input->getLabel()->addAttributes(array (
@@ -38,8 +38,8 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 
 
 <?php $iterations = 0; foreach ($form['sex']->items as $key => $label) { ?>
-	<?php if ($_label = $_form["sex"]->getLabelPart($key)) echo $_label->addAttributes(array())->startTag() ?>
- <?php echo $_form["sex"]->getControlPart($key)->addAttributes(array()) ?> <?php echo Nette\Templating\Helpers::escapeHtml($label, ENT_NOQUOTES) ;if ($_label) echo $_label->endTag() ?>
+	<?php if ($_label = $_form["sex"]->getLabelPart($key)) echo $_label->startTag() ?>
+ <?php echo $_form["sex"]->getControlPart($key) ?> <?php echo Nette\Templating\Helpers::escapeHtml($label, ENT_NOQUOTES) ;if ($_label) echo $_label->endTag() ?>
 
 	<label title=hello<?php $_input = $_form["sex"]; echo $_input->getLabelPart($key)->addAttributes(array (
   'title' => NULL,
@@ -47,8 +47,8 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 <?php $iterations++; } ?>
 
 
-<?php if ($_label = $_form["checkbox"]->getLabelPart("")) echo $_label->addAttributes(array())->startTag() ?>
- <?php echo $_form["checkbox"]->getControlPart("")->addAttributes(array()) ?> Label<?php if ($_label) echo $_label->endTag() ?>
+<?php if ($_label = $_form["checkbox"]->getLabelPart("")) echo $_label->startTag() ?>
+ <?php echo $_form["checkbox"]->getControlPart("") ?> Label<?php if ($_label) echo $_label->endTag() ?>
 
 <label title=hello<?php $_input = $_form["checkbox"]; echo $_input->getLabelPart("")->addAttributes(array (
   'title' => NULL,
@@ -56,9 +56,8 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 
 
 <?php $iterations = 0; foreach ($form['checklist']->items as $key => $label) { ?>
-	<?php if ($_label = $_form["checklist"]->getLabelPart($key)) echo $_label->addAttributes(array())->startTag() ?>
- <?php echo $_form["checklist"]->getControlPart($key)->addAttributes(array()) ?>
- <?php echo Nette\Templating\Helpers::escapeHtml($label, ENT_NOQUOTES) ;if ($_label) echo $_label->endTag() ?>
+	<?php if ($_label = $_form["checklist"]->getLabelPart($key)) echo $_label->startTag() ?>
+ <?php echo $_form["checklist"]->getControlPart($key) ?> <?php echo Nette\Templating\Helpers::escapeHtml($label, ENT_NOQUOTES) ;if ($_label) echo $_label->endTag() ?>
 
 	<label<?php $_input = $_form["checklist"]; echo $_input->getLabelPart($key)->attributes() ?>
 > <input title=hello<?php $_input = $_form["checklist"]; echo $_input->getControlPart($key)->addAttributes(array (

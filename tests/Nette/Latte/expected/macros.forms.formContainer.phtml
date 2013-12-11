@@ -6,36 +6,36 @@
 Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array()) ?>
 <table>
 	<tr>
-		<th><?php if ($_label = $_form["input1"]->getLabel()) echo $_label->addAttributes(array())  ?></th>
-		<td><?php echo $_form["input1"]->getControl()->addAttributes(array()) ?></td>
+		<th><?php if ($_label = $_form["input1"]->getLabel()) echo $_label  ?></th>
+		<td><?php echo $_form["input1"]->getControl() ?></td>
 	</tr>
 <?php $_formStack[] = $_form; $formContainer = $_form = $_form["cont1"] ?>
 	<tr>
-		<th><?php if ($_label = $_form["input2"]->getLabel()) echo $_label->addAttributes(array())  ?></th>
-		<td><?php echo $_form["input2"]->getControl()->addAttributes(array()) ?></td>
+		<th><?php if ($_label = $_form["input2"]->getLabel()) echo $_label  ?></th>
+		<td><?php echo $_form["input2"]->getControl() ?></td>
 	</tr>
 	<tr>
-		<th><?php if ($_label = $_form["input3"]->getLabel()) echo $_label->addAttributes(array())  ?></th>
-		<td><?php echo $_form["input3"]->getControl()->addAttributes(array()) ?></td>
+		<th><?php if ($_label = $_form["input3"]->getLabel()) echo $_label  ?></th>
+		<td><?php echo $_form["input3"]->getControl() ?></td>
 	</tr>
 	<tr>
 		<th>Checkboxes</th>
 		<td>
 <?php $_formStack[] = $_form; $formContainer = $_form = $_form["cont2"] ?>			<ol>
 <?php $iterations = 0; foreach ($formContainer->controls AS $name => $field) { ?>
-				<li><?php $_input = is_object($field) ? $field : $_form[$field]; echo $_input->getControl()->addAttributes(array()) ?></li>
+				<li><?php $_input = is_object($field) ? $field : $_form[$field]; echo $_input->getControl() ?></li>
 <?php $iterations++; } ?>			</ol>
 <?php $_form = array_pop($_formStack) ?>
 		</td>
 	</tr>
 	<tr>
-		<th><?php if ($_label = $_form["input7"]->getLabel()) echo $_label->addAttributes(array())  ?></th>
-		<td><?php echo $_form["input7"]->getControl()->addAttributes(array()) ?></td>
+		<th><?php if ($_label = $_form["input7"]->getLabel()) echo $_label  ?></th>
+		<td><?php echo $_form["input7"]->getControl() ?></td>
 	</tr>
 <?php $_form = array_pop($_formStack) ?>
 	<tr>
-		<th><?php if ($_label = $_form["input8"]->getLabel()) echo $_label->addAttributes(array())  ?></th>
-		<td><?php echo $_form["input8"]->getControl()->addAttributes(array()) ?></td>
+		<th><?php if ($_label = $_form["input8"]->getLabel()) echo $_label  ?></th>
+		<td><?php echo $_form["input8"]->getControl() ?></td>
 	</tr>
 </table>
 <?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form) ;

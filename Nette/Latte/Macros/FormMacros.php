@@ -95,7 +95,8 @@ class FormMacros extends MacroSet
 		$name = array_shift($words);
 		return $writer->write(
 			($name[0] === '$' ? '$_input = is_object(%0.word) ? %0.word : $_form[%0.word]; if ($_label = $_input' : 'if ($_label = $_form[%0.word]')
-			. '->%1.raw) echo $_label->addAttributes(%node.array)',
+				. '->%1.raw) echo $_label'
+				. ($node->tokenizer->isNext() ? '->addAttributes(%node.array)' : ''),
 			$name,
 			$words ? ('getLabelPart(' . implode(', ', array_map(array($writer, 'formatWord'), $words)) . ')') : 'getLabel()'
 		);
@@ -108,7 +109,7 @@ class FormMacros extends MacroSet
 	public function macroLabelEnd(MacroNode $node, PhpWriter $writer)
 	{
 		if ($node->content != NULL) {
-			$node->openingCode = substr_replace($node->openingCode, '->startTag()', strrpos($node->openingCode, ')') + 1, 0);
+			$node->openingCode = rtrim($node->openingCode, '?> ') . '->startTag() ?>';
 			return $writer->write('if ($_label) echo $_label->endTag()');
 		}
 	}
@@ -126,7 +127,8 @@ class FormMacros extends MacroSet
 		$name = array_shift($words);
 		return $writer->write(
 			($name[0] === '$' ? '$_input = is_object(%0.word) ? %0.word : $_form[%0.word]; echo $_input' : 'echo $_form[%0.word]')
-			. '->%1.raw->addAttributes(%node.array)',
+				. '->%1.raw'
+				. ($node->tokenizer->isNext() ? '->addAttributes(%node.array)' : ''),
 			$name,
 			$words ? 'getControlPart(' . implode(', ', array_map(array($writer, 'formatWord'), $words)) . ')' : 'getControl()'
 		);
@@ -162,17 +164,17 @@ class FormMacros extends MacroSet
 		if ($tagName === 'form') {
 			return $writer->write(
 				'Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = '
-				. ($name[0] === '$' ? 'is_object(%0.word) ? %0.word : ' : '')
-				. '$_control[%0.word], %1.var, FALSE)',
+					. ($name[0] === '$' ? 'is_object(%0.word) ? %0.word : ' : '')
+					. '$_control[%0.word], %1.var, FALSE)',
 				$name,
 				array_fill_keys(array_keys($node->htmlNode->attrs), NULL)
 			);
 		} else {
 			return $writer->write(
 				'$_input = ' . ($name[0] === '$' ? 'is_object(%0.word) ? %0.word : ' : '')
-				. '$_form[%0.word]; echo $_input'
-				. ($tagName === 'label' ? '->getLabel%1.raw' : '->getControl%1.raw')
-				. ($node->htmlNode->attrs ? '->addAttributes(%2.var)' : '') . '->attributes()',
+					. '$_form[%0.word]; echo $_input'
+					. ($tagName === 'label' ? '->getLabel%1.raw' : '->getControl%1.raw')
+					. ($node->htmlNode->attrs ? '->addAttributes(%2.var)' : '') . '->attributes()',
 				$name,
 				$words ? 'Part(' . implode(', ', array_map(array($writer, 'formatWord'), $words)) . ')' : '()',
 				array_fill_keys(array_keys($node->htmlNode->attrs), NULL)
