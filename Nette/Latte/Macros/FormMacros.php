@@ -95,7 +95,7 @@ class FormMacros extends MacroSet
 		$name = array_shift($words);
 		return $writer->write(
 			($name[0] === '$' ? '$_input = is_object(%0.word) ? %0.word : $_form[%0.word]; if ($_label = $_input' : 'if ($_label = $_form[%0.word]')
-			. '->%1.raw) echo $_label->addAttributes(%node.array)',
+			. '->%1.raw) {echo $_label->addAttributes(%node.array);}',
 			$name,
 			$words ? ('getLabelPart(' . implode(', ', array_map(array($writer, 'formatWord'), $words)) . ')') : 'getLabel()'
 		);
@@ -109,7 +109,7 @@ class FormMacros extends MacroSet
 	{
 		if ($node->content != NULL) {
 			$node->openingCode = substr_replace($node->openingCode, '->startTag()', strrpos($node->openingCode, ')') + 1, 0);
-			return $writer->write('if ($_label) echo $_label->endTag()');
+			return $writer->write('if ($_label) {echo $_label->endTag();}');
 		}
 	}
 
