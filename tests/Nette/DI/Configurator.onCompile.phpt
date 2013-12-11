@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator and user extension.
+ * Test: Nette\Configurator and user extension.
  *
  * @author     David Grudl
  * @package    Nette\DI
  */
 
-use Nette\Config\Configurator,
+use Nette\Configurator,
 	Tester\Assert;
 
 
