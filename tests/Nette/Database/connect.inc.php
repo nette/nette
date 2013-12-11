@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database test boostrap.
+ * Test: Nette\Database test bootstrap.
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek

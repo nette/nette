@@ -15,7 +15,7 @@ use Nette;
 
 
 /**
- * @deprecated, for back compatiblity
+ * @deprecated, for back compatibility
  */
 class NetteAccessor extends Nette\Object
 {
