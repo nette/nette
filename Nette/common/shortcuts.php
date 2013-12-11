@@ -24,3 +24,17 @@ if (!function_exists('dump')) {
 		return $var;
 	}
 }
+
+
+if (!function_exists('callback')) {
+	/**
+	 * Nette\Callback factory.
+	 * @param  mixed   class, object, callable
+	 * @param  string  method
+	 * @return Nette\Callback
+	 */
+	function callback($callback, $m = NULL)
+	{
+		return new Nette\Callback($callback, $m);
+	}
+}
