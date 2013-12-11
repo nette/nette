@@ -25,6 +25,10 @@ Assert::same( '',  formatArgs('') );
 Assert::same( '1',  formatArgs('1') );
 Assert::same( "'symbol'",  formatArgs('symbol') );
 Assert::same( "1, 2, 'symbol1', 'symbol-2'",  formatArgs('1, 2, symbol1, symbol-2') );
+Assert::same( "('a', 'b', 'c' => 'd', 'e' ? 'f' : 'g', h['i'], j('k'))",  formatArgs('(a, b, c => d, e ? f : g, h[i], j(k))') );
+Assert::same( "'x' && 'y', 'x' || 'y', 'x' < 'y', 'x' <= 'y', 'x' > 'y', 'x' => 'y', 'x' == 'y', 'x' === 'y', 'x' != 'y', 'x' !== 'y', 'x' <> 'y'",  formatArgs('x && y, x || y, x < y, x <= y, x > y, x => y, x == y, x === y, x != y, x !== y, x <> y') );
+Assert::same( "'x' and 'y', 'x' or 'y', 'x' xor 'y', 'x' and 'y' or 'x'",  formatArgs('x and y, x or y, x xor y, x and y or x') );
+Assert::same( "\$x = 'x', x = 1, 'x' . 'y'",  formatArgs('$x = x, x = 1, x . y') );
 
 
 // strings
