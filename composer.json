@@ -31,7 +31,8 @@
 		"nette/tester": "@dev"
 	},
 	"autoload": {
-		"files": ["Nette/loader.php"]
+		"classmap": ["Nette/"],
+		"files": ["Nette/common/shortcuts.php"]
 	},
 	"extra": {
 		"branch-alias": {
