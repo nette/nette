@@ -225,7 +225,7 @@ class Connection extends Nette\Object
 	/** @deprecated */
 	function table($table)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use Context::table() instead.', E_USER_DEPRECATED);
+		trigger_error(__METHOD__ . '() is deprecated; use Nette\Database\Context::table() instead.', E_USER_DEPRECATED);
 		if (!$this->context) {
 			$this->context = new Context($this);
 		}
@@ -251,7 +251,7 @@ class Connection extends Nette\Object
 	/** @deprecated */
 	function setDatabaseReflection()
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use Database\Context instead.', E_USER_DEPRECATED);
+		trigger_error(__METHOD__ . '() is deprecated; use Nette\Database\Context instead.', E_USER_DEPRECATED);
 		return $this;
 	}
 
@@ -259,7 +259,7 @@ class Connection extends Nette\Object
 	/** @deprecated */
 	function setCacheStorage()
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use Database\Context instead.', E_USER_DEPRECATED);
+		trigger_error(__METHOD__ . '() is deprecated; use Nette\Database\Context instead.', E_USER_DEPRECATED);
 	}
 
 
@@ -274,7 +274,7 @@ class Connection extends Nette\Object
 	/** @deprecated */
 	function exec($statement)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use Database\Context::query()->getRowCount() instead.', E_USER_DEPRECATED);
+		trigger_error(__METHOD__ . '() is deprecated; use Nette\Database\Context::query()->getRowCount() instead.', E_USER_DEPRECATED);
 		$args = func_get_args();
 		return $this->queryArgs(array_shift($args), $args)->getRowCount();
 	}

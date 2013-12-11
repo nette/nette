@@ -328,7 +328,7 @@ class Container extends Nette\Object
 	private function error($oldName, $newName)
 	{
 		if (empty($this->parameters['container']['accessors'])) {
-			trigger_error("$oldName() is deprecated; use $newName() or enable nette.accessors in configuration.", E_USER_DEPRECATED);
+			trigger_error("$oldName() is deprecated; use $newName() or enable nette.container.accessors in configuration.", E_USER_DEPRECATED);
 		}
 	}
 
