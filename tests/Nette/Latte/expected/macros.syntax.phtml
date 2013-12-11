@@ -14,26 +14,26 @@ if (%A%}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <ul>
-<?php $iterations = 0; foreach ($people as $person): ?>
+<?php $iterations = 0; foreach ($people as $person) { ?>
 	<li><?php echo Nette\Templating\Helpers::escapeHtml($template->upper($person), ENT_NOQUOTES) ?></li>
-<?php $iterations++; endforeach ?>
+<?php $iterations++; } ?>
 {* comment latte *}
 </ul>
 
 <p>Default: <?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></p>
 
 <ul>
-<?php $iterations = 0; foreach ($people as $person): ?>
+<?php $iterations = 0; foreach ($people as $person) { ?>
 	<li><?php echo Nette\Templating\Helpers::escapeHtml($template->upper($person), ENT_NOQUOTES) ?></li>
-<?php $iterations++; endforeach ?>
+<?php $iterations++; } ?>
 </ul>
 
 <p>Default: <?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></p>
 
 <ul>
-<?php $iterations = 0; foreach ($people as $person): ?>
+<?php $iterations = 0; foreach ($people as $person) { ?>
 	<li><?php echo Nette\Templating\Helpers::escapeHtml($template->upper($person), ENT_NOQUOTES) ?></li>
-<?php $iterations++; endforeach ?>
+<?php $iterations++; } ?>
 </ul>
 
 <p>Default: <?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></p>

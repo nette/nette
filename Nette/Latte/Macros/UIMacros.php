@@ -49,7 +49,7 @@ class UIMacros extends MacroSet
 		$me->addMacro('block', array($me, 'macroBlock'), array($me, 'macroBlockEnd'));
 		$me->addMacro('define', array($me, 'macroBlock'), array($me, 'macroBlockEnd'));
 		$me->addMacro('snippet', array($me, 'macroBlock'), array($me, 'macroBlockEnd'));
-		$me->addMacro('ifset', array($me, 'macroIfset'), 'endif');
+		$me->addMacro('ifset', array($me, 'macroIfset'), '}');
 
 		$me->addMacro('widget', array($me, 'macroControl')); // deprecated - use control
 		$me->addMacro('control', array($me, 'macroControl'));
@@ -59,7 +59,7 @@ class UIMacros extends MacroSet
 		});
 		$me->addMacro('plink', array($me, 'macroLink'));
 		$me->addMacro('link', array($me, 'macroLink'));
-		$me->addMacro('ifCurrent', array($me, 'macroIfCurrent'), 'endif'); // deprecated; use n:class="$presenter->linkCurrent ? ..."
+		$me->addMacro('ifCurrent', array($me, 'macroIfCurrent'), '}'); // deprecated; use n:class="$presenter->linkCurrent ? ..."
 
 		$me->addMacro('contentType', array($me, 'macroContentType'));
 		$me->addMacro('status', array($me, 'macroStatus'));
@@ -332,7 +332,7 @@ if (!empty($_control->snippetMode)) {
 		while (($name = $node->tokenizer->fetchWord()) !== FALSE) {
 			$list[] = $name[0] === '#' ? '$_l->blocks["' . substr($name, 1) . '"]' : $name;
 		}
-		return 'if (isset(' . implode(', ', $list) . ')):';
+		return 'if (isset(' . implode(', ', $list) . ')) {';
 	}
 
 
@@ -377,7 +377,7 @@ if (!empty($_control->snippetMode)) {
 	public function macroIfCurrent(MacroNode $node, PhpWriter $writer)
 	{
 		return $writer->write(($node->args ? 'try { $_presenter->link(%node.word, %node.array?); } catch (Nette\Application\UI\InvalidLinkException $e) {}' : '')
-			. '; if ($_presenter->getLastCreatedRequestFlag("current")):');
+			. '; if ($_presenter->getLastCreatedRequestFlag("current")) {');
 	}
 
 

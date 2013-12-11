@@ -26,9 +26,9 @@ function expandMacro($compiler, $args) {
 	return $node;
 }
 
-Assert::same( $prefix . '$array) as $value): ?>',  expandMacro($compiler, '$array as $value')->openingCode );
-Assert::same( $prefix . '$array) as $key => $value): ?>',  expandMacro($compiler, '$array as $key => $value')->openingCode );
+Assert::same( $prefix . '$array) as $value) { ?>',  expandMacro($compiler, '$array as $value')->openingCode );
+Assert::same( $prefix . '$array) as $key => $value) { ?>',  expandMacro($compiler, '$array as $key => $value')->openingCode );
 
-Assert::same( $prefix . '$obj->data("A as B")) as $value): ?>',  expandMacro($compiler, '$obj->data("A as B") as $value')->openingCode );
-Assert::same( $prefix . '$obj->data(\'A as B\')) as $value): ?>',  expandMacro($compiler, '$obj->data(\'A as B\') as $value')->openingCode );
-Assert::same( $prefix . '$obj->data("X as Y, Z as W")) as $value): ?>',  expandMacro($compiler, '$obj->data("X as Y, Z as W") as $value')->openingCode );
+Assert::same( $prefix . '$obj->data("A as B")) as $value) { ?>',  expandMacro($compiler, '$obj->data("A as B") as $value')->openingCode );
+Assert::same( $prefix . '$obj->data(\'A as B\')) as $value) { ?>',  expandMacro($compiler, '$obj->data(\'A as B\') as $value')->openingCode );
+Assert::same( $prefix . '$obj->data("X as Y, Z as W")) as $value) { ?>',  expandMacro($compiler, '$obj->data("X as Y, Z as W") as $value')->openingCode );

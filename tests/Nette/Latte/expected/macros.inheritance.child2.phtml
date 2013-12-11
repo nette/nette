@@ -10,9 +10,9 @@ if (!function_exists($_l->blocks['content'][] = '_xxx_content')) { function _xxx
 ?>	<h1><?php call_user_func(reset($_l->blocks['title']), $_l, get_defined_vars())  ?></h1>
 
 	<ul>
-<?php $iterations = 0; foreach ($people as $person): ?>
+<?php $iterations = 0; foreach ($people as $person) { ?>
 		<li><?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></li>
-<?php $iterations++; endforeach ?>
+<?php $iterations++; } ?>
 	</ul>
 <?php
 }}
