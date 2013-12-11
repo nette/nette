@@ -33,6 +33,7 @@ $template = new FileTemplate(__DIR__ . '/templates/forms.latte');
 $template->registerFilter(new Latte\Engine);
 $template->_control = array('myForm' => $form);
 
+$form['username']->addError('error');
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 //echo $template->compile(); exit;

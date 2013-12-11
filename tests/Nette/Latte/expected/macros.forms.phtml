@@ -4,6 +4,9 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 		<?php $_input = is_object($name) ? $name : $_form[$name]; if ($_label = $_input->getLabel()) echo $_label  ?>
 
 <?php $_input = is_object($name) ? $name : $_form[$name]; echo $_input->getControl()->addAttributes(array('title' => 'Hello', 'size' => 10)) ?>
+		<?php echo Nette\Templating\Helpers::escapeHtml($_input->getError(), ENT_NOQUOTES) ?>
+
+<?php $_input = is_object($name) ? $name : $_form[$name]; echo Nette\Templating\Helpers::escapeHtml($_input->getError(), ENT_NOQUOTES) ?>
 
 		<br>
 
@@ -11,7 +14,7 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
  <?php $_input = is_object($form[$name]) ? $form[$name] : $_form[$form[$name]]; echo $_input->getControl()->addAttributes(array('title' => 'Hello', 'size' => 10)) ?>
  <?php if ($_label) echo $_label->endTag() ?>
 
-<?php $iterations++; } ?>
+<?php $_input = is_object($form[$name]) ? $form[$name] : $_form[$form[$name]]; echo Nette\Templating\Helpers::escapeHtml($_input->getError(), ENT_NOQUOTES) ;$iterations++; } ?>
 
 	<?php $_input = is_object($form['username']) ? $form['username'] : $_form[$form['username']]; if ($_label = $_input->getLabel()) echo $_label  ?>
 

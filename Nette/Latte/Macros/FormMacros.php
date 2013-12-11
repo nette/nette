@@ -25,6 +25,7 @@ use Nette,
  * - {form name} ... {/form}
  * - {input name}
  * - {label name /} or {label name}... {/label}
+ * - {inputError name}
  * - {formContainer name} ... {/formContainer}
  *
  * @author     David Grudl
@@ -40,6 +41,7 @@ class FormMacros extends MacroSet
 		$me->addMacro('label', array($me, 'macroLabel'), array($me, 'macroLabelEnd'));
 		$me->addMacro('input', array($me, 'macroInput'), NULL, array($me, 'macroInputAttr'));
 		$me->addMacro('name', array($me, 'macroName'), array($me, 'macroNameEnd'), array($me, 'macroNameAttr'));
+		$me->addMacro('inputError', array($me, 'macroInputError'));
 	}
 
 
@@ -200,6 +202,22 @@ class FormMacros extends MacroSet
 			$node->content = $parts[1] . $parts[2] . '<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form, FALSE) ?>' . $parts[3];
 		} else { // select, textarea
 			$node->content = $parts[1] . '<?php echo $_input->getControl()->getHtml() ?>' . $parts[3];
+		}
+	}
+
+
+	/**
+	 * {inputError ...}
+	 */
+	public function macroInputError(MacroNode $node, PhpWriter $writer)
+	{
+		$name = $node->tokenizer->fetchWord();
+		if (!$name) {
+			return $writer->write('echo %escape($_input->getError())');
+		} elseif ($name[0] === '$') {
+			return $writer->write('$_input = is_object(%0.word) ? %0.word : $_form[%0.word]; echo %escape($_input->getError())', $name);
+		} else {
+			return $writer->write('echo %escape($_form[%0.word]->getError())', $name);
 		}
 	}
 
