@@ -33,7 +33,7 @@ $var = 10 ?>
 call_user_func(reset($_l->blocks['static']), $_l, get_defined_vars())  ?>
 
 
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array('dynamic', 'static')) as $name):
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array('dynamic', 'static')) as $name) {
 
 //
 // block $name
@@ -41,7 +41,7 @@ call_user_func(reset($_l->blocks['static']), $_l, get_defined_vars())  ?>
 if (!function_exists($_l->blocks[$name]['xxx'] = '_xxx__name')) { function _xxx__name($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v ?>
 		Dynamic block #<?php echo Nette\Templating\Helpers::escapeHtml($var, ENT_NOQUOTES) ?>
 
-<?php }} call_user_func(reset($_l->blocks[$name]), $_l, get_defined_vars()) ;$iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
+<?php }} call_user_func(reset($_l->blocks[$name]), $_l, get_defined_vars()) ;$iterations++; } array_pop($_l->its); $iterator = end($_l->its) ?>
 
 <?php Nette\Latte\Macros\UIMacros::callBlock($_l, 'dynamic', array('var' => 20) + $template->getParameters()) ?>
 

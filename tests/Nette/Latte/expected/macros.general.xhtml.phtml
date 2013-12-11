@@ -8,11 +8,11 @@ list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
 //
 if (!function_exists($_l->blocks['menu'][] = '_xxx_menu')) { function _xxx_menu($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
 ?><ul>
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($menu) as $item): ?>
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($menu) as $item) { ?>
 	<li><?php echo Nette\Templating\Helpers::escapeHtml($counter++, ENT_NOQUOTES) ?>
- <?php if (is_array($item)): ?> <?php call_user_func(reset($_l->blocks['menu']), $_l, array('menu' => $item) + get_defined_vars()) ?>
- <?php else: echo Nette\Templating\Helpers::escapeHtml($item, ENT_NOQUOTES) ;endif ?></li>
-<?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
+ <?php if (is_array($item)) { ?> <?php call_user_func(reset($_l->blocks['menu']), $_l, array('menu' => $item) + get_defined_vars()) ?>
+ <?php } else { echo Nette\Templating\Helpers::escapeHtml($item, ENT_NOQUOTES) ;} ?></li>
+<?php $iterations++; } array_pop($_l->its); $iterator = end($_l->its) ?>
 </ul>
 <?php
 }}
@@ -22,9 +22,9 @@ if (!function_exists($_l->blocks['menu'][] = '_xxx_menu')) { function _xxx_menu(
 //
 if (!function_exists($_l->blocks['bl'][] = '_xxx_bl')) { function _xxx_bl($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
 ?><ul title="block + if + foreach">
-<?php $iterations = 0; foreach ($people as $person): if (strlen($person)===4): ?>
+<?php $iterations = 0; foreach ($people as $person) { if (strlen($person)===4) { ?>
 	<li><?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></li>
-<?php endif ;$iterations++; endforeach ?>
+<?php } $iterations++; } ?>
 </ul>
 <?php
 }}
@@ -71,7 +71,7 @@ if ($_l->extends) {
 
 <p<?php echo Nette\Utils\Html::el(NULL, array('title' => $hello, 'lang' => isset($lang) ? $lang : NULL))->attributes() ?>> </p>
 
-<p val = <?php if (true): ?>"a"<?php else: ?>"b"<?php endif ?>> </p>
+<p val = <?php if (true) { ?>"a"<?php } else { ?>"b"<?php } ?>> </p>
 
 <p val0 val1 = tmp val2=tmp val3="x"></p> </p>
 
@@ -82,25 +82,25 @@ if ($_l->extends) {
 <?php echo Nette\Templating\Helpers::escapeHtml((string) (bool) (float) (int) (array) 10, ENT_NOQUOTES) ?>
 
 
-<?php if ($hello): ?>
+<?php if ($hello) { ?>
 	<?php echo Nette\Templating\Helpers::escapeHtml($hello, ENT_NOQUOTES) ?>
 
-<?php elseif ($any): ?>
+<?php } elseif ($any) { ?>
 	<?php echo Nette\Templating\Helpers::escapeHtml($any, ENT_NOQUOTES) ?>
 
-<?php else: ?>
+<?php } else { ?>
 	none
-<?php endif ?>
+<?php } ?>
 
 
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array(TRUE)) as $foo): $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): ?>
-	<?php if ($iterator->isFirst()): ?><ul><?php endif ?>
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array(TRUE)) as $foo) { $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person) { ?>
+	<?php if ($iterator->isFirst()) { ?><ul><?php } ?>
 
 	<li id="item-<?php echo htmlSpecialChars($iterator->getCounter()) ?>" class="<?php echo htmlSpecialChars($iterator->isOdd() ? 'odd' : 'even') ?>
 "><?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></li>
-	<?php if ($iterator->isLast()): ?></ul><?php endif ?>
+	<?php if ($iterator->isLast()) { ?></ul><?php } ?>
 
-<?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ;$iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
+<?php $iterations++; } array_pop($_l->its); $iterator = end($_l->its) ;$iterations++; } array_pop($_l->its); $iterator = end($_l->its) ?>
 
 
 
@@ -171,71 +171,71 @@ call_user_func(reset($_l->blocks['menu']), $_l, get_defined_vars())  ?>
 
 
 <ul title="foreach">
-<?php $iterations = 0; foreach ($people as $person): ?>	<li><?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></li>
-<?php $iterations++; endforeach ?>
+<?php $iterations = 0; foreach ($people as $person) { ?>	<li><?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></li>
+<?php $iterations++; } ?>
 </ul>
 
 <ul title="for">
-<?php for ($i=0;$i<3;$i++): ?>	<li><?php echo Nette\Templating\Helpers::escapeHtml($i, ENT_NOQUOTES) ?></li>
-<?php endfor ?>
+<?php for ($i=0;$i<3;$i++) { ?>	<li><?php echo Nette\Templating\Helpers::escapeHtml($i, ENT_NOQUOTES) ?></li>
+<?php } ?>
 </ul>
 
 <ul title="white">
-<?php while (--$i>0): ?>	<li><?php echo Nette\Templating\Helpers::escapeHtml($i, ENT_NOQUOTES) ?></li>
-<?php endwhile ?>
+<?php while (--$i>0) { ?>	<li><?php echo Nette\Templating\Helpers::escapeHtml($i, ENT_NOQUOTES) ?></li>
+<?php } ?>
 </ul>
 
-<?php if (true): ?><p>
+<?php if (true) { ?><p>
 	<div><p>true</div>
 </p>
-<?php endif ?>
+<?php } ?>
 
-<?php if (true): ?><p>
+<?php if (true) { ?><p>
 	<div><p>true</p></div>
 </p>
-<?php endif ?>
+<?php } ?>
 
-<?php if (false): ?><p>
+<?php if (false) { ?><p>
 	<div><p>false</div>
 </p>
-<?php endif ?>
+<?php } ?>
 
-<?php if (false): ?><p>
+<?php if (false) { ?><p>
 	<div><p>false</p></div>
 </p>
-<?php endif ?>
+<?php } ?>
 
-<?php if (strlen('{$xss}') > 5): ?><p>noLatte</p>
-<?php endif ?>
+<?php if (strlen('{$xss}') > 5) { ?><p>noLatte</p>
+<?php } ?>
 
 <ul title="if + foreach">
-<?php $iterations = 0; foreach ($people as $person): if (strlen($person)===4): ?>
+<?php $iterations = 0; foreach ($people as $person) { if (strlen($person)===4) { ?>
 	<li><?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></li>
-<?php endif ;$iterations++; endforeach ?>
+<?php } $iterations++; } ?>
 </ul>
 
 <ul title="if + inner-if + inner-foreach">
-<?php if (empty($iterator)): ?>	<li><?php $iterations = 0; foreach ($people as $person): if (strlen($person)===4): echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;endif ;$iterations++; endforeach ?></li>
-<?php endif ?>
+<?php if (empty($iterator)) { ?>	<li><?php $iterations = 0; foreach ($people as $person) { if (strlen($person)===4) { echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;} $iterations++; } ?></li>
+<?php } ?>
 </ul>
 
 <ul title="inner-if + inner-foreach">
-<?php $iterations = 0; foreach ($people as $person): if (strlen($person)===4): ?>
+<?php $iterations = 0; foreach ($people as $person) { if (strlen($person)===4) { ?>
 	<li><?php echo Nette\Templating\Helpers::escapeHtml($template->lower($person), ENT_NOQUOTES) ?></li>
-<?php endif ;$iterations++; endforeach ?></ul>
+<?php } $iterations++; } ?></ul>
 
 <?php call_user_func(reset($_l->blocks['bl']), $_l, get_defined_vars())  ?>
 
-<?php if ($_l->ifs[] = (true)): ?><b><?php endif ?>
-bold<?php if (array_pop($_l->ifs)): ?></b><?php endif ?>
- <?php if ($_l->ifs[] = (false)): ?><b><?php endif ?>
-normal<?php if (array_pop($_l->ifs)): ?></b>
-<?php endif ?>
+<?php if ($_l->ifs[] = (true)) { ?><b><?php } ?>
+bold<?php if (array_pop($_l->ifs)) { ?></b><?php } ?>
+ <?php if ($_l->ifs[] = (false)) { ?><b><?php } ?>
+normal<?php if (array_pop($_l->ifs)) { ?></b>
+<?php } ?>
 
-<?php if ($_l->ifs[] = (true)): ?><b<?php if ($_l->tmp = array_filter(array('first'))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>
-><?php endif ?>
-bold<?php if (array_pop($_l->ifs)): ?></b>
-<?php endif ?>
+<?php if ($_l->ifs[] = (true)) { ?><b<?php if ($_l->tmp = array_filter(array('first'))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>
+><?php } ?>
+bold<?php if (array_pop($_l->ifs)) { ?></b>
+<?php } ?>
 
 <?php echo 'test' ?>
 
@@ -247,11 +247,11 @@ bold<?php if (array_pop($_l->ifs)): ?></b>
 <p<?php if ($_l->tmp = array_filter(array(false ? 'first' : NULL))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>>n:class empty</p>
 
 <meta />
-<?php if (true): ?><meta />
-<?php endif ;if ($_l->ifs[] = (true)): ?><meta />
-<?php endif ;if (array_pop($_l->ifs)): endif ?>
+<?php if (true) { ?><meta />
+<?php } if ($_l->ifs[] = (true)) { ?><meta />
+<?php } if (array_pop($_l->ifs)) { } ?>
 <meta />
-<?php if (true): endif ?><meta />
+<?php if (true) { } ?><meta />
 
 <?php ob_start() ?>TRUE<?php if (TRUE) ob_end_flush(); else ob_end_clean() ?>
 
@@ -260,36 +260,36 @@ bold<?php if (array_pop($_l->ifs)): ?></b>
 <?php ob_start() ?>TRUE<?php ob_start() ?>FALSE<?php if (TRUE) { ob_end_clean(); ob_end_flush(); } else { $_else = ob_get_contents(); ob_end_clean(); ob_end_clean(); echo $_else; } ?>
 
 
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array(1,2,3)) as $foo): ?>
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array(1,2,3)) as $foo) { ?>
 	<b<?php if ($_l->tmp = array_filter(array($iterator->even ? 'even' : NULL))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>>item</b>
-<?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
+<?php $iterations++; } array_pop($_l->its); $iterator = end($_l->its) ?>
 
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array(1, 2, 3)) as $foo): ?>
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array(1, 2, 3)) as $foo) { ?>
 <p<?php if ($_l->tmp = array_filter(array($iterator->even ? 'even' : NULL))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>
 ><?php echo Nette\Templating\Helpers::escapeHtml($foo, ENT_NOQUOTES) ?></p>
-<?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
+<?php $iterations++; } array_pop($_l->its); $iterator = end($_l->its) ?>
 
-<?php $iterations = 0; foreach (array(0) as $foo): if (1): $iterations = 0; foreach (array(1) as $foo): if ($_l->ifs[] = (0)): ?>
-<span><?php endif ;$iterations++; endforeach ;$iterations = 0; foreach (array(2) as $foo): if (2): ?>
-Hello<?php endif ;$iterations++; endforeach ;$iterations = 0; foreach (array(1) as $foo): if (array_pop($_l->ifs)): ?></span>
-<?php endif ;$iterations++; endforeach ;endif ;$iterations++; endforeach ?>
+<?php $iterations = 0; foreach (array(0) as $foo) { if (1) { $iterations = 0; foreach (array(1) as $foo) { if ($_l->ifs[] = (0)) { ?>
+<span><?php } $iterations++; } $iterations = 0; foreach (array(2) as $foo) { if (2) { ?>
+Hello<?php } $iterations++; } $iterations = 0; foreach (array(1) as $foo) { if (array_pop($_l->ifs)) { ?></span>
+<?php } $iterations++; } } $iterations++; } ?>
 
 
 <ul title="foreach break">
-<?php $iterations = 0; foreach ($people as $person): ?>	<li><?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (TRUE) { echo "</li>\n"; break; } ?></li>
-<?php $iterations++; endforeach ?>
+<?php $iterations = 0; foreach ($people as $person) { ?>	<li><?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (TRUE) { echo "</li>\n"; break; } ?></li>
+<?php $iterations++; } ?>
 </ul>
 
 <ul title="foreach continue">
-<?php $iterations = 0; foreach ($people as $person): ?>	<li><?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (TRUE) { echo "</li>\n"; continue; } ?></li>
-<?php $iterations++; endforeach ?>
+<?php $iterations = 0; foreach ($people as $person) { ?>	<li><?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (TRUE) { echo "</li>\n"; continue; } ?></li>
+<?php $iterations++; } ?>
 </ul>
 
 
 <ul title="inner foreach break">
-	<li><?php $iterations = 0; foreach ($people as $person): echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (TRUE) break ;$iterations++; endforeach ?></li>
+	<li><?php $iterations = 0; foreach ($people as $person) { echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (TRUE) break ;$iterations++; } ?></li>
 </ul>
 
 <ul title="inner foreach continue">
-	<li><?php $iterations = 0; foreach ($people as $person): echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (TRUE) continue ;$iterations++; endforeach ?></li>
+	<li><?php $iterations = 0; foreach ($people as $person) { echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (TRUE) continue ;$iterations++; } ?></li>
 </ul>

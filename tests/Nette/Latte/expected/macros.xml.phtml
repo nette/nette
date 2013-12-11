@@ -57,11 +57,11 @@ var html = <?php echo Nette\Templating\Helpers::escapeXml($el) ?>;
 
 
 <ul>
-<?php $iterations = 0; foreach ($people as $person): ?>	<li><?php echo Nette\Templating\Helpers::escapeXml($person) ?></li>
-<?php $iterations++; endforeach ?>
+<?php $iterations = 0; foreach ($people as $person) { ?>	<li><?php echo Nette\Templating\Helpers::escapeXml($person) ?></li>
+<?php $iterations++; } ?>
 </ul>
 
-<?php if (true): ?><p>
+<?php if (true) { ?><p>
 	<div><p>true</div>
 </p>
-<?php endif ;
+<?php }

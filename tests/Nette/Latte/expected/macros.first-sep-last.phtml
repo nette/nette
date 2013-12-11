@@ -12,30 +12,30 @@ if (%A%}
 //
 ?>
 
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): ?>
-	<?php if ($iterator->isFirst()): ?>(<?php endif ?> <?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (!$iterator->isLast()): ?>
-, <?php endif ?> <?php if ($iterator->isLast()): ?>)<?php endif ?>
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person) { ?>
+	<?php if ($iterator->isFirst()) { ?>(<?php } ?> <?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (!$iterator->isLast()) { ?>
+, <?php } ?> <?php if ($iterator->isLast()) { ?>)<?php } ?>
 
-<?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
-
-
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): ?>
-	<?php if ($iterator->isFirst(2)): ?>(<?php endif ?> <?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (!$iterator->isLast(2)): ?>
-, <?php endif ?> <?php if ($iterator->isLast(2)): ?>)<?php endif ?>
-
-<?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
+<?php $iterations++; } array_pop($_l->its); $iterator = end($_l->its) ?>
 
 
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): ?>
-	<?php if ($iterator->isFirst(1)): ?>(<?php endif ?> <?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (!$iterator->isLast(1)): ?>
-, <?php endif ?> <?php if ($iterator->isLast(1)): ?>)<?php endif ?>
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person) { ?>
+	<?php if ($iterator->isFirst(2)) { ?>(<?php } ?> <?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (!$iterator->isLast(2)) { ?>
+, <?php } ?> <?php if ($iterator->isLast(2)) { ?>)<?php } ?>
 
-<?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
+<?php $iterations++; } array_pop($_l->its); $iterator = end($_l->its) ?>
 
 
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): if ($iterator->isFirst(0)): ?>
-	<span>(</span><?php endif ?>
- <?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (!$iterator->isLast()): ?>
-<span>, </span><?php endif ?>
- <?php if ($iterator->isLast()): ?><span>)</span>
-<?php endif ;$iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ;
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person) { ?>
+	<?php if ($iterator->isFirst(1)) { ?>(<?php } ?> <?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (!$iterator->isLast(1)) { ?>
+, <?php } ?> <?php if ($iterator->isLast(1)) { ?>)<?php } ?>
+
+<?php $iterations++; } array_pop($_l->its); $iterator = end($_l->its) ?>
+
+
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person) { if ($iterator->isFirst(0)) { ?>
+	<span>(</span><?php } ?>
+ <?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (!$iterator->isLast()) { ?>
+<span>, </span><?php } ?>
+ <?php if ($iterator->isLast()) { ?><span>)</span>
+<?php } $iterations++; } array_pop($_l->its); $iterator = end($_l->its) ;

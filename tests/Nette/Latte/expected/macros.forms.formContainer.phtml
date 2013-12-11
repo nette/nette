@@ -22,9 +22,9 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 		<th>Checkboxes</th>
 		<td>
 <?php $_formStack[] = $_form; $formContainer = $_form = $_form["cont2"] ?>			<ol>
-<?php $iterations = 0; foreach ($formContainer->controls AS $name => $field): ?>
+<?php $iterations = 0; foreach ($formContainer->controls AS $name => $field) { ?>
 				<li><?php $_input = is_object($field) ? $field : $_form[$field]; echo $_input->getControl()->addAttributes(array()) ?></li>
-<?php $iterations++; endforeach ?>			</ol>
+<?php $iterations++; } ?>			</ol>
 <?php $_form = array_pop($_formStack) ?>
 		</td>
 	</tr>
