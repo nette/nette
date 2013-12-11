@@ -199,8 +199,8 @@ class PhpWriter extends Nette\Object
 	public function canQuote(MacroTokenizer $tokenizer)
 	{
 		return $tokenizer->isCurrent(MacroTokenizer::T_SYMBOL)
-			&& (!$tokenizer->hasPrev() || $tokenizer->isPrev(',', '(', '[', '=', '=>', ':', '?'))
-			&& (!$tokenizer->hasNext() || $tokenizer->isNext(',', ')', ']', '=', '=>', ':', '|'));
+			&& (!$tokenizer->hasPrev() || $tokenizer->isPrev(',', '(', '[', '=>', ':', '?', '.', '<', '>', '<=', '>=', '===', '!==', '==', '!=', '<>', '&&', '||', '=', 'and', 'or', 'xor'))
+			&& (!$tokenizer->hasNext() || $tokenizer->isNext(',', ';', ')', ']', '=>', ':', '?', '.', '<', '>', '<=', '>=', '===', '!==', '==', '!=', '<>', '&&', '||', 'and', 'or', 'xor'));
 	}
 
 
