@@ -15,8 +15,8 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
 
 
-test(function() use ($dao) {
-	$books = $dao->table('book');
+test(function() use ($context) {
+	$books = $context->table('book');
 	foreach ($books as $book) {
 		foreach ($book->related('book_tag') as $bookTag) {
 			$bookTag->tag;
@@ -39,8 +39,8 @@ test(function() use ($dao) {
 });
 
 
-test(function() use ($dao) {
-	$authors = $dao->table('author')->where('id', 11);
+test(function() use ($context) {
+	$authors = $context->table('author')->where('id', 11);
 	$books = array();
 	foreach ($authors as $author) {
 		foreach ($author->related('book')->where('translator_id', NULL) as $book) {
@@ -62,9 +62,9 @@ test(function() use ($dao) {
 });
 
 
-test(function() use ($connection, $dao) {
-	$connection->query('UPDATE book SET translator_id = 12 WHERE id = 2');
-	$author = $dao->table('author')->get(11);
+test(function() use ($context) {
+	$context->query('UPDATE book SET translator_id = 12 WHERE id = 2');
+	$author = $context->table('author')->get(11);
 
 	foreach ($author->related('book')->limit(1) as $book) {
 		$book->ref('author', 'translator_id')->name;

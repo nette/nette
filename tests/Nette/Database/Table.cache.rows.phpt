@@ -16,7 +16,7 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName
 
 
 $cacheStorage = new Nette\Caching\Storages\MemoryStorage;
-$dao = new Nette\Database\Context(
+$context = new Nette\Database\Context(
 	$connection,
 	new Nette\Database\Reflection\DiscoveredReflection($connection, $cacheStorage),
 	$cacheStorage
@@ -24,7 +24,7 @@ $dao = new Nette\Database\Context(
 
 
 $selections = array();
-foreach ($selections[] = $dao->table('book') as $book) {
+foreach ($selections[] = $context->table('book') as $book) {
 	$book->author->name;
 	$selections[] = $book->author->getTable();
 }
@@ -33,7 +33,7 @@ foreach ($selections as $selection) {
 }
 
 $authors = array();
-foreach ($dao->table('book') as $book) {
+foreach ($context->table('book') as $book) {
 	$authors[] = $book->author;
 }
 
@@ -48,12 +48,12 @@ Assert::same(array(
 ), array_keys($webs));
 
 
-$bookSelection = $dao->table('book')->order('id');
+$bookSelection = $context->table('book')->order('id');
 $book = $bookSelection->fetch();
 $book->author_id;
 $bookSelection->__destruct();
 
-$bookSelection = $dao->table('book')->order('id');
+$bookSelection = $context->table('book')->order('id');
 $books = array();
 $books[] = $bookSelection->fetch();
 $books[] = $bookSelection->fetch()->toArray();
@@ -63,7 +63,7 @@ Assert::same(2, $books[1]['id']);
 Assert::same(3, $books[2]['id']);
 
 
-$row = $dao->table('author')->insert(array(
+$row = $context->table('author')->insert(array(
 	'name' => 'Eddard Stark',
 	'web' => 'http://example.com',
 ));  // INSERT INTO `author` (`name`, `web`) VALUES ('Eddard Stark', 'http://example.com')
@@ -71,5 +71,5 @@ Assert::true(is_array($row->toArray()));
 // id = 14
 
 
-$row = $dao->table('author')->where('id', 14)->fetch();
+$row = $context->table('author')->where('id', 14)->fetch();
 Assert::true(is_array($row->toArray()));

@@ -16,15 +16,15 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
 
 
-$dao = new Nette\Database\Context(
+$context = new Nette\Database\Context(
 	$connection,
 	new Nette\Database\Reflection\DiscoveredReflection($connection)
 );
 
 
-test(function() use ($dao) {
+test(function() use ($context) {
 	$appTags = array();
-	foreach ($dao->table('book') as $book) {
+	foreach ($context->table('book') as $book) {
 		$appTags[$book->title] = array(
 			'author' => $book->author->name,
 			'tags' => array(),
@@ -56,9 +56,9 @@ test(function() use ($dao) {
 });
 
 
-test(function() use ($dao) {
+test(function() use ($context) {
 	$books = array();
-	foreach ($dao->table('author') as $author) {
+	foreach ($context->table('author') as $author) {
 		foreach ($author->related('book') as $book) {
 			$books[$book->title] = $author->name;
 		}
@@ -73,14 +73,14 @@ test(function() use ($dao) {
 });
 
 
-test(function() use ($dao) {
-	$book = $dao->table('book')->get(1);
+test(function() use ($context) {
+	$book = $context->table('book')->get(1);
 	Assert::same('Jakub Vrana', $book->translator->name);
 });
 
 
-test(function() use ($dao) {
-	$book = $dao->table('book')->get(2);
+test(function() use ($context) {
+	$book = $context->table('book')->get(2);
 	Assert::true(isset($book->author_id));
 	Assert::false(empty($book->author_id));
 
@@ -95,7 +95,7 @@ test(function() use ($dao) {
 });
 
 
-test(function() use ($connection, $dao) {
+test(function() use ($connection, $context) {
 	if (
 		$connection->getPdo()->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql' &&
 		($lowerCase = $connection->query('SHOW VARIABLES LIKE "lower_case_table_names"')->fetch()) &&
@@ -103,7 +103,7 @@ test(function() use ($connection, $dao) {
 	) {
 		// tests case-insensitive reflection
 		$books = array();
-		foreach ($dao->table('Author') as $author) {
+		foreach ($context->table('Author') as $author) {
 			foreach ($author->related('book') as $book) {
 				$books[$book->title] = $author->name;
 			}
@@ -119,9 +119,9 @@ test(function() use ($connection, $dao) {
 });
 
 
-test(function() use ($dao) {
-	$count = $dao->table('book')->where('translator.name LIKE ?', '%David%')->count();
+test(function() use ($context) {
+	$count = $context->table('book')->where('translator.name LIKE ?', '%David%')->count();
 	Assert::same(2, $count);
-	$count = $dao->table('book')->where('author.name LIKE ?', '%David%')->count();
+	$count = $context->table('book')->where('author.name LIKE ?', '%David%')->count();
 	Assert::same(2, $count);
 });

@@ -27,8 +27,9 @@ test(function() { // non lazy
 
 test(function() { // lazy
 	$connection = new Nette\Database\Connection('dsn', 'user', 'password', array('lazy' => TRUE));
-	Assert::exception(function() use ($connection) {
-		$connection->query('SELECT ?', 10);
+	$context = new Nette\Database\Context($connection);
+	Assert::exception(function() use ($context) {
+		$context->query('SELECT ?', 10);
 	}, 'PDOException', 'invalid data source name');
 });
 

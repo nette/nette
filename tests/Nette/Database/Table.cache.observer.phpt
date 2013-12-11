@@ -51,7 +51,7 @@ class CacheMock implements Nette\Caching\IStorage
 }
 
 $cacheStorage = new CacheMock;
-$dao = new Nette\Database\Context(
+$context = new Nette\Database\Context(
 	$connection,
 	new Nette\Database\Reflection\DiscoveredReflection($connection, new Nette\Caching\Storages\MemoryStorage),
 	$cacheStorage
@@ -65,7 +65,7 @@ $connection->onQuery[] = function($dao, ResultSet $result) use (& $queries) {
 	}
 };
 
-$authors = $dao->table('author');
+$authors = $context->table('author');
 $stack = array();
 foreach ($authors as $author) {
 	foreach ($stack[] = $author->related('book') as $book) {

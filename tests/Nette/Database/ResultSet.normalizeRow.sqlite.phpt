@@ -16,7 +16,7 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/files/sqlite-nette_test3.sql');
 
 
-$res = $connection->query('SELECT * FROM types');
+$res = $context->query('SELECT * FROM types');
 
 Assert::equal( array(
 	'int' => 1,
@@ -109,7 +109,7 @@ Assert::same( array(
 ), (array) $res->fetch() );
 
 
-$res = $connection->query('SELECT [int] AS a, [text] AS a FROM types');
+$res = $context->query('SELECT [int] AS a, [text] AS a FROM types');
 
 Assert::same( array(
 	'a' => 'a',

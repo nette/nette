@@ -16,9 +16,9 @@ require __DIR__ . '/connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName}-nette_test1.sql");
 
 
-test(function() use ($dao) {
+test(function() use ($context) {
 	$authorTagsCount = array();
-	$authors = $dao
+	$authors = $context
 		->table('author')
 		->select('author.name, COUNT(DISTINCT :book:book_tag.tag_id) AS tagsCount')
 		->group('author.name')
@@ -36,8 +36,8 @@ test(function() use ($dao) {
 });
 
 
-test(function() use ($dao) {
-	$authorsSelection = $dao->table('author')->where(':book.translator_id IS NOT NULL')->wherePrimary(12);
+test(function() use ($context) {
+	$authorsSelection = $context->table('author')->where(':book.translator_id IS NOT NULL')->wherePrimary(12);
 	Assert::same(reformat('SELECT [author].* FROM [author] LEFT JOIN [book] ON [author].[id] = [book].[author_id] WHERE ([book].[translator_id] IS NOT NULL) AND ([author].[id] = ?)'), $authorsSelection->getSql());
 
 	$authors = array();
@@ -49,7 +49,7 @@ test(function() use ($dao) {
 });
 
 
-test(function() use ($dao) {
+test(function() use ($context) {
 	/*
 	$count = $dao->table('author')->where(':book.title LIKE ?', '%PHP%')->count('*'); // by translator_id
 	Assert::same(1, $count);

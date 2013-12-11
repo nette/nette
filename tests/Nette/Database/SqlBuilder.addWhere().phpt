@@ -184,18 +184,18 @@ Assert::exception(function() use ($connection, $reflection) {
 }, 'Nette\InvalidArgumentException', 'Column operator does not accept array argument.');
 
 
-test(function() use ($driverName, $connection, $reflection) {
+test(function() use ($driverName, $context, $connection, $reflection) {
 	switch ($driverName) {
 		case 'mysql':
-			$connection->query('CREATE INDEX book_tag_unique ON book_tag (book_id, tag_id)');
-			$connection->query('ALTER TABLE book_tag DROP PRIMARY KEY');
+			$context->query('CREATE INDEX book_tag_unique ON book_tag (book_id, tag_id)');
+			$context->query('ALTER TABLE book_tag DROP PRIMARY KEY');
 			break;
 		case 'pgsql':
-			$connection->query('ALTER TABLE book_tag DROP CONSTRAINT "book_tag_pkey"');
+			$context->query('ALTER TABLE book_tag DROP CONSTRAINT "book_tag_pkey"');
 			break;
 		case 'sqlite':
 			// dropping constraint or column is not supported
-			$connection->query('
+			$context->query('
 				CREATE TABLE book_tag_temp (
 					book_id INTEGER NOT NULL,
 					tag_id INTEGER NOT NULL,
@@ -203,12 +203,12 @@ test(function() use ($driverName, $connection, $reflection) {
 					CONSTRAINT book_tag_book FOREIGN KEY (book_id) REFERENCES book (id) ON DELETE CASCADE
 				)
 			');
-			$connection->query('INSERT INTO book_tag_temp SELECT book_id, tag_id FROM book_tag');
-			$connection->query('DROP TABLE book_tag');
-			$connection->query('ALTER TABLE book_tag_temp RENAME TO book_tag');
+			$context->query('INSERT INTO book_tag_temp SELECT book_id, tag_id FROM book_tag');
+			$context->query('DROP TABLE book_tag');
+			$context->query('ALTER TABLE book_tag_temp RENAME TO book_tag');
 			break;
 		case 'sqlsrv':
-			$connection->query('ALTER TABLE book_tag DROP CONSTRAINT PK_book_tag');
+			$context->query('ALTER TABLE book_tag DROP CONSTRAINT PK_book_tag');
 			break;
 		default:
 			Assert::fail("Unsupported driver $driverName");

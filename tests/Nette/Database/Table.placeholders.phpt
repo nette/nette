@@ -18,10 +18,10 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName
 
 
 $reflection = new DiscoveredReflection($connection);
-$dao = new Nette\Database\Context($connection, $reflection);
+$context = new Nette\Database\Context($connection, $reflection);
 
 
-test(function() use ($dao, $driverName) {
+test(function() use ($context, $driverName) {
 	// Leave literals lower-cased, also not-delimiting them is tested.
 	switch ($driverName) {
 		case 'mysql':
@@ -40,7 +40,7 @@ test(function() use ($dao, $driverName) {
 			Assert::fail("Unsupported driver $driverName");
 	}
 
-	$selection = $dao
+	$selection = $context
 		->table('book')
 		->select('? AS col1', 'hi there!')
 		->select('? AS col2', $literal);
@@ -51,9 +51,9 @@ test(function() use ($dao, $driverName) {
 });
 
 
-test(function() use ($dao) {
+test(function() use ($context) {
 	$bookTagsCount = array();
-	$books = $dao
+	$books = $context
 		->table('book')
 		->select('book.title, COUNT(DISTINCT :book_tag.tag_id) AS tagsCount')
 		->group('book.title')
@@ -71,10 +71,10 @@ test(function() use ($dao) {
 });
 
 
-test(function() use ($dao, $driverName) {
+test(function() use ($context, $driverName) {
 	if ($driverName === 'mysql') {
 		$authors = array();
-		$selection = $dao->table('author')->order('FIELD(name, ?)', array('Jakub Vrana', 'David Grudl', 'Geek'));
+		$selection = $context->table('author')->order('FIELD(name, ?)', array('Jakub Vrana', 'David Grudl', 'Geek'));
 		foreach ($selection as $author) {
 			$authors[] = $author->name;
 		}

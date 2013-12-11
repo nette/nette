@@ -17,15 +17,15 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/files/{$driverName
 
 
 $cacheStorage = new Nette\Caching\Storages\MemoryStorage;
-$dao = new Nette\Database\Context(
+$context = new Nette\Database\Context(
 	$connection,
 	new Nette\Database\Reflection\DiscoveredReflection($connection, $cacheStorage),
 	$cacheStorage
 );
 
 
-test(function() use ($dao) { // Testing Selection caching
-	$bookSelection = $dao->table('book')->wherePrimary(2);
+test(function() use ($context) { // Testing Selection caching
+	$bookSelection = $context->table('book')->wherePrimary(2);
 	Assert::same(reformat('SELECT * FROM [book] WHERE ([book].[id] = ?)'), $bookSelection->getSql());
 
 
@@ -33,7 +33,7 @@ test(function() use ($dao) { // Testing Selection caching
 	$book->title;
 	$book->translator;
 	$bookSelection->__destruct();
-	$bookSelection = $dao->table('book')->wherePrimary(2);
+	$bookSelection = $context->table('book')->wherePrimary(2);
 	Assert::same(reformat('SELECT [id], [title], [translator_id] FROM [book] WHERE ([book].[id] = ?)'), $bookSelection->getSql());
 
 
@@ -42,13 +42,13 @@ test(function() use ($dao) { // Testing Selection caching
 	Assert::same(reformat('SELECT * FROM [book] WHERE ([book].[id] = ?)'), $bookSelection->getSql());
 
 	$bookSelection->__destruct();
-	$bookSelection = $dao->table('book')->wherePrimary(2);
+	$bookSelection = $context->table('book')->wherePrimary(2);
 	Assert::same(reformat('SELECT [id], [title], [translator_id], [author_id] FROM [book] WHERE ([book].[id] = ?)'), $bookSelection->getSql());
 });
 
 
-test(function() use ($dao) { // Testing GroupedSelection reinvalidation caching
-	foreach ($dao->table('author') as $author) {
+test(function() use ($context) { // Testing GroupedSelection reinvalidation caching
+	foreach ($context->table('author') as $author) {
 		$stack[] = $selection = $author->related('book.author_id')->order('title');
 		foreach ($selection as $book) {
 			$book->title;
@@ -59,7 +59,7 @@ test(function() use ($dao) { // Testing GroupedSelection reinvalidation caching
 
 
 	$books = array();
-	foreach ($dao->table('author') as $author) {
+	foreach ($context->table('author') as $author) {
 		foreach ($author->related('book.author_id')->order('title') as $book) {
 			if ($book->author_id == 12) {
 				$books[$book->title] = $book->translator_id; // translator_id is new used column in the second loop
@@ -79,15 +79,15 @@ before(function() use ($cacheStorage) {
 });
 
 
-test(function() use ($dao) {
-	$selection = $dao->table('book');
+test(function() use ($context) {
+	$selection = $context->table('book');
 	foreach ($selection as $book) {
 		$book->id;
 	}
 	$selection->__destruct();
 
 	$authors = array();
-	foreach ($dao->table('book') as $book) {
+	foreach ($context->table('book') as $book) {
 		$authors[$book->author->name] = 1;
 	}
 
@@ -101,9 +101,9 @@ test(function() use ($dao) {
 });
 
 
-test(function() use ($dao) {
+test(function() use ($context) {
 	$relatedStack = array();
-	foreach ($dao->table('author') as $author) {
+	foreach ($context->table('author') as $author) {
 		$relatedStack[] = $related = $author->related('book.author_id');
 		foreach ($related as $book) {
 			$book->id;
@@ -119,14 +119,14 @@ test(function() use ($dao) {
 });
 
 
-test(function() use ($dao) {
-	$author = $dao->table('author')->get(11);
+test(function() use ($context) {
+	$author = $context->table('author')->get(11);
 	$books = $author->related('book')->where('translator_id', 99); // 0 rows
 	foreach ($books as $book) {}
 	$books->__destruct();
 	unset($author);
 
-	$author = $dao->table('author')->get(11);
+	$author = $context->table('author')->get(11);
 	$books = $author->related('book')->where('translator_id', 11);
 	Assert::same(array('id', 'author_id'), $books->getPreviousAccessedColumns());
 });
