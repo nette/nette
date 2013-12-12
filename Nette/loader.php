@@ -23,7 +23,6 @@ define('NETTE_VERSION_ID', 20100); // v2.1.0
 // Run NetteLoader
 require_once __DIR__ . '/common/exceptions.php';
 require_once __DIR__ . '/common/Object.php';
-require_once __DIR__ . '/Loaders/AutoLoader.php';
 require_once __DIR__ . '/Loaders/NetteLoader.php';
 
 Nette\Loaders\NetteLoader::getInstance()->register();

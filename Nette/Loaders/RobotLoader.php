@@ -23,7 +23,7 @@ use Nette,
  * @property-read array $indexedClasses
  * @property   Nette\Caching\IStorage $cacheStorage
  */
-class RobotLoader extends AutoLoader
+class RobotLoader extends Nette\Object
 {
 	const RETRY_LIMIT = 3;
 
@@ -68,7 +68,7 @@ class RobotLoader extends AutoLoader
 	public function register($prepend = FALSE)
 	{
 		$this->classes = $this->getCache()->load($this->getKey(), array($this, '_rebuildCallback'));
-		parent::register($prepend);
+		spl_autoload_register(array($this, 'tryLoad'), TRUE, (bool) $prepend);
 		return $this;
 	}
 
