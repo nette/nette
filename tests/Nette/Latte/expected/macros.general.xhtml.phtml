@@ -77,6 +77,11 @@ if ($_l->extends) {
 
 <p val = <?php echo '"' . htmlSpecialChars($xss) . '"' ?>> </p>
 
+<p onclick = <?php echo '"' . htmlSpecialChars(Nette\Templating\Helpers::escapeJs($xss)) . '"' ?>> </p>
+
+<p onclick ="<?php echo htmlSpecialChars(Nette\Templating\Helpers::escapeJs($xss)) ?>
+" <?php echo '"' . htmlSpecialChars($xss) . '"' ?>> </p>
+
 <p val =></p><?php echo Nette\Templating\Helpers::escapeHtml($xss, ENT_NOQUOTES) ?></p>
 
 <?php echo Nette\Templating\Helpers::escapeHtml((string) (bool) (float) (int) (array) 10, ENT_NOQUOTES) ?>
