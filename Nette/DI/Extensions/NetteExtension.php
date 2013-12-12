@@ -203,8 +203,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		$application = $container->addDefinition('application') // no namespace for back compatibility
 			->setClass('Nette\Application\Application')
 			->addSetup('$catchExceptions', array($config['catchExceptions']))
-			->addSetup('$errorPresenter', array($config['errorPresenter']))
-			->addSetup('!headers_sent() && header(?)', array('X-Powered-By: Nette Framework'));
+			->addSetup('$errorPresenter', array($config['errorPresenter']));
 
 		if ($config['debugger']) {
 			$application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initializePanel');
@@ -414,6 +413,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			}
 		}
 
+		$initialize->addBody("@header('X-Powered-By: Nette Framework');");
 		$initialize->addBody("@header('Content-Type: text/html; charset=utf-8');");
 		$initialize->addBody('Nette\Utils\SafeStream::register();');
 	}
