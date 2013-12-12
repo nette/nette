@@ -215,4 +215,4 @@ class Connection extends Nette\Object
 		return new SqlLiteral(array_shift($args), $args);
 	}
 
-		}
+}

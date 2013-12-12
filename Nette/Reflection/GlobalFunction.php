@@ -99,15 +99,6 @@ class GlobalFunction extends \ReflectionFunction
 	/********************* Nette\Object behaviour ****************d*g**/
 
 
-	/**
-	 * @return ClassType
-	 */
-	public static function getReflection()
-	{
-		return new ClassType(get_called_class());
-	}
-
-
 	public function __call($name, $args)
 	{
 		return ObjectMixin::call($this, $name, $args);
