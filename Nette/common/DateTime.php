@@ -91,14 +91,23 @@ class DateTime extends \DateTime
 
 	public function __sleep()
 	{
-		$this->fix = array($this->format('Y-m-d H:i:s'), $this->getTimezone()->getName());
+		$zone = $this->getTimezone()->getName();
+		if ($zone[0] === '+') {
+			$this->fix = array($this->format('Y-m-d H:i:sP'));
+		} else {
+			$this->fix = array($this->format('Y-m-d H:i:s'), $zone);
+		}
 		return array('fix');
 	}
 
 
 	public function __wakeup()
 	{
-		$this->__construct($this->fix[0], new \DateTimeZone($this->fix[1]));
+		if (isset($this->fix[1])) {
+			$this->__construct($this->fix[0], new \DateTimeZone($this->fix[1]));
+		} else {
+			$this->__construct($this->fix[0]);
+		}
 		unset($this->fix);
 	}
 
