@@ -144,6 +144,17 @@ final class Helpers
 
 
 	/**
+	 * Sanitizes string for use inside href attribute.
+	 * @param  string
+	 * @return string
+	 */
+	public static function safeUrl($s)
+	{
+		return preg_match('#^(https?://.+|ftp://.+|mailto:.+|[^:]+)\z#i', $s) ? $s : '';
+	}
+
+
+	/**
 	 * Replaces all repeated white spaces with a single space.
 	 * @param  string UTF-8 encoding or 8-bit
 	 * @return string
