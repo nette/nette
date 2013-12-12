@@ -64,6 +64,7 @@ class Compiler extends Nette\Object
 		CONTENT_XML = 'xml',
 		CONTENT_JS = 'js',
 		CONTENT_CSS = 'css',
+		CONTENT_URL = 'url',
 		CONTENT_ICAL = 'ical',
 		CONTENT_TEXT = 'text';
 
@@ -343,6 +344,8 @@ class Compiler extends Nette\Object
 				$context = self::CONTENT_JS;
 			} elseif ($token->name === 'style') {
 				$context = self::CONTENT_CSS;
+			} elseif (in_array($token->name, array('href', 'src', 'action', 'formaction'))) {
+				$context = self::CONTENT_URL;
 			} else {
 				$context = NULL;
 			}
@@ -529,8 +532,15 @@ class Compiler extends Nette\Object
 			throw new CompileException("Unknown macro {{$name}}" . ($cdata ? " (in JavaScript or CSS, try to put a space after bracket.)" : ''));
 		}
 
-		$modifiers = preg_replace('#\|noescape\s?(?=\||\z)#i', '', $modifiers, -1, $noescape);
-		if (!$noescape && strpbrk($name, '=~%^&_')) {
+		if ($this->context[1] === self::CONTENT_URL) {
+			$modifiers = preg_replace('#\|nosafeurl\s?(?=\||\z)#i', '', $modifiers, -1, $found);
+			if (!$found) {
+				$modifiers .= '|safeurl';
+			}
+		}
+
+		$modifiers = preg_replace('#\|noescape\s?(?=\||\z)#i', '', $modifiers, -1, $found);
+		if (!$found && strpbrk($name, '=~%^&_')) {
 			$modifiers .= '|escape';
 		}
 
