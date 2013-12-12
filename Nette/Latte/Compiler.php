@@ -339,15 +339,14 @@ class Compiler extends Nette\Object
 		} else {
 			$this->htmlNode->attrs[$token->name] = TRUE;
 			$this->output .= $token->text;
-			if ($token->value) { // quoted
+			if (strncasecmp($token->name, 'on', 2) === 0) {
+				$context = self::CONTENT_JS;
+			} elseif ($token->name === 'style') {
+				$context = self::CONTENT_CSS;
+			} else {
 				$context = NULL;
-				if (strncasecmp($token->name, 'on', 2) === 0) {
-					$context = self::CONTENT_JS;
-				} elseif ($token->name === 'style') {
-					$context = self::CONTENT_CSS;
-				}
-				$this->setContext($token->value, $context);
 			}
+			$this->setContext($token->value ?: self::CONTEXT_UNQUOTED_ATTR , $context);
 		}
 	}
 
