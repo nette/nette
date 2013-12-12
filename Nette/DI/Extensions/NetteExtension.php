@@ -62,7 +62,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		),
 		'container' => array(
 			'debugger' => FALSE,
-			'accessors' => TRUE,
+			'accessors' => FALSE,
 		),
 		'debugger' => array(
 			'email' => NULL,

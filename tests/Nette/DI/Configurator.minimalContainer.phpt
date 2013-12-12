@@ -33,7 +33,6 @@ Assert::same( array(
 	'container' => array(
 		'class' => 'SystemContainer',
 		'parent' => 'Nette\\DI\\Container',
-		'accessors' => TRUE,
 	),
 	'tempDir' => TEMP_DIR,
 	'hello' => 'world',
