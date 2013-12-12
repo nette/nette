@@ -19,7 +19,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class NetteLoader extends AutoLoader
+class NetteLoader extends Nette\Object
 {
 	/** @var NetteLoader */
 	private static $instance;
@@ -100,6 +100,17 @@ class NetteLoader extends AutoLoader
 			self::$instance = new static;
 		}
 		return self::$instance;
+	}
+
+
+	/**
+	 * Register autoloader.
+	 * @param  bool  prepend autoloader?
+	 * @return void
+	 */
+	public function register($prepend = FALSE)
+	{
+		spl_autoload_register(array($this, 'tryLoad'), TRUE, (bool) $prepend);
 	}
 
 

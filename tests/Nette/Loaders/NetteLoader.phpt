@@ -12,7 +12,6 @@ use Tester\Assert;
 
 require __DIR__ . '/../../../vendor/nette/tester/Tester/bootstrap.php';
 require __DIR__ . '/../../../Nette/common/Object.php';
-require __DIR__ . '/../../../Nette/Loaders/AutoLoader.php';
 require __DIR__ . '/../../../Nette/Loaders/NetteLoader.php';
 
 
