@@ -314,8 +314,9 @@ class Compiler extends Nette\Object
 			$htmlNode->closing = TRUE;
 		}
 
-		if (!$htmlNode->closing && (strcasecmp($htmlNode->name, 'script') === 0 || strcasecmp($htmlNode->name, 'style') === 0)) {
-			$this->setContext(strcasecmp($htmlNode->name, 'style') ? self::CONTENT_JS : self::CONTENT_CSS);
+		$lower = strtolower($htmlNode->name);
+		if (!$htmlNode->closing && ($lower === 'script' || $lower === 'style')) {
+			$this->setContext($lower === 'script' ? self::CONTENT_JS : self::CONTENT_CSS);
 		} else {
 			$this->setContext(NULL);
 			if ($htmlNode->closing) {
@@ -340,11 +341,12 @@ class Compiler extends Nette\Object
 		} else {
 			$this->htmlNode->attrs[$token->name] = TRUE;
 			$this->output .= $token->text;
-			if (strncasecmp($token->name, 'on', 2) === 0) {
+			$lower = strtolower($token->name);
+			if (substr($lower, 0, 2) === 'on') {
 				$context = self::CONTENT_JS;
-			} elseif ($token->name === 'style') {
+			} elseif ($lower === 'style') {
 				$context = self::CONTENT_CSS;
-			} elseif (in_array($token->name, array('href', 'src', 'action', 'formaction'))) {
+			} elseif (in_array($lower, array('href', 'src', 'action', 'formaction'))) {
 				$context = self::CONTENT_URL;
 			} else {
 				$context = NULL;

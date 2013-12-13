@@ -79,7 +79,7 @@ if ($_l->extends) {
 
 <p onclick = <?php echo '"' . htmlSpecialChars(Nette\Templating\Helpers::escapeJs($xss)) . '"' ?>> </p>
 
-<p onclick ="<?php echo htmlSpecialChars(Nette\Templating\Helpers::escapeJs($xss)) ?>
+<p ONCLICK ="<?php echo htmlSpecialChars(Nette\Templating\Helpers::escapeJs($xss)) ?>
 " <?php echo '"' . htmlSpecialChars($xss) . '"' ?>> </p>
 
 <p val =></p><?php echo Nette\Templating\Helpers::escapeHtml($xss, ENT_NOQUOTES) ?></p>
@@ -109,7 +109,7 @@ if ($_l->extends) {
 
 
 
-<style type="text/css">
+<STYLE type="text/css">
 <!--
 #<?php echo Nette\Templating\Helpers::escapeCss($xss) ?> {
 	background: blue;
@@ -132,7 +132,7 @@ var html = <?php echo Nette\Templating\Helpers::escapeJs($el) ?>;
 </script>
 
 
-<script>
+<SCRIPT>
 /* <![CDATA[ */
 
 var prop2 = <?php echo Nette\Templating\Helpers::escapeJs($people) ?>;
@@ -144,7 +144,7 @@ var prop2 = <?php echo Nette\Templating\Helpers::escapeJs($people) ?>;
 <p onclick =
 'alert(<?php echo htmlSpecialChars(Nette\Templating\Helpers::escapeJs($xss), ENT_QUOTES) ?>);alert("hello");'
  title='<?php echo htmlSpecialChars($xss, ENT_QUOTES) ?>'
- style =
+ STYLE =
  "color:<?php echo htmlSpecialChars(Nette\Templating\Helpers::escapeCss($xss)) ?>;"
  rel="<?php echo htmlSpecialChars($xss) ?>"
  onblur="alert(<?php echo htmlSpecialChars(Nette\Templating\Helpers::escapeJs($xss)) ?>)"

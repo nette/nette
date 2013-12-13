@@ -30,7 +30,7 @@
 
 <p onclick = {$xss}> </p>
 
-<p onclick ="{$xss}" {$xss}> </p>
+<p ONCLICK ="{$xss}" {$xss}> </p>
 
 <p val = />{$xss}</p>
 
@@ -55,7 +55,7 @@
 
 
 
-<style type="text/css">
+<STYLE type="text/css">
 <!--
 #{$xss} {
 	background: blue;
@@ -78,7 +78,7 @@ var html = {$el};
 </script>
 
 
-<script>
+<SCRIPT>
 /* <![CDATA[ */
 
 var prop2 = {$people};
@@ -90,7 +90,7 @@ var prop2 = {$people};
 <p onclick =
 'alert({$xss});alert("hello");'
  title='{$xss}'
- style =
+ STYLE =
  "color:{$xss};"
  rel="{$xss}"
  onblur="alert({$xss})"
