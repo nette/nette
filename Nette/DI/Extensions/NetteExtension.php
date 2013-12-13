@@ -51,6 +51,12 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		),
 		'mailer' => array(
 			'smtp' => FALSE,
+			'host' => NULL,
+			'port' => NULL,
+			'username' => NULL,
+			'password' => NULL,
+			'secure' => NULL,
+			'timeout' => NULL,
 		),
 		'database' => array(), // of [name => dsn, user, password, debugger, explain, autowired, reflection]
 		'forms' => array(
