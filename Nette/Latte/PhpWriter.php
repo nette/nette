@@ -293,7 +293,13 @@ class PhpWriter extends Nette\Object
 					default:
 						return "Nette\\Templating\\Helpers::escapeHtml($s, ENT_NOQUOTES)";
 				}
+
 			case Compiler::CONTENT_XML:
+				$context = $this->compiler->getContext();
+				if ($context[0] === Compiler::CONTEXT_COMMENT) {
+					return "Nette\\Templating\\Helpers::escapeHtmlComment($s)";
+				}
+				// break intentionally omitted
 			case Compiler::CONTENT_JS:
 			case Compiler::CONTENT_CSS:
 			case Compiler::CONTENT_ICAL:
