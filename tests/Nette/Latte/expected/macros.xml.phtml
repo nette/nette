@@ -26,7 +26,7 @@ if (%A%}
 
 <style type="text/css">
 <!--
-#<?php echo Nette\Templating\Helpers::escapeXml($id) ?> {
+#<?php echo Nette\Templating\Helpers::escapeHtmlComment($id) ?> {
 	background: blue;
 }
 -->
@@ -35,7 +35,7 @@ if (%A%}
 
 <script>
 <!--
-var html = <?php echo Nette\Templating\Helpers::escapeXml($el) ?>;
+var html = <?php echo Nette\Templating\Helpers::escapeHtmlComment($el) ?>;
 -->
 </script>
 
@@ -50,7 +50,7 @@ var html = <?php echo Nette\Templating\Helpers::escapeXml($el) ?>;
 >click on me</p>
 
 
-<!-- <?php echo Nette\Templating\Helpers::escapeXml($comment) ?> -->
+<!-- <?php echo Nette\Templating\Helpers::escapeHtmlComment($comment) ?> -->
 
 
 </ul>

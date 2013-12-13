@@ -370,7 +370,20 @@ class PhpWriter extends Nette\Object
 					default:
 						return $tokens->prepend('Nette\Templating\Helpers::escapeHtml(')->append(', ENT_NOQUOTES)');
 				}
+
 			case Compiler::CONTENT_XML:
+				$context = $this->compiler->getContext();
+				switch ($context[0]) {
+					case Compiler::CONTEXT_COMMENT:
+						return $tokens->prepend('Nette\Templating\Helpers::escapeHtmlComment(')->append(')');
+					default:
+						$tokens->prepend('Nette\Templating\Helpers::escapeXml(')->append(')');
+						if ($context[0] === Compiler::CONTEXT_UNQUOTED_ATTR) {
+							$tokens->prepend("'\"' . ")->append(" . '\"'");
+						}
+						return $tokens;
+				}
+
 			case Compiler::CONTENT_JS:
 			case Compiler::CONTENT_CSS:
 			case Compiler::CONTENT_ICAL:
