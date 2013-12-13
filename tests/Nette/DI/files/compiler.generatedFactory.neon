@@ -11,12 +11,16 @@ factories:
 		implement: IArticleFactory
 		parameters: [title]
 
-	foo:
+	fooFactory1:
 		create: Foo(..., %baz%)
 		implement: IFooFactory
-		parameters: [Baz baz]
+		parameters: [Baz baz = NULL]
 
-	fooFactory:
+	fooFactory2:
 		create: Foo(..., %baz%)
 		implement: IFooFactory
-		parameters: [Baz baz]
+		parameters: [Baz baz = NULL]
+
+	fooFactory3:
+		create: Foo
+		implement: IFooFactory

@@ -232,8 +232,34 @@ class ContainerBuilder extends Nette\Object
 			}
 
 			if (!$def->parameters) {
+				$ctorParams = array();
+				if ($def->factory && !$def->factory->arguments && $def->factory->entity[0] !== '@') {
+					if (!class_exists($def->factory->entity)) {
+						throw new ServiceCreationException("Invalid factory in service '$name' definition.");
+					}
+					$ctor = Nette\Reflection\ClassType::from($def->factory->entity)->getConstructor();
+					if ($ctor) {
+						foreach ($ctor->getParameters() as $param) {
+							$pname = $param->getName();
+							if (isset($ctorParams[$pname])) {
+								throw new ServiceCreationException("The constuctor of '{$def->factory->entity}' has two parameters with the name '$pname'.");
+							}
+							if (json_encode($pname) == '"\u0000\u0000\u0000"') { // see PHP bug #43512
+								throw new ServiceCreationException("The constuctor of '{$def->factory->entity}' has two parameters with the same name.");
+							}
+							$ctorParams[$pname] = $param;
+						}
+					}
+				}
 				foreach ($method->getParameters() as $param) {
 					$paramDef = ($param->isArray() ? 'array' : $param->getClassName()) . ' ' . $param->getName();
+					if (isset($ctorParams[$param->getName()])) {
+						$arg = $ctorParams[$param->getName()];
+						if (($param->getClassName() || $arg->getClassName()) && $param->getClassName() !== $arg->getClassName()) {
+							throw new ServiceCreationException("Argument '$arg' type hint doesn't match '" . $param->getClassName() . "' type hint.");
+						}
+						$def->factory->arguments[$arg->getPosition()] = ContainerBuilder::literal('$' . $arg->getName());
+					}
 					if ($param->isOptional()) {
 						$def->parameters[$paramDef] = $param->getDefaultValue();
 					} else {
