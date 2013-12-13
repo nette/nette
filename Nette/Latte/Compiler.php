@@ -337,10 +337,14 @@ class Compiler extends Nette\Object
 				throw new CompileException("Macro-attributes must not appear inside macro; found $token->name inside {{$this->macroNode->name}}.", 0, $token->line);
 			}
 			$this->htmlNode->macroAttrs[$name] = $token->value;
+			return;
+		}
 
-		} else {
-			$this->htmlNode->attrs[$token->name] = TRUE;
-			$this->output .= $token->text;
+    	$this->htmlNode->attrs[$token->name] = TRUE;
+		$this->output .= $token->text;
+
+		$context = NULL;
+    	if (in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML))) {
 			$lower = strtolower($token->name);
 			if (substr($lower, 0, 2) === 'on') {
 				$context = self::CONTENT_JS;
@@ -350,11 +354,9 @@ class Compiler extends Nette\Object
 				|| ($lower === 'data' && strtolower($this->htmlNode->name) === 'object')
 			) {
 				$context = self::CONTENT_URL;
-			} else {
-				$context = NULL;
 			}
-			$this->setContext($token->value ?: self::CONTEXT_UNQUOTED_ATTR , $context);
 		}
+		$this->setContext($token->value ?: self::CONTEXT_UNQUOTED_ATTR, $context);
 	}
 
 
