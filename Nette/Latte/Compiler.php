@@ -346,7 +346,9 @@ class Compiler extends Nette\Object
 				$context = self::CONTENT_JS;
 			} elseif ($lower === 'style') {
 				$context = self::CONTENT_CSS;
-			} elseif (in_array($lower, array('href', 'src', 'action', 'formaction'))) {
+			} elseif (in_array($lower, array('href', 'src', 'action', 'formaction'))
+				|| ($lower === 'data' && strtolower($this->htmlNode->name) === 'object')
+			) {
 				$context = self::CONTENT_URL;
 			} else {
 				$context = NULL;
