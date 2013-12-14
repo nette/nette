@@ -3,6 +3,11 @@ php:
     - 5.3.3
     - 5.4
     - 5.5
+    - hhvm
+
+matrix:
+    allow_failures:
+        - php: hhvm
 
 script: VERBOSE=true ./tests/run-tests.sh -s tests/
 
