@@ -320,23 +320,23 @@ class NetteExtension extends Nette\DI\CompilerExtension
 				}
 			}
 
-			if (!$info['reflection']) {
-				$reflection = NULL;
-			} elseif (is_string($info['reflection'])) {
-				$reflection = new Nette\DI\Statement(preg_match('#^[a-z]+\z#', $info['reflection'])
-					? 'Nette\Database\Reflection\\' . ucfirst($info['reflection']) . 'Reflection'
-					: $info['reflection'], strtolower($info['reflection']) === 'discovered' ? array('@self') : array());
-			} else {
-				$tmp = Nette\DI\Compiler::filterArguments(array($info['reflection']));
-				$reflection = reset($tmp);
-			}
-
 			$connection = $container->addDefinition($this->prefix("database.$name"))
 				->setClass('Nette\Database\Connection', array($info['dsn'], $info['user'], $info['password'], $info['options']))
 				->setAutowired($info['autowired'])
 				->addSetup('Nette\Diagnostics\Debugger::getBlueScreen()->addPanel(?)', array(
 					'Nette\Database\Diagnostics\ConnectionPanel::renderException'
 				));
+
+			if (!$info['reflection']) {
+				$reflection = NULL;
+			} elseif (is_string($info['reflection'])) {
+				$reflection = new Nette\DI\Statement(preg_match('#^[a-z]+\z#', $info['reflection'])
+					? 'Nette\Database\Reflection\\' . ucfirst($info['reflection']) . 'Reflection'
+					: $info['reflection'], strtolower($info['reflection']) === 'discovered' ? array($connection) : array());
+			} else {
+				$tmp = Nette\DI\Compiler::filterArguments(array($info['reflection']));
+				$reflection = reset($tmp);
+			}
 
 			$container->addDefinition($this->prefix("database.$name.context"))
 				->setClass('Nette\Database\Context', array($connection, $reflection))
