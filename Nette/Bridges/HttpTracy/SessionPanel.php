@@ -7,7 +7,8 @@
 
 namespace Nette\Bridges\HttpTracy;
 
-use Nette;
+use Nette,
+	Tracy;
 
 
 /**
@@ -15,7 +16,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class SessionPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
+class SessionPanel extends Nette\Object implements Tracy\IBarPanel
 {
 
 	/**

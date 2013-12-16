@@ -7,7 +7,8 @@
 
 namespace Nette\Database;
 
-use Nette;
+use Nette,
+	Tracy;
 
 
 /**
@@ -221,7 +222,7 @@ class Helpers
 		$panel = new Nette\Bridges\DatabaseTracy\ConnectionPanel($connection);
 		$panel->explain = $explain;
 		$panel->name = $name;
-		Nette\Diagnostics\Debugger::getBar()->addPanel($panel);
+		Tracy\Debugger::getBar()->addPanel($panel);
 		return $panel;
 	}
 
