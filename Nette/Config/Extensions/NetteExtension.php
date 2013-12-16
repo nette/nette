@@ -306,13 +306,13 @@ class NetteExtension extends Nette\Config\CompilerExtension
 					Nette\Config\Compiler::filterArguments(array(is_string($item) ? new Nette\DI\Statement($item) : $item))
 				));
 			}
+		}
 
-			foreach ((array) $config['debugger']['blueScreen'] as $item) {
-				$initialize->addBody($container->formatPhp(
-					'Nette\Diagnostics\Debugger::$blueScreen->addPanel(?);',
-					Nette\Config\Compiler::filterArguments(array($item))
-				));
-			}
+		foreach ((array) $config['debugger']['blueScreen'] as $item) {
+			$initialize->addBody($container->formatPhp(
+				'Nette\Diagnostics\Debugger::$blueScreen->addPanel(?);',
+				Nette\Config\Compiler::filterArguments(array($item))
+			));
 		}
 
 		if (!empty($container->parameters['tempDir'])) {
