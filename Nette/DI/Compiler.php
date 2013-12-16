@@ -56,9 +56,11 @@ class Compiler extends Nette\Object
 	/**
 	 * @return array
 	 */
-	public function getExtensions()
+	public function getExtensions($type = NULL)
 	{
-		return $this->extensions;
+		return $type
+			? array_filter($this->extensions, function($item) use ($type) { return $item instanceof $type; })
+			: $this->extensions;
 	}
 
 
