@@ -87,7 +87,7 @@ class SqlsrvDriver extends Nette\Object implements Nette\Database\ISupplementalD
 			}
 		}
 
-		if ($offset) {
+		if ($offset > 0) {
 			throw new Nette\NotSupportedException('Offset is not supported by this database.');
 		}
 	}
