@@ -68,6 +68,9 @@ Assert::same(2, count($extensions));
 Assert::false($extensions['foo']->loaded);
 Assert::false($extensions['baz']->loaded);
 
+Assert::equal(array('foo' => $extensions['foo']), $compiler->getExtensions('FooExtension'));
+Assert::equal(array(), $compiler->getExtensions('UnknownExtension'));
+
 
 // first running
 $compiler->compile(array(), 'SystemContainer', 'Nette\DI\Container');
