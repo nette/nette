@@ -389,13 +389,13 @@ class NetteExtension extends Nette\DI\CompilerExtension
 					Nette\DI\Compiler::filterArguments(array(is_string($item) ? new Nette\DI\Statement($item) : $item))
 				));
 			}
+		}
 
-			foreach ((array) $config['debugger']['blueScreen'] as $item) {
-				$initialize->addBody($container->formatPhp(
-					'Nette\Diagnostics\Debugger::getBlueScreen()->addPanel(?);',
-					Nette\DI\Compiler::filterArguments(array($item))
-				));
-			}
+		foreach ((array) $config['debugger']['blueScreen'] as $item) {
+			$initialize->addBody($container->formatPhp(
+				'Nette\Diagnostics\Debugger::getBlueScreen()->addPanel(?);',
+				Nette\DI\Compiler::filterArguments(array($item))
+			));
 		}
 
 		if (!empty($container->parameters['tempDir'])) {
