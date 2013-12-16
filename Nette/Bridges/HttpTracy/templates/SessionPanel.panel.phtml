@@ -2,20 +2,21 @@
 
 namespace Nette\Bridges\HttpTracy;
 
-use Nette;
+use Nette,
+	Tracy\Dumper;
 
 ?>
-<style class="nette-debug">
+<style class="tracy-debug">
 
-	#nette-debug .nette-SessionPanel .nette-inner {
+	#tracy-debug .nette-SessionPanel .tracy-inner {
 		width: 700px;
 	}
 
-	#nette-debug .nette-SessionPanel .nette-inner table {
+	#tracy-debug .nette-SessionPanel .tracy-inner table {
 		width: 100%;
 	}
 
-	#nette-debug .nette-SessionPanel-parameters pre {
+	#tracy-debug .nette-SessionPanel-parameters pre {
 		background: #FDF5CE;
 		padding: .4em .7em;
 		border: 1px dotted silver;
@@ -27,7 +28,7 @@ use Nette;
 <div class="nette-SessionPanel">
 	<h1>Session #<?php echo htmlspecialchars(session_id()) ?> (Lifetime: <?php echo htmlspecialchars(ini_get('session.cookie_lifetime')); ?>)</h1>
 
-	<div class="nette-inner">
+	<div class="tracy-inner">
 		<?php if (empty($_SESSION)):?>
 		<p><i>empty</i></p>
 		<?php else: ?>
@@ -37,7 +38,7 @@ use Nette;
 			if ($k === '__NF') {
 				$k = 'Nette Session'; $v = isset($v['DATA']) ? $v['DATA'] : NULL;
 			}
-			echo '<tr><th>', htmlspecialchars($k), '</th><td>', Nette\Diagnostics\Dumper::toHtml($v), "</td></tr>\n";
+			echo '<tr><th>', htmlspecialchars($k), '</th><td>', Dumper::toHtml($v), "</td></tr>\n";
 		}?>
 		</table>
 		<?php endif ?>

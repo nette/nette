@@ -17,6 +17,7 @@
 	],
 	"require": {
 		"php": ">=5.3.1",
+		"tracy/tracy": "~2.0",
 		"ext-iconv": "*",
 		"ext-tokenizer": "*"
 	},
@@ -33,6 +34,7 @@
 		"classmap": ["Nette/"],
 		"files": ["Nette/common/shortcuts.php"]
 	},
+	"minimum-stability": "dev",
 	"extra": {
 		"branch-alias": {
 			"dev-master": "2.2-dev"
