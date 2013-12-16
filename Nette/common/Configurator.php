@@ -8,7 +8,8 @@
 namespace Nette;
 
 use Nette,
-	Nette\DI;
+	Nette\DI,
+	Tracy;
 
 
 /**
@@ -123,8 +124,8 @@ class Configurator extends Object
 	 */
 	public function enableDebugger($logDirectory = NULL, $email = NULL)
 	{
-		Nette\Diagnostics\Debugger::$strictMode = TRUE;
-		Nette\Diagnostics\Debugger::enable(!$this->parameters['debugMode'], $logDirectory, $email);
+		Tracy\Debugger::$strictMode = TRUE;
+		Tracy\Debugger::enable(!$this->parameters['debugMode'], $logDirectory, $email);
 	}
 
 

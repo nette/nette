@@ -7,7 +7,8 @@
 
 namespace Nette\Bridges\SecurityTracy;
 
-use Nette;
+use Nette,
+	Tracy;
 
 
 /**
@@ -15,7 +16,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class UserPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
+class UserPanel extends Nette\Object implements Tracy\IBarPanel
 {
 	/** @var Nette\Security\User */
 	private $user;

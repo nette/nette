@@ -5,12 +5,12 @@
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 
 
 if (!function_exists('dump')) {
 	/**
-	 * Nette\Diagnostics\Debugger::dump() shortcut.
+	 * Tracy\Debugger::dump() shortcut.
 	 * @tracySkipLocation
 	 */
 	function dump($var)
@@ -25,7 +25,7 @@ if (!function_exists('dump')) {
 
 if (!function_exists('dlog')) {
 	/**
-	 * Nette\Diagnostics\Debugger::log() shortcut.
+	 * Tracy\Debugger::log() shortcut.
 	 */
 	function dlog($var = NULL)
 	{

@@ -4,29 +4,29 @@ namespace Nette\Bridges\ApplicationTracy;
 
 use Nette,
 	Nette\Application\UI\Presenter,
-	Nette\Diagnostics\Helpers,
-	Nette\Diagnostics\Dumper;
+	Tracy,
+	Tracy\Dumper;
 
 ?>
-<style class="nette-debug">
+<style class="tracy-debug">
 
-	#nette-debug .nette-RoutingPanel table {
+	#tracy-debug .nette-RoutingPanel table {
 		font: 9pt/1.5 Consolas, monospace;
 	}
 
-	#nette-debug .nette-RoutingPanel .yes td {
+	#tracy-debug .nette-RoutingPanel .yes td {
 		color: green;
 	}
 
-	#nette-debug .nette-RoutingPanel .may td {
+	#tracy-debug .nette-RoutingPanel .may td {
 		color: #67F;
 	}
 
-	#nette-debug .nette-RoutingPanel pre, #nette-debug .nette-RoutingPanel code {
+	#tracy-debug .nette-RoutingPanel pre, #tracy-debug .nette-RoutingPanel code {
 		display: inline;
 	}
 
-	#nette-debug .nette-RoutingPanel code .nette-collapsed {
+	#tracy-debug .nette-RoutingPanel code .tracy-collapsed {
 		display: none;
 	}
 
@@ -41,7 +41,7 @@ use Nette,
 <?php endif ?>
 </h1>
 
-<div class="nette-inner">
+<div class="tracy-inner">
 	<p><code><?php echo htmlSpecialChars($this->httpRequest->getUrl()) ?></code></p>
 
 <?php if (empty($this->routers)): ?>
@@ -91,6 +91,6 @@ use Nette,
 	</table>
 <?php endif ?>
 
-	<?php if ($this->source): ?><p><?php echo $this->source ?> in <?php echo Helpers::editorLink($this->source->getFileName(), $this->source->getStartLine()) ?></p><?php endif ?>
+	<?php if ($this->source): ?><p><?php echo $this->source ?> in <?php echo Tracy\Helpers::editorLink($this->source->getFileName(), $this->source->getStartLine()) ?></p><?php endif ?>
 </div>
 </div>

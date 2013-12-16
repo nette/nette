@@ -8,7 +8,8 @@
 namespace Nette\Bridges\DITracy;
 
 use Nette,
-	Nette\DI\Container;
+	Nette\DI\Container,
+	Tracy;
 
 
 /**
@@ -16,7 +17,7 @@ use Nette,
  *
  * @author     Patrik Votoček
  */
-class ContainerPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
+class ContainerPanel extends Nette\Object implements Tracy\IBarPanel
 {
 	/** @var Nette\DI\Container */
 	private $container;
