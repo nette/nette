@@ -5,7 +5,7 @@
  *
  * @author     Jan Skrasek
  * @package    Nette\Database
- * @dataProvider? databases.ini
+ * @dataProvider? databases.ini, != sqlsrv
  */
 
 use Tester\Assert;
