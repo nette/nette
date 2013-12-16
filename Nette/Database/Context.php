@@ -69,7 +69,7 @@ class Context extends Nette\Object
 	 */
 	public function getInsertId($name = NULL)
 	{
-		return $this->connection->lastInsertId($name);
+		return $this->connection->getInsertId($name);
 	}
 
 
