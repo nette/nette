@@ -104,7 +104,7 @@ Assert::equal(array(
 ), $pairs);
 
 
-$pairs = $context->query('SELECT id, id + 1 FROM book ORDER BY id')->fetchPairs();
+$pairs = $context->query('SELECT id, id + 1 AS id1 FROM book ORDER BY id')->fetchPairs();
 Assert::equal(array(
 	1 => 2,
 	2 => 3,
@@ -113,7 +113,7 @@ Assert::equal(array(
 ), $pairs);
 
 
-$pairs = $context->query('SELECT id, id + 1, title FROM book ORDER BY id')->fetchPairs();
+$pairs = $context->query('SELECT id, id + 1 AS id1, title FROM book ORDER BY id')->fetchPairs();
 Assert::equal(array(
 	1 => 2,
 	2 => 3,
