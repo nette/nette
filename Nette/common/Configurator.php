@@ -32,6 +32,14 @@ class Configurator extends Object
 	public $onCompile;
 
 	/** @var array */
+	public $defaultExtensions = array(
+		'php' => 'Nette\DI\Extensions\PhpExtension',
+		'constants' => 'Nette\DI\Extensions\ConstantsExtension',
+		'nette' => 'Nette\DI\Extensions\NetteExtension',
+		'extensions' => 'Nette\DI\Extensions\ExtensionsExtension',
+	);
+
+	/** @var array */
 	protected $parameters;
 
 	/** @var array */
@@ -219,10 +227,11 @@ class Configurator extends Object
 	protected function createCompiler()
 	{
 		$compiler = new DI\Compiler;
-		$compiler->addExtension('php', new DI\Extensions\PhpExtension)
-			->addExtension('constants', new DI\Extensions\ConstantsExtension)
-			->addExtension('nette', new DI\Extensions\NetteExtension)
-			->addExtension('extensions', new DI\Extensions\ExtensionsExtension);
+
+		foreach ($this->defaultExtensions as $name => $class) {
+			$compiler->addExtension($name, new $class);
+		}
+
 		return $compiler;
 	}
 
