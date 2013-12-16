@@ -340,11 +340,11 @@ class Compiler extends Nette\Object
 			return;
 		}
 
-    	$this->htmlNode->attrs[$token->name] = TRUE;
+		$this->htmlNode->attrs[$token->name] = TRUE;
 		$this->output .= $token->text;
 
 		$context = NULL;
-    	if (in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML))) {
+		if (in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML))) {
 			$lower = strtolower($token->name);
 			if (substr($lower, 0, 2) === 'on') {
 				$context = self::CONTENT_JS;
