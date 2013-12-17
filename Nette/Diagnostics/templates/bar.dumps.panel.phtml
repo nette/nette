@@ -32,7 +32,7 @@ use Nette;
 <h1>Dumped variables</h1>
 
 <div class="nette-inner nette-DumpPanel">
-<?php foreach ($data as $item): ?>
+<?php foreach ($this->data as $item): ?>
 	<?php if ($item['title']):?>
 	<h2><?php echo htmlspecialchars($item['title']) ?></h2>
 	<?php endif ?>
