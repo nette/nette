@@ -64,8 +64,6 @@ class NetteLoader extends Nette\Object
 		'Nette\FatalErrorException' => '/common/exceptions',
 		'Nette\FileNotFoundException' => '/common/exceptions',
 		'Nette\Framework' => '/common/Framework',
-		'Nette\FreezableObject' => '/common/FreezableObject',
-		'Nette\IFreezable' => '/common/IFreezable',
 		'Nette\IOException' => '/common/exceptions',
 		'Nette\Image' => '/common/Image',
 		'Nette\InvalidArgumentException' => '/common/exceptions',
