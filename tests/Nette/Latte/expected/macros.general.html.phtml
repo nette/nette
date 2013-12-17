@@ -302,3 +302,8 @@ Hello<?php } $iterations++; } $iterations = 0; foreach (array(1) as $foo) { if (
 <ul title="inner foreach continue">
 	<li><?php $iterations = 0; foreach ($people as $person) { echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (TRUE) continue ;$iterations++; } ?></li>
 </ul>
+
+<?php $_l->switch[] = (2); if (FALSE) { } elseif (end($_l->switch) === ('x')) { ?>x
+<?php } elseif (end($_l->switch) === (2)) { ?>y
+<?php } else { ?>z
+<?php } array_pop($_l->switch) ;
