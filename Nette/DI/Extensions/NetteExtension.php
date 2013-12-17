@@ -493,7 +493,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		if ($extra = array_diff_key($config, $expected)) {
 			$extra = implode(", $name.", array_keys($extra));
 			throw new Nette\InvalidStateException("Unknown option $name.$extra.");
-}
+		}
 	}
 
 }
