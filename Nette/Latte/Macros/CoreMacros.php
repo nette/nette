@@ -57,6 +57,9 @@ class CoreMacros extends MacroSet
 		$me->addMacro('elseifset', '} elseif (isset(%node.args)) {');
 		$me->addMacro('ifcontent', array($me, 'macroIfContent'), array($me, 'macroEndIfContent'));
 
+		$me->addMacro('switch', '$_l->switch[] = (%node.args); if (FALSE) {', '} array_pop($_l->switch)');
+		$me->addMacro('case', '} elseif (end($_l->switch) === (%node.args)) {');
+
 		$me->addMacro('foreach', '', array($me, 'macroEndForeach'));
 		$me->addMacro('for', 'for (%node.args) {', '}');
 		$me->addMacro('while', 'while (%node.args) {', '}');
@@ -335,7 +338,10 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroVar(MacroNode $node, PhpWriter $writer)
 	{
-		if ($node->name === 'assign') {
+		if ($node->args === '' && $node->parentNode && $node->parentNode->name === 'switch') {
+			return '} else {';
+
+		} elseif ($node->name === 'assign') {
 			trigger_error('Macro {assign} is deprecated; use {var} instead.', E_USER_DEPRECATED);
 		}
 
