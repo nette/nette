@@ -18,6 +18,7 @@ use Nette;
  * Object that has a modifiable and a read-only (frozen) state.
  *
  * @author     David Grudl
+ * @deprecated
  */
 interface IFreezable
 {

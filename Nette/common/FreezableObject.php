@@ -20,6 +20,7 @@ use Nette;
  * @author     David Grudl
  *
  * @property-read bool $frozen
+ * @deprecated
  */
 abstract class FreezableObject extends Object implements IFreezable
 {
