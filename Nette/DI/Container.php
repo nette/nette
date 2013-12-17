@@ -94,10 +94,11 @@ class Container extends Nette\Object
 	 */
 	public function getService($name)
 	{
-		if (!isset($this->registry[$name])) {
-			$this->registry[$name] = $this->createService($name);
+		if (!isset($this->registry[$key = self::escapeServiceName($name)])) {
+			$this->registry[$key] = $this->createService($name);
 		}
-		return $this->registry[$name];
+		self::deprecateServiceNameWithBackslash($name);
+		return $this->registry[$key];
 	}
 
 
@@ -108,7 +109,8 @@ class Container extends Nette\Object
 	 */
 	public function hasService($name)
 	{
-		return isset($this->registry[$name])
+		self::deprecateServiceNameWithBackslash($name);
+		return isset($this->registry[$name = self::escapeServiceName($name)])
 			|| method_exists($this, $method = Container::getMethodName($name)) && $this->getReflection()->getMethod($method)->getName() === $method;
 	}
 
@@ -123,7 +125,7 @@ class Container extends Nette\Object
 		if (!$this->hasService($name)) {
 			throw new MissingServiceException("Service '$name' not found.");
 		}
-		return isset($this->registry[$name]);
+		return isset($this->registry[self::escapeServiceName($name)]);
 	}
 
 
@@ -135,7 +137,8 @@ class Container extends Nette\Object
 	 */
 	public function createService($name, array $args = array())
 	{
-		$method = Container::getMethodName($name);
+		self::deprecateServiceNameWithBackslash($name);
+		$method = Container::getMethodName($name = self::escapeServiceName($name));
 		if (isset($this->creating[$name])) {
 			throw new Nette\InvalidStateException("Circular reference detected for services: "
 				. implode(', ', array_keys($this->creating)) . ".");
@@ -329,6 +332,20 @@ class Container extends Nette\Object
 	{
 		$uname = ucfirst($name);
 		return 'createService' . ((string) $name === $uname ? '__' : '') . str_replace('.', '__', $uname);
+	}
+
+
+	private static function escapeServiceName($name)
+	{
+		return strtr($name, '\\', '_');
+	}
+
+
+	private static function deprecateServiceNameWithBackslash($name)
+	{
+		if (strpos($name, '\\') !== FALSE) {
+			trigger_error("Using backslash in service name is deprecated.", E_USER_DEPRECATED);
+		}
 	}
 
 }
