@@ -51,7 +51,7 @@ class MacroTokens extends Nette\Utils\TokenIterator
 			self::T_WHITESPACE => '\s+',
 			self::T_COMMENT => '(?s)/\*.*?\*/',
 			self::T_STRING => Parser::RE_STRING,
-			self::T_KEYWORD => '(?:true|false|null|and|or|xor|clone|new|instanceof|return|continue|break|[A-Z_][A-Z0-9_]{2,})(?![\w\pL_])', // keyword or const
+			self::T_KEYWORD => '(?:true|false|null|and|or|xor|clone|new|instanceof|return|continue|break|endif|endforeach|endwhile|endswitch|[A-Z_][A-Z0-9_]{2,})(?![\w\pL_])', // keyword or const
 			self::T_CAST => '\((?:expand|string|array|int|integer|float|bool|boolean|object)\)', // type casting
 			self::T_VARIABLE => '\$[\w\pL_]+',
 			self::T_NUMBER => '[+-]?[0-9]+(?:\.[0-9]+)?(?:e[0-9]+)?',
