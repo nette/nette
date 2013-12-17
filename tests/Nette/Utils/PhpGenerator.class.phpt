@@ -8,7 +8,8 @@
  */
 
 use Nette\Utils\PhpGenerator\ClassType,
-	Nette\Utils\PhpGenerator\PhpLiteral;
+	Nette\Utils\PhpGenerator\PhpLiteral,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -62,4 +63,4 @@ $method->addParameter('res', NULL)
 		->setReference(TRUE)
 		->setTypeHint('array');
 
-Assert::match(file_get_contents(__DIR__ . '/PhpGenerator.class.expect'), (string) $class);
+Assert::matchFile(__DIR__ . '/PhpGenerator.class.expect', (string) $class);

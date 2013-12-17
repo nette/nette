@@ -8,7 +8,8 @@
  */
 
 use Nette\Http,
-	Nette\Application;
+	Nette\Application,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

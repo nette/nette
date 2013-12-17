@@ -7,7 +7,8 @@
  * @package    Nette\Mail
  */
 
-use Nette\Mail\Message;
+use Nette\Mail\Message,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -29,4 +30,4 @@ $mail->addAttachment(__DIR__ . '/files/example.zip', NULL, 'application/zip');
 
 $mail->send();
 
-Assert::match(file_get_contents(__DIR__ . '/Mail.textualAndHtmlBody.attachment.expect'), TestMailer::$output);
+Assert::matchFile(__DIR__ . '/Mail.textualAndHtmlBody.attachment.expect', TestMailer::$output);

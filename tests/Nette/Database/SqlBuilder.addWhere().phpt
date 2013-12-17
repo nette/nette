@@ -6,16 +6,16 @@
  * @author     Jan Skrasek
  * @package    Nette\Database
  * @dataProvider? databases.ini
- */
+*/
+
+use Nette\Database\SqlLiteral,
+	Nette\Database\Reflection\DiscoveredReflection,
+	Nette\Database\Table\SqlBuilder,
+	Tester\Assert;
 
 require __DIR__ . '/connect.inc.php'; // create $connection
 
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nette_test1.sql");
-
-use Tester\Assert;
-use Nette\Database\SqlLiteral;
-use Nette\Database\Reflection\DiscoveredReflection;
-use Nette\Database\Table\SqlBuilder;
 
 
 //$cacheStorage = new Nette\Caching\Storages\MemoryStorage;

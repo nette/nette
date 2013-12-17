@@ -7,7 +7,8 @@
  * @package    Nette\Forms
  */
 
-use Nette\Forms\Form;
+use Nette\Forms\Form,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -25,4 +26,4 @@ $form->addHidden('id')->setDefaultValue(123);
 $form->addSubmit('submit', 'Delete item');
 $form->fireEvents();
 
-Assert::match( file_get_contents(__DIR__ . '/Forms.example.002.expect'), $form->__toString(TRUE) );
+Assert::matchFile(__DIR__ . '/Forms.example.002.expect', $form->__toString(TRUE) );

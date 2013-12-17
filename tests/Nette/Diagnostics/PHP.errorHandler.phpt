@@ -7,6 +7,9 @@
  * @package    Nette\Diagnostics
  */
 
+use Tester\Assert;
+
+
 
 require __DIR__ . '/../bootstrap.php';
 

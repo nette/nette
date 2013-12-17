@@ -9,7 +9,8 @@
 
 use Nette\Latte,
 	Nette\Mail\Message,
-	Nette\Templating\FileTemplate;
+	Nette\Templating\FileTemplate,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -26,4 +27,4 @@ $mail->htmlBody->registerFilter(new Latte\Engine);
 
 $mail->send();
 
-Assert::match(file_get_contents(__DIR__ . '/Mail.template.expect'), TestMailer::$output);
+Assert::matchFile(__DIR__ . '/Mail.template.expect', TestMailer::$output);

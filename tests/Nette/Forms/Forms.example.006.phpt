@@ -7,7 +7,8 @@
  * @package    Nette\Forms
  */
 
-use Nette\Forms\Form;
+use Nette\Forms\Form,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -79,4 +80,4 @@ Assert::same( array(
    ),
 ), $form->getValues(TRUE) );
 
-Assert::match( file_get_contents(__DIR__ . '/Forms.example.006.expect'), $form->__toString(TRUE) );
+Assert::matchFile(__DIR__ . '/Forms.example.006.expect', $form->__toString(TRUE) );

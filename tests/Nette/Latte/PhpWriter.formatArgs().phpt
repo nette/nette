@@ -8,7 +8,8 @@
  */
 
 use Nette\Latte\PhpWriter,
-	Nette\Latte\MacroTokenizer;
+	Nette\Latte\MacroTokenizer,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

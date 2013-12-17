@@ -8,7 +8,8 @@
  * @phpversion 5.3 due to nested closure
  */
 
-use Nette\Utils\Strings;
+use Nette\Utils\Strings,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

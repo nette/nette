@@ -7,7 +7,8 @@
  * @package    Nette\Forms
  */
 
-use Nette\Forms\Form;
+use Nette\Forms\Form,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -43,4 +44,4 @@ $form->addText('email', 'Send to email:')
 
 $form->addSubmit('submit', 'Send');
 
-Assert::match( file_get_contents(__DIR__ . '/Forms.example.008.expect'), $form->__toString(TRUE) );
+Assert::matchFile(__DIR__ . '/Forms.example.008.expect', $form->__toString(TRUE) );

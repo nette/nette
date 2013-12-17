@@ -8,7 +8,8 @@
  */
 
 use Nette\Http,
-	Nette\Forms\Form;
+	Nette\Forms\Form,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -201,4 +202,4 @@ ob_start();
 
 <?php
 
-Assert::match( file_get_contents(__DIR__ . '/Forms.example.007.expect'), ob_get_clean() );
+Assert::matchFile(__DIR__ . '/Forms.example.007.expect', ob_get_clean() );

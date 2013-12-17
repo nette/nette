@@ -8,7 +8,8 @@
  */
 
 use Nette\DI\Container,
-	Nette\DI\NestedAccessor;
+	Nette\DI\NestedAccessor,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

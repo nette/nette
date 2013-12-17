@@ -6,9 +6,10 @@
  * @author     Jan Skrasek
  * @package    Nette\Database
  * @dataProvider? databases.ini
- */
+*/
 
-use Nette\Database;
+use Nette\Database,
+	Tester\Assert;
 
 
 require __DIR__ . '/connect.inc.php'; // create $connection

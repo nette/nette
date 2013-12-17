@@ -7,7 +7,8 @@
  * @package    Nette\Loaders
  */
 
-use Nette\Loaders\NetteLoader;
+use Nette\Loaders\NetteLoader,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

@@ -6,7 +6,9 @@
  * @author     David Grudl
  * @package    Nette\Database
  * @dataProvider? databases.ini  mysql
- */
+*/
+
+use Tester\Assert;
 
 $query = 'mysql';
 require __DIR__ . '/connect.inc.php'; // create $connection

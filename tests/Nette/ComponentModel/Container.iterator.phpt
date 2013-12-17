@@ -9,7 +9,8 @@
 
 use Nette\ComponentModel\Component,
 	Nette\ComponentModel\Container,
-	Nette\Forms\Controls\Button;
+	Nette\Forms\Controls\Button,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

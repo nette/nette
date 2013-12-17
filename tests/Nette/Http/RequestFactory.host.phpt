@@ -7,7 +7,8 @@
  * @package    Nette\Http
  */
 
-use Nette\Http\RequestFactory;
+use Nette\Http\RequestFactory,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

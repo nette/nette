@@ -5,7 +5,8 @@
  */
 
 use Nette\Mail\Message,
-	Nette\Mail\IMailer;
+	Nette\Mail\IMailer,
+	Tester\Assert;
 
 
 

@@ -7,7 +7,8 @@
  * @package    Nette\Utils
  */
 
-use Nette\Utils\PhpGenerator\Method;
+use Nette\Utils\PhpGenerator\Method,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -24,4 +25,4 @@ $function->addUse('this');
 $function->addUse('vars')
 	->setReference(TRUE);
 
-Assert::match(file_get_contents(__DIR__ . '/PhpGenerator.closure.expect'), (string) $function);
+Assert::matchFile(__DIR__ . '/PhpGenerator.closure.expect', (string) $function);

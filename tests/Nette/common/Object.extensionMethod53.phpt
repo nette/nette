@@ -8,6 +8,7 @@
  * @phpversion 5.3
  */
 
+use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 

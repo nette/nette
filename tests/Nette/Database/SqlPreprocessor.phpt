@@ -6,11 +6,12 @@
  * @author     David Grudl
  * @package    Nette\Database
  * @dataProvider? databases.ini
- */
+*/
+
+use Nette\Database\SqlLiteral,
+	Tester\Assert;
 
 require __DIR__ . '/connect.inc.php'; // create $connection
-
-use Nette\Database\SqlLiteral;
 
 
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nette_test1.sql");

@@ -9,7 +9,8 @@
 
 use Nette\Config\Configurator,
 	Nette\Config\Compiler,
-	Nette\DI\ContainerBuilder;
+	Nette\DI\ContainerBuilder,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

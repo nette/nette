@@ -7,7 +7,8 @@
  * @package    Nette\Utils
  */
 
-use Nette\Utils\PhpGenerator\ClassType;
+use Nette\Utils\PhpGenerator\ClassType,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -22,4 +23,4 @@ $interface
 
 $interface->addMethod('getForm');
 
-Assert::match(file_get_contents(__DIR__ . '/PhpGenerator.interface.expect'), (string) $interface);
+Assert::matchFile(__DIR__ . '/PhpGenerator.interface.expect', (string) $interface);

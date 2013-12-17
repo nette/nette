@@ -8,7 +8,8 @@
  * @phpini     short_open_tag=on
  */
 
-use Nette\Latte;
+use Nette\Latte,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

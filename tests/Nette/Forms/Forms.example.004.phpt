@@ -8,7 +8,8 @@
  */
 
 use Nette\Utils\Html,
-	Nette\Forms\Form;
+	Nette\Forms\Form,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -131,4 +132,4 @@ $defaults = array(
 $form->setDefaults($defaults);
 $form->fireEvents();
 
-Assert::match( file_get_contents(__DIR__ . '/Forms.example.004.expect'), $form->__toString(TRUE) );
+Assert::matchFile(__DIR__ . '/Forms.example.004.expect', $form->__toString(TRUE) );

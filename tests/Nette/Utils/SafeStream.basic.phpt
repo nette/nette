@@ -7,7 +7,6 @@
  * @package    Nette\Utils
  */
 
-
 require __DIR__ . '/../bootstrap.php';
 
 

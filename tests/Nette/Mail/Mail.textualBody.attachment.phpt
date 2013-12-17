@@ -7,7 +7,8 @@
  * @package    Nette\Mail
  */
 
-use Nette\Mail\Message;
+use Nette\Mail\Message,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

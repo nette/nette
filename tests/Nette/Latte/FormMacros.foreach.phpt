@@ -7,8 +7,9 @@
  * @package    Nette\Latte
  */
 
-use Nette\Latte\Macros\FormMacros;
-use Nette\Application\UI\Form;
+use Nette\Latte\Macros\FormMacros,
+	Nette\Application\UI\Form,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

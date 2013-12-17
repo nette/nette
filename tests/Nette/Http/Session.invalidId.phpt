@@ -8,7 +8,8 @@
  */
 
 use Nette\Http\Session,
-	Nette\Http\SessionSection;
+	Nette\Http\SessionSection,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

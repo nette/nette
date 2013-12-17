@@ -8,7 +8,8 @@
  * @phpversion 5.3
  */
 
-use Nette\Reflection\AnnotationsParser;
+use Nette\Reflection\AnnotationsParser,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

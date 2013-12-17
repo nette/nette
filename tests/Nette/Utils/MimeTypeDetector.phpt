@@ -7,7 +7,8 @@
  * @package    Nette\Utils
  */
 
-use Nette\Utils\MimeTypeDetector;
+use Nette\Utils\MimeTypeDetector,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

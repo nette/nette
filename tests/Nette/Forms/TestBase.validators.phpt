@@ -8,7 +8,8 @@
  */
 
 use Nette\Forms\Controls\TextInput,
-	Nette\Forms\Controls\TextBase;
+	Nette\Forms\Controls\TextBase,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

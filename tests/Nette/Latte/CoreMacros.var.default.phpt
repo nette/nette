@@ -7,7 +7,8 @@
  * @package    Nette\Latte
  */
 
-use Nette\Latte\Macros\CoreMacros;
+use Nette\Latte\Macros\CoreMacros,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

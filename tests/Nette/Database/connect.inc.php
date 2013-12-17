@@ -6,7 +6,9 @@
  * @author     Jakub Vrana
  * @author     Jan Skrasek
  * @package    Nette\Database
- */
+*/
+
+use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 

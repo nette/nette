@@ -9,7 +9,8 @@
 
 use Nette\Caching\Storages\MemcachedStorage,
 	Nette\Caching\Storages\FileJournal,
-	Nette\Caching\Cache;
+	Nette\Caching\Cache,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

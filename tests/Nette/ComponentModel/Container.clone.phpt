@@ -9,7 +9,8 @@
 
 use Nette\ComponentModel\Container,
 	Nette\Object,
-	Nette\ComponentModel\IContainer;
+	Nette\ComponentModel\IContainer,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

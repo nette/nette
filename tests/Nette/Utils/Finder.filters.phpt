@@ -8,7 +8,8 @@
  * @phpversion 5.3
  */
 
-use Nette\Utils\Finder;
+use Nette\Utils\Finder,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

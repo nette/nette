@@ -8,7 +8,8 @@
  */
 
 use Nette\Latte,
-	Nette\Templating\Template;
+	Nette\Templating\Template,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

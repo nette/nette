@@ -8,7 +8,8 @@
  */
 
 use Nette\Latte,
-	Nette\Templating\Template;
+	Nette\Templating\Template,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -28,4 +29,4 @@ $result = $template->setSource(
 ')->compile();
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::match(file_get_contents("$path.phtml"), $result);
+Assert::matchFile("$path.phtml", $result);

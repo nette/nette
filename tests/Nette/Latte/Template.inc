@@ -4,7 +4,8 @@
  * Common code for Template test cases.
  */
 
-use Nette\Caching\Storages\PhpFileStorage;
+use Nette\Caching\Storages\PhpFileStorage,
+	Tester\Assert;
 
 
 

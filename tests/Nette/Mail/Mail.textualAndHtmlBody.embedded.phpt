@@ -7,7 +7,8 @@
  * @package    Nette\Mail
  */
 
-use Nette\Mail\Message;
+use Nette\Mail\Message,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -28,4 +29,4 @@ $mail->setHTMLBody('<b>Sample text</b> <img src="background.png">', __DIR__ . '/
 
 $mail->send();
 
-Assert::match(file_get_contents(__DIR__ . '/Mail.textualAndHtmlBody.embedded.expect'), TestMailer::$output);
+Assert::matchFile(__DIR__ . '/Mail.textualAndHtmlBody.embedded.expect', TestMailer::$output);

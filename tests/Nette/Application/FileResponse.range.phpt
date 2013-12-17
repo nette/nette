@@ -9,7 +9,8 @@
  */
 
 use Nette\Application\Responses\FileResponse,
-	Nette\Http;
+	Nette\Http,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
