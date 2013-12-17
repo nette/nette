@@ -5,7 +5,6 @@
  *
  * @author     Miloslav Hůla
  * @package    Nette\Latte
- * @keepTrailingSpaces
  */
 
 use Nette\Latte,
