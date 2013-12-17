@@ -532,6 +532,7 @@ final class Debugger
 	/** @deprecated */
 	public static function toStringException(\Exception $exception)
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use trigger_error(..., E_USER_ERROR) instead.', E_USER_DEPRECATED);
 		if (self::$enabled) {
 			self::_exceptionHandler($exception);
 		} else {
