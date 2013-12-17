@@ -15,9 +15,10 @@ if (PHP_VERSION_ID < 50301) {
 }
 
 
+// deprecated
 define('NETTE', TRUE);
 define('NETTE_DIR', __DIR__);
-define('NETTE_VERSION_ID', 20100); // v2.1.0
+define('NETTE_VERSION_ID', 20100);
 
 
 // Run NetteLoader
@@ -29,5 +30,3 @@ Nette\Loaders\NetteLoader::getInstance()->register();
 
 
 require_once __DIR__ . '/common/shortcuts.php';
-
-class_alias('Nette\Configurator', 'Nette\Config\Configurator');

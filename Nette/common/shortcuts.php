@@ -38,3 +38,7 @@ if (!function_exists('callback')) {
 		return new Nette\Callback($callback, $m);
 	}
 }
+
+class_alias('Nette\Configurator', 'Nette\Config\Configurator');
+class_alias('Nette\Config\CompilerExtension', 'Nette\DI\CompilerExtension');
+class_alias('Nette\Config\Compiler', 'Nette\DI\Compiler');
