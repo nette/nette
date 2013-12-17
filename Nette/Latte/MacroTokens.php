@@ -132,7 +132,7 @@ class MacroTokens extends Nette\Utils\TokenIterator
 		parent::next();
 		if ($this->isCurrent('[', '(', '{')) {
 			$this->depth++;
-		} elseif ($this->isPrev(']', ')', '}')) {
+		} elseif ($this->isCurrent(']', ')', '}')) {
 			$this->depth--;
 		}
 	}

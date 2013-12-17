@@ -202,7 +202,7 @@ class PhpWriter extends Nette\Object
 			} elseif ($tokens->isCurrent(':')) {
 				array_pop($inTernary);
 
-			} elseif (end($inTernary) === $tokens->depth && $tokens->isCurrent(',', ')', ']')) {
+			} elseif ($tokens->isCurrent(',', ')', ']') && end($inTernary) === $tokens->depth + !$tokens->isCurrent(',')) {
 				$res->append(' : NULL');
 				array_pop($inTernary);
 			}
