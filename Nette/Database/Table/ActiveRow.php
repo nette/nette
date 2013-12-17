@@ -191,7 +191,7 @@ class ActiveRow implements \IteratorAggregate, IRow
 
 	/**
 	 * Deletes row.
-	 * @return int number of affected rows or FALSE in case of an error
+	 * @return int number of affected rows
 	 */
 	public function delete()
 	{

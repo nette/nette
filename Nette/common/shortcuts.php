@@ -40,5 +40,5 @@ if (!function_exists('callback')) {
 }
 
 class_alias('Nette\Configurator', 'Nette\Config\Configurator');
-class_alias('Nette\Config\CompilerExtension', 'Nette\DI\CompilerExtension');
-class_alias('Nette\Config\Compiler', 'Nette\DI\Compiler');
+class_alias('Nette\DI\CompilerExtension', 'Nette\Config\CompilerExtension');
+class_alias('Nette\DI\Compiler', 'Nette\Config\Compiler');
