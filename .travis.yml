@@ -11,7 +11,7 @@ services:
 
 before_script:
     # Install Nette Tester
-    - composer install --no-interaction --dev
+    - composer install --no-interaction --dev --prefer-source
 
     # Create databases.ini
     - cp ./tests/Nette/Database/databases.sample.ini ./tests/Nette/Database/databases.ini
