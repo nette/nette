@@ -30,9 +30,11 @@ $form->addText('special', 'Label')
 
 $form->validate();
 
-Assert::false( $form->hasErrors() );
+Assert::true( $form->hasErrors() );
 
-Assert::same( array(), $form->getErrors() );
+Assert::same( array('1 5', '5 1', '1 ', 'Label xyz is invalid [field special] xyz'), $form->getErrors() );
+
+Assert::same( array(), $form->getOwnErrors() );
 
 Assert::same( array('1 5'), $form['args1']->getErrors() );
 

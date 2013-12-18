@@ -497,7 +497,7 @@ class Form extends Container
 	 */
 	public function getErrors()
 	{
-		return array_unique($this->errors);
+		return array_unique(array_merge($this->errors, parent::getErrors()));
 	}
 
 
@@ -520,12 +520,20 @@ class Form extends Container
 
 
 	/**
-	 * Returns all validation errors.
+	 * Returns form's validation errors.
 	 * @return array
 	 */
+	public function getOwnErrors()
+	{
+		return array_unique($this->errors);
+	}
+
+
+	/** @deprecated */
 	public function getAllErrors()
 	{
-		return array_unique(array_merge($this->errors, parent::getAllErrors()));
+		trigger_error(__METHOD__ . '() is deprecated; use getErrors() instead.', E_USER_DEPRECATED);
+		return $this->errors();
 	}
 
 

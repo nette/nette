@@ -213,7 +213,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	 */
 	public function renderErrors(Nette\Forms\IControl $control = NULL)
 	{
-		$errors = $control ? $control->getErrors() : $this->form->getErrors();
+		$errors = $control ? $control->getErrors() : $this->form->getOwnErrors();
 		if (!$errors) {
 			return;
 		}
