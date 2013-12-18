@@ -26,6 +26,10 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	public $defaults = array(
 		'http' => array(
 			'proxy' => array(),
+			'headers' => array(
+				'X-Powered-By' => 'Nette Framework',
+				'Content-Type' => 'text/html; charset=utf-8',
+			),
 		),
 		'session' => array(
 			'debugger' => FALSE,
@@ -443,8 +447,12 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			}
 		}
 
-		$initialize->addBody("@header('X-Powered-By: Nette Framework');");
-		$initialize->addBody("@header('Content-Type: text/html; charset=utf-8');");
+		foreach ($config['http']['headers'] as $key => $value) {
+			if ($value != NULL) { // intentionally ==
+				$initialize->addBody('header(?);', array("$key: $value"));
+			}
+		}
+
 		$initialize->addBody('Nette\Utils\SafeStream::register();');
 	}
 
