@@ -449,7 +449,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 
 		foreach ($config['http']['headers'] as $key => $value) {
 			if ($value != NULL) { // intentionally ==
-				$initialize->addBody('header(?);', array("$key: $value"));
+				$initialize->addBody('@header(?);', array("$key: $value"));
 			}
 		}
 
