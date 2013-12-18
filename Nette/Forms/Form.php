@@ -112,6 +112,9 @@ class Form extends Container
 	/** @var array */
 	private $errors = array();
 
+	/** @var Nette\Http\IRequest  used only by standalone form */
+	public $httpRequest;
+
 
 	/**
 	 * Form constructor.
@@ -593,7 +596,11 @@ class Form extends Container
 	 */
 	protected function getHttpRequest()
 	{
-		return Nette\Environment::getHttpRequest();
+		if (!$this->httpRequest) {
+			$factory = new Nette\Http\RequestFactory;
+			$this->httpRequest = $factory->setEncoding('UTF-8')->createHttpRequest();
+		}
+		return $this->httpRequest;
 	}
 
 
@@ -602,6 +609,9 @@ class Form extends Container
 	 */
 	protected function getSession()
 	{
+		if (!$this->httpRequest) {
+			$this->httpRequest = Nette\Environment::getHttpRequest();
+		}
 		return Nette\Environment::getSession();
 	}
 
