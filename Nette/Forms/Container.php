@@ -126,7 +126,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 		if (!$this->validated) {
 			$this->validate();
 		}
-		return !$this->getAllErrors();
+		return !$this->getErrors();
 	}
 
 
@@ -149,7 +149,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 * Returns all validation errors.
 	 * @return array
 	 */
-	public function getAllErrors()
+	public function getErrors()
 	{
 		$errors = array();
 		foreach ($this->getControls() as $control) {

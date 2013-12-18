@@ -41,6 +41,6 @@ foreach ($datasets as $case) {
 
 	Assert::truthy($form->isSubmitted());
 	$form->validate();
-	Assert::equal($case[1], $form->getAllErrors());
+	Assert::equal($case[1], $form->getErrors());
 
 }
