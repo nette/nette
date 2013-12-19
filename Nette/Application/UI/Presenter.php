@@ -163,6 +163,10 @@ abstract class Presenter extends Control implements Application\IPresenter
 			$this->payload = new \stdClass;
 			$this->setParent($this->getParent(), $request->getPresenterName());
 
+			if (!$this->getHttpResponse()->isSent()) {
+				$this->getHttpResponse()->addHeader('Vary', 'X-Requested-With');
+			}
+
 			$this->initGlobalParameters();
 			$this->checkRequirements($this->getReflection());
 			$this->startup();
