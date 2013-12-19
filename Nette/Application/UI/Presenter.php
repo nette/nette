@@ -173,6 +173,11 @@ abstract class Presenter extends Control implements Application\IPresenter
 			// calls $this->action<Action>()
 			$this->tryCall($this->formatActionMethod($this->getAction()), $this->params);
 
+			// autoload components
+			foreach ($this->globalParams as $id => $foo) {
+				$this->getComponent($id, FALSE);
+			}
+
 			if ($this->autoCanonicalize) {
 				$this->canonicalize();
 			}
@@ -1172,11 +1177,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	protected function saveGlobalState()
 	{
-		// load lazy components
-		foreach ($this->globalParams as $id => $foo) {
-			$this->getComponent($id, FALSE);
-		}
-
 		$this->globalParams = array();
 		$this->globalState = $this->getGlobalState();
 	}
