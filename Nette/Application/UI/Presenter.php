@@ -939,7 +939,9 @@ abstract class Presenter extends Control implements Application\IPresenter
 		}
 
 		// ADD ACTION & SIGNAL & FLASH
-		$args[self::ACTION_KEY] = $action;
+		if ($action) {
+			$args[self::ACTION_KEY] = $action;
+		}
 		if (!empty($signal)) {
 			$args[self::SIGNAL_KEY] = $component->getParameterId($signal);
 			$current = $current && $args[self::SIGNAL_KEY] === $this->getParameter(self::SIGNAL_KEY);
