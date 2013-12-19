@@ -168,6 +168,10 @@ class Compiler extends Nette\Object
 			return strcmp(Config\Helpers::isInheriting($a), Config\Helpers::isInheriting($b));
 		});
 
+		if (!empty($config['factories'])) {
+			trigger_error("Section 'factories' is deprecated, move definitions to section `services`.", E_USER_DEPRECATED);
+		}
+
 		foreach ($all as $origName => $def) {
 			if ((string) (int) $origName === (string) $origName) {
 				$name = count($builder->getDefinitions())
