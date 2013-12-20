@@ -556,8 +556,13 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	protected function saveCacheState()
 	{
 		if ($this->observeCache === $this && $this->cache && !$this->sqlBuilder->getSelect() && $this->accessedColumns !== $this->previousAccessedColumns) {
-			$this->cache->save($this->getGeneralCacheKey(), $this->accessedColumns);
-			$this->previousAccessedColumns = NULL;
+			$previousAccessed = (array) $this->cache->load($this->getGeneralCacheKey());
+			$accessed = (array) $this->accessedColumns;
+			$needSave = array_intersect_key($accessed, $previousAccessed) !== $accessed;
+			if ($needSave) {
+				$this->cache->save($this->getGeneralCacheKey(), $previousAccessed + $accessed);
+				$this->previousAccessedColumns = NULL;
+			}
 		}
 	}
 
