@@ -19,7 +19,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-final class Rules extends Nette\Object implements \IteratorAggregate
+class Rules extends Nette\Object implements \IteratorAggregate
 {
 	/** @deprecated */
 	public static $defaultMessages;
@@ -208,7 +208,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	 * Iterates over complete ruleset.
 	 * @return \ArrayIterator
 	 */
-	final public function getIterator()
+	public function getIterator()
 	{
 		$rules = $this->rules;
 		if ($this->required) {

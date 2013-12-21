@@ -84,7 +84,7 @@ abstract class TextBase extends BaseControl
 	 * Returns the special value which is treated as empty string.
 	 * @return string
 	 */
-	final public function getEmptyValue()
+	public function getEmptyValue()
 	{
 		return $this->emptyValue;
 	}

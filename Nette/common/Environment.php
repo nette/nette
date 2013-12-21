@@ -20,7 +20,7 @@ use Nette;
  * @author     David Grudl
  * @deprecated
  */
-final class Environment
+class Environment
 {
 	/** environment name */
 	const DEVELOPMENT = 'development',

@@ -25,7 +25,7 @@ use Nette;
  * @property   array $files
  * @property   string $method
  */
-final class Request extends Nette\Object
+class Request extends Nette\Object
 {
 	/** method */
 	const FORWARD = 'FORWARD';

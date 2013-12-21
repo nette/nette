@@ -19,7 +19,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-final class Rule extends Nette\Object
+class Rule extends Nette\Object
 {
 	/** @var IControl */
 	public $control;

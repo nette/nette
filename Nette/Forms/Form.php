@@ -158,7 +158,7 @@ class Form extends Container
 	 * Returns self.
 	 * @return Form
 	 */
-	final public function getForm($need = TRUE)
+	public function getForm($need = TRUE)
 	{
 		return $this;
 	}
@@ -311,7 +311,7 @@ class Form extends Container
 	 * Returns translate adapter.
 	 * @return Nette\Localization\ITranslator|NULL
 	 */
-	final public function getTranslator()
+	public function getTranslator()
 	{
 		return $this->translator;
 	}
@@ -334,7 +334,7 @@ class Form extends Container
 	 * Tells if the form was submitted.
 	 * @return ISubmitterControl|FALSE  submittor control
 	 */
-	final public function isSubmitted()
+	public function isSubmitted()
 	{
 		if ($this->submittedBy === NULL) {
 			$this->getHttpData();
@@ -347,7 +347,7 @@ class Form extends Container
 	 * Tells if the form was submitted and successfully validated.
 	 * @return bool
 	 */
-	final public function isSuccess()
+	public function isSuccess()
 	{
 		return $this->isSubmitted() && $this->isValid();
 	}
@@ -368,7 +368,7 @@ class Form extends Container
 	 * Returns submitted HTTP data.
 	 * @return mixed
 	 */
-	final public function getHttpData($type = NULL, $htmlName = NULL)
+	public function getHttpData($type = NULL, $htmlName = NULL)
 	{
 		if ($this->httpData === NULL) {
 			if (!$this->isAnchored()) {
@@ -565,7 +565,7 @@ class Form extends Container
 	 * Returns form renderer.
 	 * @return IFormRenderer
 	 */
-	final public function getRenderer()
+	public function getRenderer()
 	{
 		if ($this->renderer === NULL) {
 			$this->renderer = new Rendering\DefaultFormRenderer;

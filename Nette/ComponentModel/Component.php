@@ -157,7 +157,7 @@ abstract class Component extends Nette\Object implements IComponent
 	/**
 	 * @return string
 	 */
-	final public function getName()
+	public function getName()
 	{
 		return $this->name;
 	}
@@ -167,7 +167,7 @@ abstract class Component extends Nette\Object implements IComponent
 	 * Returns the container if any.
 	 * @return IContainer|NULL
 	 */
-	final public function getParent()
+	public function getParent()
 	{
 		return $this->parent;
 	}
@@ -315,7 +315,7 @@ abstract class Component extends Nette\Object implements IComponent
 	/**
 	 * Prevents serialization.
 	 */
-	final public function __sleep()
+	public function __sleep()
 	{
 		throw new Nette\NotImplementedException('Object serialization is not supported by class ' . get_class($this));
 	}
@@ -324,7 +324,7 @@ abstract class Component extends Nette\Object implements IComponent
 	/**
 	 * Prevents unserialization.
 	 */
-	final public function __wakeup()
+	public function __wakeup()
 	{
 		throw new Nette\NotImplementedException('Object unserialization is not supported by class ' . get_class($this));
 	}

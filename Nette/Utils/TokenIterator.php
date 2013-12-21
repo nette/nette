@@ -190,7 +190,7 @@ class TokenIterator extends Nette\Object
 	 * Looks for (first) (not) wanted tokens.
 	 * @return mixed
 	 */
-	final protected function scan($wanted, $onlyFirst, $advance, $strings = FALSE, $until = FALSE, $prev = FALSE)
+	protected function scan($wanted, $onlyFirst, $advance, $strings = FALSE, $until = FALSE, $prev = FALSE)
 	{
 		$res = $onlyFirst ? NULL : ($strings ? '' : array());
 		$pos = $this->position + ($prev ? -1 : 1);

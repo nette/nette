@@ -59,7 +59,7 @@ class RadioList extends ChoiceControl
 	 * Returns separator HTML element template.
 	 * @return Nette\Utils\Html
 	 */
-	final public function getSeparatorPrototype()
+	public function getSeparatorPrototype()
 	{
 		return $this->separator;
 	}
@@ -69,7 +69,7 @@ class RadioList extends ChoiceControl
 	 * Returns container HTML element template.
 	 * @return Nette\Utils\Html
 	 */
-	final public function getContainerPrototype()
+	public function getContainerPrototype()
 	{
 		return $this->container;
 	}
