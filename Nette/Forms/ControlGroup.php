@@ -99,7 +99,7 @@ class ControlGroup extends Nette\Object
 	 * @param  mixed  default value
 	 * @return mixed
 	 */
-	final public function getOption($key, $default = NULL)
+	public function getOption($key, $default = NULL)
 	{
 		return isset($this->options[$key]) ? $this->options[$key] : $default;
 	}
@@ -109,7 +109,7 @@ class ControlGroup extends Nette\Object
 	 * Returns user-specific options.
 	 * @return array
 	 */
-	final public function getOptions()
+	public function getOptions()
 	{
 		return $this->options;
 	}

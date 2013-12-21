@@ -19,7 +19,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-final class Rules extends Nette\Object implements \IteratorAggregate
+class Rules extends Nette\Object implements \IteratorAggregate
 {
 	/** @internal */
 	const VALIDATE_PREFIX = 'validate';
@@ -192,7 +192,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	 * Iterates over ruleset.
 	 * @return \ArrayIterator
 	 */
-	final public function getIterator()
+	public function getIterator()
 	{
 		return new \ArrayIterator($this->rules);
 	}
@@ -201,7 +201,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	/**
 	 * @return array
 	 */
-	final public function getToggles()
+	public function getToggles()
 	{
 		return $this->toggles;
 	}

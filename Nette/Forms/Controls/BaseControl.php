@@ -272,7 +272,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 * Returns control's HTML element template.
 	 * @return Nette\Utils\Html
 	 */
-	final public function getControlPrototype()
+	public function getControlPrototype()
 	{
 		return $this->control;
 	}
@@ -282,7 +282,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 * Returns label's HTML element template.
 	 * @return Nette\Utils\Html
 	 */
-	final public function getLabelPrototype()
+	public function getLabelPrototype()
 	{
 		return $this->label;
 	}
@@ -347,7 +347,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 * Returns translate adapter.
 	 * @return Nette\Localization\ITranslator|NULL
 	 */
-	final public function getTranslator()
+	public function getTranslator()
 	{
 		if ($this->translator === TRUE) {
 			return $this->getForm(FALSE) ? $this->getForm()->getTranslator() : NULL;
@@ -414,7 +414,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/**
 	 * @return Nette\Forms\Rules
 	 */
-	final public function getRules()
+	public function getRules()
 	{
 		return $this->rules;
 	}
@@ -425,7 +425,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 * @param  string  error message
 	 * @return self
 	 */
-	final public function setRequired($message = NULL)
+	public function setRequired($message = NULL)
 	{
 		return $this->addRule(Form::FILLED, $message);
 	}
@@ -435,7 +435,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 * Is control mandatory?
 	 * @return bool
 	 */
-	final public function isRequired()
+	public function isRequired()
 	{
 		foreach ($this->rules as $rule) {
 			if ($rule->type === Rule::VALIDATOR && !$rule->isNegative && $rule->operation === Form::FILLED) {
@@ -614,7 +614,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 * Returns user-specific option.
 	 * @return mixed
 	 */
-	final public function getOption($key, $default = NULL)
+	public function getOption($key, $default = NULL)
 	{
 		return isset($this->options[$key]) ? $this->options[$key] : $default;
 	}
@@ -624,7 +624,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 * Returns user-specific options.
 	 * @return array
 	 */
-	final public function getOptions()
+	public function getOptions()
 	{
 		return $this->options;
 	}

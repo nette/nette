@@ -36,7 +36,7 @@ class ForwardResponse extends Nette\Object implements Nette\Application\IRespons
 	/**
 	 * @return Nette\Application\Request
 	 */
-	final public function getRequest()
+	public function getRequest()
 	{
 		return $this->request;
 	}

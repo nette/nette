@@ -59,7 +59,7 @@ class FileResponse extends Nette\Object implements Nette\Application\IResponse
 	 * Returns the path to a downloaded file.
 	 * @return string
 	 */
-	final public function getFile()
+	public function getFile()
 	{
 		return $this->file;
 	}
@@ -69,7 +69,7 @@ class FileResponse extends Nette\Object implements Nette\Application\IResponse
 	 * Returns the file name.
 	 * @return string
 	 */
-	final public function getName()
+	public function getName()
 	{
 		return $this->name;
 	}
@@ -79,7 +79,7 @@ class FileResponse extends Nette\Object implements Nette\Application\IResponse
 	 * Returns the MIME content type of a downloaded file.
 	 * @return string
 	 */
-	final public function getContentType()
+	public function getContentType()
 	{
 		return $this->contentType;
 	}

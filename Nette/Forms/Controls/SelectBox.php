@@ -114,7 +114,7 @@ class SelectBox extends BaseControl
 	 * Returns first prompt item?
 	 * @return mixed
 	 */
-	final public function getPrompt()
+	public function getPrompt()
 	{
 		return $this->prompt;
 	}
@@ -124,7 +124,7 @@ class SelectBox extends BaseControl
 	 * Are the keys used?
 	 * @return bool
 	 */
-	final public function areKeysUsed()
+	public function areKeysUsed()
 	{
 		return $this->useKeys;
 	}
@@ -167,7 +167,7 @@ class SelectBox extends BaseControl
 	 * Returns items from which to choose.
 	 * @return array
 	 */
-	final public function getItems()
+	public function getItems()
 	{
 		return $this->items;
 	}

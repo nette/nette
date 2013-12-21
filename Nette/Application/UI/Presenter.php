@@ -123,7 +123,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/**
 	 * @return Nette\Application\Request
 	 */
-	final public function getRequest()
+	public function getRequest()
 	{
 		return $this->request;
 	}
@@ -133,7 +133,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * Returns self.
 	 * @return Presenter
 	 */
-	final public function getPresenter($need = TRUE)
+	public function getPresenter($need = TRUE)
 	{
 		return $this;
 	}
@@ -143,7 +143,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * Returns a name that uniquely identifies component.
 	 * @return string
 	 */
-	final public function getUniqueId()
+	public function getUniqueId()
 	{
 		return '';
 	}
@@ -317,7 +317,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * Returns pair signal receiver and name.
 	 * @return array|NULL
 	 */
-	final public function getSignal()
+	public function getSignal()
 	{
 		return $this->signal === NULL ? NULL : array($this->signalReceiver, $this->signal);
 	}
@@ -329,7 +329,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * @param  string signal name (optional)
 	 * @return bool
 	 */
-	final public function isSignalReceiver($component, $signal = NULL)
+	public function isSignalReceiver($component, $signal = NULL)
 	{
 		if ($component instanceof Nette\ComponentModel\Component) {
 			$component = $component === $this ? '' : $component->lookupPath(__CLASS__, TRUE);
@@ -358,7 +358,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * Returns current action name.
 	 * @return string
 	 */
-	final public function getAction($fullyQualified = FALSE)
+	public function getAction($fullyQualified = FALSE)
 	{
 		return $fullyQualified ? ':' . $this->getName() . ':' . $this->action : $this->action;
 	}
@@ -385,7 +385,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * Returns current view.
 	 * @return string
 	 */
-	final public function getView()
+	public function getView()
 	{
 		return $this->view;
 	}
@@ -407,7 +407,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * Returns current layout name.
 	 * @return string|FALSE
 	 */
-	final public function getLayout()
+	public function getLayout()
 	{
 		return $this->layout;
 	}
@@ -754,7 +754,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * @throws InvalidLinkException
 	 * @internal
 	 */
-	final protected function createRequest($component, $destination, array $args, $mode)
+	protected function createRequest($component, $destination, array $args, $mode)
 	{
 		// note: createRequest supposes that saveState(), run() & tryCall() behaviour is final
 
@@ -1244,7 +1244,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * @param  string  component id
 	 * @return array
 	 */
-	final public function popGlobalParameters($id)
+	public function popGlobalParameters($id)
 	{
 		if (isset($this->globalParams[$id])) {
 			$res = $this->globalParams[$id];
@@ -1290,7 +1290,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/**
 	 * @return void
 	 */
-	final public function injectPrimary(Nette\DI\Container $context)
+	public function injectPrimary(Nette\DI\Container $context)
 	{
 		$this->context = $context;
 	}
@@ -1300,7 +1300,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * Gets the context.
 	 * @return \SystemContainer|Nette\DI\Container
 	 */
-	final public function getContext()
+	public function getContext()
 	{
 		return $this->context;
 	}
@@ -1309,7 +1309,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/**
 	 * @deprecated
 	 */
-	final public function getService($name)
+	public function getService($name)
 	{
 		return $this->context->getService($name);
 	}

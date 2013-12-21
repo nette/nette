@@ -19,7 +19,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-final class ObjectMixin
+class ObjectMixin
 {
 	/** @var array */
 	private static $methods;

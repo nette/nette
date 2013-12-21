@@ -19,7 +19,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-final class LimitedScope
+class LimitedScope
 {
 
 	/**

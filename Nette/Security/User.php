@@ -69,7 +69,7 @@ class User extends Nette\Object
 	/**
 	 * @return IUserStorage
 	 */
-	final public function getStorage()
+	public function getStorage()
 	{
 		return $this->storage;
 	}
@@ -102,7 +102,7 @@ class User extends Nette\Object
 	 * @param  bool  clear the identity from persistent storage?
 	 * @return void
 	 */
-	final public function logout($clearIdentity = FALSE)
+	public function logout($clearIdentity = FALSE)
 	{
 		if ($this->isLoggedIn()) {
 			$this->onLoggedOut($this);
@@ -118,7 +118,7 @@ class User extends Nette\Object
 	 * Is this user authenticated?
 	 * @return bool
 	 */
-	final public function isLoggedIn()
+	public function isLoggedIn()
 	{
 		return $this->storage->isAuthenticated();
 	}
@@ -128,7 +128,7 @@ class User extends Nette\Object
 	 * Returns current user identity, if any.
 	 * @return IIdentity|NULL
 	 */
-	final public function getIdentity()
+	public function getIdentity()
 	{
 		return $this->storage->getIdentity();
 	}
@@ -160,7 +160,7 @@ class User extends Nette\Object
 	 * Returns authentication handler.
 	 * @return IAuthenticator
 	 */
-	final public function getAuthenticator()
+	public function getAuthenticator()
 	{
 		return $this->authenticator ?: $this->context->getByType('Nette\Security\IAuthenticator');
 	}
@@ -185,7 +185,7 @@ class User extends Nette\Object
 	 * Why was user logged out?
 	 * @return int
 	 */
-	final public function getLogoutReason()
+	public function getLogoutReason()
 	{
 		return $this->storage->getLogoutReason();
 	}
@@ -214,7 +214,7 @@ class User extends Nette\Object
 	 * @param  string
 	 * @return bool
 	 */
-	final public function isInRole($role)
+	public function isInRole($role)
 	{
 		return in_array($role, $this->getRoles(), TRUE);
 	}
@@ -255,7 +255,7 @@ class User extends Nette\Object
 	 * Returns current authorization handler.
 	 * @return IAuthorizator
 	 */
-	final public function getAuthorizator()
+	public function getAuthorizator()
 	{
 		return $this->authorizator ?: $this->context->getByType('Nette\Security\IAuthorizator');
 	}

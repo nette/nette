@@ -41,7 +41,7 @@ abstract class FreezableObject extends Object implements IFreezable
 	 * Is the object unmodifiable?
 	 * @return bool
 	 */
-	final public function isFrozen()
+	public function isFrozen()
 	{
 		return $this->frozen;
 	}

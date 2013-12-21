@@ -40,7 +40,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 	/**
 	 * @return Nette\Templating\ITemplate
 	 */
-	final public function getTemplate()
+	public function getTemplate()
 	{
 		if ($this->template === NULL) {
 			$value = $this->createTemplate();

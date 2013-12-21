@@ -23,7 +23,7 @@ use Nette;
  * @property-read bool $sent
  * @property-read array $headers
  */
-final class Response extends Nette\Object implements IResponse
+class Response extends Nette\Object implements IResponse
 {
 	/** @var bool  Send invisible garbage for IE 6? */
 	private static $fixIE = TRUE;

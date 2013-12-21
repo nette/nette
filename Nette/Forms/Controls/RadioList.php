@@ -89,7 +89,7 @@ class RadioList extends BaseControl
 	 * Returns options from which to choose.
 	 * @return array
 	 */
-	final public function getItems()
+	public function getItems()
 	{
 		return $this->items;
 	}
@@ -99,7 +99,7 @@ class RadioList extends BaseControl
 	 * Returns separator HTML element template.
 	 * @return Nette\Utils\Html
 	 */
-	final public function getSeparatorPrototype()
+	public function getSeparatorPrototype()
 	{
 		return $this->separator;
 	}
@@ -109,7 +109,7 @@ class RadioList extends BaseControl
 	 * Returns container HTML element template.
 	 * @return Nette\Utils\Html
 	 */
-	final public function getContainerPrototype()
+	public function getContainerPrototype()
 	{
 		return $this->container;
 	}

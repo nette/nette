@@ -21,7 +21,7 @@ use Nette,
  * @author     David Grudl
  * @Annotation
  */
-final class AnnotationsParser
+class AnnotationsParser
 {
 	/** @internal single & double quoted PHP string */
 	const RE_STRING = '\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"';

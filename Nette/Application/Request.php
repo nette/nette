@@ -25,7 +25,7 @@ use Nette;
  * @property   array $files
  * @property   string $method
  */
-final class Request extends Nette\FreezableObject
+class Request extends Nette\FreezableObject
 {
 	/** method */
 	const FORWARD = 'FORWARD';

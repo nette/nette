@@ -48,7 +48,7 @@ class JsonResponse extends Nette\Object implements Nette\Application\IResponse
 	/**
 	 * @return array|\stdClass
 	 */
-	final public function getPayload()
+	public function getPayload()
 	{
 		return $this->payload;
 	}
@@ -58,7 +58,7 @@ class JsonResponse extends Nette\Object implements Nette\Application\IResponse
 	 * Returns the MIME content type of a downloaded file.
 	 * @return string
 	 */
-	final public function getContentType()
+	public function getContentType()
 	{
 		return $this->contentType;
 	}

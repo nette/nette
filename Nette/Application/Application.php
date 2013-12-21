@@ -195,7 +195,7 @@ class Application extends Nette\Object
 	 * Returns all processed requests.
 	 * @return Request[]
 	 */
-	final public function getRequests()
+	public function getRequests()
 	{
 		return $this->requests;
 	}
@@ -205,7 +205,7 @@ class Application extends Nette\Object
 	 * Returns current presenter.
 	 * @return IPresenter
 	 */
-	final public function getPresenter()
+	public function getPresenter()
 	{
 		return $this->presenter;
 	}

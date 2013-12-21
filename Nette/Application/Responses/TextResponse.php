@@ -39,7 +39,7 @@ class TextResponse extends Nette\Object implements Nette\Application\IResponse
 	/**
 	 * @return mixed
 	 */
-	final public function getSource()
+	public function getSource()
 	{
 		return $this->source;
 	}

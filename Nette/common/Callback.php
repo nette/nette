@@ -22,7 +22,7 @@ use Nette;
  * @property-read string|array|\Closure $native
  * @property-read bool $static
  */
-final class Callback extends Object
+class Callback extends Object
 {
 	/** @var callable */
 	private $cb;

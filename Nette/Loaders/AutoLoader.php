@@ -33,7 +33,7 @@ abstract class AutoLoader extends Nette\Object
 	 * @param  string  class/interface name
 	 * @return void
 	 */
-	final public static function load($type)
+	public static function load($type)
 	{
 		foreach (func_get_args() as $type) {
 			if (!class_exists($type)) {
@@ -47,7 +47,7 @@ abstract class AutoLoader extends Nette\Object
 	 * Return all registered autoloaders.
 	 * @return AutoLoader[]
 	 */
-	final public static function getLoaders()
+	public static function getLoaders()
 	{
 		return array_values(self::$loaders);
 	}
