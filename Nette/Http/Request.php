@@ -85,7 +85,7 @@ class Request extends Nette\Object implements IRequest
 	 * Returns URL object.
 	 * @return UrlScript
 	 */
-	final public function getUrl()
+	public function getUrl()
 	{
 		return $this->url;
 	}
@@ -101,7 +101,7 @@ class Request extends Nette\Object implements IRequest
 	 * @param  mixed  default value
 	 * @return mixed
 	 */
-	final public function getQuery($key = NULL, $default = NULL)
+	public function getQuery($key = NULL, $default = NULL)
 	{
 		if (func_num_args() === 0) {
 			return $this->query;
@@ -122,7 +122,7 @@ class Request extends Nette\Object implements IRequest
 	 * @param  mixed  default value
 	 * @return mixed
 	 */
-	final public function getPost($key = NULL, $default = NULL)
+	public function getPost($key = NULL, $default = NULL)
 	{
 		if (func_num_args() === 0) {
 			return $this->post;
@@ -141,7 +141,7 @@ class Request extends Nette\Object implements IRequest
 	 * @param  string key (or more keys)
 	 * @return FileUpload
 	 */
-	final public function getFile($key)
+	public function getFile($key)
 	{
 		return Nette\Utils\Arrays::get($this->files, func_get_args(), NULL);
 	}
@@ -151,7 +151,7 @@ class Request extends Nette\Object implements IRequest
 	 * Returns uploaded files.
 	 * @return array
 	 */
-	final public function getFiles()
+	public function getFiles()
 	{
 		return $this->files;
 	}
@@ -163,7 +163,7 @@ class Request extends Nette\Object implements IRequest
 	 * @param  mixed  default value
 	 * @return mixed
 	 */
-	final public function getCookie($key, $default = NULL)
+	public function getCookie($key, $default = NULL)
 	{
 		if (func_num_args() === 0) {
 			return $this->cookies;
@@ -181,7 +181,7 @@ class Request extends Nette\Object implements IRequest
 	 * Returns variables provided to the script via HTTP cookies.
 	 * @return array
 	 */
-	final public function getCookies()
+	public function getCookies()
 	{
 		return $this->cookies;
 	}
@@ -228,7 +228,7 @@ class Request extends Nette\Object implements IRequest
 	 * @param  mixed
 	 * @return mixed
 	 */
-	final public function getHeader($header, $default = NULL)
+	public function getHeader($header, $default = NULL)
 	{
 		$header = strtolower($header);
 		if (isset($this->headers[$header])) {
@@ -253,7 +253,7 @@ class Request extends Nette\Object implements IRequest
 	 * Returns referrer.
 	 * @return Url|NULL
 	 */
-	final public function getReferer()
+	public function getReferer()
 	{
 		return isset($this->headers['referer']) ? new Url($this->headers['referer']) : NULL;
 	}

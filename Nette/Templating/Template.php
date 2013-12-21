@@ -169,7 +169,7 @@ class Template extends Nette\Object implements ITemplate
 	 * Returns all registered compile-time filters.
 	 * @return array
 	 */
-	final public function getFilters()
+	public function getFilters()
 	{
 		return $this->filters;
 	}
@@ -204,7 +204,7 @@ class Template extends Nette\Object implements ITemplate
 	 * Returns all registered run-time helpers.
 	 * @return array
 	 */
-	final public function getHelpers()
+	public function getHelpers()
 	{
 		return $this->helpers;
 	}
@@ -214,7 +214,7 @@ class Template extends Nette\Object implements ITemplate
 	 * Returns all registered template run-time helper loaders.
 	 * @return array
 	 */
-	final public function getHelperLoaders()
+	public function getHelperLoaders()
 	{
 		return $this->helperLoaders;
 	}

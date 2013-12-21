@@ -93,7 +93,7 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	 * Gets the validation scope.
 	 * @return array|NULL
 	 */
-	final public function getValidationScope()
+	public function getValidationScope()
 	{
 		return $this->validationScope;
 	}

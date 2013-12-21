@@ -22,7 +22,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-final class Helpers
+class Helpers
 {
 	private static $helpers = array(
 		'normalize' => 'Nette\Utils\Strings::normalize',

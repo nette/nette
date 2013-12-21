@@ -20,7 +20,7 @@ use Nette;
  * @author     David Grudl
  * @internal
  */
-final class DefaultBarPanel extends Nette\Object implements IBarPanel
+class DefaultBarPanel extends Nette\Object implements IBarPanel
 {
 	private $id;
 

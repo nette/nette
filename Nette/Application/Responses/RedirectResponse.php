@@ -46,7 +46,7 @@ class RedirectResponse extends Nette\Object implements Nette\Application\IRespon
 	/**
 	 * @return string
 	 */
-	final public function getUrl()
+	public function getUrl()
 	{
 		return $this->url;
 	}
@@ -55,7 +55,7 @@ class RedirectResponse extends Nette\Object implements Nette\Application\IRespon
 	/**
 	 * @return int
 	 */
-	final public function getCode()
+	public function getCode()
 	{
 		return $this->code;
 	}

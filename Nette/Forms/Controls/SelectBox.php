@@ -56,7 +56,7 @@ class SelectBox extends ChoiceControl
 	 * Returns first prompt item?
 	 * @return mixed
 	 */
-	final public function getPrompt()
+	public function getPrompt()
 	{
 		return $this->prompt;
 	}

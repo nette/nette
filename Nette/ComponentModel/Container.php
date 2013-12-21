@@ -118,7 +118,7 @@ class Container extends Component implements IContainer
 	 * @param  bool   throw exception if component doesn't exist?
 	 * @return IComponent|NULL
 	 */
-	final public function getComponent($name, $need = TRUE)
+	public function getComponent($name, $need = TRUE)
 	{
 		if (is_int($name)) {
 			$name = (string) $name;
@@ -191,7 +191,7 @@ class Container extends Component implements IContainer
 	 * @param  string  class types filter
 	 * @return \ArrayIterator
 	 */
-	final public function getComponents($deep = FALSE, $filterType = NULL)
+	public function getComponents($deep = FALSE, $filterType = NULL)
 	{
 		$iterator = new RecursiveComponentIterator($this->components);
 		if ($deep) {
