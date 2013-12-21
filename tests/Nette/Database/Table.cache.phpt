@@ -130,3 +130,55 @@ test(function() use ($context) {
 	$books = $author->related('book')->where('translator_id', 11);
 	Assert::same(array('id', 'author_id'), $books->getPreviousAccessedColumns());
 });
+
+
+before(function() use ($cacheStorage) {
+	$cacheStorage->clean(array(Nette\Caching\Cache::ALL => TRUE));
+});
+
+
+test(function() use ($context) { // Test saving the union of needed cols, the second call is subset
+	$author = $context->table('author')->get(11);
+	$books = $author->related('book');
+	foreach ($books as $book) {
+		$book->translator_id;
+		$book->title;
+	}
+	$books->__destruct();
+
+	$author = $context->table('author')->get(11);
+	$books = $author->related('book');
+	foreach ($books as $book) {
+		$book->title;
+	}
+	$books->__destruct();
+
+	$author = $context->table('author')->get(11);
+	Assert::same(
+		reformat('SELECT [id], [author_id], [translator_id], [title] FROM [book] WHERE ([book].[author_id] IN (?))'),
+		$author->related('book')->getSql()
+	);
+});
+
+
+test(function() use ($context) { // Test saving the union of needed cols, the second call is not subset
+	$author = $context->table('author')->get(11);
+	$books = $author->related('book');
+	foreach ($books as $book) {
+		$book->translator_id;
+	}
+	$books->__destruct();
+
+	$author = $context->table('author')->get(11);
+	$books = $author->related('book');
+	foreach ($books as $book) {
+		$book->title;
+	}
+	$books->__destruct();
+
+	$author = $context->table('author')->get(11);
+	Assert::same(
+		reformat('SELECT [id], [author_id], [translator_id], [title] FROM [book] WHERE ([book].[author_id] IN (?))'),
+		$author->related('book')->getSql()
+	);
+});

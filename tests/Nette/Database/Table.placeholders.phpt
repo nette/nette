@@ -82,3 +82,12 @@ test(function() use ($context, $driverName) {
 		Assert::same(array('Jakub Vrana', 'David Grudl', 'Geek'), $authors);
 	}
 });
+
+
+test(function() use ($context) { // Test placeholder for GroupedSelection
+	$books = $context->table('author')->get(11)->related('book')->order('title = ? DESC', 'Test');
+	foreach ($books as $book) {}
+
+	$books = $context->table('author')->get(11)->related('book')->select('SUBSTR(title, ?)', 3);
+	foreach ($books as $book) {}
+});
