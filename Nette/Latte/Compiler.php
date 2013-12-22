@@ -533,9 +533,10 @@ class Compiler extends Nette\Object
 	 */
 	public function expandMacro($name, $args, $modifiers = NULL, $nPrefix = NULL)
 	{
+		$inScript = in_array($this->context[0], array(self::CONTENT_JS, self::CONTENT_CSS));
+
 		if (empty($this->macros[$name])) {
-			$cdata = $this->htmlNode && in_array(strtolower($this->htmlNode->name), array('script', 'style'));
-			throw new CompileException("Unknown macro {{$name}}" . ($cdata ? " (in JavaScript or CSS, try to put a space after bracket.)" : ''));
+			throw new CompileException("Unknown macro {{$name}}" . ($inScript ? " (in JavaScript or CSS, try to put a space after bracket.)" : ''));
 		}
 
 		if ($this->context[1] === self::CONTENT_URL) {
@@ -548,6 +549,10 @@ class Compiler extends Nette\Object
 		$modifiers = preg_replace('#\|noescape\s?(?=\||\z)#i', '', $modifiers, -1, $found);
 		if (!$found && strpbrk($name, '=~%^&_')) {
 			$modifiers .= '|escape';
+		}
+
+		if (!$found && $inScript && $name === '=' && preg_match('#["\'] *\z#', $this->tokens[$this->position - 1]->text)) {
+			throw new CompileException("Do not place {$this->tokens[$this->position]->text} inside quotes.");
 		}
 
 		foreach (array_reverse($this->macros[$name]) as $macro) {
