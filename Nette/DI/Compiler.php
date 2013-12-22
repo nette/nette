@@ -169,7 +169,7 @@ class Compiler extends Nette\Object
 		});
 
 		if (!empty($config['factories'])) {
-			trigger_error("Section 'factories' is deprecated, move definitions to section `services`.", E_USER_DEPRECATED);
+			trigger_error("Section 'factories' is deprecated, move definitions to section 'services' and append key 'autowired: no'.", E_USER_DEPRECATED);
 		}
 
 		foreach ($all as $origName => $def) {
