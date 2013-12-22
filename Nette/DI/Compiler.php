@@ -209,6 +209,10 @@ class Compiler extends Nette\Object
 				throw new ServiceCreationException("Service '$name': " . $e->getMessage(), NULL, $e);
 			}
 
+			if (array_key_exists($origName, $factories)) {
+				$definition->setAutowired(FALSE);
+			}
+
 			if ($definition->class === 'self') {
 				$definition->class = $origName;
 				trigger_error("Replace service definition '$origName: self' with '- $origName'.", E_USER_DEPRECATED);
