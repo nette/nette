@@ -32,7 +32,7 @@ class Parser extends Nette\Object
 	public $defaultSyntax = 'latte';
 
 	/** @var bool */
-	public $shortNoEscape = TRUE;
+	public $shortNoEscape = FALSE;
 
 	/** @var array */
 	public $syntaxes = array(
