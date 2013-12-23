@@ -29,7 +29,7 @@ $latte->parser->shortNoEscape = FALSE;
 $template->setSource('{="<>"}');
 Assert::match('&lt;&gt;', (string) $template);
 
-Assert::exception(function() use ($template) {
+Assert::error(function() use ($template) {
 	$template->setSource('{!="<>"}');
-	Assert::match('<>', $template->render());
-}, 'Nette\Latte\CompileException', 'The noescape shortcut (exclamation mark) is not enabled, use the noescape modifier on line 1.');
+	Assert::match('<>', (string) $template);
+}, E_USER_DEPRECATED, 'The noescape shortcut {!...} is depracated, use {...|noescape} modifier on line 1.');
