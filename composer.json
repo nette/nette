@@ -32,10 +32,5 @@
 	"autoload": {
 		"classmap": ["Nette/"],
 		"files": ["Nette/common/shortcuts.php"]
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-release-2.1.x": "2.1.x-dev"
-		}
 	}
 }
