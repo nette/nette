@@ -27,14 +27,9 @@
 		"ext-fileinfo": "*"
 	},
 	"require-dev": {
-		"nette/tester": "0.9.*"
+		"nette/tester": "~0.9.5"
 	},
 	"autoload": {
 		"files": ["Nette/loader.php"]
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-release-2.0.x": "2.0.x-dev"
-		}
 	}
 }
