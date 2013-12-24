@@ -40,7 +40,10 @@ class RouteList extends Nette\ArrayList implements Nette\Application\IRouter
 		foreach ($this as $route) {
 			$appRequest = $route->match($httpRequest);
 			if ($appRequest !== NULL) {
-				$appRequest->setPresenterName($this->module . $appRequest->getPresenterName());
+				$name = $appRequest->getPresenterName();
+				if (strncmp($name, 'Nette:', 6)) {
+					$appRequest->setPresenterName($this->module . $name);
+				}
 				return $appRequest;
 			}
 		}
