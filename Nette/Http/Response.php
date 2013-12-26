@@ -65,18 +65,13 @@ class Response extends Nette\Object implements IResponse
 	public function setCode($code)
 	{
 		$code = (int) $code;
-
 		if ($code < 100 || $code > 599) {
 			throw new Nette\InvalidArgumentException("Bad HTTP response '$code'.");
-
-		} elseif (headers_sent($file, $line)) {
-			throw new Nette\InvalidStateException("Cannot set HTTP code after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
-
-		} else {
-			$this->code = $code;
-			$protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
-			header($protocol . ' ' . $code, TRUE, $code);
 		}
+		self::checkHeaders();
+		$this->code = $code;
+		$protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
+		header($protocol . ' ' . $code, TRUE, $code);
 		return $this;
 	}
 
@@ -100,10 +95,7 @@ class Response extends Nette\Object implements IResponse
 	 */
 	public function setHeader($name, $value)
 	{
-		if (headers_sent($file, $line)) {
-			throw new Nette\InvalidStateException("Cannot send header after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
-		}
-
+		self::checkHeaders();
 		if ($value === NULL && function_exists('header_remove')) {
 			header_remove($name);
 		} elseif (strcasecmp($name, 'Content-Length') === 0 && ini_get('zlib.output_compression')) {
@@ -124,10 +116,7 @@ class Response extends Nette\Object implements IResponse
 	 */
 	public function addHeader($name, $value)
 	{
-		if (headers_sent($file, $line)) {
-			throw new Nette\InvalidStateException("Cannot send header after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
-		}
-
+		self::checkHeaders();
 		header($name . ': ' . $value, FALSE, $this->code);
 		return $this;
 	}
@@ -269,14 +258,7 @@ class Response extends Nette\Object implements IResponse
 	 */
 	public function setCookie($name, $value, $time, $path = NULL, $domain = NULL, $secure = NULL, $httpOnly = NULL)
 	{
-		if (!headers_sent() && ob_get_level() && ob_get_length()) {
-			trigger_error("Possible problem: you are sending a cookie while already having some data in output buffer.  This may not work if the outputted data grows. Try starting the session earlier.", E_USER_NOTICE);
-		}
-
-		if (headers_sent($file, $line)) {
-			throw new Nette\InvalidStateException("Cannot set cookie after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
-		}
-
+		self::checkHeaders();
 		setcookie(
 			$name,
 			$value,
@@ -286,9 +268,23 @@ class Response extends Nette\Object implements IResponse
 			$secure === NULL ? $this->cookieSecure : (bool) $secure,
 			$httpOnly === NULL ? $this->cookieHttpOnly : (bool) $httpOnly
 		);
-
 		$this->removeDuplicateCookies();
 		return $this;
+	}
+
+
+	/**
+	 * Deletes a cookie.
+	 * @param  string name of the cookie.
+	 * @param  string
+	 * @param  string
+	 * @param  bool
+	 * @return void
+	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
+	 */
+	public function deleteCookie($name, $path = NULL, $domain = NULL, $secure = NULL)
+	{
+		$this->setCookie($name, FALSE, 0, $path, $domain, $secure);
 	}
 
 
@@ -315,18 +311,13 @@ class Response extends Nette\Object implements IResponse
 	}
 
 
-	/**
-	 * Deletes a cookie.
-	 * @param  string name of the cookie.
-	 * @param  string
-	 * @param  string
-	 * @param  bool
-	 * @return void
-	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
-	 */
-	public function deleteCookie($name, $path = NULL, $domain = NULL, $secure = NULL)
+	private function checkHeaders()
 	{
-		$this->setCookie($name, FALSE, 0, $path, $domain, $secure);
+		if (headers_sent($file, $line)) {
+			throw new Nette\InvalidStateException('Cannot send header after HTTP headers have been sent' . ($file ? " (output started at $file:$line)." : '.'));
+		} elseif (ob_get_level() && ob_get_length()) {
+			trigger_error('Possible problem: you are sending a HTTP header while already having some data in output buffer. Try OutputDebugger or start session earlier.', E_USER_NOTICE);
+		}
 	}
 
 }
