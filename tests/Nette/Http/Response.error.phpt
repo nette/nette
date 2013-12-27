@@ -19,10 +19,16 @@ if (PHP_SAPI === 'cli') {
 
 
 $response = new Http\Response;
-$response->setHeader('A', 'b');
+$response->setHeader('A', 'b'); // no output
+
+ob_start();
+echo ' ';
+$response->setHeader('A', 'b'); // full buffer
+ob_end_clean();
+
 
 Assert::error(function() use ($response) {
-	ob_start();
+	ob_start(NULL, 4096);
 	echo ' ';
 	$response->setHeader('A', 'b');
 }, E_USER_NOTICE, 'Possible problem: you are sending a HTTP header while already having some data in output buffer%a%');
