@@ -32,4 +32,4 @@ Assert::match('&lt;&gt;', (string) $template);
 Assert::error(function() use ($template) {
 	$template->setSource('{!="<>"}');
 	Assert::match('<>', (string) $template);
-}, E_USER_DEPRECATED, 'The noescape shortcut {!...} is depracated, use {...|noescape} modifier on line 1.');
+}, E_USER_DEPRECATED, 'The noescape shortcut {!...} is deprecated, use {...|noescape} modifier on line 1.');
