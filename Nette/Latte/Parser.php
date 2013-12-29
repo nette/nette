@@ -345,7 +345,7 @@ class Parser extends Nette\Object
 			$match['name'] = $match['shortname'] ?: '=';
 			if ($match['noescape']) {
 				if (!$this->shortNoEscape) {
-					trigger_error("The noescape shortcut {!...} is depracated, use {...|noescape} modifier on line {$this->getLine()}.", E_USER_DEPRECATED);
+					trigger_error("The noescape shortcut {!...} is deprecated, use {...|noescape} modifier on line {$this->getLine()}.", E_USER_DEPRECATED);
 				}
 				$match['modifiers'] .= '|noescape';
 			}
