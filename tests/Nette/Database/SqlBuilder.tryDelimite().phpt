@@ -26,4 +26,3 @@ Assert::same(reformat('[hello].[world]'), $tryDelimite->invoke($sqlBuilder, 'hel
 Assert::same(reformat('[hello] [world]'), $tryDelimite->invoke($sqlBuilder, 'hello world'));
 Assert::same(reformat('HELLO([world])'), $tryDelimite->invoke($sqlBuilder, 'HELLO(world)'));
 Assert::same(reformat('hello([world])'), $tryDelimite->invoke($sqlBuilder, 'hello(world)'));
-Assert::same('[hello]', $tryDelimite->invoke($sqlBuilder, '[hello]'));

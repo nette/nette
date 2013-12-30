@@ -21,6 +21,9 @@ use Nette;
  */
 class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
 {
+	const LEFT_DELIMITER = '`';
+	const RIGHT_DELIMITER = '`';
+
 	const ERROR_ACCESS_DENIED = 1045;
 	const ERROR_DUPLICATE_ENTRY = 1062;
 	const ERROR_DATA_TRUNCATED = 1265;
