@@ -28,7 +28,7 @@ register_shutdown_function(function() use (& $onFatalErrorCalled) {
 	Assert::true($onFatalErrorCalled);
 	Assert::match(extension_loaded('xdebug') ? "
 Fatal error: Cannot re-assign \$this in %a%
-exception 'Nette\\FatalErrorException' with message 'Cannot re-assign \$this' in %a%
+exception 'ErrorException' with message 'Cannot re-assign \$this' in %a%
 Stack trace:
 #0 %a%: third()
 #1 %a%: second()
@@ -36,7 +36,7 @@ Stack trace:
 #3 {main}
 " : "
 Fatal error: Cannot re-assign \$this in %a%
-exception 'Nette\\FatalErrorException' with message 'Cannot re-assign \$this' in %a%
+exception 'ErrorException' with message 'Cannot re-assign \$this' in %a%
 Stack trace:
 #0 [internal function]: Nette\\Diagnostics\\Debugger::_shutdownHandler()
 #1 {main}
