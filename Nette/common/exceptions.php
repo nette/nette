@@ -132,6 +132,7 @@ class FatalErrorException extends \ErrorException
 	{
 		parent::__construct($message, $code, $severity, $file, $line, $previous);
 		$this->context = $context;
+		trigger_error(__CLASS__ . ' is deprecated, use ErrorException.', E_USER_DEPRECATED);
 	}
 
 }

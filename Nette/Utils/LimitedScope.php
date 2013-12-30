@@ -45,7 +45,7 @@ class LimitedScope
 		}
 		$res = eval('?>' . func_get_arg(0));
 		if ($res === FALSE && ($error = error_get_last()) && $error['type'] === E_PARSE) {
-			throw new Nette\FatalErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'], NULL);
+			throw new \ErrorException($error['message'], 0, $error['type'], $error['file'], $error['line']);
 		}
 		return $res;
 	}
