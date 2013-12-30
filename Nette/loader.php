@@ -3,10 +3,7 @@
 /**
  * Nette Framework (version 2.2-dev released on $WCDATE$, http://nette.org)
  *
- * Copyright (c) 2004, 2013 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
+ * Copyright (c) 2004, 2014 David Grudl (http://davidgrudl.com)
  */
 
 
