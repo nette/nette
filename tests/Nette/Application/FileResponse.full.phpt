@@ -4,7 +4,6 @@
  * Test: Nette\Application\Responses\FileResponse.
  *
  * @author     Josef Kriz
- * @package    Nette\Config
  */
 
 use Nette\Application\Responses\FileResponse,

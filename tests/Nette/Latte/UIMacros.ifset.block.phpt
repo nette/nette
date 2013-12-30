@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Macros\UIMacros {ifset #block}
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
 use Nette\Latte\Macros\UIMacros,

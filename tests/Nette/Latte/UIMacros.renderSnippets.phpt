@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Macros\UIMacros and renderSnippets.
  *
  * @author     Jan Skrasek
- * @package    Nette\Latte
  */
 
 use Nette\Latte,

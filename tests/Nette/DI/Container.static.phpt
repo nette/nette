@@ -4,7 +4,6 @@
  * Test: Nette\DI\Container static usage.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\DI\Container,

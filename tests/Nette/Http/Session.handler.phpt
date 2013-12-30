@@ -4,7 +4,6 @@
  * Test: Nette\Http\Session storage.
  *
  * @author     David Grudl
- * @package    Nette\Http
  * @phpversion 5.4
  */
 

@@ -4,7 +4,6 @@
  * Test: Nette\Configurator::createRobotLoader()
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\Configurator,

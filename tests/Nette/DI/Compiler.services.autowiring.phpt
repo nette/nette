@@ -4,7 +4,6 @@
  * Test: Nette\DI\Compiler and autowiring.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\DI,

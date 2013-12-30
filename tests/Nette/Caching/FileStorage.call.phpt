@@ -4,7 +4,6 @@
  * Test: Nette\Caching\Storages\FileStorage call().
  *
  * @author     David Grudl
- * @package    Nette\Caching
  */
 
 use Nette\Caching\Cache,

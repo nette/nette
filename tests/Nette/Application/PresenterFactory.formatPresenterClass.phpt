@@ -4,7 +4,6 @@
  * Test: Nette\Application\PresenterFactory.
  *
  * @author     David Grudl
- * @package    Nette\Application
  */
 
 use Nette\Application\PresenterFactory,

@@ -4,7 +4,6 @@
  * Test: Nette\DI\Container and inject methods.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\DI,

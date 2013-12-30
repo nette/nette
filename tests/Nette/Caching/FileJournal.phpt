@@ -4,7 +4,6 @@
  * Test: Nette\Caching\Storages\FileJournal basic test.
  *
  * @author     David Grudl
- * @package    Nette\Caching
  */
 
 use Nette\Caching\Storages\FileJournal,

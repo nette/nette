@@ -4,7 +4,6 @@
  * Test: Nette\Mail\Message - HTML body.
  *
  * @author     David Grudl
- * @package    Nette\Mail
  */
 
 use Nette\Mail\Message,

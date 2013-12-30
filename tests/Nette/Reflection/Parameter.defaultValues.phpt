@@ -4,7 +4,6 @@
  * Test: Nette\Reflection\Parameter default values test.
  *
  * @author     David Grudl
- * @package    Nette\Reflection
  */
 
 use Nette\Reflection,

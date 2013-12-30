@@ -4,7 +4,6 @@
  * Test: Nette\Diagnostics\Debugger exception in production mode.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  * @httpCode   500
  * @exitCode   254
  * @outputMatch %A%<h1>Server Error</h1>%A%

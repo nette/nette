@@ -4,7 +4,6 @@
  * Test: Nette\Database\Table\SqlBuilder: parseJoins().
  *
  * @author     Jan Skrasek
- * @package    Nette\Database
  * @dataProvider? databases.ini
  */
 

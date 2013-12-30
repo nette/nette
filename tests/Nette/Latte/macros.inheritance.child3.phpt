@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Engine: {extends ...} test III.
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
 use Nette\Latte,

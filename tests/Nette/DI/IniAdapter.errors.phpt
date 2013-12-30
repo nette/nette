@@ -4,7 +4,6 @@
  * Test: Nette\DI\Config\Adapters\IniAdapter errors.
  *
  * @author     David Grudl
- * @package    Nette\DI\Config
  */
 
 use Nette\DI\Config,

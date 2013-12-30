@@ -5,7 +5,6 @@
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek
- * @package    Nette\Database
  */
 
 require __DIR__ . '/../bootstrap.php';

@@ -4,7 +4,6 @@
  * Test: Nette\Database\SqlPreprocessor
  *
  * @author     David Grudl
- * @package    Nette\Database
  * @dataProvider? databases.ini
  */
 

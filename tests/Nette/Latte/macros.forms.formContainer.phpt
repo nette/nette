@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Engine and FormMacros: {formContainer}
  *
  * @author     Miloslav Hůla
- * @package    Nette\Latte
  */
 
 use Nette\Latte,

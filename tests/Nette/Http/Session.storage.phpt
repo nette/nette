@@ -4,7 +4,6 @@
  * Test: Nette\Http\Session storage.
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
 use Nette\Object,

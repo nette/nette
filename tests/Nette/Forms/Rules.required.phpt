@@ -4,7 +4,6 @@
  * Test: Nette\Forms\Rules.
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
 use Nette\Forms\Form,

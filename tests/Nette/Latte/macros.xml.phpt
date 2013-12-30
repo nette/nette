@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Engine: {contentType application/xml}
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
 use Nette\Latte,

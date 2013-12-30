@@ -4,7 +4,6 @@
  * Test: Nette\Latte\MacroTokens::fetchWords()
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
 use Nette\Latte\MacroTokens,

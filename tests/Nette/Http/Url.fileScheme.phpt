@@ -4,7 +4,6 @@
  * Test: Nette\Http\Url file://
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
 use Nette\Http\Url,

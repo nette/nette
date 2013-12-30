@@ -4,7 +4,6 @@
  * Test: NetteModule\MicroPresenter
  *
  * @author     Filip Procházka
- * @package    Nette\Application\UI
  */
 
 use Nette\Application\Request,

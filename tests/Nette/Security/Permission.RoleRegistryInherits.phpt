@@ -4,7 +4,6 @@
  * Test: Nette\Security\Permission Tests basic Role inheritance.
  *
  * @author     David Grudl
- * @package    Nette\Security
  */
 
 use Nette\Security\Permission,

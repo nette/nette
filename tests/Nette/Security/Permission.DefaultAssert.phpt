@@ -4,7 +4,6 @@
  * Test: Nette\Security\Permission Ensures that the default rule obeys its assertion.
  *
  * @author     David Grudl
- * @package    Nette\Security
  */
 
 use Nette\Security\Permission,

@@ -4,7 +4,6 @@
  * Test: Nette\Configurator and createContainer errors.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\Configurator,

@@ -4,7 +4,6 @@
  * Test: Nette\Mail\Message - textual and HTML body with embedded image.
  *
  * @author     David Grudl
- * @package    Nette\Mail
  */
 
 use Nette\Mail\Message,

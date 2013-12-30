@@ -4,7 +4,6 @@
  * Test: Nette\Forms\Controls\TextArea.
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
 use Nette\Forms\Form,

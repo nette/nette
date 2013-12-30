@@ -4,7 +4,6 @@
  * Test: Nette\Loaders\RobotLoader and renamed classes.
  *
  * @author     David Grudl
- * @package    Nette\Loaders
  */
 
 use Nette\Loaders\RobotLoader,

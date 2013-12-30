@@ -4,7 +4,6 @@
  * Test: Nette\Database\Connection fetch methods.
  *
  * @author     David Grudl
- * @package    Nette\Database
  * @dataProvider? databases.ini
  */
 

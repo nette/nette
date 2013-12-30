@@ -4,7 +4,6 @@
  * Test: Nette\Database\Table: Rows invalidating.
  *
  * @author     Jan Skrasek
- * @package    Nette\Database
  * @dataProvider? databases.ini
  */
 

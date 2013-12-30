@@ -4,7 +4,6 @@
  * Test: Nette\Diagnostics\Debugger eval error in HTML.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  * @httpCode   500
  * @exitCode   254
  * @outputMatchFile Debugger.error-in-eval.expect

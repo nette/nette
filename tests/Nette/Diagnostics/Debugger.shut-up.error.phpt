@@ -4,7 +4,6 @@
  * Test: Nette\Diagnostics\Debugger errors and shut-up operator.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  * @exitCode   255
  * @httpCode   500
  * @outputMatch exception 'ErrorException' with message 'Call to undefined function missing_function()' in %A%

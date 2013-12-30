@@ -4,7 +4,6 @@
  * Test: Nette\Database\Table: limit.
  *
  * @author     Jan Skrasek
- * @package    Nette\Database
  * @dataProvider? databases.ini, sqlsrv
  */
 

@@ -4,7 +4,6 @@
  * Test: Nette\DI\Helpers::getInjectProperties()
  *
  * @author     Jan Tvrdík
- * @package    Nette\DI
  */
 
 namespace A

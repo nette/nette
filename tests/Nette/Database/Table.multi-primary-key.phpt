@@ -4,7 +4,6 @@
  * Test: Nette\Database\Table: Multi primary key support.
  *
  * @author     Jan Skrasek
- * @package    Nette\Database
  * @dataProvider? databases.ini
  */
 

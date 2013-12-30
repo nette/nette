@@ -4,7 +4,6 @@
  * Test: Nette\Reflection\Parameter and closure tests.
  *
  * @author     David Grudl
- * @package    Nette\Reflection
  */
 
 use Nette\Reflection,

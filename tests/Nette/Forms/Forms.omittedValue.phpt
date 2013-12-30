@@ -4,7 +4,6 @@
  * Test: Nette\Forms ignored input.
  *
  * @author     Roman Pavlík
- * @package    Nette\Forms
  */
 
 use Nette\Forms\Form,

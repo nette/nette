@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @author     Jan Skrasek
- * @package    Nette\Database
  * @dataProvider? databases.ini
  */
 

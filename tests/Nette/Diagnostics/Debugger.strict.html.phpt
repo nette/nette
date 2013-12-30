@@ -4,7 +4,6 @@
  * Test: Nette\Diagnostics\Debugger notices and warnings with $strictMode in HTML.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  * @httpCode   500
  * @exitCode   254
  * @outputMatchFile Debugger.strict.html.expect

@@ -4,7 +4,6 @@
  * Test: Nette\Database\Table\SqlBuilder: addWhere() and placeholders.
  *
  * @author     Jan Skrasek
- * @package    Nette\Database
  * @dataProvider? databases.ini
  */
 

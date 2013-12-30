@@ -4,7 +4,6 @@
  * Test: Nette\DI\ContainerBuilder and aliases.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\DI,

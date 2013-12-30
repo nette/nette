@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Macros\CoreMacros: {if ...}
  *
  * @author     Matej Kravjar
- * @package    Nette\Latte
  */
 
 use Nette\Latte\Macros\CoreMacros,

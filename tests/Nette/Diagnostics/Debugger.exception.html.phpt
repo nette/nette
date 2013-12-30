@@ -4,7 +4,6 @@
  * Test: Nette\Diagnostics\Debugger exception in HTML.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  * @httpCode   500
  * @exitCode   254
  * @outputMatchFile Debugger.exception.html.expect

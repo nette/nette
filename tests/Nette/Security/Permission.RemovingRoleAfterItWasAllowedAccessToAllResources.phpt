@@ -5,7 +5,6 @@
  * raise undefined index error.
  *
  * @author     David Grudl
- * @package    Nette\Security
  */
 
 use Nette\Security\Permission,

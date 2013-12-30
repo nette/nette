@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @author     Michael Moravec
- * @package    Nette\Diagnostics
  */
 
 use Nette\Diagnostics\Debugger,

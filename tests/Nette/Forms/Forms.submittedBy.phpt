@@ -4,7 +4,6 @@
  * Test: Nette\Forms HTTP data.
  *
  * @author     Jan Skrasek
- * @package    Nette\Forms
  */
 
 use Nette\Forms\Form;

@@ -4,7 +4,6 @@
  * Test: Nette\Database\ResultSet: Fetch pairs.
  *
  * @author     David Grudl
- * @package    Nette\Database
  * @dataProvider? databases.ini
  */
 

@@ -4,7 +4,6 @@
  * Test: Nette\Http\Request invalid encoding.
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
 use Nette\Http,

@@ -4,7 +4,6 @@
  * Test: Nette\Database\ResultSet: Fetch all.
  *
  * @author     David Grudl
- * @package    Nette\Database
  * @dataProvider? databases.ini
  */
 

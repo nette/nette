@@ -4,7 +4,6 @@
  * Test: Nette\Database\Table: DiscoveredReflection with self-reference.
  *
  * @author     Jan Skrasek
- * @package    Nette\Database
  * @dataProvider? databases.ini
  */
 

@@ -4,7 +4,6 @@
  * Test: Nette\Http\Helpers.
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
 use Nette\Http\Helpers,

@@ -4,7 +4,6 @@
  * Test: Nette\Forms naming container.
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
 use Nette\Http,

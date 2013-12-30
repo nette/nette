@@ -4,7 +4,6 @@
  * Test: Nette\Mail\Message invalid email addresses.
  *
  * @author     David Grudl
- * @package    Nette\Mail
  */
 
 use Nette\Mail\Message,

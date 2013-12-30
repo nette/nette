@@ -4,7 +4,6 @@
  * Test: Nette\Http\Session::regenerateId()
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
 use Nette\Http\Session,

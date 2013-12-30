@@ -4,7 +4,6 @@
  * Test: Nette\Templating\Helpers::date()
  *
  * @author     David Grudl
- * @package    Nette\Templating
  */
 
 use Nette\Templating\Helpers,

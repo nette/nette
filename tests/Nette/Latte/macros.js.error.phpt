@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Engine and JavaScript.
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
 use Nette\Latte,

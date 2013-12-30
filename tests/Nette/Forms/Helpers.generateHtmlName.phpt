@@ -4,7 +4,6 @@
  * Test: Nette\Forms\Helpers::generateHtmlName()
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
 use Nette\Forms\Form,

@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Engine: <?xml test.
  *
  * @author     David Grudl
- * @package    Nette\Latte
  * @phpini     short_open_tag=on
  */
 

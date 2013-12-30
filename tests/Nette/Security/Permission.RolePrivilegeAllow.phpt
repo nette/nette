@@ -4,7 +4,6 @@
  * Test: Nette\Security\Permission Ensures that a privilege allowed for a particular Role upon all Resources works properly.
  *
  * @author     David Grudl
- * @package    Nette\Security
  */
 
 use Nette\Security\Permission,

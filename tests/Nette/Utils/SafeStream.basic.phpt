@@ -4,7 +4,6 @@
  * Test: Nette\Utils\SafeStream basic usage.
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
 require __DIR__ . '/../bootstrap.php';

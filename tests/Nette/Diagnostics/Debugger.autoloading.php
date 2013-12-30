@@ -4,7 +4,6 @@
  * Test: Nette\Diagnostics\Debugger autoloading.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  * @outputMatch %A%Strict Standards: Declaration of B::test() should be compatible with A::test() in %A%
  */
 

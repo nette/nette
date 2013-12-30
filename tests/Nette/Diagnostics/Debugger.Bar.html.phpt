@@ -4,7 +4,6 @@
  * Test: Nette\Diagnostics\Debugger Bar in HTML.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  * @outputMatch %A%<!-- Nette Debug Bar -->%A%
  */
 

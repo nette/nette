@@ -4,7 +4,6 @@
  * Test: Nette\Application\UI\Presenter::storeRequest()
  *
  * @author     Matěj Koubík
- * @package    Nette\Application\UI
  */
 
 use Nette\Http,

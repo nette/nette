@@ -4,7 +4,6 @@
  * Test: Nette\Forms\Rules::formatMessage()
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
 use Nette\Forms\Form,

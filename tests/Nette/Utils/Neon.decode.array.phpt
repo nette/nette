@@ -4,7 +4,6 @@
  * Test: Nette\Utils\Neon::decode block hash and array.
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
 use Nette\Utils\Neon,

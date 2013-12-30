@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Macros\FormMacros: GET form
  *
  * @author     Filip Procházka
- * @package    Nette\Latte
  */
 
 use Nette\Latte\Macros\FormMacros;

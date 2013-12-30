@@ -4,7 +4,6 @@
  * Test: Nette\DI\Container magic properties (deprecated).
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\DI\Container,

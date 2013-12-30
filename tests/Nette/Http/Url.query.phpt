@@ -4,7 +4,6 @@
  * Test: Nette\Http\Url query manipulation.
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
 use Nette\Http\Url,
