@@ -4,7 +4,6 @@
  * Test: Nette\Reflection\AnnotationsParser comment parser I.
  *
  * @author     David Grudl
- * @package    Nette\Reflection
  */
 
 use Nette\Reflection,

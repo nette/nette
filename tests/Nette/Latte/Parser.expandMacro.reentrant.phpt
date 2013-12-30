@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Compiler::expandMacro() and reentrant.
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
 use Nette\Latte,

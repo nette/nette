@@ -4,7 +4,6 @@
  * Test: Nette\Diagnostics\Debugger Bar in non-HTML mode.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  */
 
 use Nette\Diagnostics\Debugger,

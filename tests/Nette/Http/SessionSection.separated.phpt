@@ -4,7 +4,6 @@
  * Test: Nette\Http\SessionSection separated space.
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
 use Nette\Http\Session,

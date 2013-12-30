@@ -4,7 +4,6 @@
  * Test: Nette\Caching\Storages\FileStorage & Nette\Callback & Closure.
  *
  * @author     David Grudl
- * @package    Nette\Caching
  * @phpversion 5.3
  */
 

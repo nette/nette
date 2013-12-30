@@ -4,7 +4,6 @@
  * Test: Nette\Database\Statement::normalizeRow()
  *
  * @author     David Grudl
- * @package    Nette\Database
  * @dataProvider? databases.ini  mysql
 */
 

@@ -4,7 +4,6 @@
  * Test: Nette\Environment minimal usage.
  *
  * @author     David Grudl
- * @package    Nette
  */
 
 use Nette\Environment,

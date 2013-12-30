@@ -4,7 +4,6 @@
  * Test: Nette\Config\Configurator and circular references in parameters.
  *
  * @author     David Grudl
- * @package    Nette\Config
  */
 
 use Nette\Config\Configurator,

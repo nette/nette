@@ -4,7 +4,6 @@
  * Test: Nette\Config\Adapters\NeonAdapter
  *
  * @author     David Grudl
- * @package    Nette\Config
  */
 
 use Nette\Config,

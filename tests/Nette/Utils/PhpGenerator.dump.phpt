@@ -4,7 +4,6 @@
  * Test: Nette\Utils\PhpGenerator\Helpers::dump()
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
 use Nette\Utils\PhpGenerator\Helpers,

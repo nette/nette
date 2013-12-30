@@ -4,7 +4,6 @@
  * Test: Nette\Security\Permission Ensures that assertions on privileges work properly for a particular Role.
  *
  * @author     David Grudl
- * @package    Nette\Security
  */
 
 use Nette\Security\Permission,

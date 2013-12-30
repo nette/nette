@@ -4,7 +4,6 @@
  * Test: Nette\Diagnostics\Debugger::dump() and $maxDepth and $maxLen.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  */
 
 use Nette\Diagnostics\Debugger,

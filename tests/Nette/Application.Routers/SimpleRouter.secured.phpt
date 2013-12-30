@@ -4,7 +4,6 @@
  * Test: Nette\Application\Routers\SimpleRouter with secured connection.
  *
  * @author     David Grudl
- * @package    Nette\Application\Routers
  */
 
 use Nette\Http,

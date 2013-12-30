@@ -4,7 +4,6 @@
  * Test: Nette\Diagnostics\Debugger E_ERROR in HTML.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  * @exitCode   254
  * @httpCode   500
  * @outputMatchFile Debugger.E_ERROR.html.expect

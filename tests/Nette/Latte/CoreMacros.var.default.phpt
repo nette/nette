@@ -4,7 +4,6 @@
  * Test: Nette\Latte\CoreMacros: {var ...} {default ...}
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
 use Nette\Latte\Macros\CoreMacros,

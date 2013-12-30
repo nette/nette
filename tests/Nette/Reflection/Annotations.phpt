@@ -4,7 +4,6 @@
  * Test: Nette\Reflection & annotations.
  *
  * @author     David Grudl
- * @package    Nette\Reflection
  */
 
 use Nette\Reflection,

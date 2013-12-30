@@ -4,7 +4,6 @@
  * Test: Nette\Application\Routers\SimpleRouter invalid request.
  *
  * @author     Jan Tvrdík
- * @package    Nette\Application\Routers
  */
 
 use Nette\Http,

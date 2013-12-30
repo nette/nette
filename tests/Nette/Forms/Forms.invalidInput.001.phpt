@@ -4,7 +4,6 @@
  * Test: Nette\Forms invalid input.
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
 use Nette\Http,

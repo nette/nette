@@ -4,7 +4,6 @@
  * Test: Nette\Database\Connection: reflection for MySQL
  *
  * @author     David Grudl
- * @package    Nette\Database
  * @dataProvider? databases.ini
 */
 

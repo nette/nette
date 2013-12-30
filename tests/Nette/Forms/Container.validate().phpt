@@ -4,7 +4,6 @@
  * Test: Nette\Forms\Container::validate().
  *
  * @author     Filip Procházka
- * @package    Nette\Forms
  */
 
 use Nette\Forms\Form,

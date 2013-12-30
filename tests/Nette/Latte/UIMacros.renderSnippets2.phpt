@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Macros\UIMacros, renderSnippets and control with two templates.
  *
  * @author     Jan Skrasek
- * @package    Nette\Latte
  */
 
 use Nette\Latte,

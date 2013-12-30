@@ -4,7 +4,6 @@
  * Test: PHP error handler.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  */
 
 use Tester\Assert;

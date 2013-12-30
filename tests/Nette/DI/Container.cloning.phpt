@@ -4,7 +4,6 @@
  * Test: Nette\DI\Container cloning.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\DI\Container,

@@ -4,7 +4,6 @@
  * Test: Nette\Http\Url malformed URI.
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
 use Nette\Http\Url,

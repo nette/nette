@@ -4,7 +4,6 @@
  * Test: Nette\DI\Helpers::expand()
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\DI\Helpers,

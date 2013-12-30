@@ -4,7 +4,6 @@
  * Test: Nette\ComponentModel\Container component factory 1.
  *
  * @author     David Grudl
- * @package    Nette\ComponentModel
  */
 
 use Nette\ComponentModel\Container,

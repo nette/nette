@@ -4,7 +4,6 @@
  * Test: Nette\Http\UrlScript modify.
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
 use Nette\Http\UrlScript,

@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Engine and invalid UTF-8.
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
 use Nette\Latte,

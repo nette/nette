@@ -4,7 +4,6 @@
  * Test: Nette\Mail\Message - attachments.
  *
  * @author     David Grudl
- * @package    Nette\Mail
  */
 
 use Nette\Mail\Message,

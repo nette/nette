@@ -4,7 +4,6 @@
  * Test: Nette\ComponentModel\Container cloning.
  *
  * @author     David Grudl
- * @package    Nette\ComponentModel
  */
 
 use Nette\ComponentModel\Container,

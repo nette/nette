@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Database\Drivers;
@@ -36,7 +32,7 @@ class Sqlite2Driver extends SqliteDriver
 	 */
 	public function getForeignKeys($table)
 	{
-		throw new NotSupportedException; // @see http://www.sqlite.org/foreignkeys.html
+		throw new Nette\NotSupportedException; // @see http://www.sqlite.org/foreignkeys.html
 	}
 
 }

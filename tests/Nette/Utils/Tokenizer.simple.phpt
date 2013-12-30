@@ -4,7 +4,6 @@
  * Test: Nette\Utils\Tokenizer::tokenize simple
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
 use Nette\Utils\Tokenizer,

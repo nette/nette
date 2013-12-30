@@ -4,7 +4,6 @@
  * Test: Nette\Environment and loadConfig.
  *
  * @author     David Grudl
- * @package    Nette
  */
 
 use Nette\Environment,

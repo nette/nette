@@ -4,7 +4,6 @@
  * Test: Nette\Utils\PhpGenerator for classes.
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
 use Nette\Utils\PhpGenerator\ClassType,

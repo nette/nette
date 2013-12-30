@@ -4,7 +4,6 @@
  * Test: Nette\Application\UI\Presenter and checking params.
  *
  * @author     David Grudl
- * @package    Nette\Application\UI
  */
 
 use Nette\Http,

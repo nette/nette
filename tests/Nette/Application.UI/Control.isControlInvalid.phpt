@@ -4,7 +4,6 @@
  * Test: Nette\Application\UI\Control::isControlInvalid()
  *
  * @author     Jan Tvrdík
- * @package    Nette\Application\UI
  */
 
 use Nette\Application\UI,

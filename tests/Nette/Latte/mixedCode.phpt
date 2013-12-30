@@ -4,7 +4,6 @@
  * Test: CompileExceptions have correct line number in mixed php/latte template
  *
  * @author     Jan Dolecek, David Grudl
- * @package    Nette\Latte
  */
 
 use Nette\Latte,

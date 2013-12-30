@@ -4,7 +4,6 @@
  * Test: Nette\Reflection\AnnotationsParser file parser.
  *
  * @author     David Grudl
- * @package    Nette\Reflection
  * @phpversion 5.3
  */
 

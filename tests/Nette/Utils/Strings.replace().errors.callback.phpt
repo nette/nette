@@ -4,7 +4,6 @@
  * Test: Nette\Utils\Strings and error in callback.
  *
  * @author     David Grudl
- * @package    Nette\Utils
  * @phpversion 5.3 due to nested closure
  */
 

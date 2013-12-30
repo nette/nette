@@ -4,7 +4,6 @@
  * Test: Nette\Diagnostics\Debugger errors and shut-up operator.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  * @exitCode   254
  * @httpCode   500
  * @outputMatch OK!

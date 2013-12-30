@@ -4,7 +4,6 @@
  * Test: Nette\Config\Adapters\IniAdapter
  *
  * @author     David Grudl
- * @package    Nette\Config
  */
 
 use Nette\Config,

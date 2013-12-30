@@ -4,7 +4,6 @@
  * Test: Nette\Http\Response::setCookie().
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
 use Nette\Http,

@@ -4,7 +4,6 @@
  * Test: Nette\Config\Configurator and circular services.
  *
  * @author     David Grudl
- * @package    Nette\Config
  */
 
 use Nette\Config\Configurator,

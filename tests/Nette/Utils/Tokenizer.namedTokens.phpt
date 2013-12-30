@@ -4,7 +4,6 @@
  * Test: Nette\Utils\Tokenizer::tokenize with names
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
 use Nette\Utils\Tokenizer,

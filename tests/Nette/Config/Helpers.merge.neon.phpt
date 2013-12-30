@@ -4,7 +4,6 @@
  * Test: Nette\Config\Helpers::merge() with NeonAdapter
  *
  * @author     David Grudl
- * @package    Nette\Config
  */
 
 use Nette\Config,

@@ -4,7 +4,6 @@
  * Test: Nette\Utils\Tokenizer traversing
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
 use Nette\Utils\Tokenizer,

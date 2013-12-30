@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Macros\CoreMacros: {foreach ...}
  *
  * @author     Matej Kravjar
- * @package    Nette\Latte
  */
 
 use Nette\Latte\Macros\CoreMacros,

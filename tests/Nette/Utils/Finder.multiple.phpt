@@ -4,7 +4,6 @@
  * Test: Nette\Utils\Finder multiple sources.
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
 use Nette\Utils\Finder,

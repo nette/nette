@@ -4,7 +4,6 @@
  * Test: Nette\Config\Configurator: services by Class.
  *
  * @author     David Grudl
- * @package    Nette\Config
  */
 
 use Nette\Config\Configurator,

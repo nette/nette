@@ -4,7 +4,6 @@
  * Test: Nette\Diagnostics\Debugger::tryError() & catchError.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  */
 
 use Nette\Diagnostics\Debugger,

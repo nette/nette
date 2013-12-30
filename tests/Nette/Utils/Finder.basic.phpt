@@ -4,7 +4,6 @@
  * Test: Nette\Utils\Finder basic usage.
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
 use Nette\Utils\Finder,

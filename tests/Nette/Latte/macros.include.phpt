@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Engine: {include file}
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
 use Nette\Latte,

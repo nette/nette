@@ -4,7 +4,6 @@
  * Test initialization and helpers.
  *
  * @author     David Grudl
- * @package    Nette\Test
  */
 
 

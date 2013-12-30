@@ -4,7 +4,6 @@
  * Test: Nette\Application\Routers\CliRouter basic usage
  *
  * @author     David Grudl
- * @package    Nette\Application\Routers
  */
 
 use Nette\Http,

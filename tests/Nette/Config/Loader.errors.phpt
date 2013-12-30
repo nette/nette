@@ -4,7 +4,6 @@
  * Test: Nette\Config\Loader: including files
  *
  * @author     David Grudl
- * @package    Nette\Config
  */
 
 use Nette\Config,

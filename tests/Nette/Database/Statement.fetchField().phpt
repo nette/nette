@@ -4,7 +4,6 @@
  * Test: Nette\Database\Statement: Fetch field.
  *
  * @author     David Grudl
- * @package    Nette\Database
  * @dataProvider? databases.ini
 */
 

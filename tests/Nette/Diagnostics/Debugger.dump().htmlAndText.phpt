@@ -4,7 +4,6 @@
  * Test: Nette\Diagnostics\Debugger::dump() basic types in HTML and text mode.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  */
 
 use Nette\Diagnostics\Debugger,

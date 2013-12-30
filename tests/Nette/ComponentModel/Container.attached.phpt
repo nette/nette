@@ -4,7 +4,6 @@
  * Test: Nette\ComponentModel\Container::attached()
  *
  * @author     David Grudl
- * @package    Nette\ComponentModel
  */
 
 use Nette\ComponentModel\Container,

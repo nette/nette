@@ -4,7 +4,6 @@
  * Test: Nette\Security\User authentication.
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
 use Nette\Security\IAuthenticator,

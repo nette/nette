@@ -4,7 +4,6 @@
  * Test: Nette\Config\Configurator and production mode.
  *
  * @author     David Grudl
- * @package    Nette\Config
  */
 
 use Nette\Config\Configurator,

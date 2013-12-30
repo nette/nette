@@ -4,7 +4,6 @@
  * Test: Nette\Mail\Message - textual body.
  *
  * @author     Stork Dork
- * @package    Nette\Mail
  */
 
 use Nette\Mail\Message,
