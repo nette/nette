@@ -12,8 +12,7 @@
 namespace Nette\DI\Diagnostics;
 
 use Nette,
-	Nette\DI\Container,
-	Nette\Diagnostics\Dumper; // used in templates
+	Nette\DI\Container;
 
 
 /**

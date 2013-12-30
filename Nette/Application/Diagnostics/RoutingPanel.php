@@ -14,7 +14,6 @@ namespace Nette\Application\Diagnostics;
 use Nette,
 	Nette\Application\Routers,
 	Nette\Application\UI\Presenter,
-	Nette\Diagnostics\Helpers, // used in templates
 	Nette\Diagnostics\Dumper;
 
 
