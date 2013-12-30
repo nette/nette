@@ -4,7 +4,6 @@
  * Test: Nette\DI\ContainerBuilder and generated factories errors.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\DI,

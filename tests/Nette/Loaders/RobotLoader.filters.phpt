@@ -4,7 +4,6 @@
  * Test: Nette\Loaders\RobotLoader filters.
  *
  * @author     David Grudl
- * @package    Nette\Loaders
  */
 
 use Nette\Loaders\RobotLoader,

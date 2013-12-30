@@ -4,7 +4,6 @@
  * Test: Nette\Application\Routers\SimpleRouter and modules.
  *
  * @author     David Grudl
- * @package    Nette\Application\Routers
  */
 
 use Nette\Http,

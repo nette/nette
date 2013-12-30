@@ -4,7 +4,6 @@
  * Test: Nette\Security\Permission Ensures that an example for a content management system is operable.
  *
  * @author     David Grudl
- * @package    Nette\Security
  */
 
 use Nette\Security\Permission,

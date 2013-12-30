@@ -4,7 +4,6 @@
  * Test: Nette\DI\ContainerBuilder code generator.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\DI,

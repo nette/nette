@@ -4,7 +4,6 @@
  * Test: Nette\Loaders\NetteLoader basic usage.
  *
  * @author     David Grudl
- * @package    Nette\Loaders
  */
 
 use Tester\Assert;

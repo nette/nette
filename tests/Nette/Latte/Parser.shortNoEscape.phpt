@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Parser and $shortNoEscape.
  *
  * @author     Miloslav Hůla
- * @package    Nette\Latte
  */
 
 use Nette\Latte,

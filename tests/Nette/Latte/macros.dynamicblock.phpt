@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Engine: {block $name} dynamic blocks.
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
 use Nette\Latte,

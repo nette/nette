@@ -4,7 +4,6 @@
  * Test: Nette\Database\Table: Special case of caching
  *
  * @author     Jachym Tousek
- * @package    Nette\Database
  * @dataProvider? databases.ini
  */
 

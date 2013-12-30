@@ -4,7 +4,6 @@
  * Test: Nette\Application\Responses\FileResponse and range.
  *
  * @author     David Grudl
- * @package    Nette\Config
  * @httpCode   -
  */
 

@@ -4,7 +4,6 @@
  * Test: Nette\DI\Compiler and ExtensionsExtension.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\DI,

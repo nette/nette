@@ -4,7 +4,6 @@
  * Test: Nette\Forms\Helpers::extractHttpData()
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
 use Nette\Forms\Form,

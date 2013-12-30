@@ -4,7 +4,6 @@
  * Test: Nette\Configurator and services inheritance and overwriting.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\Configurator,

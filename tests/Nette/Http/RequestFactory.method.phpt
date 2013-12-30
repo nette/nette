@@ -4,7 +4,6 @@
  * Test: Nette\Http\RequestFactory and method.
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
 use Nette\Http\RequestFactory,

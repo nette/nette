@@ -4,7 +4,6 @@
  * Test: Nette\Forms validation scope.
  *
  * @author     Jan Skrasek
- * @package    Nette\Forms
  */
 
 use Nette\Forms\Form;

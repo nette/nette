@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Engine and n:ifcontent.
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
 use Nette\Latte,

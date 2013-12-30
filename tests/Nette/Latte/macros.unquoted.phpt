@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Engine: unquoted attributes.
  *
  * @author     Jakub Vrana
- * @package    Nette\Latte
  */
 
 use Nette\Latte,

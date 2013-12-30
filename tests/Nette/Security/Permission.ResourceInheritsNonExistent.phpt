@@ -4,7 +4,6 @@
  * Test: Nette\Security\Permission Ensures that an exception is thrown when a non-existent Resource is specified to each parameter of inherits().
  *
  * @author     David Grudl
- * @package    Nette\Security
  */
 
 use Nette\Security\Permission,

@@ -4,7 +4,6 @@
  * Test: Nette\Templating\Helpers::optimizePhp()
  *
  * @author     David Grudl
- * @package    Nette\Templating
  */
 
 use Nette\Templating\Helpers,

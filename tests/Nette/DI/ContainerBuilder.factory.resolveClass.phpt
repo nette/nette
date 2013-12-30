@@ -4,7 +4,6 @@
  * Test: Nette\DI\ContainerBuilder and resolving class in generated factories.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\DI,

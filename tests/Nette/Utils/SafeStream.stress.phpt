@@ -4,7 +4,6 @@
  * Test: Nette\Utils\SafeStream stress test.
  *
  * @author     David Grudl
- * @package    Nette\Utils
  * @multiple   5
  */
 

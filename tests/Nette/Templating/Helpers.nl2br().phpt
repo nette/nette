@@ -4,7 +4,6 @@
  * Test: Nette\Templating\Helpers::nl2br()
  *
  * @author     Filip Procházka
- * @package    Nette\Templating
  */
 
 use Nette\Templating\Helpers,

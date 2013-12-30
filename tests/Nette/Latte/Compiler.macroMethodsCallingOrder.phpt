@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Compiler and macro methods calling order.
  *
  * @author     Miloslav Hůla
- * @package    Nette\Latte
  */
 
 use Nette\Latte\IMacro,

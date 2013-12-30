@@ -4,7 +4,6 @@
  * Test: Nette\Http\SessionSection basic usage.
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
 use Nette\Http\Session,

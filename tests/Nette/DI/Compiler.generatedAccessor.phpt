@@ -4,7 +4,6 @@
  * Test: Nette\DI\Compiler: generated services accessors.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\DI,

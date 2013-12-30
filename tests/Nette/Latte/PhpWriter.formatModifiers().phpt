@@ -4,7 +4,6 @@
  * Test: Nette\Latte\PhpWriter::formatModifiers()
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
 use Nette\Latte\PhpWriter,

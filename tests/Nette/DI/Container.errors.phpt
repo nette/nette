@@ -4,7 +4,6 @@
  * Test: Nette\DI\Container errors usage.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\DI\Container,

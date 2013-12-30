@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Engine: general XHTML test.
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
 use Nette\Latte,

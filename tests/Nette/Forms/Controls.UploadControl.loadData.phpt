@@ -4,7 +4,6 @@
  * Test: Nette\Forms\Controls\UploadControl.
  *
  * @author     Martin Major
- * @package    Nette\Forms
  */
 
 use Nette\Forms\Form,

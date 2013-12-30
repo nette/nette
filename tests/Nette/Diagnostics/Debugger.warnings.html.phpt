@@ -4,7 +4,6 @@
  * Test: Nette\Diagnostics\Debugger notices and warnings in HTML.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  * @outputMatch OK!
  */
 

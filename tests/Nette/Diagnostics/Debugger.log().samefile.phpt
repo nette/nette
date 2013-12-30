@@ -4,7 +4,6 @@
  * Test: Nette\Diagnostics\Debugger logging exceptions in log message.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  */
 
 use Nette\Diagnostics\Debugger,

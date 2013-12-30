@@ -4,7 +4,6 @@
  * Test: Nette\Forms\Controls\Button & SubmitButton
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
 use Nette\Forms\Form,

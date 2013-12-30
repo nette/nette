@@ -4,7 +4,6 @@
  * Test: Nette\Forms default rendering GET form.
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
 use Tester\Assert;

@@ -4,7 +4,6 @@
  * Test: Nette\DI\Compiler: services by Class.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\DI,

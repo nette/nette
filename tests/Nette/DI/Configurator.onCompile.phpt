@@ -4,7 +4,6 @@
  * Test: Nette\Configurator and user extension.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\Configurator,

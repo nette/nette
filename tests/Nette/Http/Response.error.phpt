@@ -4,7 +4,6 @@
  * Test: Nette\Http\Response errors.
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
 use Nette\Http,

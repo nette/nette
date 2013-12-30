@@ -4,7 +4,6 @@
  * Test: Nette\DI\Config\Adapters\PhpAdapter
  *
  * @author     David Grudl
- * @package    Nette\DI\Config
  */
 
 use Nette\DI\Config,

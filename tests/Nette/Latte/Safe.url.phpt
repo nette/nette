@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Engine and auto-safe URL.
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
 use Nette\Latte,

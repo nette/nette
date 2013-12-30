@@ -4,7 +4,6 @@
  * Test: Nette\Mail\Message valid headers.
  *
  * @author     David Grudl
- * @package    Nette\Mail
  */
 
 use Nette\Mail\Message,

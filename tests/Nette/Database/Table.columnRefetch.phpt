@@ -4,7 +4,6 @@
  * Test: Nette\Database\Table: Refetching rows with all columns
  *
  * @author     Jan Skrasek
- * @package    Nette\Database
  * @dataProvider? databases.ini
  */
 

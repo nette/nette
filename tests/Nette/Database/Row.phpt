@@ -4,7 +4,6 @@
  * Test: Nette\Database\Row.
  *
  * @author     David Grudl
- * @package    Nette\Database
  * @dataProvider? databases.ini
  */
 

@@ -4,7 +4,6 @@
  * Test: Nette\Forms\Controls\MultiSelectBox.
  *
  * @author     Martin Major
- * @package    Nette\Forms
  */
 
 use Nette\Forms\Form,

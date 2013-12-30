@@ -4,7 +4,6 @@
  * Test: Nette\DI\Compiler: services factories.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\DI,

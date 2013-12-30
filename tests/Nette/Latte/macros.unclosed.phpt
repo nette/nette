@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Engine: unclosed macro.
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
 use Nette\Latte,

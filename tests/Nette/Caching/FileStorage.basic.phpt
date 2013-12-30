@@ -4,7 +4,6 @@
  * Test: Nette\Caching\Storages\FileStorage basic usage.
  *
  * @author     David Grudl
- * @package    Nette\Caching
  */
 
 use Nette\Caching\Cache,

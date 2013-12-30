@@ -4,7 +4,6 @@
  * Test: Nette\Security\Permission Ensures that removal of all Resources works.
  *
  * @author     David Grudl
- * @package    Nette\Security
  */
 
 use Nette\Security\Permission,

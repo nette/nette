@@ -4,7 +4,6 @@
  * Test: Nette\Configurator and minimal container.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\Configurator,

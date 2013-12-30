@@ -4,7 +4,6 @@
  * Test: Nette\Database\ResultSet::normalizeRow()
  *
  * @author     Miloslav Hůla
- * @package    Nette\Database
  * @dataProvider? databases.ini  sqlite
  */
 

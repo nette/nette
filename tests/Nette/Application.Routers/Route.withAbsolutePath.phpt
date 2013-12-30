@@ -4,7 +4,6 @@
  * Test: Nette\Application\Routers\Route with WithAbsolutePath
  *
  * @author     David Grudl
- * @package    Nette\Application\Routers
  */
 
 use Nette\Application\Routers\Route,

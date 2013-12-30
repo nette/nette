@@ -4,7 +4,6 @@
  * Test: Nette\DI\Compiler: constants in config.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
 use Nette\DI,

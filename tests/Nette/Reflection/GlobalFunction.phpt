@@ -4,7 +4,6 @@
  * Test: Nette\Reflection\GlobalFunction tests.
  *
  * @author     David Grudl
- * @package    Nette\Reflection
  */
 
 use Nette\Reflection,

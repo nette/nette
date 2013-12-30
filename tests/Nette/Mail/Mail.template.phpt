@@ -4,7 +4,6 @@
  * Test: Nette\Mail\Message with template.
  *
  * @author     David Grudl
- * @package    Nette\Mail
  */
 
 use Nette\Latte,

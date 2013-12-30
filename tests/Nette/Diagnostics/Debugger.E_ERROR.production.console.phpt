@@ -4,7 +4,6 @@
  * Test: Nette\Diagnostics\Debugger E_ERROR in production & console mode.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  * @exitCode   255
  * @httpCode   500
  * @outputMatch ERROR:%A%

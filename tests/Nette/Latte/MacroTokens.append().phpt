@@ -4,7 +4,6 @@
  * Test: Nette\Latte\MacroTokens::append()
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
 use Nette\Latte\MacroTokens,

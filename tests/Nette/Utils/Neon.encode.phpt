@@ -4,7 +4,6 @@
  * Test: Nette\Utils\Neon::encode.
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
 use Nette\Utils\Neon,

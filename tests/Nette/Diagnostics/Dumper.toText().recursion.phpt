@@ -4,7 +4,6 @@
  * Test: Nette\Diagnostics\Dumper::toText() recursion
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  */
 
 use Nette\Diagnostics\Dumper,

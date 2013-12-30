@@ -4,7 +4,6 @@
  * Test: Nette\Loaders\RobotLoader rebuild only once.
  *
  * @author     David Grudl
- * @package    Nette\Loaders
  */
 
 use Nette\Loaders\RobotLoader,

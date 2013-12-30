@@ -4,7 +4,6 @@
  * Test: Nette\Latte\Engine: whitespace test II.
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
 use Nette\Latte,

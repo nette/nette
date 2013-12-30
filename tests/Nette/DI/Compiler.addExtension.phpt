@@ -4,7 +4,6 @@
  * Test: Nette\DI\Compiler and addExtension on loadConfiguration stage.
  *
  * @author     Josef Kříž
- * @package    Nette\DI
  */
 
 use Nette\DI\CompilerExtension,

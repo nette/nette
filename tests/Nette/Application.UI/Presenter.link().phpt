@@ -4,7 +4,6 @@
  * Test: Nette\Application\UI\Presenter::link()
  *
  * @author     David Grudl
- * @package    Nette\Application\UI
  */
 
 use Nette\Http,
