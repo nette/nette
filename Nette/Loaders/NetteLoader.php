@@ -61,7 +61,6 @@ class NetteLoader extends Nette\Object
 		'Nette\DeprecatedException' => '/common/exceptions',
 		'Nette\DirectoryNotFoundException' => '/common/exceptions',
 		'Nette\Environment' => '/common/Environment',
-		'Nette\FatalErrorException' => '/common/exceptions',
 		'Nette\FileNotFoundException' => '/common/exceptions',
 		'Nette\Framework' => '/common/Framework',
 		'Nette\IOException' => '/common/exceptions',
