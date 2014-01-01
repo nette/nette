@@ -230,7 +230,7 @@ Nette.validateRule = function(elem, op, arg) {
 
 Nette.validators = {
 	filled: function(elem, arg, val) {
-		return val !== '' && val !== false && val !== null;
+		return val !== '' && val !== false && val !== null && (!window.FileList || !val instanceof FileList || val.length > 0);
 	},
 
 	blank: function(elem, arg, val) {
