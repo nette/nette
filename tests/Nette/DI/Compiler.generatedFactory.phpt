@@ -38,7 +38,7 @@ class Lorem
 interface IFinderFactory
 {
 	/**
-	 * @return NU\Finder
+	 * @return NU\Finder comment
 	 */
 	function create();
 }

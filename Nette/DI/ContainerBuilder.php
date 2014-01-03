@@ -207,7 +207,7 @@ class ContainerBuilder extends Nette\Object
 					throw new ServiceCreationException("Method $method has not @return annotation.");
 				}
 
-				$returnType = Reflection\AnnotationsParser::expandClassName($returnType, $rc);
+				$returnType = Reflection\AnnotationsParser::expandClassName(preg_replace('#[|\s].*#', '', $returnType), $rc);
 				if (!class_exists($returnType)) {
 					throw new ServiceCreationException("Please check a @return annotation of the $method method. Class '$returnType' cannot be found.");
 				}
