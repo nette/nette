@@ -75,7 +75,7 @@ class SqlPreprocessor extends Nette\Object
 			} else {
 				$res[] = Nette\Utils\Strings::replace(
 					$param,
-					'~\'.*?\'|".*?"|\?|\b(?:INSERT|REPLACE|UPDATE|WHERE|HAVING|ORDER BY|GROUP BY)\b|/\*.*?\*/|--[^\n]*~si',
+					'~\'.*?\'|".*?"|\?i?|\b(?:INSERT|REPLACE|UPDATE|WHERE|HAVING|ORDER BY|GROUP BY)\b|/\*.*?\*/|--[^\n]*~si',
 					array($this, 'callback')
 				);
 			}
@@ -92,11 +92,15 @@ class SqlPreprocessor extends Nette\Object
 		if ($m[0] === "'" || $m[0] === '"' || $m[0] === '/' || $m[0] === '-') { // string or comment
 			return $m;
 
-		} elseif ($m === '?') { // placeholder
+		} elseif ($m === '?' || $m === '?i') { // placeholder
 			if ($this->counter >= count($this->params)) {
 				throw new Nette\InvalidArgumentException('There are more placeholders than passed parameters.');
 			}
-			return $this->formatValue($this->params[$this->counter++]);
+			if ($m === '?') {
+				return $this->formatValue($this->params[$this->counter++]);
+			} else {
+				return $this->driver->delimite($this->params[$this->counter++]);
+			}
 
 		} else { // command
 			$this->arrayMode = $this->arrayModes[strtoupper($m)];

@@ -30,6 +30,15 @@ test(function() use ($connection, $reflection) { // test paramateres with NULL
 });
 
 
+test(function() use ($connection, $reflection) {
+	$sqlBuilder = new SqlBuilder('book', $connection, $reflection);
+	$sqlBuilder->addWhere('?i ?', 'id', 3);
+	$sqlBuilder->addWhere('?i = ?', 'number', 4);
+	$sqlBuilder->addWhere('?i ?', 'number', NULL);
+	Assert::same(reformat('SELECT * FROM [book] WHERE (?i = ?) AND (?i = ?) AND (?i IS NULL)'), $sqlBuilder->buildSelectQuery());
+});
+
+
 test(function() use ($dao, $connection, $reflection) { // test Selection as a parameter
 	$sqlBuilder = new SqlBuilder('book', $connection, $reflection);
 	$sqlBuilder->addWhere('id', $dao->table('book'));

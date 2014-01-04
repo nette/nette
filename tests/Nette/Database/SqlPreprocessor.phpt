@@ -57,6 +57,13 @@ test(function() use ($preprocessor) {
 });
 
 
+test(function() use ($preprocessor) {
+	list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE ?i = ? OR ?i = ?', 'id', 12, 'number', 23));
+	Assert::same( reformat('SELECT id FROM author WHERE [id] = 12 OR [number] = 23'), $sql );
+	Assert::same( array(), $params );
+});
+
+
 test(function() use ($preprocessor) { // comments
 	list($sql, $params) = $preprocessor->process(array("SELECT id --?\nFROM author WHERE id = ?", 11));
 	Assert::same( "SELECT id --?\nFROM author WHERE id = 11", $sql );
