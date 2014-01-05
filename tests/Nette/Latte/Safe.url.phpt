@@ -32,6 +32,9 @@ $template->setSource('
 <a href={$url3}></a>
 <a href={$url4}>ok</a>
 <a href={$url5}></a>
+<a href={$url4|dataStream}></a>
+<a href={$url4|dataStream|noSafeURL}></a>
+<a href={$url4|dataStream|safeURL}></a>
 ');
 
 Assert::match('
@@ -43,6 +46,9 @@ Assert::match('
 <a HREF=""></a>
 <a href=""></a>
 <a href="ok">ok</a>
+<a href=""></a>
+<a href="data:%a%;base64,b2s="></a>
+<a href="data:%a%;base64,b2s="></a>
 <a href=""></a>
 ', (string) $template);
 
