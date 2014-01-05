@@ -621,6 +621,12 @@ class Image extends Object
 		return parent::__call($name, $args);
 	}
 
+	public function __clone()
+	{
+		$clonedResource = imagecreatefromstring($this->toString());
+		$this->setImageResource($clonedResource);
+	}
+
 }
 
 
