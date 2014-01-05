@@ -276,6 +276,8 @@ class Helpers
 	 */
 	public static function dataStream($data, $type = NULL)
 	{
+		// Note: Nette\Latte\Compiler depends on name 'dataStream'
+
 		if ($type === NULL) {
 			$type = Nette\Utils\MimeTypeDetector::fromString($data);
 		}
