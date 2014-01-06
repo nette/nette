@@ -529,7 +529,7 @@ class Form extends Container
 	public function getAllErrors()
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use getErrors() instead.', E_USER_DEPRECATED);
-		return $this->errors();
+		return $this->getErrors();
 	}
 
 
