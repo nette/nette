@@ -50,11 +50,7 @@ class CacheMock implements Nette\Caching\IStorage
 }
 
 $cacheStorage = new CacheMock;
-$context = new Nette\Database\Context(
-	$connection,
-	new Nette\Database\Reflection\DiscoveredReflection($connection, new Nette\Caching\Storages\MemoryStorage),
-	$cacheStorage
-);
+$context = new Nette\Database\Context($context->getConnection(), $context->getDatabaseReflection(), $cacheStorage);
 
 
 $queries = 0;

@@ -17,11 +17,6 @@ require __DIR__ . '/../connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/../files/{$driverName}-nette_test1.sql");
 
 
-
-$reflection = new DiscoveredReflection($connection);
-$dao = new Nette\Database\Context($connection, $reflection);
-
-
 test(function() use ($connection, $reflection) { // test paramateres with NULL
 	$sqlBuilder = new SqlBuilder('book', $connection, $reflection);
 	$sqlBuilder->addWhere('id ? OR id ?', array(1, NULL));
@@ -30,9 +25,9 @@ test(function() use ($connection, $reflection) { // test paramateres with NULL
 });
 
 
-test(function() use ($dao, $connection, $reflection) { // test Selection as a parameter
+test(function() use ($context, $connection, $reflection) { // test Selection as a parameter
 	$sqlBuilder = new SqlBuilder('book', $connection, $reflection);
-	$sqlBuilder->addWhere('id', $dao->table('book'));
+	$sqlBuilder->addWhere('id', $context->table('book'));
 	Assert::equal(reformat(array(
 		'mysql' => 'SELECT * FROM `book` WHERE (`id` IN (?))',
 		'SELECT * FROM [book] WHERE ([id] IN (SELECT [id] FROM [book]))',
@@ -40,9 +35,9 @@ test(function() use ($dao, $connection, $reflection) { // test Selection as a pa
 });
 
 
-test(function() use ($dao, $connection, $reflection) { // test Selection with column as a parameter
+test(function() use ($context, $connection, $reflection) { // test Selection with column as a parameter
 	$sqlBuilder = new SqlBuilder('book', $connection, $reflection);
-	$sqlBuilder->addWhere('id', $dao->table('book')->select('id'));
+	$sqlBuilder->addWhere('id', $context->table('book')->select('id'));
 	Assert::equal(reformat(array(
 		'mysql' => 'SELECT * FROM `book` WHERE (`id` IN (?))',
 		'SELECT * FROM [book] WHERE ([id] IN (SELECT [id] FROM [book]))',
@@ -50,9 +45,9 @@ test(function() use ($dao, $connection, $reflection) { // test Selection with co
 });
 
 
-test(function() use ($dao, $connection, $reflection) { // test multiple placeholder parameter
+test(function() use ($context, $connection, $reflection) { // test multiple placeholder parameter
 	$sqlBuilder = new SqlBuilder('book', $connection, $reflection);
-	$sqlBuilder->addWhere('id ? OR id ?', NULL, $dao->table('book'));
+	$sqlBuilder->addWhere('id ? OR id ?', NULL, $context->table('book'));
 	Assert::equal(reformat(array(
 		'mysql' => 'SELECT * FROM `book` WHERE (`id` IS NULL OR `id` IN (?))',
 		'SELECT * FROM [book] WHERE ([id] IS NULL OR [id] IN (SELECT [id] FROM [book]))',
@@ -121,10 +116,10 @@ test(function() use ($connection, $reflection) { // tests multiline condition
 });
 
 
-test(function() use ($dao, $connection, $reflection) { // tests NOT
+test(function() use ($context, $connection, $reflection) { // tests NOT
 	$sqlBuilder = new SqlBuilder('book', $connection, $reflection);
 	$sqlBuilder->addWhere('id NOT', array(1, 2));
-	$sqlBuilder->addWhere('id NOT', $dao->table('book')->select('id'));
+	$sqlBuilder->addWhere('id NOT', $context->table('book')->select('id'));
 	Assert::equal(reformat(array(
 		'mysql' => 'SELECT * FROM `book` WHERE (`id` NOT IN (?)) AND (`id` NOT IN (?))',
 		'SELECT * FROM [book] WHERE ([id] NOT IN (?)) AND ([id] NOT IN (SELECT [id] FROM [book]))',
@@ -150,17 +145,17 @@ test(function() use ($connection, $reflection) { // tests operator suffix
 });
 
 
-test(function() use ($dao) {
-	$books = $dao->table('book')->where('id',
-		$dao->table('book_tag')->select('book_id')->where('tag_id', 21)
+test(function() use ($context) {
+	$books = $context->table('book')->where('id',
+		$context->table('book_tag')->select('book_id')->where('tag_id', 21)
 	);
 	Assert::same(3, $books->count());
 });
 
 
-Assert::exception(function() use ($dao) {
-	$dao->table('book')->where('id',
-		$dao->table('book_tag')->where('tag_id', 21)
+Assert::exception(function() use ($context) {
+	$context->table('book')->where('id',
+		$context->table('book_tag')->where('tag_id', 21)
 	);
 }, 'Nette\InvalidArgumentException', 'Selection argument must have defined a select column.');
 

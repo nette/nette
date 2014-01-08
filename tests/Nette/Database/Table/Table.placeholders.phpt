@@ -9,15 +9,10 @@
 
 use Tester\Assert;
 use Nette\Database\SqlLiteral;
-use Nette\Database\Reflection\DiscoveredReflection;
 
 require __DIR__ . '/../connect.inc.php'; // create $connection
 
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/../files/{$driverName}-nette_test1.sql");
-
-
-$reflection = new DiscoveredReflection($connection);
-$context = new Nette\Database\Context($connection, $reflection);
 
 
 test(function() use ($context, $driverName) {

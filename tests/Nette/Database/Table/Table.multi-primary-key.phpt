@@ -14,14 +14,6 @@ require __DIR__ . '/../connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/../files/{$driverName}-nette_test1.sql");
 
 
-$cacheStorage = new Nette\Caching\Storages\MemoryStorage;
-$context = new Nette\Database\Context(
-	$connection,
-	new Nette\Database\Reflection\DiscoveredReflection($connection, $cacheStorage),
-	$cacheStorage
-);
-
-
 test(function() use ($context) {
 	$book = $context->table('book')->get(1);
 	foreach ($book->related('book_tag') as $bookTag) {

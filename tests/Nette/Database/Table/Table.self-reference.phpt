@@ -12,12 +12,7 @@ use Nette\Database;
 
 require __DIR__ . '/../connect.inc.php'; // create $connection
 
-
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/../files/{$driverName}-nette_test1.sql");
-$context = new Nette\Database\Context(
-	$connection,
-	new Nette\Database\Reflection\DiscoveredReflection($connection)
-);
 
 
 $context->query('UPDATE book SET next_volume = 3 WHERE id IN (2,4)');

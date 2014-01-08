@@ -38,7 +38,7 @@ test(function() use ($context) {
 
 test(function() use ($context) {
 	$joinSql = $context->table('book_tag')->where('book_id', 1)->select('Tag.id')->getSql();
-	Assert::same(reformat('SELECT [Tag].[id] FROM [book_tag] LEFT JOIN [Tag] ON [book_tag].[Tag_id] = [Tag].[id] WHERE ([book_id] = ?)'), $joinSql);
+	Assert::same(reformat('SELECT [Tag].[id] FROM [book_tag] LEFT JOIN [tag] AS [Tag] ON [book_tag].[tag_id] = [Tag].[id] WHERE ([book_id] = ?)'), $joinSql);
 });
 
 
