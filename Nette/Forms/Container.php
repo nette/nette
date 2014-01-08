@@ -259,6 +259,101 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 
 
 	/**
+	 * Adds search input control to the form.
+	 * @param  string  control name
+	 * @param  string  label
+	 * @param  int  maximum number of characters the user may enter
+	 * @return Nette\Forms\Controls\TextInput
+	 */
+	public function addSearch($name, $label = NULL, $maxLength = NULL)
+	{
+		$control = new Controls\TextInput($label, $maxLength);
+		return $this[$name] = $control->setType('search');
+	}
+
+
+	/**
+	 * Adds telephone input control to the form.
+	 * @param  string  control name
+	 * @param  string  label
+	 * @param  int  maximum number of characters the user may enter
+	 * @return Nette\Forms\Controls\TextInput
+	 */
+	public function addTelephone($name, $label = NULL, $maxLength = NULL)
+	{
+		$control = new Controls\TextInput($label, $maxLength);
+		return $this[$name] = $control->setType('tel');
+	}
+
+
+	/**
+	 * Adds email input control to the form.
+	 * @param  string  control name
+	 * @param  string  label
+	 * @param  int  maximum number of characters the user may enter
+	 * @param  string error message for email validation rule
+	 * @return Nette\Forms\Controls\TextInput
+	 */
+	public function addEmail($name, $label = NULL, $maxLength = NULL, $errorMessage = NULL)
+	{
+		$control = new Controls\TextInput($label, $maxLength);
+		$control->addCondition(Form::FILLED)->addRule(Form::EMAIL, $errorMessage);
+		return $this[$name] = $control->setType('email');
+	}
+
+	/**
+	 * Adds URL input control to the form.
+	 * @param  string  control name
+	 * @param  string  label
+	 * @param  int  maximum number of characters the user may enter
+	 * @param  string  error message for URL validation rule
+	 * @return Nette\Forms\Controls\TextInput
+	 */
+	public function addUrl($name, $label = NULL, $maxLength = NULL, $errorMessage = NULL)
+	{
+		$control = new Controls\TextInput($label, $maxLength);
+		$control->addCondition(Form::FILLED)->addRule(Form::URL, $errorMessage);
+		return $this[$name] = $control->setType('url');
+	}
+
+
+	/**
+	 * Adds number input control to the form.
+	 * @param  string  control name
+	 * @param  string  label
+	 * @param  array  allowed number range
+	 * @param  string  error message for numeric validation rule
+	 * @param  string  error message for range validation rule
+	 * @return Nette\Forms\Controls\TextInput
+	 */
+	public function addNumber($name, $label = NULL, $range = NULL, $numberErrorMessage = NULL, $rangeErrorMessage = NULL)
+	{
+		$control = new Controls\TextInput($label);
+		$rules = $control->addCondition(Form::FILLED);
+		$rules->addRule(Form::NUMERIC, $numberErrorMessage);
+		if ($range !== NULL) {
+			$rules->addRule(Form::RANGE, $rangeErrorMessage, $range);
+		}
+		return $this[$name] = $control->setType('number');
+	}
+
+
+	/**
+	 * Adds range input control to the form.
+	 * @param  string  control name
+	 * @param  string  label
+	 * @param  array  allowed number range
+	 * @param  string  error message for numeric validation rule
+	 * @param  string  error message for range validation rule
+	 * @return Nette\Forms\Controls\TextInput
+	 */
+	public function addRange($name, $label = NULL, $range = array(0, 100), $numberErrorMessage = NULL, $rangeErrorMessage = NULL)
+	{
+		return $this[$name] = new Controls\RangeControl($label, $range, $numberErrorMessage, $rangeErrorMessage);
+	}
+
+
+	/**
 	 * Adds multi-line text input control to the form.
 	 * @param  string  control name
 	 * @param  string  label
