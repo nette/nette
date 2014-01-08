@@ -44,6 +44,15 @@ Assert::match( '<pre class="nette-dump"><span class="nette-dump-number">0.0</spa
 Assert::match( '<pre class="nette-dump"><span class="nette-dump-number">0.1</span>
 </pre>', Dumper::toHtml(0.1) );
 
+Assert::match( '<pre class="nette-dump"><span class="nette-dump-number">INF</span>
+</pre>', Dumper::toHtml(INF) );
+
+Assert::match( '<pre class="nette-dump"><span class="nette-dump-number">-INF</span>
+</pre>', Dumper::toHtml(-INF) );
+
+Assert::match( '<pre class="nette-dump"><span class="nette-dump-number">NAN</span>
+</pre>', Dumper::toHtml(NAN) );
+
 Assert::match( '<pre class="nette-dump"><span class="nette-dump-string">""</span>
 </pre>', Dumper::toHtml('') );
 
