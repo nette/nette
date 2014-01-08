@@ -95,8 +95,8 @@ test(function() { // validation rules
 		0 => 'Second',
 	))->setRequired('required');
 
-	Assert::same('<label><input type="checkbox" name="list[]" required data-nette-rules=\'[{"op":":filled","msg":"required"}]\' value="a">First</label><br><label><input type="checkbox" name="list[]" required value="0">Second</label>', $input->getControl());
-	Assert::same('<input type="checkbox" name="list[]" id="frm-list-0" required data-nette-rules=\'[{"op":":filled","msg":"required"}]\' value="0">', (string) $input->getControlPart(0));
+	Assert::same('<label><input type="checkbox" name="list[]" data-nette-rules=\'[{"op":":filled","msg":"required"}]\' value="a">First</label><br><label><input type="checkbox" name="list[]" value="0">Second</label>', $input->getControl());
+	Assert::same('<input type="checkbox" name="list[]" id="frm-list-0" data-nette-rules=\'[{"op":":filled","msg":"required"}]\' value="0">', (string) $input->getControlPart(0));
 });
 
 

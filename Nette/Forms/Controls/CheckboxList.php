@@ -47,6 +47,7 @@ class CheckboxList extends MultiChoiceControl
 				'id' => NULL,
 				'checked?' => $this->value,
 				'disabled:' => $this->disabled,
+				'required' => NULL,
 				'data-nette-rules:' => array(key($items) => $input->attrs['data-nette-rules']),
 			)),
 			$this->label->attrs,
@@ -85,6 +86,7 @@ class CheckboxList extends MultiChoiceControl
 			'id' => $this->getHtmlId() . '-' . $key,
 			'checked' => in_array($key, (array) $this->value),
 			'disabled' => is_array($this->disabled) ? isset($this->disabled[$key]) : $this->disabled,
+			'required' => NULL,
 			'value' => $key,
 		));
 	}
