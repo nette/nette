@@ -291,12 +291,13 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 * @param  string  control name
 	 * @param  string  label
 	 * @param  int  maximum number of characters the user may enter
+	 * @param  string error message for email validation rule
 	 * @return Nette\Forms\Controls\TextInput
 	 */
-	public function addEmail($name, $label = NULL, $maxLength = NULL)
+	public function addEmail($name, $label = NULL, $maxLength = NULL, $errorMessage = NULL)
 	{
 		$control = new Controls\TextInput($label, $maxLength);
-		$control->addCondition(Form::FILLED)->addRule(Form::EMAIL);
+		$control->addCondition(Form::FILLED)->addRule(Form::EMAIL, $errorMessage);
 		return $this[$name] = $control->setType('email');
 	}
 
@@ -305,12 +306,13 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 * @param  string  control name
 	 * @param  string  label
 	 * @param  int  maximum number of characters the user may enter
+	 * @param  string  error message for URL validation rule
 	 * @return Nette\Forms\Controls\TextInput
 	 */
-	public function addUrl($name, $label = NULL, $maxLength = NULL)
+	public function addUrl($name, $label = NULL, $maxLength = NULL, $errorMessage = NULL)
 	{
 		$control = new Controls\TextInput($label, $maxLength);
-		$control->addCondition(Form::FILLED)->addRule(Form::URL);
+		$control->addCondition(Form::FILLED)->addRule(Form::URL, $errorMessage);
 		return $this[$name] = $control->setType('url');
 	}
 
@@ -320,15 +322,17 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 * @param  string  control name
 	 * @param  string  label
 	 * @param  array  allowed number range
+	 * @param  string  error message for numeric validation rule
+	 * @param  string  error message for range validation rule
 	 * @return Nette\Forms\Controls\TextInput
 	 */
-	public function addNumber($name, $label = NULL, $range = NULL)
+	public function addNumber($name, $label = NULL, $range = NULL, $numberErrorMessage = NULL, $rangeErrorMessage = NULL)
 	{
 		$control = new Controls\TextInput($label);
 		$rules = $control->addCondition(Form::FILLED);
-		$rules->addRule(Form::NUMERIC);
+		$rules->addRule(Form::NUMERIC, $numberErrorMessage);
 		if ($range !== NULL) {
-			$rules->addRule(Form::RANGE, NULL, $range);
+			$rules->addRule(Form::RANGE, $rangeErrorMessage, $range);
 		}
 		return $this[$name] = $control->setType('number');
 	}
@@ -339,15 +343,17 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 * @param  string  control name
 	 * @param  string  label
 	 * @param  array  allowed number range
+	 * @param  string  error message for numeric validation rule
+	 * @param  string  error message for range validation rule
 	 * @return Nette\Forms\Controls\TextInput
 	 */
-	public function addRange($name, $label = NULL, $range = NULL)
+	public function addRange($name, $label = NULL, $range = NULL, $numberErrorMessage = NULL, $rangeErrorMessage = NULL)
 	{
 		$control = new Controls\TextInput($label);
 		$rules = $control->addCondition(Form::FILLED);
-		$rules->addRule(Form::NUMERIC);
+		$rules->addRule(Form::NUMERIC, $numberErrorMessage);
 		if ($range !== NULL) {
-			$rules->addRule(Form::RANGE, NULL, $range);
+			$rules->addRule(Form::RANGE, $rangeErrorMessage, $range);
 		}
 		return $this[$name] = $control->setType('range');
 	}
