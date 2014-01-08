@@ -31,8 +31,11 @@ try {
 if (strpos($options['dsn'], 'sqlite::memory:') === FALSE) {
 	Tester\Environment::lock($options['dsn'], dirname(TEMP_DIR));
 }
+
 $driverName = $connection->getPdo()->getAttribute(PDO::ATTR_DRIVER_NAME);
-$context = new Nette\Database\Context($connection);
+$cacheMemoryStorage = new Nette\Caching\Storages\MemoryStorage;
+$reflection = new Nette\Database\Reflection\DiscoveredReflection($connection, $cacheMemoryStorage);
+$context = new Nette\Database\Context($connection, $reflection, $cacheMemoryStorage);
 
 
 /** Replaces [] with driver-specific quotes */
