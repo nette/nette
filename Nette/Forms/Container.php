@@ -319,17 +319,16 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 * Adds number input control to the form.
 	 * @param  string  control name
 	 * @param  string  label
-	 * @param  int  minimum number the user may enter
-	 * @param  int  maximum number the user may enter
+	 * @param  array  allowed number range
 	 * @return Nette\Forms\Controls\TextInput
 	 */
-	public function addNumber($name, $label = NULL, $min = NULL, $max = NULL)
+	public function addNumber($name, $label = NULL, $range = NULL)
 	{
 		$control = new Controls\TextInput($label);
 		$rules = $control->addCondition(Form::FILLED);
 		$rules->addRule(Form::NUMERIC);
-		if ($min !== NULL || $max !== NULL) {
-			$rules->addRule(Form::RANGE, NULL, array($min, $max));
+		if ($range !== NULL) {
+			$rules->addRule(Form::RANGE, NULL, $range);
 		}
 		return $this[$name] = $control->setType('number');
 	}
@@ -339,17 +338,16 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 * Adds range input control to the form.
 	 * @param  string  control name
 	 * @param  string  label
-	 * @param  int  minimum number the user may enter
-	 * @param  int  maximum number the user may enter
+	 * @param  array  allowed number range
 	 * @return Nette\Forms\Controls\TextInput
 	 */
-	public function addRange($name, $label = NULL, $min = NULL, $max = NULL)
+	public function addRange($name, $label = NULL, $range = NULL)
 	{
 		$control = new Controls\TextInput($label);
 		$rules = $control->addCondition(Form::FILLED);
 		$rules->addRule(Form::NUMERIC);
-		if ($min !== NULL || $max !== NULL) {
-			$rules->addRule(Form::RANGE, NULL, array($min, $max));
+		if ($range !== NULL) {
+			$rules->addRule(Form::RANGE, NULL, $range);
 		}
 		return $this[$name] = $control->setType('range');
 	}
