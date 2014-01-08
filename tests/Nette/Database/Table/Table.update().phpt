@@ -15,12 +15,6 @@ require __DIR__ . '/../connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/../files/{$driverName}-nette_test1.sql");
 
 
-$context = new Nette\Database\Context(
-	$connection,
-	new Nette\Database\Reflection\DiscoveredReflection($connection)
-);
-
-
 $author = $context->table('author')->get(12);  // SELECT * FROM `author` WHERE (`id` = ?)
 $author->update(array(
 	'name' => 'Tyrion Lannister',
