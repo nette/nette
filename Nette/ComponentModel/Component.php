@@ -91,7 +91,7 @@ abstract class Component extends Nette\Object implements IComponent
 	 * @param  bool   throw exception if component doesn't exist?
 	 * @return string
 	 */
-	public function lookupPath($type, $need = TRUE)
+	public function lookupPath($type = NULL, $need = TRUE)
 	{
 		$this->lookup($type, $need);
 		return $this->monitors[$type][2];
