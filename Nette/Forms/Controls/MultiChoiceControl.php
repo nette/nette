@@ -68,7 +68,9 @@ abstract class MultiChoiceControl extends BaseControl
 		}
 		$values = array_keys($flip);
 		if ($diff = array_diff($values, array_keys($this->items))) {
-			throw new Nette\InvalidArgumentException("Values '" . implode("', '", $diff) . "' are out of allowed range in field '{$this->name}'.");
+			$range = Nette\Utils\Strings::truncate(implode(', ', array_map(function($s) { return var_export($s, TRUE); }, $this->items)), 70, '...');
+			$vals = (count($diff) > 1 ? 's' : '') . " '" . implode("', '", $diff) . "'";
+			throw new Nette\InvalidArgumentException("Value$vals are out of allowed range [$range] in field '{$this->name}'.");
 		}
 		$this->value = $values;
 		return $this;

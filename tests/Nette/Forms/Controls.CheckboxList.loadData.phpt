@@ -138,7 +138,7 @@ test(function() use ($series) { // setValue() and invalid argument
 
 	Assert::exception(function() use ($input) {
 		$input->setValue('unknown');
-	}, 'Nette\InvalidArgumentException', "Values 'unknown' are out of allowed range in field 'list'.");
+	}, 'Nette\InvalidArgumentException', "Value 'unknown' are out of allowed range ['Red Dwarf', 'The Simpsons', 'South Park', 'Family Guy'] in field 'list'.");
 });
 
 
