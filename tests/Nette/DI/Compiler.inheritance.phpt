@@ -37,7 +37,7 @@ class SubChildService extends ChildService
 {}
 
 
-class SecSubChildService extends ChildService
+class SecondChildService extends ChildService
 {}
 
 

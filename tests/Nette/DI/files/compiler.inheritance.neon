@@ -12,4 +12,4 @@ services:
 		factory: SubChildService()
 
 	secchild < child:
-		factory: SecSubChildService()
+		factory: SecondChildService()
