@@ -156,17 +156,27 @@ class Compiler extends Nette\Object
 	 */
 	public static function parseServices(ContainerBuilder $builder, array $config, $namespace = NULL)
 	{
+		if (!empty($config['factories'])) {
+			trigger_error("Section 'factories' is deprecated, move definitions to section 'services' and append key 'autowired: no'.", E_USER_DEPRECATED);
+		}
+
 		$services = isset($config['services']) ? $config['services'] : array();
 		$factories = isset($config['factories']) ? $config['factories'] : array();
 		$all = array_merge($services, $factories);
 
-		uasort($all, function($a, $b) {
-			return strcmp(Config\Helpers::isInheriting($a), Config\Helpers::isInheriting($b));
-		});
-
-		if (!empty($config['factories'])) {
-			trigger_error("Section 'factories' is deprecated, move definitions to section 'services' and append key 'autowired: no'.", E_USER_DEPRECATED);
+		$depths = array();
+		foreach ($all as $name => $def) {
+			$path = array();
+			while (Config\Helpers::isInheriting($def)) {
+				$path[] = $def;
+				$def = $all[$def[Config\Helpers::EXTENDS_KEY]];
+				if (in_array($def, $path, TRUE)) {
+					throw new ServiceCreationException("Circular reference detected for service '$name'.");
+				}
+			}
+			$depths[$name] = count($path);
 		}
+		array_multisort($depths, $all);
 
 		foreach ($all as $origName => $def) {
 			if ((string) (int) $origName === (string) $origName) {
