@@ -14,9 +14,6 @@ use Nette\Http\Session,
 require __DIR__ . '/../bootstrap.php';
 
 
-ini_set('session.save_path', TEMP_DIR);
-
-
 ob_start();
 
 $container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
