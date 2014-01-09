@@ -15,9 +15,6 @@ use Nette\Object,
 require __DIR__ . '/../bootstrap.php';
 
 
-ini_set('session.save_path', TEMP_DIR);
-
-
 class MySessionStorage extends Object implements SessionHandlerInterface
 {
 	private $path;
