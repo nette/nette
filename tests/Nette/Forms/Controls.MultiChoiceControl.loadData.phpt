@@ -142,6 +142,14 @@ test(function() use ($series) { // setValue() and invalid argument
 	Assert::exception(function() use ($input) {
 		$input->setValue('unknown');
 	}, 'Nette\InvalidArgumentException', "Values 'unknown' are out of allowed range in field 'select'.");
+
+	Assert::exception(function() use ($input) {
+		$input->setValue(new stdClass);
+	}, 'Nette\InvalidArgumentException', "Value must be array or NULL, object given in field 'select'.");
+
+	Assert::exception(function() use ($input) {
+		$input->setValue(array(new stdClass));
+	}, 'Nette\InvalidArgumentException', "Values must be scalar, object given in field 'select'.");
 });
 
 
