@@ -40,6 +40,9 @@ class Application extends Nette\Object
 	/** @var array of function(Application $sender, Request $request); Occurs when a new request is received */
 	public $onRequest;
 
+	/** @var array of function(Application $sender, Presenter $presenter); Occurs when a presenter is created */
+	public $onPresenter;
+
 	/** @var array of function(Application $sender, IResponse $response); Occurs when a new response is ready for dispatch */
 	public $onResponse;
 
@@ -142,6 +145,7 @@ class Application extends Nette\Object
 		$this->onRequest($this, $request);
 
 		$this->presenter = $this->presenterFactory->createPresenter($request->getPresenterName());
+		$this->onPresenter($this, $this->presenter);
 		$response = $this->presenter->run($request);
 
 		if ($response instanceof Responses\ForwardResponse) {
