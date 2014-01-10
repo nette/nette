@@ -30,6 +30,9 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 
 	<label<?php $_input = is_object($form['username']) ? $form['username'] : $_form[$form['username']]; echo $_input->getLabel()->attributes() ?>></label>
 	<input<?php $_input = is_object($form['username']) ? $form['username'] : $_form[$form['username']]; echo $_input->getControl()->attributes() ?>>
+
+	<?php if ($_label = $_form["my"]->getLabel()) echo $_label ; echo $_form["my"]->getControl() ?>
+
 <?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form) ?>
 
 
