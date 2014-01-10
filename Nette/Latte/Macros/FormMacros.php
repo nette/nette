@@ -168,13 +168,15 @@ class FormMacros extends MacroSet
 				array_fill_keys(array_keys($node->htmlNode->attrs), NULL)
 			);
 		} else {
+			$method = $tagName === 'label' ? 'getLabel' : 'getControl';
 			return $writer->write(
 				'$_input = ' . ($name[0] === '$' ? 'is_object(%0.word) ? %0.word : ' : '')
-					. '$_form[%0.word]; echo $_input'
-					. ($tagName === 'label' ? '->getLabel%1.raw' : '->getControl%1.raw')
+					. '$_form[%0.word]; echo $_input->%1.raw'
 					. ($node->htmlNode->attrs ? '->addAttributes(%2.var)' : '') . '->attributes()',
 				$name,
-				$words ? 'Part(' . implode(', ', array_map(array($writer, 'formatWord'), $words)) . ')' : '()',
+				$words
+					? $method . 'Part(' . implode(', ', array_map(array($writer, 'formatWord'), $words)) . ')'
+					: "{method_exists(\$_input, '{$method}Part')?'{$method}Part':'{$method}'}()",
 				array_fill_keys(array_keys($node->htmlNode->attrs), NULL)
 			);
 		}
