@@ -332,6 +332,17 @@ Nette.validators = {
 			}
 		}
 		return true;
+	},
+	image: function (elem, arg, val) {
+		if (window.FileList && val instanceof FileList) {
+			for (var i = 0; i < val.length; i++) {
+				var type = val[i].type;
+				if (type && type !== 'image/gif' && type !== 'image/png' && type !== 'image/jpeg') {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 };
 
