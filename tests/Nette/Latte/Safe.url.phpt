@@ -47,8 +47,8 @@ Assert::match('
 <a href=""></a>
 <a href="ok">ok</a>
 <a href=""></a>
-<a href="data:application/octet-stream;base64,b2s="></a>
-<a href="data:application/octet-stream;base64,b2s="></a>
+<a href="data:%a%;base64,b2s="></a>
+<a href="data:%a%;base64,b2s="></a>
 <a href=""></a>
 ', (string) $template);
 
