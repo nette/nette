@@ -21,6 +21,7 @@ $template->url2 = ' javascript:alert(1)';
 $template->url3 = 'data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+';
 $template->url4 = 'ok';
 $template->url5 = '';
+$template->url6 = 'x';
 
 $template->setSource('
 <a href={$url1} src="{$url1}" action={$url1} formaction={$url1} title={$url1}></a>
@@ -32,6 +33,9 @@ $template->setSource('
 <a href={$url3}></a>
 <a href={$url4}>ok</a>
 <a href={$url5}></a>
+<a href={$url6|dataStream}></a>
+<a href={$url6|dataStream|noSafeURL}></a>
+<a href={$url6|dataStream|safeURL}></a>
 ');
 
 Assert::match('
@@ -43,6 +47,9 @@ Assert::match('
 <a HREF=""></a>
 <a href=""></a>
 <a href="ok">ok</a>
+<a href=""></a>
+<a href="data:application/octet-stream;base64,eA=="></a>
+<a href="data:application/octet-stream;base64,eA=="></a>
 <a href=""></a>
 ', (string) $template);
 
