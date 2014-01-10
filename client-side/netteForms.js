@@ -333,16 +333,26 @@ Nette.validators = {
 		}
 		return true;
 	},
-	image: function (elem, arg, val) {
+
+	mimeType: function (elem, arg, val) {
+		arg = Nette.isArray(arg) ? arg : [arg];
+		for (var i = 0, len = arg.length, re = []; i < len; i++) {
+			re.push('^' + arg[i].replace('*', '.*') + '$');
+		}
+		re = new RegExp(re.join('|'));
+
 		if (window.FileList && val instanceof FileList) {
 			for (var i = 0; i < val.length; i++) {
-				var type = val[i].type;
-				if (type && type !== 'image/gif' && type !== 'image/png' && type !== 'image/jpeg') {
+				if (val[i].type && !re.test(val[i].type)) {
 					return false;
 				}
 			}
 		}
 		return true;
+	},
+
+	image: function (elem, arg, val) {
+		return Nette.validators.mimeType(elem, ['image/gif', 'image/png', 'image/jpeg'], val);
 	}
 };
 
