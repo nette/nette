@@ -73,7 +73,9 @@ class TextInput extends TextBase
 		foreach ($this->getRules() as $rule) {
 			if ($rule->isNegative || $rule->type !== Nette\Forms\Rule::VALIDATOR) {
 
-			} elseif ($rule->operation === Nette\Forms\Form::RANGE && $input->type !== 'text') {
+			} elseif ($rule->operation === Nette\Forms\Form::RANGE
+				&& in_array($input->type, array('number', 'range', 'datetime-local', 'datetime', 'date', 'month', 'week', 'time'))
+			) {
 				if (isset($rule->arg[0]) && is_scalar($rule->arg[0])) {
 					$input->min = isset($input->min) ? max($input->min, $rule->arg[0]) : $rule->arg[0];
 				}
@@ -81,7 +83,9 @@ class TextInput extends TextBase
 					$input->max = isset($input->max) ? min($input->max, $rule->arg[1]) : $rule->arg[1];
 				}
 
-			} elseif ($rule->operation === Nette\Forms\Form::PATTERN && is_scalar($rule->arg)) {
+			} elseif ($rule->operation === Nette\Forms\Form::PATTERN && is_scalar($rule->arg)
+				&& in_array($input->type, array('text', 'search', 'tel', 'url', 'email', 'password'))
+			) {
 				$input->pattern = $rule->arg;
 			}
 		}
