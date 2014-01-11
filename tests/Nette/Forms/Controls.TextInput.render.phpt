@@ -80,6 +80,15 @@ test(function() { // search
 });
 
 
+test(function() { // telephone
+	$form = new Form;
+	$input = $form->addTelephone('telephone')
+		->setValue('112');
+
+	Assert::same('<input type="tel" name="telephone" id="frm-telephone" value="112">', (string) $input->getControl());
+});
+
+
 test(function() { // validation rule required & PATTERN
 	$form = new Form;
 	$input = $form->addText('text')
