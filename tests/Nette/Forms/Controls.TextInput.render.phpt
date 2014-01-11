@@ -71,6 +71,15 @@ test(function() { // password
 });
 
 
+test(function() { // search
+	$form = new Form;
+	$input = $form->addSearch('search')
+		->setValue('rtfm');
+
+	Assert::same('<input type="search" name="search" id="frm-search" value="rtfm">', (string) $input->getControl());
+});
+
+
 test(function() { // validation rule required & PATTERN
 	$form = new Form;
 	$input = $form->addText('text')

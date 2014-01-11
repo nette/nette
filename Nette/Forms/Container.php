@@ -240,6 +240,21 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 
 
 	/**
+	 * Adds single-line search input control to the form.
+	 * @param  string  control name
+	 * @param  string  label
+	 * @param  int  maximum number of characters the user may enter
+	 * @return Nette\Forms\Controls\TextInput
+	 */
+	public function addSearch($name, $label = NULL, $maxLength = NULL)
+	{
+		$control = new Controls\TextInput($label, $maxLength);
+		$control->setType('search');
+		return $this[$name] = $control;
+	}
+
+
+	/**
 	 * Adds single-line text input control used for sensitive input such as passwords.
 	 * @param  string  control name
 	 * @param  string  label
