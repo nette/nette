@@ -60,6 +60,14 @@ test(function() { // validators
 	Assert::true( Validator::validateRange($input, array(NULL, NULL)) );
 	Assert::true( Validator::validateRange($input, array(100, 1000)) );
 	Assert::false( Validator::validateRange($input, array(1000, NULL)) );
+
+	Assert::true( Validator::validateMin($input, 122) );
+	Assert::true( Validator::validateMin($input, 123) );
+	Assert::false( Validator::validateMin($input, 124) );
+
+	Assert::false( Validator::validateMax($input, 122) );
+	Assert::true( Validator::validateMax($input, 123) );
+	Assert::true( Validator::validateMax($input, 124) );
 });
 
 

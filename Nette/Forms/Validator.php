@@ -33,6 +33,8 @@ class Validator extends Nette\Object
 		Form::URL => 'Please enter a valid URL.',
 		Form::INTEGER => 'Please enter a valid integer.',
 		Form::FLOAT => 'Please enter a valid number.',
+		Form::MIN => 'Please enter a value greater than or equal to %d.',
+		Form::MAX => 'Please enter a value less than or equal to %d.',
 		Form::RANGE => 'Please enter a value between %d and %d.',
 		Form::MAX_FILE_SIZE => 'The size of the uploaded file can be up to %d bytes.',
 		Form::MAX_POST_SIZE => 'The uploaded data exceeds the limit of %d bytes.',
@@ -143,6 +145,26 @@ class Validator extends Nette\Object
 	public static function validateRange(IControl $control, $range)
 	{
 		return Validators::isInRange($control->getValue(), $range);
+	}
+
+
+	/**
+	 * Is a control's value number greater than or equal to the specified minimum?
+	 * @return bool
+	 */
+	public static function validateMin(IControl $control, $minimum)
+	{
+		return Validators::isInRange($control->getValue(), array($minimum, NULL));
+	}
+
+
+	/**
+	 * Is a control's value number less than or equal to the specified maximum?
+	 * @return bool
+	 */
+	public static function validateMax(IControl $control, $maximum)
+	{
+		return Validators::isInRange($control->getValue(), array(NULL, $maximum));
 	}
 
 

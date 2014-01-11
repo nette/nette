@@ -8,6 +8,7 @@
 namespace Nette\Forms\Controls;
 
 use Nette;
+use Nette\Forms\Form;
 
 
 /**
@@ -37,7 +38,7 @@ class TextInput extends TextBase
 	 */
 	public function loadHttpData()
 	{
-		$this->setValue($this->getHttpData(Nette\Forms\Form::DATA_LINE));
+		$this->setValue($this->getHttpData(Form::DATA_LINE));
 	}
 
 
@@ -64,15 +65,22 @@ class TextInput extends TextBase
 		foreach ($this->getRules() as $rule) {
 			if ($rule->isNegative || $rule->branch) {
 
-			} elseif ($rule->validator === Nette\Forms\Form::RANGE && $input->type !== 'text') {
-				if (isset($rule->arg[0]) && is_scalar($rule->arg[0])) {
-					$input->min = isset($input->min) ? max($input->min, $rule->arg[0]) : $rule->arg[0];
+			} elseif (in_array($rule->validator, array(Form::MIN, Form::MAX, Form::RANGE)) && $input->type !== 'text') {
+				if ($rule->validator === Form::MIN) {
+					$range = array($rule->arg, NULL);
+				} elseif ($rule->validator === Form::MAX) {
+					$range = array(NULL, $rule->arg);
+				} else {
+					$range = $rule->arg;
 				}
-				if (isset($rule->arg[1]) && is_scalar($rule->arg[1])) {
-					$input->max = isset($input->max) ? min($input->max, $rule->arg[1]) : $rule->arg[1];
+				if (isset($range[0]) && is_scalar($range[0])) {
+					$input->min = isset($input->min) ? max($input->min, $range[0]) : $range[0];
+				}
+				if (isset($range[1]) && is_scalar($range[1])) {
+					$input->max = isset($input->max) ? min($input->max, $range[1]) : $range[1];
 				}
 
-			} elseif ($rule->validator === Nette\Forms\Form::PATTERN && is_scalar($rule->arg)) {
+			} elseif ($rule->validator === Form::PATTERN && is_scalar($rule->arg)) {
 				$input->pattern = $rule->arg;
 			}
 		}

@@ -314,6 +314,14 @@ Nette.validators = {
 		return (/^-?[0-9]*[.,]?[0-9]+$/).test(val);
 	},
 
+	min: function(elem, arg, val) {
+		return Nette.validators.range(elem, [arg, null], val);
+	},
+
+	max: function(elem, arg, val) {
+		return Nette.validators.range(elem, [null, arg], val);
+	},
+
 	range: function(elem, arg, val) {
 		return Nette.isArray(arg) ?
 			((arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1])) : null;
