@@ -61,11 +61,13 @@ class TextInput extends TextBase
 	public function getControl()
 	{
 		$input = parent::getControl();
+		$exportPattern = in_array($input->type, array('text', 'search', 'tel', 'url', 'email', 'password'));
+		$exportRange = in_array($input->type, array('number', 'range', 'datetime-local', 'datetime', 'date', 'month', 'week', 'time'));
 
 		foreach ($this->getRules() as $rule) {
 			if ($rule->isNegative || $rule->branch) {
 
-			} elseif (in_array($rule->validator, array(Form::MIN, Form::MAX, Form::RANGE)) && $input->type !== 'text') {
+			} elseif ($exportRange && in_array($rule->validator, array(Form::MIN, Form::MAX, Form::RANGE))) {
 				if ($rule->validator === Form::MIN) {
 					$range = array($rule->arg, NULL);
 				} elseif ($rule->validator === Form::MAX) {
@@ -80,8 +82,8 @@ class TextInput extends TextBase
 					$input->max = isset($input->max) ? min($input->max, $range[1]) : $range[1];
 				}
 
-			} elseif ($rule->validator === Form::PATTERN && is_scalar($rule->arg)) {
-				$input->pattern = $rule->arg;
+			} elseif ($exportPattern && $rule->validator === Form::PATTERN && is_scalar($rule->arg)) {
+				$input->pattern = '\s*(?:' . $rule->arg . ')\s*';
 			}
 		}
 
