@@ -65,7 +65,9 @@ class TextInput extends TextBase
 		foreach ($this->getRules() as $rule) {
 			if ($rule->isNegative || $rule->branch) {
 
-			} elseif (in_array($rule->validator, array(Form::MIN, Form::MAX, Form::RANGE)) && $input->type !== 'text') {
+			} elseif (in_array($rule->validator, array(Form::MIN, Form::MAX, Form::RANGE))
+				&& in_array($input->type, array('number', 'range', 'datetime-local', 'datetime', 'date', 'month', 'week', 'time'))
+			) {
 				if ($rule->validator === Form::MIN) {
 					$range = array($rule->arg, NULL);
 				} elseif ($rule->validator === Form::MAX) {
@@ -80,7 +82,9 @@ class TextInput extends TextBase
 					$input->max = isset($input->max) ? min($input->max, $range[1]) : $range[1];
 				}
 
-			} elseif ($rule->validator === Form::PATTERN && is_scalar($rule->arg)) {
+			} elseif ($rule->validator === Form::PATTERN && is_scalar($rule->arg)
+				&& in_array($input->type, array('text', 'search', 'tel', 'url', 'email', 'password'))
+			) {
 				$input->pattern = $rule->arg;
 			}
 		}
