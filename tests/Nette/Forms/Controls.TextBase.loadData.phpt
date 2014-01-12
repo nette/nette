@@ -25,7 +25,7 @@ test(function() { // trim & new lines
 	$form = new Form;
 	$input = $form->addText('text');
 
-	Assert::same( 'a  b   c', $input->getValue() );
+	Assert::same( 'a b  c', $input->getValue() );
 	Assert::true( $input->isFilled() );
 });
 

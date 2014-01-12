@@ -58,7 +58,7 @@ class Helpers extends Nette\Object
 			return is_scalar($value) ? Strings::normalizeNewLines($value) : NULL;
 
 		} elseif ($type === Form::DATA_LINE) {
-			return is_scalar($value) ? Strings::trim(strtr($value, "\r\n", '  ')) : NULL;
+			return is_scalar($value) ? Strings::trim(str_replace(array("\r", "\n"), '', $value)) : NULL;
 
 		} elseif ($type === Form::DATA_FILE) {
 			return $value instanceof Nette\Http\FileUpload ? $value : NULL;

@@ -30,7 +30,7 @@ test(function() { // non-multiple
 	Assert::null( Helpers::extractHttpData(array('invalid' => array('')), 'invalid', Form::DATA_LINE));
 	Assert::null( Helpers::extractHttpData(array('invalid' => array('')), 'invalid', Form::DATA_TEXT));
 
-	Assert::same('a  b   c', Helpers::extractHttpData(array('text' => "  a\r b \n c "), 'text', Form::DATA_LINE));
+	Assert::same('a b  c', Helpers::extractHttpData(array('text' => "  a\r b \n c "), 'text', Form::DATA_LINE));
 	Assert::same("  a\n b \n c ", Helpers::extractHttpData(array('text' => "  a\r b \n c "), 'text', Form::DATA_TEXT));
 });
 
@@ -51,7 +51,7 @@ test(function() { // multiple
 	Assert::same(array(), Helpers::extractHttpData(array('invalid' => 'red-dwarf'), 'invalid[]', Form::DATA_LINE));
 	Assert::same(array(), Helpers::extractHttpData(array('invalid' => array(array(''))), 'invalid[]', Form::DATA_LINE));
 
-	Assert::same(array('a  b   c'), Helpers::extractHttpData(array('text' => array("  a\r b \n c ")), 'text[]', Form::DATA_LINE));
+	Assert::same(array('a b  c'), Helpers::extractHttpData(array('text' => array("  a\r b \n c ")), 'text[]', Form::DATA_LINE));
 	Assert::same(array("  a\n b \n c "), Helpers::extractHttpData(array('text' => array("  a\r b \n c ")), 'text[]', Form::DATA_TEXT));
 });
 
