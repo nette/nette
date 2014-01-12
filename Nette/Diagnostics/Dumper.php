@@ -293,22 +293,36 @@ class Dumper
 	 */
 	private static function findLocation()
 	{
+		$location = NULL;
 		foreach (debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : FALSE) as $item) {
-			if (isset($item['file']) && strpos($item['file'], __DIR__) === 0) {
+			if (isset($item['class']) && $item['class'] === __CLASS__) {
+				$location = $item;
 				continue;
-
-			} elseif (!isset($item['file'], $item['line']) || !is_file($item['file'])) {
-				break;
-
-			} else {
-				$lines = file($item['file']);
-				$line = $lines[$item['line'] - 1];
-				return array(
-					$item['file'],
-					$item['line'],
-					trim(preg_match('#\w*dump(er::\w+)?\(.*\)#i', $line, $m) ? $m[0] : $line)
-				);
 			}
+			if (!isset($item['function'])) {
+				break;
+			}
+			$reflection = NULL;
+			try {
+				$reflection = isset($item['class'])
+					? new \ReflectionMethod($item['class'], $item['function'])
+					: new \ReflectionFunction($item['function']);
+			} catch (\ReflectionException $e) {}
+			if (!$reflection || !preg_match('#\s@tracySkipLocation\s#', $reflection->getDocComment())) {
+				break;
+			}
+			if (isset($item['file'], $item['line'])) {
+				$location = $item;
+			}
+		}
+		if (isset($location['file'], $location['line']) && is_file($location['file'])) {
+			$lines = file($location['file']);
+			$line = $lines[$location['line'] - 1];
+			return array(
+				$location['file'],
+				$location['line'],
+				trim(preg_match('#\w*dump(er::\w+)?\(.*\)#i', $line, $m) ? $m[0] : $line)
+			);
 		}
 	}
 
