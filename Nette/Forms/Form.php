@@ -55,6 +55,8 @@ class Form extends Container
 		INTEGER = ':integer',
 		NUMERIC = ':integer',
 		FLOAT = ':float',
+		MIN = ':min',
+		MAX = ':max',
 		RANGE = ':range';
 
 	// multiselect
