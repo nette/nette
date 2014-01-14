@@ -28,16 +28,18 @@ class MultiSelectBox extends MultiChoiceControl
 	public function setItems(array $items, $useKeys = TRUE)
 	{
 		if (!$useKeys) {
+			$res = array();
 			foreach ($items as $key => $value) {
 				unset($items[$key]);
 				if (is_array($value)) {
 					foreach ($value as $val) {
-						$items[$key][(string) $val] = $val;
+						$res[$key][(string) $val] = $val;
 					}
 				} else {
-					$items[(string) $value] = $value;
+					$res[(string) $value] = $value;
 				}
 			}
+			$items = $res;
 		}
 		$this->options = $items;
 		return parent::setItems(Nette\Utils\Arrays::flatten($items, TRUE));
