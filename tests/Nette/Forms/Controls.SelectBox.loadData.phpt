@@ -181,6 +181,13 @@ test(function() use ($series) { // setItems without keys
 });
 
 
+test(function() use ($series) { // setItems without keys
+	$form = new Form;
+	$input = $form->addSelect('select')->setItems(range(1, 5), FALSE);
+	Assert::same( array(1 => 1, 2, 3, 4, 5), $input->getItems() );
+});
+
+
 test(function() { // setItems without keys with optgroups
 	$_POST = array('select' => 'red-dwarf');
 
