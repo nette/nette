@@ -46,18 +46,13 @@ class ContainerPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	 */
 	public function getPanel()
 	{
-		$services = $factories = array();
+		$services = array();
 		foreach (Nette\Reflection\ClassType::from($this->container)->getMethods() as $method) {
-			if (preg_match('#^create(Service)?_*(.+)\z#', $method->getName(), $m)) {
-				if ($m[1]) {
-					$services[str_replace('__', '.', strtolower(substr($m[2], 0, 1)) . substr($m[2], 1))] = $method->getAnnotation('return');
-				} elseif ($method->isPublic()) {
-					$factories['create' . $m[2]] = $method->getAnnotation('return');
-				}
+			if (preg_match('#^createService_*(.+)\z#', $method->getName(), $m)) {
+				$services[str_replace('__', '.', strtolower(substr($m[1], 0, 1)) . substr($m[1], 1))] = $method->getAnnotation('return');
 			}
 		}
 		ksort($services);
-		ksort($factories);
 		$container = $this->container;
 		$registry = $this->getContainerProperty('registry');
 		$tags = array();

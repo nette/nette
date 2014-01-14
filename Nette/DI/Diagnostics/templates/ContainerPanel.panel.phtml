@@ -32,12 +32,6 @@ use Nette,
 <h1><?php echo get_class($this->container) ?></h1>
 
 <div class="nette-inner">
-	<h2>Parameters</h2>
-
-	<div class="nette-ContainerPanel-parameters">
-		<?php echo Dumper::toHtml($this->container->parameters); ?>
-	</div>
-
 	<h2>Services</h2>
 
 	<table>
@@ -70,23 +64,10 @@ use Nette,
 		</tbody>
 	</table>
 
-	<h2>Factories</h2>
+	<h2>Parameters</h2>
 
-	<table>
-		<thead>
-		<tr>
-			<th>Method</th>
-			<th>Returns</th>
-		</tr>
-		</thead>
-		<tbody>
-		<?php foreach ($factories as $name => $class): ?>
-		<tr>
-			<td><?php echo htmlSpecialChars($name) ?>()</td>
-			<td><code><?php echo htmlSpecialChars($class) ?><code></td>
-		</tr>
-		<?php endforeach ?>
-		</tbody>
-	</table>
+	<div class="nette-ContainerPanel-parameters">
+		<?php echo Dumper::toHtml($this->container->parameters); ?>
+	</div>
 </div>
 </div>
