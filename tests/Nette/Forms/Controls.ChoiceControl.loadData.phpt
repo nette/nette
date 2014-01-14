@@ -128,6 +128,12 @@ test(function() use ($series) { // setItems without keys
 	$form = new Form;
 	$input = $form['select'] = new ChoiceControl;
 	$input->setItems(array_keys($series), FALSE);
+	Assert::same( array(
+		'red-dwarf' => 'red-dwarf',
+		'the-simpsons' => 'the-simpsons',
+		0 => 0,
+		'' => '',
+	), $input->getItems() );
 
 	Assert::true( $form->isValid() );
 	Assert::same( 'red-dwarf', $input->getValue() );

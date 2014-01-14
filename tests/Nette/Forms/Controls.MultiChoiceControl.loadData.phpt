@@ -108,6 +108,26 @@ test(function() use ($series) { // malformed data
 });
 
 
+test(function() use ($series) { // setItems without keys
+	$_POST = array('multi' => array('red-dwarf'));
+
+	$form = new Form;
+	$input = $form['multi'] = new MultiChoiceControl;
+	$input->setItems(array_keys($series), FALSE);
+	Assert::same( array(
+		'red-dwarf' => 'red-dwarf',
+		'the-simpsons' => 'the-simpsons',
+		0 => 0,
+		'' => '',
+	), $input->getItems() );
+
+	Assert::true( $form->isValid() );
+	Assert::same( array('red-dwarf'), $input->getValue() );
+	Assert::same( array('red-dwarf' => 'red-dwarf'), $input->getSelectedItems() );
+	Assert::true( $input->isFilled() );
+});
+
+
 test(function() use ($series) { // validateLength
 	$_POST = array('multi' => array('red-dwarf', 'unknown', 0));
 

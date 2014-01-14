@@ -11,7 +11,7 @@ use Nette\Diagnostics\Debugger;
 if (!function_exists('dump')) {
 	/**
 	 * Nette\Diagnostics\Debugger::dump() shortcut.
-	 * @tracySkipLocation	 
+	 * @tracySkipLocation
 	 */
 	function dump($var)
 	{
