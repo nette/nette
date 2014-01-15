@@ -150,6 +150,7 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 		$handle = @fopen($cacheFile, 'r+b'); // @ - file may not exist
 		if (!$handle) {
 			$handle = fopen($cacheFile, 'wb');
+			chmod($cacheFile, 0666);
 			if (!$handle) {
 				return;
 			}
