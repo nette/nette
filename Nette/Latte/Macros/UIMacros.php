@@ -95,7 +95,7 @@ class UIMacros extends MacroSet
 				$prolog[] = "//\n// block $name\n//\n"
 					. "if (!function_exists(\$_l->blocks[" . var_export($name, TRUE) . "][] = '$func')) { "
 					. "function $func(\$_l, \$_args) { foreach (\$_args as \$__k => \$__v) \$\$__k = \$__v"
-					. ($snippet ? '; $_control->redrawControl(' . var_export(substr($name, 1), TRUE) . ', FALSE)' : '')
+					. ($snippet ? '; $_control->redrawControl(' . var_export(substr($name, 1), TRUE) . ', FALSE); $_dynSnippets = new stdClass()' : '')
 					. "\n?>$code<?php\n}}";
 			}
 			$prolog[] = "//\n// end of blocks\n//";
@@ -231,7 +231,7 @@ if (!empty($_control->snippetMode)) {
 				}
 				$parent->data->dynamic = TRUE;
 				$node->data->leave = TRUE;
-				$node->closingCode = "<?php \$_dynSnippets[\$_dynSnippetId] = ob_get_flush() ?>";
+				$node->closingCode = "<?php \$_dynSnippets->{\$_dynSnippetId} = ob_get_flush() ?>";
 
 				if ($node->prefix) {
 					$node->attrCode = $writer->write("<?php echo ' id=\"' . (\$_dynSnippetId = \$_control->getSnippetId({$writer->formatWord($name)})) . '\"' ?>");
@@ -315,7 +315,7 @@ if (!empty($_control->snippetMode)) {
 					$node->content = "<?php \$_control->snippetMode = TRUE; ?>{$node->content}<?php \$_control->snippetMode = FALSE; ?>";
 				}
 				if (!empty($node->data->dynamic)) {
-					$node->content .= '<?php if (isset($_dynSnippets)) return $_dynSnippets; ?>';
+					$node->content .= '<?php return (array)$_dynSnippets; ?>';
 				}
 				if ($node->name === 'snippetArea') {
 					$node->content .= '<?php return FALSE; ?>';
