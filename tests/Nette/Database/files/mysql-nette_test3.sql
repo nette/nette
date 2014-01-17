@@ -41,6 +41,6 @@ CREATE TABLE `types` (
 ) ENGINE=InnoDB;
 
 INSERT INTO `types` (`unsigned_int`, `int`, `smallint`, `tinyint`, `mediumint`, `bigint`, `bit`, `decimal`, `decimal2`, `float`, `double`, `date`, `time`, `datetime`, `timestamp`, `year`, `char`, `varchar`, `binary`, `varbinary`, `blob`, `tinyblob`, `mediumblob`, `longblob`, `text`, `tinytext`, `mediumtext`, `longtext`, `enum`, `set`) VALUES
-(1,	1,	1,	1,	1,	1,	1,	1,	1.1,	1,	1.1,	'2012-10-13',	'10:10:10',	'2012-10-13 10:10:10',	'2012-10-13 10:10:10',	'2012',	'a',	'a',	'a',	'a',	'a',	'a',	'a',	'a',	'a',	'a',	'a',	'a',	'a',	'a'),
+(1,	1,	1,	1,	1,	1,	1,	1,	1.1,	1,	1.1,	'2012-10-13',	'30:10:10',	'2012-10-13 10:10:10',	'2012-10-13 10:10:10',	'2012',	'a',	'a',	'a',	'a',	'a',	'a',	'a',	'a',	'a',	'a',	'a',	'a',	'a',	'a'),
 (0,	0,	0,	0,	0,	0,	0,	0,	0.5,	0.5,	0.5,	'0000-00-00',	'00:00:00',	'0000-00-00 00:00:00',	'0000-00-00 00:00:00',	'2000',	'',	'',	'\0',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'b',	''),
 (NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
