@@ -30,7 +30,7 @@ Assert::equal( array(
 	'float' => 1.0,
 	'double' => 1.1,
 	'date' => new Nette\DateTime('2012-10-13'),
-	'time' => new DateInterval('PT10H10M10S'),
+	'time' => new DateInterval('PT30H10M10S'),
 	'datetime' => new Nette\DateTime('2012-10-13 10:10:10'),
 	'timestamp' => new Nette\DateTime('2012-10-13 10:10:10'),
 	'year' => PHP_VERSION_ID < 50417 ? '2012' : 2012, // PHP bug #48724
