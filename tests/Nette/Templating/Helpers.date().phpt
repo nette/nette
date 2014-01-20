@@ -35,3 +35,6 @@ Assert::same( "1212-09-26", Helpers::date('1212-09-26', 'Y-m-d'), "TemplateHelpe
 
 
 Assert::same( "1212-09-26", Helpers::date(new DateTime('1212-09-26'), 'Y-m-d'), "TemplateHelpers::date(DateTime, format)" );
+
+
+Assert::same( "30:10:10", Helpers::date(new DateInterval('PT30H10M10S'), '%H:%I:%S'), "TemplateHelpers::date(DateInterval, format)" );

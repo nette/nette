@@ -188,7 +188,7 @@ class Helpers
 
 	/**
 	 * Date/time formatting.
-	 * @param  string|int|DateTime
+	 * @param  string|int|DateTime|DateInterval
 	 * @param  string
 	 * @return string
 	 */
@@ -200,6 +200,10 @@ class Helpers
 
 		if (!isset($format)) {
 			$format = self::$dateFormat;
+		}
+
+		if ($time instanceof \DateInterval) {
+			return $time->format($format);
 		}
 
 		$time = Nette\DateTime::from($time);
