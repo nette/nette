@@ -35,6 +35,7 @@ class Helpers
 		'reverse' =>  'Nette\Utils\Strings::reverse',
 		'replacere' => 'Nette\Utils\Strings::replace',
 		'url' => 'rawurlencode',
+		'escapeurl' => 'rawurlencode',
 		'striptags' => 'strip_tags',
 		'substr' => 'Nette\Utils\Strings::substring',
 		'repeat' => 'str_repeat',
