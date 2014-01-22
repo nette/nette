@@ -711,12 +711,19 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 		}
 
 		$return = $this->connection->query($this->sqlBuilder->buildInsertQuery(), $data);
+		$this->loadRefCache();
 
 		if ($data instanceof Nette\Database\SqlLiteral || $this->primary === NULL) {
+			unset($this->refCache['referencing'][$this->getGeneralCacheKey()][$this->getSpecificCacheKey()]);
 			return $return->getRowCount();
 		}
 
 		$primaryKey = $this->connection->getInsertId($this->getPrimarySequence());
+		if ($primaryKey === FALSE) {
+			unset($this->refCache['referencing'][$this->getGeneralCacheKey()][$this->getSpecificCacheKey()]);
+			return $return->getRowCount();
+		}
+
 		if (is_array($this->getPrimary())) {
 			$primaryKey = array();
 
@@ -737,7 +744,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 			->wherePrimary($primaryKey)
 			->fetch();
 
-		$this->loadRefCache();
 		if ($this->rows !== NULL) {
 			if ($signature = $row->getSignature(FALSE)) {
 				$this->rows[$signature] = $row;
