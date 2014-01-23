@@ -161,15 +161,7 @@ class Request extends Nette\Object implements IRequest
 	 */
 	public function getCookie($key, $default = NULL)
 	{
-		if (func_num_args() === 0) {
-			return $this->cookies;
-
-		} elseif (isset($this->cookies[$key])) {
-			return $this->cookies[$key];
-
-		} else {
-			return $default;
-		}
+		return isset($this->cookies[$key]) ? $this->cookies[$key] : $default;
 	}
 
 
