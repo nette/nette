@@ -97,3 +97,9 @@ Assert::same(array(
 		'snippet--array-3' => 'Value 3',
 	),
 ), (array) $presenter->payload);
+
+$presenter = new TestPresenter;
+ob_start();
+$presenter->render();
+$content = ob_get_clean();
+Assert::matchFile(__DIR__ .'/expected/UIMacros.renderSnippets.html', $content);
