@@ -14,13 +14,11 @@ if (!class_exists('PDO')) {
 	Tester\Environment::skip('Requires PHP extension PDO.');
 }
 
-if (!is_file(__DIR__ . '/databases.ini')) {
-	Tester\Environment::skip('Missing file databases.ini');
+try {
+	$options = Tester\DataProvider::loadCurrent() + array('user' => NULL, 'password' => NULL);
+} catch (Exception $e) {
+	Tester\Environment::skip($e->getMessage());
 }
-
-$options = Tester\DataProvider::load(__DIR__ . '/databases.ini', isset($query) ? $query : NULL);
-$options = isset($_SERVER['argv'][1]) ? $options[$_SERVER['argv'][1]] : reset($options);
-$options += array('user' => NULL, 'password' => NULL);
 
 try {
 	$connection = new Nette\Database\Connection($options['dsn'], $options['user'], $options['password']);
