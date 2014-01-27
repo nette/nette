@@ -311,7 +311,7 @@ class Response extends Nette\Object implements IResponse
 	{
 		if (headers_sent($file, $line)) {
 			throw new Nette\InvalidStateException('Cannot send header after HTTP headers have been sent' . ($file ? " (output started at $file:$line)." : '.'));
-		} elseif (ob_get_length() && ($info = ob_get_status(TRUE)) && $info[0]['chunk_size']) {
+		} elseif (ob_get_length() && !array_filter(ob_get_status(TRUE), function($i) { return !$i['chunk_size']; })) {
 			trigger_error('Possible problem: you are sending a HTTP header while already having some data in output buffer. Try OutputDebugger or start session earlier.', E_USER_NOTICE);
 		}
 	}
