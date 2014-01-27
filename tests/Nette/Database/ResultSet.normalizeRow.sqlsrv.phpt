@@ -9,7 +9,6 @@
 
 use Tester\Assert;
 
-$query = 'sqlsrv';
 require __DIR__ . '/connect.inc.php'; // create $connection
 
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/files/sqlsrv-nette_test3.sql');
