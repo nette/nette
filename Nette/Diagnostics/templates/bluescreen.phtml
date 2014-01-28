@@ -370,7 +370,7 @@ $counter = 0;
 			return;
 		}
 
-		for (var link = e.target || e.srcElement; link && (!link.tagName || link.className.indexOf('nette-toggle') < 0); link = link.parentNode) {}
+		for (var link = e.target || e.srcElement; link && (!link.tagName || !link.className.match(/\bnette-toggle(-collapsed)?\b/)); link = link.parentNode) {}
 		if (!link) {
 			return true;
 		}
