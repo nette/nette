@@ -45,7 +45,7 @@ class CsrfProtection extends HiddenField
 	/**
 	 * @return string
 	 */
-	public function getToken()
+	protected function getToken()
 	{
 		$session = $this->getSession()->getSection(__CLASS__);
 		if (!isset($session->token)) {
@@ -56,13 +56,26 @@ class CsrfProtection extends HiddenField
 
 
 	/**
+	 * @param  string|NULL
+	 * @return string
+	 */
+	protected function generateToken($random = NULL)
+	{
+		if ($random === NULL) {
+			$random = Nette\Utils\Strings::random(10);
+		}
+		return $random . base64_encode(sha1($this->getToken() . $random, TRUE));
+	}
+
+
+	/**
 	 * Generates control's HTML element.
 	 *
 	 * @return Nette\Utils\Html
 	 */
 	public function getControl()
 	{
-		return parent::getControl()->value($this->getToken());
+		return parent::getControl()->value($this->generateToken());
 	}
 
 
@@ -71,7 +84,8 @@ class CsrfProtection extends HiddenField
 	 */
 	public static function validateCsrf(CsrfProtection $control)
 	{
-		return $control->getValue() === $control->getToken();
+		$value = $control->getValue();
+		return $control->generateToken(substr($value, 0, 10)) === $value;
 	}
 
 

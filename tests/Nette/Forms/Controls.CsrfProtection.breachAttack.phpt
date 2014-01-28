@@ -20,11 +20,11 @@ $input = $form->addProtection('Security token did not match. Possible CSRF attac
 
 $target = strlen($input->getControl()->value);
 
-$charlist = 'abcdefghijklmnopqrstuvwxyz0123456789';
+$charlist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
 $strings = array();
-for ($a = 0; $a < 36; $a++) {
-	for ($b = 0; $b < 36; $b++) {
+for ($a = 0; $a < 65; $a++) {
+	for ($b = 0; $b < 65; $b++) {
 		$strings[] = $charlist[$a] . $charlist[$b];
 	}
 }
@@ -34,7 +34,7 @@ for ($i = 3; $i <= $target; $i++) {
 	$shortest = NULL;
 	$newStrings = array();
 	foreach ($strings as $string) {
-		for ($j = 0; $j < 36; $j++) {
+		for ($j = 0; $j < 65; $j++) {
 			$s = $string . $charlist[$j];
 			$length = strlen(gzdeflate($code . '<input type="text" value="' . $s . '">'));
 			if ($shortest === NULL || $length < $shortest) {
