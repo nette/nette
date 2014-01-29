@@ -400,7 +400,7 @@ class Message extends MimePart
 	/** @return string */
 	private function getRandomId()
 	{
-		return '<' . Strings::random() . '@'
+		return '<' . Nette\Utils\Random::generate() . '@'
 			. preg_replace('#[^\w.-]+#', '', isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : php_uname('n'))
 			. '>';
 	}

@@ -49,7 +49,7 @@ class CsrfProtection extends HiddenField
 	{
 		$session = $this->getSession()->getSection(__CLASS__);
 		if (!isset($session->token)) {
-			$session->token = Nette\Utils\Strings::random();
+			$session->token = Nette\Utils\Random::generate();
 		}
 		return $session->token;
 	}
@@ -61,7 +61,7 @@ class CsrfProtection extends HiddenField
 	private function generateToken($random = NULL)
 	{
 		if ($random === NULL) {
-			$random = Nette\Utils\Strings::random(10);
+			$random = Nette\Utils\Random::generate(10);
 		}
 		return $random . base64_encode(sha1($this->getToken() . $random, TRUE));
 	}

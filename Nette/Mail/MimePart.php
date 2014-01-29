@@ -242,7 +242,7 @@ class MimePart extends Nette\Object
 	public function getEncodedMessage()
 	{
 		$output = '';
-		$boundary = '--------' . Strings::random();
+		$boundary = '--------' . Nette\Utils\Random::generate();
 
 		foreach ($this->headers as $name => $value) {
 			$output .= $name . ': ' . $this->getEncodedHeader($name);

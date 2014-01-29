@@ -1071,7 +1071,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		$session = $this->session->getSection('Nette.Application/requests');
 		do {
-			$key = Nette\Utils\Strings::random(5);
+			$key = Nette\Utils\Random::generate(5);
 		} while (isset($session[$key]));
 
 		$session[$key] = array($this->user->getId(), $this->request);
@@ -1288,7 +1288,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	public function getFlashSession()
 	{
 		if (empty($this->params[self::FLASH_KEY])) {
-			$this->params[self::FLASH_KEY] = Nette\Utils\Strings::random(4);
+			$this->params[self::FLASH_KEY] = Nette\Utils\Random::generate(4);
 		}
 		return $this->session->getSection('Nette.Application.Flash/' . $this->params[self::FLASH_KEY]);
 	}
