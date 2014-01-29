@@ -425,6 +425,8 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			}
 			$initialize->addBody('header(?);', array("X-Frame-Options: $frames"));
 		}
+		
+		$initialize->addBody('Nette\Http\BreachFix::enable();');
 
 		foreach ($container->findByTag('run') as $name => $on) {
 			if ($on) {
