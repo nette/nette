@@ -241,7 +241,12 @@ class Validators extends Nette\Object
 		$alpha = "a-z\x80-\xFF"; // superset of IDN
 		$domain = "[0-9$alpha](?:[-0-9$alpha]{0,61}[0-9$alpha])?"; // RFC 1034 one domain component
 		$topDomain = "[$alpha](?:[-0-9$alpha]{0,17}[$alpha])?";
-		return (bool) preg_match("(^$localPart@(?:$domain\\.)+$topDomain\\z)i", $value);
+		$syntaxCheck = (bool) preg_match("(^$localPart@(?:$domain\\.)+$topDomain\\z)i", $value);
+		if(!$syntaxCheck) {
+			return FALSE;
+		}
+		preg_match("((?:$domain\\.)+$topDomain\\z)i",$value,$match);
+		return (bool) getmxrr($match[0]); // Check for MX records
 	}
 
 
