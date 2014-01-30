@@ -1101,6 +1101,27 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
+	/********************* CSRF protection ****************d*g**/
+
+
+	/**
+	 * Displays confirmation dialog which prevents Cross-Site Request Forgery (CSRF).
+	 * @param  array
+	 * @param  string|NULL
+	 * @param  string|NULL
+	 * @return void
+	 */
+	public function displayCsrfConfirmationDialog(array $post, $question = NULL, $buttonCaption = NULL)
+	{
+		$template = new Nette\Templating\FileTemplate;
+		$template->setFile(__DIR__ . '/templates/confirmationDialog.phtml');
+		$template->post = $post;
+		$template->question = $question;
+		$template->buttonCaption = $buttonCaption;
+		$this->sendResponse(new Responses\TextResponse($template));
+	}
+
+
 	/********************* interface IStatePersistent ****************d*g**/
 
 

@@ -24,6 +24,9 @@ use Nette;
  */
 abstract class PresenterComponent extends Nette\ComponentModel\Container implements ISignalReceiver, IStatePersistent, \ArrayAccess
 {
+	/** @internal protection token key */
+	const PROTECTOR_KEY = '_token_';
+
 	/** @var array */
 	protected $params = array();
 
@@ -111,6 +114,60 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	public static function getReflection()
 	{
 		return new PresenterComponentReflection(get_called_class());
+	}
+
+
+	/********************* CSRF protection ****************d*g**/
+
+
+	/**
+	 * Cross-Site Request Forgery (CSRF) protection.
+	 * @param  string
+	 * @return void
+	 */
+	protected function addProtection($question = NULL)
+	{
+		$presenter = $this->getPresenter();
+		$post = $presenter->getRequest()->getPost();
+		if (empty($post[self::PROTECTOR_KEY]) || !$this->checkCsrfToken($post[self::PROTECTOR_KEY])) {
+			$presenter->displayCsrfConfirmationDialog($this->getCsrfPost(), $question);
+		}
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public function getCsrfPost()
+	{
+		return array(self::PROTECTOR_KEY => $this->generateCsrfToken());
+	}
+
+
+	/**
+	 * @param  string
+	 * @return string
+	 */
+	private function generateCsrfToken($random = NULL)
+	{
+		if ($random === NULL) {
+			$random = Nette\Utils\Random::generate(10);
+		}
+		$session = $this->getPresenter()->getSession(__CLASS__);
+		if (!isset($session->csrfToken)) {
+			$session->csrfToken = Nette\Utils\Random::generate();
+		}
+		return $random . base64_encode(sha1($session->csrfToken . $random, TRUE));
+	}
+
+
+	/**
+	 * @param  string
+	 * @return bool
+	 */
+	private function checkCsrfToken($token)
+	{
+		return $this->generateCsrfToken(substr($token, 0, 10)) === $token;
 	}
 
 

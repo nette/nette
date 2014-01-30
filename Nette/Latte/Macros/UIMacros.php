@@ -57,6 +57,7 @@ class UIMacros extends MacroSet
 		$me->addMacro('plink', array($me, 'macroLink'));
 		$me->addMacro('link', array($me, 'macroLink'));
 		$me->addMacro('ifCurrent', array($me, 'macroIfCurrent'), '}'); // deprecated; use n:class="$presenter->linkCurrent ? ..."
+		$me->addMacro('secured', NULL, NULL, array($me, 'macroSecured'));
 
 		$me->addMacro('contentType', array($me, 'macroContentType'));
 		$me->addMacro('status', array($me, 'macroStatus'));
@@ -388,6 +389,15 @@ if (!empty($_control->snippetMode)) {
 	{
 		return $writer->write(($node->args ? 'try { $_presenter->link(%node.word, %node.array?); } catch (Nette\Application\UI\InvalidLinkException $e) {}' : '')
 			. '; if ($_presenter->getLastCreatedRequestFlag("current")) {');
+	}
+
+
+	/**
+	 * n:secured
+	 */
+	public function macroSecured(MacroNode $node, PhpWriter $writer)
+	{
+		return $writer->write('?> data-nette-post="<?php echo htmlspecialchars(Nette\Utils\Json::encode($control->getCsrfPost())) ?>"<?php');
 	}
 
 
