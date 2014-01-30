@@ -41,7 +41,7 @@ class Passwords
 		}
 
 		$password = substr($password, 0, self::PASSWORD_MAX_LENGTH);
-		$hash = crypt($password, $x = '$2y$' . ($cost < 10 ? 0 : '') . $cost . '$' . $salt);
+		$hash = crypt($password, '$2y$' . ($cost < 10 ? 0 : '') . $cost . '$' . $salt);
 		if (strlen($hash) < 60) {
 			throw new Nette\InvalidStateException('Hash returned by crypt is invalid.');
 		}
