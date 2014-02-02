@@ -17,6 +17,7 @@ Assert::same( '', Helpers::safeUrl('') );
 Assert::same( '', Helpers::safeUrl('http://') );
 Assert::same( 'http://x', Helpers::safeUrl('http://x') );
 Assert::same( 'http://x:80', Helpers::safeUrl('http://x:80') );
+Assert::same( '', Helpers::safeUrl('http://nette.org@1572395127') );
 Assert::same( 'https://x', Helpers::safeUrl('https://x') );
 Assert::same( 'ftp://x', Helpers::safeUrl('ftp://x') );
 Assert::same( 'mailto:x', Helpers::safeUrl('mailto:x') );
