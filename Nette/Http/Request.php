@@ -293,13 +293,14 @@ class Request extends Nette\Object implements IRequest
 	/**
 	 * Parse Accept-Language header and returns prefered language.
 	 * @param  array   Supported languages
+	 * @param  string  Fallback language
 	 * @return string
 	 */
-	public function detectLanguage(array $langs)
+	public function detectLanguage(array $langs, $default = NULL)
 	{
 		$header = $this->getHeader('Accept-Language');
 		if (!$header) {
-			return NULL;
+			return $default;
 		}
 
 		$s = strtolower($header);  // case insensitive
@@ -308,7 +309,7 @@ class Request extends Nette\Object implements IRequest
 		preg_match_all('#(' . implode('|', $langs) . ')(?:-[^\s,;=]+)?\s*(?:;\s*q=([0-9.]+))?#', $s, $matches);
 
 		if (!$matches[0]) {
-			return NULL;
+			return $default;
 		}
 
 		$max = 0;
