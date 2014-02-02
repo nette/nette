@@ -1051,7 +1051,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 			return '#';
 
 		} elseif ($this->invalidLinkMode === self::INVALID_LINK_WARNING) {
-			return 'error: ' . $e->getMessage();
+			return '#error: ' . $e->getMessage();
 
 		} else { // self::INVALID_LINK_EXCEPTION
 			throw $e;
