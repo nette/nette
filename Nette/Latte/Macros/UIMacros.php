@@ -312,7 +312,7 @@ if (!empty($_control->snippetMode)) {
 
 			if (empty($node->data->leave)) {
 				if ($node->name === 'snippetArea') {
-					$node->content = "<?php \$_control->snippetMode = TRUE; ?>{$node->content}<?php \$_control->snippetMode = FALSE; ?>";
+					$node->content = "<?php \$_control->snippetMode = isset(\$_snippetMode) && \$_snippetMode; ?>{$node->content}<?php \$_control->snippetMode = FALSE; ?>";
 				}
 				if (!empty($node->data->dynamic)) {
 					$node->content .= '<?php if (isset($_dynSnippets)) return $_dynSnippets; ?>';
@@ -477,7 +477,7 @@ if (!empty($_control->snippetMode)) {
 				}
 				ob_start();
 				$function = reset($function);
-				$snippets = $function($local, $params);
+				$snippets = $function($local, $params + array('_snippetMode' => TRUE));
 				$payload->snippets[$id = $control->getSnippetId(substr($name, 1))] = ob_get_clean();
 				if ($snippets !== NULL) { // pass FALSE from snippetArea
 					if ($snippets) {
