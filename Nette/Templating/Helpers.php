@@ -154,7 +154,7 @@ class Helpers
 	 */
 	public static function safeUrl($s)
 	{
-		return preg_match('#^(https?://.+|ftp://.+|mailto:.+|[^:]+)\z#i', $s) ? $s : '';
+		return preg_match('~^(https?://.+|ftp://.+|mailto:.+|[/?#].*|[^:]+)\z~i', $s) ? $s : '';
 	}
 
 
