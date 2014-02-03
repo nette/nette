@@ -377,7 +377,9 @@ if (!empty($_control->snippetMode)) {
 	 */
 	public function macroLink(MacroNode $node, PhpWriter $writer)
 	{
-		return $writer->write('echo %escape(%modify(' . ($node->name === 'plink' ? '$_presenter' : '$_control') . '->link(%node.word, %node.array?)))');
+		$node->modifiers = preg_replace('#\|safeurl\s*(?=\||\z)#i', '', $node->modifiers);
+		return $writer->using($node, $this->getCompiler())
+			->write('echo %escape(%modify(' . ($node->name === 'plink' ? '$_presenter' : '$_control') . '->link(%node.word, %node.array?)))');
 	}
 
 
