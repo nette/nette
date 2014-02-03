@@ -72,12 +72,13 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 <?php $iterations++; } ?>
 
 
-<form id="myForm" class="ajax"<?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array (
+<?php if (1) { ?><form id="myForm" class="ajax"<?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array (
   'id' => NULL,
   'class' => NULL,
 ), FALSE) ?>>
 	<input<?php $_input = $_form["username"]; echo $_input->{method_exists($_input, 'getControlPart')?'getControlPart':'getControl'}()->attributes() ?>>
 <?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form, FALSE) ?></form>
+<?php } ?>
 
 
 <FORM<?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = is_object($_control['myForm']) ? $_control['myForm'] : $_control[$_control['myForm']], array (
@@ -90,8 +91,9 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 ><?php echo $_input->getControl()->getHtml() ?></select>
 
 
-<textarea<?php $_input = $_form["area"]; echo $_input->{method_exists($_input, 'getControlPart')?'getControlPart':'getControl'}()->attributes() ?>
-><?php echo $_input->getControl()->getHtml() ?></textarea>
+<textarea title="<?php echo htmlSpecialChars(10) ?>"<?php $_input = $_form["area"]; echo $_input->{method_exists($_input, 'getControlPart')?'getControlPart':'getControl'}()->addAttributes(array (
+  'title' => NULL,
+))->attributes() ?>><?php echo $_input->getControl()->getHtml() ?></textarea>
 
 
 <select<?php $_input = $_form["select"]; echo $_input->{method_exists($_input, 'getControlPart')?'getControlPart':'getControl'}()->attributes() ?>

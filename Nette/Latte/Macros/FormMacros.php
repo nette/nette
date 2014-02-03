@@ -191,7 +191,7 @@ class FormMacros extends MacroSet
 
 	public function macroNameEnd(MacroNode $node, PhpWriter $writer)
 	{
-		preg_match('#(^.*?>)(.*)(<.*\z)#s', $node->content, $parts);
+		preg_match('#^(.*? n:\w+>)(.*)(<[^?].*)\z#s', $node->content, $parts);
 		if (strtolower($node->htmlNode->name) === 'form') {
 			$node->content = $parts[1] . $parts[2] . '<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form, FALSE) ?>' . $parts[3];
 		} else { // select, textarea
