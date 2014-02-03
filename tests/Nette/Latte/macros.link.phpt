@@ -22,7 +22,7 @@ class MockControl
 			$args = array_slice(func_get_args(), 1);
 		}
 		array_unshift($args, $destination);
-		return 'link(' . strtr(json_encode($args), '"', "'") . ')';
+		return 'link:' . strtr(json_encode($args), '"', "'");
 	}
 
 }
@@ -37,7 +37,7 @@ class MockPresenter extends MockControl
 			$args = array_slice(func_get_args(), 1);
 		}
 		array_unshift($args, $destination);
-		return 'plink(' . strtr(json_encode($args), '"', "'") . ')';
+		return 'plink:' . strtr(json_encode($args), '"', "'");
 	}
 
 	public function isAjax() {
@@ -56,35 +56,35 @@ $template->action = 'login';
 $template->arr = array('link' => 'login', 'param' => 123);
 
 Assert::match(<<<EOD
-plink(['Homepage:'])
+plink:['Homepage:']
 
-plink(['Homepage:'])
+plink:['Homepage:']
 
-plink(['Homepage:action'])
+plink:['Homepage:action']
 
-plink(['Homepage:action'])
+plink:['Homepage:action']
 
-plink(['Homepage:action',10,20,'{one}&amp;two'])
+plink:['Homepage:action',10,20,'{one}&amp;two']
 
-plink(['Homepage:action#hash',10,20,'{one}&amp;two'])
+plink:['Homepage:action#hash',10,20,'{one}&amp;two']
 
-plink(['#hash'])
+plink:['#hash']
 
-plink([':',10])
+plink:[':',10]
 
-plink({'0':'default','1':10,'a':20,'b':30})
+plink:{'0':'default','1':10,'a':20,'b':30}
 
-link(['login'])
+link:['login']
 
-plink(['login',123])
+<a href="plink:['login',123]"></a>
 
-link({'0':'default!','1':10,'a':20,'b':30})
+<a href="link:{'0':'default!','1':10,'a':20,'b':30}"></a>
 
-<a href="link(['Homepage:'])"></a>
+<a href="link:['Homepage:']"></a>
 
-<a href="link({'0':'default!','1':10,'a':20,'b':30})"></a>
+<a href="link:{'0':'default!','1':10,'a':20,'b':30}"></a>
 
-<a href="link(['default!#hash',10,20])"></a>
+<a href="link:['default!#hash',10,20]"></a>
 EOD
 
 , (string) $template->setSource(<<<EOD
@@ -108,9 +108,9 @@ EOD
 
 {link  \$action}
 
-{plink \$arr['link'], \$arr['param']}
+<a href="{plink \$arr['link'], \$arr['param']}"></a>
 
-{link default! 10, 'a' => 20, 'b' => 30}
+<a href="{link default! 10, 'a' => 20, 'b' => 30}"></a>
 
 <a n:href="Homepage:"></a>
 
