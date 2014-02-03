@@ -15,7 +15,7 @@ require __DIR__ . '/../bootstrap.php';
 
 $template = new Nette\Templating\Template;
 $template->registerFilter(new Latte\Engine);
-$template->registerHelperLoader('Nette\Templating\Helpers::loader');
+$template->registerHelper('datastream', 'Nette\Templating\Helpers::dataStream');
 $template->url1 = 'javascript:alert(1)';
 $template->url2 = ' javascript:alert(1)';
 $template->url3 = 'data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+';
