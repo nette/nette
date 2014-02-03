@@ -92,3 +92,7 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 
 <textarea<?php $_input = $_form["area"]; echo $_input->{method_exists($_input, 'getControlPart')?'getControlPart':'getControl'}()->attributes() ?>
 ><?php echo $_input->getControl()->getHtml() ?></textarea>
+
+
+<select<?php $_input = $_form["select"]; echo $_input->{method_exists($_input, 'getControlPart')?'getControlPart':'getControl'}()->attributes() ?>
+><?php echo $_input->getControl()->getHtml() ?></select>

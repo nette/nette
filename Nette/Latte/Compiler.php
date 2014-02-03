@@ -285,23 +285,24 @@ class Compiler extends Nette\Object
 
 		$htmlNode = $this->htmlNode;
 		$isEmpty = !$htmlNode->closing && (Strings::contains($token->text, '/') || $htmlNode->isEmpty);
+		$end = '';
 
 		if ($isEmpty && in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML))) { // auto-correct
-			$token->text = preg_replace('#^.*>#', $htmlNode->isEmpty
-				? ($this->contentType === self::CONTENT_XHTML ? ' />' : '>')
-				: "></$htmlNode->name>",
-			$token->text);
+			$token->text = preg_replace('#^.*>#', $htmlNode->isEmpty && $this->contentType === self::CONTENT_XHTML ? ' />' : '>', $token->text);
+			if (!$htmlNode->isEmpty) {
+				$end = "</$htmlNode->name>";
+			}
 		}
 
 		if (empty($htmlNode->macroAttrs)) {
-			$this->output .= $token->text;
+			$this->output .= $token->text . $end;
 		} else {
 			$code = substr($this->output, $htmlNode->offset) . $token->text;
 			$this->output = substr($this->output, 0, $htmlNode->offset);
 			$this->writeAttrsMacro($code);
 			if ($isEmpty) {
 				$htmlNode->closing = TRUE;
-				$this->writeAttrsMacro('');
+				$this->writeAttrsMacro($end);
 			}
 		}
 
