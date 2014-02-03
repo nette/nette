@@ -317,6 +317,9 @@ class PhpWriter extends Nette\Object
 					if ($this->compiler && $tokens->isCurrent('escape')) {
 						$res = $this->escapeFilter($res);
 						$tokens->nextToken('|');
+					} elseif (!strcasecmp($tokens->currentValue(), 'safeurl')) {
+						$res->prepend('Nette\Templating\Helpers::safeUrl(');
+						$inside = TRUE;
 					} else {
 						$res->prepend('$template->' . $tokens->currentValue() . '(');
 						$inside = TRUE;
