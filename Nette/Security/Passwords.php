@@ -60,4 +60,18 @@ class Passwords
 			&& self::hash($password, $m) === $hash;
 	}
 
+
+	/**
+	 * Checks if the given hash matches the options.
+	 * @param  string
+	 * @param  array with cost (4-31)
+	 * @return bool
+	 */
+	public static function needsRehash($hash, array $options = NULL)
+	{
+		$cost = isset($options['cost']) ? (int) $options['cost'] : self::BCRYPT_COST;
+		return !preg_match('#^\$2y\$(?P<cost>\d\d)\$(?P<salt>.{22})#', $hash, $m)
+			|| $m['cost'] < $cost;
+	}
+
 }
