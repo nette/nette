@@ -190,14 +190,21 @@ class Helpers
 		}
 
 		$count = 0;
+		$delimiter = ';';
 		$sql = '';
 		while (!feof($handle)) {
-			$s = fgets($handle);
-			$sql .= $s;
-			if (substr(rtrim($s), -1) === ';') {
+			$s = rtrim(fgets($handle));
+			if (!strncasecmp($s, 'DELIMITER ', 10)) {
+				$delimiter = substr($s, 10);
+
+			} elseif (substr($s, -strlen($delimiter)) === $delimiter) {
+				$sql .= substr($s, 0, -strlen($delimiter));
 				$connection->query($sql); // native query without logging
 				$sql = '';
 				$count++;
+
+			} else {
+				$sql .= $s . "\n";
 			}
 		}
 		if (trim($sql) !== '') {
