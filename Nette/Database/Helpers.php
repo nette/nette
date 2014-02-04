@@ -177,7 +177,7 @@ class Helpers
 
 
 	/**
-	 * Import SQL dump from file - extreme fast.
+	 * Import SQL dump from file - extremely fast.
 	 * @return int  count of commands
 	 */
 	public static function loadFromFile(Connection $connection, $file)
