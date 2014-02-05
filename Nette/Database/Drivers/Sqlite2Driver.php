@@ -35,4 +35,12 @@ class Sqlite2Driver extends SqliteDriver
 		throw new Nette\NotSupportedException; // @see http://www.sqlite.org/foreignkeys.html
 	}
 
+
+	/**
+	 * Not supported.
+	 */
+	public function getColumnTypes(\PDOStatement $statement)
+	{
+	}
+
 }
