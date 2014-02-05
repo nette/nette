@@ -114,6 +114,22 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	}
 
 
+	/**
+	 * Component factory. Delegates the creation of components to a createComponent<Name> method.
+	 * @param  string  component name
+	 * @return Nette\ComponentModel\IComponent  the created component (optionally)
+	 */
+	protected function createComponent($name)
+	{
+		$method = 'createComponent' . ucfirst($name);
+		if (method_exists($this, $method)) {
+			$this->checkRequirements($this->getReflection()->getMethod($method));
+		}
+
+		return parent::createComponent($name);
+	}
+
+
 	/********************* interface IStatePersistent ****************d*g**/
 
 
