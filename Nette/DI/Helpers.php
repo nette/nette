@@ -59,7 +59,9 @@ class Helpers
 				throw new Nette\InvalidArgumentException('Circular reference detected for variables: ' . implode(', ', array_keys($recursive)) . '.');
 
 			} else {
-				$val = Nette\Utils\Arrays::get($params, explode('.', $part));
+				$partSplit = preg_split('#(?<!\.)\.(?!\.)#i', $part);
+				array_walk($partSplit, function(&$segment) { $segment = preg_replace('#\.{2}#i', '.', $segment); });
+				$val = Nette\Utils\Arrays::get($params, $partSplit);
 				if ($recursive) {
 					$val = self::expand($val, $params, (is_array($recursive) ? $recursive : array()) + array($part => 1));
 				}
