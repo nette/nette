@@ -59,11 +59,17 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 	/** @var IJournal */
 	private $journal;
 
+	/** @var int|NULL */
+	private $fileMode;
+
+	/** @var int|NULL */
+	private $dirMode;
+
 	/** @var array */
 	private $locks;
 
 
-	public function __construct($dir, IJournal $journal = NULL)
+	public function __construct($dir, IJournal $journal = NULL, $fileMode = NULL, $dirMode = NULL)
 	{
 		$this->dir = realpath($dir);
 		if ($this->dir === FALSE) {
@@ -72,6 +78,8 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 
 		$this->useDirs = (bool) static::$useDirectories;
 		$this->journal = $journal;
+		$this->fileMode = $fileMode;
+		$this->dirMode = $dirMode;
 
 		if (mt_rand() / mt_getrandmax() < static::$gcProbability) {
 			$this->clean(array());
@@ -146,6 +154,9 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 		$cacheFile = $this->getCacheFile($key);
 		if ($this->useDirs && !is_dir($dir = dirname($cacheFile))) {
 			@mkdir($dir); // @ - directory may already exist
+			if ($this->dirMode !== NULL && !@chmod($dir, $this->dirMode)) {
+				throw new Nette\IOException("Unable to chmod dir '$dir'.");
+			}
 		}
 		$handle = @fopen($cacheFile, 'r+b'); // @ - file may not exist
 		if (!$handle) {
@@ -153,6 +164,9 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 			if (!$handle) {
 				return;
 			}
+		}
+		if ($this->fileMode !== NULL && !@chmod($cacheFile, $this->fileMode)) {
+			throw new Nette\IOException("Unable to chmod file '$cacheFile'.");
 		}
 
 		$this->locks[$key] = $handle;
@@ -325,6 +339,9 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 		$handle = @fopen($file, 'r+b'); // @ - file may not exist
 		if (!$handle) {
 			return NULL;
+		}
+		if ($this->fileMode !== NULL && !@chmod($file, $this->fileMode)) {
+			throw new Nette\IOException("Unable to chmod file '$file'.");
 		}
 
 		flock($handle, $lock);
