@@ -18,7 +18,7 @@ use Nette\Database;
 interface IRow extends Database\IRow
 {
 
-	function setTable(Selection $name);
+	function setTable($resultSet);
 
 	function getTable();
 
