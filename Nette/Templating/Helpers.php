@@ -309,6 +309,36 @@ class Helpers
 	}
 
 
+	/**
+	 * Dummy translate helper.
+	 * @param string         message
+	 * @param int|array|NULL plural form (positive number or array of ['plural message', $number])
+	 * @return string
+	 */
+	public static function translate($message, $form = NULL)
+	{
+		$message = (string) $message;
+		$messagePlural = NULL;
+
+		if (strpos($message, chr(4)) !== FALSE) {
+			list($context, $message) = explode(chr(4), $message, 2);
+		}
+
+		if (is_array($form)) {
+			$messagePlural = current($form);
+			$form = (int) end($form);
+		} elseif (!is_int($form)) {
+			$form = 1;
+		}
+
+		if ($form !== 1) {
+			$message = $messagePlural ?: $message;
+		}
+
+		return $message;
+	}
+
+
 	/********************* Template tools ****************d*g**/
 
 
