@@ -325,7 +325,11 @@ class ContainerBuilder extends Nette\Object
 			}
 			$def->class = preg_replace('#[|\s].*#', '', $reflection->getAnnotation('return'));
 			if ($def->class && $reflection instanceof \ReflectionMethod) {
-				$def->class = Reflection\AnnotationsParser::expandClassName($def->class, $reflection->getDeclaringClass());
+				$def->class = Reflection\AnnotationsParser::expandClassName($tmp = $def->class, $reflection->getDeclaringClass());
+				if ($tmp !== $def->class && $tmp[0] !== '\\' && class_exists($tmp)) {
+					$def->class = $tmp;
+					trigger_error("You should use @return \\$tmp' in $reflection.", E_USER_WARNING);
+				}
 			}
 
 		} elseif ($service = $this->getServiceName($factory)) { // alias or factory
