@@ -27,7 +27,7 @@
 		"ext-fileinfo": "*"
 	},
 	"require-dev": {
-		"nette/tester": "~0.9.5"
+		"nette/tester": "~1.0.0"
 	},
 	"autoload": {
 		"classmap": ["Nette/"],
