@@ -48,6 +48,10 @@ class Response extends Nette\Object implements IResponse
 			}
 			header_register_callback($this->removeDuplicateCookies);
 		}
+
+		if (!headers_sent() && isset($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'off')) {
+			header('X-Nette-Complicate-Breach: ' . Nette\Utils\Strings::random(rand(25, 50))); // complicates BREACH attack
+		}
 	}
 
 
