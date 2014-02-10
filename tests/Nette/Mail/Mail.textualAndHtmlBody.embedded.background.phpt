@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Mail\Message - textual and HTML body with embedded image.
+ * Test: Nette\Mail\Message - textual and HTML body with embedded image mentioned in background attribute.
  *
  * @author     David Grudl
  */
@@ -23,10 +23,10 @@ $mail->setSubject('Hello Jane!');
 
 $mail->setBody('Sample text');
 
-$mail->setHTMLBody('<b>Sample text</b> <img src="background.png">', __DIR__ . '/files');
+$mail->setHTMLBody('<b>Sample text</b> <table><tr><td background="background.png"></td></tr></table>', __DIR__ . '/files');
 // append automatically $mail->addEmbeddedFile('files/background.png');
 
 $mailer = new TestMailer();
 $mailer->send($mail);
 
-Assert::matchFile(__DIR__ . '/Mail.textualAndHtmlBody.embedded.expect', TestMailer::$output);
+Assert::matchFile(__DIR__ . '/Mail.textualAndHtmlBody.embedded.background.expect', TestMailer::$output);
