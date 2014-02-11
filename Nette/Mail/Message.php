@@ -231,7 +231,7 @@ class Message extends MimePart
 			$cids = array();
 			$matches = Strings::matchAll(
 				$html,
-				'#(src\s*=\s*|background\s*=\s*|url\()(["\'])(?![a-z]+:|[/\\#])(.+?)\\2#i',
+				'#(src\s*=\s*|background\s*=\s*|url\()(["\']?)(?![a-z]+:|[/\\#])([^"\')\s]+)#i',
 				PREG_OFFSET_CAPTURE
 			);
 			foreach (array_reverse($matches) as $m) {
@@ -240,7 +240,7 @@ class Message extends MimePart
 					$cids[$file] = substr($this->addEmbeddedFile($file)->getHeader("Content-ID"), 1, -1);
 				}
 				$html = substr_replace($html,
-					"{$m[1][0]}{$m[2][0]}cid:{$cids[$file]}{$m[2][0]}",
+					"{$m[1][0]}{$m[2][0]}cid:{$cids[$file]}",
 					$m[0][1], strlen($m[0][0])
 				);
 			}
