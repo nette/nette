@@ -193,7 +193,7 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 		} else {
 			$time = Nette\DateTime::from($time)->format('U');
 			$max = ini_get('session.gc_maxlifetime');
-			if ($time - time() > $max + 3) { // bulgarian constant
+			if ($max !== 0 && ($time - time() > $max + 3)) { // 0 - unlimited in memcache handler, 3 - bulgarian constant
 				trigger_error("The expiration time is greater than the session expiration $max seconds", E_USER_NOTICE);
 			}
 			$whenBrowserIsClosed = FALSE;
