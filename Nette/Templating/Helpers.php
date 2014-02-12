@@ -84,7 +84,11 @@ class Helpers
 	 */
 	public static function escapeHtmlComment($s)
 	{
-		return ' ' . str_replace('-', '- ', $s); // dash is very problematic character in comments
+		$s = (string) $s;
+		if ($s && ($s[0] === '-' || $s[0] === '>' || $s[0] === '!')) {
+			$s = ' ' . $s;
+		}
+		return str_replace('-', '- ', $s); // dash is very problematic character in comments
 	}
 
 
