@@ -239,11 +239,15 @@ class ContainerBuilder extends Nette\Object
 
 		// complete class-factory pairs
 		foreach ($this->definitions as $name => $def) {
-			if (!$def->factory) {
+			if (!$def->factory || !$def->factory->entity) {
 				if (!$def->class) {
 					throw new ServiceCreationException("Class and factory are missing in service '$name' definition.");
 				}
-				$def->factory = new Statement($def->class);
+				if ($def->factory) {
+					$def->factory->entity = $def->class;
+				} else {
+					$def->factory = new Statement($def->class);
+				}
 			}
 		}
 
