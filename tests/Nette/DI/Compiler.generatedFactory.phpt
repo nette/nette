@@ -153,3 +153,10 @@ Assert::type( 'Baz', $foo->baz );
 Assert::same($container->getService('baz'), $foo->baz);
 
 Assert::type( 'ILoremFactory', $container->getByType('ILoremFactory') );
+
+
+Assert::type('IArticleFactory', $container->getService('article2'));
+$article = $container->getService('article2')->create('nemam');
+Assert::type('Article', $article);
+Assert::same('nemam', $article->title);
+
