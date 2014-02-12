@@ -125,8 +125,8 @@ class Parser extends Nette\Object
 	{
 		$matches = $this->match('~
 			(?:(?<=\n|^)[ \t]*)?<(?P<closing>/?)(?P<tag>[a-z0-9:]+)|  ##  begin of HTML tag <tag </tag - ignores <!DOCTYPE
-			<(?P<htmlcomment>!--)|     ##  begin of HTML comment <!--
-			'.$this->macroRe.'         ##  macro tag
+			<(?P<htmlcomment>!--(?!>))|     ##  begin of HTML comment <!--, but not <!-->
+			'.$this->macroRe.'              ##  macro tag
 		~xsi');
 
 		if (!empty($matches['htmlcomment'])) { // <!--
@@ -225,11 +225,11 @@ class Parser extends Nette\Object
 	private function contextHtmlComment()
 	{
 		$matches = $this->match('~
-			(?P<htmlcomment>--\s*>)|   ##  end of HTML comment
-			'.$this->macroRe.'         ##  macro tag
+			(?P<htmlcomment>-->)|   ##  end of HTML comment
+			'.$this->macroRe.'      ##  macro tag
 		~xsi');
 
-		if (!empty($matches['htmlcomment'])) { // --\s*>
+		if (!empty($matches['htmlcomment'])) { // -->
 			$this->addToken(Token::HTML_TAG_END, $matches[0]);
 			$this->setContext(self::CONTEXT_HTML_TEXT);
 		}
