@@ -248,13 +248,34 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 * Calls signal handler method.
 	 * @param  string
 	 * @return void
-	 * @throws BadSignalException if there is not handler method
+	 * @throws BadSignalException if there is not handler method or security token does not match
+	 * @throws \RuntimeException if there is no redirect in a secured signal
 	 */
 	public function signalReceived($signal)
 	{
-		if (!$this->tryCall($this->formatSignalMethod($signal), $this->params)) {
+		$method = $this->formatSignalMethod($signal);
+		$reflection = new Nette\Reflection\Method($this, $method);
+		if ($reflection->hasAnnotation('secured')) {
+			$params = array();
+			if ($this->params) {
+				foreach ($reflection->getParameters() as $param) {
+					if (isset($this->params[$param->name])) {
+						$params[$param->name] = $this->params[$param->name];
+					}
+				}
+			}
+			if (!isset($this->params[Presenter::CSRF_TOKEN_KEY]) || $this->params[Presenter::CSRF_TOKEN_KEY] !== $this->getPresenter()->getCsrfToken(get_class($this), $method, $params)) {
+				throw new BadSignalException("Invalid security token for signal '$signal' in class {$this->reflection->name}.");
+			}
+		}
+
+		if (!$this->tryCall($method, $this->params)) {
 			$class = get_class($this);
 			throw new BadSignalException("There is no handler for signal '$signal' in class $class.");
+		}
+
+		if (isset($this->params[Presenter::CSRF_TOKEN_KEY])) {
+			throw new \RuntimeException("Secured signal '$signal' did not redirect. Possible csrf-token reveal by http referer header.");
 		}
 	}
 

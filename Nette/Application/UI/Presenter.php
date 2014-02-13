@@ -43,6 +43,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	const SIGNAL_KEY = 'do',
 		ACTION_KEY = 'action',
 		FLASH_KEY = '_fid',
+		CSRF_TOKEN_KEY = '_sec',
 		DEFAULT_ACTION = 'default';
 
 	/** @var int */
@@ -872,6 +873,20 @@ abstract class Presenter extends Control implements Application\IPresenter
 				if ($args) { // convert indexed parameters to named
 					self::argsToParams(get_class($component), $method, $args);
 				}
+
+				// secured signals
+				$signalReflection = $reflection->getMethod($method);
+				if ($signalReflection->hasAnnotation('secured')) {
+					$signalParams = array();
+					if ($args) {
+						foreach ($signalReflection->getParameters() as $param) {
+							if (isset($args[$param->name])) {
+								$signalParams[$param->name] = $args[$param->name];
+							}
+						}
+					}
+					$args[self::CSRF_TOKEN_KEY] = $this->getCsrfToken(get_class($component), $method, $signalParams);
+				}
 			}
 
 			// counterpart of IStatePersistent
@@ -986,6 +1001,27 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 		return $url . $fragment;
 	}
+
+
+	/**
+	 * Returns unique token for method and params
+	 * @param  string
+	 * @param  string
+	 * @param  array
+	 * @return string
+	 */
+	protected function getCsrfToken($control, $method, $params)
+	{
+		$session = $this->getSession('Nette.Application.UI.Presenter/CSRF');
+		if (!isset($session->token)) {
+			$session->token = Nette\Utils\Strings::random();
+		}
+
+		$params = Nette\Utils\Arrays::flatten($params);
+		$params = implode('|', array_keys($params)) . '|' . implode('|', array_values($params));
+		return substr(md5($control . $method . $params . $session->token), 0, 8);
+	}
+
 
 
 	/**
