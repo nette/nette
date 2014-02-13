@@ -352,6 +352,8 @@ class Compiler extends Nette\Object
 		foreach ($args as $k => $v) {
 			if ($v === '...') {
 				unset($args[$k]);
+			} elseif (is_array($v)) {
+				$args[$k] = self::filterArguments($v);
 			} elseif ($v instanceof \stdClass && isset($v->value, $v->attributes)) {
 				$args[$k] = new Statement($v->value, self::filterArguments($v->attributes));
 			}
