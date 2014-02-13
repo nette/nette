@@ -21,3 +21,8 @@ services:
 		create: Foo(..., %baz%)
 		implement: IFooFactory
 		parameters: [Baz baz]
+
+	article2:
+		implement: IArticleFactory
+		arguments: [%title%]
+		parameters: [title]
