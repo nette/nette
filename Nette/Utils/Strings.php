@@ -48,11 +48,11 @@ class Strings
 	public static function fixEncoding($s, $encoding = 'UTF-8')
 	{
 		// removes xD800-xDFFF, x110000 and higher
-		if (PHP_VERSION_ID >= 50400) {
+		if (strcasecmp($encoding, 'UTF-8')) {
 			ini_set('mbstring.substitute_character', 'none');
 			return mb_convert_encoding($s, $encoding, $encoding);
 		} else {
-			return @iconv('UTF-16', 'UTF-8//IGNORE', iconv($encoding, 'UTF-16//IGNORE', $s)); // intentionally @
+			return htmlspecialchars_decode(htmlspecialchars($s, ENT_NOQUOTES | ENT_IGNORE, 'UTF-8'), ENT_NOQUOTES);
 		}
 	}
 
