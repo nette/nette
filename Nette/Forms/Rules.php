@@ -165,6 +165,35 @@ class Rules extends Nette\Object implements \IteratorAggregate
 
 
 	/**
+	 * @param  bool
+	 * @return array
+	 */
+	public function getToggles($actual = FALSE)
+	{
+		return $actual ? $this->getToggleStates() : $this->toggles;
+	}
+
+
+	/**
+	 * @internal
+	 * @return array
+	 */
+	public function getToggleStates($toggles = array(), $success = TRUE)
+	{
+		foreach ($this->toggles as $id => $hide) {
+			$toggles[$id] = ($success && $hide) || !empty($toggles[$id]);
+		}
+
+		foreach ($this as $rule) {
+			if ($rule->branch) {
+				$toggles = $rule->branch->getToggleStates($toggles, $success && static::validateRule($rule));
+			}
+		}
+		return $toggles;
+	}
+
+
+	/**
 	 * Validates against ruleset.
 	 * @return bool
 	 */
@@ -211,25 +240,6 @@ class Rules extends Nette\Object implements \IteratorAggregate
 			array_unshift($rules, $this->required);
 		}
 		return new \ArrayIterator($rules);
-	}
-
-
-	/**
-	 * @param  bool
-	 * @return array
-	 */
-	public function getToggles($actual = FALSE)
-	{
-		$toggles = $this->toggles;
-		foreach ($actual ? $this : array() as $rule) {
-			if ($rule->branch) {
-				$success = static::validateRule($rule);
-				foreach ($rule->branch->getToggles(TRUE) as $id => $hide) {
-					$toggles[$id] = empty($toggles[$id]) ? ($success && $hide) : TRUE;
-				}
-			}
-		}
-		return $toggles;
 	}
 
 

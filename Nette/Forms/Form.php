@@ -627,9 +627,7 @@ class Form extends Container
 	{
 		$toggles = array();
 		foreach ($this->getControls() as $control) {
-			foreach ($control->getRules()->getToggles(TRUE) as $id => $hide) {
-				$toggles[$id] = empty($toggles[$id]) ? $hide : TRUE;
-			}
+			$toggles = $control->getRules()->getToggleStates($toggles);
 		}
 		return $toggles;
 	}
