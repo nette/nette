@@ -18,7 +18,7 @@ $template->registerFilter(new Latte\Engine);
 
 Assert::match('%A%
 <?php $netteHttpResponse->setCode(200) ;if (!$netteHttpResponse->isSent()) $netteHttpResponse->setCode(200) ;
-', $template->setSource('
+', codefix($template->setSource('
 {status 200}
 {status 200?}
-')->compile());
+')->compile()));

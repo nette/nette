@@ -321,8 +321,11 @@ class Helpers
 	 * @param  string
 	 * @return string
 	 */
-	public static function optimizePhp($source, $lineLength = 80, $existenceOfThisParameterSolvesDamnBugInPHP535 = NULL)
+	public static function optimizePhp($source, $lineLength = NULL, $existenceOfThisParameterSolvesDamnBugInPHP535 = NULL)
 	{
+		if (func_num_args() > 1) {
+			trigger_error('$lineLength is deprecated', E_USER_DEPRECATED);
+		}
 		$res = $php = '';
 		$lastChar = ';';
 		$tokens = new \ArrayIterator(token_get_all($source));
@@ -334,25 +337,20 @@ class Helpers
 
 				} elseif ($token[0] === T_CLOSE_TAG) {
 					$next = isset($tokens[$key + 1]) ? $tokens[$key + 1] : NULL;
+					$php .= substr($token[1], 2);
 					if (substr($res, -1) !== '<' && preg_match('#^<\?php\s*\z#', $php)) {
 						$php = ''; // removes empty (?php ?), but retains ((?php ?)?php
 
 					} elseif (is_array($next) && $next[0] === T_OPEN_TAG) { // remove ?)(?php
+						$php .= substr($token[1], 2); // trailing whitespace from ?)
 						if (!strspn($lastChar, ';{}:/')) {
 							$php .= $lastChar = ';';
 						}
-						if (substr($next[1], -1) === "\n") {
-							$php .= "\n";
-						}
+						$php .= substr($next[1], strlen(trim($next[1]))); // trailing whitespace from (? or (?php
 						$tokens->next();
 
 					} elseif ($next) {
-						$res .= preg_replace('#;?(\s)*\z#', '$1', $php) . $token[1]; // remove last semicolon before ?)
-						if (strlen($res) - strrpos($res, "\n") > $lineLength
-							&& (!is_array($next) || strpos($next[1], "\n") === FALSE)
-						) {
-							$res .= "\n";
-						}
+						$res .= preg_replace('#;?(\s*)\z#', '$1', $php) . $token[1]; // remove last semicolon before ?)
 						$php = '';
 
 					} else { // remove last ?)

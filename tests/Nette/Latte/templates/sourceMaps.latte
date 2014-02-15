@@ -1,0 +1,33 @@
+{*
+ * My example template for source maps
+ *}
+{block #css}
+	.no-images img { display: none; }
+	.x .y { font-weight: bold; }
+{/block}
+
+
+{block #content}
+
+<h1 n:block="title">Page {$name}</h1>
+
+{$x}
+
+<ul>
+	<li n:foreach="$items as $item">
+		Item {$item->id}:
+		<a n:href="item $item->id"
+		   n:class="$item->superCool ? superCool"
+		   onmouseover="console.log(this)">
+			Link
+		</a>
+	</li>
+</ul>
+
+{form myForm}
+	Name: {input name}<br>
+	Mail: {input email}<br>
+	{input add}
+{/form}
+
+<hr>

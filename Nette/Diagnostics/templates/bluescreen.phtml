@@ -57,7 +57,7 @@ $counter = 0;
 
 
 		<?php $ex = $exception; $level = 0; ?>
-		<?php do { ?>
+		<?php do { $exFile = $ex->getFile(); $exLine = $ex->getLine(); $this->remapStackLine($exFile, $exLine); ?>
 
 			<?php if ($level++): ?>
 			<div class="panel"<?php if ($level === 2) echo ' id="netteCaused"' ?>>
@@ -84,8 +84,8 @@ $counter = 0;
 			<?php endforeach ?>
 
 
-			<?php $stack = $ex->getTrace(); $expanded = NULL ?>
-			<?php if ((!$exception instanceof \ErrorException || in_array($exception->getSeverity(), array(E_USER_NOTICE, E_USER_WARNING, E_USER_DEPRECATED))) && $this->isCollapsed($ex->getFile())) {
+			<?php $stack = $this->getStack($ex); $expanded = NULL ?>
+			<?php if ((!$exception instanceof \ErrorException || in_array($exception->getSeverity(), array(E_USER_NOTICE, E_USER_WARNING, E_USER_DEPRECATED))) && $this->isCollapsed($exFile)) {
 				foreach ($stack as $key => $row) {
 					if (isset($row['file']) && !$this->isCollapsed($row['file'])) { $expanded = $key; break; }
 				}
@@ -95,8 +95,8 @@ $counter = 0;
 			<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle<?php echo ($collapsed = $expanded !== NULL) ? '-collapsed' : '' ?>">Source file</a></h2>
 
 			<div id="netteBsPnl<?php echo $counter ?>" class="<?php echo $collapsed ? 'nette-collapsed ' : '' ?>inner">
-				<p><b>File:</b> <?php echo Helpers::editorLink($ex->getFile(), $ex->getLine()) ?></p>
-				<?php if (is_file($ex->getFile())): ?><?php echo self::highlightFile($ex->getFile(), $ex->getLine(), 15, $ex instanceof \ErrorException && isset($ex->context) ? $ex->context : NULL) ?><?php endif ?>
+				<p><b>File:</b> <?php echo Helpers::editorLink($exFile, $exLine) ?></p>
+				<?php if (is_file($exFile)): ?><?php echo self::highlightFile($exFile, $exLine, 15, $ex instanceof \ErrorException && isset($ex->context) ? $ex->context : NULL) ?><?php endif ?>
 			</div></div>
 
 
@@ -108,6 +108,7 @@ $counter = 0;
 				<div id="netteBsPnl<?php echo $counter ?>" class="inner">
 				<ol>
 					<?php foreach ($stack as $key => $row): ?>
+					<?php if (isset($row['file'], $row['line'])) $this->remapStackLine($row['file'], $row['line']); ?>
 					<li><p>
 
 					<?php if (isset($row['file']) && is_file($row['file'])): ?>

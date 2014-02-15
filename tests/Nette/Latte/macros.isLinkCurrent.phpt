@@ -28,4 +28,4 @@ $result = $template->setSource(
 ')->compile();
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::matchFile("$path.phtml", $result);
+Assert::matchFile("$path.phtml", codefix($result));

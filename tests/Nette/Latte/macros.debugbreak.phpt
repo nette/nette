@@ -18,7 +18,7 @@ $template->registerFilter(new Latte\Engine);
 
 Assert::match('%A%
 <?php if (function_exists("debugbreak")) debugbreak(); elseif (function_exists("xdebug_break")) xdebug_break() ;if (!($i==1)); elseif (function_exists("debugbreak")) debugbreak(); elseif (function_exists("xdebug_break")) xdebug_break() ;
-', $template->setSource('
+', codefix($template->setSource('
 {debugbreak}
 {debugbreak $i==1}
-')->compile());
+')->compile()));
