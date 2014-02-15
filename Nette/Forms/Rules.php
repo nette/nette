@@ -35,6 +35,7 @@ class Rules extends Nette\Object implements \IteratorAggregate
 		Form::RANGE => 'Please enter a value between %d and %d.',
 		Form::MAX_FILE_SIZE => 'The size of the uploaded file can be up to %d bytes.',
 		Form::IMAGE => 'The uploaded file must be image in format JPEG, GIF or PNG.',
+		Form::MIME_TYPE => 'The uploaded file is not in the expected format.',
 	);
 
 	/** @var Rule[] */
