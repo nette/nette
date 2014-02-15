@@ -18,6 +18,9 @@ use Nette,
  */
 class Compiler extends Nette\Object
 {
+	/** @var bool should source map be created? Causes hints to be generated into code */
+	public static $createSourceMap = TRUE;
+
 	/** @var string default content type */
 	public $defaultContentType = self::CONTENT_HTML;
 
@@ -138,6 +141,17 @@ class Compiler extends Nette\Object
 		}
 
 		$output = $this->expandTokens($output);
+
+		// attach source map
+		if (static::$createSourceMap) {
+			$sourceMap = $this->extractSourceMap($output);
+			$hash = sha1($output);
+			$output = "<?php // source map $hash: " . json_encode($sourceMap) . " ?>\n"
+				. $output
+				. "\n<?php // end of source map $hash ?>";
+			;
+		}
+
 		return $output;
 	}
 
@@ -240,6 +254,30 @@ class Compiler extends Nette\Object
 			}
 		}
 	}
+
+
+	/**
+	 * Extract source map from generated code with hints
+	 * @param  string
+	 * @return array { compiledLine => [ sourceLine ] } which maps compiled code back to its source
+	 */
+	private function extractSourceMap(&$output)
+	{
+		$map = array();
+		$line = 1;
+		$output = \Nette\Utils\Strings::replace($output, '~([^\x03-\x05]+)|\x03([^\x04]+)\x04([^\x05]*)\x05~m', function($match) use(&$map, &$line) {
+			if (!isset($match[2])) {
+				$ret = $match[1];
+			} else {
+				$map[intval($line)][] = intval($match[2]);
+				$ret = $match[3];
+			}
+			$line += substr_count($match[0], "\n");
+			return $ret;
+		});
+		return array_map('array_unique', $map);
+	}
+
 
 
 	private function processHtmlTagBegin(Token $token)
@@ -441,7 +479,11 @@ class Compiler extends Nette\Object
 				$code .= "\n"; // double newline to avoid newline eating by PHP
 			}
 		}
-		$output .= $code;
+		if (static::$createSourceMap && !preg_match('~<\?php\s+\?>~', $code)) {
+			$output .= "\x03{$this->tokens[$this->position]->line}\x04$code\x05";
+		} else {
+			$output .= $code;
+		}
 	}
 
 
@@ -516,7 +558,7 @@ class Compiler extends Nette\Object
 			}
 		}
 
-		if ($right && substr($this->output, -2) === '?>') {
+		if ($right && (self::$createSourceMap ? substr($this->output, -3, 2) : substr($this->output, -2)) === '?>') {
 			$this->output .= "\n";
 		}
 	}

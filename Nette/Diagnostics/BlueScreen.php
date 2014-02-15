@@ -51,6 +51,41 @@ class BlueScreen extends Nette\Object
 
 
 	/**
+	 * Get enhanced stack trace for an exception
+	 * @param  \Exception
+	 * @return array
+	 */
+	private function getStack(\Exception $ex)
+	{
+		$stack = $ex->getTrace();
+
+		foreach ($stack as &$row) {
+			if (isset($row['file']) && !isset($row['line']) && is_file($row['file'])) {
+				$this->remapStackLine($row['file'], $row['line']);
+			}
+		}
+		return $stack;
+	}
+
+
+
+	/**
+	 * Find original source, see Helpers::sourceMapLookup()
+	 * @param  string
+	 * @param  int
+	 * @return void
+	 */
+	private function remapStackLine(&$originalFile, &$originalLine)
+	{
+		$ret = SourceMapHelper::sourceMapLookup($originalFile, $originalLine);
+		if ($ret) {
+			list ($originalFile, $originalLine) = $ret;
+		}
+	}
+
+
+
+	/**
 	 * Returns syntax highlighted source code.
 	 * @param  string
 	 * @param  int

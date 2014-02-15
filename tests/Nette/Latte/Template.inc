@@ -33,5 +33,6 @@ function codefix($s)
 {
 	$s = preg_replace("#(?<=['_])[a-z0-9]{10,}(?=['_])#", 'xxx', $s);
 	$s = preg_replace('#source file:.*#', '', $s);
+	$s = preg_replace('#\s*((<\\?php )?//eof:|//)sourceMap\\[.{40}\\].*#', '', $s);
 	return $s;
 }

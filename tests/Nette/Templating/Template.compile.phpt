@@ -9,6 +9,7 @@
  */
 
 use Nette\Templating\Helpers;
+use Tester\Assert;
 
 
 

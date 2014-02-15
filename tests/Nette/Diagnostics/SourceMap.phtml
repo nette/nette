@@ -1,0 +1,34 @@
+<?php
+// Example of compiled file with source-map
+$sourceMap = array(
+	array(4, 1), // source line 1 compiled to line 4
+	array(5, 15),
+	array(6, 15),
+);
+echo serialize($sourceMap);
+
+// source file: SourceMap.phpt
+//sourceMap[073e15abd403c7c814443453dce450affde014a8]000086:a:3:{i:0;a:2:{i:0;i:4;i:1;i:1;}i:1;a:2:{i:0;i:5;i:1;i:15;}i:2;a:2:{i:0;i:6;i:1;i:15;}}   -- after this the payload starts
+$line1 =
+	NULL; // of the original file
+
+$compiledVariable1 = 1; // from original line 1
+if ($x && $y) $compiledVariable15 = 2;
+else $compiledVariable15 = 'ABCD';
+
+$notFromSource = 'X';
+
+//eof:sourceMap[073e15abd403c7c814443453dce450affde014a8]
+
+
+$glueCode = 1; // not from source
+
+
+// Another source map within the same file
+//sourceMap[0000000000000000000000000000000000000011]000032:a:1:{i:0;a:2:{i:0;i:4;i:1;i:1;}}   -- after this the payload starts
+$line1 =
+	NULL; // of the original file
+
+$compiledVariable1 = 1;
+
+//eof:sourceMap[0000000000000000000000000000000000000011]
