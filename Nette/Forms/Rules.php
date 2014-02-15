@@ -38,6 +38,7 @@ class Rules extends Nette\Object implements \IteratorAggregate
 		Form::MAX_FILE_SIZE => 'The size of the uploaded file can be up to %d bytes.',
 		Form::MAX_POST_SIZE => 'The uploaded data exceeds the limit of %d bytes.',
 		Form::IMAGE => 'The uploaded file must be image in format JPEG, GIF or PNG.',
+		Form::MIME_TYPE => 'The uploaded file is not in the expected format.',
 		Nette\Forms\Controls\SelectBox::VALID => 'Please select a valid option.',
 	);
 
