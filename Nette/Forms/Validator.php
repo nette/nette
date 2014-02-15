@@ -38,6 +38,7 @@ class Validator extends Nette\Object
 		Form::RANGE => 'Please enter a value between %d and %d.',
 		Form::MAX_FILE_SIZE => 'The size of the uploaded file can be up to %d bytes.',
 		Form::MAX_POST_SIZE => 'The uploaded data exceeds the limit of %d bytes.',
+		Form::MIME_TYPE => 'The uploaded file is not in the expected format.',
 		Form::IMAGE => 'The uploaded file must be image in format JPEG, GIF or PNG.',
 		Nette\Forms\Controls\SelectBox::VALID => 'Please select a valid option.',
 	);
