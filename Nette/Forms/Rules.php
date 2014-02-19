@@ -181,7 +181,7 @@ class Rules extends Nette\Object implements \IteratorAggregate
 	public function getToggleStates($toggles = array(), $success = TRUE)
 	{
 		foreach ($this->toggles as $id => $hide) {
-			$toggles[$id] = ($success && $hide) || !empty($toggles[$id]);
+			$toggles[$id] = ($success xor !$hide) || !empty($toggles[$id]);
 		}
 
 		foreach ($this as $rule) {

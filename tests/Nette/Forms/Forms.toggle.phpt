@@ -352,7 +352,7 @@ test(function() { // $hide = FALSE
 				->toggle('b');
 
 	Assert::same( array(
-		'a' => FALSE,
+		'a' => TRUE,
 		'b' => FALSE,
 	), $form->getToggles() );
 });
@@ -369,8 +369,8 @@ test(function() {
 				->toggle('b', FALSE);
 
 	Assert::same( array(
-		'a' => FALSE,
-		'b' => FALSE,
+		'a' => TRUE,
+		'b' => TRUE,
 	), $form->getToggles() );
 });
 
@@ -387,7 +387,7 @@ test(function() {
 
 	Assert::same( array(
 		'a' => FALSE,
-		'b' => FALSE,
+		'b' => TRUE,
 	), $form->getToggles() );
 });
 
@@ -402,7 +402,7 @@ test(function() {
 			->toggle('b');
 
 	Assert::same( array(
-		'a' => FALSE,
+		'a' => TRUE,
 		'b' => TRUE,
 	), $form->getToggles() );
 });
@@ -434,8 +434,8 @@ test(function() {
 			->toggle('b', FALSE);
 
 	Assert::same( array(
-		'a' => FALSE,
-		'b' => FALSE,
+		'a' => TRUE,
+		'b' => TRUE,
 	), $form->getToggles() );
 });
 
@@ -451,7 +451,7 @@ test(function() { // $hide = FALSE & multiple used ID
 				->toggle('a');
 
 	Assert::same( array(
-		'a' => FALSE,
+		'a' => TRUE,
 	), $form->getToggles() );
 });
 
@@ -467,7 +467,7 @@ test(function() {
 				->toggle('a', FALSE);
 
 	Assert::same( array(
-		'a' => FALSE,
+		'a' => TRUE,
 	), $form->getToggles() );
 });
 
@@ -483,7 +483,7 @@ test(function() {
 				->toggle('a', FALSE);
 
 	Assert::same( array(
-		'a' => FALSE,
+		'a' => TRUE,
 	), $form->getToggles() );
 });
 
@@ -498,7 +498,7 @@ test(function() {
 			->toggle('b');
 
 	Assert::same( array(
-		'a' => FALSE,
+		'a' => TRUE,
 		'b' => TRUE,
 	), $form->getToggles() );
 });
@@ -530,7 +530,7 @@ test(function() {
 			->toggle('a', FALSE);
 
 	Assert::same( array(
-		'a' => FALSE,
+		'a' => TRUE,
 	), $form->getToggles() );
 });
 
@@ -545,6 +545,6 @@ test(function() {
 			->toggle('a', FALSE);
 
 	Assert::same( array(
-		'a' => FALSE,
+		'a' => TRUE,
 	), $form->getToggles() );
 });
