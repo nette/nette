@@ -26,10 +26,19 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 	public function __construct(Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
 	{
 		parent::__construct();
-		$this->monitor('Nette\Application\UI\Presenter');
 		if ($parent !== NULL) {
 			$parent->addComponent($this, $name);
 		}
+	}
+
+
+	/**
+	 * @return void
+	 */
+	protected function validateParent(Nette\ComponentModel\IContainer $parent)
+	{
+		parent::validateParent($parent);
+		$this->monitor('Nette\Application\UI\Presenter');
 	}
 
 
