@@ -27,6 +27,7 @@ use Nette;
  * @property-read bool $ajax
  * @property-read string $remoteAddress
  * @property-read string $remoteHost
+ * @property-read string $rawBody
  */
 class Request extends Nette\Object implements IRequest
 {
@@ -56,6 +57,9 @@ class Request extends Nette\Object implements IRequest
 
 	/** @var string */
 	private $remoteHost;
+
+	/** @var string */
+	private $rawBody;
 
 
 	public function __construct(UrlScript $url, $query = NULL, $post = NULL, $files = NULL, $cookies = NULL,
@@ -287,6 +291,23 @@ class Request extends Nette\Object implements IRequest
 			$this->remoteHost = $this->remoteAddress ? getHostByAddr($this->remoteAddress) : NULL;
 		}
 		return $this->remoteHost;
+	}
+
+
+	/**
+	 * Returns raw content of HTTP request body.
+	 * @return string
+	 */
+	public function getRawBody()
+	{
+		if (PHP_VERSION_ID >= 50600) {
+			return file_get_contents('php://input');
+
+		} elseif ($this->rawBody === NULL) { // can be read only once in PHP < 5.6
+			$this->rawBody = (string) file_get_contents('php://input');
+		}
+
+		return $this->rawBody;
 	}
 
 

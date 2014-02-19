@@ -132,4 +132,10 @@ interface IRequest
 	 */
 	function getRemoteHost();
 
+	/**
+	 * Returns raw content of HTTP request body.
+	 * @return string
+	 */
+	function getRawBody();
+
 }
