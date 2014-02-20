@@ -41,7 +41,7 @@ class CheckboxList extends MultiChoiceControl
 		$items = $this->getItems();
 		reset($items);
 		$input = parent::getControl();
-		return Nette\Forms\Helpers::createInputList(
+		return Html::el()->setHtml(Nette\Forms\Helpers::createInputList(
 			$this->translate($items),
 			array_merge($input->attrs, array(
 				'id' => NULL,
@@ -52,7 +52,7 @@ class CheckboxList extends MultiChoiceControl
 			)),
 			$this->label->attrs,
 			$this->separator
-		);
+		));
 	}
 
 
