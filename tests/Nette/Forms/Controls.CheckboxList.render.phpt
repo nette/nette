@@ -37,7 +37,7 @@ test(function() {
 	Assert::type('Nette\Utils\Html', $input->getLabelPart(0));
 	Assert::same('<label for="frm-list-0">Second</label>', (string) $input->getLabelPart(0));
 
-	Assert::type('string', $input->getControl());
+	Assert::type('Nette\Utils\Html', $input->getControl());
 	Assert::same('<label><input type="checkbox" name="list[]" value="a">First</label><br><label><input type="checkbox" name="list[]" value="0">Second</label>', $input->getControl());
 
 	Assert::type('Nette\Utils\Html', $input->getControlPart(0));
