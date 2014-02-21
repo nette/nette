@@ -32,7 +32,7 @@ class ServiceDefinition extends Nette\Object
 	/** @var array */
 	public $tags = array();
 
-	/** @var mixed */
+	/** @var bool */
 	public $autowired = TRUE;
 
 	/** @var bool */
@@ -82,7 +82,6 @@ class ServiceDefinition extends Nette\Object
 
 	public function setParameters(array $params)
 	{
-		$this->autowired = FALSE;
 		$this->parameters = $params;
 		return $this;
 	}
@@ -97,7 +96,7 @@ class ServiceDefinition extends Nette\Object
 
 	public function setAutowired($on)
 	{
-		$this->autowired = $on;
+		$this->autowired = (bool) $on;
 		return $this;
 	}
 
