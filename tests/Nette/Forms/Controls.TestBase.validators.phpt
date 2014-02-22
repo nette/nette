@@ -88,8 +88,6 @@ test(function() {
 test(function() {
 	$control = new TextInput();
 	$control->value = '123x';
-	//Assert::true( Validator::validateRegExp($control, '/[0-9]/') );
-	//Assert::false( Validator::validateRegExp($control, '/a/') );
 	Assert::false( Validator::validatePattern($control, '[0-9]') );
 	Assert::true( Validator::validatePattern($control, '[0-9]+x') );
 	Assert::false( Validator::validatePattern($control, '[0-9]+X') );
