@@ -24,6 +24,18 @@ class Configurator extends Object
 	const AUTO = TRUE,
 		NONE = FALSE;
 
+	/** @var array of Nette classes which shouldn't be autowired */
+	public $autowiringClassBlacklist = array(
+		'Nette\ComponentModel\IComponent',
+		'Nette\ComponentModel\IContainer',
+		'Nette\ComponentModel\Component',
+		'Nette\ComponentModel\Container',
+		'Nette\Application\UI\Control',
+		'Nette\Application\UI\PresenterComponent',
+		'Nette\Application\UI\Presenter',
+		'Nette\Object',
+	);
+
 	/** @var array of function(Configurator $sender, DI\Compiler $compiler); Occurs after the compiler is created */
 	public $onCompile;
 
@@ -226,6 +238,9 @@ class Configurator extends Object
 
 		foreach ($this->defaultExtensions as $name => $class) {
 			$compiler->addExtension($name, new $class);
+		}
+		foreach ($this->autowiringClassBlacklist as $class) {
+			$compiler->getContainerBuilder()->addClassToBlacklist($class);
 		}
 
 		return $compiler;

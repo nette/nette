@@ -44,6 +44,9 @@ class ContainerBuilder extends Nette\Object
 	/** @var string */
 	/*private in 5.4*/public $currentService;
 
+	/** @var array of classes excluded from auto-wiring */
+	private $classBlacklist = array();
+
 
 	/**
 	 * Adds new service definition.
@@ -284,6 +287,10 @@ class ContainerBuilder extends Nette\Object
 					$this->classes[strtolower($parent)][] = (string) $name;
 				}
 			}
+		}
+
+		foreach ($this->classBlacklist as $class) {
+			unset($this->classes[$class]);
 		}
 
 		foreach ($this->classes as $class => $foo) {
@@ -703,6 +710,18 @@ class ContainerBuilder extends Nette\Object
 			throw new ServiceCreationException("Reference to missing service '$service'.");
 		}
 		return $service;
+	}
+
+
+	/**
+	 * @param string
+	 */
+	public function addClassToBlacklist($class)
+	{
+		$class = strtolower(trim($class, '\\'));
+		if(!in_array($class, $this->classBlacklist)) {
+			$this->classBlacklist[] = $class;
+		}
 	}
 
 }
