@@ -50,7 +50,6 @@ class Form extends Container
 		LENGTH = ':length',
 		EMAIL = ':email',
 		URL = ':url',
-		REGEXP = ':regexp',
 		PATTERN = ':pattern',
 		INTEGER = ':integer',
 		NUMERIC = ':integer',
