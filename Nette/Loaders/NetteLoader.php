@@ -15,7 +15,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class NetteLoader extends Nette\Object
+class NetteLoader
 {
 	/** @var NetteLoader */
 	private static $instance;
