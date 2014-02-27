@@ -13,8 +13,6 @@ if (PHP_VERSION_ID < 50301) {
 
 
 // Run NetteLoader
-require_once __DIR__ . '/common/exceptions.php';
-require_once __DIR__ . '/common/Object.php';
 require_once __DIR__ . '/Loaders/NetteLoader.php';
 
 Nette\Loaders\NetteLoader::getInstance()->register();
