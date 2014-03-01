@@ -85,7 +85,7 @@ class Session extends Nette\Object
 		$this->configure($this->options);
 
 		$id = & $_COOKIE[session_name()];
-		if (!!$this->checkId($id)) {
+		if (!$this->checkId($id)) {
 			unset($_COOKIE[session_name()]);
 		}
 
@@ -229,7 +229,7 @@ class Session extends Nette\Object
 			}
 			$this->changeId();
 			$newId = session_id();
-			if ( !$this->checkId($newId)){
+			if (!$this->checkId($newId)){
 				throw new Nette\InvalidStateException("Session ID '$newId' is not valid session identifier.");
 			}
 			session_write_close();
