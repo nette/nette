@@ -450,6 +450,8 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		}
 
 		$initialize->addBody('Nette\Utils\SafeStream::register();');
+		$initialize->addBody('Nette\Reflection\AnnotationsParser::setCacheStorage($this->getByType("Nette\Caching\IStorage"));');
+		$initialize->addBody('Nette\Reflection\AnnotationsParser::$autoRefresh = ?;', array($container->parameters['debugMode']));
 	}
 
 
