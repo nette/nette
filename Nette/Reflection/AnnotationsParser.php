@@ -40,6 +40,9 @@ class AnnotationsParser
 	/** @var Nette\Caching\IStorage */
 	private static $cacheStorage;
 
+	/** @var bool */
+	private static $debugMode;
+
 
 	/**
 	 * Static class - cannot be instantiated.
@@ -90,11 +93,7 @@ class AnnotationsParser
 			$annotations = self::parseComment($r->getDocComment());
 
 		} else {
-			if (!self::$cacheStorage) {
-				// trigger_error('Set a cache storage for annotations parser via Nette\Reflection\AnnotationParser::setCacheStorage().', E_USER_WARNING);
-				self::$cacheStorage = new Nette\Caching\Storages\DevNullStorage;
-			}
-			$outerCache = new Nette\Caching\Cache(self::$cacheStorage, 'Nette.Reflection.Annotations');
+			$outerCache = self::getCache();
 
 			if (self::$cache === NULL) {
 				self::$cache = (array) $outerCache->load('list');
@@ -103,7 +102,7 @@ class AnnotationsParser
 
 			if (!isset(self::$cache[$type]) && $file) {
 				self::$cache['*'][$file] = filemtime($file);
-				foreach (self::parsePhp(file_get_contents($file)) as $class => $info) {
+				foreach (static::parsePhp(file_get_contents($file)) as $class => $info) {
 					foreach ($info as $prop => $comment) {
 						if ($prop !== 'use') {
 							self::$cache[$class][$prop] = self::parseComment($comment);
@@ -155,7 +154,15 @@ class AnnotationsParser
 			return ltrim($name, '\\');
 		}
 
-		$parsed = static::parsePhp(file_get_contents($reflector->getFileName()));
+		$class = get_called_class();
+		$filename = $reflector->getFileName();
+		$cache = static::getCache()->derive('parsed');
+		$parsed = $cache->load($filename, function(&$dp) use($filename, $class) {
+			if ($class::getDebugMode()) {
+				$dp[Nette\Caching\Cache::FILES] = array($filename);
+			}
+			return $class::parsePhp(file_get_contents($filename));
+		});
 		$uses = array_change_key_case((array) $tmp = & $parsed[$reflector->getName()]['use']);
 		$parts = explode('\\', $name, 2);
 		$parts[0] = strtolower($parts[0]);
@@ -380,12 +387,39 @@ class AnnotationsParser
 	}
 
 
+	public static function setDebugMode($mode)
+	{
+		self::$debugMode = (bool) $mode;
+	}
+
+
+	public static function getDebugMode()
+	{
+		if (self::$debugMode === NULL) {
+			self::$debugMode = TRUE;
+		}
+		return self::$debugMode;
+	}
+
+
 	/**
 	 * @return Nette\Caching\IStorage
 	 */
 	public static function getCacheStorage()
 	{
+		if (!self::$cacheStorage) {
+			self::$cacheStorage = new Nette\Caching\Storages\MemoryStorage();
+		}
 		return self::$cacheStorage;
+	}
+
+
+	/**
+	 * @return Nette\Caching\Cache
+	 */
+	private static function getCache()
+	{
+		return new Nette\Caching\Cache(static::getCacheStorage(), 'Nette.Reflection.Annotations');
 	}
 
 }
