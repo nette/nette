@@ -153,11 +153,10 @@ class Helpers
 				throw new Nette\InvalidStateException("Property $property has not @var annotation.");
 
 			} elseif (!class_exists($type) && !interface_exists($type)) {
-				if ($type[0] !== '\\') {
-					$type = $property->getDeclaringClass()->getNamespaceName() . '\\' . $type;
-				}
+				$type = Nette\Reflection\AnnotationsParser::expandClassName($type, $property->getDeclaringClass());
+
 				if (!class_exists($type) && !interface_exists($type)) {
-					throw new Nette\InvalidStateException("Please use a fully qualified name of class/interface in @var annotation at $property property. Class '$type' cannot be found.");
+					throw new Nette\InvalidStateException("Class/interface '$type' in @var annotation at $property property cannot be found.");
 				}
 			}
 			$res[$property->getName()] = $type;
