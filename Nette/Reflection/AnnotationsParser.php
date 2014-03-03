@@ -154,14 +154,13 @@ class AnnotationsParser
 			return ltrim($name, '\\');
 		}
 
-		$class = get_called_class();
 		$filename = $reflector->getFileName();
 		$cache = static::getCache()->derive('parsed');
-		$parsed = $cache->load($filename, function(&$dp) use($filename, $class) {
-			if ($class::getDebugMode()) {
+		$parsed = $cache->load($filename, function(&$dp) use($filename) {
+			if (AnnotationsParser::getDebugMode()) {
 				$dp[Nette\Caching\Cache::FILES] = array($filename);
 			}
-			return $class::parsePhp(file_get_contents($filename));
+			return AnnotationsParser::parsePhp(file_get_contents($filename));
 		});
 		$uses = array_change_key_case((array) $tmp = & $parsed[$reflector->getName()]['use']);
 		$parts = explode('\\', $name, 2);
@@ -396,7 +395,7 @@ class AnnotationsParser
 	public static function getDebugMode()
 	{
 		if (self::$debugMode === NULL) {
-			self::$debugMode = TRUE;
+			self::$debugMode = FALSE;
 		}
 		return self::$debugMode;
 	}
