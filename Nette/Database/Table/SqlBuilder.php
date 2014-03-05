@@ -195,13 +195,15 @@ class SqlBuilder extends Nette\Object
 		return $this->select;
 	}
 
-	public function addLeft() {
+	public function addLeft()
+	{
 		$args = func_get_args();
 		array_unshift($args, 'left');
 		return call_user_func_array($this->addCondition, $args);
 	}
 
-	public function addWhere() {
+	public function addWhere()
+	{
 		$args = func_get_args();
 		array_unshift($args, 'where');
 		return call_user_func_array($this->addCondition, $args);
@@ -461,7 +463,7 @@ class SqlBuilder extends Nette\Object
 			list($joinTable, $joinAlias, $table, $tableColumn, $joinColumn) = $join;
 
 			$additionalConditions = '';
-			if(isset($leftConditions[$joinAlias]) && count($leftConditions[$joinAlias])){
+			if (isset($leftConditions[$joinAlias]) && count($leftConditions[$joinAlias])) {
 				$additionalConditions = ' AND (' . $leftConditions[$joinAlias] . ')';
 			}
 			
@@ -495,18 +497,20 @@ class SqlBuilder extends Nette\Object
 		return $return;
 	}
 	
-	protected function createLeftJoinConditions() {
+	protected function createLeftJoinConditions()
+	{
 		return implode(',', $this->left);
 	}
 	
-	protected function buildLeftJoinConditions($allLeftJoinConditions) {
+	protected function buildLeftJoinConditions($allLeftJoinConditions)
+	{
 		$conditions = array();
-		foreach(explode(',', $allLeftJoinConditions) as $condition){
+		foreach (explode(',', $allLeftJoinConditions) as $condition) {
 			$condition = Strings::trim($condition);
 			$table = Strings::replace($condition, '~\..*$~');
-			if(!isset($conditions[$table])){
+			if (!isset($conditions[$table])) {
 				$conditions[$table] = $condition;
-			}else{
+			} else {
 				$conditions[$table] .= " AND " . $condition;
 			}
 		}

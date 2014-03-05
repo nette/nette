@@ -341,7 +341,8 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	 * @param  mixed ...
 	 * @return self
 	 */
-	public function where($condition, $parameters = array()) {
+	public function where($condition, $parameters = array())
+	{
 		$args = func_get_args();
 		array_unshift($args, 'where');
 		return call_user_func_array($this->condition, $args);
@@ -354,7 +355,8 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	 * @param  mixed ...
 	 * @return self
 	 */
-	public function left($condition, $parameters = array()) {
+	public function left($condition, $parameters = array())
+	{
 		$args = func_get_args();
 		array_unshift($args, 'left');
 		return call_user_func_array($this->condition, $args);
