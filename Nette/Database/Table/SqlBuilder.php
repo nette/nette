@@ -11,7 +11,8 @@ use Nette,
 	Nette\Database\Connection,
 	Nette\Database\IReflection,
 	Nette\Database\ISupplementalDriver,
-	Nette\Database\SqlLiteral;
+	Nette\Database\SqlLiteral,
+	Nette\Utils\Strings;
 
 
 /**
@@ -40,6 +41,9 @@ class SqlBuilder extends Nette\Object
 
 	/** @var array of where conditions */
 	protected $where = array();
+	
+	/** @var array of left join conditions */
+	protected $left = array();
 
 	/** @var array of where conditions for caching */
 	protected $conditions = array();
@@ -47,6 +51,7 @@ class SqlBuilder extends Nette\Object
 	/** @var array of parameters passed to where conditions */
 	protected $parameters = array(
 		'select' => array(),
+		'left' => array(),
 		'where' => array(),
 		'group' => array(),
 		'having' => array(),
@@ -111,10 +116,12 @@ class SqlBuilder extends Nette\Object
 	{
 		$queryCondition = $this->buildConditions();
 		$queryEnd       = $this->buildQueryEnd();
+		$leftConditions = $this->createLeftJoinConditions();
 
 		$joins = array();
 		$this->parseJoins($joins, $queryCondition);
 		$this->parseJoins($joins, $queryEnd);
+		$this->parseJoins($joins, $leftConditions);
 
 		if ($this->select) {
 			$querySelect = $this->buildSelect($this->select);
@@ -138,7 +145,7 @@ class SqlBuilder extends Nette\Object
 
 		}
 
-		$queryJoins = $this->buildQueryJoins($joins);
+		$queryJoins = $this->buildQueryJoins($joins, $this->buildLeftJoinConditions($leftConditions));
 		$query = "{$querySelect} FROM {$this->tableName}{$queryJoins}{$queryCondition}{$queryEnd}";
 
 		if ($this->limit !== NULL || $this->offset) {
@@ -153,6 +160,7 @@ class SqlBuilder extends Nette\Object
 	{
 		return array_merge(
 			$this->parameters['select'],
+			$this->parameters['left'],
 			$this->parameters['where'],
 			$this->parameters['group'],
 			$this->parameters['having'],
@@ -187,8 +195,19 @@ class SqlBuilder extends Nette\Object
 		return $this->select;
 	}
 
+	public function addLeft() {
+		$args = func_get_args();
+		array_unshift($args, 'left');
+		return call_user_func_array($this->addCondition, $args);
+	}
 
-	public function addWhere($condition, $parameters = array())
+	public function addWhere() {
+		$args = func_get_args();
+		array_unshift($args, 'where');
+		return call_user_func_array($this->addCondition, $args);
+	}
+
+	public function addCondition($method, $condition, $parameters = array())
 	{
 		if (is_array($condition) && is_array($parameters) && !empty($parameters)) {
 			return $this->addWhereComposition($condition, $parameters);
@@ -196,6 +215,7 @@ class SqlBuilder extends Nette\Object
 
 		$args = func_get_args();
 		$hash = md5(json_encode($args));
+		array_shift($args);
 		if (isset($this->conditions[$hash])) {
 			return FALSE;
 		}
@@ -250,7 +270,7 @@ class SqlBuilder extends Nette\Object
 					if ($this->driver->isSupported(ISupplementalDriver::SUPPORT_SUBSELECT)) {
 						$arg = NULL;
 						$replace = $match[2][0] . '(' . $clone->getSql() . ')';
-						$this->parameters['where'] = array_merge($this->parameters['where'], $clone->getSqlBuilder()->parameters['where']);
+						$this->parameters[$method] = array_merge($this->parameters[$method], $clone->getSqlBuilder()->parameters[$method]);
 					} else {
 						$arg = array();
 						foreach ($clone as $row) {
@@ -276,16 +296,16 @@ class SqlBuilder extends Nette\Object
 						$arg = NULL;
 					} else {
 						$replace = $match[2][0] . '(?)';
-						$this->parameters['where'][] = $arg;
+						$this->parameters[$method][] = $arg;
 					}
 				}
 			} elseif ($arg instanceof SqlLiteral) {
-				$this->parameters['where'][] = $arg;
+				$this->parameters[$method][] = $arg;
 			} else {
 				if (!$hasOperator) {
 					$replace = '= ?';
 				}
-				$this->parameters['where'][] = $arg;
+				$this->parameters[$method][] = $arg;
 			}
 
 			if ($replace) {
@@ -298,7 +318,7 @@ class SqlBuilder extends Nette\Object
 			}
 		}
 
-		$this->where[] = $condition;
+		$this->{$method}[] = $condition;
 		return TRUE;
 	}
 
@@ -434,15 +454,20 @@ class SqlBuilder extends Nette\Object
 	}
 
 
-	protected function buildQueryJoins(array $joins)
+	protected function buildQueryJoins(array $joins, $leftConditions = array())
 	{
 		$return = '';
 		foreach ($joins as $join) {
 			list($joinTable, $joinAlias, $table, $tableColumn, $joinColumn) = $join;
 
+			$additionalConditions = '';
+			if(isset($leftConditions[$joinAlias]) && count($leftConditions[$joinAlias])){
+				$additionalConditions = ' AND (' . $leftConditions[$joinAlias] . ')';
+			}
+			
 			$return .=
 				" LEFT JOIN {$joinTable}" . ($joinTable !== $joinAlias ? " AS {$joinAlias}" : '') .
-				" ON {$table}.{$tableColumn} = {$joinAlias}.{$joinColumn}";
+				" ON {$table}.{$tableColumn} = {$joinAlias}.{$joinColumn}{$additionalConditions}";
 		}
 
 		return $return;
@@ -468,6 +493,24 @@ class SqlBuilder extends Nette\Object
 			$return .= ' ORDER BY ' . implode(', ', $this->order);
 		}
 		return $return;
+	}
+	
+	protected function createLeftJoinConditions() {
+		return implode(',', $this->left);
+	}
+	
+	protected function buildLeftJoinConditions($allLeftJoinConditions) {
+		$conditions = array();
+		foreach(explode(',', $allLeftJoinConditions) as $condition){
+			$condition = Strings::trim($condition);
+			$table = Strings::replace($condition, '~\..*$~');
+			if(!isset($conditions[$table])){
+				$conditions[$table] = $condition;
+			}else{
+				$conditions[$table] .= " AND " . $condition;
+			}
+		}
+		return $conditions;
 	}
 
 
