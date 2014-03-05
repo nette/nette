@@ -45,7 +45,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		'security' => array(
 			'debugger' => TRUE,
 			'frames' => 'SAMEORIGIN', // X-Frame-Options
-			'users' => array(), // of [user => password]
+			'users' => array(), // of [user => password] or [user => ["password" => password, "roles" => [role]]]
 			'roles' => array(), // of [role => parents]
 			'resources' => array(), // of [resource => parents]
 		),
@@ -199,8 +199,17 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		}
 
 		if ($config['users']) {
+			$userList = array();
+			$usersRoles = array();
+			foreach ($config['users'] as $username => $data) {
+				$password = is_array($data) ? $data['password'] : $data;
+				$roles = is_array($data) && isset($data['roles']) ? (array) $data['roles'] : array();
+				$userList[$username] = $password;
+				$usersRoles[$username] = $roles;
+			}
+
 			$container->addDefinition($this->prefix('authenticator'))
-				->setClass('Nette\Security\SimpleAuthenticator', array($config['users']));
+				->setClass('Nette\Security\SimpleAuthenticator', array($userList, $usersRoles));
 		}
 
 		if ($config['roles'] || $config['resources']) {
