@@ -159,4 +159,3 @@ Assert::type('IArticleFactory', $container->getService('article2'));
 $article = $container->getService('article2')->create('nemam');
 Assert::type('Article', $article);
 Assert::same('nemam', $article->title);
-
