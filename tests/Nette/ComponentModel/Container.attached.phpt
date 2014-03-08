@@ -88,3 +88,42 @@ Assert::same( 'c-d-e', $d['e']->lookupPath('B') );
 Assert::same( $b, $d['e']->lookup('B') );
 
 Assert::same( $a['b-c'], $b['c'] );
+Notes::fetch(); // clear
+
+
+class FooForm extends TestClass
+{
+
+	protected function validateParent(\Nette\ComponentModel\IContainer $parent)
+	{
+		parent::validateParent($parent);
+		$this->monitor(__CLASS__);
+	}
+
+}
+
+class FooControl extends TestClass
+{
+
+	protected function validateParent(\Nette\ComponentModel\IContainer $parent)
+	{
+		parent::validateParent($parent);
+		$this->monitor('FooPresenter');
+	}
+
+}
+
+class FooPresenter extends TestClass
+{
+
+}
+
+$presenter = new FooPresenter();
+$presenter['control'] = new FooControl();
+$presenter['form'] = new FooForm();
+$presenter['form']['form'] = new FooForm();
+
+Assert::same(array(
+	'FooControl::ATTACHED(FooPresenter)',
+	'FooForm::ATTACHED(FooForm)'
+), Notes::fetch());
