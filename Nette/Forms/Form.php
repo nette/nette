@@ -122,18 +122,22 @@ class Form extends Container
 	 */
 	public function __construct($name = NULL)
 	{
-		$this->element = Nette\Utils\Html::el('form');
-		$this->element->action = ''; // RFC 1808 -> empty uri means 'this'
-		$this->element->method = self::POST;
-		$this->element->id = $name === NULL ? NULL : 'frm-' . $name;
-
-		$this->monitor(__CLASS__);
 		if ($name !== NULL) {
 			$tracker = new Controls\HiddenField($name);
 			$tracker->setOmitted();
 			$this[self::TRACKER_ID] = $tracker;
 		}
 		parent::__construct(NULL, $name);
+	}
+
+
+	/**
+	 * @return void
+	 */
+	protected function validateParent(Nette\ComponentModel\IContainer $parent)
+	{
+		parent::validateParent($parent);
+		$this->monitor(__CLASS__);
 	}
 
 
@@ -179,7 +183,7 @@ class Form extends Container
 	 */
 	public function getAction()
 	{
-		return $this->element->action;
+		return $this->getElementPrototype()->action;
 	}
 
 
@@ -193,7 +197,7 @@ class Form extends Container
 		if ($this->httpData !== NULL) {
 			throw new Nette\InvalidStateException(__METHOD__ . '() must be called until the form is empty.');
 		}
-		$this->element->method = strtolower($method);
+		$this->getElementPrototype()->method = strtolower($method);
 		return $this;
 	}
 
@@ -204,7 +208,7 @@ class Form extends Container
 	 */
 	public function getMethod()
 	{
-		return $this->element->method;
+		return $this->getElementPrototype()->method;
 	}
 
 
@@ -543,6 +547,13 @@ class Form extends Container
 	 */
 	public function getElementPrototype()
 	{
+		if ($this->element === NULL) {
+			$this->element = Nette\Utils\Html::el('form');
+			$this->element->action = ''; // RFC 1808 -> empty uri means 'this'
+			$this->element->method = self::POST;
+			$this->element->id = $this->getName() === NULL ? NULL : 'frm-' . $this->getName();
+		}
+
 		return $this->element;
 	}
 
