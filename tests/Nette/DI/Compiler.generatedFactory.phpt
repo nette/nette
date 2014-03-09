@@ -110,7 +110,6 @@ class TestExtension extends DI\CompilerExtension
 			->setImplement('IFooFactory')
 			->setArguments(array($builder::literal('$baz')));
 
-		// needed order: parameters, implement because of setting shared = true
 		// see definition by config in Compiler::parseService()
 	}
 }
