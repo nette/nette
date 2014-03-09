@@ -173,7 +173,7 @@ class Form extends Container
 	 */
 	public function setAction($url)
 	{
-		$this->element->action = $url;
+		$this->getElementPrototype()->action = $url;
 		return $this;
 	}
 
