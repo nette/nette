@@ -386,7 +386,7 @@ $counter = 0;
 		}
 
 		link.className = 'nette-toggle' + (collapsed ? '' : '-collapsed');
-		dest.style.display = collapsed ? (dest.tagName.toLowerCase() === 'div' ? 'block' : 'inline') : 'none';
+		dest.className = collapsed ? '' : 'nette-collapsed';
 
 		if (link.id === 'netteBluescreenIcon') {
 			for (var i = 0, styles = document.styleSheets; i < styles.length; i++) {

@@ -38,7 +38,7 @@
 				oldPosition = panel.position();
 
 			link.className = 'nette-toggle' + (collapsed ? '' : '-collapsed');
-			dest[collapsed ? 'show' : 'hide']();
+			dest[collapsed ? 'removeClass' : 'addClass']('nette-collapsed');
 			e.preventDefault();
 
 			if (panel.length) {
