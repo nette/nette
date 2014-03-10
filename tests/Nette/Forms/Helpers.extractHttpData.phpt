@@ -39,6 +39,7 @@ test(function() { // multiple
 	Assert::same(array('1', '2'), Helpers::extractHttpData(array('multi' => array('1', '2')), 'multi[]', Form::DATA_LINE));
 	Assert::same(array('1', '2'), Helpers::extractHttpData(array('multi' => array('1', '2')), 'multi[]', Form::DATA_TEXT));
 	Assert::same(array('1', '2'), Helpers::extractHttpData(array('multi' => array('x' => '1', 2 => '2')), 'multi[]', Form::DATA_TEXT));
+	Assert::same(array('x' => '1', 2 => '2'), Helpers::extractHttpData(array('multi' => array('x' => '1', 2 => '2')), 'multi[]', Form::DATA_KEYS | Form::DATA_TEXT));
 
 	Assert::same(array('3', '4'), Helpers::extractHttpData(array(
 		'container' => array('image' => array('3', '4')),
@@ -76,8 +77,12 @@ test(function() { // files
 
 
 	Assert::equal(array($file, $file), Helpers::extractHttpData(array(
-		'multiple' => array('avatar' => array($file, $file)),
+		'multiple' => array('avatar' => array('x' => $file, $file)),
 	), 'multiple[avatar][]', Form::DATA_FILE));
+
+	Assert::equal(array('x' => $file, $file), Helpers::extractHttpData(array(
+		'multiple' => array('avatar' => array('x' => $file, $file)),
+	), 'multiple[avatar][]', Form::DATA_KEYS | Form::DATA_FILE));
 
 	Assert::same(array(), Helpers::extractHttpData(array(), 'missing[]', Form::DATA_FILE));
 	Assert::same(array(), Helpers::extractHttpData(array('invalid' => NULL), 'invalid[]', Form::DATA_FILE));

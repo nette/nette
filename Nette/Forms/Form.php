@@ -75,6 +75,7 @@ class Form extends Container
 	const DATA_TEXT = 1;
 	const DATA_LINE = 2;
 	const DATA_FILE = 3;
+	const DATA_KEYS = 8;
 
 	/** @internal tracker ID */
 	const TRACKER_ID = '_form_';

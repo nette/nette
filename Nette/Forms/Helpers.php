@@ -29,25 +29,31 @@ class Helpers extends Nette\Object
 	 * Extracts and sanitizes submitted form data for single control.
 	 * @param  array   submitted data
 	 * @param  string  control HTML name
-	 * @param  string  type Form::DATA_TEXT, DATA_LINE, DATA_FILE
+	 * @param  string  type Form::DATA_TEXT, DATA_LINE, DATA_FILE, DATA_KEYS
 	 * @return string|string[]
 	 */
 	public static function extractHttpData(array $data, $htmlName, $type)
 	{
 		$name = explode('[', str_replace(array('[]', ']', '.'), array('', '', '_'), $htmlName));
 		$data = Nette\Utils\Arrays::get($data, $name, NULL);
+		$itype = $type & ~Form::DATA_KEYS;
 
 		if (substr($htmlName, -2) === '[]') {
-			$arr = array();
-			foreach (is_array($data) ? $data : array() as $v) {
-				$arr[] = $v = static::sanitize($type, $v);
+			if (!is_array($data)) {
+				return array();
+			}
+			foreach ($data as $k => $v) {
+				$data[$k] = $v = static::sanitize($itype, $v);
 				if ($v === NULL) {
 					return array();
 				}
 			}
-			return $arr;
+			if ($type & Form::DATA_KEYS) {
+				return $data;
+			}
+			return array_values($data);
 		} else {
-			return static::sanitize($type, $data);
+			return static::sanitize($itype, $data);
 		}
 	}
 
