@@ -5,7 +5,7 @@
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
-namespace Nette\DI\Diagnostics;
+namespace Nette\Bridges\Tracy;
 
 use Nette,
 	Nette\DI\Container;
@@ -16,7 +16,7 @@ use Nette,
  *
  * @author     Patrik Votoček
  */
-class ContainerPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
+class DIContainerPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 {
 	/** @var Nette\DI\Container */
 	private $container;
@@ -35,7 +35,7 @@ class ContainerPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	public function getTab()
 	{
 		ob_start();
-		require __DIR__ . '/templates/ContainerPanel.tab.phtml';
+		require __DIR__ . '/templates/DIContainerPanel.tab.phtml';
 		return ob_get_clean();
 	}
 
@@ -66,7 +66,7 @@ class ContainerPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 		}
 
 		ob_start();
-		require __DIR__ . '/templates/ContainerPanel.panel.phtml';
+		require __DIR__ . '/templates/DIContainerPanel.panel.phtml';
 		return ob_get_clean();
 	}
 

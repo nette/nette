@@ -31,9 +31,9 @@ class Engine extends Nette\Object
 		$this->compiler->defaultContentType = Compiler::CONTENT_HTML;
 
 		Macros\CoreMacros::install($this->compiler);
-		$this->compiler->addMacro('cache', new Macros\CacheMacro($this->compiler));
+		$this->compiler->addMacro('cache', new Nette\Bridges\Latte\CacheMacro($this->compiler));
 		Macros\UIMacros::install($this->compiler);
-		Macros\FormMacros::install($this->compiler);
+		Nette\Bridges\Latte\FormMacros::install($this->compiler);
 	}
 
 

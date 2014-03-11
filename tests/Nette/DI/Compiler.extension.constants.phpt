@@ -15,7 +15,7 @@ require __DIR__ . '/../bootstrap.php';
 
 $loader = new DI\Config\Loader;
 $compiler = new DI\Compiler;
-$compiler->addExtension('constants', new Nette\DI\Extensions\ConstantsExtension);
+$compiler->addExtension('constants', new Nette\Bridges\DI\ConstantsExtension);
 $code = $compiler->compile($loader->load('files/compiler.extension.constants.neon'), 'Container', 'Nette\DI\Container');
 
 file_put_contents(TEMP_DIR . '/code.php', "<?php\n\n$code");

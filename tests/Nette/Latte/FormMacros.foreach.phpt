@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Macros\FormMacros: GET form
+ * Test: Nette\Bridges\Latte\FormMacros: GET form
  *
  * @author     Filip Procházka
  */
 
-use Nette\Latte\Macros\FormMacros;
+use Nette\Bridges\Latte\FormMacros;
 use Nette\Application\UI\Form;
 use Tester\Assert;
 

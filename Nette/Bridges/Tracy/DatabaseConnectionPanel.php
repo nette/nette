@@ -5,7 +5,7 @@
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
-namespace Nette\Database\Diagnostics;
+namespace Nette\Bridges\Tracy;
 
 use Nette,
 	Nette\Database\Helpers;
@@ -16,7 +16,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
+class DatabaseConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 {
 	/** @var int */
 	public $maxQueries = 100;

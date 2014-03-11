@@ -29,9 +29,9 @@ class Configurator extends Object
 
 	/** @var array */
 	public $defaultExtensions = array(
-		'php' => 'Nette\DI\Extensions\PhpExtension',
-		'constants' => 'Nette\DI\Extensions\ConstantsExtension',
-		'nette' => 'Nette\DI\Extensions\NetteExtension',
+		'php' => 'Nette\Bridges\DI\PhpExtension',
+		'constants' => 'Nette\Bridges\DI\ConstantsExtension',
+		'nette' => 'Nette\Bridges\DI\NetteExtension',
 		'extensions' => 'Nette\DI\Extensions\ExtensionsExtension',
 	);
 

@@ -5,7 +5,7 @@
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
-namespace Nette\DI\Extensions;
+namespace Nette\Bridges\DI;
 
 use Nette,
 	Nette\DI\ContainerBuilder,
@@ -171,7 +171,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 
 		if ($container->parameters['debugMode'] && $config['debugger']) {
 			$session->addSetup('Nette\Diagnostics\Debugger::getBar()->addPanel(?)', array(
-				new Nette\DI\Statement('Nette\Http\Diagnostics\SessionPanel')
+				new Nette\DI\Statement('Nette\Bridges\Tracy\HttpSessionPanel')
 			));
 		}
 
@@ -194,7 +194,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 
 		if ($container->parameters['debugMode'] && $config['debugger']) {
 			$user->addSetup('Nette\Diagnostics\Debugger::getBar()->addPanel(?)', array(
-				new Nette\DI\Statement('Nette\Security\Diagnostics\UserPanel')
+				new Nette\DI\Statement('Nette\Bridges\Tracy\SecurityUserPanel')
 			));
 		}
 
@@ -232,7 +232,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			->addSetup('$errorPresenter', array($config['errorPresenter']));
 
 		if ($config['debugger']) {
-			$application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initializePanel');
+			$application->addSetup('Nette\Bridges\Tracy\RoutingPanel::initializePanel');
 		}
 
 		$presenterFactory = $container->addDefinition($this->prefix('presenterFactory'))
@@ -258,7 +258,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 
 		if ($container->parameters['debugMode'] && $config['debugger']) {
 			$container->getDefinition('application')->addSetup('Nette\Diagnostics\Debugger::getBar()->addPanel(?)', array(
-				new Nette\DI\Statement('Nette\Application\Diagnostics\RoutingPanel')
+				new Nette\DI\Statement('Nette\Bridges\Tracy\RoutingPanel')
 			));
 		}
 	}
@@ -336,7 +336,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 				->setClass('Nette\Database\Connection', array($info['dsn'], $info['user'], $info['password'], $info['options']))
 				->setAutowired($info['autowired'])
 				->addSetup('Nette\Diagnostics\Debugger::getBlueScreen()->addPanel(?)', array(
-					'Nette\Database\Diagnostics\ConnectionPanel::renderException'
+					'Nette\Bridges\Tracy\DatabaseConnectionPanel::renderException'
 				));
 
 			if (!$info['reflection']) {
@@ -386,7 +386,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 
 		if ($container->parameters['debugMode']) {
 			if ($config['container']['debugger']) {
-				$config['debugger']['bar'][] = 'Nette\DI\Diagnostics\ContainerPanel';
+				$config['debugger']['bar'][] = 'Nette\Bridges\Tracy\DIContainerPanel';
 			}
 
 			foreach ((array) $config['debugger']['bar'] as $item) {
