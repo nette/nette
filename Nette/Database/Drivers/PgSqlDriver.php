@@ -134,10 +134,10 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 				NULL AS size,
 				FALSE AS unsigned,
 				NOT (a.attnotnull OR t.typtype = 'd' AND t.typnotnull) AS nullable,
-				ad.adsrc::varchar AS default,
+				pg_catalog.pg_get_expr(ad.adbin, 'pg_catalog.pg_attrdef'::regclass)::varchar AS default,
 				coalesce(co.contype = 'p' AND strpos(ad.adsrc, 'nextval') = 1, FALSE) AS autoincrement,
 				coalesce(co.contype = 'p', FALSE) AS primary,
-				substring(ad.adsrc from 'nextval[(]''\"?([^''\"]+)') AS sequence
+				substring(pg_catalog.pg_get_expr(ad.adbin, 'pg_catalog.pg_attrdef'::regclass) from 'nextval[(]''\"?([^''\"]+)') AS sequence
 			FROM
 				pg_catalog.pg_attribute AS a
 				JOIN pg_catalog.pg_class AS c ON a.attrelid = c.oid
