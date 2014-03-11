@@ -31,7 +31,7 @@ class Configurator extends Object
 	public $defaultExtensions = array(
 		'php' => 'Nette\DI\Extensions\PhpExtension',
 		'constants' => 'Nette\DI\Extensions\ConstantsExtension',
-		'nette' => 'Nette\DI\Extensions\NetteExtension',
+		'nette' => 'Nette\Bridges\Framework\NetteExtension',
 		'extensions' => 'Nette\DI\Extensions\ExtensionsExtension',
 	);
 

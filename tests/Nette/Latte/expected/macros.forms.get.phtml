@@ -12,9 +12,9 @@ if (!empty($_control->snippetMode)) {
 //
 // main template
 //
-Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array()) ;Nette\Latte\Macros\FormMacros::renderFormEnd($_form) ?>
+Nette\Bridges\FormsLatte\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array()) ;Nette\Bridges\FormsLatte\FormMacros::renderFormEnd($_form) ?>
 
 
-<form<?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array (
+<form<?php Nette\Bridges\FormsLatte\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array (
 ), FALSE) ?>>
-<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form, FALSE) ?></form>
+<?php Nette\Bridges\FormsLatte\FormMacros::renderFormEnd($_form, FALSE) ?></form>

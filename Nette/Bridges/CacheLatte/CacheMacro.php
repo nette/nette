@@ -5,7 +5,7 @@
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
-namespace Nette\Latte\Macros;
+namespace Nette\Bridges\CacheLatte;
 
 use Nette,
 	Nette\Latte;
@@ -39,7 +39,7 @@ class CacheMacro extends Nette\Object implements Latte\IMacro
 	public function finalize()
 	{
 		if ($this->used) {
-			return array('Nette\Latte\Macros\CacheMacro::initRuntime($template, $_g);');
+			return array('Nette\Bridges\CacheLatte\CacheMacro::initRuntime($template, $_g);');
 		}
 	}
 
@@ -53,7 +53,7 @@ class CacheMacro extends Nette\Object implements Latte\IMacro
 		$this->used = TRUE;
 		$node->isEmpty = FALSE;
 		$node->openingCode = Latte\PhpWriter::using($node)
-			->write('<?php if (Nette\Latte\Macros\CacheMacro::createCache($netteCacheStorage, %var, $_g->caches, %node.array?)) { ?>',
+			->write('<?php if (Nette\Bridges\CacheLatte\CacheMacro::createCache($netteCacheStorage, %var, $_g->caches, %node.array?)) { ?>',
 				Nette\Utils\Random::generate()
 			);
 	}

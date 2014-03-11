@@ -3,7 +3,7 @@
 //
 // main template
 //
-Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array()) ?>
+Nette\Bridges\FormsLatte\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array()) ?>
 <table>
 	<tr>
 		<th><?php if ($_label = $_form["input1"]->getLabel()) echo $_label  ?></th>
@@ -38,4 +38,4 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 		<td><?php echo $_form["input8"]->getControl() ?></td>
 	</tr>
 </table>
-<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form) ;
+<?php Nette\Bridges\FormsLatte\FormMacros::renderFormEnd($_form) ;

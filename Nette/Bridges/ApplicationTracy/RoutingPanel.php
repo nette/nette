@@ -5,7 +5,7 @@
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
-namespace Nette\Application\Diagnostics;
+namespace Nette\Bridges\ApplicationTracy;
 
 use Nette,
 	Nette\Application\Routers,

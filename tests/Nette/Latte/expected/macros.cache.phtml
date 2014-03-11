@@ -2,8 +2,8 @@
 // prolog Nette\Latte\Macros\CoreMacros
 list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
 ;
-// prolog Nette\Latte\Macros\CacheMacro
-Nette\Latte\Macros\CacheMacro::initRuntime($template, $_g);
+// prolog Nette\Bridges\CacheLatte\CacheMacro
+Nette\Bridges\CacheLatte\CacheMacro::initRuntime($template, $_g);
 
 // prolog Nette\Latte\Macros\UIMacros
 
@@ -16,7 +16,7 @@ if (%A%}
 ?>
 Noncached content
 
-<?php if (Nette\Latte\Macros\CacheMacro::createCache($netteCacheStorage, 'xxx', $_g->caches, array($id, 'tags' => 'mytag'))) { ?>
+<?php if (Nette\Bridges\CacheLatte\CacheMacro::createCache($netteCacheStorage, 'xxx', $_g->caches, array($id, 'tags' => 'mytag'))) { ?>
 
 <h1><?php echo Nette\Templating\Helpers::escapeHtml($template->upper($title), ENT_NOQUOTES) ?></h1>
 

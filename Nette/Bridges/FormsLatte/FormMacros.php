@@ -5,13 +5,14 @@
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
-namespace Nette\Latte\Macros;
+namespace Nette\Bridges\FormsLatte;
 
 use Nette,
 	Nette\Latte,
 	Nette\Latte\MacroNode,
 	Nette\Latte\PhpWriter,
 	Nette\Latte\CompileException,
+	Nette\Latte\Macros\MacroSet,
 	Nette\Forms\Form;
 
 
@@ -32,7 +33,7 @@ class FormMacros extends MacroSet
 	public static function install(Latte\Compiler $compiler)
 	{
 		$me = new static($compiler);
-		$me->addMacro('form', array($me, 'macroForm'), 'Nette\Latte\Macros\FormMacros::renderFormEnd($_form)');
+		$me->addMacro('form', array($me, 'macroForm'), 'Nette\Bridges\FormsLatte\FormMacros::renderFormEnd($_form)');
 		$me->addMacro('formContainer', array($me, 'macroFormContainer'), '$_form = array_pop($_formStack)');
 		$me->addMacro('label', array($me, 'macroLabel'), array($me, 'macroLabelEnd'));
 		$me->addMacro('input', array($me, 'macroInput'), NULL, array($me, 'macroInputAttr'));
@@ -58,7 +59,7 @@ class FormMacros extends MacroSet
 		}
 		$node->tokenizer->reset();
 		return $writer->write(
-			'Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = '
+			'Nette\Bridges\FormsLatte\FormMacros::renderFormBegin($form = $_form = '
 			. ($name[0] === '$' ? 'is_object(%node.word) ? %node.word : ' : '')
 			. '$_control[%node.word], %node.array)'
 		);
@@ -157,7 +158,7 @@ class FormMacros extends MacroSet
 
 		if ($tagName === 'form') {
 			return $writer->write(
-				'Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = '
+				'Nette\Bridges\FormsLatte\FormMacros::renderFormBegin($form = $_form = '
 					. ($name[0] === '$' ? 'is_object(%0.word) ? %0.word : ' : '')
 					. '$_control[%0.word], %1.var, FALSE)',
 				$name,
@@ -193,7 +194,7 @@ class FormMacros extends MacroSet
 	{
 		preg_match('#^(.*? n:\w+>)(.*)(<[^?].*)\z#s', $node->content, $parts);
 		if (strtolower($node->htmlNode->name) === 'form') {
-			$node->content = $parts[1] . $parts[2] . '<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form, FALSE) ?>' . $parts[3];
+			$node->content = $parts[1] . $parts[2] . '<?php Nette\Bridges\FormsLatte\FormMacros::renderFormEnd($_form, FALSE) ?>' . $parts[3];
 		} else { // select, textarea
 			$node->content = $parts[1] . '<?php echo $_input->getControl()->getHtml() ?>' . $parts[3];
 		}

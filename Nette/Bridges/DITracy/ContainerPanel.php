@@ -5,7 +5,7 @@
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
-namespace Nette\DI\Diagnostics;
+namespace Nette\Bridges\DITracy;
 
 use Nette,
 	Nette\DI\Container;

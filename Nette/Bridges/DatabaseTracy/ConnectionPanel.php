@@ -5,7 +5,7 @@
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
-namespace Nette\Database\Diagnostics;
+namespace Nette\Bridges\DatabaseTracy;
 
 use Nette,
 	Nette\Database\Helpers;

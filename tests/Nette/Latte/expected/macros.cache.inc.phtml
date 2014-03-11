@@ -6,8 +6,8 @@
 // prolog Nette\Latte\Macros\CoreMacros
 list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
 ;
-// prolog Nette\Latte\Macros\CacheMacro
-Nette\Latte\Macros\CacheMacro::initRuntime($template, $_g);
+// prolog Nette\Bridges\CacheLatte\CacheMacro
+Nette\Bridges\CacheLatte\CacheMacro::initRuntime($template, $_g);
 
 // prolog Nette\Latte\Macros\UIMacros
 
@@ -20,7 +20,7 @@ if (%A%}
 ?>
 <p>Included file (<?php echo Nette\Templating\Helpers::escapeHtml($localvar, ENT_NOQUOTES) ?>)</p>
 
-<?php if (Nette\Latte\Macros\CacheMacro::createCache($netteCacheStorage, 'xxx', $_g->caches)) { ?>
+<?php if (Nette\Bridges\CacheLatte\CacheMacro::createCache($netteCacheStorage, 'xxx', $_g->caches)) { ?>
 	<?php echo Nette\Templating\Helpers::escapeHtml($template->lower($title), ENT_NOQUOTES) ?>
 
 <?php $_l->tmp = array_pop($_g->caches); if (!$_l->tmp instanceof stdClass) $_l->tmp->end(); }
