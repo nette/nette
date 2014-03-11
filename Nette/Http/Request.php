@@ -301,7 +301,7 @@ class Request extends Nette\Object implements IRequest
 	/**
 	 * Parse Accept-Language header and returns prefered language.
 	 * @param  array   Supported languages
-	 * @return string
+	 * @return string|null
 	 */
 	public function detectLanguage(array $langs)
 	{
