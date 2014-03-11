@@ -36,9 +36,6 @@ class ServiceDefinition extends Nette\Object
 	public $autowired = TRUE;
 
 	/** @var bool */
-	public $shared = TRUE;
-
-	/** @var bool */
 	public $inject = TRUE;
 
 	/** @var string  interface name */
@@ -85,7 +82,7 @@ class ServiceDefinition extends Nette\Object
 
 	public function setParameters(array $params)
 	{
-		$this->shared = $this->autowired = FALSE;
+		$this->autowired = FALSE;
 		$this->parameters = $params;
 		return $this;
 	}
@@ -108,9 +105,16 @@ class ServiceDefinition extends Nette\Object
 	/** @deprecated */
 	public function setShared($on)
 	{
-		$this->shared = (bool) $on;
-		$this->autowired = $this->shared ? $this->autowired : FALSE;
+		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
+		$this->autowired = $on ? $this->autowired : FALSE;
 		return $this;
+	}
+
+
+	/** @deprecated */
+	public function isShared()
+	{
+		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
 	}
 
 
@@ -124,7 +128,6 @@ class ServiceDefinition extends Nette\Object
 	public function setImplement($implement)
 	{
 		$this->implement = $implement;
-		$this->shared = TRUE;
 		return $this;
 	}
 
