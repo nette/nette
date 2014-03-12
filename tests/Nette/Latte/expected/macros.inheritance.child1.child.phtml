@@ -16,7 +16,7 @@ if (!function_exists($_l->blocks['title'][] = '_xxx_title')) { function _xxx_tit
 if (!function_exists($_l->blocks['content'][] = '_xxx_content')) { function _xxx_content($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
 ?>	<ul>
 <?php $iterations = 0; foreach ($people as $person) { ?>
-		<li><?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></li>
+		<li><?php echo Nette\Latte\Runtime\Filters::escapeHtml($person, ENT_NOQUOTES) ?></li>
 <?php $iterations++; } ?>
 	</ul>
 <?php

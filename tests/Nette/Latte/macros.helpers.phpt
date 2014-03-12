@@ -42,7 +42,7 @@ $template->registerHelper('h1', array(new MyHelper, 'invoke'));
 $template->registerHelper('h2', 'strtoupper');
 $template->registerHelper('translate', 'strrev');
 $template->registerHelper('types', 'types');
-$template->registerHelperLoader('Nette\Templating\Helpers::loader');
+$template->registerHelperLoader('Nette\Latte\Runtime\Filters::loader');
 
 $template->hello = 'Hello World';
 $template->date = strtotime('2008-01-02');

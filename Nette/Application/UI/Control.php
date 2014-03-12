@@ -59,7 +59,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 		$template = $class ? new $class : new Nette\Templating\FileTemplate;
 		$presenter = $this->getPresenter(FALSE);
 		$template->onPrepareFilters[] = $this->templatePrepareFilters;
-		$template->registerHelperLoader('Nette\Templating\Helpers::loader');
+		$template->registerHelperLoader('Nette\Latte\Runtime\Filters::loader');
 
 		// default parameters
 		$template->control = $template->_control = $this;

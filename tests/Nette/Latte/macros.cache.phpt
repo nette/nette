@@ -19,7 +19,7 @@ require __DIR__ . '/Template.inc';
 $template = new FileTemplate(__DIR__ . '/templates/cache.latte');
 $template->setCacheStorage($cache = new MockCacheStorage);
 $template->registerFilter(new Latte\Engine);
-$template->registerHelperLoader('Nette\Templating\Helpers::loader');
+$template->registerHelperLoader('Nette\Latte\Runtime\Filters::loader');
 
 $template->netteCacheStorage = new Nette\Caching\Storages\DevNullStorage;
 $template->title = 'Hello';

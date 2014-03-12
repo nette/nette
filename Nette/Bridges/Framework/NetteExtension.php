@@ -293,7 +293,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		$container->addDefinition($this->prefix('template'))
 			->setClass('Nette\Templating\FileTemplate')
 			->addSetup('registerFilter', array($latte))
-			->addSetup('registerHelperLoader', array('Nette\Templating\Helpers::loader'))
+			->addSetup('registerHelperLoader', array('Nette\Latte\Runtime\Filters::loader'))
 			->setAutowired(FALSE);
 
 		foreach ($config['macros'] as $macro) {

@@ -18,9 +18,9 @@ if (%A%}
 // main template
 //
 ?>
-<p>Included file (<?php echo Nette\Templating\Helpers::escapeHtml($localvar, ENT_NOQUOTES) ?>)</p>
+<p>Included file (<?php echo Nette\Latte\Runtime\Filters::escapeHtml($localvar, ENT_NOQUOTES) ?>)</p>
 
 <?php if (Nette\Bridges\CacheLatte\CacheMacro::createCache($netteCacheStorage, 'xxx', $_g->caches)) { ?>
-	<?php echo Nette\Templating\Helpers::escapeHtml($template->lower($title), ENT_NOQUOTES) ?>
+	<?php echo Nette\Latte\Runtime\Filters::escapeHtml($template->lower($title), ENT_NOQUOTES) ?>
 
 <?php $_l->tmp = array_pop($_g->caches); if (!$_l->tmp instanceof stdClass) $_l->tmp->end(); }

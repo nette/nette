@@ -18,7 +18,7 @@ Noncached content
 
 <?php if (Nette\Bridges\CacheLatte\CacheMacro::createCache($netteCacheStorage, 'xxx', $_g->caches, array($id, 'tags' => 'mytag'))) { ?>
 
-<h1><?php echo Nette\Templating\Helpers::escapeHtml($template->upper($title), ENT_NOQUOTES) ?></h1>
+<h1><?php echo Nette\Latte\Runtime\Filters::escapeHtml($template->upper($title), ENT_NOQUOTES) ?></h1>
 
 <?php Nette\Latte\Macros\CoreMacros::includeTemplate('include.cache.latte', array('localvar' => 11) + $template->getParameters(), $_l->templates['xxx'])->render() ?>
 
