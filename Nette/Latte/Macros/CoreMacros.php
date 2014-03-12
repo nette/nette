@@ -175,9 +175,9 @@ class CoreMacros extends MacroSet
 		$node->content = $parts[1]
 			. '<?php ob_start() ?>'
 			. $parts[2]
-			. '<?php $_ifcontent = ob_get_length(); ob_end_flush() ?>'
+			. '<?php $_ifcontent = ob_get_contents(); ob_end_flush() ?>'
 			. $parts[3];
-		return '$_ifcontent ? ob_end_flush() : ob_end_clean()';
+		return 'rtrim($_ifcontent) === "" ? ob_end_clean() : ob_end_flush()';
 	}
 
 

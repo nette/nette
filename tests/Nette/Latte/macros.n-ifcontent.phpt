@@ -59,6 +59,29 @@ Assert::match(<<<EOD
 EOD
 , (string) $template);
 
+$template->setSource(<<<EOD
+<div n:ifcontent>
+
+</div>
+EOD
+);
+
+Assert::match(<<<EOD
+EOD
+, (string) $template);
+
+
+$template->setSource(<<<'EOD'
+<div n:ifcontent>
+	{$empty}
+</div>
+EOD
+);
+
+Assert::match(<<<EOD
+EOD
+, (string) $template);
+
 
 Assert::exception(function() use ($template) {
 	$template->setSource('{ifcontent}')->compile();
