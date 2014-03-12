@@ -22,6 +22,9 @@ class CheckboxList extends MultiChoiceControl
 {
 	/** @var Nette\Utils\Html  separator element template */
 	protected $separator;
+	
+	/** @var Nette\Utils\Html  wrapper element template */
+	private $wrapper;
 
 
 	public function __construct($label = NULL, array $items = NULL)
@@ -29,6 +32,7 @@ class CheckboxList extends MultiChoiceControl
 		parent::__construct($label, $items);
 		$this->control->type = 'checkbox';
 		$this->separator = Html::el('br');
+		$this->wrapper = Html::el();
 	}
 
 
@@ -41,7 +45,7 @@ class CheckboxList extends MultiChoiceControl
 		$items = $this->getItems();
 		reset($items);
 		$input = parent::getControl();
-		return Nette\Forms\Helpers::createInputList(
+		return $this->wrapper->setHtml(Nette\Forms\Helpers::createInputList(
 			$this->translate($items),
 			array_merge($input->attrs, array(
 				'id' => NULL,
@@ -52,7 +56,7 @@ class CheckboxList extends MultiChoiceControl
 			)),
 			$this->label->attrs,
 			$this->separator
-		);
+		));
 	}
 
 
@@ -100,4 +104,14 @@ class CheckboxList extends MultiChoiceControl
 		return parent::getLabel($this->items[$key])->for($this->getHtmlId() . '-' . $key);
 	}
 
+	
+	/**
+	 * Returns wrapper HTML element template.
+	 * @return Nette\Utils\Html
+	 */
+	public function getWrapperPrototype()
+	{
+		return $this->wrapper;
+	}
+	
 }
