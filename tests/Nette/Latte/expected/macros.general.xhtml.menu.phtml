@@ -12,7 +12,7 @@ if (%A%}
 //
 ?>
 <ul>
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($menu) as $item) { ?>
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Latte\Runtime\CachingIterator($menu) as $item) { ?>
 	<li><?php if (is_array($item)) { ?> <?php Nette\Latte\Macros\CoreMacros::includeTemplate('@menu.latte', array('menu' => $item) + $template->getParameters(), $_l->templates['xxx'])->render() ?>
  <?php } else { echo Nette\Latte\Runtime\Filters::escapeHtml($item, ENT_NOQUOTES) ;} ?></li>
 <?php $iterations++; } array_pop($_l->its); $iterator = end($_l->its) ?>

@@ -8,7 +8,7 @@ list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
 //
 if (!function_exists($_l->blocks['menu'][] = '_xxx_menu')) { function _xxx_menu($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
 ?><ul>
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($menu) as $item) { ?>
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Latte\Runtime\CachingIterator($menu) as $item) { ?>
 	<li><?php echo Nette\Latte\Runtime\Filters::escapeHtml($counter++, ENT_NOQUOTES) ?>
  <?php if (is_array($item)) { ?> <?php call_user_func(reset($_l->blocks['menu']), $_l, array('menu' => $item) + get_defined_vars()) ?>
  <?php } else { echo Nette\Latte\Runtime\Filters::escapeHtml($item, ENT_NOQUOTES) ;} ?></li>
@@ -102,7 +102,7 @@ if ($_l->extends) {
 <?php } ?>
 
 
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array(TRUE)) as $foo) { $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person) { ?>
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Latte\Runtime\CachingIterator(array(TRUE)) as $foo) { $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Latte\Runtime\CachingIterator($people) as $person) { ?>
 	<?php if ($iterator->isFirst()) { ?><ul><?php } ?>
 
 	<li id="item-<?php echo htmlSpecialChars($iterator->getCounter()) ?>" class="<?php echo htmlSpecialChars($iterator->isOdd() ? 'odd' : 'even') ?>
@@ -269,11 +269,11 @@ bold<?php if (array_pop($_l->ifs)) { ?></b>
 <?php ob_start() ?>TRUE<?php ob_start() ?>FALSE<?php if (TRUE) { ob_end_clean(); ob_end_flush(); } else { $_else = ob_get_contents(); ob_end_clean(); ob_end_clean(); echo $_else; } ?>
 
 
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array(1,2,3)) as $foo) { ?>
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Latte\Runtime\CachingIterator(array(1,2,3)) as $foo) { ?>
 	<b<?php if ($_l->tmp = array_filter(array($iterator->even ? 'even' : NULL))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>>item</b>
 <?php $iterations++; } array_pop($_l->its); $iterator = end($_l->its) ?>
 
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array(1, 2, 3)) as $foo) { ?>
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Latte\Runtime\CachingIterator(array(1, 2, 3)) as $foo) { ?>
 <p<?php if ($_l->tmp = array_filter(array($iterator->even ? 'even' : NULL))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>
 ><?php echo Nette\Latte\Runtime\Filters::escapeHtml($foo, ENT_NOQUOTES) ?></p>
 <?php $iterations++; } array_pop($_l->its); $iterator = end($_l->its) ?>
