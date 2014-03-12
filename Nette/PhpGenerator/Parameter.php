@@ -23,6 +23,8 @@ use Nette;
  * @method string getTypeHint()
  * @method Parameter setOptional(bool)
  * @method bool isOptional()
+ * @method Parameter setVariadic(bool)
+ * @method bool isVariadic()
  * @method Parameter setDefaultValue(mixed)
  * @method mixed getDefaultValue()
  */
@@ -39,6 +41,9 @@ class Parameter extends Nette\Object
 
 	/** @var bool */
 	private $optional;
+
+	/** @var bool */
+	private $variadic;
 
 	/** @var mixed */
 	public $defaultValue;
@@ -60,6 +65,7 @@ class Parameter extends Nette\Object
 			}
 		}
 		$param->optional = PHP_VERSION_ID < 50407 ? $from->isOptional() || ($param->typeHint && $from->allowsNull()) : $from->isDefaultValueAvailable();
+		$param->variadic = PHP_VERSION_ID >= 50600 && $from->isVariadic();
 		$param->defaultValue = (PHP_VERSION_ID === 50316 ? $from->isOptional() : $from->isDefaultValueAvailable()) ? $from->getDefaultValue() : NULL;
 
 		$namespace = $from->getDeclaringClass()->getNamespaceName();

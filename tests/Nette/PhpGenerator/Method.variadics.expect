@@ -1,0 +1,46 @@
+function variadic()
+{
+	return 42;
+}
+
+
+
+function variadic(...$foo)
+{
+	return 42;
+}
+
+
+
+function variadic($foo, $bar, ...$baz)
+{
+	return 42;
+}
+
+
+
+function variadic(...$foo)
+{
+	return 42;
+}
+
+
+
+function variadic($foo, ...$bar)
+{
+	return 42;
+}
+
+
+
+function variadic(array ...$foo)
+{
+	return 42;
+}
+
+
+
+function variadic(array &...$foo)
+{
+	return 42;
+}
