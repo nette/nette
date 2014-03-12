@@ -5,18 +5,27 @@
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
-namespace Nette\Http\Diagnostics;
+namespace Nette\Bridges\Tracy;
 
 use Nette;
 
 
 /**
- * Session panel for Debugger Bar.
+ * User panel for Debugger Bar.
  *
  * @author     David Grudl
  */
-class SessionPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
+class SecurityUserPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 {
+	/** @var Nette\Security\User */
+	private $user;
+
+
+	public function __construct(Nette\Security\User $user)
+	{
+		$this->user = $user;
+	}
+
 
 	/**
 	 * Renders tab.
@@ -25,7 +34,7 @@ class SessionPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	public function getTab()
 	{
 		ob_start();
-		require __DIR__ . '/templates/SessionPanel.tab.phtml';
+		require __DIR__ . '/templates/SecurityUserPanel.tab.phtml';
 		return ob_get_clean();
 	}
 
@@ -37,7 +46,7 @@ class SessionPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	public function getPanel()
 	{
 		ob_start();
-		require __DIR__ . '/templates/SessionPanel.panel.phtml';
+		require __DIR__ . '/templates/SecurityUserPanel.panel.phtml';
 		return ob_get_clean();
 	}
 

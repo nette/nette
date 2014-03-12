@@ -218,7 +218,7 @@ class Helpers
 
 	public static function createDebugPanel($connection, $explain = TRUE, $name = NULL)
 	{
-		$panel = new Nette\Database\Diagnostics\ConnectionPanel($connection);
+		$panel = new Nette\Bridges\Tracy\DatabaseConnectionPanel($connection);
 		$panel->explain = $explain;
 		$panel->name = $name;
 		Nette\Diagnostics\Debugger::getBar()->addPanel($panel);

@@ -5,7 +5,7 @@
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
-namespace Nette\DI\Extensions;
+namespace Nette\Bridges\DI;
 
 use Nette;
 
