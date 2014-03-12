@@ -35,7 +35,7 @@ class SendmailMailer extends Nette\Object implements IMailer
 
 		$args = array(
 			str_replace(Message::EOL, PHP_EOL, $mail->getEncodedHeader('To')),
-			str_replace(Message::EOL, PHP_EOL, $mail->getEncodedHeader('Subject')),
+			$mail->getEncodedHeader('Subject'),
 			str_replace(Message::EOL, PHP_EOL, $parts[1]),
 			str_replace(Message::EOL, PHP_EOL, $parts[0]),
 		);
