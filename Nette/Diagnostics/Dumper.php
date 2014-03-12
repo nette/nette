@@ -212,6 +212,8 @@ class Dumper
 			foreach (clone $var as $obj) {
 				$fields[] = array('object' => $obj, 'data' => $var[$obj]);
 			}
+		} elseif (method_exists($var, '__debugInfo')) {
+			$fields = $var->__debugInfo();
 		} else {
 			$fields = (array) $var;
 		}
