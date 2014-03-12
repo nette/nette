@@ -14,11 +14,14 @@ use Nette;
  * Assignment or calling statement.
  *
  * @author     David Grudl
+ *
+ * @method Statement setEntity(string|array)
+ * @method string getEntity()
  */
 class Statement extends Nette\Object
 {
 	/** @var string  class|method|$property */
-	public $entity;
+	private $entity;
 
 	/** @var array */
 	public $arguments;
