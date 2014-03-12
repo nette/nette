@@ -16,17 +16,17 @@ if (%A%}
 <?php $netteHttpResponse->setHeader("Content-Type", 'application/xml; charset=utf-8') ?>
 
 <ul>
-	<li>Escaped: <?php echo Nette\Templating\Helpers::escapeXml($hello) ?></li>
+	<li>Escaped: <?php echo Nette\Latte\Runtime\Filters::escapeXml($hello) ?></li>
 	<li>Non-escaped: <?php echo $hello ?></li>
-	<li>Escaped expression: <?php echo Nette\Templating\Helpers::escapeXml('<' . 'b' . '>hello' . '</b>') ?></li>
+	<li>Escaped expression: <?php echo Nette\Latte\Runtime\Filters::escapeXml('<' . 'b' . '>hello' . '</b>') ?></li>
 	<li>Non-escaped expression: <?php echo '<' . 'b' . '>hello' . '</b>' ?></li>
-	<li>Array access: <?php echo Nette\Templating\Helpers::escapeXml($people[1]) ?></li>
-	<li>Html: <?php echo Nette\Templating\Helpers::escapeXml($el) ?></li>
+	<li>Array access: <?php echo Nette\Latte\Runtime\Filters::escapeXml($people[1]) ?></li>
+	<li>Html: <?php echo Nette\Latte\Runtime\Filters::escapeXml($el) ?></li>
 </ul>
 
 <style type="text/css">
 <!--
-#<?php echo Nette\Templating\Helpers::escapeHtmlComment($id) ?> {
+#<?php echo Nette\Latte\Runtime\Filters::escapeHtmlComment($id) ?> {
 	background: blue;
 }
 -->
@@ -35,29 +35,29 @@ if (%A%}
 
 <script>
 <!--
-var html = <?php echo Nette\Templating\Helpers::escapeHtmlComment($el) ?>;
+var html = <?php echo Nette\Latte\Runtime\Filters::escapeHtmlComment($el) ?>;
 -->
 </script>
 
 
 <p onclick =
-'alert(<?php echo Nette\Templating\Helpers::escapeXml($id) ?>);alert("hello");'
- title='<?php echo Nette\Templating\Helpers::escapeXml($id) ?>"'
+'alert(<?php echo Nette\Latte\Runtime\Filters::escapeXml($id) ?>);alert("hello");'
+ title='<?php echo Nette\Latte\Runtime\Filters::escapeXml($id) ?>"'
  style =
- "color:<?php echo Nette\Templating\Helpers::escapeXml($id) ?>;'"
- alt='<?php echo Nette\Templating\Helpers::escapeXml($el) ?>'
- onfocus="alert(<?php echo Nette\Templating\Helpers::escapeXml($el) ?>)"
+ "color:<?php echo Nette\Latte\Runtime\Filters::escapeXml($id) ?>;'"
+ alt='<?php echo Nette\Latte\Runtime\Filters::escapeXml($el) ?>'
+ onfocus="alert(<?php echo Nette\Latte\Runtime\Filters::escapeXml($el) ?>)"
 >click on me</p>
 
 
-<!-- <?php echo Nette\Templating\Helpers::escapeHtmlComment($comment) ?> -->
+<!-- <?php echo Nette\Latte\Runtime\Filters::escapeHtmlComment($comment) ?> -->
 
 
 </ul>
 
 
 <ul>
-<?php $iterations = 0; foreach ($people as $person) { ?>	<li><?php echo Nette\Templating\Helpers::escapeXml($person) ?></li>
+<?php $iterations = 0; foreach ($people as $person) { ?>	<li><?php echo Nette\Latte\Runtime\Filters::escapeXml($person) ?></li>
 <?php $iterations++; } ?>
 </ul>
 

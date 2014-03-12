@@ -42,7 +42,7 @@ class MockControl extends Object
 
 $template = new Nette\Templating\Template;
 $template->registerFilter(new Latte\Engine);
-$template->registerHelperLoader('Nette\Templating\Helpers::loader');
+$template->registerHelperLoader('Nette\Latte\Runtime\Filters::loader');
 
 $template->_control = new MockComponent;
 $template->form = new MockControl;

@@ -15,29 +15,29 @@ if (%A%}
 
 <ul>
 <?php $iterations = 0; foreach ($people as $person) { ?>
-	<li><?php echo Nette\Templating\Helpers::escapeHtml($template->upper($person), ENT_NOQUOTES) ?></li>
+	<li><?php echo Nette\Latte\Runtime\Filters::escapeHtml($template->upper($person), ENT_NOQUOTES) ?></li>
 <?php $iterations++; } ?>
 {* comment latte *}
 </ul>
 
-<p>Default: <?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></p>
+<p>Default: <?php echo Nette\Latte\Runtime\Filters::escapeHtml($person, ENT_NOQUOTES) ?></p>
 
 <ul>
 <?php $iterations = 0; foreach ($people as $person) { ?>
-	<li><?php echo Nette\Templating\Helpers::escapeHtml($template->upper($person), ENT_NOQUOTES) ?></li>
+	<li><?php echo Nette\Latte\Runtime\Filters::escapeHtml($template->upper($person), ENT_NOQUOTES) ?></li>
 <?php $iterations++; } ?>
 </ul>
 
-<p>Default: <?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></p>
+<p>Default: <?php echo Nette\Latte\Runtime\Filters::escapeHtml($person, ENT_NOQUOTES) ?></p>
 
 <ul>
 <?php $iterations = 0; foreach ($people as $person) { ?>
-	<li><?php echo Nette\Templating\Helpers::escapeHtml($template->upper($person), ENT_NOQUOTES) ?></li>
+	<li><?php echo Nette\Latte\Runtime\Filters::escapeHtml($template->upper($person), ENT_NOQUOTES) ?></li>
 <?php $iterations++; } ?>
 </ul>
 
-<p>Default: <?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></p>
+<p>Default: <?php echo Nette\Latte\Runtime\Filters::escapeHtml($person, ENT_NOQUOTES) ?></p>
 
-<p>Default: <?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></p>
+<p>Default: <?php echo Nette\Latte\Runtime\Filters::escapeHtml($person, ENT_NOQUOTES) ?></p>
 
 <p>Default: {$person}</p>

@@ -23,7 +23,7 @@ $latte->compiler->defaultContentType = Latte\Compiler::CONTENT_HTML;
 $template = new FileTemplate(__DIR__ . '/templates/include.latte');
 $template->setCacheStorage($cache = new MockCacheStorage);
 $template->registerFilter($latte);
-$template->registerHelperLoader('Nette\Templating\Helpers::loader');
+$template->registerHelperLoader('Nette\Latte\Runtime\Filters::loader');
 $template->hello = '<i>Hello</i>';
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');

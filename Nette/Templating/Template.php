@@ -142,7 +142,7 @@ class Template extends Nette\Object implements ITemplate
 			$code = strtr($code, $blocks); // put PHP code back
 		}
 
-		return Helpers::optimizePhp($code);
+		return Nette\Latte\Runtime\Filters::optimizePhp($code);
 	}
 
 

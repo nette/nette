@@ -11,5 +11,5 @@ if (%A%}
 // main template
 //
 ?>
-<p>Included file #2 (<?php echo Nette\Templating\Helpers::escapeHtml($localvar, ENT_NOQUOTES) ?>
-, <?php echo Nette\Templating\Helpers::escapeHtml($hello, ENT_NOQUOTES) ?>)</p>
+<p>Included file #2 (<?php echo Nette\Latte\Runtime\Filters::escapeHtml($localvar, ENT_NOQUOTES) ?>
+, <?php echo Nette\Latte\Runtime\Filters::escapeHtml($hello, ENT_NOQUOTES) ?>)</p>

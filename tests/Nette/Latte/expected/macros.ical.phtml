@@ -16,13 +16,13 @@ VERSION:2.0
 PRODID:-//example.org//iCal 4.0.3//CS
 METHOD:PUBLISH
 BEGIN:VEVENT
-DTSTAMP:<?php echo Nette\Templating\Helpers::escapeIcal($template->date($start, 'Ymd\THis')) ?>
+DTSTAMP:<?php echo Nette\Latte\Runtime\Filters::escapeIcal($template->date($start, 'Ymd\THis')) ?>
 
-DTSTART;TZID=Europe/Prague:<?php echo Nette\Templating\Helpers::escapeIcal($template->date($start, 'Ymd\THis')) ?>
+DTSTART;TZID=Europe/Prague:<?php echo Nette\Latte\Runtime\Filters::escapeIcal($template->date($start, 'Ymd\THis')) ?>
 
-DTEND;TZID=Europe/Prague:<?php echo Nette\Templating\Helpers::escapeIcal($template->date($end, 'Ymd\THis')) ?>
+DTEND;TZID=Europe/Prague:<?php echo Nette\Latte\Runtime\Filters::escapeIcal($template->date($end, 'Ymd\THis')) ?>
 
-SUMMARY;LANGUAGE=cs:<?php echo Nette\Templating\Helpers::escapeIcal($info) ?>
+SUMMARY;LANGUAGE=cs:<?php echo Nette\Latte\Runtime\Filters::escapeIcal($info) ?>
 
 DESCRIPTION:
 CLASS:PUBLIC

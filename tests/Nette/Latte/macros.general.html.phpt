@@ -22,7 +22,7 @@ $template = new FileTemplate(__DIR__ . '/templates/general.latte');
 $template->registerFilter($latte);
 $template->registerHelper('translate', 'strrev');
 $template->registerHelper('join', 'implode');
-$template->registerHelperLoader('Nette\Templating\Helpers::loader');
+$template->registerHelperLoader('Nette\Latte\Runtime\Filters::loader');
 
 $template->hello = '<i>Hello</i>';
 $template->xss = 'some&<>"\'/chars';

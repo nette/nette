@@ -116,7 +116,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 		$template->baseUrl = rtrim($url->getBaseUrl(), '/');
 		$template->basePath = rtrim($url->getBasePath(), '/');
 
-		$template->registerHelperLoader('Nette\Templating\Helpers::loader');
+		$template->registerHelperLoader('Nette\Latte\Runtime\Filters::loader');
 		$template->setCacheStorage($context->getService('nette.templateCacheStorage'));
 		$template->onPrepareFilters[] = function($template) use ($latteFactory) {
 			$template->registerFilter($latteFactory ? $latteFactory() : new Nette\Latte\Engine);

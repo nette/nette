@@ -22,7 +22,7 @@ restore_error_handler();
 
 $template = new FileTemplate(__DIR__ . '/templates/xml.latte');
 $template->registerFilter(new Latte\Engine);
-$template->registerHelperLoader('Nette\Templating\Helpers::loader');
+$template->registerHelperLoader('Nette\Latte\Runtime\Filters::loader');
 
 $template->hello = '<i>Hello</i>';
 $template->id = ':/item';
