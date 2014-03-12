@@ -5,7 +5,7 @@
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
-namespace Nette\Iterators;
+namespace Nette\Latte\Runtime;
 
 use Nette;
 

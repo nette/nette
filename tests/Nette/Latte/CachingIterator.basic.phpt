@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Iterators\CachingIterator basic usage.
+ * Test: Nette\Latte\Runtime\CachingIterator basic usage.
  *
  * @author     David Grudl
  */
 
-use Nette\Iterators,
+use Nette\Latte\Runtime\CachingIterator,
 	Tester\Assert;
 
 
@@ -17,7 +17,7 @@ test(function() { // ==> Two items in array
 
 	$arr = array('Nette', 'Framework');
 
-	$iterator = new Iterators\CachingIterator($arr);
+	$iterator = new CachingIterator($arr);
 	$iterator->rewind();
 	Assert::true( $iterator->valid() );
 	Assert::true( $iterator->isFirst() );
@@ -44,7 +44,7 @@ test(function() { // ==> Two items in array
 test(function() {
 	$arr = array('Nette');
 
-	$iterator = new Iterators\CachingIterator($arr);
+	$iterator = new CachingIterator($arr);
 	$iterator->rewind();
 	Assert::true( $iterator->valid() );
 	Assert::true( $iterator->isFirst() );
@@ -65,7 +65,7 @@ test(function() {
 test(function() {
 	$arr = array();
 
-	$iterator = new Iterators\CachingIterator($arr);
+	$iterator = new CachingIterator($arr);
 	$iterator->next();
 	$iterator->next();
 	Assert::false( $iterator->isFirst() );

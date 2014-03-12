@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Iterators\CachingIterator width.
+ * Test: Nette\Latte\Runtime\CachingIterator width.
  *
  * @author     David Grudl
  */
 
-use Nette\Iterators,
+use Nette\Latte\Runtime\CachingIterator,
 	Tester\Assert;
 
 
@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 test(function() {
 	$arr = array('The', 'Nette', 'Framework');
 
-	$iterator = new Iterators\CachingIterator($arr);
+	$iterator = new CachingIterator($arr);
 	$iterator->rewind();
 
 	$iterator->rewind();
@@ -52,7 +52,7 @@ test(function() {
 
 
 test(function() {
-	$iterator = new Iterators\CachingIterator(array());
+	$iterator = new CachingIterator(array());
 	Assert::false( $iterator->isFirst(0) );
 	Assert::true( $iterator->isLast(0) );
 	Assert::false( $iterator->isFirst(1) );

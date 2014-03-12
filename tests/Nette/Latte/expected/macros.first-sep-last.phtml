@@ -12,28 +12,28 @@ if (%A%}
 //
 ?>
 
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person) { ?>
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Latte\Runtime\CachingIterator($people) as $person) { ?>
 	<?php if ($iterator->isFirst()) { ?>(<?php } ?> <?php echo Nette\Latte\Runtime\Filters::escapeHtml($person, ENT_NOQUOTES) ;if (!$iterator->isLast()) { ?>
 , <?php } ?> <?php if ($iterator->isLast()) { ?>)<?php } ?>
 
 <?php $iterations++; } array_pop($_l->its); $iterator = end($_l->its) ?>
 
 
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person) { ?>
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Latte\Runtime\CachingIterator($people) as $person) { ?>
 	<?php if ($iterator->isFirst(2)) { ?>(<?php } ?> <?php echo Nette\Latte\Runtime\Filters::escapeHtml($person, ENT_NOQUOTES) ;if (!$iterator->isLast(2)) { ?>
 , <?php } ?> <?php if ($iterator->isLast(2)) { ?>)<?php } ?>
 
 <?php $iterations++; } array_pop($_l->its); $iterator = end($_l->its) ?>
 
 
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person) { ?>
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Latte\Runtime\CachingIterator($people) as $person) { ?>
 	<?php if ($iterator->isFirst(1)) { ?>(<?php } ?> <?php echo Nette\Latte\Runtime\Filters::escapeHtml($person, ENT_NOQUOTES) ;if (!$iterator->isLast(1)) { ?>
 , <?php } ?> <?php if ($iterator->isLast(1)) { ?>)<?php } ?>
 
 <?php $iterations++; } array_pop($_l->its); $iterator = end($_l->its) ?>
 
 
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person) { if ($iterator->isFirst(0)) { ?>
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Latte\Runtime\CachingIterator($people) as $person) { if ($iterator->isFirst(0)) { ?>
 	<span>(</span><?php } ?>
  <?php echo Nette\Latte\Runtime\Filters::escapeHtml($person, ENT_NOQUOTES) ;if (!$iterator->isLast()) { ?>
 <span>, </span><?php } ?>

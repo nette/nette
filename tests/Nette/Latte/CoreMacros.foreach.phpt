@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 $compiler = new Nette\Latte\Compiler;
 CoreMacros::install($compiler);
 
-$prefix = '<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(';
+$prefix = '<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Latte\Runtime\CachingIterator(';
 
 function expandMacro($compiler, $args, $modifiers = NULL) {
 	$node = $compiler->expandMacro('foreach', $args, $modifiers);
