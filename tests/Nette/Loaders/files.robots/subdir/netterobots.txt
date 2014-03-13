@@ -1,6 +1,0 @@
-# testing combinations of class names and directories
-
-Disallow: /class.php
-Disallow: disallowed4/
-Disallow: subdir2/class.php
-Disallow: /subdir2/disallowed5/

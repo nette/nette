@@ -1,5 +1,0 @@
-extensions:
-	foo: FooExtension
-
-foo:
-	key: value
