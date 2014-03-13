@@ -1,5 +1,0 @@
-scalar: 10
-
-scalar < parent:
-	date:
-		timezone = "Europe/Paris"
