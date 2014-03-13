@@ -7,15 +7,14 @@
 
 namespace Nette\Diagnostics;
 
-use Nette;
+use Nette,
+	Tracy;
 
 
 /**
- * Rendering helpers for Debugger.
- *
- * @author     David Grudl
+ * @deprecated
  */
-class Helpers
+class Helpers extends Tracy\Helpers
 {
 
 	/**
@@ -37,46 +36,6 @@ class Helpers
 		} else {
 			return Nette\Utils\Html::el('span')->setText($file . ($line ? ":$line" : ''));
 		}
-	}
-
-
-	public static function findTrace(array $trace, $method, & $index = NULL)
-	{
-		$m = explode('::', $method);
-		foreach ($trace as $i => $item) {
-			if (isset($item['function']) && $item['function'] === end($m)
-				&& isset($item['class']) === isset($m[1])
-				&& (!isset($item['class']) || $item['class'] === $m[0] || $m[0] === '*' || is_subclass_of($item['class'], $m[0]))
-			) {
-				$index = $i;
-				return $item;
-			}
-		}
-	}
-
-
-	public static function fixStack($exception)
-	{
-		if (function_exists('xdebug_get_function_stack')) {
-			$stack = array();
-			foreach (array_slice(array_reverse(xdebug_get_function_stack()), 2, -1) as $row) {
-				$frame = array(
-					'file' => $row['file'],
-					'line' => $row['line'],
-					'function' => isset($row['function']) ? $row['function'] : '*unknown*',
-					'args' => array(),
-				);
-				if (!empty($row['class'])) {
-					$frame['type'] = isset($row['type']) && $row['type'] === 'dynamic' ? '->' : '::';
-					$frame['class'] = $row['class'];
-				}
-				$stack[] = $frame;
-			}
-			$ref = new \ReflectionProperty('Exception', 'trace');
-			$ref->setAccessible(TRUE);
-			$ref->setValue($exception, $stack);
-		}
-		return $exception;
 	}
 
 }
