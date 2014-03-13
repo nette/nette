@@ -414,7 +414,7 @@ class Form extends Container
 					$this->onError($this);
 					break;
 				}
-				Nette\Utils\Callback::invoke($handler, $this);
+				Nette\Utils\Callback::invoke($handler, $this, $this->getValues());
 			}
 		} elseif (!$this->isValid()) {
 			$this->onError($this);
