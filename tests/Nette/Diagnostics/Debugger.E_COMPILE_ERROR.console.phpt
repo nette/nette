@@ -37,7 +37,7 @@ Stack trace:
 Fatal error: Cannot re-assign \$this in %a%
 exception 'ErrorException' with message 'Cannot re-assign \$this' in %a%
 Stack trace:
-#0 [internal function]: Nette\\Diagnostics\\Debugger::_shutdownHandler()
+#0 [internal function]: Tracy\\Debugger::_shutdownHandler()
 #1 {main}
 ", ob_get_clean());
 	echo 'OK!'; // prevents PHP bug #62725

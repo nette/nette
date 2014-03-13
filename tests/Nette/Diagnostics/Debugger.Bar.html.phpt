@@ -4,7 +4,7 @@
  * Test: Nette\Diagnostics\Debugger Bar in HTML.
  *
  * @author     David Grudl
- * @outputMatch %A%<!-- Nette Debug Bar -->%A%
+ * @outputMatch %A%<!-- Tracy Debug Bar -->%A%
  */
 
 use Nette\Diagnostics\Debugger,

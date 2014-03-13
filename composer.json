@@ -16,6 +16,7 @@
 		}
 	],
 	"require": {
+		"tracy/tracy": "@dev",
 		"php": ">=5.3.1",
 		"ext-iconv": "*",
 		"ext-tokenizer": "*"

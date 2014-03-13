@@ -7,27 +7,13 @@
 
 namespace Nette\Diagnostics;
 
-use Nette;
+use Nette,
+	Tracy;
 
 
 /**
- * Custom output for Debugger.
- *
- * @author     David Grudl
+ * @deprecated
  */
-interface IBarPanel
+interface IBarPanel extends Tracy\IBarPanel
 {
-
-	/**
-	 * Renders HTML code for custom tab.
-	 * @return string
-	 */
-	function getTab();
-
-	/**
-	 * Renders HTML code for custom panel.
-	 * @return string
-	 */
-	function getPanel();
-
 }
