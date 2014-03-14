@@ -23,6 +23,9 @@ interface IRouter
 	/** HTTPS route */
 	const SECURED = 2;
 
+	/** HTTP & HTTPS route, depends if secured http request */
+	const OPTIONAL_SECURED = 4;
+
 	/**
 	 * Maps HTTP request to a Request object.
 	 * @return Request|NULL

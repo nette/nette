@@ -105,6 +105,8 @@ class Route extends Nette\Object implements Application\IRouter
 	/** @var int */
 	private $flags;
 
+	/** @var bool */
+	private $httpRequestSecured = false;
 
 	/**
 	 * @param  string  URL mask, e.g. '<presenter>/<action>/<id \d{1,3}>'
@@ -251,13 +253,15 @@ class Route extends Nette\Object implements Application\IRouter
 			unset($params[self::PRESENTER_KEY]);
 		}
 
+		$this->httpRequestSecured = $httpRequest->isSecured();
+
 		return new Application\Request(
 			$presenter,
 			$httpRequest->getMethod(),
 			$params,
 			$httpRequest->getPost(),
 			$httpRequest->getFiles(),
-			array(Application\Request::SECURED => $httpRequest->isSecured())
+			array(Application\Request::SECURED => $this->httpRequestSecured)
 		);
 	}
 
@@ -404,7 +408,7 @@ class Route extends Nette\Object implements Application\IRouter
 			return NULL; // TODO: implement counterpart in match() ?
 		}
 
-		$url = ($this->flags & self::SECURED ? 'https:' : 'http:') . $url;
+		$url = ((($this->flags & self::SECURED) || (($this->flags & self::OPTIONAL_SECURED) && $this->httpRequestSecured)) ? 'https:' : 'http:') . $url;
 
 		// build query string
 		if ($this->xlat) {

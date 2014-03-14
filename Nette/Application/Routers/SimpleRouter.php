@@ -33,6 +33,8 @@ class SimpleRouter extends Nette\Object implements Application\IRouter
 	/** @var int */
 	private $flags;
 
+	/** @var bool */
+	private $httpRequestSecured = false;
 
 	/**
 	 * @param  array   default values
@@ -81,6 +83,8 @@ class SimpleRouter extends Nette\Object implements Application\IRouter
 		$presenter = $this->module . $params[self::PRESENTER_KEY];
 		unset($params[self::PRESENTER_KEY]);
 
+		$this->httpRequestSecured = $httpRequest->isSecured();
+
 		return new Application\Request(
 			$presenter,
 			$httpRequest->getMethod(),
@@ -118,7 +122,8 @@ class SimpleRouter extends Nette\Object implements Application\IRouter
 			}
 		}
 
-		$url = ($this->flags & self::SECURED ? 'https://' : 'http://') . $refUrl->getAuthority() . $refUrl->getPath();
+		$url = ((($this->flags & self::SECURED) || (($this->flags & self::OPTIONAL_SECURED) && $this->httpRequestSecured)) ? 'https://' : 'http://') . $refUrl->getAuthority() . $refUrl->getPath();
+
 		$sep = ini_get('arg_separator.input');
 		$query = http_build_query($params, '', $sep ? $sep[0] : '&');
 		if ($query != '') { // intentionally ==
