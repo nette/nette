@@ -4,11 +4,11 @@
  * Test: Nette\Caching\Storages\MemcachedStorage files dependency test.
  *
  * @author     David Grudl
- * @package    Nette\Caching
  */
 
 use Nette\Caching\Storages\MemcachedStorage,
-	Nette\Caching\Cache;
+	Nette\Caching\Cache,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -40,9 +40,7 @@ Assert::true( isset($cache[$key]) );
 
 
 // Modifing dependent file
-sleep(2);
 file_put_contents($dependentFile, 'a');
-clearstatcache();
 
 Assert::false( isset($cache[$key]) );
 

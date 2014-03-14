@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Http;
@@ -31,6 +27,7 @@ use Nette;
  * @property-read bool $ajax
  * @property-read string $remoteAddress
  * @property-read string $remoteHost
+ * @property-read string $rawBody
  */
 class Request extends Nette\Object implements IRequest
 {
@@ -61,6 +58,9 @@ class Request extends Nette\Object implements IRequest
 	/** @var string */
 	private $remoteHost;
 
+	/** @var string */
+	private $rawBody;
+
 
 	public function __construct(UrlScript $url, $query = NULL, $post = NULL, $files = NULL, $cookies = NULL,
 		$headers = NULL, $method = NULL, $remoteAddress = NULL, $remoteHost = NULL)
@@ -85,7 +85,7 @@ class Request extends Nette\Object implements IRequest
 	 * Returns URL object.
 	 * @return UrlScript
 	 */
-	final public function getUrl()
+	public function getUrl()
 	{
 		return $this->url;
 	}
@@ -101,7 +101,7 @@ class Request extends Nette\Object implements IRequest
 	 * @param  mixed  default value
 	 * @return mixed
 	 */
-	final public function getQuery($key = NULL, $default = NULL)
+	public function getQuery($key = NULL, $default = NULL)
 	{
 		if (func_num_args() === 0) {
 			return $this->query;
@@ -122,7 +122,7 @@ class Request extends Nette\Object implements IRequest
 	 * @param  mixed  default value
 	 * @return mixed
 	 */
-	final public function getPost($key = NULL, $default = NULL)
+	public function getPost($key = NULL, $default = NULL)
 	{
 		if (func_num_args() === 0) {
 			return $this->post;
@@ -141,7 +141,7 @@ class Request extends Nette\Object implements IRequest
 	 * @param  string key (or more keys)
 	 * @return FileUpload
 	 */
-	final public function getFile($key)
+	public function getFile($key)
 	{
 		return Nette\Utils\Arrays::get($this->files, func_get_args(), NULL);
 	}
@@ -151,7 +151,7 @@ class Request extends Nette\Object implements IRequest
 	 * Returns uploaded files.
 	 * @return array
 	 */
-	final public function getFiles()
+	public function getFiles()
 	{
 		return $this->files;
 	}
@@ -163,17 +163,9 @@ class Request extends Nette\Object implements IRequest
 	 * @param  mixed  default value
 	 * @return mixed
 	 */
-	final public function getCookie($key, $default = NULL)
+	public function getCookie($key, $default = NULL)
 	{
-		if (func_num_args() === 0) {
-			return $this->cookies;
-
-		} elseif (isset($this->cookies[$key])) {
-			return $this->cookies[$key];
-
-		} else {
-			return $default;
-		}
+		return isset($this->cookies[$key]) ? $this->cookies[$key] : $default;
 	}
 
 
@@ -181,7 +173,7 @@ class Request extends Nette\Object implements IRequest
 	 * Returns variables provided to the script via HTTP cookies.
 	 * @return array
 	 */
-	final public function getCookies()
+	public function getCookies()
 	{
 		return $this->cookies;
 	}
@@ -228,7 +220,7 @@ class Request extends Nette\Object implements IRequest
 	 * @param  mixed
 	 * @return mixed
 	 */
-	final public function getHeader($header, $default = NULL)
+	public function getHeader($header, $default = NULL)
 	{
 		$header = strtolower($header);
 		if (isset($this->headers[$header])) {
@@ -253,7 +245,7 @@ class Request extends Nette\Object implements IRequest
 	 * Returns referrer.
 	 * @return Url|NULL
 	 */
-	final public function getReferer()
+	public function getReferer()
 	{
 		return isset($this->headers['referer']) ? new Url($this->headers['referer']) : NULL;
 	}
@@ -303,9 +295,26 @@ class Request extends Nette\Object implements IRequest
 
 
 	/**
+	 * Returns raw content of HTTP request body.
+	 * @return string
+	 */
+	public function getRawBody()
+	{
+		if (PHP_VERSION_ID >= 50600) {
+			return file_get_contents('php://input');
+
+		} elseif ($this->rawBody === NULL) { // can be read only once in PHP < 5.6
+			$this->rawBody = (string) file_get_contents('php://input');
+		}
+
+		return $this->rawBody;
+	}
+
+
+	/**
 	 * Parse Accept-Language header and returns prefered language.
 	 * @param  array   Supported languages
-	 * @return string
+	 * @return string|null
 	 */
 	public function detectLanguage(array $langs)
 	{

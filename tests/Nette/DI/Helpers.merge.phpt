@@ -4,10 +4,10 @@
  * Test: Nette\DI\Config\Helpers::merge()
  *
  * @author     David Grudl
- * @package    Nette\DI\Config
  */
 
-use Nette\DI\Config\Helpers;
+use Nette\DI\Config\Helpers,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Forms;
@@ -19,33 +15,24 @@ use Nette;
  *
  * @author     David Grudl
  */
-final class Rule extends Nette\Object
+class Rule extends Nette\Object
 {
-	/** type */
-	const CONDITION = 1;
-
-	/** type */
-	const VALIDATOR = 2;
-
 	/** @var IControl */
 	public $control;
 
 	/** @var mixed */
-	public $operation;
+	public $validator;
 
 	/** @var mixed */
 	public $arg;
 
-	/** @var int (CONDITION, VALIDATOR, FILTER) */
-	public $type;
-
 	/** @var bool */
 	public $isNegative = FALSE;
 
-	/** @var string (only for VALIDATOR type) */
+	/** @var string */
 	public $message;
 
-	/** @var Rules (only for CONDITION type)  */
-	public $subRules;
+	/** @var Rules  for conditions */
+	public $branch;
 
 }

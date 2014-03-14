@@ -4,10 +4,10 @@
  * Test: Nette\Http\Request invalid encoding.
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
-use Nette\Http;
+use Nette\Http,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

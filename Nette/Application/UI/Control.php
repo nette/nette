@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Application\UI;
@@ -40,7 +36,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 	/**
 	 * @return Nette\Templating\ITemplate
 	 */
-	final public function getTemplate()
+	public function getTemplate()
 	{
 		if ($this->template === NULL) {
 			$value = $this->createTemplate();
@@ -63,7 +59,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 		$template = $class ? new $class : new Nette\Templating\FileTemplate;
 		$presenter = $this->getPresenter(FALSE);
 		$template->onPrepareFilters[] = $this->templatePrepareFilters;
-		$template->registerHelperLoader('Nette\Templating\Helpers::loader');
+		$template->registerHelperLoader('Nette\Latte\Runtime\Filters::loader');
 
 		// default parameters
 		$template->control = $template->_control = $this;
@@ -126,28 +122,32 @@ abstract class Control extends PresenterComponent implements IRenderable
 
 	/**
 	 * Forces control or its snippet to repaint.
-	 * @param  string
 	 * @return void
 	 */
-	public function invalidateControl($snippet = NULL)
+	public function redrawControl($snippet = NULL, $redraw = TRUE)
 	{
-		$this->invalidSnippets[$snippet] = TRUE;
-	}
+		if ($redraw) {
+			$this->invalidSnippets[$snippet] = TRUE;
 
-
-	/**
-	 * Allows control or its snippet to not repaint.
-	 * @param  string
-	 * @return void
-	 */
-	public function validateControl($snippet = NULL)
-	{
-		if ($snippet === NULL) {
+		} elseif ($snippet === NULL) {
 			$this->invalidSnippets = array();
 
 		} else {
 			unset($this->invalidSnippets[$snippet]);
 		}
+	}
+
+
+	/** @deprecated */
+	function invalidateControl($snippet = NULL)
+	{
+		$this->redrawControl($snippet);
+	}
+
+	/** @deprecated */
+	function validateControl($snippet = NULL)
+	{
+		$this->redrawControl($snippet, FALSE);
 	}
 
 

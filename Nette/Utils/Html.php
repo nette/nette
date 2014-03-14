@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Utils;
@@ -85,7 +81,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * @return self
 	 * @throws Nette\InvalidArgumentException
 	 */
-	final public function setName($name, $isEmpty = NULL)
+	public function setName($name, $isEmpty = NULL)
 	{
 		if ($name !== NULL && !is_string($name)) {
 			throw new Nette\InvalidArgumentException("Name must be string or NULL, " . gettype($name) ." given.");
@@ -101,7 +97,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * Returns element's name.
 	 * @return string
 	 */
-	final public function getName()
+	public function getName()
 	{
 		return $this->name;
 	}
@@ -111,7 +107,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * Is element empty?
 	 * @return bool
 	 */
-	final public function isEmpty()
+	public function isEmpty()
 	{
 		return $this->isEmpty;
 	}
@@ -135,7 +131,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * @param  mixed     HTML attribute value
 	 * @return void
 	 */
-	final public function __set($name, $value)
+	public function __set($name, $value)
 	{
 		$this->attrs[$name] = $value;
 	}
@@ -146,7 +142,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * @param  string    HTML attribute name
 	 * @return mixed     HTML attribute value
 	 */
-	final public function &__get($name)
+	public function &__get($name)
 	{
 		return $this->attrs[$name];
 	}
@@ -155,9 +151,9 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	/**
 	 * Overloaded tester for element's attribute.
 	 * @param  string    HTML attribute name
-	 * @return void
+	 * @return bool
 	 */
-	final public function __isset($name)
+	public function __isset($name)
 	{
 		return isset($this->attrs[$name]);
 	}
@@ -168,7 +164,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * @param  string    HTML attribute name
 	 * @return void
 	 */
-	final public function __unset($name)
+	public function __unset($name)
 	{
 		unset($this->attrs[$name]);
 	}
@@ -180,7 +176,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * @param  array   (string) HTML attribute value or pair?
 	 * @return self
 	 */
-	final public function __call($m, $args)
+	public function __call($m, $args)
 	{
 		$p = substr($m, 0, 3);
 		if ($p === 'get' || $p === 'set' || $p === 'add') {
@@ -219,7 +215,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * @param  array query
 	 * @return self
 	 */
-	final public function href($path, $query = NULL)
+	public function href($path, $query = NULL)
 	{
 		if ($query) {
 			$query = http_build_query($query, NULL, '&');
@@ -238,7 +234,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * @return self
 	 * @throws Nette\InvalidArgumentException
 	 */
-	final public function setHtml($html)
+	public function setHtml($html)
 	{
 		if (is_array($html)) {
 			throw new Nette\InvalidArgumentException("Textual content must be a scalar, " . gettype($html) ." given.");
@@ -253,7 +249,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * Returns element's HTML content.
 	 * @return string
 	 */
-	final public function getHtml()
+	public function getHtml()
 	{
 		$s = '';
 		foreach ($this->children as $child) {
@@ -273,7 +269,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * @return self
 	 * @throws Nette\InvalidArgumentException
 	 */
-	final public function setText($text)
+	public function setText($text)
 	{
 		if (!is_array($text) && !$text instanceof self) {
 			$text = htmlspecialchars((string) $text, ENT_NOQUOTES);
@@ -286,7 +282,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * Returns element's textual content.
 	 * @return string
 	 */
-	final public function getText()
+	public function getText()
 	{
 		return html_entity_decode(strip_tags($this->getHtml()), ENT_QUOTES, 'UTF-8');
 	}
@@ -297,7 +293,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * @param  Html|string child node
 	 * @return self
 	 */
-	final public function add($child)
+	public function add($child)
 	{
 		return $this->insert(NULL, $child);
 	}
@@ -309,7 +305,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * @param  array|string element's attributes (or textual content)
 	 * @return Html  created element
 	 */
-	final public function create($name, $attrs = NULL)
+	public function create($name, $attrs = NULL)
 	{
 		$this->insert(NULL, $child = static::el($name, $attrs));
 		return $child;
@@ -348,7 +344,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * @param  Html node
 	 * @return void
 	 */
-	final public function offsetSet($index, $child)
+	public function offsetSet($index, $child)
 	{
 		$this->insert($index, $child, TRUE);
 	}
@@ -359,7 +355,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * @param  int index
 	 * @return mixed
 	 */
-	final public function offsetGet($index)
+	public function offsetGet($index)
 	{
 		return $this->children[$index];
 	}
@@ -370,7 +366,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * @param  int index
 	 * @return bool
 	 */
-	final public function offsetExists($index)
+	public function offsetExists($index)
 	{
 		return isset($this->children[$index]);
 	}
@@ -393,7 +389,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * Required by the \Countable interface.
 	 * @return int
 	 */
-	final public function count()
+	public function count()
 	{
 		return count($this->children);
 	}
@@ -415,7 +411,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * @param  string  class types filter
 	 * @return \RecursiveIterator
 	 */
-	final public function getIterator($deep = FALSE)
+	public function getIterator($deep = FALSE)
 	{
 		if ($deep) {
 			$deep = $deep > 0 ? \RecursiveIteratorIterator::SELF_FIRST : \RecursiveIteratorIterator::CHILD_FIRST;
@@ -431,7 +427,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * Returns all of children.
 	 * @return array
 	 */
-	final public function getChildren()
+	public function getChildren()
 	{
 		return $this->children;
 	}
@@ -442,7 +438,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * @param  int indent
 	 * @return string
 	 */
-	final public function render($indent = NULL)
+	public function render($indent = NULL)
 	{
 		$s = $this->startTag();
 
@@ -470,7 +466,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	}
 
 
-	final public function __toString()
+	public function __toString()
 	{
 		return $this->render();
 	}
@@ -480,7 +476,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * Returns element's start tag.
 	 * @return string
 	 */
-	final public function startTag()
+	public function startTag()
 	{
 		if ($this->name) {
 			return '<' . $this->name . $this->attributes() . (static::$xhtml && $this->isEmpty ? ' />' : '>');
@@ -495,7 +491,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * Returns element's end tag.
 	 * @return string
 	 */
-	final public function endTag()
+	public function endTag()
 	{
 		return $this->name && !$this->isEmpty ? '</' . $this->name . '>' : '';
 	}
@@ -505,7 +501,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 * Returns element's attributes.
 	 * @return string
 	 */
-	final public function attributes()
+	public function attributes()
 	{
 		if (!is_array($this->attrs)) {
 			return '';

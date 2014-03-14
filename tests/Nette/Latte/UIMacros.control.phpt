@@ -4,10 +4,10 @@
  * Test: Nette\Latte\Macros\UIMacros: {control ...}
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
-use Nette\Latte\Macros\UIMacros;
+use Nette\Latte\Macros\UIMacros,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

@@ -4,10 +4,10 @@
  * Test: Nette\Image alpha channel.
  *
  * @author     David Grudl
- * @package    Nette
  */
 
-use Nette\Image;
+use Nette\Image,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

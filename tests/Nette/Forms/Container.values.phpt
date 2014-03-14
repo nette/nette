@@ -4,12 +4,12 @@
  * Test: Nette\Forms naming container.
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
 use Nette\Http,
 	Nette\Forms\Form,
-	Nette\ArrayHash;
+	Nette\ArrayHash,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

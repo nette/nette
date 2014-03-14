@@ -4,10 +4,10 @@
  * Test: Nette\DI\Container magic properties (deprecated).
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
-use Nette\DI\Container;
+use Nette\DI\Container,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -31,4 +31,4 @@ Assert::false( isset($container->undefined) );
 Assert::error(function() {
 	$container = new Container;
 	$container->one = new Service;
-}, E_USER_DEPRECATED, 'Nette\DI\Container::__set() is deprecated; use addService() or enable nette.accessors in configuration.');
+}, E_USER_DEPRECATED, 'Nette\DI\Container::__set() is deprecated; use addService() or enable nette.container.accessors in configuration.');

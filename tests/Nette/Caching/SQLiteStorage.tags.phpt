@@ -4,14 +4,19 @@
  * Test: Nette\Caching\Storages\SQLiteStorage tags dependency test.
  *
  * @author     David Grudl
- * @package    Nette\Caching
  */
 
 use Nette\Caching\Storages\SQLiteStorage,
-	Nette\Caching\Cache;
+	Nette\Caching\Cache,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
+
+
+if (!extension_loaded('pdo_sqlite')) {
+	Tester\Environment::skip('Requires PHP extension pdo_sqlite.');
+}
 
 
 $cache = new Cache(new SQLiteStorage(TEMP_DIR . '/db.db3'));

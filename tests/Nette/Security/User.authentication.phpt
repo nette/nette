@@ -4,11 +4,11 @@
  * Test: Nette\Security\User authentication.
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
 use Nette\Security\IAuthenticator,
-	Nette\Security\Identity;
+	Nette\Security\Identity,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

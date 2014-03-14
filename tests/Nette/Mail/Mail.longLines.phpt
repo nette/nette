@@ -4,10 +4,10 @@
  * Test: Nette\Mail\Message - textual body and line longer than 990 characters.
  *
  * @author     Stork Dork
- * @package    Nette\Mail
  */
 
-use Nette\Mail\Message;
+use Nette\Mail\Message,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

@@ -4,10 +4,10 @@
  * Test: Nette\Reflection\Extension tests.
  *
  * @author     David Grudl
- * @package    Nette\Reflection
  */
 
-use Nette\Reflection;
+use Nette\Reflection,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -16,6 +16,11 @@ require __DIR__ . '/../bootstrap.php';
 $ext = new Reflection\Extension('standard');
 $funcs = $ext->getFunctions();
 Assert::equal( new Reflection\GlobalFunction('sleep'), $funcs['sleep'] );
+
+
+if (!class_exists('PDO')) {
+	Tester\Environment::skip('For full test requires PHP extension PDO.');
+}
 
 
 $ext = new Reflection\Extension('pdo');

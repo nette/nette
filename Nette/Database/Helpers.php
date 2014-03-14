@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Database;
@@ -83,7 +79,7 @@ class Helpers
 	public static function dumpSql($sql, array $params = NULL)
 	{
 		static $keywords1 = 'SELECT|(?:ON\s+DUPLICATE\s+KEY)?UPDATE|INSERT(?:\s+INTO)?|REPLACE(?:\s+INTO)?|DELETE|CALL|UNION|FROM|WHERE|HAVING|GROUP\s+BY|ORDER\s+BY|LIMIT|OFFSET|SET|VALUES|LEFT\s+JOIN|INNER\s+JOIN|TRUNCATE';
-		static $keywords2 = 'ALL|DISTINCT|DISTINCTROW|IGNORE|AS|USING|ON|AND|OR|IN|IS|NOT|NULL|LIKE|RLIKE|REGEXP|TRUE|FALSE';
+		static $keywords2 = 'ALL|DISTINCT|DISTINCTROW|IGNORE|AS|USING|ON|AND|OR|IN|IS|NOT|NULL|[RI]?LIKE|REGEXP|TRUE|FALSE';
 
 		// insert new lines
 		$sql = " $sql ";
@@ -181,7 +177,7 @@ class Helpers
 
 
 	/**
-	 * Import SQL dump from file - extreme fast.
+	 * Import SQL dump from file - extremely fast.
 	 * @return int  count of commands
 	 */
 	public static function loadFromFile(Connection $connection, $file)
@@ -194,14 +190,21 @@ class Helpers
 		}
 
 		$count = 0;
+		$delimiter = ';';
 		$sql = '';
 		while (!feof($handle)) {
-			$s = fgets($handle);
-			$sql .= $s;
-			if (substr(rtrim($s), -1) === ';') {
+			$s = rtrim(fgets($handle));
+			if (!strncasecmp($s, 'DELIMITER ', 10)) {
+				$delimiter = substr($s, 10);
+
+			} elseif (substr($s, -strlen($delimiter)) === $delimiter) {
+				$sql .= substr($s, 0, -strlen($delimiter));
 				$connection->query($sql); // native query without logging
 				$sql = '';
 				$count++;
+
+			} else {
+				$sql .= $s . "\n";
 			}
 		}
 		if (trim($sql) !== '') {
@@ -215,11 +218,48 @@ class Helpers
 
 	public static function createDebugPanel($connection, $explain = TRUE, $name = NULL)
 	{
-		$panel = new Nette\Database\Diagnostics\ConnectionPanel($connection);
+		$panel = new Nette\Bridges\Tracy\DatabaseConnectionPanel($connection);
 		$panel->explain = $explain;
 		$panel->name = $name;
 		Nette\Diagnostics\Debugger::getBar()->addPanel($panel);
 		return $panel;
+	}
+
+
+	/**
+	 * Reformat source to key -> value pairs.
+	 * @return array
+	 */
+	public static function toPairs(array $rows, $key = NULL, $value = NULL)
+	{
+		if (!$rows) {
+			return array();
+		}
+
+		$keys = array_keys((array) reset($rows));
+		if (!count($keys)) {
+			throw new \LogicException('Result set does not contain any column.');
+
+		} elseif ($key === NULL && $value === NULL) {
+			if (count($keys) === 1) {
+				list($value) = $keys;
+			} else {
+				list($key, $value) = $keys;
+			}
+		}
+
+		$return = array();
+		if ($key === NULL) {
+			foreach ($rows as $row) {
+				$return[] = ($value === NULL ? $row : $row[$value]);
+			}
+		} else {
+			foreach ($rows as $row) {
+				$return[is_object($row[$key]) ? (string) $row[$key] : $row[$key]] = ($value === NULL ? $row : $row[$value]);
+			}
+		}
+
+		return $return;
 	}
 
 }

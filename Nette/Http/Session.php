@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Http;
@@ -127,7 +123,7 @@ class Session extends Nette\Object
 		// browser closing detection
 		$browserKey = $this->request->getCookie('nette-browser');
 		if (!$browserKey) {
-			$browserKey = Nette\Utils\Strings::random();
+			$browserKey = Nette\Utils\Random::generate();
 		}
 		$browserClosed = !isset($nf['B']) || $nf['B'] !== $browserKey;
 		$nf['B'] = $browserKey;
@@ -331,7 +327,8 @@ class Session extends Nette\Object
 
 
 	/**
-	 * Cleans and minimizes meta structures.
+	 * Cleans and minimizes meta structures. This method is called automatically on shutdown, do not call it directly.
+	 * @internal
 	 * @return void
 	 */
 	public function clean()
@@ -427,8 +424,8 @@ class Session extends Nette\Object
 				} elseif (function_exists('ini_set')) {
 					ini_set("session.$key", $value);
 
-				} else {
-					throw new Nette\NotSupportedException('Required function ini_set() is disabled.');
+				} elseif (ini_get("session.$key") != $value) { // intentionally ==
+					throw new Nette\NotSupportedException("Unable to set 'session.$key' to '$value' because function ini_set() is disabled.");
 				}
 			}
 		}
@@ -508,18 +505,31 @@ class Session extends Nette\Object
 
 
 	/**
-	 * Sets user session storage.
+	 * Sets user session storage for PHP < 5.4. For PHP >= 5.4, use setHandler().
 	 * @return self
 	 */
 	public function setStorage(ISessionStorage $storage)
 	{
 		if (self::$started) {
-			throw new Nette\InvalidStateException("Unable to set storage when session has been started.");
+			throw new Nette\InvalidStateException('Unable to set storage when session has been started.');
 		}
 		session_set_save_handler(
 			array($storage, 'open'), array($storage, 'close'), array($storage, 'read'),
 			array($storage, 'write'), array($storage, 'remove'), array($storage, 'clean')
 		);
+	}
+
+
+	/**
+	 * Sets user session handler.
+	 * @return self
+	 */
+	public function setHandler(\SessionHandlerInterface $handler)
+	{
+		if (self::$started) {
+			throw new Nette\InvalidStateException('Unable to set handler when session has been started.');
+		}
+		session_set_save_handler($handler);
 	}
 
 
@@ -530,7 +540,7 @@ class Session extends Nette\Object
 	private function sendCookie()
 	{
 		if (!headers_sent() && ob_get_level() && ob_get_length()) {
-			trigger_error("Possible problem: you are starting session while already having some data in output buffer. This may not work if the outputted data grows. Try starting the session earlier.", E_USER_NOTICE);
+			trigger_error('Possible problem: you are starting session while already having some data in output buffer. This may not work if the outputted data grows. Try starting the session earlier.', E_USER_NOTICE);
 		}
 
 		$cookie = $this->getCookieParameters();

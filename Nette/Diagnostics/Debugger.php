@@ -2,16 +2,13 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Diagnostics;
 
-use Nette;
+use Nette,
+	ErrorException;
 
 
 /**
@@ -23,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-final class Debugger
+class Debugger
 {
 	/** @var bool in production mode is suppressed any debugging output */
 	public static $productionMode = self::DETECT;
@@ -78,9 +75,6 @@ final class Debugger
 
 	/** @var bool {@link Debugger::enable()} */
 	private static $enabled = FALSE;
-
-	/** @var mixed {@link Debugger::tryError()} FALSE means catching is disabled */
-	private static $lastError = FALSE;
 
 	/** @internal */
 	public static $errorTypes = array(
@@ -154,7 +148,7 @@ final class Debugger
 	{
 		self::$time = isset($_SERVER['REQUEST_TIME_FLOAT']) ? $_SERVER['REQUEST_TIME_FLOAT'] : microtime(TRUE);
 		if (isset($_SERVER['REQUEST_URI'])) {
-			self::$source = (isset($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'off') ? 'https://' : 'http://')
+			self::$source = (!empty($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'off') ? 'https://' : 'http://')
 				. (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '')
 				. $_SERVER['REQUEST_URI'];
 		} else {
@@ -215,7 +209,7 @@ final class Debugger
 			set_error_handler(array(__CLASS__, '_errorHandler'));
 
 			foreach (array('Nette\Diagnostics\Bar', 'Nette\Diagnostics\BlueScreen', 'Nette\Diagnostics\DefaultBarPanel', 'Nette\Diagnostics\Dumper', 'Nette\Diagnostics\FireLogger',
-				'Nette\Diagnostics\Helpers', 'Nette\Diagnostics\Logger', 'Nette\FatalErrorException', 'Nette\Utils\Html', 'Nette\Utils\Strings') as $class) {
+				'Nette\Diagnostics\Helpers', 'Nette\Diagnostics\Logger', 'Nette\Utils\Html', 'Nette\Utils\Strings') as $class) {
 				class_exists($class);
 			}
 			self::$enabled = TRUE;
@@ -230,7 +224,7 @@ final class Debugger
 	{
 		if (!self::$blueScreen) {
 			self::$blueScreen = new BlueScreen;
-			self::$blueScreen->collapsePaths[] = NETTE_DIR;
+			self::$blueScreen->collapsePaths[] = dirname(__DIR__);
 			self::$blueScreen->addPanel(function($e) {
 				if ($e instanceof Nette\Templating\FilterException) {
 					return array(
@@ -239,7 +233,7 @@ final class Debugger
 						. ($e->sourceLine ? BlueScreen::highlightFile($e->sourceFile, $e->sourceLine) : '')
 					);
 				} elseif ($e instanceof Nette\Utils\NeonException && preg_match('#line (\d+)#', $e->getMessage(), $m)) {
-					if ($item = Helpers::findTrace($e->getTrace(), 'Nette\Config\Adapters\NeonAdapter::load')) {
+					if ($item = Helpers::findTrace($e->getTrace(), 'Nette\DI\Config\Adapters\NeonAdapter::load')) {
 						return array(
 							'tab' => 'NEON',
 							'panel' => '<p><b>File:</b> ' . Helpers::editorLink($item['args'][0], $m[1]) . '</p>'
@@ -340,7 +334,7 @@ final class Debugger
 		if ($message instanceof \Exception) {
 			$exception = $message;
 			while ($exception) {
-				$tmp[] = ($exception instanceof Nette\FatalErrorException
+				$tmp[] = ($exception instanceof ErrorException
 					? 'Fatal error: ' . $exception->getMessage()
 					: get_class($exception) . ": " . $exception->getMessage())
 					. " in " . $exception->getFile() . ":" . $exception->getLine();
@@ -398,7 +392,7 @@ final class Debugger
 
 		$error = error_get_last();
 		if (in_array($error['type'], array(E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE))) {
-			self::_exceptionHandler(Helpers::fixStack(new Nette\FatalErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'], NULL)), TRUE);
+			self::_exceptionHandler(Helpers::fixStack(new ErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'])), TRUE);
 
 		} elseif (!connection_aborted() && !self::$productionMode && self::isHtmlMode()) {
 			self::getBar()->render();
@@ -414,6 +408,11 @@ final class Debugger
 	 */
 	public static function _exceptionHandler(\Exception $exception, $shutdown = FALSE)
 	{
+		if (!self::$enabled) {
+			return;
+		}
+		self::$enabled = FALSE; // prevent double rendering
+
 		if (!headers_sent()) {
 			$protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
 			$code = isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE ') !== FALSE ? 503 : 500;
@@ -465,7 +464,6 @@ final class Debugger
 			}
 		}
 
-		self::$enabled = FALSE; // prevent double rendering
 		if (!$shutdown) {
 			exit(254);
 		}
@@ -480,7 +478,7 @@ final class Debugger
 	 * @param  int    line number the error was raised at
 	 * @param  array  an array of variables that existed in the scope the error was triggered in
 	 * @return bool   FALSE to call normal error handler, NULL otherwise
-	 * @throws Nette\FatalErrorException
+	 * @throws ErrorException
 	 * @internal
 	 */
 	public static function _errorHandler($severity, $message, $file, $line, $context)
@@ -489,27 +487,29 @@ final class Debugger
 			error_reporting(E_ALL | E_STRICT);
 		}
 
-		if (self::$lastError !== FALSE && ($severity & error_reporting()) === $severity) { // tryError mode
-			self::$lastError = new \ErrorException($message, 0, $severity, $file, $line);
-			return NULL;
-		}
-
 		if ($severity === E_RECOVERABLE_ERROR || $severity === E_USER_ERROR) {
 			if (Helpers::findTrace(debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : FALSE), '*::__toString')) {
 				$previous = isset($context['e']) && $context['e'] instanceof \Exception ? $context['e'] : NULL;
-				self::_exceptionHandler(new Nette\FatalErrorException($message, 0, $severity, $file, $line, $context, $previous));
+				$e = new ErrorException($message, 0, $severity, $file, $line, $previous);
+				$e->context = $context;
+				self::_exceptionHandler($e);
 			}
-			throw new Nette\FatalErrorException($message, 0, $severity, $file, $line, $context);
+
+			$e = new ErrorException($message, 0, $severity, $file, $line);
+			$e->context = $context;
+			throw $e;
 
 		} elseif (($severity & error_reporting()) !== $severity) {
 			return FALSE; // calls normal error handler to fill-in error_get_last()
 
 		} elseif (!self::$productionMode && (is_bool(self::$strictMode) ? self::$strictMode : ((self::$strictMode & $severity) === $severity))) {
-			self::_exceptionHandler(new Nette\FatalErrorException($message, 0, $severity, $file, $line, $context));
+			$e = new ErrorException($message, 0, $severity, $file, $line);
+			$e->context = $context;
+			self::_exceptionHandler($e);
 		}
 
 		$message = 'PHP ' . (isset(self::$errorTypes[$severity]) ? self::$errorTypes[$severity] : 'Unknown error') . ": $message";
-		$count = & self::getBar()->getPanel(__CLASS__ . ':errors')->data["$message|$file|$line"];
+		$count = & self::getBar()->getPanel(__CLASS__ . ':errors')->data["$file|$line|$message"];
 
 		if ($count++) { // repeated error
 			return NULL;
@@ -519,46 +519,9 @@ final class Debugger
 			return NULL;
 
 		} else {
-			self::fireLog(new \ErrorException($message, 0, $severity, $file, $line));
-			return self::isHtmlMode() ? NULL : FALSE;
+			self::fireLog(new ErrorException($message, 0, $severity, $file, $line));
+			return self::isHtmlMode() ? NULL : FALSE; // FALSE calls normal error handler
 		}
-
-		return FALSE; // call normal error handler
-	}
-
-
-	/** @deprecated */
-	public static function toStringException(\Exception $exception)
-	{
-		if (self::$enabled) {
-			self::_exceptionHandler($exception);
-		} else {
-			trigger_error($exception->getMessage(), E_USER_ERROR);
-		}
-	}
-
-
-	/** @deprecated */
-	public static function tryError()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use own error handler instead.', E_USER_DEPRECATED);
-		if (!self::$enabled && self::$lastError === FALSE) {
-			set_error_handler(array(__CLASS__, '_errorHandler'));
-		}
-		self::$lastError = NULL;
-	}
-
-
-	/** @deprecated */
-	public static function catchError(& $error)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use own error handler instead.', E_USER_DEPRECATED);
-		if (!self::$enabled && self::$lastError !== FALSE) {
-			restore_error_handler();
-		}
-		$error = self::$lastError;
-		self::$lastError = FALSE;
-		return (bool) $error;
 	}
 
 
@@ -567,6 +530,7 @@ final class Debugger
 
 	/**
 	 * Dumps information about a variable in readable format.
+	 * @tracySkipLocation
 	 * @param  mixed  variable to dump
 	 * @param  bool   return output instead of printing it? (bypasses $productionMode)
 	 * @return mixed  variable itself or dump
@@ -610,18 +574,20 @@ final class Debugger
 
 	/**
 	 * Dumps information about a variable in Nette Debug Bar.
+	 * @tracySkipLocation
 	 * @param  mixed  variable to dump
 	 * @param  string optional title
+	 * @param  array  dumper options
 	 * @return mixed  variable itself
 	 */
-	public static function barDump($var, $title = NULL)
+	public static function barDump($var, $title = NULL, array $options = NULL)
 	{
 		if (!self::$productionMode) {
-			$dump = array();
-			foreach ((is_array($var) ? $var : array('' => $var)) as $key => $val) {
-				$dump[$key] = Dumper::toHtml($val);
-			}
-			self::getBar()->getPanel(__CLASS__ . ':dumps')->data[] = array('title' => $title, 'dump' => $dump);
+			self::getBar()->getPanel(__CLASS__ . ':dumps')->data[] = array('title' => $title, 'dump' => Dumper::toHtml($var, (array) $options + array(
+				Dumper::DEPTH => self::$maxDepth,
+				Dumper::TRUNCATE => self::$maxLen,
+				Dumper::LOCATION => self::$showLocation,
+			)));
 		}
 		return $var;
 	}

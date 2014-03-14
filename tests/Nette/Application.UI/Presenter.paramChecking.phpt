@@ -4,11 +4,11 @@
  * Test: Nette\Application\UI\Presenter and checking params.
  *
  * @author     David Grudl
- * @package    Nette\Application\UI
  */
 
 use Nette\Http,
-	Nette\Application;
+	Nette\Application,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

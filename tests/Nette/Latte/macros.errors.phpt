@@ -4,10 +4,10 @@
  * Test: Nette\Latte\Engine: errors.
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
-use Nette\Latte;
+use Nette\Latte,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

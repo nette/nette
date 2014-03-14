@@ -4,10 +4,10 @@
  * Test: Nette\Forms\Controls\TextInput.
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
-use Nette\Forms\Form;
+use Nette\Forms\Form,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -89,7 +89,7 @@ test(function() { // setValue() and invalid argument
 
 	Assert::exception(function() use ($input) {
 		$input->setValue(array());
-	}, 'Nette\InvalidArgumentException', "Value must be scalar or NULL, array given.");
+	}, 'Nette\InvalidArgumentException', "Value must be scalar or NULL, array given in field 'text'.");
 });
 
 
@@ -100,7 +100,23 @@ test(function() { // float
 	$input = $form->addText('number')
 		->addRule($form::FLOAT);
 
-	Assert::same( '10.5', $input->getValue() );
+	Assert::same( '10,5', $input->getValue() );
+	$input->validate();
+	Assert::same( 10.5, $input->getValue() );
+});
+
+
+
+test(function() { // float in condition
+	$_POST = array('number' => ' 10,5 ');
+
+	$form = new Form;
+	$input = $form->addText('number');
+	$input->addCondition($form::FILLED)
+			->addRule($form::FLOAT);
+
+	$input->validate();
+	Assert::same( 10.5, $input->getValue() );
 });
 
 
@@ -111,7 +127,8 @@ test(function() { // non float
 	$input = $form->addText('number')
 		->addRule(~$form::FLOAT);
 
-	Assert::same( '10,5', $input->getValue() );
+	$input->validate();
+	Assert::same( 10.5, $input->getValue() ); // side effect
 });
 
 
@@ -144,6 +161,7 @@ test(function() { // URL
 	$input = $form->addText('url')
 		->addRule($form::URL);
 
+	$input->validate();
 	Assert::same( 'http://nette.org', $input->getValue() );
 });
 
@@ -151,7 +169,7 @@ test(function() { // URL
 test(function() { // object
 	$form = new Form;
 	$input = $form->addText('text')
-		->setValue(new Nette\DateTime('2013-07-05'));
+		->setValue($date = new Nette\DateTime('2013-07-05'));
 
-	Assert::same( '2013-07-05 00:00:00', $input->getValue() );
+	Assert::same( $date, $input->getValue() );
 });

@@ -4,11 +4,11 @@
  * Test: Nette\PhpGenerator for classes.
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
 use Nette\PhpGenerator\ClassType,
-	Nette\PhpGenerator\PhpLiteral;
+	Nette\PhpGenerator\PhpLiteral,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

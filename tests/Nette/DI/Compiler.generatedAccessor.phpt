@@ -4,10 +4,10 @@
  * Test: Nette\DI\Compiler: generated services accessors.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
-use Nette\DI;
+use Nette\DI,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

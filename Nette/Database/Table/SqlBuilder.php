@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Database\Table;
@@ -222,7 +218,7 @@ class SqlBuilder extends Nette\Object
 		$replace = NULL;
 		$placeholderNum = 0;
 		foreach ($args as $arg) {
-			preg_match('#(?:.*?\?.*?){' . $placeholderNum . '}(((?:&|\||^|~|\+|-|\*|/|%|\(|,|<|>|=|(?<=\W|^)(?:REGEXP|ALL|AND|ANY|BETWEEN|EXISTS|IN|R?LIKE|OR|NOT|SOME))\s*)?(?:\(\?\)|\?))#s', $condition, $match, PREG_OFFSET_CAPTURE);
+			preg_match('#(?:.*?\?.*?){' . $placeholderNum . '}(((?:&|\||^|~|\+|-|\*|/|%|\(|,|<|>|=|(?<=\W|^)(?:REGEXP|ALL|AND|ANY|BETWEEN|EXISTS|IN|[IR]?LIKE|OR|NOT|SOME|INTERVAL))\s*)?(?:\(\?\)|\?))#s', $condition, $match, PREG_OFFSET_CAPTURE);
 			$hasOperator = ($match[1][0] === '?' && $match[1][1] === 0) ? TRUE : !empty($match[2][0]);
 
 			if ($arg === NULL) {
@@ -387,7 +383,7 @@ class SqlBuilder extends Nette\Object
 			(?(DEFINE)
 				(?P<word> [a-z][\w_]* )
 				(?P<del> [.:] )
-				(?P<node> (?&del)? (?&word) )
+				(?P<node> (?&del)? (?&word) (\((?&word)\))? )
 			)
 			(?P<chain> (?!\.) (?&node)*)  \. (?P<column> (?&word) | \*  )
 		~xi', function($match) use (& $joins, $builder) {
@@ -412,12 +408,17 @@ class SqlBuilder extends Nette\Object
 			(?(DEFINE)
 				(?P<word> [a-z][\w_]* )
 			)
-			(?P<del> [.:])?(?P<key> (?&word))
+			(?P<del> [.:])?(?P<key> (?&word))(\((?P<throughColumn> (?&word))\))?
 		~xi', $chain, $keyMatches, PREG_SET_ORDER);
 
 		foreach ($keyMatches as $keyMatch) {
 			if ($keyMatch['del'] === ':') {
-				list($table, $primary) = $this->databaseReflection->getHasManyReference($parent, $keyMatch['key']);
+				if (isset($keyMatch['throughColumn'])) {
+					$table = $keyMatch['key'];
+					list(, $primary) = $this->databaseReflection->getBelongsToReference($table, $keyMatch['throughColumn']);
+				} else {
+					list($table, $primary) = $this->databaseReflection->getHasManyReference($parent, $keyMatch['key']);
+				}
 				$column = $this->databaseReflection->getPrimary($parent);
 			} else {
 				list($table, $column) = $this->databaseReflection->getBelongsToReference($parent, $keyMatch['key']);

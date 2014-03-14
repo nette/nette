@@ -4,11 +4,11 @@
  * Test: Nette\Forms\Rules.
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
 use Nette\Forms\Form,
-	Nette\Forms\Rule;
+	Nette\Forms\Rule,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -35,40 +35,44 @@ test(function() { // Rules
 
 	$items = iterator_to_array($rules);
 	Assert::same( 1, count($items) );
-	Assert::same( Form::REQUIRED, $items[0]->operation );
-	Assert::same( Rule::VALIDATOR, $items[0]->type );
+	Assert::same( Form::REQUIRED, $items[0]->validator );
+	Assert::null( $items[0]->branch );
 	Assert::false( $items[0]->isNegative );
 
-	Assert::same( array('Please complete mandatory field.'), $rules->validate() );
+	Assert::false( $rules->validate() );
+	Assert::same( array('This field is required.'), $input->getErrors() );
 });
 
 
 test(function() { // 'required' is always the first rule
 	$form = new Form;
-	$rules = $form->addText('text')->getRules();
+	$input = $form->addText('text');
+	$rules = $input->getRules();
 
 	$rules->addRule($form::EMAIL);
 	$rules->addRule($form::REQUIRED);
 
 	$items = iterator_to_array($rules);
 	Assert::same( 2, count($items) );
-	Assert::same( Form::REQUIRED, $items[0]->operation );
-	Assert::same( Form::EMAIL, $items[1]->operation );
+	Assert::same( Form::REQUIRED, $items[0]->validator );
+	Assert::same( Form::EMAIL, $items[1]->validator );
 
 	$rules->addRule(~$form::REQUIRED);
 	$items = iterator_to_array($rules);
 	Assert::same( 2, count($items) );
-	Assert::same( Form::REQUIRED, $items[0]->operation );
+	Assert::same( Form::REQUIRED, $items[0]->validator );
 	Assert::true( $items[0]->isNegative );
-	Assert::same( Form::EMAIL, $items[1]->operation );
+	Assert::same( Form::EMAIL, $items[1]->validator );
 
-	Assert::same( array('Please enter a valid email address.'), $rules->validate() );
+	Assert::false( $rules->validate() );
+	Assert::same( array('Please enter a valid email address.'), $input->getErrors() );
 });
 
 
 test(function() { // setRequired(FALSE)
 	$form = new Form;
-	$rules = $form->addText('text')->getRules();
+	$input = $form->addText('text');
+	$rules = $input->getRules();
 
 	$rules->addRule($form::EMAIL);
 	$rules->addRule($form::REQUIRED);
@@ -76,7 +80,18 @@ test(function() { // setRequired(FALSE)
 
 	$items = iterator_to_array($rules);
 	Assert::same( 1, count($items) );
-	Assert::same( Form::EMAIL, $items[0]->operation );
+	Assert::same( Form::EMAIL, $items[0]->validator );
 
-	Assert::same( array('Please enter a valid email address.'), $rules->validate() );
+	Assert::false( $rules->validate() );
+	Assert::same( array('Please enter a valid email address.'), $input->getErrors() );
+});
+
+
+test(function () { // addRule(~Form::REQUIRED)
+	$form = new Form;
+	$input = $form->addText('text');
+
+	Assert::false( $input->isRequired() );
+	Assert::same( $input, $input->addRule(~Form::REQUIRED) );
+	Assert::false( $input->isRequired() );
 });

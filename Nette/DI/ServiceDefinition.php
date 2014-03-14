@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\DI;
@@ -18,35 +14,52 @@ use Nette;
  * Definition used by ContainerBuilder.
  *
  * @author     David Grudl
+ *
+ * @method string getClass()
+ * @method Statement getFactory()
+ * @method ServiceDefinition setSetup(Statement[])
+ * @method Statement[] getSetup()
+ * @method ServiceDefinition setParameters(array)
+ * @method array getParameters()
+ * @method ServiceDefinition setTags(array)
+ * @method array getTags()
+ * @method ServiceDefinition setAutowired(bool)
+ * @method bool isAutowired()
+ * @method ServiceDefinition setInject(bool)
+ * @method bool getInject()
+ * @method ServiceDefinition setImplement(string)
+ * @method string getImplement()
+ * @method ServiceDefinition setImplementType(string)
+ * @method string getImplementType()
  */
 class ServiceDefinition extends Nette\Object
 {
 	/** @var string  class or interface name */
-	public $class;
+	private $class;
 
 	/** @var Statement */
-	public $factory;
+	private $factory;
 
 	/** @var Statement[] */
-	public $setup = array();
+	private $setup = array();
 
 	/** @var array */
 	public $parameters = array();
 
 	/** @var array */
-	public $tags = array();
-
-	/** @var mixed */
-	public $autowired = TRUE;
+	private $tags = array();
 
 	/** @var bool */
-	public $shared = TRUE;
+	private $autowired = TRUE;
 
 	/** @var bool */
-	public $inject = TRUE;
+	private $inject = TRUE;
 
 	/** @var string  interface name */
-	public $implement;
+	private $implement;
+
+	/** @internal @var string  create | get */
+	private $implementType;
 
 
 	public function setClass($class, array $args = array())
@@ -61,7 +74,7 @@ class ServiceDefinition extends Nette\Object
 
 	public function setFactory($factory, array $args = array())
 	{
-		$this->factory = new Statement($factory, $args);
+		$this->factory = $factory instanceof Statement ? $factory : new Statement($factory, $args);
 		return $this;
 	}
 
@@ -77,17 +90,9 @@ class ServiceDefinition extends Nette\Object
 	}
 
 
-	public function addSetup($target, $args = NULL)
+	public function addSetup($target, array $args = array())
 	{
-		$this->setup[] = new Statement($target, is_array($args) ? $args : array_slice(func_get_args(), 1));
-		return $this;
-	}
-
-
-	public function setParameters(array $params)
-	{
-		$this->shared = $this->autowired = FALSE;
-		$this->parameters = $params;
+		$this->setup[] = new Statement($target, $args);
 		return $this;
 	}
 
@@ -99,33 +104,19 @@ class ServiceDefinition extends Nette\Object
 	}
 
 
-	public function setAutowired($on)
-	{
-		$this->autowired = $on;
-		return $this;
-	}
-
-
+	/** @deprecated */
 	public function setShared($on)
 	{
-		$this->shared = (bool) $on;
-		$this->autowired = $this->shared ? $this->autowired : FALSE;
+		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
+		$this->autowired = $on ? $this->autowired : FALSE;
 		return $this;
 	}
 
 
-	public function setInject($on)
+	/** @deprecated */
+	public function isShared()
 	{
-		$this->inject = (bool) $on;
-		return $this;
-	}
-
-
-	public function setImplement($implement)
-	{
-		$this->implement = $implement;
-		$this->shared = TRUE;
-		return $this;
+		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
 	}
 
 }

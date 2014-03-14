@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette;
@@ -19,7 +15,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-final class ObjectMixin
+class ObjectMixin
 {
 	/** @var array (name => 0 | bool | array)  used by getMethods() */
 	private static $methods;
@@ -69,12 +65,9 @@ final class ObjectMixin
 				throw new UnexpectedValueException("Property $class::$$name must be array or NULL, " . gettype($_this->$name) ." given.");
 			}
 
-		} elseif (isset($methods[$name])) { // magic @methods
+		} elseif (isset($methods[$name]) && is_array($methods[$name])) { // magic @methods
 			list($op, $rp, $type) = $methods[$name];
-			if (!$rp) {
-				throw new MemberAccessException("Magic method $class::$name() has not corresponding property $$op.");
-
-			} elseif (count($args) !== ($op === 'get' ? 0 : 1)) {
+			if (count($args) !== ($op === 'get' ? 0 : 1)) {
 				throw new InvalidArgumentException("$class::$name() expects " . ($op === 'get' ? 'no' : '1') . ' argument, ' . count($args) . ' given.');
 
 			} elseif ($type && $args && !self::checkType($args[0], $type)) {
@@ -97,6 +90,9 @@ final class ObjectMixin
 			return Nette\Utils\Callback::invokeArgs($cb, $args);
 
 		} else {
+			if (method_exists($class, $name)) { // called parent::$name()
+				$class = 'parent';
+			}
 			throw new MemberAccessException("Call to undefined method $class::$name().");
 		}
 	}
@@ -287,8 +283,6 @@ final class ObjectMixin
 					$type = $rc->getNamespaceName() . '\\' . $type;
 				}
 				$methods[$name] = array($op, $rp, $type);
-			} else {
-				$methods[$name] = array($prop, NULL, NULL);
 			}
 		}
 		return $methods;

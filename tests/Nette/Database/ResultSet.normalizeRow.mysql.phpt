@@ -4,17 +4,17 @@
  * Test: Nette\Database\ResultSet::normalizeRow()
  *
  * @author     David Grudl
- * @package    Nette\Database
  * @dataProvider? databases.ini  mysql
  */
 
-$query = 'mysql';
+use Tester\Assert;
+
 require __DIR__ . '/connect.inc.php'; // create $connection
 
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/files/mysql-nette_test3.sql');
 
 
-$res = $connection->query('SELECT * FROM types');
+$res = $context->query('SELECT * FROM types');
 
 Assert::equal( array(
 	'unsigned_int' => 1,
@@ -29,7 +29,7 @@ Assert::equal( array(
 	'float' => 1.0,
 	'double' => 1.1,
 	'date' => new Nette\DateTime('2012-10-13'),
-	'time' => new Nette\DateTime('10:10:10'),
+	'time' => new DateInterval('PT30H10M10S'),
 	'datetime' => new Nette\DateTime('2012-10-13 10:10:10'),
 	'timestamp' => new Nette\DateTime('2012-10-13 10:10:10'),
 	'year' => PHP_VERSION_ID < 50417 ? '2012' : 2012, // PHP bug #48724
@@ -62,7 +62,7 @@ Assert::equal( array(
 	'float' => 0.5,
 	'double' => 0.5,
 	'date' => new Nette\DateTime('0000-00-00 00:00:00'),
-	'time' => new Nette\DateTime('00:00:00'),
+	'time' => new DateInterval('P0D'),
 	'datetime' => new Nette\DateTime('0000-00-00 00:00:00'),
 	'timestamp' => new Nette\DateTime('0000-00-00 00:00:00'),
 	'year' => PHP_VERSION_ID < 50417 ? '2000' : 2000, // PHP bug #48724
@@ -116,7 +116,7 @@ Assert::same( array(
 ), (array) $res->fetch() );
 
 
-$res = $connection->query('SELECT `int` AS a, `char` AS a FROM types');
+$res = $context->query('SELECT `int` AS a, `char` AS a FROM types');
 
 Assert::same( array(
 	'a' => 'a',

@@ -4,17 +4,17 @@
  * Test: Nette\Diagnostics\Debugger Bar in HTML.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
- * @output     %A%<!-- Nette Debug Bar -->%A%
+ * @outputMatch %A%<!-- Nette Debug Bar -->%A%
  */
 
-use Nette\Diagnostics\Debugger;
+use Nette\Diagnostics\Debugger,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 if (PHP_SAPI === 'cli') {
-	Tester\Environment::skip();
+	Tester\Environment::skip('Debugger Bar is not rendered in CLI mode');
 }
 
 

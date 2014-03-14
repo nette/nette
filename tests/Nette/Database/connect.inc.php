@@ -1,23 +1,24 @@
 <?php
 
 /**
- * Test: Nette\Database test boostap.
+ * Test: Nette\Database test bootstrap.
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek
- * @package    Nette\Database
  */
 
 require __DIR__ . '/../bootstrap.php';
 
 
-if (!is_file(__DIR__ . '/databases.ini')) {
-	Tester\Environment::skip();
+if (!class_exists('PDO')) {
+	Tester\Environment::skip('Requires PHP extension PDO.');
 }
 
-$options = Tester\DataProvider::load(__DIR__ . '/databases.ini', isset($query) ? $query : NULL);
-$options = isset($_SERVER['argv'][1]) ? $options[$_SERVER['argv'][1]] : reset($options);
-$options += array('user' => NULL, 'password' => NULL);
+try {
+	$options = Tester\DataProvider::loadCurrent() + array('user' => NULL, 'password' => NULL);
+} catch (Exception $e) {
+	Tester\Environment::skip($e->getMessage());
+}
 
 try {
 	$connection = new Nette\Database\Connection($options['dsn'], $options['user'], $options['password']);
@@ -28,8 +29,11 @@ try {
 if (strpos($options['dsn'], 'sqlite::memory:') === FALSE) {
 	Tester\Environment::lock($options['dsn'], dirname(TEMP_DIR));
 }
+
 $driverName = $connection->getPdo()->getAttribute(PDO::ATTR_DRIVER_NAME);
-$dao = new Nette\Database\SelectionFactory($connection);
+$cacheMemoryStorage = new Nette\Caching\Storages\MemoryStorage;
+$reflection = new Nette\Database\Reflection\DiscoveredReflection($connection, $cacheMemoryStorage);
+$context = new Nette\Database\Context($connection, $reflection, $cacheMemoryStorage);
 
 
 /** Replaces [] with driver-specific quotes */

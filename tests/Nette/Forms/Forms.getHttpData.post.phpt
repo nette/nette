@@ -4,11 +4,11 @@
  * Test: Nette\Forms HTTP data.
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
 use Nette\Forms\Form,
-	Nette\Forms\Validator;
+	Nette\Forms\Validator,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

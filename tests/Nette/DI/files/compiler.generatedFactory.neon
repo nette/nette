@@ -3,8 +3,9 @@ services:
 	bar: Bar
 	baz: Baz
 
-factories:
 	lorem: \ILoremFactory(Lorem)
+
+	finder: IFinderFactory
 
 	article:
 		create: Article(%title%)
@@ -15,3 +16,13 @@ factories:
 		create: Foo(..., %baz%)
 		implement: IFooFactory
 		parameters: [Baz baz]
+
+	fooFactory:
+		create: Foo(..., %baz%)
+		implement: IFooFactory
+		parameters: [Baz baz]
+
+	article2:
+		implement: IArticleFactory
+		arguments: [%title%]
+		parameters: [title]

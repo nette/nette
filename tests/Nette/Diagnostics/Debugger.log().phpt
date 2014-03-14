@@ -5,10 +5,10 @@
  *
  * @author     David Grudl
  * @author     Michael Moravec
- * @package    Nette\Diagnostics
  */
 
-use Nette\Diagnostics\Debugger;
+use Nette\Diagnostics\Debugger,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

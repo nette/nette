@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Database;
@@ -79,7 +75,7 @@ class SqlPreprocessor extends Nette\Object
 			} else {
 				$res[] = Nette\Utils\Strings::replace(
 					$param,
-					'~\'.*?\'|".*?"|\?|\b(?:INSERT|REPLACE|UPDATE|WHERE|HAVING|ORDER BY|GROUP BY)\b~si',
+					'~\'.*?\'|".*?"|\?|\b(?:INSERT|REPLACE|UPDATE|WHERE|HAVING|ORDER BY|GROUP BY)\b|/\*.*?\*/|--[^\n]*~si',
 					array($this, 'callback')
 				);
 			}
@@ -93,7 +89,7 @@ class SqlPreprocessor extends Nette\Object
 	public function callback($m)
 	{
 		$m = $m[0];
-		if ($m[0] === "'" || $m[0] === '"') { // string
+		if ($m[0] === "'" || $m[0] === '"' || $m[0] === '/' || $m[0] === '-') { // string or comment
 			return $m;
 
 		} elseif ($m === '?') { // placeholder
@@ -173,18 +169,23 @@ class SqlPreprocessor extends Nette\Object
 
 			} elseif ($this->arrayMode === 'assoc') { // key=value, key=value, ...
 				foreach ($value as $k => $v) {
-					$vx[] = $this->driver->delimite($k) . '=' . $this->formatValue($v);
+					if (substr($k, -1) === '=') {
+						$k2 = $this->driver->delimite(substr($k, 0, -2));
+						$vx[] = $k2 . '=' . $k2 . ' ' . substr($k, -2, 1) . ' ' . $this->formatValue($v);
+					} else {
+						$vx[] = $this->driver->delimite($k) . '=' . $this->formatValue($v);
+					}
 				}
 				return implode(', ', $vx);
 
 			} elseif ($this->arrayMode === 'multi') { // multiple insert (value, value, ...), ...
-				foreach ($value as $k => $v) {
+				foreach ($value as $v) {
 					$vx[] = $this->formatValue($v);
 				}
 				return '(' . implode(', ', $vx) . ')';
 
 			} elseif ($this->arrayMode === 'union') { // UNION ALL SELECT value, value, ...
-				foreach ($value as $k => $v) {
+				foreach ($value as $v) {
 					$vx[] = $this->formatValue($v);
 				}
 				return 'UNION ALL SELECT ' . implode(', ', $vx);
@@ -208,7 +209,7 @@ class SqlPreprocessor extends Nette\Object
 				return implode(', ', $vx);
 			}
 
-		} elseif ($value instanceof \DateTime) {
+		} elseif ($value instanceof \DateTime || $value instanceof \DateTimeInterface) {
 			return $this->driver->formatDateTime($value);
 
 		} elseif ($value instanceof SqlLiteral) {

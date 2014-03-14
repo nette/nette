@@ -4,10 +4,10 @@
  * Test: Nette\PhpGenerator\Helpers::format() & formatArgs()
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
-use Nette\PhpGenerator\Helpers;
+use Nette\PhpGenerator\Helpers,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

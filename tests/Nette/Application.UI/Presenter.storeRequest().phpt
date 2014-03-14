@@ -4,13 +4,13 @@
  * Test: Nette\Application\UI\Presenter::storeRequest()
  *
  * @author     Matěj Koubík
- * @package    Nette\Application\UI
  */
 
 use Nette\Http,
 	Nette\Application,
 	Nette\DI,
-	Nette\Security;
+	Nette\Security,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -83,14 +83,18 @@ class MockUser extends Security\User
 	}
 }
 
-class MockApplication extends Application\Application
+class MockPresenterFactory extends Nette\Object implements Nette\Application\IPresenterFactory
 {
-	public function __construct() {}
+	function getPresenterClass(& $name) {}
+
+	function createPresenter($name) {}
 }
 
-class MockHttpContext extends Http\Context
+class MockRouter extends Nette\Object implements Nette\Application\IRouter
 {
-	public function __construct() {}
+	function match(Nette\Http\IRequest $httpRequest) {}
+
+	function constructUrl(Nette\Application\Request $appRequest, Nette\Http\Url $refUrl) {}
 }
 
 class MockHttpRequest extends Http\Request
@@ -100,8 +104,8 @@ class MockHttpRequest extends Http\Request
 
 
 $context = new DI\Container();
-$application = new MockApplication();
-$httpContext = new MockHttpContext();
+$presenterFactory = new MockPresenterFactory();
+$router = new MockRouter();
 $httpRequest = new MockHttpRequest();
 $httpResponse = new Http\Response();
 $session = new MockSession();
@@ -110,7 +114,7 @@ $user = new MockUser();
 $applicationRequest = new Application\Request('', '', array());
 
 $presenter = new TestPresenter();
-$presenter->injectPrimary($context, $application, $httpContext, $httpRequest, $httpResponse, $session, $user);
+$presenter->injectPrimary($context, $presenterFactory, $router, $httpRequest, $httpResponse, $session, $user);
 $presenter->run($applicationRequest);
 
 $expiration = '+1 year';

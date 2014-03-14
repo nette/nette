@@ -4,10 +4,10 @@
  * Test: Nette\Configurator and production mode.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
-use Nette\Configurator;
+use Nette\Configurator,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -19,11 +19,9 @@ Assert::false( $configurator->isDebugMode() );
 
 $configurator->setDebugMode(TRUE);
 Assert::true( $configurator->isDebugMode() );
-Assert::false( @$configurator->isProductionMode() );
 
 $configurator->setDebugMode(FALSE);
 Assert::false( $configurator->isDebugMode() );
-Assert::true( @$configurator->isProductionMode() );
 
 $configurator->setDebugMode(php_uname('n'));
 Assert::true( $configurator->isDebugMode() );

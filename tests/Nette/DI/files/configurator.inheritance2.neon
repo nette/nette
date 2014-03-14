@@ -1,5 +1,5 @@
 services:
-	app2 < application: # inherites from overwritten application
+	app2 < application: # inherits from overwritten application
 		autowired: no
 		setup!: # overwrites inherited setup
 

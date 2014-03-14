@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Caching;
@@ -158,7 +154,10 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 		// convert FILES into CALLBACKS
 		if (isset($dp[self::FILES])) {
-			$dp[self::CALLBACKS][] = array(array(__CLASS__, 'checkFiles'), $dp[self::FILES], time());
+			//clearstatcache();
+			foreach (array_unique((array) $dp[self::FILES]) as $item) {
+				$dp[self::CALLBACKS][] = array(array(__CLASS__, 'checkFile'), $item, @filemtime($item)); // @ - stat may fail
+			}
 			unset($dp[self::FILES]);
 		}
 
@@ -375,14 +374,9 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 * @param  int
 	 * @return bool
 	 */
-	private static function checkFiles($files, $time)
+	private static function checkFile($file, $time)
 	{
-		foreach ((array) $files as $file) {
-			if (@filemtime($file) > $time) { // @ - stat may fail
-				return FALSE;
-			}
-		}
-		return TRUE;
+		return @filemtime($file) == $time; // @ - stat may fail
 	}
 
 

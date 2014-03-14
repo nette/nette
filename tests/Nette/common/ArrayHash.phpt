@@ -4,10 +4,10 @@
  * Test: Nette\ArrayHash basic usage.
  *
  * @author     David Grudl
- * @package    Nette
  */
 
-use Nette\ArrayHash;
+use Nette\ArrayHash,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

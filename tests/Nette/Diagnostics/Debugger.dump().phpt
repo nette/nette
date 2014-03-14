@@ -4,10 +4,10 @@
  * Test: Nette\Diagnostics\Debugger::dump() production vs development
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  */
 
-use Nette\Diagnostics\Debugger;
+use Nette\Diagnostics\Debugger,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

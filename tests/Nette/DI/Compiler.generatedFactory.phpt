@@ -4,10 +4,11 @@
  * Test: Nette\DI\Compiler: generated services factories.
  *
  * @author     Filip Prochazka
- * @package    Nette\DI
  */
 
 use Nette\DI;
+use Tester\Assert;
+use Nette\Utils as NU;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -32,6 +33,14 @@ class Lorem
 		$this->ipsum = $ipsum;
 	}
 
+}
+
+interface IFinderFactory
+{
+	/**
+	 * @return NU\Finder comment
+	 */
+	function create();
 }
 
 interface IArticleFactory
@@ -90,9 +99,24 @@ interface IFooFactory
 	public function create(Baz $baz);
 }
 
+class TestExtension extends DI\CompilerExtension
+{
+	public function loadConfiguration()
+	{
+		$builder = $this->getContainerBuilder();
+		$builder->addDefinition('fooFactory')
+			->setFactory('Foo')
+			->setParameters(array('Baz baz'))
+			->setImplement('IFooFactory')
+			->setArguments(array($builder::literal('$baz')));
+
+		// see definition by config in Compiler::parseService()
+	}
+}
 
 $loader = new DI\Config\Loader;
 $compiler = new DI\Compiler;
+$compiler->addExtension('test', new TestExtension);
 $code = $compiler->compile($loader->load('files/compiler.generatedFactory.neon'), 'Container', 'Nette\DI\Container');
 
 file_put_contents(TEMP_DIR . '/code.php', "<?php\n\n$code");
@@ -106,6 +130,11 @@ $lorem = $container->getService('lorem')->create();
 Assert::type( 'Lorem', $lorem );
 Assert::type( 'Ipsum', $lorem->ipsum );
 Assert::same( $container->getService('ipsum'), $lorem->ipsum );
+
+
+Assert::type( 'IFinderFactory', $container->getService('finder') );
+$finder = $container->getService('finder')->create();
+Assert::type( 'Nette\Utils\Finder', $finder );
 
 
 Assert::type( 'IArticleFactory', $container->getService('article') );
@@ -123,3 +152,9 @@ Assert::type( 'Baz', $foo->baz );
 Assert::same($container->getService('baz'), $foo->baz);
 
 Assert::type( 'ILoremFactory', $container->getByType('ILoremFactory') );
+
+
+Assert::type('IArticleFactory', $container->getService('article2'));
+$article = $container->getService('article2')->create('nemam');
+Assert::type('Article', $article);
+Assert::same('nemam', $article->title);

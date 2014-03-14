@@ -4,14 +4,13 @@
  * Test: Nette\PhpGenerator generator.
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
 namespace Abc;
 
 use Nette\PhpGenerator\ClassType,
-	Assert,
-	ReflectionClass;
+	ReflectionClass,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

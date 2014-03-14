@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Utils;
@@ -19,9 +15,8 @@ use Nette;
  *
  * @author     David Grudl
  */
-final class LimitedScope
+class LimitedScope
 {
-	private static $vars;
 
 	/**
 	 * Static class - cannot be instantiated.
@@ -41,12 +36,12 @@ final class LimitedScope
 	public static function evaluate(/*$code, array $vars = NULL*/)
 	{
 		if (func_num_args() > 1) {
-			self::$vars = func_get_arg(1);
-			extract(self::$vars);
+			foreach (func_get_arg(1) as $__k => $__v) $$__k = $__v;
+			unset($__k, $__v);
 		}
 		$res = eval('?>' . func_get_arg(0));
 		if ($res === FALSE && ($error = error_get_last()) && $error['type'] === E_PARSE) {
-			throw new Nette\FatalErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'], NULL);
+			throw new \ErrorException($error['message'], 0, $error['type'], $error['file'], $error['line']);
 		}
 		return $res;
 	}
@@ -55,17 +50,14 @@ final class LimitedScope
 	/**
 	 * Includes script in a limited scope.
 	 * @param  string  file to include
-	 * @param  array   local variables or TRUE meaning include once
+	 * @param  array   local variables
 	 * @return mixed   the return value of the included file
 	 */
 	public static function load(/*$file, array $vars = NULL*/)
 	{
-		if (func_num_args() > 1) {
-			self::$vars = func_get_arg(1);
-			if (self::$vars === TRUE) {
-				return include_once func_get_arg(0);
-			}
-			extract(self::$vars);
+		if (func_num_args() > 1 && is_array(func_get_arg(1))) {
+			foreach (func_get_arg(1) as $__k => $__v) $$__k = $__v;
+			unset($__k, $__v);
 		}
 		return include func_get_arg(0);
 	}

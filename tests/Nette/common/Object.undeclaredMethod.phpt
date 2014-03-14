@@ -4,9 +4,9 @@
  * Test: Nette\Object undeclared method.
  *
  * @author     David Grudl
- * @package    Nette
  */
 
+use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 

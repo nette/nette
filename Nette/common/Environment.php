@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette;
@@ -20,7 +16,7 @@ use Nette;
  * @author     David Grudl
  * @deprecated
  */
-final class Environment
+class Environment
 {
 	/** environment name */
 	const DEVELOPMENT = 'development',
@@ -262,7 +258,7 @@ final class Environment
 	 */
 	public static function getCache($namespace = '')
 	{
-		return new Caching\Cache(self::getService('cacheStorage'), $namespace);
+		return new Caching\Cache(self::getContext()->getByType('Nette\Caching\IStorage'), $namespace);
 	}
 
 
@@ -274,8 +270,8 @@ final class Environment
 	public static function getSession($namespace = NULL)
 	{
 		return $namespace === NULL
-			? self::getService('session')
-			: self::getService('session')->getSection($namespace);
+			? self::getContext()->getByType('Nette\Http\Session')
+			: self::getContext()->getByType('Nette\Http\Session')->getSection($namespace);
 	}
 
 
@@ -298,7 +294,8 @@ final class Environment
 		$configurator = new Nette\Configurator;
 		$configurator
 			->setDebugMode(!self::isProduction())
-			->setTempDirectory(TEMP_DIR);
+			->setTempDirectory(TEMP_DIR)
+			->addParameters(array('container' => array('class' => 'EnvironmentContainer')));
 		if ($file) {
 			$configurator->addConfig($file, $section);
 		}
@@ -306,7 +303,7 @@ final class Environment
 
 		self::$createdAt = '?';
 		foreach (debug_backtrace(FALSE) as $row) {
-			if (isset($row['file']) && is_file($row['file']) && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) !== 0) {
+			if (isset($row['file']) && $row['file'] !== __FILE__ && is_file($row['file'])) {
 				self::$createdAt = "$row[file]:$row[line]";
 				break;
 			}

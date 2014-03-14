@@ -4,10 +4,10 @@
  * Test: Nette\DI\Compiler: arguments in config.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
-use Nette\DI;
+use Nette\DI,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -64,7 +64,7 @@ Assert::error(function () use ($container) {
 Assert::same( array($lorem, $lorem, $container), $lorem->args[1] );
 
 // statements
-Assert::same( array(3, 'HELLO'), $lorem->args[2] );
+Assert::same( array(3, array('x' => 'HELLO')), $lorem->args[2] );
 
 // non-statements
 Assert::same( array(array('Lorem', 'method'), 'Lorem::add', 'Lorem::add'), $lorem->args[3] );

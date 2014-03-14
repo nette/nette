@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Application;
@@ -95,7 +91,7 @@ class PresenterFactory extends Nette\Object implements IPresenterFactory
 			// internal autoloading
 			$file = $this->formatPresenterFile($name);
 			if (is_file($file) && is_readable($file)) {
-				Nette\Utils\LimitedScope::load($file, TRUE);
+				call_user_func(function() use ($file) { require $file; });
 			}
 
 			if (!class_exists($class)) {

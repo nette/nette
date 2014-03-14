@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Templating;
@@ -146,7 +142,7 @@ class Template extends Nette\Object implements ITemplate
 			$code = strtr($code, $blocks); // put PHP code back
 		}
 
-		return Helpers::optimizePhp($code);
+		return Nette\Latte\Runtime\Filters::optimizePhp($code);
 	}
 
 
@@ -169,7 +165,7 @@ class Template extends Nette\Object implements ITemplate
 	 * Returns all registered compile-time filters.
 	 * @return array
 	 */
-	final public function getFilters()
+	public function getFilters()
 	{
 		return $this->filters;
 	}
@@ -204,7 +200,7 @@ class Template extends Nette\Object implements ITemplate
 	 * Returns all registered run-time helpers.
 	 * @return array
 	 */
-	final public function getHelpers()
+	public function getHelpers()
 	{
 		return $this->helpers;
 	}
@@ -214,7 +210,7 @@ class Template extends Nette\Object implements ITemplate
 	 * Returns all registered template run-time helper loaders.
 	 * @return array
 	 */
-	final public function getHelperLoaders()
+	public function getHelperLoaders()
 	{
 		return $this->helperLoaders;
 	}

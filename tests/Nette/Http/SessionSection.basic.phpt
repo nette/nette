@@ -4,16 +4,13 @@
  * Test: Nette\Http\SessionSection basic usage.
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
-use Nette\Http\Session;
+use Nette\Http\Session,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
-
-
-ini_set('session.save_path', TEMP_DIR);
 
 
 $container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();

@@ -1,27 +1,26 @@
 
-Fatal error: Call to undefined function missing_funcion() in %a% on line %d%
-<!DOCTYPE html><!-- "' --></script></style></pre></xmp></table>
+Fatal error: Call to undefined function missing_function() in %a% on line %d%
+<!DOCTYPE html><!-- "' --></script></style></pre></xmp></table></a></abbr></address></article></aside></audio></b></bdi></bdo></blockquote></button></canvas></caption></cite></code></datalist></del></details></dfn></div></dl></em></fieldset></figcaption></figure></footer></form></h1></h2></h3></h4></h5></h6></header></hgroup></i></iframe></ins></kbd></label></legend></map></mark></menu></meter></nav></noscript></object></ol></optgroup></output></progress></q></rp></rt></ruby></s></samp></section></select></small></span></strong></sub></summary></sup></textarea></time></title></tr></u></ul></var></video>
 <html>
 <head>
 	<meta charset="utf-8">
 	<meta name="robots" content="noindex">
 	<meta name="generator" content="Nette Framework">
 
-	<title>Fatal Error</title><!-- Call to undefined function missing_funcion() -->
+	<title>Fatal Error</title><!-- Call to undefined function missing_function() -->
 
 	%A%
 </head>
 
 
 <body>
-%A%
 <div id="netteBluescreen">
 	<a id="netteBluescreenIcon" href="#" class="nette-toggle"></a>
 	<div>
 		<div id="netteBluescreenError" class="panel">
 			<h1>Fatal Error</h1>
 
-			<p>Call to undefined function missing_funcion() <a href="%a%" id="netteBsSearch">search&#x25ba;</a></p>
+			<p>Call to undefined function missing_function() <a href="%a%" id="netteBsSearch">search&#x25ba;</a></p>
 		</div>
 
 
@@ -37,7 +36,7 @@ Fatal error: Call to undefined function missing_funcion() in %a% on line %d%
 
 			<div id="netteBsPnl1" class="inner">
 				<p><b>File:</b> %a%</p>
-				<pre class='php'><div><code><span style="color: #06B"><span style="color: #D24; font-weight: bold"><span class='line'>%d%:</span>
+				<pre data-nette-href="%a%" class='php'><div><code><span style="color: #06B"><span style="color: #D24; font-weight: bold"><span class='line'>%d%:</span>
 <span class='line'>%d%:</span>
 <span class='line'>%d%:</span>    function&nbsp;</span><span style="color: #000">second</span><span style="color: #D24; font-weight: bold">(</span><span style="color: #000">$arg1</span><span style="color: #D24; font-weight: bold">,&nbsp;</span><span style="color: #000">$arg2</span><span style="color: #D24; font-weight: bold">)
 <span class='line'>%d%:</span>    {
@@ -47,7 +46,7 @@ Fatal error: Call to undefined function missing_funcion() in %a% on line %d%
 <span class='line'>%d%:</span>
 <span class='line'>%d%:</span>    function&nbsp;</span><span style="color: #000">third</span><span style="color: #D24; font-weight: bold">(</span><span style="color: #000">$arg1</span><span style="color: #D24; font-weight: bold">)
 <span class='line'>%d%:</span>    {
-<span class='highlight'>%d%:    &nbsp;&nbsp;&nbsp;&nbsp;missing_funcion();
+<span class='highlight'>%d%:    &nbsp;&nbsp;&nbsp;&nbsp;missing_function();
 </span></span><span style="color: #000"></span><span style="color: #D24; font-weight: bold"><span class='line'>%d%:</span>    }
 <span class='line'>%d%:</span>
 <span class='line'>%d%:</span>

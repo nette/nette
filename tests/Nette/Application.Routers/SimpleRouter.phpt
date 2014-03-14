@@ -4,11 +4,11 @@
  * Test: Nette\Application\Routers\SimpleRouter basic functions.
  *
  * @author     David Grudl
- * @package    Nette\Application\Routers
  */
 
 use Nette\Http,
-	Nette\Application\Routers\SimpleRouter;
+	Nette\Application\Routers\SimpleRouter,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

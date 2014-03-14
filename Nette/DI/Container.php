@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\DI;
@@ -60,21 +56,13 @@ class Container extends Nette\Object
 	 */
 	public function addService($name, $service)
 	{
-		if (func_num_args() > 2) {
-			throw new Nette\DeprecatedException('Parameter $meta has been removed.');
-
-		} elseif (!is_string($name) || !$name) {
+		if (!is_string($name) || !$name) {
 			throw new Nette\InvalidArgumentException('Service name must be a non-empty string, ' . gettype($name) . ' given.');
 
 		} elseif (isset($this->registry[$name])) {
 			throw new Nette\InvalidStateException("Service '$name' already exists.");
 
-		} elseif (is_string($service) || is_array($service) || $service instanceof \Closure || $service instanceof Nette\Callback) {
-			trigger_error('Passing factories to ' . __METHOD__ . '() is deprecated; pass the object itself.', E_USER_DEPRECATED);
-			$service = is_string($service) && !preg_match('#\x00|:#', $service) ? new $service : call_user_func($service, $this);
-		}
-
-		if (!is_object($service)) {
+		} elseif (!is_object($service)) {
 			throw new Nette\InvalidArgumentException('Service must be a object, ' . gettype($service) . ' given.');
 		}
 
@@ -328,7 +316,7 @@ class Container extends Nette\Object
 	private function error($oldName, $newName)
 	{
 		if (empty($this->parameters['container']['accessors'])) {
-			trigger_error("$oldName() is deprecated; use $newName() or enable nette.accessors in configuration.", E_USER_DEPRECATED);
+			trigger_error("$oldName() is deprecated; use $newName() or enable nette.container.accessors in configuration.", E_USER_DEPRECATED);
 		}
 	}
 

@@ -4,10 +4,10 @@
  * Test: Nette\Utils\Paginator Base:0 Page:3 test.
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
-use Nette\Utils\Paginator;
+use Nette\Utils\Paginator,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

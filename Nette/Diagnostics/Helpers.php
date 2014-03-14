@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Diagnostics;
@@ -19,7 +15,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-final class Helpers
+class Helpers
 {
 
 	/**
@@ -81,28 +77,6 @@ final class Helpers
 			$ref->setValue($exception, $stack);
 		}
 		return $exception;
-	}
-
-
-	/** @deprecated */
-	public static function htmlDump($var)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use Nette\Diagnostics\Dumper::toHtml() instead.', E_USER_DEPRECATED);
-		return Dumper::toHtml($var);
-	}
-
-	/** @deprecated */
-	public static function clickableDump($var)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use Nette\Diagnostics\Dumper::toHtml() instead.', E_USER_DEPRECATED);
-		return Dumper::toHtml($var);
-	}
-
-	/** @deprecated */
-	public static function textDump($var)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use Nette\Diagnostics\Dumper::toText() instead.', E_USER_DEPRECATED);
-		return Dumper::toText($var);
 	}
 
 }

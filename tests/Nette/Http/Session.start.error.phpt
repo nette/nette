@@ -4,17 +4,16 @@
  * Test: Nette\Http\Session error in session_start.
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
 use Nette\Http\Session,
-	Nette\Http\SessionSection;
+	Nette\Http\SessionSection,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-ini_set('session.gc_probability', 0); // ensure to GC not run
 ini_set('session.save_path', ';;;');
 
 

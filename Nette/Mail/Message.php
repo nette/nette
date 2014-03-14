@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Mail;
@@ -25,7 +21,6 @@ use Nette,
  * @property   string $returnPath
  * @property   int $priority
  * @property   mixed $htmlBody
- * @property   IMailer $mailer
  */
 class Message extends MimePart
 {
@@ -34,17 +29,11 @@ class Message extends MimePart
 		NORMAL = 3,
 		LOW = 5;
 
-	/** @deprecated */
-	public static $defaultMailer = 'Nette\Mail\SendmailMailer';
-
 	/** @var array */
 	public static $defaultHeaders = array(
 		'MIME-Version' => '1.0',
 		'X-Mailer' => 'Nette Framework',
 	);
-
-	/** @var IMailer */
-	private $mailer;
 
 	/** @var array */
 	private $attachments = array();
@@ -242,7 +231,7 @@ class Message extends MimePart
 			$cids = array();
 			$matches = Strings::matchAll(
 				$html,
-				'#(src\s*=\s*|background\s*=\s*|url\()(["\'])(?![a-z]+:|[/\\#])(.+?)\\2#i',
+				'#(src\s*=\s*|background\s*=\s*|url\()(["\']?)(?![a-z]+:|[/\\#])([^"\')\s]+)#i',
 				PREG_OFFSET_CAPTURE
 			);
 			foreach (array_reverse($matches) as $m) {
@@ -251,7 +240,7 @@ class Message extends MimePart
 					$cids[$file] = substr($this->addEmbeddedFile($file)->getHeader("Content-ID"), 1, -1);
 				}
 				$html = substr_replace($html,
-					"{$m[1][0]}{$m[2][0]}cid:{$cids[$file]}{$m[2][0]}",
+					"{$m[1][0]}{$m[2][0]}cid:{$cids[$file]}",
 					$m[0][1], strlen($m[0][0])
 				);
 			}
@@ -333,40 +322,6 @@ class Message extends MimePart
 
 
 	/**
-	 * @deprecated
-	 */
-	public function send()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use IMailer::send() instead.', E_USER_DEPRECATED);
-		$this->getMailer()->send($this);
-	}
-
-
-	/**
-	 * @deprecated
-	 */
-	public function setMailer(IMailer $mailer)
-	{
-		//trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
-		$this->mailer = $mailer;
-		return $this;
-	}
-
-
-	/**
-	 * @deprecated
-	 */
-	public function getMailer()
-	{
-		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
-		if ($this->mailer === NULL) {
-			$this->mailer = is_object(static::$defaultMailer) ? static::$defaultMailer : new static::$defaultMailer;
-		}
-		return $this->mailer;
-	}
-
-
-	/**
 	 * Returns encoded message.
 	 * @return string
 	 */
@@ -401,7 +356,7 @@ class Message extends MimePart
 			if ($mail->inlines) {
 				$tmp = $alt->setContentType('multipart/related');
 				$alt = $alt->addPart();
-				foreach ($mail->inlines as $name => $value) {
+				foreach ($mail->inlines as $value) {
 					$tmp->addPart($value);
 				}
 			}
@@ -445,7 +400,7 @@ class Message extends MimePart
 	/** @return string */
 	private function getRandomId()
 	{
-		return '<' . Strings::random() . '@'
+		return '<' . Nette\Utils\Random::generate() . '@'
 			. preg_replace('#[^\w.-]+#', '', isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : php_uname('n'))
 			. '>';
 	}

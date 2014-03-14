@@ -4,11 +4,11 @@
  * Test: Nette\Latte\Engine: unquoted attributes.
  *
  * @author     Jakub Vrana
- * @package    Nette\Latte
  */
 
 use Nette\Latte,
-	Nette\Templating\FileTemplate;
+	Nette\Templating\FileTemplate,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

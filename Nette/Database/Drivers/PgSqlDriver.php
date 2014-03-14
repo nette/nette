@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Database\Drivers;
@@ -56,7 +52,7 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	/**
 	 * Formats date-time for use in a SQL statement.
 	 */
-	public function formatDateTime(\DateTime $value)
+	public function formatDateTime(/*\DateTimeInterface*/ $value)
 	{
 		return $value->format("'Y-m-d H:i:s'");
 	}
@@ -113,7 +109,7 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 				JOIN pg_catalog.pg_namespace AS n ON n.oid = c.relnamespace
 			WHERE
 				c.relkind IN ('r', 'v')
-				AND n.nspname = current_schema()
+				AND ARRAY[n.nspname] <@ pg_catalog.current_schemas(FALSE)
 			ORDER BY
 				c.relname
 		") as $row) {
@@ -138,10 +134,10 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 				NULL AS size,
 				FALSE AS unsigned,
 				NOT (a.attnotnull OR t.typtype = 'd' AND t.typnotnull) AS nullable,
-				ad.adsrc::varchar AS default,
+				pg_catalog.pg_get_expr(ad.adbin, 'pg_catalog.pg_attrdef'::regclass)::varchar AS default,
 				coalesce(co.contype = 'p' AND strpos(ad.adsrc, 'nextval') = 1, FALSE) AS autoincrement,
 				coalesce(co.contype = 'p', FALSE) AS primary,
-				substring(ad.adsrc from 'nextval[(]''\"?([^''\"]+)') AS sequence
+				substring(pg_catalog.pg_get_expr(ad.adbin, 'pg_catalog.pg_attrdef'::regclass) from 'nextval[(]''\"?([^''\"]+)') AS sequence
 			FROM
 				pg_catalog.pg_attribute AS a
 				JOIN pg_catalog.pg_class AS c ON a.attrelid = c.oid
@@ -152,7 +148,7 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 			WHERE
 				c.relkind IN ('r', 'v')
 				AND c.relname::varchar = {$this->connection->quote($table)}
-				AND n.nspname = current_schema()
+				AND ARRAY[n.nspname] <@ pg_catalog.current_schemas(FALSE)
 				AND a.attnum > 0
 				AND NOT a.attisdropped
 			ORDER BY
@@ -188,7 +184,7 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 				JOIN pg_catalog.pg_class AS c2 ON i.indexrelid = c2.oid
 				LEFT JOIN pg_catalog.pg_attribute AS a ON c1.oid = a.attrelid AND a.attnum = ANY(i.indkey)
 			WHERE
-				n.nspname = current_schema()
+				ARRAY[n.nspname] <@ pg_catalog.current_schemas(FALSE)
 				AND c1.relkind = 'r'
 				AND c1.relname = {$this->connection->quote($table)}
 		") as $row) {
@@ -222,7 +218,7 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 				JOIN pg_catalog.pg_attribute AS al ON al.attrelid = cl.oid AND al.attnum = co.conkey[1]
 				JOIN pg_catalog.pg_attribute AS af ON af.attrelid = cf.oid AND af.attnum = co.confkey[1]
 			WHERE
-				n.nspname = current_schema()
+				ARRAY[n.nspname] <@ pg_catalog.current_schemas(FALSE)
 				AND co.contype = 'f'
 				AND cl.relname = {$this->connection->quote($table)}
 		")->fetchAll();

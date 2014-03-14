@@ -4,10 +4,10 @@
  * Test: Nette\Forms user validator.
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
-use Nette\Forms\Form;
+use Nette\Forms\Form,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Application;
@@ -43,6 +39,9 @@ class Application extends Nette\Object
 
 	/** @var array of function(Application $sender, Request $request); Occurs when a new request is received */
 	public $onRequest;
+
+	/** @var array of function(Application $sender, Presenter $presenter); Occurs when a presenter is created */
+	public $onPresenter;
 
 	/** @var array of function(Application $sender, IResponse $response); Occurs when a new response is ready for dispatch */
 	public $onResponse;
@@ -146,6 +145,7 @@ class Application extends Nette\Object
 		$this->onRequest($this, $request);
 
 		$this->presenter = $this->presenterFactory->createPresenter($request->getPresenterName());
+		$this->onPresenter($this, $this->presenter);
 		$response = $this->presenter->run($request);
 
 		if ($response instanceof Responses\ForwardResponse) {
@@ -167,7 +167,7 @@ class Application extends Nette\Object
 			$this->httpResponse->setCode($e instanceof BadRequestException ? ($e->getCode() ?: 404) : 500);
 		}
 
-		$args = array('exception' => $e, 'request' => end($this->requests));
+		$args = array('exception' => $e, 'request' => end($this->requests) ?: NULL);
 		if ($this->presenter instanceof UI\Presenter) {
 			try {
 				$this->presenter->forward(":$this->errorPresenter:", $args);
@@ -184,7 +184,7 @@ class Application extends Nette\Object
 	 * Returns all processed requests.
 	 * @return Request[]
 	 */
-	final public function getRequests()
+	public function getRequests()
 	{
 		return $this->requests;
 	}
@@ -194,7 +194,7 @@ class Application extends Nette\Object
 	 * Returns current presenter.
 	 * @return IPresenter
 	 */
-	final public function getPresenter()
+	public function getPresenter()
 	{
 		return $this->presenter;
 	}
@@ -220,24 +220,6 @@ class Application extends Nette\Object
 	public function getPresenterFactory()
 	{
 		return $this->presenterFactory;
-	}
-
-
-	/********************* request serialization ****************d*g**/
-
-
-	/** @deprecated */
-	function storeRequest($expiration = '+ 10 minutes')
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use $presenter->storeRequest() instead.', E_USER_DEPRECATED);
-		return $this->presenter->storeRequest($expiration);
-	}
-
-	/** @deprecated */
-	function restoreRequest($key)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use $presenter->restoreRequest() instead.', E_USER_DEPRECATED);
-		return $this->presenter->restoreRequest($key);
 	}
 
 }

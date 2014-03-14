@@ -4,11 +4,11 @@
  * Test: Nette\Utils\TokenIterator traversing
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
 use Nette\Utils\Tokenizer,
-	Nette\Utils\TokenIterator;
+	Nette\Utils\TokenIterator,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

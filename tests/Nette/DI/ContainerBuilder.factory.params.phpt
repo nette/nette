@@ -4,10 +4,10 @@
  * Test: Nette\DI\ContainerBuilder and generated factories with parameters.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
-use Nette\DI;
+use Nette\DI,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -23,13 +23,13 @@ $builder = new DI\ContainerBuilder;
 $builder->addDefinition('one')
 	->setImplement('stdClassFactory')
 	->setFactory('stdClass')
-	->addSetup('$a', $builder::literal('$a'));
+	->addSetup('$a', array($builder::literal('$a')));
 
 $builder->addDefinition('two')
 	->setParameters(array('stdClass foo', 'array bar', 'foobar' => NULL))
 	->setImplement('stdClassFactory')
 	->setFactory('stdClass')
-	->addSetup('$a', $builder::literal('$foo'));
+	->addSetup('$a', array($builder::literal('$foo')));
 
 $builder->addDefinition('three')
 	->setClass('stdClass');

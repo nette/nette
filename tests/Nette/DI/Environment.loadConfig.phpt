@@ -4,10 +4,10 @@
  * Test: Nette\Environment and loadConfig.
  *
  * @author     David Grudl
- * @package    Nette
  */
 
-use Nette\Environment;
+use Nette\Environment,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

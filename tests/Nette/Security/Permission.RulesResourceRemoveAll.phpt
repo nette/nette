@@ -4,10 +4,10 @@
  * Test: Nette\Security\Permission Ensures that removal of all Resources results in Resource-specific rules being removed.
  *
  * @author     David Grudl
- * @package    Nette\Security
  */
 
-use Nette\Security\Permission;
+use Nette\Security\Permission,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

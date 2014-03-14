@@ -4,11 +4,11 @@
  * Test: Nette\PhpGenerator\Helpers::dump()
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
 use Nette\PhpGenerator\Helpers,
-	Nette\PhpGenerator\PhpLiteral;
+	Nette\PhpGenerator\PhpLiteral,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

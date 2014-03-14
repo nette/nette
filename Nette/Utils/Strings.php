@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Utils;
@@ -32,44 +28,45 @@ class Strings
 
 
 	/**
-	 * Checks if the string is valid for the specified encoding.
+	 * Checks if the string is valid for UTF-8 encoding.
 	 * @param  string  byte stream to check
-	 * @param  string  expected encoding
 	 * @return bool
 	 */
-	public static function checkEncoding($s, $encoding = 'UTF-8')
+	public static function checkEncoding($s)
 	{
-		return $s === self::fixEncoding($s, $encoding);
-	}
-
-
-	/**
-	 * Returns correctly encoded string.
-	 * @param  string  byte stream to fix
-	 * @param  string  encoding
-	 * @return string
-	 */
-	public static function fixEncoding($s, $encoding = 'UTF-8')
-	{
-		// removes xD800-xDFFF, x110000 and higher
-		if (PHP_VERSION_ID >= 50400) {
-			ini_set('mbstring.substitute_character', 'none');
-			return mb_convert_encoding($s, $encoding, $encoding);
-		} else {
-			return @iconv('UTF-16', 'UTF-8//IGNORE', iconv($encoding, 'UTF-16//IGNORE', $s)); // intentionally @
+		if (func_num_args() > 1 && strcasecmp(func_get_arg(1), 'UTF-8')) {
+			trigger_error(__METHOD__ . ' supports only UTF-8 encoding.', E_USER_DEPRECATED);
 		}
+		return $s === self::fixEncoding($s);
 	}
 
 
 	/**
-	 * Returns a specific character.
-	 * @param  int     codepoint
-	 * @param  string  encoding
+	 * Removes invalid code unit sequences from UTF-8 string.
+	 * @param  string  byte stream to fix
 	 * @return string
 	 */
-	public static function chr($code, $encoding = 'UTF-8')
+	public static function fixEncoding($s)
 	{
-		return iconv('UTF-32BE', $encoding . '//IGNORE', pack('N', $code));
+		if (func_num_args() > 1 && strcasecmp(func_get_arg(1), 'UTF-8')) {
+			trigger_error(__METHOD__ . ' supports only UTF-8 encoding.', E_USER_DEPRECATED);
+		}
+		// removes xD800-xDFFF, x110000 and higher
+		return htmlspecialchars_decode(htmlspecialchars($s, ENT_NOQUOTES | ENT_IGNORE, 'UTF-8'), ENT_NOQUOTES);
+	}
+
+
+	/**
+	 * Returns a specific character in UTF-8.
+	 * @param  int     codepoint
+	 * @return string
+	 */
+	public static function chr($code)
+	{
+		if (func_num_args() > 1 && strcasecmp(func_get_arg(1), 'UTF-8')) {
+			trigger_error(__METHOD__ . ' supports only UTF-8 encoding.', E_USER_DEPRECATED);
+		}
+		return iconv('UTF-32BE', 'UTF-8//IGNORE', pack('N', $code));
 	}
 
 
@@ -401,34 +398,12 @@ class Strings
 
 
 	/**
-	 * Generate random string.
-	 * @param  int
-	 * @param  string
-	 * @return string
+	 * Use Nette\Utils\Random::generate
+	 * @deprecated
 	 */
 	public static function random($length = 10, $charlist = '0-9a-z')
 	{
-		$charlist = str_shuffle(preg_replace_callback('#.-.#', function($m) {
-			return implode('', range($m[0][0], $m[0][2]));
-		}, $charlist));
-		$chLen = strlen($charlist);
-
-		static $rand3;
-		if (!$rand3) {
-			$rand3 = md5(serialize($_SERVER), TRUE);
-		}
-
-		$s = '';
-		for ($i = 0; $i < $length; $i++) {
-			if ($i % 5 === 0) {
-				list($rand, $rand2) = explode(' ', microtime());
-				$rand += lcg_value();
-			}
-			$rand *= $chLen;
-			$s .= $charlist[($rand + $rand2 + ord($rand3[$i % strlen($rand3)])) % $chLen];
-			$rand -= (int) $rand;
-		}
-		return $s;
+		return Random::generate($length, $charlist);
 	}
 
 
@@ -499,7 +474,7 @@ class Strings
 			restore_error_handler();
 			throw new RegexpException("$message in pattern: $pattern");
 		});
-		$res = preg_match_all(
+		preg_match_all(
 			$pattern, $subject, $m,
 			($flags & PREG_PATTERN_ORDER) ? $flags : ($flags | PREG_SET_ORDER),
 			$offset

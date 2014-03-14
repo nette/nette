@@ -1,0 +1,15 @@
+
+services:
+	subchild < child:
+		factory: SubChildService()
+
+	base:
+		factory: BaseService()
+		setup:
+			- setPrivate( ::PRIVATE_VALUE )
+
+	child < base:
+		factory: ChildService()
+
+	secchild < child:
+		factory: SecondChildService()

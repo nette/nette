@@ -11,10 +11,23 @@
 
 	var Dumper = Nette.Dumper = {};
 
-	// enables <a class="nette-toggle" href="#"> or <span data-ref="#"> toggling
 	Dumper.init = function() {
 		$(document.body).bind('click', function(e) {
-			for (var link = e.target; link && (!link.tagName || link.className.indexOf('nette-toggle') < 0); link = link.parentNode) {}
+			var link;
+
+			// enables <span data-nette-href=""> & ctrl key
+			for (link = e.target; link && (!link.getAttribute || !link.getAttribute('data-nette-href')); link = link.parentNode) {}
+			if (e.ctrlKey && link) {
+				location.href = link.getAttribute('data-nette-href');
+				return false;
+			}
+
+			if (e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) {
+				return;
+			}
+
+			// enables <a class="nette-toggle" href="#"> or <span data-ref="#"> toggling
+			for (link = e.target; link && (!link.tagName || typeof link.className !== 'string' || !link.className.match(/\bnette-toggle(-collapsed)?\b/)); link = link.parentNode) {}
 			if (!link) {
 				return;
 			}
@@ -25,14 +38,16 @@
 				oldPosition = panel.position();
 
 			link.className = 'nette-toggle' + (collapsed ? '' : '-collapsed');
-			dest[collapsed ? 'show' : 'hide']();
+			dest[collapsed ? 'removeClass' : 'addClass']('nette-collapsed');
 			e.preventDefault();
 
-			var newPosition = panel.position();
-			panel.position({
-				right: newPosition.right - newPosition.width + oldPosition.width,
-				bottom: newPosition.bottom - newPosition.height + oldPosition.height
-			});
+			if (panel.length) {
+				var newPosition = panel.position();
+				panel.position({
+					right: newPosition.right - newPosition.width + oldPosition.width,
+					bottom: newPosition.bottom - newPosition.height + oldPosition.height
+				});
+			}
 		});
 	};
 

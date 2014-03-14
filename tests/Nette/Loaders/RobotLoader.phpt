@@ -4,11 +4,11 @@
  * Test: Nette\Loaders\RobotLoader basic usage.
  *
  * @author     David Grudl
- * @package    Nette\Loaders
  */
 
 use Nette\Loaders\RobotLoader,
-	Nette\Caching\Storages\DevNullStorage;
+	Nette\Caching\Storages\DevNullStorage,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

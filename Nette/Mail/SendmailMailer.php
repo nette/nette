@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Mail;
@@ -38,8 +34,8 @@ class SendmailMailer extends Nette\Object implements IMailer
 		$parts = explode(Message::EOL . Message::EOL, $tmp->generateMessage(), 2);
 
 		$args = array(
-			str_replace(Message::EOL, PHP_EOL, $mail->getEncodedHeader('To')),
-			str_replace(Message::EOL, PHP_EOL, $mail->getEncodedHeader('Subject')),
+			$mail->getEncodedHeader('To'),
+			$mail->getEncodedHeader('Subject'),
 			str_replace(Message::EOL, PHP_EOL, $parts[1]),
 			str_replace(Message::EOL, PHP_EOL, $parts[0]),
 		);

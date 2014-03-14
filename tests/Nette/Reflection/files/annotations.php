@@ -3,9 +3,7 @@
 namespace Test;
 
 
-/**
- * @author john
- */
+/** @author john */
 class AnnotatedClass1
 {
 	/** @var a */
@@ -39,7 +37,9 @@ class AnnotatedClass1
 
 	/** @return c */
 	static public function c()
-	{}
+	{
+		/** @return ignore */function out() {}
+	}
 
 	/** @return d */
 	protected function d()
@@ -69,9 +69,7 @@ function a()
 {}
 
 
-/**
- * @author jack
- */
+/** @author jack */
 class AnnotatedClass2
 {}
 

@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Http;
@@ -15,8 +11,9 @@ use Nette;
 
 
 /**
- * User session storage. @see http://php.net/session_set_save_handler
+ * User session storage for PHP < 5.4. @see http://php.net/session_set_save_handler
  *
+ * @deprecated since PHP 5.4, use \SessionHandlerInterface
  * @author     David Grudl
  */
 interface ISessionStorage

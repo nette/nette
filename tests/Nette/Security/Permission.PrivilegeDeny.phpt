@@ -4,10 +4,10 @@
  * Test: Nette\Security\Permission Ensures that a privilege denied for all Roles upon all Resources works properly.
  *
  * @author     David Grudl
- * @package    Nette\Security
  */
 
-use Nette\Security\Permission;
+use Nette\Security\Permission,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

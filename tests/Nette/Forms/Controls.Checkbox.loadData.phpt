@@ -4,10 +4,10 @@
  * Test: Nette\Forms\Controls\Checkbox.
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
-use Nette\Forms\Form;
+use Nette\Forms\Form,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -56,5 +56,5 @@ test(function() { // setValue() and invalid argument
 
 	Assert::exception(function() use ($input) {
 		$input->setValue(array());
-	}, 'Nette\InvalidArgumentException', "Value must be scalar or NULL, array given.");
+	}, 'Nette\InvalidArgumentException', "Value must be scalar or NULL, array given in field 'checkbox'.");
 });

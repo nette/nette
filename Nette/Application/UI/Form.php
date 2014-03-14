@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Application\UI;
@@ -30,10 +26,19 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 	public function __construct(Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
 	{
 		parent::__construct();
-		$this->monitor('Nette\Application\UI\Presenter');
 		if ($parent !== NULL) {
 			$parent->addComponent($this, $name);
 		}
+	}
+
+
+	/**
+	 * @return void
+	 */
+	protected function validateParent(Nette\ComponentModel\IContainer $parent)
+	{
+		parent::validateParent($parent);
+		$this->monitor('Nette\Application\UI\Presenter');
 	}
 
 
@@ -75,8 +80,8 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 				}
 			}
 
-			$signal = new Nette\Forms\Controls\HiddenField;
-			$signal->setValue($name . self::NAME_SEPARATOR . 'submit')->setOmitted()->setHtmlId(FALSE)->unmonitor('Nette\Forms\Form');
+			$signal = new Nette\Forms\Controls\HiddenField($name . self::NAME_SEPARATOR . 'submit');
+			$signal->setOmitted()->setHtmlId(FALSE);
 			$this[Presenter::SIGNAL_KEY] = $signal;
 		}
 		parent::attached($presenter);

@@ -4,10 +4,10 @@
  * Test: Nette\Utils\Finder mask tests.
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
-use Nette\Utils\Finder;
+use Nette\Utils\Finder,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

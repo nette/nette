@@ -4,13 +4,13 @@
  * Test: Nette\Diagnostics\Debugger notices and warnings with $strictMode in console.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  * @exitCode   254
  * @httpCode   500
  * @outputMatchFile Debugger.strict.console.expect
  */
 
-use Nette\Diagnostics\Debugger;
+use Nette\Diagnostics\Debugger,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

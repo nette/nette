@@ -4,10 +4,10 @@
  * Test: Nette\Security\SimpleAuthenticator
  *
  * @author     Matěj Koubík
- * @package    Nette\Security
  */
 
-use Nette\Security\SimpleAuthenticator;
+use Nette\Security\SimpleAuthenticator,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

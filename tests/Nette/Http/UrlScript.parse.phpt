@@ -4,10 +4,10 @@
  * Test: Nette\Http\UrlScript parse.
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
-use Nette\Http\UrlScript;
+use Nette\Http\UrlScript,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

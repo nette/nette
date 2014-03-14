@@ -4,16 +4,17 @@
  * Test: Nette\Diagnostics\Debugger::barDump() with showLocation.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
+ * @outputMatch OK!
  */
 
-use Nette\Diagnostics\Debugger;
+use Nette\Diagnostics\Debugger,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 if (PHP_SAPI === 'cli') {
-	Tester\Environment::skip();
+	Tester\Environment::skip('Debugger Bar is not rendered in CLI mode');
 }
 
 
@@ -31,17 +32,18 @@ register_shutdown_function(function() {
 <div class="nette-inner nette-DumpPanel">
 
 	<table>
-			<tr class="">
-		<th></th>
-		<td><pre class="nette-dump"><span class="nette-dump-string">"value"</span> (5)
-</pre>
+		<tr class="">
+		<td><pre class="nette-dump" title="barDump(&#039;value&#039;)
+in file %a% on line %d%"><span class="nette-dump-string">"value"</span> (5)
+<small>in <a href="%a%">%a%:%d%</a></small></pre>
 </td>
 	</tr>
-		</table>
+	</table>
 </div>
 %A%
 EOD
 , json_decode($m[1]));
+	echo 'OK!'; // prevents PHP bug #62725
 });
 ob_start();
 

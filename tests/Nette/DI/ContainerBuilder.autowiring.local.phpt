@@ -4,10 +4,10 @@
  * Test: Nette\DI\ContainerBuilder and local autowiring.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
-use Nette\DI;
+use Nette\DI,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

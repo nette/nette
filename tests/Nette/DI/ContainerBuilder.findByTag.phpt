@@ -4,10 +4,10 @@
  * Test: Nette\DI\ContainerBuilder and Container: findByTag()
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
-use Nette\DI;
+use Nette\DI,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -22,10 +22,6 @@ $builder->addDefinition('two')
 $builder->addDefinition('three')
 	->setClass('stdClass')
 	->addTag('component');
-$builder->addDefinition('four')
-	->setClass('stdClass')
-	->addTag('component')
-	->setParameters(array()); // shared = FALSE
 $builder->addDefinition('five')
 	->setClass('stdClass')
 	->addTag('debugPanel', array(1, 2, 3))

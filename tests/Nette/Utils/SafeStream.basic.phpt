@@ -4,12 +4,12 @@
  * Test: Nette\Utils\SafeStream basic usage.
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
-
 
 require __DIR__ . '/../bootstrap.php';
 
+
+Nette\Utils\SafeStream::register();
 
 // actually it creates temporary file
 $handle = fopen('safe://myfile.txt', 'x');

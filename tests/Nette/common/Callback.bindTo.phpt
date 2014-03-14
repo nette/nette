@@ -4,10 +4,10 @@
  * Test: Nette\Callback tests.
  *
  * @author     David Grudl
- * @package    Nette
  */
 
-use Nette\Callback;
+use Nette\Callback,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

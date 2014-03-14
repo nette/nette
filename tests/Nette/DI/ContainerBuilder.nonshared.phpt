@@ -4,10 +4,10 @@
  * Test: Nette\DI\ContainerBuilder and non-shared services.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
-use Nette\DI;
+use Nette\DI,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -28,7 +28,7 @@ $builder->addDefinition('one')
 $two = $builder->addDefinition('two')
 	->setParameters(array('foo', 'bar' => FALSE, 'array foobar' => NULL))
 	->setClass('stdClass')
-	->addSetup('$foo', $builder::literal('$foo'));
+	->addSetup('$foo', array($builder::literal('$foo')));
 
 $builder->addDefinition('three')
 	->setFactory($two, array('hello'));

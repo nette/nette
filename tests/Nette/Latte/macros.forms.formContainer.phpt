@@ -4,13 +4,12 @@
  * Test: Nette\Latte\Engine and FormMacros: {formContainer}
  *
  * @author     Miloslav Hůla
- * @package    Nette\Latte
- * @keepTrailingSpaces
  */
 
 use Nette\Latte,
 	Nette\Templating\FileTemplate,
-	Nette\Forms\Form;
+	Nette\Forms\Form,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

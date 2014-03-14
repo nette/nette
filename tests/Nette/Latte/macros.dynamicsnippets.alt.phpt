@@ -4,13 +4,12 @@
  * Test: Nette\Latte\Engine: dynamic snippets test.
  *
  * @author     David Grudl
- * @package    Nette\Latte
- * @keepTrailingSpaces
  */
 
 use Nette\Latte,
 	Nette\Utils\Html,
-	Nette\Templating\FileTemplate;
+	Nette\Templating\FileTemplate,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

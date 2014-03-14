@@ -4,12 +4,11 @@
  * Test: Nette\Latte\Engine: isLinkCurrent()
  *
  * @author     David Grudl
- * @package    Nette\Latte
- * @keepTrailingSpaces
  */
 
 use Nette\Latte,
-	Nette\Templating\Template;
+	Nette\Templating\Template,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

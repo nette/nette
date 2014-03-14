@@ -4,10 +4,10 @@
  * Test: Nette\DI\Config\Adapters\NeonAdapter errors.
  *
  * @author     David Grudl
- * @package    Nette\DI\Config
  */
 
-use Nette\DI\Config;
+use Nette\DI\Config,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

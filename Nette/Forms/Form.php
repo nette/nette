@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Forms;
@@ -36,7 +32,9 @@ class Form extends Container
 	/** validator */
 	const EQUAL = ':equal',
 		IS_IN = self::EQUAL,
+		NOT_EQUAL = ':notEqual',
 		FILLED = ':filled',
+		BLANK = ':blank',
 		REQUIRED = self::FILLED,
 		VALID = ':valid';
 
@@ -52,11 +50,12 @@ class Form extends Container
 		LENGTH = ':length',
 		EMAIL = ':email',
 		URL = ':url',
-		REGEXP = ':regexp',
 		PATTERN = ':pattern',
 		INTEGER = ':integer',
 		NUMERIC = ':integer',
 		FLOAT = ':float',
+		MIN = ':min',
+		MAX = ':max',
 		RANGE = ':range';
 
 	// multiselect
@@ -65,7 +64,8 @@ class Form extends Container
 	// file upload
 	const MAX_FILE_SIZE = ':fileSize',
 		MIME_TYPE = ':mimeType',
-		IMAGE = ':image';
+		IMAGE = ':image',
+		MAX_POST_SIZE = ':maxPostSize';
 
 	/** method */
 	const GET = 'get',
@@ -75,6 +75,7 @@ class Form extends Container
 	const DATA_TEXT = 1;
 	const DATA_LINE = 2;
 	const DATA_FILE = 3;
+	const DATA_KEYS = 8;
 
 	/** @internal tracker ID */
 	const TRACKER_ID = '_form_';
@@ -97,7 +98,7 @@ class Form extends Container
 	/** @var array */
 	private $httpData;
 
-	/** @var Html  <form> element */
+	/** @var Nette\Utils\Html  <form> element */
 	private $element;
 
 	/** @var IFormRenderer */
@@ -122,18 +123,23 @@ class Form extends Container
 	 */
 	public function __construct($name = NULL)
 	{
-		$this->element = Nette\Utils\Html::el('form');
-		$this->element->action = ''; // RFC 1808 -> empty uri means 'this'
-		$this->element->method = self::POST;
-		$this->element->id = $name === NULL ? NULL : 'frm-' . $name;
-
-		$this->monitor(__CLASS__);
 		if ($name !== NULL) {
-			$tracker = new Controls\HiddenField;
-			$tracker->setValue($name)->setOmitted()->unmonitor(__CLASS__);
+			$this->getElementPrototype()->id = 'frm-' . $name;
+			$tracker = new Controls\HiddenField($name);
+			$tracker->setOmitted();
 			$this[self::TRACKER_ID] = $tracker;
 		}
 		parent::__construct(NULL, $name);
+	}
+
+
+	/**
+	 * @return void
+	 */
+	protected function validateParent(Nette\ComponentModel\IContainer $parent)
+	{
+		parent::validateParent($parent);
+		$this->monitor(__CLASS__);
 	}
 
 
@@ -155,7 +161,7 @@ class Form extends Container
 	 * Returns self.
 	 * @return Form
 	 */
-	final public function getForm($need = TRUE)
+	public function getForm($need = TRUE)
 	{
 		return $this;
 	}
@@ -168,7 +174,7 @@ class Form extends Container
 	 */
 	public function setAction($url)
 	{
-		$this->element->action = $url;
+		$this->getElementPrototype()->action = $url;
 		return $this;
 	}
 
@@ -179,7 +185,7 @@ class Form extends Container
 	 */
 	public function getAction()
 	{
-		return $this->element->action;
+		return $this->getElementPrototype()->action;
 	}
 
 
@@ -193,7 +199,7 @@ class Form extends Container
 		if ($this->httpData !== NULL) {
 			throw new Nette\InvalidStateException(__METHOD__ . '() must be called until the form is empty.');
 		}
-		$this->element->method = strtolower($method);
+		$this->getElementPrototype()->method = strtolower($method);
 		return $this;
 	}
 
@@ -204,7 +210,7 @@ class Form extends Container
 	 */
 	public function getMethod()
 	{
-		return $this->element->method;
+		return $this->getElementPrototype()->method;
 	}
 
 
@@ -245,7 +251,7 @@ class Form extends Container
 
 	/**
 	 * Removes fieldset group from form.
-	 * @param  string|FormGroup
+	 * @param  string|ControlGroup
 	 * @return void
 	 */
 	public function removeGroup($name)
@@ -271,7 +277,7 @@ class Form extends Container
 
 	/**
 	 * Returns all defined groups.
-	 * @return FormGroup[]
+	 * @return ControlGroup[]
 	 */
 	public function getGroups()
 	{
@@ -308,7 +314,7 @@ class Form extends Container
 	 * Returns translate adapter.
 	 * @return Nette\Localization\ITranslator|NULL
 	 */
-	final public function getTranslator()
+	public function getTranslator()
 	{
 		return $this->translator;
 	}
@@ -331,7 +337,7 @@ class Form extends Container
 	 * Tells if the form was submitted.
 	 * @return ISubmitterControl|FALSE  submittor control
 	 */
-	final public function isSubmitted()
+	public function isSubmitted()
 	{
 		if ($this->submittedBy === NULL) {
 			$this->getHttpData();
@@ -344,7 +350,7 @@ class Form extends Container
 	 * Tells if the form was submitted and successfully validated.
 	 * @return bool
 	 */
-	final public function isSuccess()
+	public function isSuccess()
 	{
 		return $this->isSubmitted() && $this->isValid();
 	}
@@ -363,9 +369,9 @@ class Form extends Container
 
 	/**
 	 * Returns submitted HTTP data.
-	 * @return array
+	 * @return mixed
 	 */
-	final public function getHttpData($htmlName = NULL, $type = self::DATA_TEXT)
+	public function getHttpData($type = NULL, $htmlName = NULL)
 	{
 		if ($this->httpData === NULL) {
 			if (!$this->isAnchored()) {
@@ -390,8 +396,11 @@ class Form extends Container
 	{
 		if (!$this->isSubmitted()) {
 			return;
+		}
 
-		} elseif ($this->submittedBy instanceof ISubmitterControl) {
+		$this->validate();
+
+		if ($this->submittedBy instanceof ISubmitterControl) {
 			if ($this->isValid()) {
 				$this->submittedBy->onClick($this->submittedBy);
 			} else {
@@ -399,9 +408,15 @@ class Form extends Container
 			}
 		}
 
-		if ($this->isValid()) {
-			$this->onSuccess($this);
-		} else {
+		if ($this->onSuccess) {
+			foreach ($this->onSuccess as $handler) {
+				if (!$this->isValid()) {
+					$this->onError($this);
+					break;
+				}
+				Nette\Utils\Callback::invoke($handler, $this);
+			}
+		} elseif (!$this->isValid()) {
 			$this->onError($this);
 		}
 		$this->onSubmit($this);
@@ -443,10 +458,28 @@ class Form extends Container
 
 	public function validate(array $controls = NULL)
 	{
+		$this->cleanErrors();
 		if ($controls === NULL && $this->submittedBy instanceof ISubmitterControl) {
 			$controls = $this->submittedBy->getValidationScope();
 		}
+		$this->validateMaxPostSize();
 		parent::validate($controls);
+	}
+
+
+	public function validateMaxPostSize()
+	{
+		if (!$this->submittedBy || strcasecmp($this->getMethod(), 'POST') || empty($_SERVER['CONTENT_LENGTH'])) {
+			return;
+		}
+		$maxSize = ini_get('post_max_size');
+		$units = array('k' => 10, 'm' => 20, 'g' => 30);
+		if (isset($units[$ch = strtolower(substr($maxSize, -1))])) {
+			$maxSize <<= $units[$ch];
+		}
+		if ($maxSize > 0 && $maxSize < $_SERVER['CONTENT_LENGTH']) {
+			$this->addError(sprintf(Validator::$messages[self::MAX_FILE_SIZE], $maxSize));
+		}
 	}
 
 
@@ -467,7 +500,7 @@ class Form extends Container
 	 */
 	public function getErrors()
 	{
-		return array_unique($this->errors);
+		return array_unique(array_merge($this->errors, parent::getErrors()));
 	}
 
 
@@ -490,12 +523,20 @@ class Form extends Container
 
 
 	/**
-	 * Returns all validation errors.
+	 * Returns form's validation errors.
 	 * @return array
 	 */
+	public function getOwnErrors()
+	{
+		return array_unique($this->errors);
+	}
+
+
+	/** @deprecated */
 	public function getAllErrors()
 	{
-		return array_unique(array_merge($this->errors, parent::getAllErrors()));
+		trigger_error(__METHOD__ . '() is deprecated; use getErrors() instead.', E_USER_DEPRECATED);
+		return $this->getErrors();
 	}
 
 
@@ -508,6 +549,11 @@ class Form extends Container
 	 */
 	public function getElementPrototype()
 	{
+		if (!$this->element) {
+			$this->element = Nette\Utils\Html::el('form');
+			$this->element->action = ''; // RFC 1808 -> empty uri means 'this'
+			$this->element->method = self::POST;
+		}
 		return $this->element;
 	}
 
@@ -527,7 +573,7 @@ class Form extends Container
 	 * Returns form renderer.
 	 * @return IFormRenderer
 	 */
-	final public function getRenderer()
+	public function getRenderer()
 	{
 		if ($this->renderer === NULL) {
 			$this->renderer = new Rendering\DefaultFormRenderer;
@@ -591,9 +637,7 @@ class Form extends Container
 	{
 		$toggles = array();
 		foreach ($this->getControls() as $control) {
-			foreach ($control->getRules()->getToggles(TRUE) as $id => $hide) {
-				$toggles[$id] = empty($toggles[$id]) ? $hide : TRUE;
-			}
+			$toggles = $control->getRules()->getToggleStates($toggles);
 		}
 		return $toggles;
 	}

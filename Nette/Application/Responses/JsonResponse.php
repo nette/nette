@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Application\Responses;
@@ -48,7 +44,7 @@ class JsonResponse extends Nette\Object implements Nette\Application\IResponse
 	/**
 	 * @return array|\stdClass
 	 */
-	final public function getPayload()
+	public function getPayload()
 	{
 		return $this->payload;
 	}
@@ -58,7 +54,7 @@ class JsonResponse extends Nette\Object implements Nette\Application\IResponse
 	 * Returns the MIME content type of a downloaded file.
 	 * @return string
 	 */
-	final public function getContentType()
+	public function getContentType()
 	{
 		return $this->contentType;
 	}

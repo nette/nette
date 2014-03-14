@@ -4,10 +4,10 @@
  * Test: Nette\Utils\Tokenizer::tokenize with names
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
-use Nette\Utils\Tokenizer;
+use Nette\Utils\Tokenizer,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

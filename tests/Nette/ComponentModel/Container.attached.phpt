@@ -4,10 +4,10 @@
  * Test: Nette\ComponentModel\Container::attached()
  *
  * @author     David Grudl
- * @package    Nette\ComponentModel
  */
 
-use Nette\ComponentModel\Container;
+use Nette\ComponentModel\Container,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -82,9 +82,48 @@ $a['b'] = $b;
 
 Assert::same( 'b-c-d-e', $d['e']->lookupPath('A') );
 Assert::same( $a, $d['e']->lookup('A') );
-Assert::same( 'b-c-d-e', $d['e']->lookupPath(NULL) );
+Assert::same( 'b-c-d-e', $d['e']->lookupPath() );
 Assert::same( $a, $d['e']->lookup(NULL) );
 Assert::same( 'c-d-e', $d['e']->lookupPath('B') );
 Assert::same( $b, $d['e']->lookup('B') );
 
 Assert::same( $a['b-c'], $b['c'] );
+Notes::fetch(); // clear
+
+
+class FooForm extends TestClass
+{
+
+	protected function validateParent(\Nette\ComponentModel\IContainer $parent)
+	{
+		parent::validateParent($parent);
+		$this->monitor(__CLASS__);
+	}
+
+}
+
+class FooControl extends TestClass
+{
+
+	protected function validateParent(\Nette\ComponentModel\IContainer $parent)
+	{
+		parent::validateParent($parent);
+		$this->monitor('FooPresenter');
+	}
+
+}
+
+class FooPresenter extends TestClass
+{
+
+}
+
+$presenter = new FooPresenter();
+$presenter['control'] = new FooControl();
+$presenter['form'] = new FooForm();
+$presenter['form']['form'] = new FooForm();
+
+Assert::same(array(
+	'FooControl::ATTACHED(FooPresenter)',
+	'FooForm::ATTACHED(FooForm)'
+), Notes::fetch());

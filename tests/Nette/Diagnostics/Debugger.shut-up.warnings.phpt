@@ -4,11 +4,11 @@
  * Test: Nette\Diagnostics\Debugger notices and warnings and shut-up operator.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  * @outputMatch
  */
 
-use Nette\Diagnostics\Debugger;
+use Nette\Diagnostics\Debugger,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

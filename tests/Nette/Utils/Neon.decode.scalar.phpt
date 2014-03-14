@@ -4,10 +4,10 @@
  * Test: Nette\Utils\Neon::decode simple values.
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
-use Nette\Utils\Neon;
+use Nette\Utils\Neon,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

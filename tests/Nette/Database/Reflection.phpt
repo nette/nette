@@ -4,9 +4,10 @@
  * Test: Nette\Database\Connection: reflection
  *
  * @author     David Grudl
- * @package    Nette\Database
  * @dataProvider? databases.ini
  */
+
+use Tester\Assert;
 
 require __DIR__ . '/connect.inc.php'; // create $connection
 

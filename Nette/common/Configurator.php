@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette;
@@ -25,14 +21,19 @@ use Nette,
  */
 class Configurator extends Object
 {
-	/** @deprecated */
-	const DEVELOPMENT = 'development',
-		PRODUCTION = 'production',
-		AUTO = TRUE,
+	const AUTO = TRUE,
 		NONE = FALSE;
 
 	/** @var array of function(Configurator $sender, DI\Compiler $compiler); Occurs after the compiler is created */
 	public $onCompile;
+
+	/** @var array */
+	public $defaultExtensions = array(
+		'php' => 'Nette\Bridges\DI\PhpExtension',
+		'constants' => 'Nette\Bridges\DI\ConstantsExtension',
+		'nette' => 'Nette\Bridges\DI\NetteExtension',
+		'extensions' => 'Nette\DI\Extensions\ExtensionsExtension',
+	);
 
 	/** @var array */
 	protected $parameters;
@@ -164,7 +165,7 @@ class Configurator extends Object
 			$cache->save($cacheKey, $code, array($cache::FILES => $dependencies));
 			$cached = $cache->load($cacheKey);
 		}
-		Nette\Utils\LimitedScope::load($cached['file'], TRUE);
+		require_once $cached['file'];
 
 		$container = new $this->parameters['container']['class'];
 		$container->initialize();
@@ -222,10 +223,11 @@ class Configurator extends Object
 	protected function createCompiler()
 	{
 		$compiler = new DI\Compiler;
-		$compiler->addExtension('php', new DI\Extensions\PhpExtension)
-			->addExtension('constants', new DI\Extensions\ConstantsExtension)
-			->addExtension('nette', new DI\Extensions\NetteExtension)
-			->addExtension('extensions', new DI\Extensions\ExtensionsExtension);
+
+		foreach ($this->defaultExtensions as $name => $class) {
+			$compiler->addExtension($name, new $class);
+		}
+
 		return $compiler;
 	}
 
@@ -268,30 +270,6 @@ class Configurator extends Object
 			$list[] = '::1';
 		}
 		return in_array(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : php_uname('n'), $list, TRUE);
-	}
-
-
-	/** @deprecated */
-	public function setProductionMode($value = TRUE)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use setDebugMode(!$value) instead.', E_USER_DEPRECATED);
-		return $this->setDebugMode(is_bool($value) ? !$value : $value);
-	}
-
-
-	/** @deprecated */
-	public function isProductionMode()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use !isDebugMode() instead.', E_USER_DEPRECATED);
-		return !$this->isDebugMode();
-	}
-
-
-	/** @deprecated */
-	public static function detectProductionMode($list = NULL)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use !detectDebugMode() instead.', E_USER_DEPRECATED);
-		return !static::detectDebugMode($list);
 	}
 
 }

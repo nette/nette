@@ -4,11 +4,11 @@
  * Test: Nette\Caching\Storages\MemcachedStorage sliding expiration test.
  *
  * @author     David Grudl
- * @package    Nette\Caching
  */
 
 use Nette\Caching\Storages\MemcachedStorage,
-	Nette\Caching\Cache;
+	Nette\Caching\Cache,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

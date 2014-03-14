@@ -4,11 +4,11 @@
  * Test: Nette\Forms\Controls\SelectBox.
  *
  * @author     Martin Major
- * @package    Nette\Forms
  */
 
 use Nette\Forms\Form,
-	Nette\DateTime;
+	Nette\DateTime,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -167,11 +167,24 @@ test(function() use ($series) { // setItems without keys
 
 	$form = new Form;
 	$input = $form->addSelect('select')->setItems(array_keys($series), FALSE);
+	Assert::same( array(
+		'red-dwarf' => 'red-dwarf',
+		'the-simpsons' => 'the-simpsons',
+		0 => 0,
+		'' => '',
+	), $input->getItems() );
 
 	Assert::true( $form->isValid() );
 	Assert::same( 'red-dwarf', $input->getValue() );
 	Assert::same( 'red-dwarf', $input->getSelectedItem() );
 	Assert::true( $input->isFilled() );
+});
+
+
+test(function() use ($series) { // setItems without keys
+	$form = new Form;
+	$input = $form->addSelect('select')->setItems(range(1, 5), FALSE);
+	Assert::same( array(1 => 1, 2, 3, 4, 5), $input->getItems() );
 });
 
 
@@ -191,24 +204,6 @@ test(function() { // setItems without keys with optgroups
 });
 
 
-test(function() {  // doubled item
-	$form = new Form;
-
-	Assert::exception(function() use ($form) {
-		$form->addSelect('select', NULL, array(
-			'usa' => array('the-simpsons' => 'The Simpsons'),
-			'uk' => array('the-simpsons' => 'Red Dwarf'),
-		));
-	}, 'Nette\InvalidArgumentException', "Items contain duplication for key 'the-simpsons'.");
-
-	Assert::exception(function() use ($form) {
-		$form->addSelect('select')->setItems(array(
-			'the-simpsons', 'the-simpsons',
-		), FALSE);
-	}, 'Nette\InvalidArgumentException', "Items contain duplication for key 'the-simpsons'.");
-});
-
-
 test(function() use ($series) { // setValue() and invalid argument
 	$form = new Form;
 	$input = $form->addSelect('select', NULL, $series);
@@ -216,7 +211,7 @@ test(function() use ($series) { // setValue() and invalid argument
 
 	Assert::exception(function() use ($input) {
 		$input->setValue('unknown');
-	}, 'Nette\InvalidArgumentException', "Value 'unknown' is out of range of current items.");
+	}, 'Nette\InvalidArgumentException', "Value 'unknown' is out of allowed range ['Red Dwarf', 'The Simpsons', 'South Park', 'Family Guy'] in field 'select'.");
 });
 
 

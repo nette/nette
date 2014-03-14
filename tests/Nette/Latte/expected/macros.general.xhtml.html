@@ -28,6 +28,10 @@
 
 <p val = "some&amp;&lt;&gt;&quot;'/chars"> </p>
 
+<p onclick = "&quot;some&amp;&lt;&gt;\&quot;'\/chars&quot;"> </p>
+
+<p ONCLICK ="&quot;some&amp;&lt;&gt;\&quot;'\/chars&quot;" "some&amp;&lt;&gt;&quot;'/chars"> </p>
+
 <p val =></p>some&amp;&lt;&gt;"'/chars</p>
 
 1
@@ -45,12 +49,12 @@
 	<li id="item-3" class="odd">Paul</li>
 
 
-	<li id="item-4" class="even">]]&gt;</li>
+	<li id="item-4" class="even">]]&gt; &lt;!--</li>
 	</ul>
 
 
 
-<style type="text/css">
+<STYLE type="text/css">
 <!--
 #some\&\<\>\"\'\/chars {
 	background: blue;
@@ -64,7 +68,7 @@
 <!--
 alert('</div>');
 
-var prop = ["John","Mary","Paul","]]\x3E"];
+var prop = ["John","Mary","Paul","]]\x3E \x3C!--"];
 
 document.getElementById("some&<>\"'\/chars").style.backgroundColor = 'red';
 
@@ -73,10 +77,10 @@ var html = "<div title='1\/2\"'><\/div>";
 </script>
 
 
-<script>
+<SCRIPT>
 /* <![CDATA[ */
 
-var prop2 = ["John","Mary","Paul","]]\x3E"];
+var prop2 = ["John","Mary","Paul","]]\x3E \x3C!--"];
 
 /* ]]> */
 </script>
@@ -85,7 +89,7 @@ var prop2 = ["John","Mary","Paul","]]\x3E"];
 <p onclick =
 'alert(&quot;some&amp;&lt;&gt;\&quot;&#039;\/chars&quot;);alert("hello");'
  title='some&amp;&lt;&gt;&quot;&#039;/chars'
- style =
+ STYLE =
  "color:some\&amp;\&lt;\&gt;\&quot;\'\/chars;"
  rel="some&amp;&lt;&gt;&quot;'/chars"
  onblur="alert(&quot;some&amp;&lt;&gt;\&quot;'\/chars&quot;)"
@@ -122,7 +126,7 @@ var prop2 = ["John","Mary","Paul","]]\x3E"];
 	<li>John</li>
 	<li>Mary</li>
 	<li>Paul</li>
-	<li>]]&gt;</li>
+	<li>]]&gt; &lt;!--</li>
 </ul>
 
 <ul title="for">
@@ -209,7 +213,7 @@ Hello
 	<li>John</li>
 	<li>Mary</li>
 	<li>Paul</li>
-	<li>]]&gt;</li>
+	<li>]]&gt; &lt;!--</li>
 </ul>
 
 
@@ -218,5 +222,7 @@ Hello
 </ul>
 
 <ul title="inner foreach continue">
-	<li>JohnMaryPaul]]&gt;</li>
+	<li>JohnMaryPaul]]&gt; &lt;!--</li>
 </ul>
+
+y

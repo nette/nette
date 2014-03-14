@@ -4,11 +4,11 @@
  * Test: Nette\Caching\Storages\FileStorage exception situations.
  *
  * @author     Matej Kravjar
- * @package    Nette\Caching
  */
 
 use Nette\Caching\Cache,
-	Nette\Caching\Storages\FileStorage;
+	Nette\Caching\Storages\FileStorage,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

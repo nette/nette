@@ -4,13 +4,12 @@
  * Test: Nette\Latte\Engine: {block $name} dynamic blocks.
  *
  * @author     David Grudl
- * @package    Nette\Latte
- * @keepTrailingSpaces
  */
 
 use Nette\Latte,
 	Nette\Templating\FileTemplate,
-	Nette\Utils\Html;
+	Nette\Utils\Html,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

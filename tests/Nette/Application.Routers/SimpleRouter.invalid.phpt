@@ -4,11 +4,11 @@
  * Test: Nette\Application\Routers\SimpleRouter invalid request.
  *
  * @author     Jan Tvrdík
- * @package    Nette\Application\Routers
  */
 
 use Nette\Http,
-	Nette\Application\Routers\SimpleRouter;
+	Nette\Application\Routers\SimpleRouter,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

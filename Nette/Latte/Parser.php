@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Latte;
@@ -32,7 +28,7 @@ class Parser extends Nette\Object
 	public $defaultSyntax = 'latte';
 
 	/** @var bool */
-	public $shortNoEscape = TRUE;
+	public $shortNoEscape = FALSE;
 
 	/** @var array */
 	public $syntaxes = array(
@@ -129,8 +125,8 @@ class Parser extends Nette\Object
 	{
 		$matches = $this->match('~
 			(?:(?<=\n|^)[ \t]*)?<(?P<closing>/?)(?P<tag>[a-z0-9:]+)|  ##  begin of HTML tag <tag </tag - ignores <!DOCTYPE
-			<(?P<htmlcomment>!--)|     ##  begin of HTML comment <!--
-			'.$this->macroRe.'         ##  macro tag
+			<(?P<htmlcomment>!--(?!>))|     ##  begin of HTML comment <!--, but not <!-->
+			'.$this->macroRe.'              ##  macro tag
 		~xsi');
 
 		if (!empty($matches['htmlcomment'])) { // <!--
@@ -177,7 +173,7 @@ class Parser extends Nette\Object
 		$matches = $this->match('~
 			(?P<end>\ ?/?>)([ \t]*\n)?|  ##  end of HTML tag
 			'.$this->macroRe.'|          ##  macro tag
-			\s*(?P<attr>[^\s/>={]+)(?:\s*=\s*(?P<value>["\']|[^\s/>{]+))? ## begin of HTML attribute
+			\s*(?P<attr>[^\s/>={]+)(?:\s*=\s*(?P<value>["\']|[^\s/>{]+))? ## beginning of HTML attribute
 		~xsi');
 
 		if (!empty($matches['end'])) { // end of HTML tag />
@@ -229,11 +225,11 @@ class Parser extends Nette\Object
 	private function contextHtmlComment()
 	{
 		$matches = $this->match('~
-			(?P<htmlcomment>--\s*>)|   ##  end of HTML comment
-			'.$this->macroRe.'         ##  macro tag
+			(?P<htmlcomment>-->)|   ##  end of HTML comment
+			'.$this->macroRe.'      ##  macro tag
 		~xsi');
 
-		if (!empty($matches['htmlcomment'])) { // --\s*>
+		if (!empty($matches['htmlcomment'])) { // -->
 			$this->addToken(Token::HTML_TAG_END, $matches[0]);
 			$this->setContext(self::CONTEXT_HTML_TEXT);
 		}
@@ -345,7 +341,7 @@ class Parser extends Nette\Object
 			$match['name'] = $match['shortname'] ?: '=';
 			if ($match['noescape']) {
 				if (!$this->shortNoEscape) {
-					throw new CompileException("The noescape shortcut (exclamation mark) is not enabled, use the noescape modifier on line {$this->getLine()}.");
+					trigger_error("The noescape shortcut {!...} is deprecated, use {...|noescape} modifier on line {$this->getLine()}.", E_USER_DEPRECATED);
 				}
 				$match['modifiers'] .= '|noescape';
 			}

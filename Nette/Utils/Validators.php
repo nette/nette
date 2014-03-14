@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Utils;
@@ -244,7 +240,7 @@ class Validators extends Nette\Object
 		$localPart = "(?:\"(?:[ !\\x23-\\x5B\\x5D-\\x7E]*|\\\\[ -~])+\"|$atom+(?:\\.$atom+)*)"; // quoted or unquoted
 		$alpha = "a-z\x80-\xFF"; // superset of IDN
 		$domain = "[0-9$alpha](?:[-0-9$alpha]{0,61}[0-9$alpha])?"; // RFC 1034 one domain component
-		$topDomain = "[$alpha][-0-9$alpha]{0,17}[$alpha]";
+		$topDomain = "[$alpha](?:[-0-9$alpha]{0,17}[$alpha])?";
 		return (bool) preg_match("(^$localPart@(?:$domain\\.)+$topDomain\\z)i", $value);
 	}
 
@@ -258,7 +254,7 @@ class Validators extends Nette\Object
 	{
 		$alpha = "a-z\x80-\xFF";
 		$domain = "[0-9$alpha](?:[-0-9$alpha]{0,61}[0-9$alpha])?";
-		$topDomain = "[$alpha][-0-9$alpha]{0,17}[$alpha]";
+		$topDomain = "[$alpha](?:[-0-9$alpha]{0,17}[$alpha])?";
 		return (bool) preg_match("(^https?://(?:(?:$domain\\.)*$topDomain|\\d{1,3}\.\\d{1,3}\.\\d{1,3}\.\\d{1,3}|\[[0-9a-f:]{3,39}\])(:\\d{1,5})?(/\\S*)?\\z)i", $value);
 	}
 

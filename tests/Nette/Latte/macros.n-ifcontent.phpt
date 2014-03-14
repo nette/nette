@@ -4,10 +4,10 @@
  * Test: Nette\Latte\Engine and n:ifcontent.
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
-use Nette\Latte;
+use Nette\Latte,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -52,6 +52,29 @@ EOD
 
 $template->setSource(<<<'EOD'
 <div n:ifcontent>{$empty}</div>
+EOD
+);
+
+Assert::match(<<<EOD
+EOD
+, (string) $template);
+
+$template->setSource(<<<EOD
+<div n:ifcontent>
+
+</div>
+EOD
+);
+
+Assert::match(<<<EOD
+EOD
+, (string) $template);
+
+
+$template->setSource(<<<'EOD'
+<div n:ifcontent>
+	{$empty}
+</div>
 EOD
 );
 

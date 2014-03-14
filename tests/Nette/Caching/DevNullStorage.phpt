@@ -4,11 +4,11 @@
  * Test: Nette\Caching\Storages\DevNullStorage test.
  *
  * @author     David Grudl
- * @package    Nette\Caching
  */
 
 use Nette\Caching\Cache,
-	Nette\Caching\Storages\DevNullStorage;
+	Nette\Caching\Storages\DevNullStorage,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

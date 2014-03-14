@@ -4,10 +4,10 @@
  * Test: Nette\Latte\Macros\UIMacros and renderSnippets.
  *
  * @author     Jan Skrasek
- * @package    Nette\Latte
  */
 
-use Nette\Latte;
+use Nette\Latte,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -17,51 +17,89 @@ class InnerControl extends Nette\Application\UI\Control
 {
 	public function render()
 	{
-		$template = new Nette\Templating\Template;
+		$template = new Nette\Templating\FileTemplate;
 		$template->registerFilter(new Latte\Engine);
 		$template->_presenter = $this->getPresenter();
 		$template->_control = $this;
-		$template->setSource(<<<EOD
-			Hello {snippet test}world{/snippet}!
-EOD
-		);
+		$template->say = 'Hello';
+		$template->setFile(__DIR__ . '/templates/snippet-included.latte');
 		$template->render();
 	}
 }
 
-class MultiControl extends Nette\Application\UI\Presenter
+class TestPresenter extends Nette\Application\UI\Presenter
 {
 	private $payload;
+
+	function __construct()
+	{
+		$this->payload = new stdClass;
+	}
+
 	function getPayload()
 	{
 		return $this->payload;
 	}
+
 	function createComponentMulti()
 	{
-		$this->payload = new stdClass;
-		return new Nette\Application\UI\Multiplier(function($name) {
+		return new Nette\Application\UI\Multiplier(function() {
 			$control = new InnerControl();
-			$control->invalidateControl();
+			$control->redrawControl();
 			return $control;
 		});
 	}
+
 	public function render()
 	{
-		$template = new Nette\Templating\Template;
+		$template = new Nette\Templating\FileTemplate;
 		$template->registerFilter(new Latte\Engine);
 		$template->_control = $this;
+		$template->setFile(__DIR__ . '/templates/snippet-include.latte');
 		$template->render();
 	}
 }
 
 
-$control = new MultiControl;
-$control['multi-1'];
-$control->snippetMode = true;
-$control->render();
+$presenter = new TestPresenter;
+$presenter->snippetMode = TRUE;
+$presenter->redrawControl();
+$presenter['multi-1']->redrawControl();
+$presenter->render();
+Assert::same(array(
+	'snippets' => array(
+		'snippet--hello' => 'Hello',
+		'snippet--include' => "<p>Included file #3 (A, B)</p>\n",
+		'snippet--array-1' => 'Value 1',
+		'snippet--array-2' => 'Value 2',
+		'snippet--array-3' => 'Value 3',
+		'snippet--array2-1' => 'Value 1',
+		'snippet--array2-2' => 'Value 2',
+		'snippet--array2-3' => 'Value 3',
+		'snippet--includeSay' => 'Hello include snippet',
+		'snippet-multi-1-includeSay' => 'Hello',
+	),
+), (array) $presenter->payload);
 
-Assert::equal((object) array(
-   'snippets' => array(
-      'snippet-multi-1-test' => 'world',
-   ),
-), $control->payload);
+
+
+$presenter = new TestPresenter;
+$presenter->snippetMode = TRUE;
+$presenter->redrawControl('hello');
+$presenter->redrawControl('array');
+$presenter->render();
+
+Assert::same(array(
+	'snippets' => array(
+		'snippet--hello' => 'Hello',
+		'snippet--array-1' => 'Value 1',
+		'snippet--array-2' => 'Value 2',
+		'snippet--array-3' => 'Value 3',
+	),
+), (array) $presenter->payload);
+
+$presenter = new TestPresenter;
+ob_start();
+$presenter->render();
+$content = ob_get_clean();
+Assert::matchFile(__DIR__ .'/expected/UIMacros.renderSnippets.html', $content);

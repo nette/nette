@@ -4,10 +4,10 @@
  * Test: Nette\Utils\Strings::startsWith()
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
-use Nette\Utils\Strings;
+use Nette\Utils\Strings,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

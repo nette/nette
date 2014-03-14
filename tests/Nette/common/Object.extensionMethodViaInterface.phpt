@@ -4,10 +4,10 @@
  * Test: Nette\Object extension method via interface.
  *
  * @author     David Grudl
- * @package    Nette
  */
 
-use Nette\Object;
+use Nette\Object,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

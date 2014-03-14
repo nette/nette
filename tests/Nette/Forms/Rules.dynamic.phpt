@@ -4,10 +4,10 @@
  * Test: Nette\Forms validation of range depends on another control.
  *
  * @author     Karel Hak
- * @package    Nette\Forms
  */
 
-use Nette\Forms\Form;
+use Nette\Forms\Form,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

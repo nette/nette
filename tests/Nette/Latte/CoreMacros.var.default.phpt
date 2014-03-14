@@ -4,10 +4,10 @@
  * Test: Nette\Latte\CoreMacros: {var ...} {default ...}
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
-use Nette\Latte\Macros\CoreMacros;
+use Nette\Latte\Macros\CoreMacros,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -18,6 +18,7 @@ CoreMacros::install($compiler);
 
 test(function() use ($compiler) { // {var ... }
 	Assert::same( '<?php $var = \'hello\' ?>',  $compiler->expandMacro('var', 'var => hello', '')->openingCode );
+	Assert::same( '<?php $var = \'hello\'; $var2 = \'world\' ?>',  $compiler->expandMacro('var', 'var => hello, var2 = world', '')->openingCode );
 	Assert::same( '<?php $var = 123 ?>',  $compiler->expandMacro('var', '$var => 123', '')->openingCode );
 	Assert::same( '<?php $var = 123 ?>',  $compiler->expandMacro('var', '$var = 123', '')->openingCode );
 	Assert::same( '<?php $var = 123 ?>',  $compiler->expandMacro('var', '$var => 123', 'filter')->openingCode );

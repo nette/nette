@@ -4,10 +4,10 @@
  * Test: Nette\Latte\Parser::parseMacroTag().
  *
  * @author     David Grudl
- * @package    Nette\Latte
  */
 
-use Nette\Latte;
+use Nette\Latte,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -24,14 +24,13 @@ Assert::same( array('?', '', '', TRUE), $parser->parseMacroTag('?/') );
 Assert::same( array('?', '', '', TRUE), $parser->parseMacroTag('? /') );
 Assert::same( array('?', '/', '', FALSE), $parser->parseMacroTag('? / ') );
 Assert::same( array('=', '$var', '', FALSE), $parser->parseMacroTag('$var') );
-Assert::same( array('=', '$var', '|noescape', FALSE), $parser->parseMacroTag('!$var') );
-Assert::same( array('=', '$var', '|noescape', FALSE), $parser->parseMacroTag('! $var') );
-Assert::same( array('_', '"I love Nette"', '|noescape', FALSE), $parser->parseMacroTag('!_"I love Nette"') );
+Assert::same( array('=', '$var', '|noescape', FALSE), $parser->parseMacroTag('$var|noescape') );
+Assert::same( array('_', '"I love Nette"', '|noescape', FALSE), $parser->parseMacroTag('_"I love Nette"|noescape') );
 Assert::same( array('_', '$var', '', FALSE), $parser->parseMacroTag('_$var') );
 Assert::same( array('_', '$var', '', FALSE), $parser->parseMacroTag('_ $var') );
 Assert::same( array('_', '', '', FALSE), $parser->parseMacroTag('_') );
 Assert::same( array('/_', '', '', FALSE), $parser->parseMacroTag('/_') );
-Assert::same( array('=', '$var', '|noescape', FALSE), $parser->parseMacroTag('!=$var') );
+Assert::same( array('=', '$var', '|noescape', FALSE), $parser->parseMacroTag('=$var|noescape') );
 Assert::same( array('=', '$var', '', FALSE), $parser->parseMacroTag('=$var') );
 Assert::same( array('=', '$var', '', FALSE), $parser->parseMacroTag('= $var') );
 Assert::same( array('=', 'function()', '', FALSE), $parser->parseMacroTag('function()') );
@@ -55,4 +54,4 @@ Assert::same( array('=', '+10', '', FALSE), $parser->parseMacroTag('+10') );
 Assert::same( array('=', '-10', '', FALSE), $parser->parseMacroTag('-10') );
 
 Assert::same( array('=', '$var', "|mod:'\\':a:b:c':arg2 |mod2:|mod3", FALSE), $parser->parseMacroTag("\$var |mod:'\\':a:b:c':arg2 |mod2:|mod3") );
-Assert::same( array('=', '$var', '|mod|mod2|noescape', FALSE), $parser->parseMacroTag('!$var|mod|mod2') );
+Assert::same( array('=', '$var', '|mod|mod2|noescape', FALSE), $parser->parseMacroTag('$var|mod|mod2|noescape') );

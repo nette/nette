@@ -4,10 +4,10 @@
  * Test: Nette\ComponentModel\Container component named factory 6.
  *
  * @author     David Grudl
- * @package    Nette\ComponentModel
  */
 
-use Nette\ComponentModel\Container;
+use Nette\ComponentModel\Container,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

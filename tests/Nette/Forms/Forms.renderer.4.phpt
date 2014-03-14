@@ -4,9 +4,9 @@
  * Test: Nette\Forms default rendering GET form.
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
+use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 

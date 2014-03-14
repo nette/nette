@@ -4,12 +4,12 @@
  * Test: Nette\Application\Responses\FileResponse and range.
  *
  * @author     David Grudl
- * @package    Nette\Config
  * @httpCode   -
  */
 
 use Nette\Application\Responses\FileResponse,
-	Nette\Http;
+	Nette\Http,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

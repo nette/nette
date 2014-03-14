@@ -4,7 +4,6 @@
  * Test: Nette\Forms validation scope.
  *
  * @author     Jan Skrasek
- * @package    Nette\Forms
  */
 
 use Nette\Forms\Form;
@@ -41,6 +40,6 @@ foreach ($datasets as $case) {
 
 	Assert::truthy($form->isSubmitted());
 	$form->validate();
-	Assert::equal($case[1], $form->getAllErrors());
+	Assert::equal($case[1], $form->getErrors());
 
 }

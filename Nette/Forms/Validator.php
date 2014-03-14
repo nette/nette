@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Forms;
@@ -27,16 +23,22 @@ class Validator extends Nette\Object
 	public static $messages = array(
 		Form::PROTECTION => 'Please submit this form again (security token has expired).',
 		Form::EQUAL => 'Please enter %s.',
-		Form::FILLED => 'Please complete mandatory field.',
-		Form::MIN_LENGTH => 'Please enter a value of at least %d characters.',
-		Form::MAX_LENGTH => 'Please enter a value no longer than %d characters.',
+		Form::NOT_EQUAL => 'This value should not be %s.',
+		Form::FILLED => 'This field is required.',
+		Form::BLANK => 'This field should be blank.',
+		Form::MIN_LENGTH => 'Please enter at least %d characters.',
+		Form::MAX_LENGTH => 'Please enter no more than %d characters.',
 		Form::LENGTH => 'Please enter a value between %d and %d characters long.',
 		Form::EMAIL => 'Please enter a valid email address.',
 		Form::URL => 'Please enter a valid URL.',
-		Form::INTEGER => 'Please enter a numeric value.',
-		Form::FLOAT => 'Please enter a numeric value.',
+		Form::INTEGER => 'Please enter a valid integer.',
+		Form::FLOAT => 'Please enter a valid number.',
+		Form::MIN => 'Please enter a value greater than or equal to %d.',
+		Form::MAX => 'Please enter a value less than or equal to %d.',
 		Form::RANGE => 'Please enter a value between %d and %d.',
 		Form::MAX_FILE_SIZE => 'The size of the uploaded file can be up to %d bytes.',
+		Form::MAX_POST_SIZE => 'The uploaded data exceeds the limit of %d bytes.',
+		Form::MIME_TYPE => 'The uploaded file is not in the expected format.',
 		Form::IMAGE => 'The uploaded file must be image in format JPEG, GIF or PNG.',
 		Nette\Forms\Controls\SelectBox::VALID => 'Please select a valid option.',
 	);
@@ -48,11 +50,11 @@ class Validator extends Nette\Object
 		if ($message instanceof Nette\Utils\Html) {
 			return $message;
 
-		} elseif ($message === NULL && is_string($rule->operation) && isset(static::$messages[$rule->operation])) {
-			$message = static::$messages[$rule->operation];
+		} elseif ($message === NULL && is_string($rule->validator) && isset(static::$messages[$rule->validator])) {
+			$message = static::$messages[$rule->validator];
 
 		} elseif ($message == NULL) { // intentionally ==
-			trigger_error("Missing validation message for control '{$rule->control->name}'.", E_USER_WARNING);
+			trigger_error("Missing validation message for control '{$rule->control->getName()}'.", E_USER_WARNING);
 		}
 
 		if ($translator = $rule->control->getForm()->getTranslator()) {
@@ -88,11 +90,22 @@ class Validator extends Nette\Object
 		foreach ((is_array($value) ? $value : array($value)) as $val) {
 			foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
 				if ((string) $val === (string) $item) {
-					return TRUE;
+					continue 2;
 				}
 			}
+			return FALSE;
 		}
-		return FALSE;
+		return TRUE;
+	}
+
+
+	/**
+	 * Is control's value not equal with second parameter?
+	 * @return bool
+	 */
+	public static function validateNotEqual(IControl $control, $arg)
+	{
+		return !static::validateEqual($control, $arg);
 	}
 
 
@@ -107,12 +120,22 @@ class Validator extends Nette\Object
 
 
 	/**
+	 * Is control not filled?
+	 * @return bool
+	 */
+	public static function validateBlank(IControl $control)
+	{
+		return !$control->isFilled();
+	}
+
+
+	/**
 	 * Is control valid?
 	 * @return bool
 	 */
 	public static function validateValid(IControl $control)
 	{
-		return !$control->getRules()->validate();
+		return $control->getRules()->validate();
 	}
 
 
@@ -123,6 +146,26 @@ class Validator extends Nette\Object
 	public static function validateRange(IControl $control, $range)
 	{
 		return Validators::isInRange($control->getValue(), $range);
+	}
+
+
+	/**
+	 * Is a control's value number greater than or equal to the specified minimum?
+	 * @return bool
+	 */
+	public static function validateMin(IControl $control, $minimum)
+	{
+		return Validators::isInRange($control->getValue(), array($minimum, NULL));
+	}
+
+
+	/**
+	 * Is a control's value number less than or equal to the specified maximum?
+	 * @return bool
+	 */
+	public static function validateMax(IControl $control, $maximum)
+	{
+		return Validators::isInRange($control->getValue(), array(NULL, $maximum));
 	}
 
 
@@ -186,15 +229,14 @@ class Validator extends Nette\Object
 	 */
 	public static function validateUrl(IControl $control)
 	{
-		return Validators::isUrl($control->getValue()) || Validators::isUrl('http://' . $control->getValue());
-	}
+		if (Validators::isUrl($value = $control->getValue())) {
+			return TRUE;
 
-
-	/** @deprecated */
-	public static function validateRegexp(IControl $control, $regexp)
-	{
-		trigger_error('Validator REGEXP is deprecated; use PATTERN instead (which is matched against the entire value and is case sensitive).', E_USER_DEPRECATED);
-		return (bool) Strings::match($control->getValue(), $regexp);
+		} elseif (Validators::isUrl($value = "http://$value")) {
+			$control->setValue($value);
+			return TRUE;
+		}
+		return FALSE;
 	}
 
 
@@ -214,7 +256,13 @@ class Validator extends Nette\Object
 	 */
 	public static function validateInteger(IControl $control)
 	{
-		return Validators::isNumericInt($control->getValue());
+		if (Validators::isNumericInt($value = $control->getValue())) {
+			if (!is_float($tmp = $value * 1)) { // bigint leave as string
+				$control->setValue($tmp);
+			}
+			return TRUE;
+		}
+		return FALSE;
 	}
 
 
@@ -224,7 +272,12 @@ class Validator extends Nette\Object
 	 */
 	public static function validateFloat(IControl $control)
 	{
-		return Validators::isNumeric(str_replace(array(' ', ','), array('', '.'), $control->getValue()));
+		$value = str_replace(array(' ', ','), array('', '.'), $control->getValue());
+		if (Validators::isNumeric($value)) {
+			$control->setValue((float) $value);
+			return TRUE;
+		}
+		return FALSE;
 	}
 
 

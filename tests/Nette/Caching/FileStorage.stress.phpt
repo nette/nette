@@ -4,12 +4,12 @@
  * Test: Nette\Caching\Storages\FileStorage sliding expiration test.
  *
  * @author     David Grudl
- * @package    Nette\Caching
  * @multiple   5
  */
 
 use Nette\Caching\Storages\FileStorage,
-	Nette\Diagnostics\Debugger;
+	Nette\Diagnostics\Debugger,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

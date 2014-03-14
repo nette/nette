@@ -4,8 +4,9 @@
  * Test: Nette\Diagnostics\Debugger E_ERROR in console.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  */
+
+use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 

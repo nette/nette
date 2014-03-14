@@ -16,11 +16,11 @@ namespace Nette\Diagnostics;
 use Nette;
 
 
-$title = ($exception instanceof Nette\FatalErrorException && isset(Debugger::$errorTypes[$exception->getSeverity()])) ? Debugger::$errorTypes[$exception->getSeverity()] : get_class($exception);
+$title = ($exception instanceof \ErrorException && isset(Debugger::$errorTypes[$exception->getSeverity()])) ? Debugger::$errorTypes[$exception->getSeverity()] : get_class($exception);
 
 $counter = 0;
 
-?><!DOCTYPE html><!-- "' --></script></style></pre></xmp></table>
+?><!DOCTYPE html><!-- "' --></script></style></pre></xmp></table></a></abbr></address></article></aside></audio></b></bdi></bdo></blockquote></button></canvas></caption></cite></code></datalist></del></details></dfn></div></dl></em></fieldset></figcaption></figure></footer></form></h1></h2></h3></h4></h5></h6></header></hgroup></i></iframe></ins></kbd></label></legend></map></mark></menu></meter></nav></noscript></object></ol></optgroup></output></progress></q></rp></rt></ruby></s></samp></section></select></small></span></strong></sub></summary></sup></textarea></time></title></tr></u></ul></var></video>
 <html>
 <head>
 	<meta charset="utf-8">
@@ -35,11 +35,11 @@ $counter = 0;
 	<style type="text/css" class="nette-debug">
 	<?php require __DIR__ . '/bluescreen.css' ?>
 	</style>
+	<script>document.documentElement.className+=' js'</script>
 </head>
 
 
 <body>
-<script>document.body.className+=' js'</script>
 <div id="netteBluescreen">
 	<a id="netteBluescreenIcon" href="#" class="nette-toggle"></a>
 	<div>
@@ -96,7 +96,7 @@ $counter = 0;
 
 			<div id="netteBsPnl<?php echo $counter ?>" class="<?php echo $collapsed ? 'nette-collapsed ' : '' ?>inner">
 				<p><b>File:</b> <?php echo Helpers::editorLink($ex->getFile(), $ex->getLine()) ?></p>
-				<?php if (is_file($ex->getFile())): ?><?php echo self::highlightFile($ex->getFile(), $ex->getLine(), 15, isset($ex->context) ? $ex->context : NULL) ?><?php endif ?>
+				<?php if (is_file($ex->getFile())): ?><?php echo self::highlightFile($ex->getFile(), $ex->getLine(), 15, $ex instanceof \ErrorException && isset($ex->context) ? $ex->context : NULL) ?><?php endif ?>
 			</div></div>
 
 
@@ -160,7 +160,7 @@ $counter = 0;
 			<?php endif ?>
 
 
-			<?php if (isset($ex->context) && is_array($ex->context)):?>
+			<?php if ($ex instanceof \ErrorException && isset($ex->context) && is_array($ex->context)):?>
 			<div class="panel">
 			<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle-collapsed">Variables</a></h2>
 
@@ -366,13 +366,18 @@ $counter = 0;
 
 	bs.onclick = function(e) {
 		e = e || window.event;
-		for (var link = e.target || e.srcElement; link && (!link.tagName || link.className.indexOf('nette-toggle') < 0); link = link.parentNode) {}
+		if (e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) {
+			return;
+		}
+
+		for (var link = e.target || e.srcElement; link && (!link.tagName || !link.className.match(/\bnette-toggle(-collapsed)?\b/)); link = link.parentNode) {}
 		if (!link) {
 			return true;
 		}
 
 		var collapsed = link.className.indexOf('nette-toggle-collapsed') > -1,
-			ref = link.getAttribute('data-ref') || link.getAttribute('href', 2);
+			ref = link.getAttribute('data-ref') || link.getAttribute('href', 2),
+			dest;
 
 		if (ref && ref !== '#') {
 			dest = document.getElementById(ref.substring(1));
@@ -381,7 +386,7 @@ $counter = 0;
 		}
 
 		link.className = 'nette-toggle' + (collapsed ? '' : '-collapsed');
-		dest.style.display = collapsed ? (dest.tagName.toLowerCase() === 'div' ? 'block' : 'inline') : 'none';
+		dest.className = collapsed ? '' : 'nette-collapsed';
 
 		if (link.id === 'netteBluescreenIcon') {
 			for (var i = 0, styles = document.styleSheets; i < styles.length; i++) {

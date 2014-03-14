@@ -4,10 +4,10 @@
  * Test: Nette\DI\ContainerBuilder and inject properties.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
-use Nette\DI;
+use Nette\DI,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -33,7 +33,7 @@ class Test2 extends Test1
 $builder = new DI\ContainerBuilder;
 $builder->addDefinition('test')
 	->setClass('Test2')
-	->addSetup('$varX', 123);
+	->addSetup('$varX', array(123));
 
 $builder->addDefinition('stdClass')
 	->setClass('stdClass');

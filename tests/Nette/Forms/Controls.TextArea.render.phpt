@@ -4,11 +4,11 @@
  * Test: Nette\Forms\Controls\TextArea.
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
 use Nette\Forms\Form,
-	Nette\Utils\Html;
+	Nette\Utils\Html,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -73,9 +73,10 @@ test(function() { // validation rule LENGTH
 test(function() { // validation rule MAX_LENGTH
 	$form = new Form;
 	$input = $form->addTextArea('text')
+		->addRule($form::MAX_LENGTH, NULL, 30)
 		->addRule($form::MAX_LENGTH, NULL, 10);
 
-	Assert::same('<textarea name="text" maxlength="10" id="frm-text" data-nette-rules=\'[{"op":":maxLength","msg":"Please enter a value no longer than 10 characters.","arg":10}]\'></textarea>', (string) $input->getControl());
+	Assert::same('<textarea name="text" maxlength="10" id="frm-text" data-nette-rules=\'[{"op":":maxLength","msg":"Please enter no more than 30 characters.","arg":30},{"op":":maxLength","msg":"Please enter no more than 10 characters.","arg":10}]\'></textarea>', (string) $input->getControl());
 });
 
 

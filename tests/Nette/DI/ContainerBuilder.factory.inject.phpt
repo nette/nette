@@ -4,10 +4,10 @@
  * Test: Nette\DI\ContainerBuilder and generated factories with inject methods.
  *
  * @author     Filip Procházka
- * @package    Nette\DI
  */
 
-use Nette\DI;
+use Nette\DI,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

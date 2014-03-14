@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Forms;
@@ -99,7 +95,7 @@ class ControlGroup extends Nette\Object
 	 * @param  mixed  default value
 	 * @return mixed
 	 */
-	final public function getOption($key, $default = NULL)
+	public function getOption($key, $default = NULL)
 	{
 		return isset($this->options[$key]) ? $this->options[$key] : $default;
 	}
@@ -109,7 +105,7 @@ class ControlGroup extends Nette\Object
 	 * Returns user-specific options.
 	 * @return array
 	 */
-	final public function getOptions()
+	public function getOptions()
 	{
 		return $this->options;
 	}

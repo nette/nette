@@ -4,11 +4,11 @@
  * Test: Nette\Forms\Helpers::generateHtmlName()
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
 use Nette\Forms\Form,
-	Nette\Forms\Helpers;
+	Nette\Forms\Helpers,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

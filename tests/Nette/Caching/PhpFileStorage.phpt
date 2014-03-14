@@ -4,11 +4,11 @@
  * Test: Nette\Caching\Storages\PhpFileStorage test.
  *
  * @author     David Grudl
- * @package    Nette\Caching
  */
 
 use Nette\Caching\Cache,
-	Nette\Caching\Storages\PhpFileStorage;
+	Nette\Caching\Storages\PhpFileStorage,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

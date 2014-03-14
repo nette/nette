@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Application\UI;
@@ -186,13 +182,9 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 * @param  mixed  default value
 	 * @return mixed
 	 */
-	final public function getParameter($name = NULL, $default = NULL)
+	public function getParameter($name, $default = NULL)
 	{
-		if (func_num_args() === 0) {
-			trigger_error('Calling ' . __METHOD__ . ' with no arguments to get all parameters is deprecated, use getParameters() instead.', E_USER_DEPRECATED);
-			return $this->params;
-
-		} elseif (isset($this->params[$name])) {
+		if (isset($this->params[$name])) {
 			return $this->params[$name];
 
 		} else {
@@ -205,7 +197,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 * Returns component parameters.
 	 * @return array
 	 */
-	final public function getParameters()
+	public function getParameters()
 	{
 		return $this->params;
 	}
@@ -216,7 +208,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 * @param  string
 	 * @return string
 	 */
-	final public function getParameterId($name)
+	public function getParameterId($name)
 	{
 		$uid = $this->getUniqueId();
 		return $uid === '' ? $name : $uid . self::NAME_SEPARATOR . $name;
@@ -361,7 +353,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 * @param  Nette\ComponentModel\IComponent
 	 * @return void
 	 */
-	final public function offsetSet($name, $component)
+	public function offsetSet($name, $component)
 	{
 		$this->addComponent($component, $name);
 	}
@@ -373,7 +365,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 * @return Nette\ComponentModel\IComponent
 	 * @throws Nette\InvalidArgumentException
 	 */
-	final public function offsetGet($name)
+	public function offsetGet($name)
 	{
 		return $this->getComponent($name, TRUE);
 	}
@@ -384,7 +376,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 * @param  string  component name
 	 * @return bool
 	 */
-	final public function offsetExists($name)
+	public function offsetExists($name)
 	{
 		return $this->getComponent($name, FALSE) !== NULL;
 	}
@@ -395,7 +387,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 * @param  string  component name
 	 * @return void
 	 */
-	final public function offsetUnset($name)
+	public function offsetUnset($name)
 	{
 		$component = $this->getComponent($name, FALSE);
 		if ($component !== NULL) {

@@ -4,10 +4,10 @@
  * Test: Nette\Http\Helpers.
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
-use Nette\Http\Helpers;
+use Nette\Http\Helpers,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

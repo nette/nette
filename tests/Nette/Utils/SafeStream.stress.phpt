@@ -4,11 +4,11 @@
  * Test: Nette\Utils\SafeStream stress test.
  *
  * @author     David Grudl
- * @package    Nette\Utils
  * @multiple   5
  */
 
-use Nette\Diagnostics\Debugger;
+use Nette\Diagnostics\Debugger,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -29,6 +29,7 @@ function checkStr($s)
 
 define('COUNT_FILES', 3);
 set_time_limit(0);
+Nette\Utils\SafeStream::register();
 
 
 // clear playground

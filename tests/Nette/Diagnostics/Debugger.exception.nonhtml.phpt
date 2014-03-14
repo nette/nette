@@ -4,13 +4,13 @@
  * Test: Nette\Diagnostics\Debugger exception in non-HTML.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  * @exitCode   254
  * @httpCode   500
  * @outputMatchFile Debugger.exception.nonhtml.expect
  */
 
-use Nette\Diagnostics\Debugger;
+use Nette\Diagnostics\Debugger,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

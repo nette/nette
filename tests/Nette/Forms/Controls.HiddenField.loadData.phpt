@@ -4,10 +4,10 @@
  * Test: Nette\Forms\Controls\HiddenField.
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
-use Nette\Forms\Form;
+use Nette\Forms\Form,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -30,7 +30,7 @@ test(function() {
 
 test(function() {
 	$form = new Form;
-	$input = $form->addText('unknown');
+	$input = $form->addHidden('unknown');
 	Assert::same( '', $input->getValue() );
 	Assert::false( $input->isFilled() );
 });
@@ -61,7 +61,7 @@ test(function() { // setValue() and invalid argument
 
 	Assert::exception(function() use ($input) {
 		$input->setValue(array());
-	}, 'Nette\InvalidArgumentException', "Value must be scalar or NULL, array given.");
+	}, 'Nette\InvalidArgumentException', "Value must be scalar or NULL, array given in field 'hidden'.");
 });
 
 

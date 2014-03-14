@@ -4,11 +4,11 @@
  * Test: Nette\Forms ignored input.
  *
  * @author     Roman Pavlík
- * @package    Nette\Forms
  */
 
 use Nette\Forms\Form,
-	Nette\ArrayHash;
+	Nette\ArrayHash,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

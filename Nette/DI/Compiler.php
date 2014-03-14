@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\DI;
@@ -30,7 +26,7 @@ class Compiler extends Nette\Object
 	private $extensions = array();
 
 	/** @var ContainerBuilder */
-	private $container;
+	private $builder;
 
 	/** @var array */
 	private $config;
@@ -56,9 +52,11 @@ class Compiler extends Nette\Object
 	/**
 	 * @return array
 	 */
-	public function getExtensions()
+	public function getExtensions($type = NULL)
 	{
-		return $this->extensions;
+		return $type
+			? array_filter($this->extensions, function($item) use ($type) { return $item instanceof $type; })
+			: $this->extensions;
 	}
 
 
@@ -67,7 +65,7 @@ class Compiler extends Nette\Object
 	 */
 	public function getContainerBuilder()
 	{
-		return $this->container;
+		return $this->builder;
 	}
 
 
@@ -87,7 +85,7 @@ class Compiler extends Nette\Object
 	public function compile(array $config, $className, $parentName)
 	{
 		$this->config = $config;
-		$this->container = new ContainerBuilder;
+		$this->builder = new ContainerBuilder;
 		$this->processParameters();
 		$this->processExtensions();
 		$this->processServices();
@@ -98,7 +96,7 @@ class Compiler extends Nette\Object
 	public function processParameters()
 	{
 		if (isset($this->config['parameters'])) {
-			$this->container->parameters = Helpers::expand($this->config['parameters'], $this->config['parameters'], TRUE);
+			$this->builder->parameters = Helpers::expand($this->config['parameters'], $this->config['parameters'], TRUE);
 		}
 	}
 
@@ -108,7 +106,7 @@ class Compiler extends Nette\Object
 		for ($i = 0; $slice = array_slice($this->extensions, $i, 1, TRUE); $i++) {
 			$name = key($slice);
 			if (isset($this->config[$name])) {
-				$this->config[$name] = $this->container->expand($this->config[$name]);
+				$this->config[$name] = $this->builder->expand($this->config[$name]);
 			}
 			$this->extensions[$name]->loadConfiguration();
 		}
@@ -122,11 +120,11 @@ class Compiler extends Nette\Object
 
 	public function processServices()
 	{
-		$this->parseServices($this->container, $this->config);
+		$this->parseServices($this->builder, $this->config);
 
 		foreach ($this->extensions as $name => $extension) {
 			if (isset($this->config[$name])) {
-				$this->parseServices($this->container, $this->config[$name], $name);
+				$this->parseServices($this->builder, $this->config[$name], $name);
 			}
 		}
 	}
@@ -136,13 +134,11 @@ class Compiler extends Nette\Object
 	{
 		foreach ($this->extensions as $extension) {
 			$extension->beforeCompile();
-			$this->container->addDependency(Nette\Reflection\ClassType::from($extension)->getFileName());
+			$this->builder->addDependency(Nette\Reflection\ClassType::from($extension)->getFileName());
 		}
 
-		$classes = $this->container->generateClasses();
-		$classes[0]->setName($className)
-			->setExtends($parentName)
-			->addMethod('initialize');
+		$classes = $this->builder->generateClasses($className, $parentName);
+		$classes[0]->addMethod('initialize');
 
 		foreach ($this->extensions as $extension) {
 			$extension->afterCompile($classes[0]);
@@ -158,61 +154,74 @@ class Compiler extends Nette\Object
 	 * Parses section 'services' from (unexpanded) configuration file.
 	 * @return void
 	 */
-	public static function parseServices(ContainerBuilder $container, array $config, $namespace = NULL)
+	public static function parseServices(ContainerBuilder $builder, array $config, $namespace = NULL)
 	{
+		if (!empty($config['factories'])) {
+			trigger_error("Section 'factories' is deprecated, move definitions to section 'services' and append key 'autowired: no'.", E_USER_DEPRECATED);
+		}
+
 		$services = isset($config['services']) ? $config['services'] : array();
 		$factories = isset($config['factories']) ? $config['factories'] : array();
 		$all = array_merge($services, $factories);
 
-		uasort($all, function($a, $b) {
-			return strcmp(Config\Helpers::isInheriting($a), Config\Helpers::isInheriting($b));
-		});
+		$depths = array();
+		foreach ($all as $name => $def) {
+			$path = array();
+			while (Config\Helpers::isInheriting($def)) {
+				$path[] = $def;
+				$def = $all[$def[Config\Helpers::EXTENDS_KEY]];
+				if (in_array($def, $path, TRUE)) {
+					throw new ServiceCreationException("Circular reference detected for service '$name'.");
+				}
+			}
+			$depths[$name] = count($path);
+		}
+		array_multisort($depths, $all);
 
 		foreach ($all as $origName => $def) {
-			$shared = array_key_exists($origName, $services);
 			if ((string) (int) $origName === (string) $origName) {
-				$name = count($container->getDefinitions())
+				$name = count($builder->getDefinitions())
 					. preg_replace('#\W+#', '_', $def instanceof \stdClass ? ".$def->value" : (is_scalar($def) ? ".$def" : ''));
-			} elseif ($shared && array_key_exists($origName, $factories)) {
+			} elseif (array_key_exists($origName, $services) && array_key_exists($origName, $factories)) {
 				throw new ServiceCreationException("It is not allowed to use services and factories with the same name: '$origName'.");
 			} else {
 				$name = ($namespace ? $namespace . '.' : '') . strtr($origName, '\\', '_');
 			}
 
-			$params = $container->parameters;
+			$params = $builder->parameters;
 			if (is_array($def) && isset($def['parameters'])) {
 				foreach ((array) $def['parameters'] as $k => $v) {
 					$v = explode(' ', is_int($k) ? $v : $k);
-					$params[end($v)] = $container::literal('$' . end($v));
+					$params[end($v)] = $builder::literal('$' . end($v));
 				}
 			}
 			$def = Helpers::expand($def, $params);
 
 			if (($parent = Config\Helpers::takeParent($def)) && $parent !== $name) {
-				$container->removeDefinition($name);
-				$definition = $container->addDefinition(
+				$builder->removeDefinition($name);
+				$definition = $builder->addDefinition(
 					$name,
-					$parent === Config\Helpers::OVERWRITE ? NULL : unserialize(serialize($container->getDefinition($parent))) // deep clone
+					$parent === Config\Helpers::OVERWRITE ? NULL : unserialize(serialize($builder->getDefinition($parent))) // deep clone
 				);
-			} elseif ($container->hasDefinition($name)) {
-				$definition = $container->getDefinition($name);
-				if ($definition->shared !== $shared) {
-					throw new ServiceCreationException("It is not allowed to use service and factory with the same name '$name'.");
-				}
+			} elseif ($builder->hasDefinition($name)) {
+				$definition = $builder->getDefinition($name);
 			} else {
-				$definition = $container->addDefinition($name);
+				$definition = $builder->addDefinition($name);
 			}
+
 			try {
-				static::parseService($definition, $def, $shared);
+				static::parseService($definition, $def);
 			} catch (\Exception $e) {
 				throw new ServiceCreationException("Service '$name': " . $e->getMessage(), NULL, $e);
 			}
 
 			if ($definition->class === 'self') {
 				$definition->class = $origName;
+				trigger_error("Replace service definition '$origName: self' with '- $origName'.", E_USER_DEPRECATED);
 			}
 			if ($definition->factory && $definition->factory->entity === 'self') {
 				$definition->factory->entity = $origName;
+				trigger_error("Replace service definition '$origName: self' with '- $origName'.", E_USER_DEPRECATED);
 			}
 		}
 	}
@@ -222,15 +231,15 @@ class Compiler extends Nette\Object
 	 * Parses single service from configuration file.
 	 * @return void
 	 */
-	public static function parseService(ServiceDefinition $definition, $config, $shared = TRUE)
+	public static function parseService(ServiceDefinition $definition, $config)
 	{
 		if ($config === NULL) {
 			return;
 
-		} elseif (!$shared && is_string($config) && interface_exists($config)) {
+		} elseif (is_string($config) && interface_exists($config)) {
 			$config = array('class' => NULL, 'implement' => $config);
 
-		} elseif (!$shared && $config instanceof \stdClass && interface_exists($config->value)) {
+		} elseif ($config instanceof \stdClass && interface_exists($config->value)) {
 			$config = array('class' => NULL, 'implement' => $config->value, 'factory' => array_shift($config->attributes));
 
 		} elseif (!is_array($config)) {
@@ -242,10 +251,7 @@ class Compiler extends Nette\Object
 			unset($config['factory']);
 		};
 
-		$known = $shared
-			? array('class', 'create', 'arguments', 'setup', 'autowired', 'inject', 'run', 'tags')
-			: array('class', 'create', 'arguments', 'setup', 'autowired', 'inject', 'parameters', 'implement');
-
+		$known = array('class', 'create', 'arguments', 'setup', 'autowired', 'inject', 'parameters', 'implement', 'run', 'tags');
 		if ($error = array_diff(array_keys($config), $known)) {
 			throw new Nette\InvalidStateException("Unknown or deprecated key '" . implode("', '", $error) . "' in definition of service.");
 		}
@@ -296,7 +302,6 @@ class Compiler extends Nette\Object
 			}
 		}
 
-		$definition->setShared($shared);
 		if (isset($config['parameters'])) {
 			Validators::assertField($config, 'parameters', 'array');
 			$definition->setParameters($config['parameters']);
@@ -347,6 +352,8 @@ class Compiler extends Nette\Object
 		foreach ($args as $k => $v) {
 			if ($v === '...') {
 				unset($args[$k]);
+			} elseif (is_array($v)) {
+				$args[$k] = self::filterArguments($v);
 			} elseif ($v instanceof \stdClass && isset($v->value, $v->attributes)) {
 				$args[$k] = new Statement($v->value, self::filterArguments($v->attributes));
 			}

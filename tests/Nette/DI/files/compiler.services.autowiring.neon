@@ -22,6 +22,6 @@ services:
 
 	alias: @lorem
 
-	database:
-		class: Nette\Database\Connection
-		arguments: ['sqlite::memory:']
+	authenticator:
+		class: Nette\Security\SimpleAuthenticator
+		arguments: [['username': '*****']]

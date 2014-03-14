@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Forms\Controls;
@@ -21,6 +17,9 @@ use Nette;
  */
 class Checkbox extends BaseControl
 {
+	/** @var Nette\Utils\Html  wrapper element template */
+	private $wrapper;
+
 
 	/**
 	 * @param  string  label
@@ -29,6 +28,7 @@ class Checkbox extends BaseControl
 	{
 		parent::__construct($label);
 		$this->control->type = 'checkbox';
+		$this->wrapper = Nette\Utils\Html::el();
 	}
 
 
@@ -40,7 +40,7 @@ class Checkbox extends BaseControl
 	public function setValue($value)
 	{
 		if (!is_scalar($value) && $value !== NULL) {
-			throw new Nette\InvalidArgumentException('Value must be scalar or NULL, ' . gettype($value) . ' given.');
+			throw new Nette\InvalidArgumentException('Value must be scalar or NULL, ' . gettype($value) . " given in field '{$this->name}'.");
 		}
 		$this->value = (bool) $value;
 		return $this;
@@ -63,7 +63,45 @@ class Checkbox extends BaseControl
 	 */
 	public function getControl()
 	{
+		return $this->wrapper->setHtml($this->getLabelPart()->insert(0, $this->getControlPart()));
+	}
+
+
+	/**
+	 * Bypasses label generation.
+	 * @return void
+	 */
+	public function getLabel($caption = NULL)
+	{
+		return NULL;
+	}
+
+
+	/**
+	 * @return Nette\Utils\Html
+	 */
+	public function getControlPart()
+	{
 		return parent::getControl()->checked($this->value);
+	}
+
+
+	/**
+	 * @return Nette\Utils\Html
+	 */
+	public function getLabelPart()
+	{
+		return parent::getLabel();
+	}
+
+
+	/**
+	 * Returns wrapper HTML element template.
+	 * @return Nette\Utils\Html
+	 */
+	public function getSeparatorPrototype()
+	{
+		return $this->wrapper;
 	}
 
 }

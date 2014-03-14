@@ -4,18 +4,16 @@
  * Test: Nette\Diagnostics\Debugger notices and warnings logging.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  */
 
-use Nette\Diagnostics\Debugger;
+use Nette\Diagnostics\Debugger,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
 // Setup environment
-$_SERVER['HTTP_HOST'] = 'nette.org';
-
 $logDirectory = TEMP_DIR . '/log';
 Tester\Helpers::purge($logDirectory);
 

@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Utils;
@@ -59,7 +55,7 @@ class Finder extends Nette\Object implements \IteratorAggregate
 			$mask = func_get_args();
 		}
 		$finder = new static;
-		return $finder->select(array(), 'isDir')->select($mask, 'isFile');
+		return $finder->select($mask, 'isDir')->select($mask, 'isFile');
 	}
 
 

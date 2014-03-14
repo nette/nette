@@ -4,10 +4,10 @@
  * Test: Nette\Utils\Neon::decode errors.
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
-use Nette\Utils\Neon;
+use Nette\Utils\Neon,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -26,6 +26,11 @@ Assert::exception(function() {
 Assert::exception(function() {
 	Neon::decode("- first: Dave\n last: Lister\n gender: male\n");
 }, 'Nette\Utils\NeonException', "Unexpected ':' on line 1, column 8." );
+
+
+Assert::exception(function() {
+	Neon::decode(" - first\n - second");
+}, 'Nette\Utils\NeonException', "Unexpected indentation. on line 2, column 2." );
 
 
 Assert::exception(function() {

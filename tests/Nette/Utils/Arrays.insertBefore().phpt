@@ -4,10 +4,10 @@
  * Test: Nette\Utils\Arrays::insertBefore() & insertAfter()
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
-use Nette\Utils\Arrays;
+use Nette\Utils\Arrays,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

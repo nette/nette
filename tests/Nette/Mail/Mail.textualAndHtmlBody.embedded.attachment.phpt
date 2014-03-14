@@ -4,10 +4,10 @@
  * Test: Nette\Mail\Message - textual and HTML body with embedded image and attachment.
  *
  * @author     David Grudl
- * @package    Nette\Mail
  */
 
-use Nette\Mail\Message;
+use Nette\Mail\Message,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

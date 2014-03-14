@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Database;
@@ -28,7 +24,8 @@ interface IReflection
 		FIELD_DATE = 'date',
 		FIELD_TIME = 'time',
 		FIELD_DATETIME = 'datetime',
-		FIELD_UNIX_TIMESTAMP = 'timestamp';
+		FIELD_UNIX_TIMESTAMP = 'timestamp',
+		FIELD_TIME_INTERVAL = 'timeint';
 
 	/**
 	 * Gets primary key of $table.

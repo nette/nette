@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Http;
@@ -282,6 +278,36 @@ class Url extends Nette\Object
 	public function getQuery()
 	{
 		return $this->query;
+	}
+
+
+	/**
+	 * @param string
+	 * @param mixed
+	 * @return mixed
+	 */
+	public function getQueryParameter($name, $default = NULL)
+	{
+		parse_str($this->query, $params);
+		return isset($params[$name]) ? $params[$name] : $default;
+	}
+
+
+	/**
+	 * @param string
+	 * @param mixed NULL unsets the parameter
+	 * @return self
+	 */
+	public function setQueryParameter($name, $value)
+	{
+		parse_str($this->query, $params);
+		if ($value === NULL) {
+			unset($params[$name]);
+		} else {
+			$params[$name] = $value;
+		}
+		$this->setQuery($params);
+		return $this;
 	}
 
 

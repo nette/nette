@@ -4,10 +4,10 @@
  * Test: Nette\Latte\Parser and $shortNoEscape.
  *
  * @author     Miloslav Hůla
- * @package    Nette\Latte
  */
 
-use Nette\Latte;
+use Nette\Latte,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -28,7 +28,7 @@ $latte->parser->shortNoEscape = FALSE;
 $template->setSource('{="<>"}');
 Assert::match('&lt;&gt;', (string) $template);
 
-Assert::exception(function() use ($template) {
+Assert::error(function() use ($template) {
 	$template->setSource('{!="<>"}');
-	Assert::match('<>', $template->render());
-}, 'Nette\Latte\CompileException', 'The noescape shortcut (exclamation mark) is not enabled, use the noescape modifier on line 1.');
+	Assert::match('<>', (string) $template);
+}, E_USER_DEPRECATED, 'The noescape shortcut {!...} is deprecated, use {...|noescape} modifier on line 1.');

@@ -4,10 +4,10 @@
  * Test: Nette\Security\Permission Ensures that the same Resource cannot be added more than once.
  *
  * @author     David Grudl
- * @package    Nette\Security
  */
 
-use Nette\Security\Permission;
+use Nette\Security\Permission,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

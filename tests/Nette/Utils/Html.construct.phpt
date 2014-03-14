@@ -4,10 +4,10 @@
  * Test: Nette\Utils\Html::__construct()
  *
  * @author     David Grudl
- * @package    Nette\Utils
  */
 
-use Nette\Utils\Html;
+use Nette\Utils\Html,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

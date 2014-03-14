@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Forms\Controls;
@@ -21,14 +17,19 @@ use Nette;
  */
 class HiddenField extends BaseControl
 {
+	/** @var bool */
+	private $persistValue;
 
-	public function __construct()
+
+	public function __construct($persistentValue = NULL)
 	{
-		if (func_num_args()) {
-			throw new Nette\DeprecatedException('The "forced value" has been deprecated.');
-		}
 		parent::__construct();
 		$this->control->type = 'hidden';
+		if ($persistentValue !== NULL) {
+			$this->unmonitor('Nette\Forms\Form');
+			$this->persistValue = TRUE;
+			$this->value = (string) $persistentValue;
+		}
 	}
 
 
@@ -40,9 +41,11 @@ class HiddenField extends BaseControl
 	public function setValue($value)
 	{
 		if (!is_scalar($value) && $value !== NULL && !method_exists($value, '__toString')) {
-			throw new Nette\InvalidArgumentException('Value must be scalar or NULL, ' . gettype($value) . ' given.');
+			throw new Nette\InvalidArgumentException('Value must be scalar or NULL, ' . gettype($value) . " given in field '{$this->name}'.");
 		}
-		$this->value = (string) $value;
+		if (!$this->persistValue) {
+			$this->value = (string) $value;
+		}
 		return $this;
 	}
 

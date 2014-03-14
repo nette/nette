@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Forms\Controls;
@@ -30,6 +26,9 @@ abstract class TextBase extends BaseControl
 	/** @var array */
 	protected $filters = array();
 
+	/** @var mixed unfiltered submitted value */
+	protected $rawValue = '';
+
 
 	/**
 	 * Sets control's value.
@@ -38,10 +37,12 @@ abstract class TextBase extends BaseControl
 	 */
 	public function setValue($value)
 	{
-		if (!is_scalar($value) && $value !== NULL && !method_exists($value, '__toString')) {
-			throw new Nette\InvalidArgumentException('Value must be scalar or NULL, ' . gettype($value) . ' given.');
+		if ($value === NULL) {
+			$value = '';
+		} elseif (!is_scalar($value) && !method_exists($value, '__toString')) {
+			throw new Nette\InvalidArgumentException('Value must be scalar or NULL, ' . gettype($value) . " given in field '{$this->name}'.");
 		}
-		$this->value = (string) $value;
+		$this->rawValue = $this->value = $value;
 		return $this;
 	}
 
@@ -52,7 +53,7 @@ abstract class TextBase extends BaseControl
 	 */
 	public function getValue()
 	{
-		$value = (string) $this->value;
+		$value = $this->value;
 		if (!empty($this->control->maxlength)) {
 			$value = Nette\Utils\Strings::substring($value, 0, $this->control->maxlength);
 		}
@@ -79,7 +80,7 @@ abstract class TextBase extends BaseControl
 	 * Returns the special value which is treated as empty string.
 	 * @return string
 	 */
-	final public function getEmptyValue()
+	public function getEmptyValue()
 	{
 		return $this->emptyValue;
 	}
@@ -110,23 +111,15 @@ abstract class TextBase extends BaseControl
 	}
 
 
-	public function addRule($operation, $message = NULL, $arg = NULL)
+	public function addRule($validator, $message = NULL, $arg = NULL)
 	{
-		if ($operation === Form::FLOAT) {
-			$this->addFilter(function($s) {
-				return str_replace(array(' ', ','), array('', '.'), $s);
-			});
-
-		} elseif ($operation === Form::URL) {
-			$this->addFilter(function($s) {
-				return Nette\Utils\Validators::isUrl('http://' . $s) ? 'http://' . $s : $s;
-			});
-
-		} elseif ($operation === Form::LENGTH || $operation === Form::MAX_LENGTH) {
+		if ($validator === Form::LENGTH || $validator === Form::MAX_LENGTH) {
 			$tmp = is_array($arg) ? $arg[1] : $arg;
-			$this->control->maxlength = is_scalar($tmp) ? $tmp : NULL;
+			if (is_scalar($tmp)) {
+				$this->control->maxlength = isset($this->control->maxlength) ? min($this->control->maxlength, $tmp) : $tmp;
+			}
 		}
-		return parent::addRule($operation, $message, $arg);
+		return parent::addRule($validator, $message, $arg);
 	}
 
 }

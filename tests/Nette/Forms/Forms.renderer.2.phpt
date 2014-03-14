@@ -4,11 +4,11 @@
  * Test: Nette\Forms default rendering.
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
 use Nette\Utils\Html,
-	Nette\Forms\Form;
+	Nette\Forms\Form,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

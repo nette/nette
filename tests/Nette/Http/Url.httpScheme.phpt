@@ -4,10 +4,10 @@
  * Test: Nette\Http\Url http://
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
-use Nette\Http\Url;
+use Nette\Http\Url,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

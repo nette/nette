@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Loaders;
@@ -23,7 +19,7 @@ use Nette,
  * @property-read array $indexedClasses
  * @property   Nette\Caching\IStorage $cacheStorage
  */
-class RobotLoader extends AutoLoader
+class RobotLoader extends Nette\Object
 {
 	const RETRY_LIMIT = 3;
 
@@ -74,7 +70,7 @@ class RobotLoader extends AutoLoader
 	public function register($prepend = FALSE)
 	{
 		$this->classes = $this->getCache()->load($this->getKey(), array($this, '_rebuildCallback'));
-		parent::register($prepend);
+		spl_autoload_register(array($this, 'tryLoad'), TRUE, (bool) $prepend);
 		return $this;
 	}
 
@@ -113,13 +109,11 @@ class RobotLoader extends AutoLoader
 		}
 
 		if (isset($this->classes[$type]['file'])) {
-			if (empty($this->classes[$type]['filter'])) {
-				Nette\Utils\LimitedScope::load($this->classes[$type]['file'], TRUE);
-			} else {
-				$item = $this->getPhpCache()->load($this->classes[$type]['file']);
-				Nette\Utils\LimitedScope::load($item['file'], TRUE);
+			$info = $this->classes[$type];
+			if (!empty($info['filter'])) {
+				$info = $this->getPhpCache()->load($info['file']);
 			}
-			self::$count++;
+			call_user_func(function($file) { require $file; }, $info['file']);
 		} else {
 			$this->missing[$type] = TRUE;
 		}
@@ -151,7 +145,7 @@ class RobotLoader extends AutoLoader
 	public function getIndexedClasses()
 	{
 		$res = array();
-		foreach ($this->classes as $class => $info) {
+		foreach ($this->classes as $info) {
 			if (is_array($info)) {
 				$res[$info['orig']] = $info['file'];
 			}

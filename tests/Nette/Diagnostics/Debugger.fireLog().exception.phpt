@@ -4,16 +4,16 @@
  * Test: Nette\Diagnostics\Debugger::fireLog() and exception.
  *
  * @author     David Grudl
- * @package    Nette\Diagnostics
  */
 
-use Nette\Diagnostics\Debugger;
+use Nette\Diagnostics\Debugger,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 if (PHP_SAPI === 'cli') {
-	Tester\Environment::skip();
+	Tester\Environment::skip('FireLogger is not available in CLI mode');
 }
 
 

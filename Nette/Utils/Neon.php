@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Utils;
@@ -119,7 +115,7 @@ class Neon extends Nette\Object
 			return $var;
 
 		} elseif (is_float($var)) {
-			$var = var_export($var, TRUE);
+			$var = json_encode($var);
 			return Strings::contains($var, '.') ? $var : $var . '.0';
 
 		} else {

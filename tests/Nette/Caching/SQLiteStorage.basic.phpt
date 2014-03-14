@@ -4,14 +4,19 @@
  * Test: Nette\Caching\Storages\SQLiteStorage basic usage.
  *
  * @author     David Grudl
- * @package    Nette\Caching
  */
 
 use Nette\Caching\Cache,
-	Nette\Caching\Storages\SQLiteStorage;
+	Nette\Caching\Storages\SQLiteStorage,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
+
+
+if (!extension_loaded('pdo_sqlite')) {
+	Tester\Environment::skip('Requires PHP extension pdo_sqlite.');
+}
 
 
 // key and data with special chars

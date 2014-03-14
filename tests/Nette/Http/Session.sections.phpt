@@ -4,17 +4,14 @@
  * Test: Nette\Http\Session sections.
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
 use Nette\Http\Session,
-	Nette\Http\SessionSection;
+	Nette\Http\SessionSection,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
-
-
-ini_set('session.save_path', TEMP_DIR);
 
 
 ob_start();

@@ -4,12 +4,11 @@
  * Test: Nette\Latte\Engine: {first}, {last}, {sep}.
  *
  * @author     David Grudl
- * @package    Nette\Latte
- * @keepTrailingSpaces
  */
 
 use Nette\Latte,
-	Nette\Templating\FileTemplate;
+	Nette\Templating\FileTemplate,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

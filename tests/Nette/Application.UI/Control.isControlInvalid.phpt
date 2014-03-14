@@ -4,10 +4,10 @@
  * Test: Nette\Application\UI\Control::isControlInvalid()
  *
  * @author     Jan Tvrdík
- * @package    Nette\Application\UI
  */
 
-use Nette\Application\UI;
+use Nette\Application\UI,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

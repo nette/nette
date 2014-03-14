@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Utils;
@@ -28,7 +24,7 @@ use Nette;
  * @author     David Grudl
  * @internal
  */
-final class SafeStream
+class SafeStream
 {
 	/** Name of stream protocol - safe:// */
 	const PROTOCOL = 'safe';
@@ -58,6 +54,7 @@ final class SafeStream
 	 */
 	public static function register()
 	{
+		@stream_wrapper_unregister(self::PROTOCOL); // intentionally @
 		return stream_wrapper_register(self::PROTOCOL, __CLASS__);
 	}
 
@@ -219,6 +216,17 @@ final class SafeStream
 		}
 
 		return $res;
+	}
+
+
+	/**
+	 * Truncates a file to a given length.
+	 * @param  int    The size to truncate to.
+	 * @return bool
+	 */
+	public function stream_truncate($size)
+	{
+		return ftruncate($this->tempHandle, $size);
 	}
 
 

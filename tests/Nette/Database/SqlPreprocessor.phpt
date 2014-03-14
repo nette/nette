@@ -4,13 +4,13 @@
  * Test: Nette\Database\SqlPreprocessor
  *
  * @author     David Grudl
- * @package    Nette\Database
  * @dataProvider? databases.ini
  */
 
-require __DIR__ . '/connect.inc.php'; // create $connection
-
+use Tester\Assert;
 use Nette\Database\SqlLiteral;
+
+require __DIR__ . '/connect.inc.php'; // create $connection
 
 
 $preprocessor = new Nette\Database\SqlPreprocessor($connection);
@@ -53,6 +53,28 @@ test(function() use ($preprocessor) {
 test(function() use ($preprocessor) {
 	list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE id =', '? OR id = ?', 11, 12));
 	Assert::same( 'SELECT id FROM author WHERE id = 11 OR id = 12', $sql );
+	Assert::same( array(), $params );
+});
+
+
+test(function() use ($preprocessor) { // comments
+	list($sql, $params) = $preprocessor->process(array("SELECT id --?\nFROM author WHERE id = ?", 11));
+	Assert::same( "SELECT id --?\nFROM author WHERE id = 11", $sql );
+	Assert::same( array(), $params );
+
+	list($sql, $params) = $preprocessor->process(array("SELECT id /* ? \n */FROM author WHERE id = ? --*/", 11));
+	Assert::same( "SELECT id /* ? \n */FROM author WHERE id = 11 --*/", $sql );
+	Assert::same( array(), $params );
+});
+
+
+test(function() use ($preprocessor) { // strings
+	list($sql, $params) = $preprocessor->process(array("SELECT id, '?' FROM author WHERE id = ?", 11));
+	Assert::same( "SELECT id, '?' FROM author WHERE id = 11", $sql );
+	Assert::same( array(), $params );
+
+	list($sql, $params) = $preprocessor->process(array('SELECT id, "?" FROM author WHERE id = ?', 11));
+	Assert::same( 'SELECT id, "?" FROM author WHERE id = 11', $sql );
 	Assert::same( array(), $params );
 });
 
@@ -160,6 +182,15 @@ test(function() use ($preprocessor) { // update
 
 	Assert::same( reformat("UPDATE author SET [id]=12, [name]=UPPER(?)"), $sql );
 	Assert::same( array('John Doe'), $params );
+});
+
+
+test(function() use ($preprocessor) { // update +=
+	list($sql, $params) = $preprocessor->process(array('UPDATE author SET ?',
+		array('id+=' => 1, 'id-=' => -1),
+	));
+
+	Assert::same( reformat("UPDATE author SET [id]=[id] + 1, [id]=[id] - -1"), $sql );
 });
 
 

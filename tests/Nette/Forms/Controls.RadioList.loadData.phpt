@@ -4,11 +4,11 @@
  * Test: Nette\Forms\Controls\RadioList.
  *
  * @author     David Grudl
- * @package    Nette\Forms
  */
 
 use Nette\Forms\Form,
-	Nette\DateTime;
+	Nette\DateTime,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -36,6 +36,7 @@ test(function() use ($series) { // Radio list
 
 	Assert::true( $form->isValid() );
 	Assert::same( 'red-dwarf', $input->getValue() );
+	Assert::same( 'Red Dwarf', $input->getSelectedItem() );
 	Assert::true( $input->isFilled() );
 });
 
@@ -48,6 +49,7 @@ test(function() use ($series) { // Radio list with invalid input
 
 	Assert::true( $form->isValid() );
 	Assert::null( $input->getValue() );
+	Assert::null( $input->getSelectedItem() );
 	Assert::false( $input->isFilled() );
 });
 
@@ -61,6 +63,7 @@ test(function() use ($series) { // Indexed arrays
 	Assert::true( $form->isValid() );
 	Assert::same( 0, $input->getValue() );
 	Assert::same( 0, $input->getRawValue() );
+	Assert::same( 'South Park', $input->getSelectedItem() );
 	Assert::true( $input->isFilled() );
 });
 
@@ -73,18 +76,19 @@ test(function() use ($series) { // empty key
 
 	Assert::true( $form->isValid() );
 	Assert::same( '', $input->getValue() );
+	Assert::same( 'Family Guy', $input->getSelectedItem() );
 	Assert::true( $input->isFilled() );
 });
 
 
 test(function() use ($series) { // missing key
-	$_POST = array('malformed' => array(NULL));
-
 	$form = new Form;
 	$input = $form->addRadioList('missing', NULL, $series);
 
 	Assert::true( $form->isValid() );
 	Assert::null( $input->getValue() );
+	Assert::null( $input->getSelectedItem() );
+	Assert::false( $input->isFilled() );
 });
 
 
@@ -109,7 +113,21 @@ test(function() use ($series) { // malformed data
 
 	Assert::true( $form->isValid() );
 	Assert::null( $input->getValue() );
+	Assert::null( $input->getSelectedItem() );
 	Assert::false( $input->isFilled() );
+});
+
+
+test(function() use ($series) { // setItems without keys
+	$_POST = array('select' => 'red-dwarf');
+
+	$form = new Form;
+	$input = $form->addRadioList('select')->setItems(array_keys($series), FALSE);
+
+	Assert::true( $form->isValid() );
+	Assert::same( 'red-dwarf', $input->getValue() );
+	Assert::same( 'red-dwarf', $input->getSelectedItem() );
+	Assert::true( $input->isFilled() );
 });
 
 
@@ -120,7 +138,7 @@ test(function() use ($series) { // setValue() and invalid argument
 
 	Assert::exception(function() use ($input) {
 		$input->setValue('unknown');
-	}, 'Nette\InvalidArgumentException', "Value 'unknown' is out of range of current items.");
+	}, 'Nette\InvalidArgumentException', "Value 'unknown' is out of allowed range ['Red Dwarf', 'The Simpsons', 'South Park', 'Family Guy'] in field 'radio'.");
 });
 
 

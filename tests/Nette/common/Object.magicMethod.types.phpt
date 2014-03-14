@@ -4,12 +4,13 @@
  * Test: Nette\Object magic @methods and types.
  *
  * @author     David Grudl
- * @package    Nette
  */
 
 namespace Test;
 
-use Assert, Nette, stdClass;
+use Nette,
+	stdClass,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

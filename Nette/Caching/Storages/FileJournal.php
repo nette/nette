@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Caching\Storages;
@@ -287,7 +283,7 @@ class FileJournal extends Nette\Object implements IJournal
 		$entries = array();
 
 		foreach ($tags as $tag) {
-			list($nodeId, $node) = $this->findIndexNode(self::TAGS, $tag);
+			list(, $node) = $this->findIndexNode(self::TAGS, $tag);
 
 			if (isset($node[$tag])) {
 				$ent = $this->cleanLinks($this->mergeIndexData($node[$tag]), $toDelete);
@@ -307,7 +303,7 @@ class FileJournal extends Nette\Object implements IJournal
 	 */
 	private function cleanPriority($priority, array & $toDelete)
 	{
-		list($nodeId, $node) = $this->findIndexNode(self::PRIORITY, $priority);
+		list(, $node) = $this->findIndexNode(self::PRIORITY, $priority);
 
 		ksort($node);
 
@@ -338,7 +334,7 @@ class FileJournal extends Nette\Object implements IJournal
 			$nodeInfo = $node[self::INFO];
 			unset($node[self::INFO]);
 
-			foreach ($node as $prior => $data) {
+			foreach ($node as $data) {
 				$this->arrayAppendKeys($allData, $this->mergeIndexData($data));
 			}
 		}

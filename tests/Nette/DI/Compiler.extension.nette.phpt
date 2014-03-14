@@ -4,10 +4,10 @@
  * Test: Nette\DI\Compiler: services setup.
  *
  * @author     David Grudl
- * @package    Nette\DI
  */
 
-use Nette\DI;
+use Nette\DI,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -42,10 +42,11 @@ class IpsumLoremMacros extends Nette\Latte\Macros\MacroSet
 $loader = new DI\Config\Loader;
 $config = $loader->load('files/compiler.extension.nette.neon');
 $config['parameters']['debugMode'] = FALSE;
+$config['parameters']['productionMode'] = TRUE;
 $config['parameters']['tempDir'] = '';
 
 $compiler = new DI\Compiler;
-$compiler->addExtension('nette', new Nette\DI\Extensions\NetteExtension);
+$compiler->addExtension('nette', new Nette\Bridges\DI\NetteExtension);
 $code = $compiler->compile($config, 'Container', 'Nette\DI\Container');
 
 

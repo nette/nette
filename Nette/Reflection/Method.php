@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Framework (http://nette.org)
- *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Reflection;
@@ -175,15 +171,6 @@ class Method extends \ReflectionMethod
 	/********************* Nette\Object behaviour ****************d*g**/
 
 
-	/**
-	 * @return ClassType
-	 */
-	public static function getReflection()
-	{
-		return new ClassType(get_called_class());
-	}
-
-
 	public function __call($name, $args)
 	{
 		return ObjectMixin::call($this, $name, $args);
@@ -198,7 +185,7 @@ class Method extends \ReflectionMethod
 
 	public function __set($name, $value)
 	{
-		return ObjectMixin::set($this, $name, $value);
+		ObjectMixin::set($this, $name, $value);
 	}
 
 

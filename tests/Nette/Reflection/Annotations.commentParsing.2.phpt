@@ -4,10 +4,10 @@
  * Test: Nette\Reflection\AnnotationsParser comment parser II.
  *
  * @author     David Grudl
- * @package    Nette\Reflection
  */
 
-use Nette\Reflection;
+use Nette\Reflection,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

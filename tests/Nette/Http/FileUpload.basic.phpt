@@ -4,10 +4,10 @@
  * Test: Nette\Http\FileUpload basic test.
  *
  * @author     David Grudl
- * @package    Nette\Http
  */
 
-use Nette\Http\FileUpload;
+use Nette\Http\FileUpload,
+	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
