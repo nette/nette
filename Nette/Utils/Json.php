@@ -50,6 +50,10 @@ class Json
 	 */
 	public static function encode($value, $options = 0)
 	{
+		if (!function_exists('json_encode')) {
+			throw new \RuntimeException('The JSON extension is not available. Please install it and enable in your php.ini file.');
+		}
+
 		if (function_exists('ini_set')) { // workaround for PHP bugs #52397, #54109, #63004
 			$old = ini_set('display_errors', 0); // needed to receive 'Invalid UTF-8 sequence' error
 		}
@@ -81,6 +85,10 @@ class Json
 	 */
 	public static function decode($json, $options = 0)
 	{
+		if (!function_exists('json_decode')) {
+			throw new \RuntimeException('The JSON extension is not available. Please install it and enable in your php.ini file.');
+		}
+
 		$json = (string) $json;
 		if (!preg_match('##u', $json)) {
 			throw new JsonException('Invalid UTF-8 sequence', 5); // workaround for PHP < 5.3.3 & PECL JSON-C
