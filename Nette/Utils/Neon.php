@@ -176,6 +176,11 @@ class Neon extends Nette\Object
 		for (; $n < $count; $n++) {
 			$t = $tokens[$n][0];
 
+			$nextT = NULL;
+			if(isset($tokens[$n+1][0])) {
+				$nextT = $tokens[$n+1][0];
+			}
+			
 			if ($t === ',') { // ArrayEntry separator
 				if ((!$hasKey && !$hasValue) || !$inlineParser) {
 					$this->error();
@@ -292,7 +297,7 @@ class Neon extends Nette\Object
 					$value = preg_replace_callback('#\\\\(?:u[0-9a-f]{4}|x[0-9a-f]{2}|.)#i', array($this, 'cbString'), substr($t, 1, -1));
 				} elseif ($t[0] === "'") {
 					$value = substr($t, 1, -1);
-				} elseif (isset($consts[$t])) {
+				} elseif (isset($consts[$t]) && !($nextT === ':' || $nextT === '=')) {
 					$value = $consts[$t];
 				} elseif ($t === 'null' || $t === 'Null' || $t === 'NULL') {
 					$value = NULL;

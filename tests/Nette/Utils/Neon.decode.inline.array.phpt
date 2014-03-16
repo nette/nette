@@ -24,11 +24,11 @@ Assert::same( array(
 
 
 Assert::same( array(
-	1 => 1,
-	'' => 1,
+	'false' => false,
+	'on' => true,
 	-5 => 1,
 	'5.3' => 1,
-), Neon::decode('{true: 1, false: 1, -5: 1, 5.3: 1}') );
+), Neon::decode('{false: off, "on": true, -5: 1, 5.3: 1}') );
 
 
 Assert::same( array(
