@@ -65,6 +65,9 @@ class Compiler extends Nette\Object
 	 */
 	public function getContainerBuilder()
 	{
+		if ($this->builder === NULL) {
+			$this->builder = new ContainerBuilder();
+		}
 		return $this->builder;
 	}
 
@@ -85,7 +88,7 @@ class Compiler extends Nette\Object
 	public function compile(array $config, $className, $parentName)
 	{
 		$this->config = $config;
-		$this->builder = new ContainerBuilder;
+		$this->builder = $this->getContainerBuilder();
 		$this->processParameters();
 		$this->processExtensions();
 		$this->processServices();
