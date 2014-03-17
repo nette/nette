@@ -586,7 +586,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 
 	/**
-	 * Returns general cache key indenpendent on query parameters or sql limit
+	 * Returns general cache key independent on query parameters or sql limit
 	 * Used e.g. for previously accessed columns caching
 	 * @return string
 	 */
