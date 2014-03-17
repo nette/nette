@@ -308,9 +308,11 @@ class Parser extends Nette\Object
 		$this->macroRe = '
 			(?P<comment>' . $left . '\\*.*?\\*' . $right . '\n{0,2})|
 			' . $left . '
-				(?P<macro>(?:' . self::RE_STRING . '|\{
-						(?P<inner>' . self::RE_STRING . '|\{(?P>inner)\}|[^\'"{}])*+
-				\}|[^\'"{}])+?)
+				(?P<macro>(?:
+					' . self::RE_STRING . '|
+					\{(?:' . self::RE_STRING . '|[^\'"{}])*+\}|
+					[^\'"{}]
+				)+?)
 			' . $right . '
 			(?P<rmargin>[ \t]*(?=\n))?
 		';
