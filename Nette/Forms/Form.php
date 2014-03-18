@@ -27,7 +27,7 @@ use Nette;
  * @property-read Nette\Utils\Html $elementPrototype
  * @property   IFormRenderer $renderer
  */
-class Form extends Container
+class Form extends Container implements Nette\Utils\IHtmlString
 {
 	/** validator */
 	const EQUAL = ':equal',

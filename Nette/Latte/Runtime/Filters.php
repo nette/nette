@@ -9,8 +9,7 @@ namespace Nette\Latte\Runtime;
 
 use Nette,
 	Nette\Utils\Strings,
-	Nette\Forms\Form,
-	Nette\Utils\Html;
+	Nette\Utils\IHtmlString;
 
 
 /**
@@ -70,7 +69,7 @@ class Filters
 	 */
 	public static function escapeHtml($s, $quotes = ENT_QUOTES)
 	{
-		if (is_object($s) && ($s instanceof ITemplate || $s instanceof Html || $s instanceof Form)) {
+		if ($s instanceof IHtmlString) {
 			return $s->__toString(TRUE);
 		}
 		return htmlSpecialChars($s, $quotes);
@@ -125,7 +124,7 @@ class Filters
 	 */
 	public static function escapeJs($s)
 	{
-		if (is_object($s) && ($s instanceof ITemplate || $s instanceof Html || $s instanceof Form)) {
+		if ($s instanceof IHtmlString) {
 			$s = $s->__toString(TRUE);
 		}
 		return str_replace(array(']]>', '<!'), array(']]\x3E', '\x3C!'), Nette\Utils\Json::encode($s));
@@ -309,7 +308,7 @@ class Filters
 	 */
 	public static function nl2br($value)
 	{
-		return nl2br($value, Html::$xhtml);
+		return nl2br($value, Nette\Utils\Html::$xhtml);
 	}
 
 
