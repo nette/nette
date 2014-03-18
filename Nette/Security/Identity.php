@@ -15,8 +15,6 @@ use Nette;
  *
  * @author     David Grudl
  *
- * @serializationVersion 1.0
- *
  * @property   mixed $id
  * @property   array $roles
  * @property-read array $data

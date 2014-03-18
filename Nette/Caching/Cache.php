@@ -142,11 +142,6 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 	private function completeDependencies($dp, $data)
 	{
-		if (is_object($data)) {
-			$dp[self::CALLBACKS][] = array(array(__CLASS__, 'checkSerializationVersion'), get_class($data),
-				Nette\Reflection\ClassType::from($data)->getAnnotation('serializationVersion'));
-		}
-
 		// convert expire into relative amount of seconds
 		if (isset($dp[Cache::EXPIRATION])) {
 			$dp[Cache::EXPIRATION] = Nette\DateTime::from($dp[Cache::EXPIRATION])->format('U') - time();
@@ -377,18 +372,6 @@ class Cache extends Nette\Object implements \ArrayAccess
 	private static function checkFile($file, $time)
 	{
 		return @filemtime($file) == $time; // @ - stat may fail
-	}
-
-
-	/**
-	 * Checks object @serializationVersion label.
-	 * @param  string
-	 * @param  mixed
-	 * @return bool
-	 */
-	private static function checkSerializationVersion($class, $value)
-	{
-		return Nette\Reflection\ClassType::from($class)->getAnnotation('serializationVersion') === $value;
 	}
 
 }
