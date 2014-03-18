@@ -92,7 +92,7 @@ class Response extends Nette\Object implements IResponse
 	public function setHeader($name, $value)
 	{
 		self::checkHeaders();
-		if ($value === NULL && function_exists('header_remove')) {
+		if ($value === NULL) {
 			header_remove($name);
 		} elseif (strcasecmp($name, 'Content-Length') === 0 && ini_get('zlib.output_compression')) {
 			// ignore, PHP bug #44164

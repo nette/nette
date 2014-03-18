@@ -257,7 +257,7 @@ class MimePart extends Nette\Object
 		if ($body !== '') {
 			switch ($this->getEncoding()) {
 				case self::ENCODING_QUOTED_PRINTABLE:
-					$output .= function_exists('quoted_printable_encode') ? quoted_printable_encode($body) : self::encodeQuotedPrintable($body);
+					$output .= quoted_printable_encode($body);
 					break;
 
 				case self::ENCODING_BASE64:
