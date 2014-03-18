@@ -85,9 +85,6 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	{
 		$this->start();
 		$this->data[$name] = $value;
-		if (is_object($value)) {
-			$this->meta[$name]['V'] = Nette\Reflection\ClassType::from($value)->getAnnotation('serializationVersion');
-		}
 	}
 
 
