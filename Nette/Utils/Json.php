@@ -27,9 +27,6 @@ class Json
 		JSON_ERROR_CTRL_CHAR => 'Unexpected control character found',
 		JSON_ERROR_SYNTAX => 'Syntax error, malformed JSON',
 		5 /*JSON_ERROR_UTF8*/ => 'Invalid UTF-8 sequence', // exists since 5.3.3, but is returned since 5.3.1
-		6 /*JSON_ERROR_RECURSION*/ => 'Recursion detected',
-		7 /*JSON_ERROR_INF_OR_NAN*/ => 'Inf and NaN cannot be JSON encoded',
-		8 /*JSON_ERROR_UNSUPPORTED_TYPE*/ => 'Type is not supported',
 	);
 
 
@@ -60,7 +57,9 @@ class Json
 		);
 		restore_error_handler();
 		if ($error = json_last_error()) {
-			throw new JsonException(isset(static::$messages[$error]) ? static::$messages[$error] : 'Unknown error', $error);
+			$message = isset(static::$messages[$error]) ? static::$messages[$error]
+				: (PHP_VERSION_ID >= 50500 ? json_last_error_msg() : 'Unknown error');
+			throw new JsonException($message, $error);
 		}
 
 		$json = str_replace(array("\xe2\x80\xa8", "\xe2\x80\xa9"), array('\u2028', '\u2029'), $json);
