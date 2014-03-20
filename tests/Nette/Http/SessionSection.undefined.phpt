@@ -13,8 +13,7 @@ use Nette\Http\Session,
 require __DIR__ . '/../bootstrap.php';
 
 
-$container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
-$session = $container->getService('session');
+$session = new Session(new Nette\Http\Request(new Nette\Http\UrlScript), new Nette\Http\Response);
 
 $namespace = $session->getSection('one');
 Assert::false( isset($namespace->undefined) );

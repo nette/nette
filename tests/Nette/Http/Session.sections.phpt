@@ -16,8 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 ob_start();
 
-$container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
-$session = $container->getService('session');
+$session = new Session(new Nette\Http\Request(new Nette\Http\UrlScript), new Nette\Http\Response);
 
 Assert::false( $session->hasSection('trees') ); // hasSection() should have returned FALSE for a section with no keys set
 

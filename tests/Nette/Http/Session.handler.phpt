@@ -55,8 +55,8 @@ class MySessionStorage extends Object implements SessionHandlerInterface
 }
 
 
-$container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
-$session = $container->getService('session');
+$factory = new Nette\Http\RequestFactory;
+$session = new Nette\Http\Session($factory->createHttpRequest(), new Nette\Http\Response);
 
 $session->setHandler(new MySessionStorage);
 $session->start();

@@ -8,12 +8,15 @@
 
 use Nette\ComponentModel\Component,
 	Nette\ComponentModel\Container,
-	Nette\Forms\Controls\Button,
 	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
+
+class Button extends Component
+{
+}
 
 class ComponentX extends Component
 {
@@ -23,11 +26,11 @@ $c = new Container(NULL, 'top');
 
 $c->addComponent(new Container, 'one');
 $c->addComponent(new ComponentX, 'two');
-$c->addComponent(new Button('label'), 'button1');
+$c->addComponent(new Button, 'button1');
 
 $c->getComponent('one')->addComponent(new ComponentX, 'inner');
 $c->getComponent('one')->addComponent(new Container, 'inner2');
-$c->getComponent('one')->getComponent('inner2')->addComponent(new Button('label'), 'button2');
+$c->getComponent('one')->getComponent('inner2')->addComponent(new Button, 'button2');
 
 
 // Normal
@@ -40,7 +43,7 @@ Assert::same( array(
 
 
 // Filter
-$list = $c->getComponents(FALSE, 'Nette\Forms\Controls\Button');
+$list = $c->getComponents(FALSE, 'Button');
 Assert::same( array(
 	"button1",
 ), array_keys(iterator_to_array($list)) );
@@ -83,7 +86,7 @@ Assert::same( array(
 
 
 // Recursive & filter I
-$list = $c->getComponents(TRUE, 'Nette\Forms\Controls\Button');
+$list = $c->getComponents(TRUE, 'Button');
 Assert::same( array(
 	"button2",
 	"button1",

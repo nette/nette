@@ -1,10 +1,6 @@
-parameters:
-	class: Lorem
-	factory: Factory
-
 services:
 	model:
-		create: %factory%::createModel
+		create: Factory::createModel
 		setup:
 			# local methods
 			- test(...)
@@ -18,10 +14,9 @@ services:
 			- @lorem::test
 
 	lorem:
-		class: %class%
+		class: Lorem
 
 	alias: @lorem
 
-	authenticator:
-		class: Nette\Security\SimpleAuthenticator
-		arguments: [['username': '*****']]
+	ipsum:
+		class: Ipsum

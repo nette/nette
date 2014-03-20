@@ -13,6 +13,7 @@ use Nette\Security\IAuthenticator,
 
 
 require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/MockUserStorage.php';
 
 
 // Setup environment
@@ -60,9 +61,7 @@ class Authorizator implements IAuthorizator
 }
 
 
-$container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
-
-$user = $container->getService('user');
+$user = new Nette\Security\User(new MockUserStorage);
 
 // guest
 Assert::false( $user->isLoggedIn() );

@@ -36,11 +36,14 @@ class Model
 class Lorem
 {
 	/** autowiring using parameters */
-	static function test(Nette\Security\SimpleAuthenticator $arg)
+	static function test(Ipsum $arg)
 	{
 		Notes::add(__METHOD__);
 	}
 }
+
+class Ipsum
+{}
 
 
 $loader = new DI\Config\Loader;
