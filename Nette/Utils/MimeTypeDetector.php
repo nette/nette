@@ -43,13 +43,13 @@ class MimeTypeDetector
 			return $info['mime'];
 
 		} elseif (extension_loaded('fileinfo')) {
-			$type = preg_replace('#[\s;].*\z#', '', finfo_file(finfo_open(FILEINFO_MIME), $file));
+			$type = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $file);
 
 		} elseif (function_exists('mime_content_type')) {
 			$type = mime_content_type($file);
 		}
 
-		return isset($type) && preg_match('#^\S+/\S+\z#', $type) ? $type : 'application/octet-stream';
+		return isset($type) && strpos($type, '/') ? $type : 'application/octet-stream';
 	}
 
 
@@ -60,8 +60,8 @@ class MimeTypeDetector
 	 */
 	public static function fromString($data)
 	{
-		if (extension_loaded('fileinfo') && preg_match('#^(\S+/[^\s;]+)#', finfo_buffer(finfo_open(FILEINFO_MIME), $data), $m)) {
-			return $m[1];
+		if (extension_loaded('fileinfo') && strpos($type = finfo_buffer(finfo_open(FILEINFO_MIME_TYPE), $data), '/')) {
+			return $type;
 
 		} elseif (strncmp($data, "\xff\xd8", 2) === 0) {
 			return 'image/jpeg';
