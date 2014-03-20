@@ -598,7 +598,7 @@ class Form extends Container implements Nette\Utils\IHtmlString
 
 	/**
 	 * Renders form to string.
-	 * @return bool  can throw exceptions? (hidden parameter)
+	 * @return can throw exceptions? (hidden parameter)
 	 * @return string
 	 */
 	public function __toString()
@@ -607,11 +607,10 @@ class Form extends Container implements Nette\Utils\IHtmlString
 			return $this->getRenderer()->render($this);
 
 		} catch (\Exception $e) {
-			if (func_get_args() && func_get_arg(0)) {
+			if (func_num_args()) {
 				throw $e;
-			} else {
-				trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
 			}
+			trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
 		}
 	}
 

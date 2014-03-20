@@ -104,7 +104,7 @@ class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Renders template to string.
-	 * @param  bool  can throw exceptions? (hidden parameter)
+	 * @param  can throw exceptions? (hidden parameter)
 	 * @return string
 	 */
 	public function __toString()
@@ -116,11 +116,10 @@ class Template extends Nette\Object implements ITemplate
 
 		} catch (\Exception $e) {
 			ob_end_clean();
-			if (func_get_args() && func_get_arg(0)) {
+			if (func_num_args()) {
 				throw $e;
-			} else {
-				trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
 			}
+			trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
 		}
 	}
 
