@@ -24,8 +24,8 @@ Assert::same( array(
 
 
 Assert::same( array(
-	'false' => false,
-	'on' => true,
+	'false' => FALSE,
+	'on' => TRUE,
 	-5 => 1,
 	'5.3' => 1,
 ), Neon::decode('{false: off, "on": true, -5: 1, 5.3: 1}') );

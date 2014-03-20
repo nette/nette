@@ -46,3 +46,8 @@ Assert::exception(function() {
 Assert::exception(function() {
 	Neon::decode('{a, ,}');
 }, 'Nette\Utils\NeonException', "Unexpected ',' on line 1, column 5." );
+
+
+Assert::exception(function() {
+	Neon::decode('"');
+}, 'Nette\Utils\NeonException', "Unexpected '\"' on line 1, column 1." );
