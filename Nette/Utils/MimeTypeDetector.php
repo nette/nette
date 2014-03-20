@@ -13,7 +13,7 @@ use Nette;
 /**
  * Mime type detector.
  *
- * @author     David Grudl
+ * @deprecated
  */
 class MimeTypeDetector
 {
