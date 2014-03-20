@@ -86,7 +86,7 @@ class FileUpload extends Nette\Object
 	public function getContentType()
 	{
 		if ($this->isOk() && $this->type === NULL) {
-			$this->type = Nette\Utils\MimeTypeDetector::fromFile($this->tmpName);
+			$this->type = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $this->tmpName);
 		}
 		return $this->type;
 	}

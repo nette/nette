@@ -311,7 +311,7 @@ class Message extends MimePart
 			$content = (string) $content;
 		}
 		$part->setBody($content);
-		$part->setContentType($contentType ? $contentType : Nette\Utils\MimeTypeDetector::fromString($content));
+		$part->setContentType($contentType ? $contentType : finfo_buffer(finfo_open(FILEINFO_MIME_TYPE), $content));
 		$part->setEncoding(preg_match('#(multipart|message)/#A', $contentType) ? self::ENCODING_8BIT : self::ENCODING_BASE64);
 		$part->setHeader('Content-Disposition', $disposition . '; filename="' . Strings::fixEncoding(basename($file)) . '"');
 		return $part;
