@@ -285,7 +285,7 @@ class Filters
 	public static function dataStream($data, $type = NULL)
 	{
 		if ($type === NULL) {
-			$type = Nette\Utils\MimeTypeDetector::fromString($data);
+			$type = finfo_buffer(finfo_open(FILEINFO_MIME_TYPE), $data);
 		}
 		return 'data:' . ($type ? "$type;" : '') . 'base64,' . base64_encode($data);
 	}
