@@ -13,7 +13,7 @@ use Nette;
 /**
  * Mime type detector.
  *
- * @author     David Grudl
+ * @deprecated
  */
 class MimeTypeDetector
 {
@@ -34,6 +34,7 @@ class MimeTypeDetector
 	 */
 	public static function fromFile($file)
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use finfo_file() instead.', E_USER_DEPRECATED);
 		if (!is_file($file)) {
 			throw new Nette\FileNotFoundException("File '$file' not found.");
 		}
@@ -49,6 +50,7 @@ class MimeTypeDetector
 	 */
 	public static function fromString($data)
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use finfo_buffer() instead.', E_USER_DEPRECATED);
 		$type = finfo_buffer(finfo_open(FILEINFO_MIME_TYPE), $data);
 		return strpos($type, '/') ? $type : 'application/octet-stream';
 	}
