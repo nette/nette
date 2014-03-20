@@ -103,18 +103,20 @@ class MockHttpRequest extends Http\Request
 }
 
 
-$context = new DI\Container();
-$presenterFactory = new MockPresenterFactory();
-$router = new MockRouter();
-$httpRequest = new MockHttpRequest();
-$httpResponse = new Http\Response();
-$session = new MockSession();
-$section = $session->testSection = new MockSessionSection($session);
-$user = new MockUser();
-$applicationRequest = new Application\Request('', '', array());
-
 $presenter = new TestPresenter();
-$presenter->injectPrimary($context, $presenterFactory, $router, $httpRequest, $httpResponse, $session, $user);
+$presenter->injectPrimary(
+	new DI\Container,
+	new MockPresenterFactory,
+	new MockRouter,
+	new MockHttpRequest,
+	new Http\Response,
+	$session = new MockSession,
+	$user = new MockUser
+);
+
+$section = $session->testSection = new MockSessionSection($session);
+
+$applicationRequest = new Application\Request('', '', array());
 $presenter->run($applicationRequest);
 
 $expiration = '+1 year';

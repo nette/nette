@@ -8,7 +8,6 @@
  */
 
 use Nette\Caching\Storages\FileStorage,
-	Nette\Diagnostics\Debugger,
 	Tester\Assert;
 
 
@@ -44,8 +43,6 @@ for ($i=0; $i<=COUNT_FILES; $i++) {
 
 
 // test loop
-Debugger::timer();
-
 $hits = array('ok' => 0, 'notfound' => 0, 'error' => 0, 'cantwrite' => 0, 'cantdelete' => 0);
 for ($counter=0; $counter<1000; $counter++) {
 	// write
@@ -64,7 +61,6 @@ for ($counter=0; $counter<1000; $counter++) {
 	elseif (checkStr($res)) $hits['ok']++;
 	else $hits['error']++;
 }
-$time = Debugger::timer();
 
 
 Assert::same( array(
@@ -83,4 +79,3 @@ Assert::same( array(
 //    [cantdelete] => 0  // means 'delete() has timeout',  should be 0
 
 Assert::same(0, $hits['error']);
-// takes $time ms

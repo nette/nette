@@ -12,6 +12,7 @@ use Nette\Http,
 
 
 require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/mocks.php';
 
 
 class TestControl extends Application\UI\Control
@@ -158,20 +159,22 @@ class OtherPresenter extends TestPresenter
 }
 
 
-$container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
-
 $url = new Http\UrlScript('http://localhost/index.php');
 $url->setScriptPath('/index.php');
-$container->removeService('httpRequest');
-$container->addService('httpRequest', new Http\Request($url));
-
-$application = $container->getService('application');
-$application->router[] = new Application\Routers\SimpleRouter();
-
-$request = new Application\Request('Test', Http\Request::GET, array());
 
 $presenter = new TestPresenter;
+$presenter->injectPrimary(
+	new Nette\DI\Container,
+	new MockPresenterFactory,
+	new Application\Routers\SimpleRouter,
+	new Http\Request($url),
+	new Http\Response,
+	new MockSession,
+	new MockUser
+);
+
 $presenter->invalidLinkMode = TestPresenter::INVALID_LINK_WARNING;
-$container->callMethod($presenter->injectPrimary);
 $presenter->autoCanonicalize = FALSE;
+
+$request = new Application\Request('Test', Http\Request::GET, array());
 $presenter->run($request);

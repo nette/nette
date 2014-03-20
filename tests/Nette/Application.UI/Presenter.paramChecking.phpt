@@ -12,6 +12,7 @@ use Nette\Http,
 
 
 require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/mocks.php';
 
 
 class TestPresenter extends Application\UI\Presenter
@@ -26,9 +27,16 @@ class TestPresenter extends Application\UI\Presenter
 }
 
 
-$container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
 $presenter = new TestPresenter;
-$container->callMethod($presenter->injectPrimary);
+$presenter->injectPrimary(
+	new Nette\DI\Container,
+	new MockPresenterFactory,
+	new MockRouter,
+	new MockHttpRequest,
+	new Http\Response,
+	new MockSession,
+	new MockUser
+);
 
 
 Assert::exception(function() use ($presenter) {

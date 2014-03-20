@@ -22,10 +22,8 @@ class Invokable extends Nette\Object
 }
 
 
-$container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
-
-test(function() use ($container) {
-	$presenter = new NetteModule\MicroPresenter($container);
+test(function() {
+	$presenter = new NetteModule\MicroPresenter;
 
 	$presenter->run(new Request('Nette:Micro', 'GET', array(
 		'callback' => function($id, $page) {
@@ -40,8 +38,8 @@ test(function() use ($container) {
 });
 
 
-test(function() use ($container) {
-	$presenter = new NetteModule\MicroPresenter($container);
+test(function() {
+	$presenter = new NetteModule\MicroPresenter;
 
 	$presenter->run(new Request('Nette:Micro', 'GET', array(
 		'callback' => new Invokable(),

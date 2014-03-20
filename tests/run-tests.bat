@@ -6,6 +6,6 @@ IF NOT EXIST "%~dp0..\vendor\nette\tester" (
 	EXIT /B 2
 )
 
-php.exe -n "%~dp0..\vendor\nette\tester\Tester\tester.php" -p php-cgi.exe -c "%~dp0php-win.ini" -j 20 -log "%~dp0test.log" %*
+php -n "%~dp0..\vendor\nette\tester\Tester\tester.php" -p php-cgi.exe -c "%~dp0php-win.ini" -j 20 -log "%~dp0test.log" %*
 
 rmdir "%~dp0/tmp" /S /Q

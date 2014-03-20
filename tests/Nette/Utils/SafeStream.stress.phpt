@@ -7,8 +7,7 @@
  * @multiple   5
  */
 
-use Nette\Diagnostics\Debugger,
-	Tester\Assert;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

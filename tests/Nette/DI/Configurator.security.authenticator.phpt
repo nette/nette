@@ -15,7 +15,7 @@ require __DIR__ . '/../bootstrap.php';
 $configurator = new Configurator;
 $configurator->setTempDirectory(TEMP_DIR);
 $container = $configurator->addConfig('files/configurator.security.authenticator.neon')
-						  ->createContainer();
+	->createContainer();
 
 /** @var \Nette\Security\SimpleAuthenticator $authenticator */
 $authenticator = $container->getService('nette.authenticator');
