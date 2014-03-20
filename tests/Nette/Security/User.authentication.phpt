@@ -12,7 +12,7 @@ use Nette\Security\IAuthenticator,
 
 
 require __DIR__ . '/../bootstrap.php';
-
+require __DIR__ . '/MockUserStorage.php';
 
 // Setup environment
 $_COOKIE = array();
@@ -53,9 +53,7 @@ function onLoggedOut($user) {
 }
 
 
-$container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
-
-$user = $container->getService('user');
+$user = new Nette\Security\User(new MockUserStorage);
 $user->onLoggedIn[] = 'onLoggedIn';
 $user->onLoggedOut[] = 'onLoggedOut';
 
@@ -116,10 +114,3 @@ Assert::null( $user->getIdentity() );
 // login as john#2?
 $user->login('john', 'xxx');
 Assert::true( $user->isLoggedIn() );
-
-
-// setNamespace(...)
-$user->getStorage()->setNamespace('other');
-
-Assert::false( $user->isLoggedIn() );
-Assert::null( $user->getIdentity() );

@@ -13,10 +13,8 @@ use Nette\Application\PresenterFactory,
 require __DIR__ . '/../bootstrap.php';
 
 
-$container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
-
-test(function() use ($container) {
-	$factory = new PresenterFactory(NULL, $container);
+test(function() {
+	$factory = new PresenterFactory(NULL, new Nette\DI\Container);
 
 	$factory->setMapping(array(
 		'Foo2' => 'App2\*\*Presenter',
@@ -38,8 +36,8 @@ test(function() use ($container) {
 });
 
 
-test(function() use ($container) {
-	$factory = new PresenterFactory(NULL, $container);
+test(function() {
+	$factory = new PresenterFactory(NULL, new Nette\DI\Container);
 
 	$factory->setMapping(array(
 		'Foo2' => 'App2\*Presenter',
