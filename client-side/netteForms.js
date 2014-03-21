@@ -311,6 +311,7 @@ Nette.validators = {
 	},
 
 	'float': function(elem, arg, val) {
+		val = val.replace(/ /g, '');
 		return (/^-?[0-9]*[.,]?[0-9]+$/).test(val);
 	},
 
@@ -323,8 +324,9 @@ Nette.validators = {
 	},
 
 	range: function(elem, arg, val) {
+		var floatVal = Nette.parseFloat(val);
 		return Nette.isArray(arg) ?
-			((arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1])) : null;
+			((arg[0] === null || floatVal >= arg[0]) && (arg[1] === null || floatVal <= arg[1])) : null;
 	},
 
 	submitted: function(elem, arg, val) {
@@ -440,6 +442,13 @@ Nette.parseJSON = function(s) {
 		return eval('[' + s + ']'); // backward compatibility
 	}
 	return window.JSON && window.JSON.parse ? JSON.parse(s) : eval(s);
+};
+
+
+Nette.parseFloat = function(val) {
+	val = val.replace(/ /g, '');
+	val = val.replace(/,/g, '.');
+	return parseFloat(val);
 };
 
 
