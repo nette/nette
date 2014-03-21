@@ -33,6 +33,8 @@ class NetteLoader
 		'Nette\Utils\PhpGenerator\Parameter' => 'Nette\PhpGenerator\Parameter',
 		'Nette\Utils\PhpGenerator\PhpLiteral' => 'Nette\PhpGenerator\PhpLiteral',
 		'Nette\Utils\PhpGenerator\Property' => 'Nette\PhpGenerator\Property',
+		'Nette\Utils\Tokenizer' => 'Nette\Latte\Tokenizer',
+		'Nette\Utils\TokenIterator' => 'Nette\Latte\TokenIterator',
 		'Nette\Iterators\CachingIterator' => 'Nette\Latte\Runtime\CachingIterator',
 	);
 
@@ -65,6 +67,7 @@ class NetteLoader
 		'Nette\InvalidArgumentException' => 'common/exceptions',
 		'Nette\InvalidStateException' => 'common/exceptions',
 		'Nette\Latte\CompileException' => 'Latte/exceptions',
+		'Nette\Latte\TokenizerException' => 'Latte/exceptions',
 		'Nette\Mail\SmtpException' => 'Mail/SmtpMailer',
 		'Nette\MemberAccessException' => 'common/exceptions',
 		'Nette\NotImplementedException' => 'common/exceptions',
@@ -80,7 +83,6 @@ class NetteLoader
 		'Nette\Utils\NeonEntity' => 'Utils/Neon',
 		'Nette\Utils\NeonException' => 'Utils/Neon',
 		'Nette\Utils\RegexpException' => 'Utils/Strings',
-		'Nette\Utils\TokenizerException' => 'Utils/Tokenizer',
 	);
 
 

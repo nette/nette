@@ -15,7 +15,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class MacroTokens extends Nette\Utils\TokenIterator
+class MacroTokens extends TokenIterator
 {
 	const T_WHITESPACE = 1,
 		T_COMMENT = 2,
@@ -27,7 +27,7 @@ class MacroTokens extends Nette\Utils\TokenIterator
 		T_KEYWORD = 8,
 		T_CHAR = 9;
 
-	/** @var Nette\Utils\Tokenizer */
+	/** @var Tokenizer */
 	private static $tokenizer;
 
 	/** @var int */
@@ -43,7 +43,7 @@ class MacroTokens extends Nette\Utils\TokenIterator
 
 	public function parse($s)
 	{
-		self::$tokenizer = self::$tokenizer ?: new Nette\Utils\Tokenizer(array(
+		self::$tokenizer = self::$tokenizer ?: new Tokenizer(array(
 			self::T_WHITESPACE => '\s+',
 			self::T_COMMENT => '(?s)/\*.*?\*/',
 			self::T_STRING => Parser::RE_STRING,

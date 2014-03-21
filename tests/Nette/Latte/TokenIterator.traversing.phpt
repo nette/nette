@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Utils\TokenIterator traversing
+ * Test: Nette\Latte\TokenIterator traversing
  *
  * @author     David Grudl
  */
 
-use Nette\Utils\Tokenizer,
-	Nette\Utils\TokenIterator,
+use Nette\Latte\Tokenizer,
+	Nette\Latte\TokenIterator,
 	Tester\Assert;
 
 
@@ -120,17 +120,4 @@ test(function() {
 	$traverser->position = 2;
 	Assert::same( array(), $traverser->nextUntil(T_STRING, T_DNUMBER, T_WHITESPACE) );
 	Assert::same( 2, $traverser->position );
-});
-
-
-test(function() {
-	$tokenizer = new Tokenizer(array(
-		'\d+',
-		'\s+',
-		'\w+',
-	));
-	$traverser = new TokenIterator($tokenizer->tokenize('say 123'));
-	Assert::null( $traverser->nextToken('s') );
-	Assert::same( array('say', 0), $traverser->nextToken('say') );
-	Assert::same( array(' ', 3), $traverser->nextToken() );
 });

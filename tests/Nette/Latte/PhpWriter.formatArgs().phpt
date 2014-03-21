@@ -38,7 +38,7 @@ test(function() { // strings
 	Assert::same( "('hello')",  formatArgs('(hello)') );
 	Assert::exception(function() {
 		formatArgs("'\\\\'1, 2, symbol1, symbol2'");
-	}, 'Nette\Utils\TokenizerException', 'Unexpected %a% on line 1, column 27.');
+	}, 'Nette\Latte\TokenizerException', 'Unexpected %a% on line 1, column 27.');
 });
 
 

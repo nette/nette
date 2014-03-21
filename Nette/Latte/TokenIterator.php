@@ -5,7 +5,7 @@
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
-namespace Nette\Utils;
+namespace Nette\Latte;
 
 use Nette;
 

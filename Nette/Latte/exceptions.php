@@ -20,4 +20,11 @@ class CompileException extends Nette\Templating\FilterException
 }
 
 
+/**
+ * The exception that indicates tokenizer error.
+ */
+class TokenizerException extends \Exception
+{
+}
+
 class_alias('Nette\Latte\CompileException', 'Nette\Latte\ParseException');
