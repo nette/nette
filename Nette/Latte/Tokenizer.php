@@ -5,9 +5,10 @@
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
-namespace Nette\Utils;
+namespace Nette\Latte;
 
-use Nette;
+use Nette,
+	Nette\Utils\Strings;
 
 
 /**
@@ -96,12 +97,4 @@ class Tokenizer extends Nette\Object
 		return array(substr_count($text, "\n") + 1, $offset - strrpos("\n" . $text, "\n") + 1);
 	}
 
-}
-
-
-/**
- * The exception that indicates tokenizer error.
- */
-class TokenizerException extends \Exception
-{
 }

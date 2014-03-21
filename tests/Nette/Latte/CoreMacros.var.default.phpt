@@ -27,7 +27,7 @@ test(function() use ($compiler) { // {var ... }
 
 	Assert::exception(function() use ($compiler) {
 		$compiler->expandMacro('var', '$var => "123', '');
-	}, 'Nette\Utils\TokenizerException', 'Unexpected %a% on line 1, column 9.');
+	}, 'Nette\Latte\TokenizerException', 'Unexpected %a% on line 1, column 9.');
 });
 
 

@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Utils\TokenIterator traversing
+ * Test: Nette\Latte\TokenIterator traversing
  *
  * @author     David Grudl
  */
 
-use Nette\Utils\Tokenizer,
-	Nette\Utils\TokenIterator,
+use Nette\Latte\Tokenizer,
+	Nette\Latte\TokenIterator,
 	Tester\Assert;
 
 

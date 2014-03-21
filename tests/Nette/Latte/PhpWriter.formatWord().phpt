@@ -34,4 +34,4 @@ Assert::same( '$x["[x]"]',  $writer->formatWord('$x["[x]"]') );
 
 Assert::exception(function() use ($writer) {
 	$writer->formatWord("'var\"");
-}, 'Nette\Utils\TokenizerException', "Unexpected ''var\"' on line 1, column 1.");
+}, 'Nette\Latte\TokenizerException', "Unexpected ''var\"' on line 1, column 1.");

@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Utils\Tokenizer::tokenize with names
+ * Test: Nette\Latte\Tokenizer::tokenize with names
  *
  * @author     David Grudl
  */
 
-use Nette\Utils\Tokenizer,
+use Nette\Latte\Tokenizer,
 	Tester\Assert;
 
 
@@ -27,4 +27,4 @@ Assert::same( array(
 
 Assert::exception(function() use ($tokenizer) {
 	$tokenizer->tokenize('say 123;');
-}, 'Nette\Utils\TokenizerException', "Unexpected ';' on line 1, column 8.");
+}, 'Nette\Latte\TokenizerException', "Unexpected ';' on line 1, column 8.");
