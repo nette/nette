@@ -32,6 +32,7 @@ class Configurator extends Object
 		'php' => 'Nette\DI\Extensions\PhpExtension',
 		'constants' => 'Nette\DI\Extensions\ConstantsExtension',
 		'nette' => 'Nette\Bridges\Framework\NetteExtension',
+		'database' => 'Nette\Bridges\DatabaseDI\DatabaseExtension',
 		'extensions' => 'Nette\DI\Extensions\ExtensionsExtension',
 	);
 
