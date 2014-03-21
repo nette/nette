@@ -58,7 +58,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			'secure' => NULL,
 			'timeout' => NULL,
 		),
-		'database' => array(), // of [name => dsn, user, password, debugger, explain, autowired, reflection]
+		'database' => array(), // BC
 		'forms' => array(
 			'messages' => array(),
 		),
@@ -83,17 +83,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		),
 	);
 
-	public $databaseDefaults = array(
-		'dsn' => NULL,
-		'user' => NULL,
-		'password' => NULL,
-		'options' => NULL,
-		'debugger' => TRUE,
-		'explain' => TRUE,
-		'reflection' => 'Nette\Database\Reflection\DiscoveredReflection',
-		'autowired' => NULL,
-	);
-
 
 	public function loadConfiguration()
 	{
@@ -115,7 +104,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		$this->setupRouting($container, $config['routing']);
 		$this->setupMailer($container, $config['mailer']);
 		$this->setupLatte($container, $config['latte']);
-		$this->setupDatabase($container, $config['database']);
 		$this->setupContainer($container, $config['container']);
 	}
 
@@ -290,58 +278,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 
 		$container->addDefinition($this->prefix('template'))
 			->setClass('Nette\Bridges\ApplicationLatte\TemplateFactory');
-	}
-
-
-	private function setupDatabase(ContainerBuilder $container, array $config)
-	{
-		if (isset($config['dsn'])) {
-			$config = array('default' => $config);
-		}
-
-		$autowired = TRUE;
-		foreach ((array) $config as $name => $info) {
-			if (!is_array($info)) {
-				continue;
-			}
-			$this->validate($info, $this->databaseDefaults, 'nette.database');
-
-			$info += array('autowired' => $autowired) + $this->databaseDefaults;
-			$autowired = FALSE;
-
-			foreach ((array) $info['options'] as $key => $value) {
-				if (preg_match('#^PDO::\w+\z#', $key)) {
-					unset($info['options'][$key]);
-					$info['options'][constant($key)] = $value;
-				}
-			}
-
-			$connection = $container->addDefinition($this->prefix("database.$name"))
-				->setClass('Nette\Database\Connection', array($info['dsn'], $info['user'], $info['password'], $info['options']))
-				->setAutowired($info['autowired'])
-				->addSetup('Nette\Diagnostics\Debugger::getBlueScreen()->addPanel(?)', array(
-					'Nette\Bridges\DatabaseTracy\ConnectionPanel::renderException'
-				));
-
-			if (!$info['reflection']) {
-				$reflection = NULL;
-			} elseif (is_string($info['reflection'])) {
-				$reflection = new Nette\DI\Statement(preg_match('#^[a-z]+\z#', $info['reflection'])
-					? 'Nette\Database\Reflection\\' . ucfirst($info['reflection']) . 'Reflection'
-					: $info['reflection'], strtolower($info['reflection']) === 'discovered' ? array($connection) : array());
-			} else {
-				$tmp = Nette\DI\Compiler::filterArguments(array($info['reflection']));
-				$reflection = reset($tmp);
-			}
-
-			$container->addDefinition($this->prefix("database.$name.context"))
-				->setClass('Nette\Database\Context', array($connection, $reflection))
-				->setAutowired($info['autowired']);
-
-			if ($container->parameters['debugMode'] && $info['debugger']) {
-				$connection->addSetup('Nette\Database\Helpers::createDebugPanel', array($connection, !empty($info['explain']), $name));
-			}
-		}
 	}
 
 
