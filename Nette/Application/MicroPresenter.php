@@ -22,16 +22,24 @@ use Nette,
  */
 class MicroPresenter extends Nette\Object implements Application\IPresenter
 {
-	/** @var Nette\DI\Container */
+	/** @var Nette\DI\Container|NULL */
 	private $context;
 
-	/** @var Nette\Application\Request */
+	/** @var Nette\Http\IRequest|NULL */
+	private $httpRequest;
+
+	/** @var IRouter|NULL */
+	private $router;
+
+	/** @var Request */
 	private $request;
 
 
-	public function __construct(Nette\DI\Container $context)
+	public function __construct(Nette\DI\Container $context = NULL, Http\IRequest $httpRequest = NULL, IRouter $router = NULL)
 	{
 		$this->context = $context;
+		$this->httpRequest = $httpRequest;
+		$this->router = $router;
 	}
 
 
@@ -52,11 +60,10 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	{
 		$this->request = $request;
 
-		$httpRequest = $this->context->getByType('Nette\Http\IRequest');
-		if (!$httpRequest->isAjax() && ($request->isMethod('get') || $request->isMethod('head'))) {
-			$refUrl = clone $httpRequest->getUrl();
-			$url = $this->context->getByType('Nette\Application\IRouter')->constructUrl($request, $refUrl->setPath($refUrl->getScriptPath()));
-			if ($url !== NULL && !$httpRequest->getUrl()->isEqual($url)) {
+		if ($this->httpRequest && $this->router && !$this->httpRequest->isAjax() && ($request->isMethod('get') || $request->isMethod('head'))) {
+			$refUrl = clone $this->httpRequest->getUrl();
+			$url = $this->router->constructUrl($request, $refUrl->setPath($refUrl->getScriptPath()));
+			if ($url !== NULL && !$this->httpRequest->getUrl()->isEqual($url)) {
 				return new Responses\RedirectResponse($url, Http\IResponse::S301_MOVED_PERMANENTLY);
 			}
 		}
@@ -75,7 +82,10 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 				unset($params[$param->getPosition()]);
 			}
 		}
-		$params = Nette\DI\Helpers::autowireArguments($reflection, $params, $this->context);
+
+		if ($this->context) {
+			$params = Nette\DI\Helpers::autowireArguments($reflection, $params, $this->context);
+		}
 
 		$response = call_user_func_array($callback, $params);
 
@@ -111,13 +121,15 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 
 		$template->setParameters($this->request->getParameters());
 		$template->presenter = $this;
-		$template->context = $context = $this->context;
-		$url = $context->getByType('Nette\Http\IRequest')->getUrl();
-		$template->baseUrl = rtrim($url->getBaseUrl(), '/');
-		$template->basePath = rtrim($url->getBasePath(), '/');
+		$template->context = $this->context;
+		if ($this->httpRequest) {
+			$url = $this->httpRequest->getUrl();
+			$template->baseUrl = rtrim($url->getBaseUrl(), '/');
+			$template->basePath = rtrim($url->getBasePath(), '/');
+		}
 
 		$template->registerHelperLoader('Nette\Latte\Runtime\Filters::loader');
-		$template->setCacheStorage($context->getService('nette.templateCacheStorage'));
+		$template->setCacheStorage($this->context->getService('nette.templateCacheStorage'));
 		$template->onPrepareFilters[] = function($template) use ($latteFactory) {
 			$template->registerFilter($latteFactory ? $latteFactory() : new Nette\Latte\Engine);
 		};
