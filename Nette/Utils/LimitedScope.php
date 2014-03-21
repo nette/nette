@@ -13,7 +13,7 @@ use Nette;
 /**
  * Limited scope for PHP code evaluation and script including.
  *
- * @author     David Grudl
+ * @deprecated
  */
 class LimitedScope
 {
@@ -35,6 +35,7 @@ class LimitedScope
 	 */
 	public static function evaluate(/*$code, array $vars = NULL*/)
 	{
+		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
 		if (func_num_args() > 1) {
 			foreach (func_get_arg(1) as $__k => $__v) $$__k = $__v;
 			unset($__k, $__v);
@@ -55,6 +56,7 @@ class LimitedScope
 	 */
 	public static function load(/*$file, array $vars = NULL*/)
 	{
+		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
 		if (func_num_args() > 1 && is_array(func_get_arg(1))) {
 			foreach (func_get_arg(1) as $__k => $__v) $$__k = $__v;
 			unset($__k, $__v);
