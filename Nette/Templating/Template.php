@@ -81,10 +81,22 @@ class Template extends Nette\Object implements ITemplate
 			$cached = $cache->load($this->source);
 		}
 
-		if ($cached !== NULL && $storage instanceof Caching\Storages\PhpFileStorage) {
-			Nette\Utils\LimitedScope::load($cached['file'], $this->getParameters());
+		$isFile = $cached !== NULL && $storage instanceof Caching\Storages\PhpFileStorage;
+		self::load($isFile ? $cached['file'] : $compiled, $this->getParameters(), $isFile);
+	}
+
+
+	protected static function load(/*$code, $params, $isFile*/)
+	{
+		foreach (func_get_arg(1) as $__k => $__v) $$__k = $__v;
+		unset($__k, $__v);
+		if (func_get_arg(2)) {
+			include func_get_arg(0);
 		} else {
-			Nette\Utils\LimitedScope::evaluate($compiled, $this->getParameters());
+			$res = eval('?>' . func_get_arg(0));
+			if ($res === FALSE && ($error = error_get_last()) && $error['type'] === E_PARSE) {
+				throw new \ErrorException($error['message'], 0, $error['type'], $error['file'], $error['line']);
+			}
 		}
 	}
 

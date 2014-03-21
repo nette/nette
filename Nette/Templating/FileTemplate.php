@@ -104,11 +104,8 @@ class FileTemplate extends Template implements IFileTemplate
 			$cached = $cache->load($this->file);
 		}
 
-		if ($cached !== NULL && $storage instanceof Caching\Storages\PhpFileStorage) {
-			Nette\Utils\LimitedScope::load($cached['file'], $this->getParameters());
-		} else {
-			Nette\Utils\LimitedScope::evaluate($compiled, $this->getParameters());
-		}
+		$isFile = $cached !== NULL && $storage instanceof Caching\Storages\PhpFileStorage;
+		self::load($isFile ? $cached['file'] : $compiled, $this->getParameters(), $isFile);
 	}
 
 }
