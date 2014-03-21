@@ -21,10 +21,10 @@
 		"ext-tokenizer": "*"
 	},
 	"suggest": {
-		"ext-mbstring": "*",
-		"ext-pdo": "*",
-		"ext-gd": "*",
-		"ext-fileinfo": "*"
+		"ext-mbstring": "",
+		"ext-pdo": "",
+		"ext-gd": "",
+		"ext-fileinfo": ""
 	},
 	"require-dev": {
 		"nette/tester": "~1.1"
