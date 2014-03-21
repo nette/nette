@@ -37,8 +37,7 @@ class Tokenizer extends Nette\Object
 	public function __construct(array $patterns, $flags = '')
 	{
 		$this->re = '~(' . implode(')|(', $patterns) . ')~A' . $flags;
-		$keys = array_keys($patterns);
-		$this->types = $keys === range(0, count($patterns) - 1) ? FALSE : $keys;
+		$this->types = array_keys($patterns);
 	}
 
 
@@ -49,37 +48,24 @@ class Tokenizer extends Nette\Object
 	 */
 	public function tokenize($input)
 	{
-		if ($this->types) {
-			$tokens = Strings::matchAll($input, $this->re);
-			$len = 0;
-			$count = count($this->types);
-			foreach ($tokens as & $match) {
-				$type = NULL;
-				for ($i = 1; $i <= $count; $i++) {
-					if (!isset($match[$i])) {
-						break;
-					} elseif ($match[$i] != NULL) {
-						$type = $this->types[$i - 1]; break;
-					}
+		$tokens = Strings::matchAll($input, $this->re);
+		$len = 0;
+		$count = count($this->types);
+		foreach ($tokens as & $match) {
+			$type = NULL;
+			for ($i = 1; $i <= $count; $i++) {
+				if (!isset($match[$i])) {
+					break;
+				} elseif ($match[$i] != NULL) {
+					$type = $this->types[$i - 1]; break;
 				}
-				$match = array(self::VALUE => $match[0], self::OFFSET => $len, self::TYPE => $type);
-				$len += strlen($match[self::VALUE]);
 			}
-			if ($len !== strlen($input)) {
-				$errorOffset = $len;
-			}
-
-		} else {
-			$tokens = Strings::split($input, $this->re, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_OFFSET_CAPTURE);
-			$last = end($tokens);
-			if ($tokens && !Strings::match($last[0], $this->re)) {
-				$errorOffset = $last[1];
-			}
+			$match = array(self::VALUE => $match[0], self::OFFSET => $len, self::TYPE => $type);
+			$len += strlen($match[self::VALUE]);
 		}
-
-		if (isset($errorOffset)) {
-			list($line, $col) = $this->getCoordinates($input, $errorOffset);
-			$token = str_replace("\n", '\n', substr($input, $errorOffset, 10));
+		if ($len !== strlen($input)) {
+			list($line, $col) = $this->getCoordinates($input, $len);
+			$token = str_replace("\n", '\n', substr($input, $len, 10));
 			throw new TokenizerException("Unexpected '$token' on line $line, column $col.");
 		}
 		return $tokens;
