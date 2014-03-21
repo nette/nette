@@ -37,7 +37,7 @@ Stack trace:
 Fatal error: Call to undefined function missing_function() in %a%
 exception 'ErrorException' with message 'Call to undefined function missing_function()' in %a%
 Stack trace:
-#0 [internal function]: Nette\\Diagnostics\\Debugger::_shutdownHandler()
+#0 [internal function]: Tracy\\Debugger::_shutdownHandler()
 #1 {main}
 ", ob_get_clean());
 	echo 'OK!'; // prevents PHP bug #62725

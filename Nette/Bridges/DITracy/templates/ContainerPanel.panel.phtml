@@ -3,25 +3,25 @@
 namespace Nette\Bridges\DITracy;
 
 use Nette,
-	Nette\Diagnostics\Dumper;
+	Tracy\Dumper;
 
 ?>
-<style class="nette-debug">
+<style class="tracy-debug">
 
-	#nette-debug .nette-ContainerPanel .nette-inner {
+	#tracy-debug .nette-ContainerPanel .tracy-inner {
 		width: 700px;
 	}
 
-	#nette-debug .nette-ContainerPanel table {
+	#tracy-debug .nette-ContainerPanel table {
 		width: 100%;
 		white-space: nowrap;
 	}
 
-	#nette-debug .nette-ContainerPanel .created {
+	#tracy-debug .nette-ContainerPanel .created {
 		font-weight: bold;
 	}
 
-	#nette-debug .nette-ContainerPanel .yes {
+	#tracy-debug .nette-ContainerPanel .yes {
 		color: green;
 		font-weight: bold;
 	}
@@ -31,7 +31,7 @@ use Nette,
 <div class="nette-ContainerPanel">
 <h1><?php echo get_class($this->container) ?></h1>
 
-<div class="nette-inner">
+<div class="tracy-inner">
 	<h2>Services</h2>
 
 	<table>

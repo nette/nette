@@ -9,7 +9,7 @@ namespace NetteModule;
 
 use Nette,
 	Nette\Application,
-	Nette\Diagnostics\Debugger;
+	Tracy\Debugger;
 
 
 /**

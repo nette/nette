@@ -8,7 +8,8 @@
 namespace Nette\Bridges\DatabaseTracy;
 
 use Nette,
-	Nette\Database\Helpers;
+	Nette\Database\Helpers,
+	Tracy;
 
 
 /**
@@ -16,7 +17,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
+class ConnectionPanel extends Nette\Object implements Tracy\IBarPanel
 {
 	/** @var int */
 	public $maxQueries = 100;
@@ -56,7 +57,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 		$source = NULL;
 		$trace = $result instanceof \PDOException ? $result->getTrace() : debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : FALSE);
 		foreach ($trace as $row) {
-			if (isset($row['file']) && is_file($row['file']) && !Nette\Diagnostics\Debugger::getBluescreen()->isCollapsed($row['file'])) {
+			if (isset($row['file']) && is_file($row['file']) && !Tracy\Debugger::getBluescreen()->isCollapsed($row['file'])) {
 				if ((isset($row['function']) && strpos($row['function'], 'call_user_func') === 0)
 					|| (isset($row['class']) && is_subclass_of($row['class'], '\\Nette\\Database\\Connection'))
 				) {
@@ -86,7 +87,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 		if (isset($e->queryString)) {
 			$sql = $e->queryString;
 
-		} elseif ($item = Nette\Diagnostics\Helpers::findTrace($e->getTrace(), 'PDO::prepare')) {
+		} elseif ($item = Tracy\Helpers::findTrace($e->getTrace(), 'PDO::prepare')) {
 			$sql = $item['args'][0];
 		}
 		return isset($sql) ? array(
@@ -130,12 +131,12 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 			if ($explain) {
 				static $counter;
 				$counter++;
-				$s .= "<br /><a class='nette-toggle-collapsed' href='#nette-DbConnectionPanel-row-$counter'>explain</a>";
+				$s .= "<br /><a class='tracy-toggle-collapsed' href='#nette-DbConnectionPanel-row-$counter'>explain</a>";
 			}
 
 			$s .= '</td><td class="nette-DbConnectionPanel-sql">' . Helpers::dumpSql($sql, $params);
 			if ($explain) {
-				$s .= "<table id='nette-DbConnectionPanel-row-$counter' class='nette-collapsed'><tr>";
+				$s .= "<table id='nette-DbConnectionPanel-row-$counter' class='tracy-collapsed'><tr>";
 				foreach ($explain[0] as $col => $foo) {
 					$s .= '<th>' . htmlSpecialChars($col) . '</th>';
 				}
@@ -150,18 +151,18 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 				$s .= "</table>";
 			}
 			if ($source) {
-				$s .= Nette\Diagnostics\Helpers::editorLink($source[0], $source[1])->class('nette-DbConnectionPanel-source');
+				$s .= substr_replace(Tracy\Helpers::editorLink($source[0], $source[1]), ' class="nette-DbConnectionPanel-source"', 2, 0);
 			}
 
 			$s .= '</td><td>' . $rows . '</td></tr>';
 		}
 
 		return $this->count ?
-			'<style class="nette-debug"> #nette-debug td.nette-DbConnectionPanel-sql { background: white !important }
-			#nette-debug .nette-DbConnectionPanel-source { color: #BBB !important } </style>
+			'<style class="tracy-debug"> #tracy-debug td.nette-DbConnectionPanel-sql { background: white !important }
+			#tracy-debug .nette-DbConnectionPanel-source { color: #BBB !important } </style>
 			<h1 title="' . htmlSpecialChars($connection->getDsn()) . '">Queries: ' . $this->count
 			. ($this->totalTime ? ', time: ' . sprintf('%0.3f', $this->totalTime * 1000) . ' ms' : '') . ', ' . htmlSpecialChars($this->name) . '</h1>
-			<div class="nette-inner nette-DbConnectionPanel">
+			<div class="tracy-inner nette-DbConnectionPanel">
 			<table>
 				<tr><th>Time&nbsp;ms</th><th>SQL Query</th><th>Rows</th></tr>' . $s . '
 			</table>'

@@ -10,7 +10,7 @@ namespace Nette\Bridges\ApplicationTracy;
 use Nette,
 	Nette\Application\Routers,
 	Nette\Application\UI\Presenter,
-	Nette\Diagnostics\Dumper;
+	Tracy;
 
 
 /**
@@ -18,7 +18,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
+class RoutingPanel extends Nette\Object implements Tracy\IBarPanel
 {
 	/** @var Nette\Application\IRouter */
 	private $router;
@@ -41,11 +41,11 @@ class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 
 	public static function initializePanel(Nette\Application\Application $application)
 	{
-		Nette\Diagnostics\Debugger::getBlueScreen()->addPanel(function($e) use ($application) {
+		Tracy\Debugger::getBlueScreen()->addPanel(function($e) use ($application) {
 			return $e ? NULL : array(
 				'tab' => 'Nette Application',
-				'panel' => '<h3>Requests</h3>' . Dumper::toHtml($application->getRequests())
-					. '<h3>Presenter</h3>' . Dumper::toHtml($application->getPresenter())
+				'panel' => '<h3>Requests</h3>' . Tracy\Dumper::toHtml($application->getRequests())
+					. '<h3>Presenter</h3>' . Tracy\Dumper::toHtml($application->getPresenter())
 			);
 		});
 	}

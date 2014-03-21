@@ -14,12 +14,10 @@ require __DIR__ . '/../../../Nette/Loaders/NetteLoader.php';
 
 
 Assert::false( class_exists('Nette\ArrayHash') );
-Assert::false( class_exists('Nette\Diagnostics\Debugger') );
 
 Nette\Loaders\NetteLoader::getInstance()->register();
 
 Assert::true( class_exists('Nette\ArrayHash') );
-Assert::true( class_exists('Nette\Diagnostics\Debugger') );
 
 Assert::error(function() {
 	class_exists('Nette\Http\User');
