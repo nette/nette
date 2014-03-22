@@ -1,41 +1,41 @@
 {
-	"name": "nette/nette",
-	"type": "library",
-	"description": "Nette Framework - innovative framework for fast and easy development of secured web applications in PHP. Write less, have cleaner code and your work will bring you joy.",
-	"keywords": ["framework", "mvc", "debugging", "templating", "database", "forms", "mailing"],
-	"homepage": "http://nette.org",
-	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
-	"authors": [
-		{
-			"name": "David Grudl",
-			"homepage": "http://davidgrudl.com"
-		},
-		{
-			"name": "Nette Community",
-			"homepage": "http://nette.org/contributors"
-		}
-	],
-	"require": {
-		"php": ">=5.3.1",
-		"ext-iconv": "*",
-		"ext-tokenizer": "*"
-	},
-	"suggest": {
-		"ext-mbstring": "*",
-		"ext-pdo": "*",
-		"ext-gd": "*",
-		"ext-fileinfo": "*"
-	},
-	"require-dev": {
-		"nette/tester": "@dev"
-	},
-	"autoload": {
-		"classmap": ["Nette/"],
-		"files": ["Nette/common/shortcuts.php"]
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-master": "2.2-dev"
-		}
-	}
+    "name": "nette/nette",
+    "type": "library",
+    "description": "Nette Framework - innovative framework for fast and easy development of secured web applications in PHP. Write less, have cleaner code and your work will bring you joy.",
+    "keywords": ["framework", "mvc", "debugging", "templating", "database", "forms", "mailing"],
+    "homepage": "http://nette.org",
+    "license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
+    "authors": [
+        {
+            "name": "David Grudl",
+            "homepage": "http://davidgrudl.com"
+        },
+        {
+            "name": "Nette Community",
+            "homepage": "http://nette.org/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.1",
+        "ext-iconv": "*",
+        "ext-tokenizer": "*"
+    },
+    "suggest": {
+        "ext-mbstring": "*",
+        "ext-pdo": "*",
+        "ext-gd": "*",
+        "ext-fileinfo": "*"
+    },
+    "require-dev": {
+        "nette/tester": "@dev"
+    },
+    "autoload": {
+        "classmap": ["Nette/"],
+        "files": ["Nette/common/shortcuts.php"]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.2-dev"
+        }
+    }
 }
