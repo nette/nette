@@ -6,3 +6,7 @@ end_of_line = crlf
 insert_final_newline = true
 trim_trailing_whitespace = true
 max_line_length = 120
+
+[composer.json]
+indent_stype = space
+indent_size = 4
