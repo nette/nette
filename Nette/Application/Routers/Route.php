@@ -56,7 +56,7 @@ class Route extends Nette\Object implements Application\IRouter
 	public static $styles = array(
 		'#' => array( // default style for path parameters
 			self::PATTERN => '[^/]+',
-			self::FILTER_IN => 'rawurldecode',
+			self::FILTER_IN => array(__CLASS__, 'path2param'),
 			self::FILTER_OUT => array(__CLASS__, 'param2path'),
 		),
 		'?#' => array( // default style for query parameters
@@ -215,7 +215,7 @@ class Route extends Nette\Object implements Application\IRouter
 					return NULL; // rejected by filterTable
 
 				} elseif (isset($meta[self::FILTER_IN])) { // applies filterIn only to scalar parameters
-					$params[$name] = call_user_func($meta[self::FILTER_IN], (string) $params[$name]);
+					$params[$name] = call_user_func($meta[self::FILTER_IN], (string) $params[$name], $params, $httpRequest);
 					if ($params[$name] === NULL && !isset($meta['fixity'])) {
 						return NULL; // rejected by filter
 					}
@@ -227,7 +227,7 @@ class Route extends Nette\Object implements Application\IRouter
 		}
 
 		if (isset($this->metadata[NULL][self::FILTER_IN])) {
-			$params = call_user_func($this->metadata[NULL][self::FILTER_IN], $params);
+			$params = call_user_func($this->metadata[NULL][self::FILTER_IN], $params, $httpRequest);
 			if ($params === NULL) {
 				return NULL;
 			}
@@ -279,7 +279,7 @@ class Route extends Nette\Object implements Application\IRouter
 		$params[self::PRESENTER_KEY] = $presenter;
 
 		if (isset($metadata[NULL][self::FILTER_OUT])) {
-			$params = call_user_func($metadata[NULL][self::FILTER_OUT], $params);
+			$params = call_user_func($metadata[NULL][self::FILTER_OUT], $params, $appRequest);
 			if ($params === NULL) {
 				return NULL;
 			}
@@ -327,7 +327,7 @@ class Route extends Nette\Object implements Application\IRouter
 				return NULL;
 
 			} elseif (isset($meta[self::FILTER_OUT])) {
-				$params[$name] = call_user_func($meta[self::FILTER_OUT], $params[$name]);
+				$params[$name] = call_user_func($meta[self::FILTER_OUT], $params[$name], $params, $appRequest);
 			}
 
 			if (isset($meta[self::PATTERN]) && !preg_match($meta[self::PATTERN], rawurldecode($params[$name]))) {
@@ -780,6 +780,12 @@ class Route extends Nette\Object implements Application\IRouter
 	private static function param2path($s)
 	{
 		return str_replace('%2F', '/', rawurlencode($s));
+	}
+
+
+	private static function path2param($s)
+	{
+		return rawurldecode($s);
 	}
 
 
