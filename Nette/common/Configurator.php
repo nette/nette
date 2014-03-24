@@ -146,6 +146,13 @@ class Configurator extends Object
 	 */
 	public function addConfig($file, $section = NULL)
 	{
+		if ($section === NULL && $this->parameters['debugMode']) { // back compatibility
+			try {
+				$this->createLoader()->load($file, $this->parameters['environment']);
+				trigger_error("Config file '$file' has sections, call addConfig() with second parameter Configurator::AUTO.", E_USER_WARNING);
+				$section = $this->parameters['environment'];
+			} catch (\Exception $e) {}
+		}
 		$this->files[] = array($file, $section === self::AUTO ? $this->parameters['environment'] : $section);
 		return $this;
 	}
@@ -186,15 +193,6 @@ class Configurator extends Object
 		foreach ($this->files as $tmp) {
 			list($file, $section) = $tmp;
 			$code .= "// source: $file $section\n";
-			try {
-				if ($section === NULL) { // back compatibility
-					$config = DI\Config\Helpers::merge($loader->load($file, $this->parameters['environment']), $config);
-					continue;
-				}
-			} catch (Nette\InvalidStateException $e) {
-			} catch (Nette\Utils\AssertionException $e) {
-			}
-
 			$config = DI\Config\Helpers::merge($loader->load($file, $section), $config);
 		}
 		$code .= "\n";
