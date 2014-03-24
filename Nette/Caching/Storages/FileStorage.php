@@ -147,16 +147,11 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 		if ($this->useDirs && !is_dir($dir = dirname($cacheFile))) {
 			@mkdir($dir); // @ - directory may already exist
 		}
-		$handle = @fopen($cacheFile, 'r+b'); // @ - file may not exist
-		if (!$handle) {
-			$handle = fopen($cacheFile, 'wb');
-			if (!$handle) {
-				return;
-			}
+		$handle = fopen($cacheFile, 'c+b');
+		if ($handle) {
+			$this->locks[$key] = $handle;
+			flock($handle, LOCK_EX);
 		}
-
-		$this->locks[$key] = $handle;
-		flock($handle, LOCK_EX);
 	}
 
 
