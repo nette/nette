@@ -228,10 +228,6 @@ class Session extends Nette\Object
 				throw new Nette\InvalidStateException("Cannot regenerate session ID after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
 			}
 			$this->changeId();
-			$newId = session_id();
-			if (!$this->checkId($newId)){
-				throw new Nette\InvalidStateException("Session ID '$newId' is not valid session identifier.");
-			}
 			session_write_close();
 			$backup = $_SESSION;
 			session_start();
@@ -244,16 +240,18 @@ class Session extends Nette\Object
 	/**
 	 * Performs change of session ID.
 	 */
-	protected function changeId() {
+	protected function changeId()
+	{
 		session_regenerate_id(TRUE);
 	}
 
 	/**
 	 * Checks that session ID has correct format.
-	 * @param string $id
+	 * @param  string
 	 * @return bool
 	 */
-	private function checkId($id){
+	private function checkId($id)
+	{
 		return is_string($id) && preg_match('#^[0-9a-zA-Z,-]{22,128}\z#i', $id);
 	}
 
