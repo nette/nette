@@ -130,5 +130,11 @@ interface IResponse
 	 * @return void
 	 */
 	function deleteCookie($name, $path = NULL, $domain = NULL, $secure = NULL);
+	
+	/**
+	 * Removes duplicate cookies from response.
+	 * @return void
+	 */
+	public function removeDuplicateCookies();
 
 }
