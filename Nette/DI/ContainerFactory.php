@@ -103,16 +103,45 @@ class ContainerFactory extends Nette\Object
 	 */
 	private function loadClass()
 	{
-		$cache = new Nette\Caching\Cache(new Nette\Caching\Storages\PhpFileStorage($this->tempDirectory), 'Nette.DI');
-		$cacheKey = array($this->config, $this->configFiles);
-		$cached = $cache->load($cacheKey);
-		if (!$cached) {
-			$this->dependencies = array();
-			$code = $this->generateCode();
-			$cache->save($cacheKey, $code, array($cache::FILES => $this->dependencies));
-			$cached = $cache->load($cacheKey);
+		$key = md5(serialize(array($this->config, $this->configFiles, $this->class, $this->parentClass)));
+		$handle = fopen($file = "$this->tempDirectory/$key.php", 'c+');
+		if (!$handle) {
+			throw new Nette\IOException("Unable to open or create file '$file'.");
 		}
-		require $cached['file'];
+
+		flock($handle, LOCK_SH);
+		$stat = fstat($handle);
+		if ($stat['size']) {
+			if ($this->autoRebuild) {
+				foreach ((array) @unserialize(file_get_contents($file . '.meta')) as $f => $time) { // @ - file may not exist
+					if (@filemtime($f) !== $time) { // @ - stat may fail
+						goto write;
+					}
+				}
+			}
+		} else {
+			write:
+			ftruncate($handle, 0);
+			flock($handle, LOCK_EX);
+			$stat = fstat($handle);
+			if (!$stat['size']) {
+				$this->dependencies = array();
+				$code = $this->generateCode();
+				if (fwrite($handle, $code, strlen($code)) !== strlen($code)) {
+					ftruncate($handle, 0);
+					throw new Nette\IOException("Unable to write file '$file'.");
+				}
+
+				$tmp = array();
+				foreach ($this->dependencies as $f) {
+					$tmp[$f] = @filemtime($f); // @ - stat may fail
+				}
+				file_put_contents($file . '.meta', serialize($tmp));
+			}
+			flock($handle, LOCK_SH);
+		}
+
+		require $file;
 	}
 
 
