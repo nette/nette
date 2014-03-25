@@ -21,26 +21,23 @@ class MockControl
 }
 
 
-$template = new Nette\Templating\Template;
-$template->registerFilter(new Latte\Engine);
-$template->_control = new MockControl;
+$latte = new Latte\Engine;
+$latte->setLoader(new Latte\Loaders\StringLoader);
+$params['_control'] = new MockControl;
 
-$template->setSource(<<<EOD
+Assert::match(<<<EOD
+<p id="">hello</p>
+EOD
+, $latte->renderToString(<<<EOD
 <p n:inner-snippet="abc">hello</p>
 EOD
-);
+, $params));
+
 
 Assert::match(<<<EOD
 <p id="">hello</p>
 EOD
-, (string) $template);
-
-$template->setSource(<<<EOD
+, $latte->renderToString(<<<EOD
 <p n:snippet="abc">hello</p>
 EOD
-);
-
-Assert::match(<<<EOD
-<p id="">hello</p>
-EOD
-, (string) $template);
+, $params));

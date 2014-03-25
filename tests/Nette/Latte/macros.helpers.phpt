@@ -7,7 +7,6 @@
  */
 
 use Nette\Latte,
-	Nette\Templating\FileTemplate,
 	Tester\Assert;
 
 
@@ -35,18 +34,26 @@ function types()
 }
 
 
-$template = new FileTemplate(__DIR__ . '/templates/helpers.latte');
-$template->registerFilter(new Latte\Engine);
-$template->registerHelper('nl2br', 'nl2br');
-$template->registerHelper('h1', array(new MyHelper, 'invoke'));
-$template->registerHelper('h2', 'strtoupper');
-$template->registerHelper('translate', 'strrev');
-$template->registerHelper('types', 'types');
-$template->registerHelperLoader('Nette\Latte\Runtime\Filters::loader');
+$latte = new Latte\Engine;
+$latte->addFilter('nl2br', 'nl2br');
+$latte->addFilter('h1', array(new MyHelper, 'invoke'));
+$latte->addFilter('h2', 'strtoupper');
+$latte->addFilter('translate', 'strrev');
+$latte->addFilter('types', 'types');
+$latte->addFilterLoader('Nette\Latte\Runtime\Filters::loader');
 
-$template->hello = 'Hello World';
-$template->date = strtotime('2008-01-02');
+$params['hello'] = 'Hello World';
+$params['date'] = strtotime('2008-01-02');
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::matchFile("$path.phtml", codefix($template->compile()));
-Assert::matchFile("$path.html", $template->__toString(TRUE));
+Assert::matchFile(
+	"$path.phtml",
+	codefix($latte->compile(__DIR__ . '/templates/helpers.latte'))
+);
+Assert::matchFile(
+	"$path.html",
+	$latte->renderToString(
+		__DIR__ . '/templates/helpers.latte',
+		$params
+	)
+);

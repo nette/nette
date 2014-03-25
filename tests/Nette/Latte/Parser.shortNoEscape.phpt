@@ -14,21 +14,16 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $latte = new Latte\Engine;
-$template = new Nette\Templating\Template;
-$template->registerFilter($latte);
+$latte->setLoader(new Latte\Loaders\StringLoader);
+$latte->getParser()->shortNoEscape = TRUE;
 
-$latte->parser->shortNoEscape = TRUE;
-$template->setSource('{="<>"}');
-Assert::match('&lt;&gt;', (string) $template);
+Assert::match('&lt;&gt;', $latte->renderToString('{="<>"}'));
 
-$template->setSource('{!="<>"}');
-Assert::match('<>', (string) $template);
+Assert::match('<>', $latte->renderToString('{!="<>"}'));
 
 $latte->parser->shortNoEscape = FALSE;
-$template->setSource('{="<>"}');
-Assert::match('&lt;&gt;', (string) $template);
+Assert::match('&lt;&gt;', $latte->renderToString('{="<>"}'));
 
-Assert::error(function() use ($template) {
-	$template->setSource('{!="<>"}');
-	Assert::match('<>', (string) $template);
+Assert::error(function() use ($latte) {
+	Assert::match('<>', $latte->renderToString('{!="<>"}'));
 }, E_USER_DEPRECATED, 'The noescape shortcut {!...} is deprecated, use {...|noescape} modifier on line 1.');

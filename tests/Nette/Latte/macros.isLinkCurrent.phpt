@@ -7,17 +7,16 @@
  */
 
 use Nette\Latte,
-	Nette\Templating\Template,
 	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-$template = new Template;
-$template->registerFilter(new Latte\Engine);
+$latte = new Latte\Engine;
+$latte->setLoader(new Latte\Loaders\StringLoader);
 
-$result = $template->setSource(
+$result = $latte->compile(
 '<a n:href="default" n:class="$presenter->isLinkCurrent() ? current">n:href before n:class</a>
 
 <a n:class="$presenter->isLinkCurrent() ? current" n:href="default">n:href after n:class</a>
@@ -25,7 +24,7 @@ $result = $template->setSource(
 <a href="{link default}" n:class="$presenter->isLinkCurrent() ? current">href before n:class</a>
 
 <a n:class="$presenter->isLinkCurrent() ? current" href="{link default}">href after n:class</a>
-')->compile();
+');
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::matchFile("$path.phtml", $result);

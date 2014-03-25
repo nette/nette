@@ -13,10 +13,9 @@ use Nette\Latte,
 require __DIR__ . '/../bootstrap.php';
 
 
-$template = new Nette\Templating\Template;
-$template->registerFilter(new Latte\Engine);
+$latte = new Latte\Engine;
+$latte->setLoader(new Latte\Loaders\StringLoader);
 
-
-Assert::exception(function() use ($template) {
-	$template->setSource("\xAA")->compile();
+Assert::exception(function() use ($latte) {
+	$latte->compile("\xAA");
 }, 'Nette\InvalidArgumentException', '%a% UTF-8 %a%');

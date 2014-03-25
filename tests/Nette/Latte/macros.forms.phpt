@@ -7,7 +7,6 @@
  */
 
 use Nette\Latte,
-	Nette\Templating\FileTemplate,
 	Nette\Forms\Form,
 	Tester\Assert;
 
@@ -42,12 +41,19 @@ $form->addCheckboxList('checklist', NULL, array('m' => 'male', 'f' => 'female'))
 $form->addSubmit('send', 'Sign in');
 $form['my'] = new MyControl;
 
-$template = new FileTemplate(__DIR__ . '/templates/forms.latte');
-$template->registerFilter(new Latte\Engine);
-$template->_control = array('myForm' => $form);
+$latte = new Latte\Engine;
 
 $form['username']->addError('error');
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::matchFile("$path.phtml", codefix($template->compile()));
-Assert::matchFile("$path.html", $template->__toString(TRUE));
+Assert::matchFile(
+	"$path.phtml",
+	codefix($latte->compile(__DIR__ . '/templates/forms.latte'))
+);
+Assert::matchFile(
+	"$path.html",
+	$latte->renderToString(
+		__DIR__ . '/templates/forms.latte',
+		array('_control' => array('myForm' => $form))
+	)
+);

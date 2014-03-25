@@ -47,13 +47,13 @@ class MockPresenter extends MockControl
 }
 
 
-$template = new Nette\Templating\Template;
-$template->registerFilter(new Latte\Engine);
+$latte = new Latte\Engine;
+$latte->setLoader(new Latte\Loaders\StringLoader);
 
-$template->_control = new MockControl;
-$template->_presenter = new MockPresenter;
-$template->action = 'login';
-$template->arr = array('link' => 'login', 'param' => 123);
+$params['_control'] = new MockControl;
+$params['_presenter'] = new MockPresenter;
+$params['action'] = 'login';
+$params['arr'] = array('link' => 'login', 'param' => 123);
 
 Assert::match(<<<EOD
 plink:['Homepage:']
@@ -87,7 +87,7 @@ link:['login']
 <a href="link:['default!#hash',10,20]"></a>
 EOD
 
-, (string) $template->setSource(<<<EOD
+, $latte->renderToString(<<<EOD
 {plink Homepage:}
 
 {plink  Homepage: }
@@ -118,4 +118,4 @@ EOD
 
 <a n:href="default!#hash 10, 20"></a>
 EOD
-));
+, $params));

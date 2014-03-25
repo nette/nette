@@ -13,15 +13,15 @@ use Nette\Latte,
 require __DIR__ . '/../bootstrap.php';
 
 
-$template = new Nette\Templating\Template;
-$template->registerFilter(new Latte\Engine);
+$latte = new Latte\Engine;
+$latte->setLoader(new Latte\Loaders\StringLoader);
 
 Assert::match(<<<EOD
 qwerty
 
 EOD
 
-, (string) $template->setSource(<<<EOD
+, $latte->renderToString(<<<EOD
 {contentType text}
 qwerty
 
@@ -34,7 +34,7 @@ Assert::match(<<<EOD
 asdfgh
 EOD
 
-, (string) $template->setSource(<<<EOD
+, $latte->renderToString(<<<EOD
 
 {contentType text}
 asdfgh

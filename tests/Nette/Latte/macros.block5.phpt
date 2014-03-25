@@ -13,17 +13,11 @@ use Nette\Latte,
 require __DIR__ . '/../bootstrap.php';
 
 
-$template = new Nette\Templating\Template;
-$template->registerFilter(new Latte\Engine);
+$latte = new Latte\Engine;
+$latte->setLoader(new Latte\Loaders\StringLoader);
 
-$template->setSource('{define foobar}Hello{/define}');
-Assert::match('', (string) $template);
+Assert::match('', $latte->renderToString('{define foobar}Hello{/define}'));
 
+Assert::match('', $latte->renderToString('{define foo-bar}Hello{/define}'));
 
-$template->setSource('{define foo-bar}Hello{/define}');
-Assert::match('', (string) $template);
-
-
-$template->foo = 'bar';
-$template->setSource('{define $foo}Hello{/define}');
-Assert::match('', (string) $template);
+Assert::match('', $latte->renderToString('{define $foo}Hello{/define}', array('foo' => 'bar')));

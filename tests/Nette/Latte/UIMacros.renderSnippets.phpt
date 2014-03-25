@@ -17,13 +17,11 @@ class InnerControl extends Nette\Application\UI\Control
 {
 	public function render()
 	{
-		$template = new Nette\Templating\FileTemplate;
-		$template->registerFilter(new Latte\Engine);
-		$template->_presenter = $this->getPresenter();
-		$template->_control = $this;
-		$template->say = 'Hello';
-		$template->setFile(__DIR__ . '/templates/snippet-included.latte');
-		$template->render();
+		$latte = new Latte\Engine;
+		$params['_presenter'] = $this->getPresenter();
+		$params['_control'] = $this;
+		$params['say'] = 'Hello';
+		$latte->render(__DIR__ . '/templates/snippet-included.latte', $params);
 	}
 }
 
@@ -52,11 +50,9 @@ class TestPresenter extends Nette\Application\UI\Presenter
 
 	public function render()
 	{
-		$template = new Nette\Templating\FileTemplate;
-		$template->registerFilter(new Latte\Engine);
-		$template->_control = $this;
-		$template->setFile(__DIR__ . '/templates/snippet-include.latte');
-		$template->render();
+		$latte = new Latte\Engine;
+		$params['_control'] = $this;
+		$latte->render(__DIR__ . '/templates/snippet-include.latte', $params);
 	}
 }
 

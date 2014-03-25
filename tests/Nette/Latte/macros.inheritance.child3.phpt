@@ -7,19 +7,17 @@
  */
 
 use Nette\Latte,
-	Nette\Templating\FileTemplate,
 	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-$template = new FileTemplate;
-$template->setFile(__DIR__ . '/templates/inheritance.child3.latte');
-$template->registerFilter(new Latte\Engine);
+$latte = new Latte\Engine;
+$latte->setLoader(new Latte\Loaders\StringLoader);
 
 Assert::match(<<<EOD
 
 	Content
 EOD
-, $template->__toString(TRUE));
+, $latte->renderToString(file_get_contents(__DIR__ . '/templates/inheritance.child3.latte')));

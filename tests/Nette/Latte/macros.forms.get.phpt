@@ -7,7 +7,6 @@
  */
 
 use Nette\Latte,
-	Nette\Templating\FileTemplate,
 	Nette\Forms\Form,
 	Tester\Assert;
 
@@ -22,11 +21,17 @@ $form->setMethod('get');
 $form->setAction('?arg=val');
 $form->addSubmit('send', 'Sign in');
 
-$template = new FileTemplate(__DIR__ . '/templates/forms.get.latte');
-$template->registerFilter(new Latte\Engine);
-$template->_control = array('myForm' => $form);
-
+$latte = new Latte\Engine;
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::matchFile("$path.phtml", codefix($template->compile()));
-Assert::matchFile("$path.html", $template->__toString(TRUE));
+Assert::matchFile(
+	"$path.phtml",
+	codefix($latte->compile(__DIR__ . '/templates/forms.get.latte'))
+);
+Assert::matchFile(
+	"$path.html",
+	$latte->renderToString(
+		__DIR__ . '/templates/forms.get.latte',
+		array('_control' => array('myForm' => $form))
+	)
+);

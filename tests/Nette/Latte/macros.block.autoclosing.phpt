@@ -13,15 +13,15 @@ use Nette\Latte,
 require __DIR__ . '/../bootstrap.php';
 
 
-$template = new Nette\Templating\Template;
-$template->registerFilter(new Latte\Engine);
+$latte = new Latte\Engine;
+$latte->setLoader(new Latte\Loaders\StringLoader);
 
 Assert::match(<<<EOD
 Block
 
 EOD
 
-, (string) $template->setSource(<<<EOD
+, $latte->renderToString(<<<EOD
 {block}
 Block
 

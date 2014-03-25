@@ -40,15 +40,15 @@ class MockControl extends Object
 }
 
 
-$template = new Nette\Templating\Template;
-$template->registerFilter(new Latte\Engine);
-$template->registerHelperLoader('Nette\Latte\Runtime\Filters::loader');
+$latte = new Latte\Engine;
+$latte->setLoader(new Latte\Loaders\StringLoader);
+$latte->addFilterLoader('Nette\Latte\Runtime\Filters::loader');
 
-$template->_control = new MockComponent;
-$template->form = new MockControl;
-$template->name = 'form';
+$params['_control'] = new MockComponent;
+$params['form'] = new MockControl;
+$params['name'] = 'form';
 
-(string) $template->setSource('
+$latte->renderToString('
 {control \'name\'}
 
 {control form}
@@ -66,7 +66,7 @@ $template->name = 'form';
 {control form var1, 1, 2}
 
 {control form var1 => 5, 1, 2}
-');
+', $params);
 
 Assert::same( array(
 	"MockComponent::getComponent", array("name"),

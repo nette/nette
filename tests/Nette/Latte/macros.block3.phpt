@@ -13,20 +13,8 @@ use Nette\Latte,
 require __DIR__ . '/../bootstrap.php';
 
 
-$template = new Nette\Templating\Template;
-$template->registerFilter(new Latte\Engine);
-
-$template->setSource(<<<EOD
-<head>
-	<script src="nette.js"></script>
-	{include #meta}
-</head>
-
-{block meta}
-	<link rel="alternate">
-{/block}
-EOD
-);
+$latte = new Latte\Engine;
+$latte->setLoader(new Latte\Loaders\StringLoader);
 
 Assert::match(<<<EOD
 <head>
@@ -36,4 +24,14 @@ Assert::match(<<<EOD
 
 	<link rel="alternate">
 EOD
-, (string) $template);
+, $latte->renderToString(<<<EOD
+<head>
+	<script src="nette.js"></script>
+	{include #meta}
+</head>
+
+{block meta}
+	<link rel="alternate">
+{/block}
+EOD
+));

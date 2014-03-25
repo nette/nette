@@ -7,7 +7,6 @@
  */
 
 use Nette\Latte,
-	Nette\Templating\FileTemplate,
 	Tester\Assert;
 
 
@@ -16,12 +15,19 @@ require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/Template.inc';
 
 
-$template = new FileTemplate(__DIR__ . '/templates/ical.latte');
-$template->registerHelper('escape', 'Nette\Latte\Runtime\Filters::escapeICal');
-$template->registerFilter(new Latte\Engine);
-$template->registerHelperLoader('Nette\Latte\Runtime\Filters::loader');
-$template->netteHttpResponse = new Nette\Http\Response;
+$latte = new Latte\Engine;
+$latte->addFilter('escape', 'Nette\Latte\Runtime\Filters::escapeICal');
+$latte->addFilterLoader('Nette\Latte\Runtime\Filters::loader');
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::matchFile("$path.phtml", codefix($template->compile()));
-Assert::matchFile("$path.html", $template->__toString(TRUE));
+Assert::matchFile(
+	"$path.phtml",
+	codefix($latte->compile(__DIR__ . '/templates/ical.latte'))
+);
+Assert::matchFile(
+	"$path.html",
+	$latte->renderToString(
+		__DIR__ . '/templates/ical.latte',
+		array('netteHttpResponse' => new Nette\Http\Response)
+	)
+);
