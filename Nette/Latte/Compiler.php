@@ -55,14 +55,14 @@ class Compiler extends Nette\Object
 	private $templateId;
 
 	/** Context-aware escaping content types */
-	const CONTENT_HTML = 'html',
-		CONTENT_XHTML = 'xhtml',
-		CONTENT_XML = 'xml',
-		CONTENT_JS = 'js',
-		CONTENT_CSS = 'css',
-		CONTENT_URL = 'url',
-		CONTENT_ICAL = 'ical',
-		CONTENT_TEXT = 'text';
+	const CONTENT_HTML = Engine::CONTENT_HTML,
+		CONTENT_XHTML = Engine::CONTENT_XHTML,
+		CONTENT_XML = Engine::CONTENT_XML,
+		CONTENT_JS = Engine::CONTENT_JS,
+		CONTENT_CSS = Engine::CONTENT_CSS,
+		CONTENT_ICAL = Engine::CONTENT_ICAL,
+		CONTENT_TEXT = Engine::CONTENT_TEXT,
+		CONTENT_URL = 'url';
 
 	/** @internal Context-aware escaping HTML contexts */
 	const CONTEXT_COMMENT = 'comment',
