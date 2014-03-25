@@ -17,34 +17,157 @@ use Nette;
  */
 class Engine extends Nette\Object
 {
+	/** Content types */
+	const CONTENT_HTML = Compiler::CONTENT_HTML,
+		CONTENT_XHTML = Compiler::CONTENT_XHTML,
+		CONTENT_XML = Compiler::CONTENT_XML,
+		CONTENT_JS = Compiler::CONTENT_JS,
+		CONTENT_CSS = Compiler::CONTENT_CSS,
+		CONTENT_ICAL = Compiler::CONTENT_ICAL,
+		CONTENT_TEXT = Compiler::CONTENT_TEXT;
+
+	/** @var array */
+	public $onCompile;
+
 	/** @var Parser */
 	private $parser;
 
 	/** @var Compiler */
 	private $compiler;
 
+	/** @var ILoader */
+	private $loader;
 
-	public function __construct()
+	/** @var string */
+	private $contentType = self::CONTENT_HTML;
+
+	/** @var array run-time filters */
+	private $filters = array(
+		NULL => array(), // dynamic
+	);
+
+	/** @internal @var Nette\Caching\IStorage */
+	public $cacheStorage;
+
+
+	/**
+	 * Renders template to output.
+	 * @return void
+	 */
+	public function render($name, array $params = array())
 	{
-		$this->parser = new Parser;
-		$this->compiler = new Compiler;
-		$this->compiler->defaultContentType = Compiler::CONTENT_HTML;
-
-		Macros\CoreMacros::install($this->compiler);
-		$this->compiler->addMacro('cache', new Nette\Bridges\CacheLatte\CacheMacro($this->compiler));
-		Macros\UIMacros::install($this->compiler);
-		Nette\Bridges\FormsLatte\FormMacros::install($this->compiler);
+		if ($this->getLoader() instanceof Loaders\FileLoader) {
+			$template = new Nette\Templating\FileTemplate($name);
+		} else {
+			$template = new Nette\Templating\Template;
+			$template->setSource($name);
+		}
+		$template->registerFilter($this);
+		$template->setParameters($params);
+		foreach ($this->filters as $key => $callback) {
+			$template->registerHelper($key, $callback);
+		}
+		foreach ($this->filters[NULL] as $callback) {
+			$template->registerHelperLoader($callback);
+		}
+		if ($this->cacheStorage) {
+			$template->setCacheStorage($this->cacheStorage);
+		}
+		$template->render();
 	}
 
 
 	/**
-	 * Invokes filter.
-	 * @param  string
+	 * Renders template to string.
 	 * @return string
+	 */
+	public function renderToString($name, array $params = array())
+	{
+		ob_start();
+		try {
+			$this->render($name, $params);
+		} catch (\Exception $e) {
+			ob_end_clean();
+			throw $e;
+		}
+		return ob_get_clean();
+	}
+
+
+	/**
+	 * Compiles template to PHP code.
+	 * @return string
+	 */
+	public function compile($name)
+	{
+		if ($this->onCompile) {
+			$this->onCompile($this);
+			$this->onCompile = array();
+		}
+		$this->getCompiler()->defaultContentType = $this->contentType;
+		$source = $this->getLoader()->getContent($name);
+		$tokens = $this->getParser()->parse($source);
+		$code = $this->getCompiler()->compile($tokens);
+		$code = Helpers::optimizePhp($code);
+		return $code;
+	}
+
+
+	/**
+	 * Registers run-time filter.
+	 * @param  string|NULL
+	 * @param  callable
+	 * @return self
+	 */
+	public function addFilter($name, $callback)
+	{
+		if ($name == NULL) { // intentionally ==
+			array_unshift($this->filters[NULL], $callback);
+		} else {
+			$this->filters[strtolower($name)] = $callback;
+		}
+		return $this;
+	}
+
+
+	/**
+	 * Returns all run-time filters.
+	 * @return callable[]
+	 */
+	public function getFilters()
+	{
+		return $this->filters;
+	}
+
+
+	/**
+	 * Adds new macro.
+	 * @return self
+	 */
+	public function addMacro($name, IMacro $macro)
+	{
+		$this->getCompiler()->addMacro($name, $macro);
+		return $this;
+	}
+
+
+	/**
+	 * @return self
+	 */
+	public function setContentType($type)
+	{
+		$this->contentType = $type;
+		return $this;
+	}
+
+
+	/**
+	 * @deprecated
 	 */
 	public function __invoke($s)
 	{
-		return $this->compiler->compile($this->parser->parse($s));
+		return $this->setLoader(new Loaders\StringLoader)
+			->getCompiler()->compile($this->getParser()->parse($s));
 	}
 
 
@@ -53,6 +176,9 @@ class Engine extends Nette\Object
 	 */
 	public function getParser()
 	{
+		if (!$this->parser) {
+			$this->parser = new Parser;
+		}
 		return $this->parser;
 	}
 
@@ -62,7 +188,36 @@ class Engine extends Nette\Object
 	 */
 	public function getCompiler()
 	{
+		if (!$this->compiler) {
+			$this->compiler = new Compiler;
+			Macros\CoreMacros::install($this->compiler);
+			$this->compiler->addMacro('cache', new Nette\Bridges\CacheLatte\CacheMacro($this->compiler));
+			Macros\UIMacros::install($this->compiler);
+			Nette\Bridges\FormsLatte\FormMacros::install($this->compiler);
+		}
 		return $this->compiler;
+	}
+
+
+	/**
+	 * @return self
+	 */
+	public function setLoader(ILoader $loader)
+	{
+		$this->loader = $loader;
+		return $this;
+	}
+
+
+	/**
+	 * @return ILoader
+	 */
+	public function getLoader()
+	{
+		if (!$this->loader) {
+			$this->loader = new Loaders\FileLoader;
+		}
+		return $this->loader;
 	}
 
 }
