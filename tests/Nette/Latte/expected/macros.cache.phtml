@@ -1,4 +1,6 @@
 <?php
+// source: %a%
+
 // prolog Nette\Latte\Macros\CoreMacros
 list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
@@ -20,6 +22,6 @@ Noncached content
 
 <h1><?php echo Nette\Latte\Runtime\Filters::escapeHtml($template->upper($title), ENT_NOQUOTES) ?></h1>
 
-<?php Nette\Latte\Macros\CoreMacros::includeTemplate('include.cache.latte', array('localvar' => 11) + $template->getParameters(), $_l->templates['%[a-z0-9]+%'])->render() ?>
+<?php $_l->templates['%[a-z0-9]+%']->renderChildTemplate('include.cache.latte', array('localvar' => 11) + $template->getParameters()) ?>
 
 <?php $_l->tmp = array_pop($_g->caches); if (!$_l->tmp instanceof stdClass) $_l->tmp->end(); }

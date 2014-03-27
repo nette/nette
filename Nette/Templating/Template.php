@@ -17,7 +17,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class Template extends Nette\Object implements ITemplate
+class Template extends Nette\Latte\Template implements ITemplate
 {
 	/** @var array of function(Template $sender); Occurs before a template is compiled - implement to customize the filters */
 	public $onPrepareFilters = array();
@@ -25,17 +25,8 @@ class Template extends Nette\Object implements ITemplate
 	/** @var string */
 	private $source;
 
-	/** @var array */
-	private $params = array();
-
 	/** @var array compile-time filters */
-	private $filters = array();
-
-	/** @var array run-time helpers */
-	private $helpers = array();
-
-	/** @var array */
-	private $helperLoaders = array();
+	private $preFilters = array();
 
 	/** @var Nette\Caching\IStorage */
 	private $cacheStorage;
@@ -142,18 +133,37 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function compile()
 	{
-		if (!$this->filters) {
+		if (!$this->preFilters) {
 			$this->onPrepareFilters($this);
 		}
 
 		$code = $this->getSource();
-		foreach ($this->filters as $filter) {
+		foreach ($this->preFilters as $filter) {
 			$code = self::extractPhp($code, $blocks);
 			$code = call_user_func($filter, $code);
 			$code = strtr($code, $blocks); // put PHP code back
 		}
 
 		return Nette\Latte\Helpers::optimizePhp($code);
+	}
+
+
+	/**
+	 * @internal
+	 */
+	public function renderChildTemplate($name, array $params = array())
+	{
+		if ($this instanceof Nette\Templating\IFileTemplate) {
+			if (!preg_match('#/|[a-z]:#iA', $name)) {
+				$name = dirname($this->getFile()) . '/' . $name;
+			}
+			$tpl = clone $this;
+			$tpl->setFile($name);
+			$tpl->setParameters($params);
+			$tpl->render();
+		} else {
+			parent::renderChildTemplate($name, $params);
+		}
 	}
 
 
@@ -167,18 +177,8 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function registerFilter($callback)
 	{
-		$this->filters[] = Callback::check($callback);
+		$this->preFilters[] = Callback::check($callback);
 		return $this;
-	}
-
-
-	/**
-	 * Returns all registered compile-time filters.
-	 * @return array
-	 */
-	public function getFilters()
-	{
-		return $this->filters;
 	}
 
 
@@ -190,7 +190,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function registerHelper($name, $callback)
 	{
-		$this->helpers[strtolower($name)] = $callback;
+		$this->filters[strtolower($name)] = $callback;
 		return $this;
 	}
 
@@ -202,7 +202,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function registerHelperLoader($callback)
 	{
-		array_unshift($this->helperLoaders, $callback);
+		array_unshift($this->filters[NULL], $callback);
 		return $this;
 	}
 
@@ -213,7 +213,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function getHelpers()
 	{
-		return $this->helpers;
+		return $this->filters;
 	}
 
 
@@ -223,31 +223,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function getHelperLoaders()
 	{
-		return $this->helperLoaders;
-	}
-
-
-	/**
-	 * Call a template run-time helper. Do not call directly.
-	 * @param  string  helper name
-	 * @param  array   arguments
-	 * @return mixed
-	 */
-	public function __call($name, $args)
-	{
-		$lname = strtolower($name);
-		if (!isset($this->helpers[$lname])) {
-			foreach ($this->helperLoaders as $loader) {
-				$helper = Callback::invoke($loader, $lname);
-				if ($helper) {
-					$this->registerHelper($lname, $helper);
-					return Callback::invokeArgs($this->helpers[$lname], $args);
-				}
-			}
-			return parent::__call($name, $args);
-		}
-
-		return Callback::invokeArgs($this->helpers[$lname], $args);
+		return $this->filters[NULL];
 	}
 
 
@@ -257,7 +233,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
 	{
-		$this->registerHelper('translate', $translator === NULL ? NULL : array($translator, 'translate'));
+		$this->filters['translate'] = $translator === NULL ? NULL : array($translator, 'translate');
 		return $this;
 	}
 
@@ -281,18 +257,6 @@ class Template extends Nette\Object implements ITemplate
 
 
 	/**
-	 * Sets all parameters.
-	 * @param  array
-	 * @return self
-	 */
-	public function setParameters(array $params)
-	{
-		$this->params = $params + $this->params;
-		return $this;
-	}
-
-
-	/**
 	 * Returns array of all parameters.
 	 * @return array
 	 */
@@ -300,51 +264,6 @@ class Template extends Nette\Object implements ITemplate
 	{
 		$this->params['template'] = $this;
 		return $this->params;
-	}
-
-
-	/**
-	 * Sets a template parameter. Do not call directly.
-	 * @return void
-	 */
-	public function __set($name, $value)
-	{
-		$this->params[$name] = $value;
-	}
-
-
-	/**
-	 * Returns a template parameter. Do not call directly.
-	 * @return mixed  value
-	 */
-	public function &__get($name)
-	{
-		if (!array_key_exists($name, $this->params)) {
-			trigger_error("The variable '$name' does not exist in template.", E_USER_NOTICE);
-		}
-
-		return $this->params[$name];
-	}
-
-
-	/**
-	 * Determines whether parameter is defined. Do not call directly.
-	 * @return bool
-	 */
-	public function __isset($name)
-	{
-		return isset($this->params[$name]);
-	}
-
-
-	/**
-	 * Removes a template parameter. Do not call directly.
-	 * @param  string    name
-	 * @return void
-	 */
-	public function __unset($name)
-	{
-		unset($this->params[$name]);
 	}
 
 

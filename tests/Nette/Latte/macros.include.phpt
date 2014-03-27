@@ -13,11 +13,9 @@ use Nette\Latte,
 
 require __DIR__ . '/../bootstrap.php';
 
-require __DIR__ . '/Template.inc';
-
 
 $latte = new Latte\Engine;
-$latte->cacheStorage = new MockCacheStorage;
+$latte->setTempDirectory(TEMP_DIR);
 $latte->addFilter(NULL, 'Nette\Latte\Runtime\Filters::loader');
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
@@ -32,13 +30,6 @@ Assert::matchFile(
 		array('hello' => '<i>Hello</i>')
 	)
 );
-Assert::matchFile("$path.inc1.phtml", $latte->cacheStorage->phtml['include1.latte']);
-Assert::matchFile("$path.inc2.phtml", $latte->cacheStorage->phtml['include2.latte']);
-Assert::matchFile("$path.inc3.phtml", $latte->cacheStorage->phtml['include3.latte']);
-
-
-Assert::exception(function() {
-	$latte = new Latte\Engine;
-	$latte->setLoader(new Latte\Loaders\StringLoader);
-	$latte->renderToString('{include somefile.latte}');
-}, 'Nette\NotSupportedException', 'Macro {include "filename"} is supported only with Nette\Templating\IFileTemplate.');
+Assert::matchFile("$path.inc1.phtml", file_get_contents($latte->getCacheFile(__DIR__ . '/templates/subdir/include1.latte')));
+Assert::matchFile("$path.inc2.phtml", file_get_contents($latte->getCacheFile(__DIR__ . '/templates/subdir/include2.latte')));
+Assert::matchFile("$path.inc3.phtml", file_get_contents($latte->getCacheFile(__DIR__ . '/templates/subdir/../include3.latte')));

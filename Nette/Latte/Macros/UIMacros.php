@@ -110,7 +110,7 @@ class UIMacros extends MacroSet
 
 			$prolog[] = '
 if ($_l->extends) {
-	' . ($this->namedBlocks ? 'ob_start();' : 'return Nette\Latte\Macros\CoreMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render();') . '
+	' . ($this->namedBlocks ? 'ob_start();' : 'return $template->renderChildTemplate($_l->extends, get_defined_vars());') . '
 
 } elseif (!empty($_control->snippetMode)) {
 	return Nette\Latte\Macros\UIMacros::renderSnippets($_control, $_l, get_defined_vars());
@@ -170,7 +170,7 @@ if (!empty($_control->snippetMode)) {
 	 */
 	public function macroIncludeBlock(MacroNode $node, PhpWriter $writer)
 	{
-		return $writer->write('Nette\Latte\Macros\CoreMacros::includeTemplate(%node.word, %node.array? + get_defined_vars(), $_l->templates[%var])->render()',
+		return $writer->write('$_l->templates[%var]->renderChildTemplate(%node.word, %node.array? + get_defined_vars())',
 			$this->getCompiler()->getTemplateId());
 	}
 
@@ -265,7 +265,7 @@ if (!empty($_control->snippetMode)) {
 			throw new CompileException("Cannot redeclare static {$node->name} '$name'");
 		}
 
-		$prolog = $this->namedBlocks ? '' : "if (\$_l->extends) { ob_end_clean(); return Nette\\Latte\\Macros\\CoreMacros::includeTemplate(\$_l->extends, get_defined_vars(), \$template)->render(); }\n";
+		$prolog = $this->namedBlocks ? '' : "if (\$_l->extends) { ob_end_clean(); return \$template->renderChildTemplate(\$_l->extends, get_defined_vars()); }\n";
 		$this->namedBlocks[$name] = TRUE;
 
 		$include = 'call_user_func(reset($_l->blocks[%var]), $_l, ' . (($node->name === 'snippet' || $node->name === 'snippetArea') ? '$template->getParameters()' : 'get_defined_vars()') . ')';

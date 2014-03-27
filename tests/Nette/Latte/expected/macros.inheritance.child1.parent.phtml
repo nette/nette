@@ -1,8 +1,6 @@
 <?php
+// source: %a%
 
-// source file: %a%
-
-?><?php
 // prolog Nette\Latte\Macros\CoreMacros
 list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
@@ -45,13 +43,13 @@ extract(array('class' => NULL, 'namespace' => NULL, 'top' => TRUE), EXTR_SKIP) ?
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 	<link rel="stylesheet" href="style.css">
-	<title><?php if ($_l->extends) { ob_end_clean(); return Nette\Latte\Macros\CoreMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render(); }
-call_user_func(reset($_l->blocks['title']), $_l, get_defined_vars()) ?></title>
+	<title><?php if ($_l->extends) { ob_end_clean(); return $template->renderChildTemplate($_l->extends, get_defined_vars()); }
+call_user_func(reset($_l->blocks['title']), $_l, get_defined_vars())  ?></title>
 </head>
 
 <body>
 	<div id="sidebar">
-<?php call_user_func(reset($_l->blocks['sidebar']), $_l, get_defined_vars()) ?>
+<?php call_user_func(reset($_l->blocks['sidebar']), $_l, get_defined_vars())  ?>
 	</div>
 
 	<div id="content">

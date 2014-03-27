@@ -1,4 +1,6 @@
 <?php
+// source: %a%
+
 // prolog Nette\Latte\Macros\CoreMacros
 list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
@@ -158,7 +160,7 @@ var prop2 = <?php echo Nette\Latte\Runtime\Filters::escapeJs($people) ?>;
 
 
 
-<?php $counter = 0 ;if ($_l->extends) { ob_end_clean(); return Nette\Latte\Macros\CoreMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render(); }
+<?php $counter = 0 ;if ($_l->extends) { ob_end_clean(); return $template->renderChildTemplate($_l->extends, get_defined_vars()); }
 call_user_func(reset($_l->blocks['menu']), $_l, get_defined_vars())  ?>
 
 

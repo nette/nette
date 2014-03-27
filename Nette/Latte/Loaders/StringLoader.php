@@ -27,4 +27,23 @@ class StringLoader extends Nette\Object implements Nette\Latte\ILoader
 		return $content;
 	}
 
+
+	/**
+	 * @return bool
+	 */
+	public function isExpired($content, $time)
+	{
+		return FALSE;
+	}
+
+
+	/**
+	 * Returns fully qualified template name.
+	 * @return string
+	 */
+	public function getChildName($content, $parent = NULL)
+	{
+		return $content;
+	}
+
 }

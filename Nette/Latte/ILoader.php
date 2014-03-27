@@ -22,4 +22,16 @@ interface ILoader
 	 */
 	function getContent($name);
 
+	/**
+	 * Checks whether template is expired.
+	 * @return bool
+	 */
+	function isExpired($name, $time);
+
+	/**
+	 * Returns fully qualified template name.
+	 * @return string
+	 */
+	function getChildName($name, $parent = NULL);
+
 }

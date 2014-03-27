@@ -1,4 +1,6 @@
 <?php
+// source: %a%
+
 // prolog Nette\Latte\Macros\CoreMacros
 list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
@@ -12,6 +14,6 @@ if (%A%}
 //
 ?>
 
-<?php Nette\Latte\Macros\CoreMacros::includeTemplate('includeblock.inc.latte', get_defined_vars(), $_l->templates['%[a-z0-9]+%'])->render() ?>
+<?php $_l->templates['%[a-z0-9]+%']->renderChildTemplate('includeblock.inc.latte', get_defined_vars()) ?>
 
 <?php Nette\Latte\Macros\UIMacros::callBlock($_l, 'test', $template->getParameters()) ;
