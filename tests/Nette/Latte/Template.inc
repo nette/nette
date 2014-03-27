@@ -23,15 +23,7 @@ class MockCacheStorage extends PhpFileStorage
 
 	public function write($key, $data, array $dp)
 	{
-		$this->phtml[basename($this->hint)] = codefix($data);
+		$this->phtml[basename($this->hint)] = $data;
 	}
 
-}
-
-
-function codefix($s)
-{
-	$s = preg_replace("#(?<=['_])[a-z0-9]{10,}(?=['_])#", 'xxx', $s);
-	$s = preg_replace('#source file:.*#', '', $s);
-	return $s;
 }

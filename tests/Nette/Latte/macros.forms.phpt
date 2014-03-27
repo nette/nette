@@ -14,8 +14,6 @@ use Nette\Latte,
 
 require __DIR__ . '/../bootstrap.php';
 
-require __DIR__ . '/Template.inc';
-
 
 class MyControl extends Nette\Forms\Controls\BaseControl
 {
@@ -49,5 +47,5 @@ $template->_control = array('myForm' => $form);
 $form['username']->addError('error');
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::matchFile("$path.phtml", codefix($template->compile()));
+Assert::matchFile("$path.phtml", $template->compile());
 Assert::matchFile("$path.html", $template->__toString(TRUE));

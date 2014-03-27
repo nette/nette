@@ -13,8 +13,6 @@ use Nette\Latte,
 
 require __DIR__ . '/../bootstrap.php';
 
-require __DIR__ . '/Template.inc';
-
 
 class MyHelper
 {
@@ -48,5 +46,5 @@ $template->hello = 'Hello World';
 $template->date = strtotime('2008-01-02');
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::matchFile("$path.phtml", codefix($template->compile()));
+Assert::matchFile("$path.phtml", $template->compile());
 Assert::matchFile("$path.html", $template->__toString(TRUE));

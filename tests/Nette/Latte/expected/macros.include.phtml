@@ -1,6 +1,6 @@
 <?php
 // prolog Nette\Latte\Macros\CoreMacros
-list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
+list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
 // prolog Nette\Latte\Macros\UIMacros
 
@@ -12,4 +12,4 @@ if (%A%}
 //
 ?>
 
-<?php echo $template->indent(Nette\Latte\Macros\CoreMacros::includeTemplate('subdir/include1.latte', array('localvar' => 10) + $template->getParameters(), $_l->templates['xxx'])->__toString(TRUE)) ?>
+<?php echo $template->indent(Nette\Latte\Macros\CoreMacros::includeTemplate('subdir/include1.latte', array('localvar' => 10) + $template->getParameters(), $_l->templates['%[a-z0-9]+%'])->__toString(TRUE)) ?>

@@ -13,8 +13,6 @@ use Nette\Latte,
 
 require __DIR__ . '/../bootstrap.php';
 
-require __DIR__ . '/Template.inc';
-
 
 class MockComponent extends Object
 {
