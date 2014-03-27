@@ -1,8 +1,6 @@
 <?php
+// source: %a%
 
-// source file: %a%
-
-?><?php
 // prolog Nette\Latte\Macros\CoreMacros
 list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
@@ -30,4 +28,4 @@ if ($_l->extends) {
 //
 // main template
 //
-if ($_l->extends) { ob_end_clean(); return Nette\Latte\Macros\CoreMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render(); }
+if ($_l->extends) { ob_end_clean(); return $template->renderChildTemplate($_l->extends, get_defined_vars()); }

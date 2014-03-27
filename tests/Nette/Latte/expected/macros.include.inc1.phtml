@@ -1,8 +1,6 @@
 <?php
+// source: %a%
 
-// source file: %a%
-
-?><?php
 // prolog Nette\Latte\Macros\CoreMacros
 list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
@@ -17,9 +15,9 @@ if (%A%}
 ?>
 <p>Included file #1</p>
 
-<?php Nette\Latte\Macros\CoreMacros::includeTemplate("include2.latte", array('localvar' => 20) + $template->getParameters(), $_l->templates['%[a-z0-9]+%'])->render() ?>
+<?php $_l->templates['%[a-z0-9]+%']->renderChildTemplate("include2.latte", array('localvar' => 20) + $template->getParameters()) ?>
 
-<?php Nette\Latte\Macros\CoreMacros::includeTemplate("../include3.latte", $template->getParameters(), $_l->templates['%[a-z0-9]+%'])->render() ?>
+<?php $_l->templates['%[a-z0-9]+%']->renderChildTemplate("../include3.latte", $template->getParameters()) ?>
 
 <textarea>
 pre

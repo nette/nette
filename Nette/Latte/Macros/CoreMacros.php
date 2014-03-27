@@ -203,13 +203,13 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroInclude(MacroNode $node, PhpWriter $writer)
 	{
-		$code = $writer->write('Nette\Latte\Macros\CoreMacros::includeTemplate(%node.word, %node.array? + $template->getParameters(), $_l->templates[%var])',
+		$code = $writer->write('$_l->templates[%var]->renderChildTemplate(%node.word, %node.array? + $template->getParameters())',
 			$this->getCompiler()->getTemplateId());
 
 		if ($node->modifiers) {
-			return $writer->write('echo %modify(%raw->__toString(TRUE))', $code);
+			return $writer->write('ob_start(); %raw; echo %modify(ob_get_clean())', $code);
 		} else {
-			return $code . '->render()';
+			return $code;
 		}
 	}
 
@@ -372,41 +372,10 @@ class CoreMacros extends MacroSet
 
 
 	/**
-	 * Includes subtemplate.
-	 * @param  mixed      included file name or template
-	 * @param  array      parameters
-	 * @param  Nette\Templating\ITemplate  current template
-	 * @return Nette\Templating\Template
-	 */
-	public static function includeTemplate($destination, array $params, Nette\Templating\ITemplate $template)
-	{
-		if ($destination instanceof Nette\Templating\ITemplate) {
-			$tpl = $destination;
-
-		} elseif ($destination == NULL) { // intentionally ==
-			throw new Nette\InvalidArgumentException("Template file name was not specified.");
-
-		} elseif ($template instanceof Nette\Templating\IFileTemplate) {
-			if (substr($destination, 0, 1) !== '/' && substr($destination, 1, 1) !== ':') {
-				$destination = dirname($template->getFile()) . '/' . $destination;
-			}
-			$tpl = clone $template;
-			$tpl->setFile($destination);
-
-		} else {
-			throw new Nette\NotSupportedException('Macro {include "filename"} is supported only with Nette\Templating\IFileTemplate.');
-		}
-
-		$tpl->setParameters($params); // interface?
-		return $tpl;
-	}
-
-
-	/**
 	 * Initializes local & global storage in template.
-	 * @return \stdClass
+	 * @return [\stdClass, \stdClass]
 	 */
-	public static function initRuntime(Nette\Templating\ITemplate $template, $templateId)
+	public static function initRuntime(Nette\Latte\Template $template, $templateId)
 	{
 		// local storage
 		if (isset($template->_l)) {

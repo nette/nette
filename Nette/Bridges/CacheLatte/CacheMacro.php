@@ -75,10 +75,10 @@ class CacheMacro extends Nette\Object implements Latte\IMacro
 	/**
 	 * @return void
 	 */
-	public static function initRuntime(Nette\Templating\FileTemplate $template, \stdClass $global)
+	public static function initRuntime(Nette\Latte\Template $template, \stdClass $global)
 	{
-		if (!empty($global->caches)) {
-			end($global->caches)->dependencies[Nette\Caching\Cache::FILES][] = $template->getFile();
+		if (!empty($global->caches) && $template->getEngine()->getLoader() instanceof Nette\Latte\Loaders\FileLoader) {
+			end($global->caches)->dependencies[Nette\Caching\Cache::FILES][] = $template->getName();
 		}
 	}
 

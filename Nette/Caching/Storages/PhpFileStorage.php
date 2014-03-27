@@ -50,4 +50,13 @@ class PhpFileStorage extends FileStorage
 		)) . '.php';
 	}
 
+
+	/**
+	 * @return string
+	 */
+	public function getDir()
+	{
+		return dirname(parent::getCacheFile(NULL));
+	}
+
 }

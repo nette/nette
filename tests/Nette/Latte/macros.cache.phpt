@@ -12,11 +12,9 @@ use Nette\Latte,
 
 require __DIR__ . '/../bootstrap.php';
 
-require __DIR__ . '/Template.inc';
-
 
 $latte = new Latte\Engine;
-$latte->cacheStorage = new MockCacheStorage;
+$latte->setTempDirectory(TEMP_DIR);
 $latte->addFilter(NULL, 'Nette\Latte\Runtime\Filters::loader');
 
 $params['netteCacheStorage'] = new Nette\Caching\Storages\DevNullStorage;
@@ -35,4 +33,4 @@ Assert::matchFile(
 		$params
 	)
 );
-Assert::matchFile("$path.inc.phtml", $latte->cacheStorage->phtml['include.cache.latte']);
+Assert::matchFile("$path.inc.phtml", file_get_contents($latte->getCacheFile(__DIR__ . '/templates/include.cache.latte')));

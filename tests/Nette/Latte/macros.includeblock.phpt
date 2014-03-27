@@ -13,11 +13,9 @@ use Nette\Latte,
 
 require __DIR__ . '/../bootstrap.php';
 
-require __DIR__ . '/Template.inc';
-
 
 $latte = new Latte\Engine;
-$latte->cacheStorage = new MockCacheStorage;
+$latte->setTempDirectory(TEMP_DIR);
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::matchFile(
@@ -28,4 +26,4 @@ Assert::matchFile(
 	"$path.html",
 	$latte->renderToString(__DIR__ . '/templates/includeblock.latte')
 );
-Assert::matchFile("$path.inc.phtml", $latte->cacheStorage->phtml['includeblock.inc.latte']);
+Assert::matchFile("$path.inc.phtml", file_get_contents($latte->getCacheFile(__DIR__ . '/templates/includeblock.inc.latte')));

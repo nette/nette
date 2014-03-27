@@ -15,6 +15,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $latte = new Latte\Engine;
+$latte->setTempDirectory(TEMP_DIR);
 $latte->addFilter('translate', 'strrev');
 $latte->addFilter('join', 'implode');
 $latte->addFilter(NULL, 'Nette\Latte\Runtime\Filters::loader');

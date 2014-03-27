@@ -23,6 +23,9 @@ class Template extends Nette\Object implements ITemplate
 	public $onPrepareFilters = array();
 
 	/** @var string */
+	protected $useLatte;
+
+	/** @var string */
 	private $source;
 
 	/** @var array */
@@ -72,6 +75,13 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function render()
 	{
+		if (!$this->filters) {
+			$this->onPrepareFilters($this);
+		}
+		if ($this->useLatte) {
+			return $this->createLatte()->setLoader(new Nette\Latte\Loaders\StringLoader)->render($this->source, $this->getParameters());
+		}
+
 		$cache = new Caching\Cache($storage = $this->getCacheStorage(), 'Nette.Template');
 		$cached = $compiled = $cache->load($this->source);
 
@@ -153,7 +163,31 @@ class Template extends Nette\Object implements ITemplate
 			$code = strtr($code, $blocks); // put PHP code back
 		}
 
-		return Nette\Latte\Helpers::optimizePhp($code);
+		if ($this->useLatte) {
+			return $this->createLatte()->setLoader(new Nette\Latte\Loaders\StringLoader)->compile($code);
+		}
+
+		return Helpers::optimizePhp($code);
+	}
+
+
+	protected function createLatte()
+	{
+		$latte = new Nette\Latte\Engine;
+
+		foreach ($this->helpers as $key => $callback) {
+			$latte->addFilter($key, $callback);
+		}
+
+		foreach ($this->helperLoaders as $callback) {
+			$latte->addFilter(NULL, $callback);
+		}
+
+		if ($this->cacheStorage instanceof Nette\Caching\Storages\PhpFileStorage) {
+			$latte->setTempDirectory($this->cacheStorage->getDir());
+		}
+
+		return $latte;
 	}
 
 
@@ -167,7 +201,13 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function registerFilter($callback)
 	{
-		$this->filters[] = Callback::check($callback);
+		if ($callback instanceof Nette\Latte\Engine || strpos(Callback::toString($callback), 'Latte\Engine') !== FALSE) { // back compatibility
+			$this->useLatte = TRUE;
+		} elseif ($this->useLatte) {
+			throw new Nette\DeprecatedException('Adding filters after Latte is not possible.');
+		} else {
+			$this->filters[] = Callback::check($callback);
+		}
 		return $this;
 	}
 
