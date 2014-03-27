@@ -1,6 +1,6 @@
 <?php
 // prolog Nette\Latte\Macros\CoreMacros
-list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
+list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
 // prolog Nette\Bridges\CacheLatte\CacheMacro
 Nette\Bridges\CacheLatte\CacheMacro::initRuntime($template, $_g);
@@ -16,10 +16,10 @@ if (%A%}
 ?>
 Noncached content
 
-<?php if (Nette\Bridges\CacheLatte\CacheMacro::createCache($netteCacheStorage, 'xxx', $_g->caches, array($id, 'tags' => 'mytag'))) { ?>
+<?php if (Nette\Bridges\CacheLatte\CacheMacro::createCache($netteCacheStorage, '%[a-z0-9]+%', $_g->caches, array($id, 'tags' => 'mytag'))) { ?>
 
 <h1><?php echo Nette\Latte\Runtime\Filters::escapeHtml($template->upper($title), ENT_NOQUOTES) ?></h1>
 
-<?php Nette\Latte\Macros\CoreMacros::includeTemplate('include.cache.latte', array('localvar' => 11) + $template->getParameters(), $_l->templates['xxx'])->render() ?>
+<?php Nette\Latte\Macros\CoreMacros::includeTemplate('include.cache.latte', array('localvar' => 11) + $template->getParameters(), $_l->templates['%[a-z0-9]+%'])->render() ?>
 
 <?php $_l->tmp = array_pop($_g->caches); if (!$_l->tmp instanceof stdClass) $_l->tmp->end(); }

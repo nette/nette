@@ -1,19 +1,19 @@
 <?php
 // prolog Nette\Latte\Macros\CoreMacros
-list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
+list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
 // prolog Nette\Latte\Macros\UIMacros
 //
 // block title
 //
-if (!function_exists($_l->blocks['title'][] = '_xxx_title')) { function _xxx_title($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
+if (!function_exists($_l->blocks['title'][] = '_%[a-z0-9]+%_title')) { function _%[a-z0-9]+%_title($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
 ?>Homepage | <?php Nette\Latte\Macros\UIMacros::callBlockParent($_l, 'title', get_defined_vars()) ;
 }}
 
 //
 // block content
 //
-if (!function_exists($_l->blocks['content'][] = '_xxx_content')) { function _xxx_content($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
+if (!function_exists($_l->blocks['content'][] = '_%[a-z0-9]+%_content')) { function _%[a-z0-9]+%_content($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
 ?>	<ul>
 <?php $iterations = 0; foreach ($people as $person) { ?>
 		<li><?php echo Nette\Latte\Runtime\Filters::escapeHtml($person, ENT_NOQUOTES) ?></li>

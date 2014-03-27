@@ -14,8 +14,6 @@ use Nette\Latte,
 
 require __DIR__ . '/../bootstrap.php';
 
-require __DIR__ . '/Template.inc';
-
 
 $latte = new Latte\Engine;
 $latte->compiler->defaultContentType = Latte\Compiler::CONTENT_XHTML;
@@ -32,5 +30,5 @@ $template->menu = array('about', array('product1', 'product2'), 'contact');
 $template->el = Html::el('div')->title('1/2"');
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::matchFile("$path.phtml", codefix($template->compile()));
+Assert::matchFile("$path.phtml", $template->compile());
 Assert::matchFile("$path.html", $template->__toString(TRUE));

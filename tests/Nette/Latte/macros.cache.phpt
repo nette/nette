@@ -26,6 +26,6 @@ $template->title = 'Hello';
 $template->id = 456;
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::matchFile("$path.phtml", codefix($template->compile()));
+Assert::matchFile("$path.phtml", $template->compile());
 Assert::matchFile("$path.html", $template->__toString(TRUE));
 Assert::matchFile("$path.inc.phtml", $cache->phtml['include.cache.latte']);

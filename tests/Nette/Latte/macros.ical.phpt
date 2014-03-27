@@ -13,8 +13,6 @@ use Nette\Latte,
 
 require __DIR__ . '/../bootstrap.php';
 
-require __DIR__ . '/Template.inc';
-
 
 $template = new FileTemplate(__DIR__ . '/templates/ical.latte');
 $template->registerHelper('escape', 'Nette\Latte\Runtime\Filters::escapeICal');
@@ -23,5 +21,5 @@ $template->registerHelperLoader('Nette\Latte\Runtime\Filters::loader');
 $template->netteHttpResponse = new Nette\Http\Response;
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::matchFile("$path.phtml", codefix($template->compile()));
+Assert::matchFile("$path.phtml", $template->compile());
 Assert::matchFile("$path.html", $template->__toString(TRUE));

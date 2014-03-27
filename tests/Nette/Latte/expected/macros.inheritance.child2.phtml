@@ -1,12 +1,12 @@
 <?php
 // prolog Nette\Latte\Macros\CoreMacros
-list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
+list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
 // prolog Nette\Latte\Macros\UIMacros
 //
 // block content
 //
-if (!function_exists($_l->blocks['content'][] = '_xxx_content')) { function _xxx_content($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
+if (!function_exists($_l->blocks['content'][] = '_%[a-z0-9]+%_content')) { function _%[a-z0-9]+%_content($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
 ?>	<h1><?php call_user_func(reset($_l->blocks['title']), $_l, get_defined_vars())  ?></h1>
 
 	<ul>
@@ -20,14 +20,14 @@ if (!function_exists($_l->blocks['content'][] = '_xxx_content')) { function _xxx
 //
 // block title
 //
-if (!function_exists($_l->blocks['title'][] = '_xxx_title')) { function _xxx_title($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
+if (!function_exists($_l->blocks['title'][] = '_%[a-z0-9]+%_title')) { function _%[a-z0-9]+%_title($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
 ?>Homepage<?php
 }}
 
 //
 // block sidebar
 //
-if (!function_exists($_l->blocks['sidebar'][] = '_xxx_sidebar')) { function _xxx_sidebar($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
+if (!function_exists($_l->blocks['sidebar'][] = '_%[a-z0-9]+%_sidebar')) { function _%[a-z0-9]+%_sidebar($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
 ;
 }}
 

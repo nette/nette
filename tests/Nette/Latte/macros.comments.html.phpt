@@ -14,11 +14,8 @@ use Nette\Latte,
 
 require __DIR__ . '/../bootstrap.php';
 
-require __DIR__ . '/Template.inc';
-
 
 $latte = new Latte\Engine;
-$latte->compiler->defaultContentType = Latte\Compiler::CONTENT_HTML;
 $template = new FileTemplate(__DIR__ . '/templates/comments.latte');
 $template->registerFilter(new Latte\Engine);
 $template->gt = '>';

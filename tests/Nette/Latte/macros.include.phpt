@@ -19,7 +19,6 @@ require __DIR__ . '/Template.inc';
 
 
 $latte = new Latte\Engine;
-$latte->compiler->defaultContentType = Latte\Compiler::CONTENT_HTML;
 $template = new FileTemplate(__DIR__ . '/templates/include.latte');
 $template->setCacheStorage($cache = new MockCacheStorage);
 $template->registerFilter($latte);
@@ -27,7 +26,7 @@ $template->registerHelperLoader('Nette\Latte\Runtime\Filters::loader');
 $template->hello = '<i>Hello</i>';
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::matchFile("$path.phtml", codefix($template->compile()));
+Assert::matchFile("$path.phtml", $template->compile());
 Assert::matchFile("$path.html", $template->__toString(TRUE));
 Assert::matchFile("$path.inc1.phtml", $cache->phtml['include1.latte']);
 Assert::matchFile("$path.inc2.phtml", $cache->phtml['include2.latte']);
