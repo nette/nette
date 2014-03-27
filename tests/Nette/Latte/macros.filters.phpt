@@ -38,7 +38,6 @@ $latte->addFilter('h1', array(new MyFilter, 'invoke'));
 $latte->addFilter('h2', 'strtoupper');
 $latte->addFilter('translate', 'strrev');
 $latte->addFilter('types', 'types');
-$latte->addFilter(NULL, 'Nette\Latte\Runtime\Filters::loader');
 
 $params['hello'] = 'Hello World';
 $params['date'] = strtotime('2008-01-02');

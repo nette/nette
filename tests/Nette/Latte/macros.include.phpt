@@ -16,7 +16,6 @@ require __DIR__ . '/../bootstrap.php';
 
 $latte = new Latte\Engine;
 $latte->setTempDirectory(TEMP_DIR);
-$latte->addFilter(NULL, 'Nette\Latte\Runtime\Filters::loader');
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::matchFile(

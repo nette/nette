@@ -25,7 +25,6 @@ class MockTexy
 $latte = new Latte\Engine;
 $latte->setLoader(new Latte\Loaders\StringLoader);
 $latte->addFilter('texy', array(new MockTexy, 'process'));
-$latte->addFilter(NULL, 'Nette\Latte\Runtime\Filters::loader');
 
 $params['hello'] = '<i>Hello</i>';
 $params['people'] = array('John', 'Mary', 'Paul');
