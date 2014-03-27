@@ -15,4 +15,10 @@ use Nette;
  */
 class Helpers extends Nette\Latte\Runtime\Filters
 {
+
+	public static function optimizePhp($source, $lineLength = 80)
+	{
+		return Nette\Latte\Helpers::optimizePhp($source, $lineLength);
+	}
+
 }
