@@ -15,7 +15,6 @@ require __DIR__ . '/../bootstrap.php';
 
 $latte = new Latte\Engine;
 $latte->setTempDirectory(TEMP_DIR);
-$latte->addFilter(NULL, 'Nette\Latte\Runtime\Filters::loader');
 
 $params['netteCacheStorage'] = new Nette\Caching\Storages\DevNullStorage;
 $params['title'] = 'Hello';

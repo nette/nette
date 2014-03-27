@@ -19,7 +19,6 @@ $latte->setTempDirectory(TEMP_DIR);
 $latte->setContentType($latte::CONTENT_XHTML);
 $latte->addFilter('translate', 'strrev');
 $latte->addFilter('join', 'implode');
-$latte->addFilter(NULL, 'Nette\Latte\Runtime\Filters::loader');
 
 $params['hello'] = '<i>Hello</i>';
 $params['xss'] = 'some&<>"\'/chars';

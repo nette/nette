@@ -40,7 +40,6 @@ class MockControl extends Object
 
 $latte = new Latte\Engine;
 $latte->setLoader(new Latte\Loaders\StringLoader);
-$latte->addFilter(NULL, 'Nette\Latte\Runtime\Filters::loader');
 
 $params['_control'] = new MockComponent;
 $params['form'] = new MockControl;

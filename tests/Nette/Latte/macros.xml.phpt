@@ -19,7 +19,6 @@ restore_error_handler();
 
 $latte = new Latte\Engine;
 $latte->setContentType($latte::CONTENT_XML);
-$latte->addFilter(NULL, 'Nette\Latte\Runtime\Filters::loader');
 
 $params['hello'] = '<i>Hello</i>';
 $params['id'] = ':/item';
