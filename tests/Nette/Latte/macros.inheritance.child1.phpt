@@ -7,7 +7,6 @@
  */
 
 use Nette\Latte,
-	Nette\Templating\FileTemplate,
 	Tester\Assert;
 
 
@@ -16,13 +15,19 @@ require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/Template.inc';
 
 
-$template = new FileTemplate(__DIR__ . '/templates/inheritance.child1.latte');
-$template->setCacheStorage($cache = new MockCacheStorage);
-$template->registerFilter(new Latte\Engine);
-
-$template->people = array('John', 'Mary', 'Paul');
+$latte = new Latte\Engine;
+$latte->cacheStorage = new MockCacheStorage;
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::matchFile("$path.child.phtml", $template->compile());
-Assert::matchFile("$path.html", $template->__toString(TRUE));
-Assert::matchFile("$path.parent.phtml", $cache->phtml['inheritance.parent.latte']);
+Assert::matchFile(
+	"$path.child.phtml",
+	$latte->compile(__DIR__ . '/templates/inheritance.child1.latte')
+);
+Assert::matchFile(
+	"$path.html",
+	$latte->renderToString(
+		__DIR__ . '/templates/inheritance.child1.latte',
+		array('people' => array('John', 'Mary', 'Paul'))
+	)
+);
+Assert::matchFile("$path.parent.phtml", $latte->cacheStorage->phtml['inheritance.parent.latte']);

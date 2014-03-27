@@ -16,8 +16,8 @@ require __DIR__ . '/../bootstrap.php';
 
 function xml($v) { echo $v; }
 
-$template = new Nette\Templating\Template;
-$template->registerFilter(new Latte\Engine);
+$latte = new Latte\Engine;
+$latte->setLoader(new Latte\Loaders\StringLoader);
 
 Assert::match(<<<EOD
 <?xml version="1.0" ?>
@@ -25,7 +25,7 @@ Assert::match(<<<EOD
 
 EOD
 
-, (string) $template->setSource(<<<EOD
+, $latte->renderToString(<<<EOD
 <?xml version="1.0" ?>
 <?php xml(1) ?>
 <? xml(2) ?>

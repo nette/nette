@@ -7,17 +7,23 @@
  */
 
 use Nette\Latte,
-	Nette\Templating\FileTemplate,
 	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-$template = new FileTemplate(__DIR__ . '/templates/unquoted.latte');
-$template->registerFilter(new Latte\Engine);
-$template->x = '\' & "';
+$latte = new Latte\Engine;
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::matchFile("$path.phtml", $template->compile());
-Assert::matchFile("$path.html", $template->__toString(TRUE));
+Assert::matchFile(
+	"$path.phtml",
+	$latte->compile(__DIR__ . '/templates/unquoted.latte')
+);
+Assert::matchFile(
+	"$path.html",
+	$latte->renderToString(
+		__DIR__ . '/templates/unquoted.latte',
+		array('x' => '\' & "')
+	)
+);

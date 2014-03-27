@@ -8,8 +8,6 @@
 
 use Nette\Latte,
 	Nette\Utils\Html,
-	Nette\Templating\FileTemplate,
-	Nette\Templating\Template,
 	Tester\Assert;
 
 
@@ -19,23 +17,28 @@ require __DIR__ . '/Template.inc';
 
 
 $latte = new Latte\Engine;
-$template = new FileTemplate(__DIR__ . '/templates/include.latte');
-$template->setCacheStorage($cache = new MockCacheStorage);
-$template->registerFilter($latte);
-$template->registerHelperLoader('Nette\Latte\Runtime\Filters::loader');
-$template->hello = '<i>Hello</i>';
+$latte->cacheStorage = new MockCacheStorage;
+$latte->addFilter(NULL, 'Nette\Latte\Runtime\Filters::loader');
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::matchFile("$path.phtml", $template->compile());
-Assert::matchFile("$path.html", $template->__toString(TRUE));
-Assert::matchFile("$path.inc1.phtml", $cache->phtml['include1.latte']);
-Assert::matchFile("$path.inc2.phtml", $cache->phtml['include2.latte']);
-Assert::matchFile("$path.inc3.phtml", $cache->phtml['include3.latte']);
+Assert::matchFile(
+	"$path.phtml",
+	$latte->compile(__DIR__ . '/templates/include.latte')
+);
+Assert::matchFile(
+	"$path.html",
+	$latte->renderToString(
+		__DIR__ . '/templates/include.latte',
+		array('hello' => '<i>Hello</i>')
+	)
+);
+Assert::matchFile("$path.inc1.phtml", $latte->cacheStorage->phtml['include1.latte']);
+Assert::matchFile("$path.inc2.phtml", $latte->cacheStorage->phtml['include2.latte']);
+Assert::matchFile("$path.inc3.phtml", $latte->cacheStorage->phtml['include3.latte']);
 
 
-$template = new Template;
-$template->registerFilter($latte);
-$template->setSource('{include somefile.latte}');
-Assert::exception(function() use ($template) {
-	$template->render();
+Assert::exception(function() {
+	$latte = new Latte\Engine;
+	$latte->setLoader(new Latte\Loaders\StringLoader);
+	$latte->renderToString('{include somefile.latte}');
 }, 'Nette\NotSupportedException', 'Macro {include "filename"} is supported only with Nette\Templating\IFileTemplate.');

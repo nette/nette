@@ -21,22 +21,19 @@ class MockControl
 }
 
 
-$template = new Nette\Templating\Template;
-$template->registerFilter(new Latte\Engine);
-$template->_control = new MockControl;
-
-$template->setSource(<<<EOD
-<div>
-	{snippet abc}
-	hello
-	{/snippet}
-</div>
-EOD
-);
+$latte = new Latte\Engine;
+$latte->setLoader(new Latte\Loaders\StringLoader);
 
 Assert::match(<<<EOD
 <div>
 <div id="">	hello
 </div></div>
 EOD
-, (string) $template);
+, $latte->renderToString(<<<EOD
+<div>
+	{snippet abc}
+	hello
+	{/snippet}
+</div>
+EOD
+, array('_control' => new MockControl)));

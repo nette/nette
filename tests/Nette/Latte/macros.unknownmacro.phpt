@@ -13,17 +13,17 @@ use Nette\Latte,
 require __DIR__ . '/../bootstrap.php';
 
 
-$template = new Nette\Templating\Template;
-$template->registerFilter(new Latte\Engine);
+$latte = new Latte\Engine;
+$latte->setLoader(new Latte\Loaders\StringLoader);
 
-Assert::exception(function() use ($template) {
-	$template->setSource('{unknown}')->compile();
+Assert::exception(function() use ($latte) {
+	$latte->compile('{unknown}');
 }, 'Nette\Latte\CompileException', 'Unknown macro {unknown}');
 
-Assert::exception(function() use ($template) {
-	$template->setSource('<style>body {color:blue}</style>')->compile();
+Assert::exception(function() use ($latte) {
+	$latte->compile('<style>body {color:blue}</style>');
 }, 'Nette\Latte\CompileException', 'Unknown macro {color:blue} (in JavaScript or CSS, try to put a space after bracket.)');
 
-Assert::exception(function() use ($template) {
-	$template->setSource('<script>if (true) {return}</script>')->compile();
+Assert::exception(function() use ($latte) {
+	$latte->compile('<script>if (true) {return}</script>');
 }, 'Nette\Latte\CompileException', 'Unknown macro {return} (in JavaScript or CSS, try to put a space after bracket.)');

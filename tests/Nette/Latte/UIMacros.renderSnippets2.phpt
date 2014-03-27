@@ -23,24 +23,22 @@ class InnerControl extends Nette\Application\UI\Control
 
 	public function renderA()
 	{
-		$template = new Nette\Templating\Template;
-		$template->registerFilter(new Latte\Engine);
-		$template->_presenter = $this->getPresenter();
-		$template->_control = $this;
-		$template->say = 'Hello';
-		$template->setSource('{snippet testA}{$say}{/snippet}');
-		$template->render();
+		$latte = new Latte\Engine;
+		$latte->setLoader(new Latte\Loaders\StringLoader);
+		$params['_presenter'] = $this->getPresenter();
+		$params['_control'] = $this;
+		$params['say'] = 'Hello';
+		$latte->render('{snippet testA}{$say}{/snippet}', $params);
 	}
 
 	public function renderB()
 	{
-		$template = new Nette\Templating\Template;
-		$template->registerFilter(new Latte\Engine);
-		$template->_presenter = $this->getPresenter();
-		$template->_control = $this;
-		$template->say = 'world';
-		$template->setSource('{snippet testB}{$say}{/snippet}');
-		$template->render();
+		$latte = new Latte\Engine;
+		$latte->setLoader(new Latte\Loaders\StringLoader);
+		$params['_presenter'] = $this->getPresenter();
+		$params['_control'] = $this;
+		$params['say'] = 'world';
+		$latte->render('{snippet testB}{$say}{/snippet}', $params);
 	}
 
 }
@@ -68,10 +66,10 @@ class TestPresenter extends Nette\Application\UI\Presenter
 
 	public function render()
 	{
-		$template = new Nette\Templating\Template;
-		$template->registerFilter(new Latte\Engine);
-		$template->_control = $this;
-		$template->render();
+		$latte = new Latte\Engine;
+		$latte->setLoader(new Latte\Loaders\StringLoader);
+		$params['_control'] = $this;
+		$latte->render('', $params);
 	}
 }
 

@@ -46,12 +46,12 @@ extract(array('class' => NULL, 'namespace' => NULL, 'top' => TRUE), EXTR_SKIP) ?
 <head>
 	<link rel="stylesheet" href="style.css">
 	<title><?php if ($_l->extends) { ob_end_clean(); return Nette\Latte\Macros\CoreMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render(); }
-call_user_func(reset($_l->blocks['title']), $_l, get_defined_vars())  ?></title>
+call_user_func(reset($_l->blocks['title']), $_l, get_defined_vars()) ?></title>
 </head>
 
 <body>
 	<div id="sidebar">
-<?php call_user_func(reset($_l->blocks['sidebar']), $_l, get_defined_vars())  ?>
+<?php call_user_func(reset($_l->blocks['sidebar']), $_l, get_defined_vars()) ?>
 	</div>
 
 	<div id="content">

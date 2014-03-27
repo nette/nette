@@ -22,15 +22,15 @@ class MockTexy
 }
 
 
-$template = new Nette\Templating\Template;
-$template->registerFilter(new Latte\Engine);
-$template->registerHelper('texy', array(new MockTexy, 'process'));
-$template->registerHelperLoader('Nette\Latte\Runtime\Filters::loader');
+$latte = new Latte\Engine;
+$latte->setLoader(new Latte\Loaders\StringLoader);
+$latte->addFilter('texy', array(new MockTexy, 'process'));
+$latte->addFilter(NULL, 'Nette\Latte\Runtime\Filters::loader');
 
-$template->hello = '<i>Hello</i>';
-$template->people = array('John', 'Mary', 'Paul');
+$params['hello'] = '<i>Hello</i>';
+$params['people'] = array('John', 'Mary', 'Paul');
 
-$result = (string) $template->setSource(<<<'EOD'
+$result = $latte->renderToString(<<<'EOD'
 {block|lower|texy}
 {$hello}
 ---------
@@ -46,7 +46,7 @@ $result = (string) $template->setSource(<<<'EOD'
 [* image.jpg *]
 {/block}
 EOD
-);
+, $params);
 
 Assert::match(<<<EOD
 <pre>&lt;i&gt;hello&lt;/i&gt;

@@ -7,7 +7,6 @@
  */
 
 use Nette\Latte,
-	Nette\Templating\FileTemplate,
 	Nette\Utils\Html,
 	Tester\Assert;
 
@@ -17,11 +16,16 @@ require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/Template.inc';
 
 
-$template = new FileTemplate(__DIR__ . '/templates/includeblock.latte');
-$template->setCacheStorage($cache = new MockCacheStorage);
-$template->registerFilter(new Latte\Engine);
+$latte = new Latte\Engine;
+$latte->cacheStorage = new MockCacheStorage;
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::matchFile("$path.phtml", $template->compile());
-Assert::matchFile("$path.html", $template->__toString(TRUE));
-Assert::matchFile("$path.inc.phtml", $cache->phtml['includeblock.inc.latte']);
+Assert::matchFile(
+	"$path.phtml",
+	$latte->compile(__DIR__ . '/templates/includeblock.latte')
+);
+Assert::matchFile(
+	"$path.html",
+	$latte->renderToString(__DIR__ . '/templates/includeblock.latte')
+);
+Assert::matchFile("$path.inc.phtml", $latte->cacheStorage->phtml['includeblock.inc.latte']);

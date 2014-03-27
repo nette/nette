@@ -13,12 +13,12 @@ use Nette\Latte,
 require __DIR__ . '/../bootstrap.php';
 
 
-$template = new Nette\Templating\Template;
-$template->registerFilter(new Latte\Engine);
+$latte = new Latte\Engine;
+$latte->setLoader(new Latte\Loaders\StringLoader);
 
 Assert::match('%A%
 <?php if (function_exists("debugbreak")) debugbreak(); elseif (function_exists("xdebug_break")) xdebug_break() ;if (!($i==1)); elseif (function_exists("debugbreak")) debugbreak(); elseif (function_exists("xdebug_break")) xdebug_break() ;
-', $template->setSource('
+', $latte->compile('
 {debugbreak}
 {debugbreak $i==1}
-')->compile());
+'));

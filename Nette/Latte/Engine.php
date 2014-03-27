@@ -166,8 +166,7 @@ class Engine extends Nette\Object
 	 */
 	public function __invoke($s)
 	{
-		return $this->setLoader(new Loaders\StringLoader)
-			->getCompiler()->compile($this->getParser()->parse($s));
+		return $this->setLoader(new Loaders\StringLoader)->compile($s);
 	}
 
 

@@ -13,81 +13,68 @@ use Nette\Latte,
 require __DIR__ . '/../bootstrap.php';
 
 
-$template = new Nette\Templating\Template;
-$template->registerFilter(new Latte\Engine);
-$template->content = '0';
-$template->empty = '';
-
-$template->setSource(<<<EOD
-<div n:ifcontent>Content</div>
-EOD
-);
+$latte = new Latte\Engine;
+$latte->setLoader(new Latte\Loaders\StringLoader);
 
 Assert::match(<<<EOD
 <div>Content</div>
 EOD
-, (string) $template);
-
-
-$template->setSource(<<<EOD
-<div n:ifcontent></div>
+, $latte->renderToString(<<<EOD
+<div n:ifcontent>Content</div>
 EOD
-);
+));
+
 
 Assert::match(<<<EOD
 EOD
-, (string) $template);
-
-
-$template->setSource(<<<'EOD'
-<div n:ifcontent>{$content}</div>
+, $latte->renderToString(<<<EOD
+<div n:ifcontent></div>
 EOD
-);
+));
+
 
 Assert::match(<<<EOD
 <div>0</div>
 EOD
-, (string) $template);
-
-
-$template->setSource(<<<'EOD'
-<div n:ifcontent>{$empty}</div>
+, $latte->renderToString(<<<'EOD'
+<div n:ifcontent>{$content}</div>
 EOD
-);
+, array('content' => '0')));
+
 
 Assert::match(<<<EOD
 EOD
-, (string) $template);
+, $latte->renderToString(<<<'EOD'
+<div n:ifcontent>{$empty}</div>
+EOD
+, array('empty' => '')));
 
-$template->setSource(<<<EOD
+
+Assert::match(<<<EOD
+EOD
+, $latte->renderToString(<<<EOD
 <div n:ifcontent>
 
 </div>
 EOD
-);
+));
+
 
 Assert::match(<<<EOD
 EOD
-, (string) $template);
-
-
-$template->setSource(<<<'EOD'
+, $latte->renderToString(<<<'EOD'
 <div n:ifcontent>
 	{$empty}
 </div>
 EOD
-);
-
-Assert::match(<<<EOD
-EOD
-, (string) $template);
+, array('empty' => '')));
 
 
-Assert::exception(function() use ($template) {
-	$template->setSource('{ifcontent}')->compile();
+Assert::exception(function() use ($latte) {
+	$latte->compile('{ifcontent}');
 }, 'Nette\Latte\CompileException', 'Unknown macro {ifcontent}, use n:ifcontent attribute.');
 
 
-Assert::exception(function() use ($template) {
-	$template->setSource('<div n:inner-ifcontent>')->compile();
+Assert::exception(function() use ($latte) {
+	$latte->compile('<div n:inner-ifcontent>');
 }, 'Nette\Latte\CompileException', 'Unknown attribute n:inner-ifcontent, use n:ifcontent attribute.');

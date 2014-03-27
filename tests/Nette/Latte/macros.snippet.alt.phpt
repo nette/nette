@@ -8,15 +8,16 @@
 
 use Nette\Latte,
 	Nette\Utils\Html,
-	Nette\Templating\FileTemplate,
 	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-$template = new FileTemplate(__DIR__ . '/templates/snippet.alt.latte');
-$template->registerFilter(new Latte\Engine);
+$latte = new Latte\Engine;
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::matchFile("$path.phtml", $template->compile());
+Assert::matchFile(
+	"$path.phtml",
+	$latte->compile(__DIR__ . '/templates/snippet.alt.latte')
+);

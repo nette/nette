@@ -7,7 +7,6 @@
  */
 
 use Nette\Latte,
-	Nette\Templating\FileTemplate,
 	Nette\Utils\Html,
 	Tester\Assert;
 
@@ -15,9 +14,14 @@ use Nette\Latte,
 require __DIR__ . '/../bootstrap.php';
 
 
-$template = new FileTemplate(__DIR__ . '/templates/defineblock.latte');
-$template->registerFilter(new Latte\Engine);
+$latte = new Latte\Engine;
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::matchFile("$path.phtml", $template->compile());
-Assert::matchFile("$path.html", $template->__toString(TRUE));
+Assert::matchFile(
+	"$path.phtml",
+	$latte->compile(__DIR__ . '/templates/defineblock.latte')
+);
+Assert::matchFile(
+	"$path.html",
+	$latte->renderToString(__DIR__ . '/templates/defineblock.latte')
+);

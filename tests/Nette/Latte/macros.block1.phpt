@@ -13,21 +13,8 @@ use Nette\Latte,
 require __DIR__ . '/../bootstrap.php';
 
 
-$template = new Nette\Templating\Template;
-$template->registerFilter(new Latte\Engine);
-
-$template->setSource(<<<EOD
-	{block main}
-	<div id="main">
-		{block sidebar}side{/block}
-	</div> <!-- /main -->
-	{/block}
-
-	{include sidebar}
-
-{include #main}
-EOD
-);
+$latte = new Latte\Engine;
+$latte->setLoader(new Latte\Loaders\StringLoader);
 
 Assert::match(<<<EOD
 	<div id="main">
@@ -39,4 +26,15 @@ side
 		side
 	</div> <!-- /main -->
 EOD
-, (string) $template);
+, $latte->renderToString(<<<EOD
+	{block main}
+	<div id="main">
+		{block sidebar}side{/block}
+	</div> <!-- /main -->
+	{/block}
+
+	{include sidebar}
+
+{include #main}
+EOD
+));

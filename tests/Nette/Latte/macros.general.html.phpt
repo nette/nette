@@ -7,7 +7,6 @@
  */
 
 use Nette\Latte,
-	Nette\Templating\FileTemplate,
 	Nette\Utils\Html,
 	Tester\Assert;
 
@@ -16,18 +15,25 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $latte = new Latte\Engine;
-$template = new FileTemplate(__DIR__ . '/templates/general.latte');
-$template->registerFilter($latte);
-$template->registerHelper('translate', 'strrev');
-$template->registerHelper('join', 'implode');
-$template->registerHelperLoader('Nette\Latte\Runtime\Filters::loader');
+$latte->addFilter('translate', 'strrev');
+$latte->addFilter('join', 'implode');
+$latte->addFilter(NULL, 'Nette\Latte\Runtime\Filters::loader');
 
-$template->hello = '<i>Hello</i>';
-$template->xss = 'some&<>"\'/chars';
-$template->people = array('John', 'Mary', 'Paul', ']]> <!--');
-$template->menu = array('about', array('product1', 'product2'), 'contact');
-$template->el = Html::el('div')->title('1/2"');
+$params['hello'] = '<i>Hello</i>';
+$params['xss'] = 'some&<>"\'/chars';
+$params['people'] = array('John', 'Mary', 'Paul', ']]> <!--');
+$params['menu'] = array('about', array('product1', 'product2'), 'contact');
+$params['el'] = Html::el('div')->title('1/2"');
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::matchFile("$path.phtml", $template->compile());
-Assert::matchFile("$path.html", $template->__toString(TRUE));
+Assert::matchFile(
+	"$path.phtml",
+	$latte->compile(__DIR__ . '/templates/general.latte')
+);
+Assert::matchFile(
+	"$path.html",
+	$latte->renderToString(
+		__DIR__ . '/templates/general.latte',
+		$params
+	)
+);

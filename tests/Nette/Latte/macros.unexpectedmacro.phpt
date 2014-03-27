@@ -13,8 +13,9 @@ use Nette\Latte,
 require __DIR__ . '/../bootstrap.php';
 
 
-$template = new Nette\Templating\Template;
-$template->registerFilter(new Latte\Engine);
-Assert::exception(function() use ($template) {
-	$template->setSource('Block{/block}')->compile();
+$latte = new Latte\Engine;
+$latte->setLoader(new Latte\Loaders\StringLoader);
+
+Assert::exception(function() use ($latte) {
+	$latte->compile('Block{/block}');
 }, 'Nette\Latte\CompileException', 'Unexpected {/block}');

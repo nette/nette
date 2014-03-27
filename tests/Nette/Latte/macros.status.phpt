@@ -13,12 +13,12 @@ use Nette\Latte,
 require __DIR__ . '/../bootstrap.php';
 
 
-$template = new Nette\Templating\Template;
-$template->registerFilter(new Latte\Engine);
+$latte = new Latte\Engine;
+$latte->setLoader(new Latte\Loaders\StringLoader);
 
 Assert::match('%A%
 <?php $netteHttpResponse->setCode(200) ;if (!$netteHttpResponse->isSent()) $netteHttpResponse->setCode(200) ;
-', $template->setSource('
+', $latte->compile('
 {status 200}
 {status 200?}
-')->compile());
+'));

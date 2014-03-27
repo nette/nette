@@ -7,7 +7,6 @@
  */
 
 use Nette\Latte,
-	Nette\Templating\FileTemplate,
 	Tester\Assert;
 
 
@@ -16,16 +15,24 @@ require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/Template.inc';
 
 
-$template = new FileTemplate(__DIR__ . '/templates/cache.latte');
-$template->setCacheStorage($cache = new MockCacheStorage);
-$template->registerFilter(new Latte\Engine);
-$template->registerHelperLoader('Nette\Latte\Runtime\Filters::loader');
+$latte = new Latte\Engine;
+$latte->cacheStorage = new MockCacheStorage;
+$latte->addFilter(NULL, 'Nette\Latte\Runtime\Filters::loader');
 
-$template->netteCacheStorage = new Nette\Caching\Storages\DevNullStorage;
-$template->title = 'Hello';
-$template->id = 456;
+$params['netteCacheStorage'] = new Nette\Caching\Storages\DevNullStorage;
+$params['title'] = 'Hello';
+$params['id'] = 456;
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::matchFile("$path.phtml", $template->compile());
-Assert::matchFile("$path.html", $template->__toString(TRUE));
-Assert::matchFile("$path.inc.phtml", $cache->phtml['include.cache.latte']);
+Assert::matchFile(
+	"$path.phtml",
+	$latte->compile(__DIR__ . '/templates/cache.latte')
+);
+Assert::matchFile(
+	"$path.html",
+	$latte->renderToString(
+		__DIR__ . '/templates/cache.latte',
+		$params
+	)
+);
+Assert::matchFile("$path.inc.phtml", $latte->cacheStorage->phtml['include.cache.latte']);
