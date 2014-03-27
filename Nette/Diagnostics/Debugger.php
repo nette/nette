@@ -226,11 +226,11 @@ class Debugger
 			self::$blueScreen = new BlueScreen;
 			self::$blueScreen->collapsePaths[] = dirname(__DIR__);
 			self::$blueScreen->addPanel(function($e) {
-				if ($e instanceof Nette\Templating\FilterException) {
+				if ($e instanceof Nette\Latte\CompileException) {
 					return array(
 						'tab' => 'Template',
-						'panel' => '<p><b>File:</b> ' . Helpers::editorLink($e->sourceFile, $e->sourceLine) . '</p>'
-						. ($e->sourceLine ? BlueScreen::highlightFile($e->sourceFile, $e->sourceLine) : '')
+						'panel' => '<p>' . (is_file($e->sourceName) ? '<b>File:</b> ' . Helpers::editorLink($e->sourceName, $e->sourceLine) : htmlspecialchars($e->sourceName)) . '</p>'
+							. ($e->sourceCode ? '<pre>' . BlueScreen::highlightLine(htmlspecialchars($e->sourceCode), $e->sourceLine) . '</pre>' : ''),
 					);
 				} elseif ($e instanceof Nette\Utils\NeonException && preg_match('#line (\d+)#', $e->getMessage(), $m)) {
 					if ($item = Helpers::findTrace($e->getTrace(), 'Nette\DI\Config\Adapters\NeonAdapter::load')) {

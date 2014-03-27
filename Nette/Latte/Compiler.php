@@ -109,13 +109,13 @@ class Compiler extends Nette\Object
 				$this->{"process$token->type"}($token);
 			}
 		} catch (CompileException $e) {
-			$e->sourceLine = $token->line;
-			throw $e;
+			throw $e->setSource(NULL, $token->line);
 		}
 
 		while ($this->htmlNode) {
 			if (!empty($this->htmlNode->macroAttrs)) {
-				throw new CompileException('Missing ' . self::printEndTag($this->macroNode), 0, $token->line);
+				$e = new CompileException('Missing ' . self::printEndTag($this->macroNode));
+				throw $e->setSource(NULL, $token->line);
 			}
 			$this->htmlNode = $this->htmlNode->parentNode;
 		}
@@ -130,7 +130,8 @@ class Compiler extends Nette\Object
 		$output = ($prologs ? $prologs . "<?php\n//\n// main template\n//\n?>\n" : '') . $output . $epilogs;
 
 		if ($this->macroNode) {
-			throw new CompileException('Missing ' . self::printEndTag($this->macroNode), 0, $token->line);
+			$e = new CompileException('Missing ' . self::printEndTag($this->macroNode));
+			throw $e->setSource(NULL, $token->line);
 		}
 
 		$output = $this->expandTokens($output);

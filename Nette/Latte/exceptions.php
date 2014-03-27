@@ -15,9 +15,32 @@ use Nette;
  *
  * @author     David Grudl
  */
-class CompileException extends Nette\Templating\FilterException
+class CompileException extends Nette\InvalidStateException
 {
+	/** @var string */
+	public $sourceCode;
+
+	/** @var string */
+	public $sourceName;
+
+	/** @var int */
+	public $sourceLine;
+
+
+	public function setSource($code, $line, $name = NULL)
+	{
+		$this->sourceCode = (string) $code;
+		$this->sourceLine = (int) $line;
+		$this->sourceName = (string) $name;
+		if (is_file($name)) {
+			$this->message = rtrim($this->message, '.')
+				. ' in ' . str_replace(dirname(dirname($name)), '...', $name) . ($line ? ":$line" : '');
+		}
+		return $this;
+	}
+
 }
+
 
 
 /**
@@ -28,3 +51,4 @@ class TokenizerException extends \Exception
 }
 
 class_alias('Nette\Latte\CompileException', 'Nette\Latte\ParseException');
+class_alias('Nette\Latte\CompileException', 'Nette\Templating\FilterException');

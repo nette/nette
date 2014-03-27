@@ -27,6 +27,7 @@ class NetteLoader
 		'Nette\Http\User' => 'Nette\Security\User',
 		'Nette\Templating\DefaultHelpers' => 'Nette\Templating\Helpers',
 		'Nette\Latte\ParseException' => 'Nette\Latte\CompileException',
+		'Nette\Templating\FilterException' => 'Nette\Latte\CompileException',
 		'Nette\Utils\PhpGenerator\ClassType' => 'Nette\PhpGenerator\ClassType',
 		'Nette\Utils\PhpGenerator\Helpers' => 'Nette\PhpGenerator\Helpers',
 		'Nette\Utils\PhpGenerator\Method' => 'Nette\PhpGenerator\Method',

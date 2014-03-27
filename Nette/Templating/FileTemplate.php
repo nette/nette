@@ -93,8 +93,7 @@ class FileTemplate extends Template implements IFileTemplate
 				$compiled = "<?php\n\n// source file: $this->file\n\n?>" . $this->compile();
 
 			} catch (FilterException $e) {
-				$e->setSourceFile($this->file);
-				throw $e;
+				throw $e->setSource(file_get_contents($this->file), $e->sourceLine, $this->file);
 			}
 
 			$cache->save($this->file, $compiled, array(
