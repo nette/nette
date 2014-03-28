@@ -53,6 +53,28 @@ class Template extends Nette\Object implements Nette\Application\UI\ITemplate
 	}
 
 
+	/**
+	 * Renders template to string.
+	 * @param  can throw exceptions? (hidden parameter)
+	 * @return string
+	 */
+	public function __toString()
+	{
+		ob_start();
+		try {
+			$this->render();
+			return ob_get_clean();
+
+		} catch (\Exception $e) {
+			ob_end_clean();
+			if (func_num_args()) {
+				throw $e;
+			}
+			trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
+		}
+	}
+
+
 	/********************* template filters & helpers ****************d*g**/
 
 
