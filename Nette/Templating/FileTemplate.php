@@ -12,9 +12,7 @@ use Nette,
 
 
 /**
- * Template stored in file.
- *
- * @author     David Grudl
+ * @deprecated
  */
 class FileTemplate extends Template implements IFileTemplate
 {
@@ -28,6 +26,7 @@ class FileTemplate extends Template implements IFileTemplate
 	 */
 	public function __construct($file = NULL)
 	{
+		trigger_error(__CLASS__ . ' is deprecated.', E_USER_DEPRECATED);
 		if ($file !== NULL) {
 			$this->setFile($file);
 		}

@@ -15,6 +15,7 @@ use Nette,
  * Template.
  *
  * @author     David Grudl
+ * @internal
  */
 class Template extends Nette\Object
 {
