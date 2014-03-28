@@ -18,9 +18,6 @@ use Nette,
  */
 class Compiler extends Nette\Object
 {
-	/** @var string default content type */
-	public $defaultContentType = self::CONTENT_HTML;
-
 	/** @var Token[] */
 	private $tokens;
 
@@ -101,8 +98,7 @@ class Compiler extends Nette\Object
 		$this->tokens = $tokens;
 		$output = '';
 		$this->output = & $output;
-		$this->htmlNode = $this->macroNode = NULL;
-		$this->setContentType($this->defaultContentType);
+		$this->htmlNode = $this->macroNode = $this->context = NULL;
 
 		foreach ($this->macroHandlers as $handler) {
 			$handler->initialize($this);

@@ -287,7 +287,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			->setAutowired(FALSE);
 
 		if ($config['xhtml']) {
-			$latte->addSetup('$service->getCompiler()->defaultContentType = ?', array(Nette\Latte\Compiler::CONTENT_XHTML));
+			$latte->addSetup('setContentType', array(Nette\Latte\Compiler::CONTENT_XHTML));
 		}
 
 		$container->addDefinition($this->prefix('template'))
