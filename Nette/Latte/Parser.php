@@ -273,6 +273,24 @@ class Parser extends Nette\Object
 	/**
 	 * @return self
 	 */
+	public function setContentType($type)
+	{
+		if (strpos($type, 'html') !== FALSE) {
+			$this->xmlMode = FALSE;
+			$this->setContext(self::CONTEXT_HTML_TEXT);
+		} elseif (strpos($type, 'xml') !== FALSE) {
+			$this->xmlMode = TRUE;
+			$this->setContext(self::CONTEXT_HTML_TEXT);
+		} else {
+			$this->setContext(self::CONTEXT_RAW);
+		}
+		return $this;
+	}
+
+
+	/**
+	 * @return self
+	 */
 	public function setContext($context, $quote = NULL)
 	{
 		$this->context = array($context, $quote);
@@ -391,12 +409,7 @@ class Parser extends Nette\Object
 			$this->setSyntax($this->defaultSyntax);
 
 		} elseif ($token->type === Token::MACRO_TAG && $token->name === 'contentType') {
-			if (preg_match('#html|xml#', $token->value, $m)) {
-				$this->xmlMode = $m[0] === 'xml';
-				$this->setContext(self::CONTEXT_HTML_TEXT);
-			} else {
-				$this->setContext(self::CONTEXT_RAW);
-			}
+			$this->setContentType($token->value);
 		}
 	}
 

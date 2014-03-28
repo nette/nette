@@ -105,7 +105,8 @@ class Engine extends Nette\Object
 			$this->onCompile = array();
 		}
 		$source = $this->getLoader()->getContent($name);
-		$tokens = $this->getParser()->parse($source);
+		$tokens = $this->getParser()->setContentType($this->contentType)
+			->parse($source);
 		$code = $this->getCompiler()->setContentType($this->contentType)
 			->compile($tokens);
 		$code = Helpers::optimizePhp($code);
