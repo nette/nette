@@ -13,25 +13,25 @@ use Nette;
 /**
  * Defines template.
  */
-interface ITemplate
+interface ITemplate extends Nette\Templating\IFileTemplate
 {
 
 	/**
 	 * Renders template to output.
 	 * @return void
 	 */
-	function render();
+	//function render();
 
 	/**
 	 * Sets the path to the template file.
 	 * @return void
 	 */
-	function setFile($file);
+	//function setFile($file);
 
 	/**
 	 * Returns the path to the template file.
 	 * @return string
 	 */
-	function getFile();
+	//function getFile();
 
 }

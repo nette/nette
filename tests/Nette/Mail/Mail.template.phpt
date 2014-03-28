@@ -20,9 +20,8 @@ require __DIR__ . '/Mail.inc';
 $mail = new Message();
 $mail->addTo('Lady Jane <jane@example.com>');
 
-$template = new FileTemplate;
+$template = new Nette\Bridges\ApplicationLatte\Template(new Latte\Engine);
 $template->setFile('files/template.phtml');
-$template->registerFilter(new Latte\Engine);
 $mail->htmlBody = $template;
 
 $mailer = new TestMailer();
