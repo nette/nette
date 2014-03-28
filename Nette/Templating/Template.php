@@ -202,7 +202,12 @@ class Template extends Nette\Latte\Template implements ITemplate
 	 */
 	public function registerHelperLoader($callback)
 	{
-		array_unshift($this->filters[NULL], $callback);
+		$filters = & $this->filters;
+		array_unshift($filters[NULL], function($name) use ($callback, & $filters) {
+			if ($res = call_user_func($callback, $name)) {
+				$filters[$name] = $res;
+			}
+		});
 		return $this;
 	}
 
