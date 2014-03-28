@@ -64,7 +64,6 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		),
 		'latte' => array(
 			'xhtml' => FALSE,
-			'macros' => array(),
 		),
 		'container' => array(
 			'debugger' => FALSE,
@@ -284,28 +283,16 @@ class NetteExtension extends Nette\DI\CompilerExtension
 
 		$latte = $container->addDefinition($this->prefix('latte'))
 			->setClass('Nette\Latte\Engine')
-			->setAutowired(FALSE);
-
-		if ($config['xhtml']) {
-			$latte->addSetup('setContentType', array(Nette\Latte\Compiler::CONTENT_XHTML));
-		}
+			->addSetup('setTempDirectory', array($container->expand('%tempDir%/cache/latte')))
+			->addSetup('setAutoRefresh', array($container->parameters['debugMode']))
+			->addSetup('setContentType', array($config['xhtml'] ? Nette\Latte\Compiler::CONTENT_XHTML : Nette\Latte\Compiler::CONTENT_HTML))
+			->setImplement('Nette\Bridges\Framework\ILatteFactory');
 
 		$container->addDefinition($this->prefix('template'))
 			->setClass('Nette\Templating\FileTemplate')
-			->addSetup('registerFilter', array($latte))
+			->addSetup('registerFilter', array(new Nette\DI\Statement(array($latte, 'create'))))
 			->addSetup('registerHelperLoader', array('Nette\Templating\Helpers::loader'))
 			->setAutowired(FALSE);
-
-		foreach ($config['macros'] as $macro) {
-			if (strpos($macro, '::') === FALSE && class_exists($macro)) {
-				$macro .= '::install';
-
-			} else {
-				Validators::assert($macro, 'callable');
-			}
-
-			$latte->addSetup($macro . '(?->compiler)', array('@self'));
-		}
 	}
 
 
