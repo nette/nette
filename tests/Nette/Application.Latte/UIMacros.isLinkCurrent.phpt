@@ -7,6 +7,7 @@
  */
 
 use Nette\Latte,
+	Nette\Bridges\ApplicationLatte\UIMacros,
 	Tester\Assert;
 
 
@@ -15,6 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 $latte = new Latte\Engine;
 $latte->setLoader(new Latte\Loaders\StringLoader);
+UIMacros::install($latte->getCompiler());
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::matchFile("$path.phtml", $latte->compile(

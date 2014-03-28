@@ -1,12 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Latte\Macros\UIMacros and renderSnippets.
+ * Test: UIMacros and renderSnippets.
  *
  * @author     Jan Skrasek
  */
 
 use Nette\Latte,
+	Nette\Bridges\ApplicationLatte\UIMacros,
 	Tester\Assert;
 
 

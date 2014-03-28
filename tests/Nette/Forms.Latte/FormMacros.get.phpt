@@ -8,6 +8,7 @@
 
 use Nette\Latte,
 	Nette\Forms\Form,
+	Nette\Bridges\FormsLatte\FormMacros,
 	Tester\Assert;
 
 
@@ -20,6 +21,7 @@ $form->setAction('?arg=val');
 $form->addSubmit('send', 'Sign in');
 
 $latte = new Latte\Engine;
+FormMacros::install($latte->getCompiler());
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::matchFile(

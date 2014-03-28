@@ -4,7 +4,7 @@
 // prolog Nette\Latte\Macros\CoreMacros
 list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
-// prolog Nette\Latte\Macros\UIMacros
+// prolog Nette\Latte\Macros\BlockMacros
 //
 // block title
 //
@@ -53,7 +53,7 @@ call_user_func(reset($_l->blocks['title']), $_l, get_defined_vars())  ?></title>
 	</div>
 
 	<div id="content">
-<?php Nette\Latte\Macros\UIMacros::callBlock($_l, 'content', $template->getParameters()) ?>
+<?php Nette\Latte\Macros\BlockMacros::callBlock($_l, 'content', $template->getParameters()) ?>
 	</div>
 </body>
 </html>

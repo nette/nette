@@ -7,6 +7,7 @@
  */
 
 use Nette\Latte,
+	Nette\Bridges\ApplicationLatte\UIMacros,
 	Tester\Assert;
 
 
@@ -49,6 +50,7 @@ class MockPresenter extends MockControl
 
 $latte = new Latte\Engine;
 $latte->setLoader(new Latte\Loaders\StringLoader);
+UIMacros::install($latte->getCompiler());
 
 $params['_control'] = new MockControl;
 $params['_presenter'] = new MockPresenter;

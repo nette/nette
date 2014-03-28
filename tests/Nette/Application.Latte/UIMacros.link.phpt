@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Macros\UIMacros: {link ...}
+ * Test: UIMacros: {link ...}
  *
  * @author     David Grudl
  */
 
-use Nette\Latte\Macros\UIMacros,
+use Nette\Bridges\ApplicationLatte\UIMacros,
 	Tester\Assert;
 
 

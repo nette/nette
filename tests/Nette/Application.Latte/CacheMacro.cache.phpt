@@ -1,12 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Latte\Engine: {cache ...}
+ * Test: {cache ...}
  *
  * @author     David Grudl
  */
 
 use Nette\Latte,
+	Nette\Bridges\CacheLatte\CacheMacro,
 	Tester\Assert;
 
 
@@ -15,6 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 $latte = new Latte\Engine;
 $latte->setTempDirectory(TEMP_DIR);
+$latte->addMacro('cache', new CacheMacro($latte->getCompiler()));
 
 $params['netteCacheStorage'] = new Nette\Caching\Storages\DevNullStorage;
 $params['title'] = 'Hello';

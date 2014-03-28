@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Macros\UIMacros {ifset #block}
+ * Test: Nette\Latte\Macros\BlockMacros {ifset #block}
  *
  * @author     David Grudl
  */
 
-use Nette\Latte\Macros\UIMacros,
+use Nette\Latte\Macros\BlockMacros,
 	Tester\Assert;
 
 
@@ -14,7 +14,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $compiler = new Nette\Latte\Compiler;
-UIMacros::install($compiler);
+BlockMacros::install($compiler);
 
 // {ifset ... }
 Assert::same( '<?php if (isset($_l->blocks["block"])) { ?>',  $compiler->expandMacro('ifset', '#block')->openingCode );

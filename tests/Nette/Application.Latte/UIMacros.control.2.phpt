@@ -8,6 +8,7 @@
 
 use Nette\Latte,
 	Nette\Object,
+	Nette\Bridges\ApplicationLatte\UIMacros,
 	Tester\Assert;
 
 
@@ -40,6 +41,7 @@ class MockControl extends Object
 
 $latte = new Latte\Engine;
 $latte->setLoader(new Latte\Loaders\StringLoader);
+UIMacros::install($latte->getCompiler());
 
 $params['_control'] = new MockComponent;
 $params['form'] = new MockControl;

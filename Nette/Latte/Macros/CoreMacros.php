@@ -11,7 +11,8 @@ use Nette,
 	Nette\Latte,
 	Nette\Latte\CompileException,
 	Nette\Latte\MacroNode,
-	Nette\Latte\PhpWriter;
+	Nette\Latte\PhpWriter,
+	Nette\Utils\Strings;
 
 
 /**
@@ -34,6 +35,7 @@ use Nette,
  * - {default var => value} set default template parameter
  * - {dump $var}
  * - {debugbreak}
+ * - {contentType ...} HTTP Content-Type header
  * - {l} {r} to display { }
  *
  * @author     David Grudl
@@ -79,6 +81,7 @@ class CoreMacros extends MacroSet
 		$me->addMacro('capture', array($me, 'macroCapture'), array($me, 'macroCaptureEnd'));
 		$me->addMacro('include', array($me, 'macroInclude'));
 		$me->addMacro('use', array($me, 'macroUse'));
+		$me->addMacro('contentType', array($me, 'macroContentType'));
 
 		$me->addMacro('class', NULL, NULL, array($me, 'macroClass'));
 		$me->addMacro('attr', NULL, NULL, array($me, 'macroAttr'));
@@ -365,6 +368,40 @@ class CoreMacros extends MacroSet
 	public function macroExpr(MacroNode $node, PhpWriter $writer)
 	{
 		return $writer->write(($node->name === '?' ? '' : 'echo ') . '%modify(%node.args)');
+	}
+
+
+	/**
+	 * {contentType ...}
+	 */
+	public function macroContentType(MacroNode $node, PhpWriter $writer)
+	{
+		if (Strings::contains($node->args, 'xhtml')) {
+			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_XHTML);
+
+		} elseif (Strings::contains($node->args, 'html')) {
+			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_HTML);
+
+		} elseif (Strings::contains($node->args, 'xml')) {
+			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_XML);
+
+		} elseif (Strings::contains($node->args, 'javascript')) {
+			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_JS);
+
+		} elseif (Strings::contains($node->args, 'css')) {
+			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_CSS);
+
+		} elseif (Strings::contains($node->args, 'calendar')) {
+			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_ICAL);
+
+		} else {
+			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_TEXT);
+		}
+
+		// temporary solution
+		if (Strings::contains($node->args, '/')) {
+			return $writer->write('$netteHttpResponse->setHeader("Content-Type", %var)', $node->args);
+		}
 	}
 
 

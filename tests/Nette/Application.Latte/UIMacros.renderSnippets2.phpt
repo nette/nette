@@ -1,12 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Latte\Macros\UIMacros, renderSnippets and control with two templates.
+ * Test: UIMacros, renderSnippets and control with two templates.
  *
  * @author     Jan Skrasek
  */
 
 use Nette\Latte,
+	Nette\Bridges\ApplicationLatte\UIMacros,
 	Tester\Assert;
 
 

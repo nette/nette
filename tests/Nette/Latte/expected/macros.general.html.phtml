@@ -4,7 +4,7 @@
 // prolog Nette\Latte\Macros\CoreMacros
 list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
-// prolog Nette\Latte\Macros\UIMacros
+// prolog Nette\Latte\Macros\BlockMacros
 //
 // block menu
 //
@@ -44,7 +44,7 @@ if ($_l->extends) {
 	ob_start();
 
 } elseif (!empty($_control->snippetMode)) {
-	return Nette\Latte\Macros\UIMacros::renderSnippets($_control, $_l, get_defined_vars());
+	return Nette\Latte\Macros\BlockMacros::renderSnippets($_control, $_l, get_defined_vars());
 }
 
 //

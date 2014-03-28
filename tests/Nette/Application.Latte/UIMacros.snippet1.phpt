@@ -1,12 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Latte\Engine and blocks.
+ * Test: snippets.
  *
  * @author     David Grudl
  */
 
 use Nette\Latte,
+	Nette\Bridges\ApplicationLatte\UIMacros,
 	Tester\Assert;
 
 
@@ -22,12 +23,19 @@ class MockControl
 
 
 $latte = new Latte\Engine;
+UIMacros::install($latte->getCompiler());
 $latte->setLoader(new Latte\Loaders\StringLoader);
 
 Assert::match(<<<EOD
-<p><div id="">hello</div> world</p>
+<div>
+<div id="">	hello
+</div></div>
 EOD
 , $latte->renderToString(<<<EOD
-<p>{snippet abc}hello{/snippet} world</p>
+<div>
+	{snippet abc}
+	hello
+	{/snippet}
+</div>
 EOD
 , array('_control' => new MockControl)));

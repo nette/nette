@@ -1,12 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Latte\Engine and blocks.
+ * Test: snippets.
  *
  * @author     David Grudl
  */
 
 use Nette\Latte,
+	Nette\Bridges\ApplicationLatte\UIMacros,
 	Tester\Assert;
 
 
@@ -22,6 +23,7 @@ class MockControl
 
 
 $latte = new Latte\Engine;
+UIMacros::install($latte->getCompiler());
 $latte->setLoader(new Latte\Loaders\StringLoader);
 $params['_control'] = new MockControl;
 

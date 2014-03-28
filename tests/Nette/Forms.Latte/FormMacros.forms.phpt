@@ -8,6 +8,7 @@
 
 use Nette\Latte,
 	Nette\Forms\Form,
+	Nette\Bridges\FormsLatte\FormMacros,
 	Tester\Assert;
 
 
@@ -40,6 +41,7 @@ $form->addSubmit('send', 'Sign in');
 $form['my'] = new MyControl;
 
 $latte = new Latte\Engine;
+FormMacros::install($latte->getCompiler());
 
 $form['username']->addError('error');
 

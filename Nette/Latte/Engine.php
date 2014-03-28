@@ -304,9 +304,7 @@ class Engine extends Nette\Object
 		if (!$this->compiler) {
 			$this->compiler = new Compiler;
 			Macros\CoreMacros::install($this->compiler);
-			$this->compiler->addMacro('cache', new Nette\Bridges\CacheLatte\CacheMacro($this->compiler));
-			Macros\UIMacros::install($this->compiler);
-			Nette\Bridges\FormsLatte\FormMacros::install($this->compiler);
+			Macros\BlockMacros::install($this->compiler);
 		}
 		return $this->compiler;
 	}

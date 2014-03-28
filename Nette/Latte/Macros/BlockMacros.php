@@ -16,17 +16,11 @@ use Nette,
 
 
 /**
- * Macros for Nette\Application\UI.
- *
- * - {link destination ...} control link
- * - {plink destination ...} presenter link
- * - {snippet ?} ... {/snippet ?} control snippet
- * - {contentType ...} HTTP Content-Type header
- * - {status ...} HTTP status
+ * Block macros.
  *
  * @author     David Grudl
  */
-class UIMacros extends MacroSet
+class BlockMacros extends MacroSet
 {
 	/** @var array */
 	private $namedBlocks = array();
@@ -48,18 +42,6 @@ class UIMacros extends MacroSet
 		$me->addMacro('snippet', array($me, 'macroBlock'), array($me, 'macroBlockEnd'));
 		$me->addMacro('snippetArea', array($me, 'macroBlock'), array($me, 'macroBlockEnd'));
 		$me->addMacro('ifset', array($me, 'macroIfset'), '}');
-
-		$me->addMacro('control', array($me, 'macroControl'));
-
-		$me->addMacro('href', NULL, NULL, function(MacroNode $node, PhpWriter $writer) use ($me) {
-			return ' ?> href="<?php ' . $me->macroLink($node, $writer) . ' ?>"<?php ';
-		});
-		$me->addMacro('plink', array($me, 'macroLink'));
-		$me->addMacro('link', array($me, 'macroLink'));
-		$me->addMacro('ifCurrent', array($me, 'macroIfCurrent'), '}'); // deprecated; use n:class="$presenter->linkCurrent ? ..."
-
-		$me->addMacro('contentType', array($me, 'macroContentType'));
-		$me->addMacro('status', array($me, 'macroStatus'));
 	}
 
 
@@ -113,13 +95,13 @@ if ($_l->extends) {
 	' . ($this->namedBlocks ? 'ob_start();' : 'return $template->renderChildTemplate($_l->extends, get_defined_vars());') . '
 
 } elseif (!empty($_control->snippetMode)) {
-	return Nette\Latte\Macros\UIMacros::renderSnippets($_control, $_l, get_defined_vars());
+	return Nette\Latte\Macros\BlockMacros::renderSnippets($_control, $_l, get_defined_vars());
 }';
 		} else {
 			$prolog[] = '
 // snippets support
 if (!empty($_control->snippetMode)) {
-	return Nette\Latte\Macros\UIMacros::renderSnippets($_control, $_l, get_defined_vars());
+	return Nette\Latte\Macros\BlockMacros::renderSnippets($_control, $_l, get_defined_vars());
 }';
 		}
 
@@ -154,7 +136,7 @@ if (!empty($_control->snippetMode)) {
 		if (isset($this->namedBlocks[$destination]) && !$parent) {
 			$cmd = "call_user_func(reset(\$_l->blocks[$name]), \$_l, %node.array? + get_defined_vars())";
 		} else {
-			$cmd = 'Nette\Latte\Macros\UIMacros::callBlock' . ($parent ? 'Parent' : '') . "(\$_l, $name, %node.array? + " . ($parent ? 'get_defined_vars' : '$template->getParameters') . '())';
+			$cmd = 'Nette\Latte\Macros\BlockMacros::callBlock' . ($parent ? 'Parent' : '') . "(\$_l, $name, %node.array? + " . ($parent ? 'get_defined_vars' : '$template->getParameters') . '())';
 		}
 
 		if ($node->modifiers) {
@@ -344,97 +326,6 @@ if (!empty($_control->snippetMode)) {
 			$list[] = $name[0] === '#' ? '$_l->blocks["' . substr($name, 1) . '"]' : $name;
 		}
 		return 'if (isset(' . implode(', ', $list) . ')) {';
-	}
-
-
-	/**
-	 * {control name[:method] [params]}
-	 */
-	public function macroControl(MacroNode $node, PhpWriter $writer)
-	{
-		$words = $node->tokenizer->fetchWords();
-		if (!$words) {
-			throw new CompileException("Missing control name in {control}");
-		}
-		$name = $writer->formatWord($words[0]);
-		$method = isset($words[1]) ? ucfirst($words[1]) : '';
-		$method = Strings::match($method, '#^\w*\z#') ? "render$method" : "{\"render$method\"}";
-		$param = $writer->formatArray();
-		if (!Strings::contains($node->args, '=>')) {
-			$param = substr($param, 6, -1); // removes array()
-		}
-		return ($name[0] === '$' ? "if (is_object($name)) \$_ctrl = $name; else " : '')
-			. '$_ctrl = $_control->getComponent(' . $name . '); '
-			. 'if ($_ctrl instanceof Nette\Application\UI\IRenderable) $_ctrl->redrawControl(NULL, FALSE); '
-			. ($node->modifiers === '' ? "\$_ctrl->$method($param)" : $writer->write("ob_start(); \$_ctrl->$method($param); echo %modify(ob_get_clean())"));
-	}
-
-
-	/**
-	 * {link destination [,] [params]}
-	 * {plink destination [,] [params]}
-	 * n:href="destination [,] [params]"
-	 */
-	public function macroLink(MacroNode $node, PhpWriter $writer)
-	{
-		$node->modifiers = preg_replace('#\|safeurl\s*(?=\||\z)#i', '', $node->modifiers);
-		return $writer->using($node, $this->getCompiler())
-			->write('echo %escape(%modify(' . ($node->name === 'plink' ? '$_presenter' : '$_control') . '->link(%node.word, %node.array?)))');
-	}
-
-
-	/**
-	 * {ifCurrent destination [,] [params]}
-	 */
-	public function macroIfCurrent(MacroNode $node, PhpWriter $writer)
-	{
-		return $writer->write(($node->args ? 'try { $_presenter->link(%node.word, %node.array?); } catch (Nette\Application\UI\InvalidLinkException $e) {}' : '')
-			. '; if ($_presenter->getLastCreatedRequestFlag("current")) {');
-	}
-
-
-	/**
-	 * {contentType ...}
-	 */
-	public function macroContentType(MacroNode $node, PhpWriter $writer)
-	{
-		if (Strings::contains($node->args, 'xhtml')) {
-			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_XHTML);
-
-		} elseif (Strings::contains($node->args, 'html')) {
-			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_HTML);
-
-		} elseif (Strings::contains($node->args, 'xml')) {
-			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_XML);
-
-		} elseif (Strings::contains($node->args, 'javascript')) {
-			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_JS);
-
-		} elseif (Strings::contains($node->args, 'css')) {
-			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_CSS);
-
-		} elseif (Strings::contains($node->args, 'calendar')) {
-			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_ICAL);
-
-		} else {
-			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_TEXT);
-		}
-
-		// temporary solution
-		if (Strings::contains($node->args, '/')) {
-			return $writer->write('$netteHttpResponse->setHeader("Content-Type", %var)', $node->args);
-		}
-	}
-
-
-	/**
-	 * {status ...}
-	 */
-	public function macroStatus(MacroNode $node, PhpWriter $writer)
-	{
-		return $writer->write((substr($node->args, -1) === '?' ? 'if (!$netteHttpResponse->isSent()) ' : '') .
-			'$netteHttpResponse->setCode(%var)', (int) $node->args
-		);
 	}
 
 
