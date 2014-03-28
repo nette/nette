@@ -4,7 +4,7 @@
 // prolog Nette\Latte\Macros\CoreMacros
 list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
-// prolog Nette\Latte\Macros\UIMacros
+// prolog Nette\Latte\Macros\BlockMacros
 //
 // block menu
 //
@@ -35,13 +35,11 @@ if (!function_exists($_l->blocks['bl'][] = '_%[a-z0-9]+%_bl')) { function _%[a-z
 // end of blocks
 //
 
-// template extending and snippets support
+// template extending
 
 $_l->extends = empty($template->_extended) && isset($_control) && $_control instanceof Nette\Application\UI\Presenter ? $_control->findLayoutTemplateFile() : NULL; $template->_extended = $_extended = TRUE;
 
-
-if ($_l->extends) {
-	%A%}
+if ($_l->extends) { ob_start();}
 
 //
 // main template

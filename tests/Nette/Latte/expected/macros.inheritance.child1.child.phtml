@@ -4,12 +4,12 @@
 // prolog Nette\Latte\Macros\CoreMacros
 list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
-// prolog Nette\Latte\Macros\UIMacros
+// prolog Nette\Latte\Macros\BlockMacros
 //
 // block title
 //
 if (!function_exists($_l->blocks['title'][] = '_%[a-z0-9]+%_title')) { function _%[a-z0-9]+%_title($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
-?>Homepage | <?php Nette\Latte\Macros\UIMacros::callBlockParent($_l, 'title', get_defined_vars()) ;
+?>Homepage | <?php Nette\Latte\Macros\BlockMacros::callBlockParent($_l, 'title', get_defined_vars()) ;
 }}
 
 //
@@ -28,13 +28,11 @@ if (!function_exists($_l->blocks['content'][] = '_%[a-z0-9]+%_content')) { funct
 // end of blocks
 //
 
-// template extending and snippets support
+// template extending
 
 $_l->extends = "inheritance.parent.latte"; $template->_extended = $_extended = TRUE;
 
-
-if ($_l->extends) {
-	%A%}
+if ($_l->extends) { ob_start();}
 
 //
 // main template

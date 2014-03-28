@@ -4,7 +4,7 @@
 // prolog Nette\Latte\Macros\CoreMacros
 list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
-// prolog Nette\Latte\Macros\UIMacros
+// prolog Nette\Latte\Macros\BlockMacros
 //
 // block static
 //
@@ -18,13 +18,11 @@ if (!function_exists($_l->blocks['static'][] = '_%[a-z0-9]+%_static')) { functio
 // end of blocks
 //
 
-// template extending and snippets support
+// template extending
 
 $_l->extends = empty($template->_extended) && isset($_control) && $_control instanceof Nette\Application\UI\Presenter ? $_control->findLayoutTemplateFile() : NULL; $template->_extended = $_extended = TRUE;
 
-
-if ($_l->extends) {
-	%A%}
+if ($_l->extends) { ob_start();}
 
 //
 // main template
@@ -45,11 +43,11 @@ if (!function_exists($_l->blocks[$name]['%[a-z0-9]+%'] = '_%[a-z0-9]+%__name')) 
 
 <?php }} call_user_func(reset($_l->blocks[$name]), $_l, get_defined_vars()) ;$iterations++; } array_pop($_l->its); $iterator = end($_l->its) ?>
 
-<?php Nette\Latte\Macros\UIMacros::callBlock($_l, 'dynamic', array('var' => 20) + $template->getParameters()) ?>
+<?php Nette\Latte\Macros\BlockMacros::callBlock($_l, 'dynamic', array('var' => 20) + $template->getParameters()) ?>
 
 <?php call_user_func(reset($_l->blocks['static']), $_l, array('var' => 30) + get_defined_vars()) ?>
 
-<?php Nette\Latte\Macros\UIMacros::callBlock($_l, $name, array('var' => 40) + $template->getParameters()) ?>
+<?php Nette\Latte\Macros\BlockMacros::callBlock($_l, $name, array('var' => 40) + $template->getParameters()) ?>
 
 <?php
 

@@ -4,11 +4,6 @@
 // prolog Nette\Latte\Macros\CoreMacros
 list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
-// prolog Nette\Latte\Macros\UIMacros
-
-// snippets support
-if (%A%}
-
 //
 // main template
 //
@@ -16,4 +11,4 @@ if (%A%}
 
 <?php $_l->templates['%[a-z0-9]+%']->renderChildTemplate('includeblock.inc.latte', get_defined_vars()) ?>
 
-<?php Nette\Latte\Macros\UIMacros::callBlock($_l, 'test', $template->getParameters()) ;
+<?php Nette\Latte\Macros\BlockMacros::callBlock($_l, 'test', $template->getParameters()) ;
