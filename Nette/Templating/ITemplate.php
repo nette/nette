@@ -11,9 +11,7 @@ use Nette;
 
 
 /**
- * Defines template methods.
- *
- * @author     David Grudl
+ * @deprecated
  */
 interface ITemplate
 {

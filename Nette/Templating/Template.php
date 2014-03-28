@@ -13,9 +13,7 @@ use Nette,
 
 
 /**
- * Template.
- *
- * @author     David Grudl
+ * @deprecated
  */
 class Template extends Nette\Latte\Template implements ITemplate
 {
