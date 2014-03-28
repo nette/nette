@@ -146,6 +146,13 @@ class Configurator extends Object
 	 */
 	public function addConfig($file, $section = NULL)
 	{
+		if ($section === NULL && $this->parameters['debugMode']) { // back compatibility
+			try {
+				$this->createLoader()->load($file, $this->parameters['environment']);
+				trigger_error("Config file '$file' has sections, call addConfig() with second parameter Configurator::AUTO.", E_USER_WARNING);
+				$section = $this->parameters['environment'];
+			} catch (\Exception $e) {}
+		}
 		$this->files[] = array($file, $section === self::AUTO ? $this->parameters['environment'] : $section);
 		return $this;
 	}
@@ -157,17 +164,7 @@ class Configurator extends Object
 	 */
 	public function createContainer()
 	{
-		$cache = new Nette\Caching\Cache(new Nette\Caching\Storages\PhpFileStorage($this->getCacheDirectory()), 'Nette.Configurator');
-		$cacheKey = array($this->parameters, $this->files);
-		$cached = $cache->load($cacheKey);
-		if (!$cached) {
-			$code = $this->buildContainer($dependencies);
-			$cache->save($cacheKey, $code, array($cache::FILES => $dependencies));
-			$cached = $cache->load($cacheKey);
-		}
-		require_once $cached['file'];
-
-		$container = new $this->parameters['container']['class'];
+		$container = $this->createContainerFactory()->create();
 		$container->initialize();
 		Nette\Environment::setContext($container); // back compatibility
 		return $container;
@@ -175,69 +172,29 @@ class Configurator extends Object
 
 
 	/**
-	 * Build system container class.
-	 * @return string
+	 * @return DI\ContainerFactory
 	 */
-	protected function buildContainer(& $dependencies = NULL)
+	protected function createContainerFactory()
 	{
-		$loader = $this->createLoader();
-		$config = array();
-		$code = "<?php\n";
-		foreach ($this->files as $tmp) {
-			list($file, $section) = $tmp;
-			$code .= "// source: $file $section\n";
-			try {
-				if ($section === NULL) { // back compatibility
-					$config = DI\Config\Helpers::merge($loader->load($file, $this->parameters['environment']), $config);
-					continue;
-				}
-			} catch (Nette\InvalidStateException $e) {
-			} catch (Nette\Utils\AssertionException $e) {
+		$factory = new DI\ContainerFactory(NULL);
+		$factory->autoRebuild = $this->parameters['debugMode'] ? TRUE : 'compat';
+		$factory->class = $this->parameters['container']['class'];
+		$factory->config = array('parameters' => $this->parameters);
+		$factory->configFiles = $this->files;
+		$factory->tempDirectory = $this->getCacheDirectory() . '/Nette.Configurator';
+		if (!is_dir($factory->tempDirectory)) {
+			mkdir($factory->tempDirectory);
+		}
+
+		$me = $this;
+		$factory->onCompile[] = function(DI\ContainerFactory $factory, DI\Compiler $compiler, $config) use ($me) {
+			foreach ($me->defaultExtensions as $name => $class) {
+				$compiler->addExtension($name, new $class);
 			}
-
-			$config = DI\Config\Helpers::merge($loader->load($file, $section), $config);
-		}
-		$code .= "\n";
-
-		if (!isset($config['parameters'])) {
-			$config['parameters'] = array();
-		}
-		$config['parameters'] = DI\Config\Helpers::merge($config['parameters'], $this->parameters);
-
-		$compiler = $this->createCompiler();
-		$this->onCompile($this, $compiler);
-
-		$code .= $compiler->compile(
-			$config,
-			$this->parameters['container']['class'],
-			$config['parameters']['container']['parent']
-		);
-		$dependencies = array_merge($loader->getDependencies(), $this->parameters['debugMode'] ? $compiler->getContainerBuilder()->getDependencies() : array());
-		return $code;
-	}
-
-
-	/**
-	 * @return Compiler
-	 */
-	protected function createCompiler()
-	{
-		$compiler = new DI\Compiler;
-
-		foreach ($this->defaultExtensions as $name => $class) {
-			$compiler->addExtension($name, new $class);
-		}
-
-		return $compiler;
-	}
-
-
-	/**
-	 * @return Loader
-	 */
-	protected function createLoader()
-	{
-		return new DI\Config\Loader;
+			$factory->parentClass = $config['parameters']['container']['parent'];
+			$me->onCompile($me, $compiler);
+		};
+		return $factory;
 	}
 
 
