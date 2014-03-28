@@ -93,15 +93,14 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 			$response = array($response, array());
 		}
 		if (is_array($response)) {
+			$response = $this->createTemplate()->setParameters($response[1]);
 			if ($response[0] instanceof \SplFileInfo) {
-				$response = $this->createTemplate('Nette\Templating\FileTemplate')
-					->setParameters($response[1])->setFile($response[0]);
+				$response->setFile($response[0]);
 			} else {
-				$response = $this->createTemplate('Nette\Templating\Template')
-					->setParameters($response[1])->setSource($response[0]);
+				$response->setSource($response[0]); // TODO
 			}
 		}
-		if ($response instanceof Nette\Templating\ITemplate) {
+		if ($response instanceof Application\UI\ITemplate) {
 			return new Responses\TextResponse($response);
 		} else {
 			return $response;
@@ -113,11 +112,12 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	 * Template factory.
 	 * @param  string
 	 * @param  callable
-	 * @return Nette\Templating\ITemplate
+	 * @return Application\UI\ITemplate
 	 */
 	public function createTemplate($class = NULL, $latteFactory = NULL)
 	{
-		$template = $class ? new $class : new Nette\Templating\FileTemplate;
+		$latte = $latteFactory ? $latteFactory() : $this->getContext()->getByType('Nette\Bridges\Framework\ILatteFactory')->create();
+		$template = $class ? new $class : new Nette\Bridges\ApplicationLatte\Template($latte);
 
 		$template->setParameters($this->request->getParameters());
 		$template->presenter = $this;
@@ -127,12 +127,6 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 			$template->baseUrl = rtrim($url->getBaseUrl(), '/');
 			$template->basePath = rtrim($url->getBasePath(), '/');
 		}
-
-		$template->registerHelperLoader('Nette\Templating\Helpers::loader');
-		$template->setCacheStorage($this->context->getService('nette.templateCacheStorage'));
-		$template->onPrepareFilters[] = function($template) use ($latteFactory) {
-			$template->registerFilter($latteFactory ? $latteFactory() : new Nette\Latte\Engine);
-		};
 		return $template;
 	}
 
