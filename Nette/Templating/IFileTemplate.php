@@ -11,9 +11,7 @@ use Nette;
 
 
 /**
- * Defines file-based template methods.
- *
- * @author     David Grudl
+ * @deprecated
  */
 interface IFileTemplate extends ITemplate
 {
