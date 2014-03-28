@@ -25,6 +25,8 @@ if (%A%}
 	<li>Translated HTML: <?php ob_start() ?>ahoj<?php echo Nette\Latte\Runtime\Filters::escapeHtml($template->translate(ob_get_clean()), ENT_NOQUOTES) ?></li>
 	<li>Translated HTML: <?php echo Nette\Latte\Runtime\Filters::escapeHtml($template->translate('ahoj|ahojahojahojahoj'), ENT_NOQUOTES) ?></li>
 	<li>spaces: <?php echo Nette\Latte\Runtime\Filters::escapeHtml($template->types($hello , '' , "" , "$hello" ), ENT_NOQUOTES) ?></li>
+	<li>dynamic: <?php echo Nette\Latte\Runtime\Filters::escapeHtml($template->dynamic($hello), ENT_NOQUOTES) ?>
+ <?php echo Nette\Latte\Runtime\Filters::escapeHtml($template->dynamic2($hello), ENT_NOQUOTES) ?></li>
 </ul>
 
 <ul>

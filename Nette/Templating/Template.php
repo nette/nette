@@ -180,7 +180,11 @@ class Template extends Nette\Object implements ITemplate
 		}
 
 		foreach ($this->helperLoaders as $callback) {
-			$latte->addFilter(NULL, $callback);
+			$latte->addFilter(NULL, function($name) use ($callback, $latte) {
+				if ($res = call_user_func($callback, $name)) {
+					$latte->addFilter($name, $res);
+				}
+			});
 		}
 
 		if ($this->cacheStorage instanceof Nette\Caching\Storages\PhpFileStorage) {

@@ -83,16 +83,18 @@ class Template extends Nette\Object
 	{
 		$lname = strtolower($name);
 		if (!isset($this->filters[$lname])) {
-			foreach ($this->filters[NULL] as $loader) {
-				$filter = Callback::invoke($loader, $lname);
-				if ($filter) {
-					$this->filters[$lname] = $filter;
+			$args2 = $args;
+			array_unshift($args2, $lname);
+			foreach ($this->filters[NULL] as $filter) {
+				$res = Callback::invokeArgs($filter, $args2);
+				if ($res !== NULL) {
+					return $res;
+				} elseif (isset($this->filters[$lname])) {
 					return Callback::invokeArgs($this->filters[$lname], $args);
 				}
 			}
 			return parent::__call($name, $args);
 		}
-
 		return Callback::invokeArgs($this->filters[$lname], $args);
 	}
 
