@@ -289,10 +289,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			->setImplement('Nette\Bridges\Framework\ILatteFactory');
 
 		$container->addDefinition($this->prefix('template'))
-			->setClass('Nette\Templating\FileTemplate')
-			->addSetup('registerFilter', array(new Nette\DI\Statement(array($latte, 'create'))))
-			->addSetup('registerHelperLoader', array('Nette\Templating\Helpers::loader'))
-			->setAutowired(FALSE);
+			->setClass('Nette\Bridges\ApplicationLatte\TemplateFactory');
 	}
 
 
