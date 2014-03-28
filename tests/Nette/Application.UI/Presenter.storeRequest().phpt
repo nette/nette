@@ -102,6 +102,12 @@ class MockHttpRequest extends Http\Request
 	public function __construct() {}
 }
 
+class MockTemplateFactory extends Nette\Bridges\ApplicationLatte\TemplateFactory
+{
+	public function __construct()
+	{}
+}
+
 
 $presenter = new TestPresenter();
 $presenter->injectPrimary(
@@ -111,7 +117,8 @@ $presenter->injectPrimary(
 	new MockHttpRequest,
 	new Http\Response,
 	$session = new MockSession,
-	$user = new MockUser
+	$user = new MockUser,
+	new MockTemplateFactory
 );
 
 $section = $session->testSection = new MockSessionSection($session);

@@ -123,6 +123,9 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/** @var Nette\Security\User */
 	private $user;
 
+	/** @var ITemplateFactory */
+	private $templateFactory;
+
 
 	public function __construct()
 	{
@@ -446,7 +449,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 			return;
 		}
 
-		if ($template instanceof Nette\Templating\IFileTemplate && !$template->getFile()) { // content template
+		if (!$template->getFile()) { // content template
 			$files = $this->formatTemplateFiles();
 			foreach ($files as $file) {
 				if (is_file($file)) {
@@ -554,6 +557,15 @@ abstract class Presenter extends Control implements Application\IPresenter
 	public static function formatRenderMethod($view)
 	{
 		return 'render' . $view;
+	}
+
+
+	/**
+	 * @return ITemplate
+	 */
+	protected function createTemplate()
+	{
+		return $this->templateFactory->createTemplate($this);
 	}
 
 
@@ -1293,7 +1305,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/********************* services ****************d*g**/
 
 
-	public function injectPrimary(Nette\DI\Container $context, Nette\Application\IPresenterFactory $presenterFactory, Nette\Application\IRouter $router, Http\IRequest $httpRequest, Http\IResponse $httpResponse, Http\Session $session, Nette\Security\User $user)
+	public function injectPrimary(Nette\DI\Container $context, Nette\Application\IPresenterFactory $presenterFactory, Nette\Application\IRouter $router, Http\IRequest $httpRequest, Http\IResponse $httpResponse, Http\Session $session, Nette\Security\User $user, ITemplateFactory $templateFactory)
 	{
 		if ($this->presenterFactory !== NULL) {
 			throw new Nette\InvalidStateException("Method " . __METHOD__ . " is intended for initialization and should not be called more than once.");
@@ -1306,6 +1318,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 		$this->httpResponse = $httpResponse;
 		$this->session = $session;
 		$this->user = $user;
+		$this->templateFactory = $templateFactory;
 	}
 
 
@@ -1355,6 +1368,15 @@ abstract class Presenter extends Control implements Application\IPresenter
 	public function getUser()
 	{
 		return $this->user;
+	}
+
+
+	/**
+	 * @return ITemplateFactory
+	 */
+	public function getTemplateFactory()
+	{
+		return $this->templateFactory;
 	}
 
 }

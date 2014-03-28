@@ -42,3 +42,10 @@ class MockHttpRequest extends Nette\Http\Request
 	public function __construct()
 	{}
 }
+
+
+class MockTemplateFactory extends Nette\Bridges\ApplicationLatte\TemplateFactory
+{
+	public function __construct()
+	{}
+}
