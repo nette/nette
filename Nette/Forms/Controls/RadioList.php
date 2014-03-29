@@ -97,7 +97,7 @@ class RadioList extends ChoiceControl
 					'disabled:' => $this->disabled,
 					'data-nette-rules:' => array(key($ids) => $input->attrs['data-nette-rules']),
 				)),
-				array('for:' => $ids) + $this->label->attrs,
+				array('for:' => $ids),
 				$this->separator
 			)
 		);
