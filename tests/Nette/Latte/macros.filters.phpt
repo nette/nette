@@ -55,13 +55,12 @@ $latte->addFilter(NULL, function($name, $val) use ($latte) {
 $params['hello'] = 'Hello World';
 $params['date'] = strtotime('2008-01-02');
 
-$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::matchFile(
-	"$path.phtml",
+	__DIR__ . '/expected/macros.filters.phtml',
 	$latte->compile(__DIR__ . '/templates/filters.latte')
 );
 Assert::matchFile(
-	"$path.html",
+	__DIR__ . '/expected/macros.filters.html',
 	$latte->renderToString(
 		__DIR__ . '/templates/filters.latte',
 		$params

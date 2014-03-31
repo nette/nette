@@ -23,13 +23,12 @@ $form->addSubmit('send', 'Sign in');
 $latte = new Latte\Engine;
 FormMacros::install($latte->getCompiler());
 
-$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::matchFile(
-	"$path.phtml",
+	__DIR__ . '/expected/FormMacros.get.phtml',
 	$latte->compile(__DIR__ . '/templates/forms.get.latte')
 );
 Assert::matchFile(
-	"$path.html",
+	__DIR__ . '/expected/FormMacros.get.html',
 	$latte->renderToString(
 		__DIR__ . '/templates/forms.get.latte',
 		array('_control' => array('myForm' => $form))

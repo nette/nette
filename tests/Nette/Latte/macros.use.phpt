@@ -25,12 +25,11 @@ class MyMacros extends Latte\Macros\MacroSet
 
 $latte = new Latte\Engine;
 
-$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::matchFile(
-	"$path.phtml",
+	__DIR__ . '/expected/macros.use.phtml',
 	$latte->compile(__DIR__ . '/templates/use.latte')
 );
 Assert::matchFile(
-	"$path.html",
+	__DIR__ . '/expected/macros.use.html',
 	$latte->renderToString(__DIR__ . '/templates/use.latte')
 );

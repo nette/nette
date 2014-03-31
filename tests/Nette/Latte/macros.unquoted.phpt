@@ -15,13 +15,12 @@ require __DIR__ . '/../bootstrap.php';
 
 $latte = new Latte\Engine;
 
-$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::matchFile(
-	"$path.phtml",
+	__DIR__ . '/expected/macros.unquoted.phtml',
 	$latte->compile(__DIR__ . '/templates/unquoted.latte')
 );
 Assert::matchFile(
-	"$path.html",
+	__DIR__ . '/expected/macros.unquoted.html',
 	$latte->renderToString(
 		__DIR__ . '/templates/unquoted.latte',
 		array('x' => '\' & "')
