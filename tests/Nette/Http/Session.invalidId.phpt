@@ -19,4 +19,6 @@ $_COOKIE['PHPSESSID'] = '#';
 
 $session = new Session(new Nette\Http\Request(new Nette\Http\UrlScript), new Nette\Http\Response);
 
-$session = $session->start();
+$session->start();
+
+Assert::match('%[\w]+%', $session->getId());

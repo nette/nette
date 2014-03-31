@@ -7,7 +7,7 @@
  */
 
 use Nette\Bridges\FormsLatte\FormMacros;
-use Nette\Application\UI\Form;
+use Nette\Forms\Form;
 use Tester\Assert;
 
 
