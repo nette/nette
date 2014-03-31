@@ -27,13 +27,12 @@ $params['comment'] = 'test -- comment';
 $params['netteHttpResponse'] = new Nette\Http\Response;
 $params['el'] = Html::el('div')->title('1/2"');
 
-$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::matchFile(
-	"$path.phtml",
+	__DIR__ . '/expected/macros.xml.phtml',
 	$latte->compile(__DIR__ . '/templates/xml.latte')
 );
 Assert::matchFile(
-	"$path.html",
+	__DIR__ . '/expected/macros.xml.html',
 	$latte->renderToString(
 		__DIR__ . '/templates/xml.latte',
 		$params

@@ -25,13 +25,12 @@ $params['people'] = array('John', 'Mary', 'Paul', ']]> <!--');
 $params['menu'] = array('about', array('product1', 'product2'), 'contact');
 $params['el'] = Html::el('div')->title('1/2"');
 
-$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::matchFile(
-	"$path.phtml",
+	__DIR__ . '/expected/macros.general.html.phtml',
 	$latte->compile(__DIR__ . '/templates/general.latte')
 );
 Assert::matchFile(
-	"$path.html",
+	__DIR__ . '/expected/macros.general.html.html',
 	$latte->renderToString(
 		__DIR__ . '/templates/general.latte',
 		$params

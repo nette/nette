@@ -15,13 +15,12 @@ require __DIR__ . '/../bootstrap.php';
 
 $latte = new Latte\Engine;
 
-$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::matchFile(
-	"$path.phtml",
+	__DIR__ . '/expected/macros.syntax.phtml',
 	$latte->compile(__DIR__ . '/templates/syntax.latte')
 );
 Assert::matchFile(
-	"$path.html",
+	__DIR__ . '/expected/macros.syntax.html',
 	$latte->renderToString(
 		__DIR__ . '/templates/syntax.latte',
 		array('people' => array('John', 'Mary', 'Paul'))

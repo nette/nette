@@ -16,8 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 $latte = new Latte\Engine;
 
-$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::matchFile(
-	"$path.phtml",
+	__DIR__ . '/expected/macros.recursive.phtml',
 	$latte->compile(__DIR__ . '/templates/recursive.latte')
 );

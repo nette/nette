@@ -17,13 +17,15 @@ require __DIR__ . '/../bootstrap.php';
 $latte = new Latte\Engine;
 $latte->setTempDirectory(TEMP_DIR);
 
-$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::matchFile(
-	"$path.phtml",
+	__DIR__ . '/expected/macros.includeblock.phtml',
 	$latte->compile(__DIR__ . '/templates/includeblock.latte')
 );
 Assert::matchFile(
-	"$path.html",
+	__DIR__ . '/expected/macros.includeblock.html',
 	$latte->renderToString(__DIR__ . '/templates/includeblock.latte')
 );
-Assert::matchFile("$path.inc.phtml", file_get_contents($latte->getCacheFile(__DIR__ . '/templates/includeblock.inc.latte')));
+Assert::matchFile(
+	__DIR__ . '/expected/macros.includeblock.inc.phtml',
+	file_get_contents($latte->getCacheFile(__DIR__ . '/templates/includeblock.inc.latte'))
+);
