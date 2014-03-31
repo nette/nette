@@ -104,10 +104,10 @@ if (empty($_l->extends) && !empty($_control->snippetMode)) {
 			. '; if ($_presenter->getLastCreatedRequestFlag("current")) {');
 	}
 
-	
+
 	/********************* run-time helpers ****************d*g**/
-	
-	
+
+
 	public static function renderSnippets(Nette\Application\UI\Control $control, \stdClass $local, array $params)
 	{
 		$control->snippetMode = FALSE;
@@ -147,5 +147,5 @@ if (empty($_l->extends) && !empty($_control->snippetMode)) {
 			} while ($queue);
 		}
 	}
-	
+
 }
