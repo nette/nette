@@ -144,7 +144,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	{
 		// convert expire into relative amount of seconds
 		if (isset($dp[Cache::EXPIRATION])) {
-			$dp[Cache::EXPIRATION] = Nette\DateTime::from($dp[Cache::EXPIRATION])->format('U') - time();
+			$dp[Cache::EXPIRATION] = Nette\Utils\DateTime::from($dp[Cache::EXPIRATION])->format('U') - time();
 		}
 
 		// convert FILES into CALLBACKS

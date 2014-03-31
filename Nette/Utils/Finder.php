@@ -344,7 +344,7 @@ class Finder extends Nette\Object implements \IteratorAggregate
 			list(, $operator, $date) = $matches;
 			$operator = $operator ? $operator : '=';
 		}
-		$date = Nette\DateTime::from($date)->format('U');
+		$date = DateTime::from($date)->format('U');
 		return $this->filter(function($file) use ($operator, $date) {
 			return Finder::compare($file->getMTime(), $operator, $date);
 		});

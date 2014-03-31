@@ -169,7 +169,7 @@ test(function() { // URL
 test(function() { // object
 	$form = new Form;
 	$input = $form->addText('text')
-		->setValue($date = new Nette\DateTime('2013-07-05'));
+		->setValue($date = new Nette\Utils\DateTime('2013-07-05'));
 
 	Assert::same( $date, $input->getValue() );
 });

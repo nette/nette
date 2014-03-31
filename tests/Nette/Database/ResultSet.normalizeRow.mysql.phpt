@@ -7,7 +7,8 @@
  * @dataProvider? databases.ini  mysql
  */
 
-use Tester\Assert;
+use Tester\Assert,
+	Nette\Utils\DateTime;
 
 require __DIR__ . '/connect.inc.php'; // create $connection
 
@@ -28,10 +29,10 @@ Assert::equal( array(
 	'decimal2' => 1.1,
 	'float' => 1.0,
 	'double' => 1.1,
-	'date' => new Nette\DateTime('2012-10-13'),
+	'date' => new DateTime('2012-10-13'),
 	'time' => new DateInterval('PT30H10M10S'),
-	'datetime' => new Nette\DateTime('2012-10-13 10:10:10'),
-	'timestamp' => new Nette\DateTime('2012-10-13 10:10:10'),
+	'datetime' => new DateTime('2012-10-13 10:10:10'),
+	'timestamp' => new DateTime('2012-10-13 10:10:10'),
 	'year' => PHP_VERSION_ID < 50417 ? '2012' : 2012, // PHP bug #48724
 	'char' => 'a',
 	'varchar' => 'a',
@@ -61,10 +62,10 @@ Assert::equal( array(
 	'decimal2' => 0.5,
 	'float' => 0.5,
 	'double' => 0.5,
-	'date' => new Nette\DateTime('0000-00-00 00:00:00'),
+	'date' => new DateTime('0000-00-00 00:00:00'),
 	'time' => new DateInterval('P0D'),
-	'datetime' => new Nette\DateTime('0000-00-00 00:00:00'),
-	'timestamp' => new Nette\DateTime('0000-00-00 00:00:00'),
+	'datetime' => new DateTime('0000-00-00 00:00:00'),
+	'timestamp' => new DateTime('0000-00-00 00:00:00'),
 	'year' => PHP_VERSION_ID < 50417 ? '2000' : 2000, // PHP bug #48724
 	'char' => '',
 	'varchar' => '',

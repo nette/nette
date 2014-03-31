@@ -21,7 +21,7 @@ Assert::same( 'hello world', Environment::getVariable('foo') );
 
 Assert::same( 'hello world', constant('HELLO_WORLD') );
 
-Assert::equal( Nette\ArrayHash::from(array(
+Assert::equal( Nette\Utils\ArrayHash::from(array(
 	'adapter' => 'pdo_mysql',
 	'params' => array(
 		'host' => 'db.example.com',

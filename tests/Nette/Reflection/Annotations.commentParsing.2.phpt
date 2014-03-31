@@ -43,7 +43,7 @@ Assert::equal( array(
 	'three' => array(TRUE),
 	'five' => array(TRUE),
 	'brackets' => array(
-		Nette\ArrayHash::from(array(
+		Nette\Utils\ArrayHash::from(array(
 			'single' => "()@\\'\"",
 			'double' => "()@'\\\"",
 		)),
