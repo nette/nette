@@ -8,7 +8,7 @@
 namespace Nette\Reflection;
 
 use Nette,
-	Nette\ObjectMixin;
+	Nette\Utils\ObjectMixin;
 
 
 /**

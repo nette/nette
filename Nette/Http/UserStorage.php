@@ -128,7 +128,7 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 	{
 		$section = $this->getSessionSection(TRUE);
 		if ($time) {
-			$time = Nette\DateTime::from($time)->format('U');
+			$time = Nette\Utils\DateTime::from($time)->format('U');
 			$section->expireTime = $time;
 			$section->expireDelta = $time - time();
 

@@ -7,7 +7,8 @@
  * @dataProvider? databases.ini  sqlsrv
  */
 
-use Tester\Assert;
+use Tester\Assert,
+	Nette\Utils\DateTime;
 
 require __DIR__ . '/connect.inc.php'; // create $connection
 
@@ -21,9 +22,9 @@ Assert::equal( array(
 	'binary_3' => '0000FF',
 	'bit' => '1',
 	'char_5' => 'a    ',
-	'date' => new Nette\DateTime('2012-10-13 00:00:00'),
-	'datetime' => new Nette\DateTime('2012-10-13 10:10:10'),
-	'datetime2' => new Nette\DateTime('2012-10-13 10:10:10'),
+	'date' => new DateTime('2012-10-13 00:00:00'),
+	'datetime' => new DateTime('2012-10-13 10:10:10'),
+	'datetime2' => new DateTime('2012-10-13 10:10:10'),
 	'decimal' => 1.0,
 	'float' => '1.1000000000000001',
 	'geography' => 'E610000001148716D9CEF7D34740D7A3703D0A975EC08716D9CEF7D34740CBA145B6F3955EC0',
@@ -37,11 +38,11 @@ Assert::equal( array(
 	'numeric_10_2' => 1.1,
 	'nvarchar' => 'a',
 	'real' => 1.1,
-	'smalldatetime' => new Nette\DateTime('2012-10-13 10:10:00'),
+	'smalldatetime' => new DateTime('2012-10-13 10:10:00'),
 	'smallint' => 1,
 	'smallmoney' => 1.1,
 	'text' => 'a',
-	'time' => new Nette\DateTime('10:10:10'),
+	'time' => new DateTime('10:10:10'),
 	'tinyint' => 1,
 	'uniqueidentifier' => '678E9994-A048-11E2-9030-003048D30C14',
 	'varbinary' => '01',
@@ -54,9 +55,9 @@ Assert::equal( array(
 	'binary_3' => '000000',
 	'bit' => '0',
 	'char_5' => '     ',
-	'date' => new Nette\DateTime('0001-01-01 00:00:00'),
-	'datetime' => new Nette\DateTime('1753-01-01 00:00:00'),
-	'datetime2' => new Nette\DateTime('0001-01-01 00:00:00'),
+	'date' => new DateTime('0001-01-01 00:00:00'),
+	'datetime' => new DateTime('1753-01-01 00:00:00'),
+	'datetime2' => new DateTime('0001-01-01 00:00:00'),
 	'decimal' => 0.0,
 	'float' => 0.5,
 	'geography' => NULL,
@@ -70,11 +71,11 @@ Assert::equal( array(
 	'numeric_10_2' => 0.5,
 	'nvarchar' => '',
 	'real' => 0.0,
-	'smalldatetime' => new Nette\DateTime('1900-01-01 00:00:00'),
+	'smalldatetime' => new DateTime('1900-01-01 00:00:00'),
 	'smallint' => 0,
 	'smallmoney' => 0.5,
 	'text' => '',
-	'time' => new Nette\DateTime('00:00:00'),
+	'time' => new DateTime('00:00:00'),
 	'tinyint' => 0,
 	'uniqueidentifier' => '00000000-0000-0000-0000-000000000000',
 	'varbinary' => '00',
@@ -128,13 +129,13 @@ function isTimestamp($str) {
 }
 
 $row = (array) $context->query('SELECT [datetimeoffset], CAST([sql_variant] AS int) AS [sql_variant], [timestamp] FROM types2 WHERE id = 1')->fetch();
-Assert::type( 'Nette\DateTime', $row['datetimeoffset'] );
+Assert::type( 'DateTime', $row['datetimeoffset'] );
 Assert::same($row['datetimeoffset']->format('Y-m-d H:i:s P'), '2012-10-13 10:10:10 +02:00');
 Assert::same($row['sql_variant'], 123456);
 Assert::true(isTimestamp($row['timestamp']));
 
 $row = (array) $context->query('SELECT [datetimeoffset], CAST([sql_variant] AS varchar) AS [sql_variant], [timestamp] FROM types2 WHERE id = 2')->fetch();
-Assert::type( 'Nette\DateTime', $row['datetimeoffset'] );
+Assert::type( 'DateTime', $row['datetimeoffset'] );
 Assert::same($row['datetimeoffset']->format('Y-m-d H:i:s P'), '0001-01-01 00:00:00 +00:00');
 Assert::same($row['sql_variant'], 'abcd');
 Assert::true(isTimestamp($row['timestamp']));

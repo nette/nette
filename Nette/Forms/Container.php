@@ -16,7 +16,7 @@ use Nette;
  * @author     David Grudl
  *
  * @property-write $defaults
- * @property   Nette\ArrayHash $values
+ * @property   Nette\Utils\ArrayHash $values
  * @property-read bool $valid
  * @property   ControlGroup $currentGroup
  * @property-read \ArrayIterator $controls
@@ -93,11 +93,11 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	/**
 	 * Returns the values submitted by the form.
 	 * @param  bool  return values as an array?
-	 * @return Nette\ArrayHash|array
+	 * @return Nette\Utils\ArrayHash|array
 	 */
 	public function getValues($asArray = FALSE)
 	{
-		$values = $asArray ? array() : new Nette\ArrayHash;
+		$values = $asArray ? array() : new Nette\Utils\ArrayHash;
 		foreach ($this->getComponents() as $name => $control) {
 			if ($control instanceof IControl && !$control->isOmitted()) {
 				$values[$name] = $control->getValue();

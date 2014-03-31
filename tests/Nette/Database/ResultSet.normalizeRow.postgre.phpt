@@ -7,7 +7,8 @@
  * @dataProvider? databases.ini  postgresql
  */
 
-use Tester\Assert;
+use Tester\Assert,
+	Nette\Utils\DateTime;
 
 require __DIR__ . '/connect.inc.php'; // create $connection
 
@@ -28,9 +29,9 @@ Assert::equal( array(
 	'real' => 1.1,
 	'double' => 1.11,
 	'bool' => TRUE,
-	'date' => new Nette\DateTime('2012-10-13'),
-	'time' => new Nette\DateTime('10:10:10'),
-	'timestamp' => new Nette\DateTime('2012-10-13 10:10:10'),
+	'date' => new DateTime('2012-10-13'),
+	'time' => new DateTime('10:10:10'),
+	'timestamp' => new DateTime('2012-10-13 10:10:10'),
 	'interval' => '1 year',
 	'character' => 'a                             ',
 	'character_varying' => 'a',

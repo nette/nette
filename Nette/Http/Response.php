@@ -7,7 +7,8 @@
 
 namespace Nette\Http;
 
-use Nette;
+use Nette,
+	Nette\Utils\DateTime;
 
 
 /**
@@ -161,7 +162,7 @@ class Response extends Nette\Object implements IResponse
 			return $this;
 		}
 
-		$time = Nette\DateTime::from($time);
+		$time = DateTime::from($time);
 		$this->setHeader('Cache-Control', 'max-age=' . ($time->format('U') - time()));
 		$this->setHeader('Expires', self::date($time));
 		return $this;
@@ -219,7 +220,7 @@ class Response extends Nette\Object implements IResponse
 	 */
 	public static function date($time = NULL)
 	{
-		$time = Nette\DateTime::from($time);
+		$time = DateTime::from($time);
 		$time->setTimezone(new \DateTimeZone('GMT'));
 		return $time->format('D, d M Y H:i:s \G\M\T');
 	}
@@ -258,7 +259,7 @@ class Response extends Nette\Object implements IResponse
 		setcookie(
 			$name,
 			$value,
-			$time ? Nette\DateTime::from($time)->format('U') : 0,
+			$time ? DateTime::from($time)->format('U') : 0,
 			$path === NULL ? $this->cookiePath : (string) $path,
 			$domain === NULL ? $this->cookieDomain : (string) $domain,
 			$secure === NULL ? $this->cookieSecure : (bool) $secure,

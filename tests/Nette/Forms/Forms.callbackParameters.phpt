@@ -6,7 +6,7 @@
  * @author     rostenkowski
  */
 
-use Nette\ArrayHash;
+use Nette\Utils\ArrayHash;
 use Nette\Forms\Form;
 use Tester\Assert;
 

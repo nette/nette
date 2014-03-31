@@ -8,7 +8,7 @@
 
 use Nette\Forms\Form,
 	Nette\Forms\Validator,
-	Nette\DateTime,
+	Nette\Utils\DateTime,
 	Tester\Assert;
 
 

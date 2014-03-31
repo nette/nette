@@ -8,7 +8,7 @@
 
 use Nette\Http,
 	Nette\Forms\Form,
-	Nette\ArrayHash,
+	Nette\Utils\ArrayHash,
 	Tester\Assert;
 
 

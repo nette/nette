@@ -7,7 +7,7 @@
  */
 
 use Nette\Forms\Form,
-	Nette\DateTime,
+	Nette\Utils\DateTime,
 	Tester\Assert;
 
 
