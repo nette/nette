@@ -18,8 +18,7 @@ $latte = new Latte\Engine;
 $latte->setLoader(new Latte\Loaders\StringLoader);
 UIMacros::install($latte->getCompiler());
 
-$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-Assert::matchFile("$path.phtml", $latte->compile(
+Assert::matchFile(__DIR__ . '/expected/UIMacros.isLinkCurrent.phtml', $latte->compile(
 '<a n:href="default" n:class="$presenter->isLinkCurrent() ? current">n:href before n:class</a>
 
 <a n:class="$presenter->isLinkCurrent() ? current" n:href="default">n:href after n:class</a>

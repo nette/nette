@@ -18,8 +18,7 @@ require __DIR__ . '/../bootstrap.php';
 $latte = new Latte\Engine;
 UIMacros::install($latte->getCompiler());
 
-$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::matchFile(
-	"$path.phtml",
+	__DIR__ . '/expected/UIMacros.snippet.phtml',
 	$latte->compile(__DIR__ . '/templates/snippet.latte')
 );

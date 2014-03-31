@@ -19,9 +19,8 @@ $params['gt'] = '>';
 $params['dash'] = '-';
 $params['basePath'] = '/www';
 
-$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::matchFile(
-	"$path.html",
+	__DIR__ . '/expected/macros.comments.html.html',
 	$latte->renderToString(
 		__DIR__ . '/templates/comments.latte',
 		$params

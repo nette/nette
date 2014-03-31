@@ -16,13 +16,12 @@ require __DIR__ . '/../bootstrap.php';
 
 $latte = new Latte\Engine;
 
-$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::matchFile(
-	"$path.phtml",
+	__DIR__ . '/expected/macros.inheritance.child5.phtml',
 	$latte->compile(__DIR__ . '/templates/inheritance.child5.latte')
 );
 Assert::matchFile(
-	"$path.html",
+	__DIR__ . '/expected/macros.inheritance.child5.html',
 	$latte->renderToString(
 		__DIR__ . '/templates/inheritance.child5.latte',
 		array('ext' => 'inheritance.parent.latte')

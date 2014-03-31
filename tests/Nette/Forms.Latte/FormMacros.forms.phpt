@@ -45,13 +45,12 @@ FormMacros::install($latte->getCompiler());
 
 $form['username']->addError('error');
 
-$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::matchFile(
-	"$path.phtml",
+	__DIR__ . '/expected/FormMacros.forms.phtml',
 	$latte->compile(__DIR__ . '/templates/forms.latte')
 );
 Assert::matchFile(
-	"$path.html",
+	__DIR__ . '/expected/FormMacros.forms.html',
 	$latte->renderToString(
 		__DIR__ . '/templates/forms.latte',
 		array('_control' => array('myForm' => $form))

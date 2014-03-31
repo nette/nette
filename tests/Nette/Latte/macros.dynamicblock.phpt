@@ -16,12 +16,11 @@ require __DIR__ . '/../bootstrap.php';
 
 $latte = new Latte\Engine;
 
-$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::matchFile(
-	"$path.phtml",
+	__DIR__ . '/expected/macros.dynamicblock.phtml',
 	$latte->compile(__DIR__ . '/templates/dynamicblocks.latte')
 );
 Assert::matchFile(
-	"$path.html",
+	__DIR__ . '/expected/macros.dynamicblock.html',
 	$latte->renderToString(__DIR__ . '/templates/dynamicblocks.latte')
 );
