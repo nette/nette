@@ -23,7 +23,7 @@ $book = $context->table('author')->insert(array(
 // id = 14
 
 Assert::equal('eddard stark', $book->name);
-Assert::equal(new Nette\DateTime('2011-11-11'), $book->born);
+Assert::equal(new Nette\Utils\DateTime('2011-11-11'), $book->born);
 
 
 $books = $context->table('book');

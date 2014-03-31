@@ -172,7 +172,7 @@ class Filters
 			return $time->format($format);
 		}
 
-		$time = Nette\DateTime::from($time);
+		$time = Nette\Utils\DateTime::from($time);
 		return Strings::contains($format, '%')
 			? strftime($format, $time->format('U')) // formats according to locales
 			: $time->format($format); // formats using date()

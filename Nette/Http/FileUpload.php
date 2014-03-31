@@ -172,11 +172,11 @@ class FileUpload extends Nette\Object
 
 	/**
 	 * Returns the image.
-	 * @return Nette\Image
+	 * @return Nette\Utils\Image
 	 */
 	public function toImage()
 	{
-		return Nette\Image::fromFile($this->tmpName);
+		return Nette\Utils\Image::fromFile($this->tmpName);
 	}
 
 

@@ -7,7 +7,8 @@
  * @dataProvider? databases.ini  sqlite
  */
 
-use Tester\Assert;
+use Tester\Assert,
+	Nette\Utils\DateTime;
 
 require __DIR__ . '/connect.inc.php'; // create $connection
 
@@ -42,8 +43,8 @@ Assert::equal( array(
 	'numeric' => 1.1,
 	'decimal_10_5' => 1.1,
 	'boolean' => TRUE,
-	'date' => new Nette\DateTime('2012-10-13'),
-	'datetime' => new Nette\DateTime('2012-10-13 10:10:10'),
+	'date' => new DateTime('2012-10-13'),
+	'datetime' => new DateTime('2012-10-13 10:10:10'),
 ), (array) $res->fetch() );
 
 Assert::equal( array(
@@ -72,8 +73,8 @@ Assert::equal( array(
 	'numeric' => 0.5,
 	'decimal_10_5' => 0.5,
 	'boolean' => FALSE,
-	'date' => new Nette\DateTime('1970-01-01'),
-	'datetime' => new Nette\DateTime('1970-01-01 00:00:00'),
+	'date' => new DateTime('1970-01-01'),
+	'datetime' => new DateTime('1970-01-01 00:00:00'),
 ), (array) $res->fetch() );
 
 Assert::same( array(

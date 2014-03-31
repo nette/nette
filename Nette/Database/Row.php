@@ -16,7 +16,7 @@ use Nette;
  * @author     David Grudl
  * @author     Jan Skrasek
  */
-class Row extends Nette\ArrayHash implements IRow
+class Row extends Nette\Utils\ArrayHash implements IRow
 {
 
 	public function __get($key)

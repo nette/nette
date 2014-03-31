@@ -150,7 +150,7 @@ class Identity extends Nette\Object implements IIdentity
 	 */
 	public function __unset($name)
 	{
-		Nette\ObjectMixin::remove($this, $name);
+		Nette\Utils\ObjectMixin::remove($this, $name);
 	}
 
 }

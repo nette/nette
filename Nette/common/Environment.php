@@ -282,7 +282,7 @@ class Environment
 	 * Loads global configuration from file and process it.
 	 * @param  string
 	 * @param  string
-	 * @return Nette\ArrayHash
+	 * @return Nette\Utils\ArrayHash
 	 */
 	public static function loadConfig($file = NULL, $section = NULL)
 	{
@@ -320,7 +320,7 @@ class Environment
 	 */
 	public static function getConfig($key = NULL, $default = NULL)
 	{
-		$params = Nette\ArrayHash::from(self::getContext()->parameters);
+		$params = Nette\Utils\ArrayHash::from(self::getContext()->parameters);
 		if (func_num_args()) {
 			return isset($params[$key]) ? $params[$key] : $default;
 		} else {
