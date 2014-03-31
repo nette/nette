@@ -59,3 +59,13 @@ $session = new Session(new Nette\Http\Request(new Nette\Http\UrlScript), new Net
 
 $session->setStorage(new MySessionStorage);
 $session->start();
+$_COOKIE['PHPSESSID'] = $session->getId();
+
+$namespace = $session->getSection('one');
+$namespace->a = 'apple';
+$session->close();
+unset($_SESSION);
+
+$session->start();
+$namespace = $session->getSection('one');
+Assert::same('apple', $namespace->a);
