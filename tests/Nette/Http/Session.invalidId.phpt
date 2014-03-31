@@ -20,4 +20,6 @@ $_COOKIE['PHPSESSID'] = '#';
 $container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
 $session = $container->getService('session');
 
-$session = $session->start();
+$session->start();
+
+Assert::match('%[\w]+%', $session->getId());

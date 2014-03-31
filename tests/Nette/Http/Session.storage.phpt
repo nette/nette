@@ -63,3 +63,13 @@ $session = $container->getService('session');
 
 $session->setStorage(new MySessionStorage);
 $session->start();
+$_COOKIE['PHPSESSID'] = $session->getId();
+
+$namespace = $session->getSection('one');
+$namespace->a = 'apple';
+$session->close();
+unset($_SESSION);
+
+$session->start();
+$namespace = $session->getSection('one');
+Assert::same('apple', $namespace->a);
