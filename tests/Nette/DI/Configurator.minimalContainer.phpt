@@ -39,7 +39,6 @@ Assert::same( array(
 
 Assert::type( 'Nette\Caching\Storages\FileJournal', $container->getService('nette.cacheJournal') );
 Assert::type( 'Nette\Caching\Storages\FileStorage', $container->getService('cacheStorage') );
-Assert::type( 'Nette\Caching\Storages\PhpFileStorage', $container->getService('nette.templateCacheStorage') );
 Assert::type( 'Nette\Http\Request', $container->getService('httpRequest') );
 Assert::type( 'Nette\Http\Response', $container->getService('httpResponse') );
 Assert::type( 'Nette\Http\Context', $container->getService('nette.httpContext') );

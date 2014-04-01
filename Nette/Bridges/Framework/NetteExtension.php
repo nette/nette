@@ -118,6 +118,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 
 		$container->addDefinition($this->prefix('templateCacheStorage'))
 			->setClass('Nette\Caching\Storages\PhpFileStorage', array($container->expand('%tempDir%/cache')))
+			->addSetup('::trigger_error', array('Service templateCacheStorage is deprecated.', E_USER_DEPRECATED))
 			->setAutowired(FALSE);
 
 		$container->addDefinition($this->prefix('cache'))
