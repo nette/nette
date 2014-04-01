@@ -1,7 +1,0 @@
-services:
-	lorem:
-		create: stdClass
-		tags:
-			- a
-			b: c
-			d: [e]

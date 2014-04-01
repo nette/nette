@@ -17,6 +17,25 @@
 	],
 	"require": {
 		"php": ">=5.3.1",
+        "nette/application": "~2.2",
+        "nette/caching": "~2.2",
+        "nette/component-model": "~2.2",
+        "nette/database": "~2.2",
+        "nette/di": "~2.2",
+        "nette/finder": "~2.2",
+        "nette/forms": "~2.2",
+        "nette/http": "~2.2",
+        "nette/mail": "~2.2",
+        "nette/neon": "~2.2",
+        "nette/php-generator": "~2.2",
+        "nette/reflection": "~2.2",
+        "nette/robot-loader": "~2.2",
+        "nette/safe-stream": "~2.2",
+        "nette/security": "~2.2",
+        "nette/tokenizer": "~2.2",
+        "nette/utils": "~2.2",
+		"latte/latte": "~2.2",
+		"tracy/tracy": "~2.0",
 		"ext-iconv": "*",
 		"ext-tokenizer": "*"
 	},
@@ -27,12 +46,13 @@
 		"ext-fileinfo": "*"
 	},
 	"require-dev": {
-		"nette/tester": "@dev"
+		"nette/tester": "~1.0"
 	},
 	"autoload": {
 		"classmap": ["Nette/"],
 		"files": ["Nette/common/shortcuts.php"]
 	},
+	"minimum-stability": "dev",
 	"extra": {
 		"branch-alias": {
 			"dev-master": "2.2-dev"

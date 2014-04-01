@@ -7,45 +7,12 @@
 
 namespace Nette\Latte;
 
-use Nette;
+use Latte;
 
 
 /**
- * HTML element node.
- *
- * @author     David Grudl
+ * @deprecated
  */
-class HtmlNode extends Nette\Object
+class HtmlNode extends Latte\HtmlNode
 {
-	/** @var string */
-	public $name;
-
-	/** @var bool */
-	public $isEmpty = FALSE;
-
-	/** @var array */
-	public $attrs = array();
-
-	/** @var array */
-	public $macroAttrs = array();
-
-	/** @var bool */
-	public $closing = FALSE;
-
-	/** @var HtmlNode */
-	public $parentNode;
-
-	/** @var string */
-	public $attrCode;
-
-	/** @var int */
-	public $offset;
-
-
-	public function __construct($name, self $parentNode = NULL)
-	{
-		$this->name = $name;
-		$this->parentNode = $parentNode;
-	}
-
 }

@@ -1,3 +1,0 @@
-# testing netterobots.txt in root of folder
-
-Disallow: /disallowed1/

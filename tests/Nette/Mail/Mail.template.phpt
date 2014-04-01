@@ -6,8 +6,7 @@
  * @author     David Grudl
  */
 
-use Nette\Latte,
-	Nette\Mail\Message,
+use Nette\Mail\Message,
 	Nette\Templating\FileTemplate,
 	Tester\Assert;
 
@@ -22,7 +21,7 @@ $mail->addTo('Lady Jane <jane@example.com>');
 
 @$template = new FileTemplate;
 $template->setFile('files/template.phtml');
-$template->registerFilter(new Latte\Engine);
+$template->registerFilter(new Nette\Latte\Engine);
 $mail->htmlBody = $template;
 
 $mailer = new TestMailer();

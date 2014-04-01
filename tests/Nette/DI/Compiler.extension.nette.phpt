@@ -13,10 +13,10 @@ use Nette\DI,
 require __DIR__ . '/../bootstrap.php';
 
 
-class LoremIpsumMacros extends Nette\Latte\Macros\MacroSet
+class LoremIpsumMacros extends Latte\Macros\MacroSet
 {
 
-	public static function install(Nette\Latte\Compiler $compiler)
+	public static function install(Latte\Compiler $compiler)
 	{
 		$me = new static($compiler);
 		$me->addMacro('lorem', 'lorem');
@@ -26,10 +26,10 @@ class LoremIpsumMacros extends Nette\Latte\Macros\MacroSet
 }
 
 
-class IpsumLoremMacros extends Nette\Latte\Macros\MacroSet
+class IpsumLoremMacros extends Latte\Macros\MacroSet
 {
 
-	public static function install(Nette\Latte\Compiler $compiler)
+	public static function install(Latte\Compiler $compiler)
 	{
 		$me = new static($compiler);
 		$me->addMacro('ipsum', 'ipsum');

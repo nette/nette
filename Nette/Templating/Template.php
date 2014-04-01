@@ -9,13 +9,14 @@ namespace Nette\Templating;
 
 use Nette,
 	Nette\Caching,
-	Nette\Utils\Callback;
+	Nette\Utils\Callback,
+	Latte;
 
 
 /**
  * @deprecated
  */
-class Template extends Nette\Latte\Template implements ITemplate
+class Template extends Latte\Template implements ITemplate
 {
 	/** @var array of function(Template $sender); Occurs before a template is compiled - implement to customize the filters */
 	public $onPrepareFilters = array();
@@ -142,7 +143,7 @@ class Template extends Nette\Latte\Template implements ITemplate
 			$code = strtr($code, $blocks); // put PHP code back
 		}
 
-		return Nette\Latte\Helpers::optimizePhp($code);
+		return Latte\Helpers::optimizePhp($code);
 	}
 
 

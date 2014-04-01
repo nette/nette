@@ -9,7 +9,8 @@ namespace Nette\Bridges\Framework;
 
 use Nette,
 	Nette\DI\ContainerBuilder,
-	Nette\Utils\Validators;
+	Nette\Utils\Validators,
+	Latte;
 
 
 /**
@@ -158,7 +159,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		}
 
 		if ($container->parameters['debugMode'] && $config['debugger']) {
-			$session->addSetup('Nette\Diagnostics\Debugger::getBar()->addPanel(?)', array(
+			$session->addSetup('Tracy\Debugger::getBar()->addPanel(?)', array(
 				new Nette\DI\Statement('Nette\Bridges\HttpTracy\SessionPanel')
 			));
 		}
@@ -181,7 +182,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 			->setClass('Nette\Security\User');
 
 		if ($container->parameters['debugMode'] && $config['debugger']) {
-			$user->addSetup('Nette\Diagnostics\Debugger::getBar()->addPanel(?)', array(
+			$user->addSetup('Tracy\Debugger::getBar()->addPanel(?)', array(
 				new Nette\DI\Statement('Nette\Bridges\SecurityTracy\UserPanel')
 			));
 		}
@@ -245,7 +246,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		}
 
 		if ($container->parameters['debugMode'] && $config['debugger']) {
-			$container->getDefinition('application')->addSetup('Nette\Diagnostics\Debugger::getBar()->addPanel(?)', array(
+			$container->getDefinition('application')->addSetup('Tracy\Debugger::getBar()->addPanel(?)', array(
 				new Nette\DI\Statement('Nette\Bridges\ApplicationTracy\RoutingPanel')
 			));
 		}
@@ -271,10 +272,10 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		$this->validate($config, $this->defaults['latte'], 'nette.latte');
 
 		$latte = $container->addDefinition($this->prefix('latte'))
-			->setClass('Nette\Latte\Engine')
+			->setClass('Latte\Engine')
 			->addSetup('setTempDirectory', array($container->expand('%tempDir%/cache/latte')))
 			->addSetup('setAutoRefresh', array($container->parameters['debugMode']))
-			->addSetup('setContentType', array($config['xhtml'] ? Nette\Latte\Compiler::CONTENT_XHTML : Nette\Latte\Compiler::CONTENT_HTML))
+			->addSetup('setContentType', array($config['xhtml'] ? Latte\Compiler::CONTENT_XHTML : Latte\Compiler::CONTENT_HTML))
 			->setImplement('Nette\Bridges\Framework\ILatteFactory');
 
 		$container->addDefinition($this->prefix('template'))
@@ -299,9 +300,11 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		$config = $this->getConfig($this->defaults);
 
 		// debugger
+		$initialize->addBody('Nette\Bridges\Framework\TracyBridge::initialize();');
+
 		foreach (array('email', 'editor', 'browser', 'strictMode', 'maxLen', 'maxDepth', 'showLocation', 'scream') as $key) {
 			if (isset($config['debugger'][$key])) {
-				$initialize->addBody('Nette\Diagnostics\Debugger::$? = ?;', array($key, $config['debugger'][$key]));
+				$initialize->addBody('Tracy\Debugger::$? = ?;', array($key, $config['debugger'][$key]));
 			}
 		}
 
@@ -312,7 +315,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 
 			foreach ((array) $config['debugger']['bar'] as $item) {
 				$initialize->addBody($container->formatPhp(
-					'Nette\Diagnostics\Debugger::getBar()->addPanel(?);',
+					'Tracy\Debugger::getBar()->addPanel(?);',
 					Nette\DI\Compiler::filterArguments(array(is_string($item) ? new Nette\DI\Statement($item) : $item))
 				));
 			}
@@ -320,7 +323,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 
 		foreach ((array) $config['debugger']['blueScreen'] as $item) {
 			$initialize->addBody($container->formatPhp(
-				'Nette\Diagnostics\Debugger::getBlueScreen()->addPanel(?);',
+					'Tracy\Debugger::getBlueScreen()->addPanel(?);',
 				Nette\DI\Compiler::filterArguments(array($item))
 			));
 		}

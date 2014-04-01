@@ -7,13 +7,14 @@
 
 namespace Nette\Templating;
 
-use Nette;
+use Nette,
+	Latte;
 
 
 /**
  * @deprecated
  */
-class Helpers extends Nette\Latte\Runtime\Filters
+class Helpers extends Latte\Runtime\Filters
 {
 	private static $helpers = array(
 		'normalize' => 'Nette\Utils\Strings::normalize',
@@ -93,7 +94,7 @@ class Helpers extends Nette\Latte\Runtime\Filters
 
 	public static function optimizePhp($source, $lineLength = 80)
 	{
-		return Nette\Latte\Helpers::optimizePhp($source, $lineLength);
+		return Latte\Helpers::optimizePhp($source, $lineLength);
 	}
 
 }
