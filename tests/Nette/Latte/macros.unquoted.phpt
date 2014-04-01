@@ -1,13 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Engine: unquoted attributes.
+ * Test: Latte\Engine: unquoted attributes.
  *
  * @author     Jakub Vrana
  */
 
-use Nette\Latte,
-	Tester\Assert;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

@@ -1,15 +1,15 @@
 <?php
 // source: %a%
 
-// prolog Nette\Latte\Macros\CoreMacros
-list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
+// prolog Latte\Macros\CoreMacros
+list($_l, $_g) = Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
-// prolog Nette\Latte\Macros\BlockMacros
+// prolog Latte\Macros\BlockMacros
 //
 // block test
 //
 if (!function_exists($_l->blocks['test'][] = '_%[a-z0-9]+%_test')) { function _%[a-z0-9]+%_test($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
-?>	This is definition #<?php echo Nette\Latte\Runtime\Filters::escapeHtml($var, ENT_NOQUOTES) ?>
+?>	This is definition #<?php echo Latte\Runtime\Filters::escapeHtml($var, ENT_NOQUOTES) ?>
 
 <?php
 }}

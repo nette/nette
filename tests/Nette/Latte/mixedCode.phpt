@@ -6,8 +6,7 @@
  * @author     Jan Dolecek, David Grudl
  */
 
-use Nette\Latte,
-	Tester\Assert;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -23,7 +22,7 @@ try {
 	?>
 	{notDefined line 4}
 	');
-} catch(\Nette\Latte\CompileException $e) {
+} catch(\Latte\CompileException $e) {
 	Assert::same(4, $e->sourceLine);
 	Assert::same("Unknown macro {notDefined}", $e->getMessage());
 }
@@ -35,7 +34,7 @@ try {
 	<?xml ?>
 	{notDefined line 4}
 	');
-} catch(\Nette\Latte\CompileException $e) {
+} catch(\Latte\CompileException $e) {
 	Assert::same(4, $e->sourceLine);
 	Assert::same("Unknown macro {notDefined}", $e->getMessage());
 }

@@ -1,13 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Engine and FormMacros.
+ * Test: FormMacros.
  *
  * @author     David Grudl
  */
 
-use Nette\Latte,
-	Nette\Forms\Form,
+use Nette\Forms\Form,
 	Nette\Bridges\FormsLatte\FormMacros,
 	Tester\Assert;
 

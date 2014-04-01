@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Runtime\Filters::date()
+ * Test: Latte\Runtime\Filters::date()
  *
  * @author     David Grudl
  */
 
-use Nette\Latte\Runtime\Filters,
+use Latte\Runtime\Filters,
 	Tester\Assert;
 
 

@@ -9,7 +9,8 @@ namespace Nette\Templating;
 
 use Nette,
 	Nette\Caching,
-	Nette\Utils\Callback;
+	Nette\Utils\Callback,
+	Latte;
 
 
 /**
@@ -77,7 +78,7 @@ class Template extends Nette\Object implements ITemplate
 			$this->onPrepareFilters($this);
 		}
 		if ($this->useLatte) {
-			return $this->createLatte()->setLoader(new Nette\Latte\Loaders\StringLoader)->render($this->source, $this->getParameters());
+			return $this->createLatte()->setLoader(new Latte\Loaders\StringLoader)->render($this->source, $this->getParameters());
 		}
 
 		$cache = new Caching\Cache($storage = $this->getCacheStorage(), 'Nette.Template');
@@ -162,7 +163,7 @@ class Template extends Nette\Object implements ITemplate
 		}
 
 		if ($this->useLatte) {
-			return $this->createLatte()->setLoader(new Nette\Latte\Loaders\StringLoader)->compile($code);
+			return $this->createLatte()->setLoader(new Latte\Loaders\StringLoader)->compile($code);
 		}
 
 		return Helpers::optimizePhp($code);
@@ -171,7 +172,7 @@ class Template extends Nette\Object implements ITemplate
 
 	protected function createLatte()
 	{
-		$latte = new Nette\Latte\Engine;
+		$latte = new Latte\Engine;
 
 		foreach ($this->helpers as $key => $callback) {
 			$latte->addFilter($key, $callback);
@@ -203,7 +204,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function registerFilter($callback)
 	{
-		if ($callback instanceof Nette\Latte\Engine || strpos(Callback::toString($callback), 'Latte\Engine') !== FALSE) { // back compatibility
+		if ($callback instanceof Latte\Engine || strpos(Callback::toString($callback), 'Latte\Engine') !== FALSE) { // back compatibility
 			$this->useLatte = TRUE;
 		} elseif ($this->useLatte) {
 			throw new Nette\DeprecatedException('Adding filters after Latte is not possible.');

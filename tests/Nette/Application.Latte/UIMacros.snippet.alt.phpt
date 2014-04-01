@@ -6,8 +6,7 @@
  * @author     David Grudl
  */
 
-use Nette\Latte,
-	Nette\Utils\Html,
+use Nette\Utils\Html,
 	Nette\Bridges\ApplicationLatte\UIMacros,
 	Tester\Assert;
 

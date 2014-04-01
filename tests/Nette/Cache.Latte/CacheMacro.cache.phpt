@@ -6,8 +6,7 @@
  * @author     David Grudl
  */
 
-use Nette\Latte,
-	Nette\Bridges\CacheLatte\CacheMacro,
+use Nette\Bridges\CacheLatte\CacheMacro,
 	Tester\Assert;
 
 

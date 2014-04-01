@@ -1,13 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Engine and auto-safe URL.
+ * Test: Latte\Engine and auto-safe URL.
  *
  * @author     David Grudl
  */
 
-use Nette\Latte,
-	Tester\Assert;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -15,7 +14,7 @@ require __DIR__ . '/../bootstrap.php';
 
 $latte = new Latte\Engine;
 $latte->setLoader(new Latte\Loaders\StringLoader);
-$latte->addFilter('datastream', 'Nette\Latte\Runtime\Filters::dataStream');
+$latte->addFilter('datastream', 'Latte\Runtime\Filters::dataStream');
 $params['url1'] = 'javascript:alert(1)';
 $params['url2'] = ' javascript:alert(1)';
 $params['url3'] = 'data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+';

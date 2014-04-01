@@ -1,8 +1,8 @@
 <?php
 // source: %a%
 
-// prolog Nette\Latte\Macros\CoreMacros
-list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
+// prolog Latte\Macros\CoreMacros
+list($_l, $_g) = Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
 //
 // main template
@@ -11,4 +11,4 @@ list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9
 
 <?php $_l->templates['%[a-z0-9]+%']->renderChildTemplate('includeblock.inc.latte', get_defined_vars()) ?>
 
-<?php Nette\Latte\Macros\BlockMacros::callBlock($_l, 'test', $template->getParameters()) ;
+<?php Latte\Macros\BlockMacros::callBlock($_l, 'test', $template->getParameters()) ;

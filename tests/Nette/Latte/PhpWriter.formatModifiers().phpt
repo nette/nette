@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Latte\PhpWriter::formatModifiers()
+ * Test: Latte\PhpWriter::formatModifiers()
  *
  * @author     David Grudl
  */
 
-use Nette\Latte\PhpWriter,
-	Nette\Latte\MacroTokens,
+use Latte\PhpWriter,
+	Latte\MacroTokens,
 	Tester\Assert;
 
 
@@ -25,10 +25,10 @@ test(function() { // special
 	Assert::same( '@',  formatModifiers('@', '|') );
 	Assert::exception(function() {
 		formatModifiers('@', ':');
-	}, 'Nette\InvalidStateException', 'Modifier name must be alphanumeric string%a%');
+	}, 'Latte\CompileException', 'Modifier name must be alphanumeric string%a%');
 	Assert::exception(function() {
 		Assert::same( '$template->mod(@, \'\\\\\', "a", "b", "c", "arg2")',  formatModifiers('@', "mod:'\\\\':a:b:c':arg2") );
-	}, 'Nette\Latte\TokenizerException', 'Unexpected %a% on line 1, column 15.');
+	}, 'Latte\CompileException', 'Unexpected %a% on line 1, column 15.');
 });
 
 

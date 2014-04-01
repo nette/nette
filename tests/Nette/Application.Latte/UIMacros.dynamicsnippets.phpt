@@ -1,13 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Engine: dynamic snippets test.
+ * Test: dynamic snippets test.
  *
  * @author     David Grudl
  */
 
-use Nette\Latte,
-	Nette\Bridges\ApplicationLatte\UIMacros,
+use Nette\Bridges\ApplicationLatte\UIMacros,
 	Tester\Assert;
 
 

@@ -7,39 +7,12 @@
 
 namespace Nette\Latte;
 
-use Nette;
+use Latte;
 
 
 /**
- * Latte macro.
- *
- * @author     David Grudl
+ * @deprecated
  */
-interface IMacro
+interface IMacro extends Latte\IMacro
 {
-
-	/**
-	 * Initializes before template parsing.
-	 * @return void
-	 */
-	function initialize();
-
-	/**
-	 * Finishes template parsing.
-	 * @return array(prolog, epilog)
-	 */
-	function finalize();
-
-	/**
-	 * New node is found. Returns FALSE to reject.
-	 * @return bool
-	 */
-	function nodeOpened(MacroNode $node);
-
-	/**
-	 * Node is closed.
-	 * @return void
-	 */
-	function nodeClosed(MacroNode $node);
-
 }

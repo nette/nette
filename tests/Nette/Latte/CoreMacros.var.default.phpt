@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Test: Nette\Latte\CoreMacros: {var ...} {default ...}
+ * Test: Latte\CoreMacros: {var ...} {default ...}
  *
  * @author     David Grudl
  */
 
-use Nette\Latte\Macros\CoreMacros,
+use Latte\Macros\CoreMacros,
 	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-$compiler = new Nette\Latte\Compiler;
+$compiler = new Latte\Compiler;
 CoreMacros::install($compiler);
 
 test(function() use ($compiler) { // {var ... }
@@ -27,7 +27,7 @@ test(function() use ($compiler) { // {var ... }
 
 	Assert::exception(function() use ($compiler) {
 		$compiler->expandMacro('var', '$var => "123', '');
-	}, 'Nette\Latte\TokenizerException', 'Unexpected %a% on line 1, column 9.');
+	}, 'Latte\CompileException', 'Unexpected %a% on line 1, column 9.');
 });
 
 
@@ -40,5 +40,5 @@ test(function() use ($compiler) { // {default ...}
 
 	Assert::exception(function() use ($compiler) {
 		$compiler->expandMacro('default', '$temp->var1 = 123', '');
-	}, 'Nette\Latte\CompileException', "Unexpected '->' in {default \$temp->var1 = 123}");
+	}, 'Latte\CompileException', "Unexpected '->' in {default \$temp->var1 = 123}");
 });

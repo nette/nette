@@ -6,8 +6,7 @@
  * @author     David Grudl
  */
 
-use Nette\Latte,
-	Nette\Templating\FileTemplate,
+use Nette\Templating\FileTemplate,
 	Nette\Utils\Html,
 	Tester\Assert;
 

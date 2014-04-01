@@ -8,11 +8,11 @@
 namespace Nette\Bridges\FormsLatte;
 
 use Nette,
-	Nette\Latte,
-	Nette\Latte\MacroNode,
-	Nette\Latte\PhpWriter,
-	Nette\Latte\CompileException,
-	Nette\Latte\Macros\MacroSet,
+	Latte,
+	Latte\MacroNode,
+	Latte\PhpWriter,
+	Latte\CompileException,
+	Latte\Macros\MacroSet,
 	Nette\Forms\Form;
 
 

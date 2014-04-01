@@ -1,13 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Engine: {includeblock ...}
+ * Test: Latte\Engine: {includeblock ...}
  *
  * @author     David Grudl
  */
 
-use Nette\Latte,
-	Nette\Utils\Html,
+use Nette\Utils\Html,
 	Tester\Assert;
 
 

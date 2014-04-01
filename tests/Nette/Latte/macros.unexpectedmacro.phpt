@@ -1,13 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Engine: unexpected macro.
+ * Test: Latte\Engine: unexpected macro.
  *
  * @author     David Grudl
  */
 
-use Nette\Latte,
-	Tester\Assert;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -18,4 +17,4 @@ $latte->setLoader(new Latte\Loaders\StringLoader);
 
 Assert::exception(function() use ($latte) {
 	$latte->compile('Block{/block}');
-}, 'Nette\Latte\CompileException', 'Unexpected {/block}');
+}, 'Latte\CompileException', 'Unexpected {/block}');

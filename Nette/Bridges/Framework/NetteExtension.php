@@ -9,7 +9,8 @@ namespace Nette\Bridges\Framework;
 
 use Nette,
 	Nette\DI\ContainerBuilder,
-	Nette\Utils\Validators;
+	Nette\Utils\Validators,
+	Latte;
 
 
 /**
@@ -271,10 +272,10 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		$this->validate($config, $this->defaults['latte'], 'nette.latte');
 
 		$latte = $container->addDefinition($this->prefix('latte'))
-			->setClass('Nette\Latte\Engine')
+			->setClass('Latte\Engine')
 			->addSetup('setTempDirectory', array($container->expand('%tempDir%/cache/latte')))
 			->addSetup('setAutoRefresh', array($container->parameters['debugMode']))
-			->addSetup('setContentType', array($config['xhtml'] ? Nette\Latte\Compiler::CONTENT_XHTML : Nette\Latte\Compiler::CONTENT_HTML))
+			->addSetup('setContentType', array($config['xhtml'] ? Latte\Compiler::CONTENT_XHTML : Latte\Compiler::CONTENT_HTML))
 			->setImplement('Nette\Bridges\Framework\ILatteFactory');
 
 		$container->addDefinition($this->prefix('template'))

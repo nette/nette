@@ -8,10 +8,10 @@
 namespace Nette\Bridges\ApplicationLatte;
 
 use Nette,
-	Nette\Latte,
-	Nette\Latte\MacroNode,
-	Nette\Latte\PhpWriter,
-	Nette\Latte\CompileException,
+	Latte,
+	Latte\MacroNode,
+	Latte\PhpWriter,
+	Latte\CompileException,
 	Nette\Utils\Strings;
 
 

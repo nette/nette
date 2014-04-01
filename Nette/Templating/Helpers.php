@@ -7,28 +7,23 @@
 
 namespace Nette\Templating;
 
-use Nette;
+use Nette,
+	Latte;
 
 
 /**
  * @deprecated
  */
-class Helpers extends Nette\Latte\Runtime\Filters
+class Helpers extends Latte\Runtime\Filters
 {
 	private static $helpers = array(
 		'normalize' => 'Nette\Utils\Strings::normalize',
 		'toascii' => 'Nette\Utils\Strings::toAscii',
 		'webalize' => 'Nette\Utils\Strings::webalize',
-		'truncate' => 'Nette\Utils\Strings::truncate',
-		'lower' => 'Nette\Utils\Strings::lower',
-		'upper' => 'Nette\Utils\Strings::upper',
-		'firstupper' => 'Nette\Utils\Strings::firstUpper',
-		'capitalize' => 'Nette\Utils\Strings::capitalize',
 		'trim' => 'Nette\Utils\Strings::trim',
 		'padleft' => 'Nette\Utils\Strings::padLeft',
 		'padright' => 'Nette\Utils\Strings::padRight',
 		'reverse' =>  'Nette\Utils\Strings::reverse',
-		'replacere' => 'Nette\Utils\Strings::replace',
 		'url' => 'rawurlencode',
 		'escapeurl' => 'rawurlencode',
 		'striptags' => 'strip_tags',
@@ -93,7 +88,7 @@ class Helpers extends Nette\Latte\Runtime\Filters
 
 	public static function optimizePhp($source, $lineLength = 80)
 	{
-		return Nette\Latte\Helpers::optimizePhp($source, $lineLength);
+		return Latte\Helpers::optimizePhp($source, $lineLength);
 	}
 
 }

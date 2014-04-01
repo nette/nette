@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Runtime\CachingIterator width.
+ * Test: Latte\Runtime\CachingIterator width.
  *
  * @author     David Grudl
  */
 
-use Nette\Latte\Runtime\CachingIterator,
+use Latte\Runtime\CachingIterator,
 	Tester\Assert;
 
 

@@ -1,13 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Engine: {control ...}
+ * Test: {control ...}
  *
  * @author     David Grudl
  */
 
-use Nette\Latte,
-	Nette\Object,
+use Nette\Object,
 	Nette\Bridges\ApplicationLatte\UIMacros,
 	Tester\Assert;
 

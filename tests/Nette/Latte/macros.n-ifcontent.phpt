@@ -1,13 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Engine and n:ifcontent.
+ * Test: Latte\Engine and n:ifcontent.
  *
  * @author     David Grudl
  */
 
-use Nette\Latte,
-	Tester\Assert;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -72,9 +71,9 @@ EOD
 
 Assert::exception(function() use ($latte) {
 	$latte->compile('{ifcontent}');
-}, 'Nette\Latte\CompileException', 'Unknown macro {ifcontent}, use n:ifcontent attribute.');
+}, 'Latte\CompileException', 'Unknown macro {ifcontent}, use n:ifcontent attribute.');
 
 
 Assert::exception(function() use ($latte) {
 	$latte->compile('<div n:inner-ifcontent>');
-}, 'Nette\Latte\CompileException', 'Unknown attribute n:inner-ifcontent, use n:ifcontent attribute.');
+}, 'Latte\CompileException', 'Unknown attribute n:inner-ifcontent, use n:ifcontent attribute.');

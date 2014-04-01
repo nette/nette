@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Test: Nette\Latte\Macros\CoreMacros: {_translate}
+ * Test: Latte\Macros\CoreMacros: {_translate}
  *
  * @author     David Grudl
  */
 
-use Nette\Latte\Macros\CoreMacros,
+use Latte\Macros\CoreMacros,
 	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-$compiler = new Nette\Latte\Compiler;
+$compiler = new Latte\Compiler;
 CoreMacros::install($compiler);
 
 // {_...}

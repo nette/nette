@@ -10,7 +10,8 @@ namespace Nette\Bridges\Framework;
 use Nette,
 	Tracy,
 	Tracy\Helpers,
-	Tracy\BlueScreen;
+	Tracy\BlueScreen,
+	Latte;
 
 
 /**
@@ -29,7 +30,7 @@ class TracyBridge
 		$blueScreen->info[] = 'Nette Framework ' . Nette\Framework::VERSION . ' (revision ' . Nette\Framework::REVISION . ')';
 
 		$blueScreen->addPanel(function($e) {
-			if ($e instanceof Nette\Latte\CompileException) {
+			if ($e instanceof Latte\CompileException) {
 				return array(
 					'tab' => 'Template',
 					'panel' => '<p>' . (is_file($e->sourceName) ? '<b>File:</b> ' . Helpers::editorLink($e->sourceName, $e->sourceLine) : htmlspecialchars($e->sourceName)) . '</p>'

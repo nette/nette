@@ -1,20 +1,19 @@
 <?php
 
 /**
- * Test: Nette\Latte\Engine: iCal template
+ * Test: Latte\Engine: iCal template
  *
  * @author     David Grudl
  */
 
-use Nette\Latte,
-	Tester\Assert;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
 $latte = new Latte\Engine;
-$latte->addFilter('escape', 'Nette\Latte\Runtime\Filters::escapeICal');
+$latte->addFilter('escape', 'Latte\Runtime\Filters::escapeICal');
 
 Assert::matchFile(
 	__DIR__ . '/expected/macros.ical.phtml',
