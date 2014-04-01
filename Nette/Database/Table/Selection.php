@@ -306,6 +306,35 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 
 	/**
+	 * Adds condition, more calls appends with AND.
+	 * @param string method name [where|left]
+	 * @param  string condition possibly containing ?
+	 * @param  mixed
+	 * @param  mixed ...
+	 * @return self
+	 * @internal
+	 */
+	public function condition($method, $condition, $parameters = array())
+	{
+		if (is_array($condition) && $parameters === array()) { // where(array('column1' => 1, 'column2 > ?' => 2))
+			foreach ($condition as $key => $val) {
+				if (is_int($key)) {
+					$this->$method($val); // where('full condition')
+				} else {
+					$this->$method($key, $val); // where('column', 1)
+				}
+			}
+			return $this;
+		}
+
+		$this->emptyResultSet();
+		$args = func_get_args();
+		array_shift($args);
+		call_user_func_array(array($this->sqlBuilder, "add" . ucfirst($method)), $args);
+		return $this;
+	}
+	
+	/**
 	 * Adds where condition, more calls appends with AND.
 	 * @param  string condition possibly containing ?
 	 * @param  mixed
@@ -314,20 +343,23 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	 */
 	public function where($condition, $parameters = array())
 	{
-		if (is_array($condition) && $parameters === array()) { // where(array('column1' => 1, 'column2 > ?' => 2))
-			foreach ($condition as $key => $val) {
-				if (is_int($key)) {
-					$this->where($val); // where('full condition')
-				} else {
-					$this->where($key, $val); // where('column', 1)
-				}
-			}
-			return $this;
-		}
-
-		$this->emptyResultSet();
-		call_user_func_array(array($this->sqlBuilder, 'addWhere'), func_get_args());
-		return $this;
+		$args = func_get_args();
+		array_unshift($args, 'where');
+		return call_user_func_array($this->condition, $args);
+	}
+	
+	/**
+	 * Adds condition to left join, more calls appends with AND.
+	 * @param  string condition possibly containing ?
+	 * @param  mixed
+	 * @param  mixed ...
+	 * @return self
+	 */
+	public function left($condition, $parameters = array())
+	{
+		$args = func_get_args();
+		array_unshift($args, 'left');
+		return call_user_func_array($this->condition, $args);
 	}
 
 

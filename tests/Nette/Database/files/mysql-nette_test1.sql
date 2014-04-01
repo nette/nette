@@ -95,4 +95,17 @@ CREATE TABLE note (
 	CONSTRAINT note_book FOREIGN KEY (book_id) REFERENCES book (id)
 );
 
+CREATE TABLE product_price (
+	id INT NOT NULL AUTO_INCREMENT,
+	book_id INT NOT NULL,
+	value DOUBLE NOT NULL,
+	active TINYINT(1) NOT NULL,
+	PRIMARY KEY (id),
+	CONSTRAINT book_product_price FOREIGN KEY (book_id) REFERENCES book (id)
+);
+
+INSERT INTO product_price (book_id, value, active) VALUES (1, 1000, 1);
+INSERT INTO product_price (book_id, value, active) VALUES (2, 500, 1);
+INSERT INTO product_price (book_id, value, active) VALUES (3, 666, 0);
+
 SET FOREIGN_KEY_CHECKS = 1;
