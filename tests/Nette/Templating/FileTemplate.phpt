@@ -6,8 +6,7 @@
  * @author     David Grudl
  */
 
-use Nette\Latte,
-	Nette\Templating\FileTemplate,
+use Nette\Templating\FileTemplate,
 	Nette\Utils\Html,
 	Tester\Assert;
 
@@ -15,7 +14,7 @@ use Nette\Latte,
 require __DIR__ . '/../bootstrap.php';
 
 
-$latte = new Latte\Engine;
+$latte = new Nette\Latte\Engine;
 @$template = new FileTemplate(__DIR__ . '/templates/general.latte');
 $template->registerFilter($latte);
 $template->registerHelper('translate', 'strrev');

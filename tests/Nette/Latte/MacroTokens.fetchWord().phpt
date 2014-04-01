@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\MacroTokens::fetchWord()
+ * Test: Latte\MacroTokens::fetchWord()
  *
  * @author     David Grudl
  */
 
-use Nette\Latte\MacroTokens,
+use Latte\MacroTokens,
 	Tester\Assert;
 
 

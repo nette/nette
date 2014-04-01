@@ -6,8 +6,7 @@
  * @author     Jan Skrasek
  */
 
-use Nette\Latte,
-	Nette\Bridges\ApplicationLatte\UIMacros,
+use Nette\Bridges\ApplicationLatte\UIMacros,
 	Tester\Assert;
 
 

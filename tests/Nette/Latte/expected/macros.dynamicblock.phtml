@@ -1,15 +1,15 @@
 <?php
 // source: %a%
 
-// prolog Nette\Latte\Macros\CoreMacros
-list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
+// prolog Latte\Macros\CoreMacros
+list($_l, $_g) = Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
-// prolog Nette\Latte\Macros\BlockMacros
+// prolog Latte\Macros\BlockMacros
 //
 // block static
 //
 if (!function_exists($_l->blocks['static'][] = '_%[a-z0-9]+%_static')) { function _%[a-z0-9]+%_static($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
-?>	Static block #<?php echo Nette\Latte\Runtime\Filters::escapeHtml($var, ENT_NOQUOTES) ?>
+?>	Static block #<?php echo Latte\Runtime\Filters::escapeHtml($var, ENT_NOQUOTES) ?>
 
 <?php
 }}
@@ -33,21 +33,21 @@ $var = 10 ?>
 call_user_func(reset($_l->blocks['static']), $_l, get_defined_vars())  ?>
 
 
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Latte\Runtime\CachingIterator(array('dynamic', 'static')) as $name) {
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Latte\Runtime\CachingIterator(array('dynamic', 'static')) as $name) {
 
 //
 // block $name
 //
 if (!function_exists($_l->blocks[$name]['%[a-z0-9]+%'] = '_%[a-z0-9]+%__name')) { function _%[a-z0-9]+%__name($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v ?>
-		Dynamic block #<?php echo Nette\Latte\Runtime\Filters::escapeHtml($var, ENT_NOQUOTES) ?>
+		Dynamic block #<?php echo Latte\Runtime\Filters::escapeHtml($var, ENT_NOQUOTES) ?>
 
 <?php }} call_user_func(reset($_l->blocks[$name]), $_l, get_defined_vars()) ;$iterations++; } array_pop($_l->its); $iterator = end($_l->its) ?>
 
-<?php Nette\Latte\Macros\BlockMacros::callBlock($_l, 'dynamic', array('var' => 20) + $template->getParameters()) ?>
+<?php Latte\Macros\BlockMacros::callBlock($_l, 'dynamic', array('var' => 20) + $template->getParameters()) ?>
 
 <?php call_user_func(reset($_l->blocks['static']), $_l, array('var' => 30) + get_defined_vars()) ?>
 
-<?php Nette\Latte\Macros\BlockMacros::callBlock($_l, $name, array('var' => 40) + $template->getParameters()) ?>
+<?php Latte\Macros\BlockMacros::callBlock($_l, $name, array('var' => 40) + $template->getParameters()) ?>
 
 <?php
 

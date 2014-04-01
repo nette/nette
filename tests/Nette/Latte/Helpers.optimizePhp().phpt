@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Helpers::optimizePhp()
+ * Test: Latte\Helpers::optimizePhp()
  *
  * @author     David Grudl
  */
 
-use Nette\Latte\Helpers,
+use Latte\Helpers,
 	Tester\Assert;
 
 

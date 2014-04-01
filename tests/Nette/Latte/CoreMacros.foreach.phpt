@@ -1,22 +1,22 @@
 <?php
 
 /**
- * Test: Nette\Latte\Macros\CoreMacros: {foreach ...}
+ * Test: Latte\Macros\CoreMacros: {foreach ...}
  *
  * @author     Matej Kravjar
  */
 
-use Nette\Latte\Macros\CoreMacros,
+use Latte\Macros\CoreMacros,
 	Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-$compiler = new Nette\Latte\Compiler;
+$compiler = new Latte\Compiler;
 CoreMacros::install($compiler);
 
-$prefix = '<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Latte\Runtime\CachingIterator(';
+$prefix = '<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Latte\Runtime\CachingIterator(';
 
 function expandMacro($compiler, $args, $modifiers = NULL) {
 	$node = $compiler->expandMacro('foreach', $args, $modifiers);

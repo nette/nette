@@ -1,12 +1,12 @@
 <?php
 // source: %a%
 
-// prolog Nette\Latte\Macros\CoreMacros
-list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
+// prolog Latte\Macros\CoreMacros
+list($_l, $_g) = Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
 //
 // main template
 //
 ?>
-<p>Included file #3 (<?php echo Nette\Latte\Runtime\Filters::escapeHtml($localvar, ENT_NOQUOTES) ?>
-, <?php echo Nette\Latte\Runtime\Filters::escapeHtml($hello, ENT_NOQUOTES) ?>)</p>
+<p>Included file #3 (<?php echo Latte\Runtime\Filters::escapeHtml($localvar, ENT_NOQUOTES) ?>
+, <?php echo Latte\Runtime\Filters::escapeHtml($hello, ENT_NOQUOTES) ?>)</p>

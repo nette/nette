@@ -17,6 +17,7 @@
 	],
 	"require": {
 		"php": ">=5.3.1",
+		"latte/latte": "~2.2",
 		"tracy/tracy": "~2.0",
 		"ext-iconv": "*",
 		"ext-tokenizer": "*"

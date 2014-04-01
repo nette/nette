@@ -1,13 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Engine: isLinkCurrent()
+ * Test: isLinkCurrent()
  *
  * @author     David Grudl
  */
 
-use Nette\Latte,
-	Nette\Bridges\ApplicationLatte\UIMacros,
+use Nette\Bridges\ApplicationLatte\UIMacros,
 	Tester\Assert;
 
 

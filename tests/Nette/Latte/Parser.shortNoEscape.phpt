@@ -1,13 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Parser and $shortNoEscape.
+ * Test: Latte\Parser and $shortNoEscape.
  *
  * @author     Miloslav Hůla
  */
 
-use Nette\Latte,
-	Tester\Assert;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -21,7 +20,7 @@ Assert::match('&lt;&gt;', $latte->renderToString('{="<>"}'));
 
 Assert::match('<>', $latte->renderToString('{!="<>"}'));
 
-$latte->parser->shortNoEscape = FALSE;
+$latte->getParser()->shortNoEscape = FALSE;
 Assert::match('&lt;&gt;', $latte->renderToString('{="<>"}'));
 
 Assert::error(function() use ($latte) {

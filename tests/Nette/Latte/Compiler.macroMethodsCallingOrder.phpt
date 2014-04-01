@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Test: Nette\Latte\Compiler and macro methods calling order.
+ * Test: Latte\Compiler and macro methods calling order.
  *
  * @author     Miloslav Hůla
  */
 
-use Nette\Latte\IMacro,
-	Nette\Latte\MacroNode,
-	Nette\Latte\Parser,
-	Nette\Latte\Compiler,
+use Latte\IMacro,
+	Latte\MacroNode,
+	Latte\Parser,
+	Latte\Compiler,
 	Tester\Assert;
 
 

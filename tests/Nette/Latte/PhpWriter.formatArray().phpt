@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Latte\PhpWriter::formatArray()
+ * Test: Latte\PhpWriter::formatArray()
  *
  * @author     David Grudl
  */
 
-use Nette\Latte\PhpWriter,
-	Nette\Latte\MacroTokens,
+use Latte\PhpWriter,
+	Latte\MacroTokens,
 	Tester\Assert;
 
 

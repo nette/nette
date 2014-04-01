@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Tokenizer::getCoordinates
+ * Test: Latte\Tokenizer::getCoordinates
  *
  * @author     David Grudl
  */
 
-use Nette\Latte\Tokenizer,
+use Latte\Tokenizer,
 	Tester\Assert;
 
 

@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Latte\PhpWriter::formatWord()
+ * Test: Latte\PhpWriter::formatWord()
  *
  * @author     David Grudl
  */
 
-use Nette\Latte\PhpWriter,
-	Nette\Latte\MacroTokens,
+use Latte\PhpWriter,
+	Latte\MacroTokens,
 	Tester\Assert;
 
 
@@ -34,4 +34,4 @@ Assert::same( '$x["[x]"]',  $writer->formatWord('$x["[x]"]') );
 
 Assert::exception(function() use ($writer) {
 	$writer->formatWord("'var\"");
-}, 'Nette\Latte\TokenizerException', "Unexpected ''var\"' on line 1, column 1.");
+}, 'Latte\CompileException', "Unexpected ''var\"' on line 1, column 1.");

@@ -1,13 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Parser::parseMacroTag().
+ * Test: Latte\Parser::parseMacroTag().
  *
  * @author     David Grudl
  */
 
-use Nette\Latte,
-	Tester\Assert;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

@@ -8,7 +8,7 @@
 namespace Nette\Bridges\CacheLatte;
 
 use Nette,
-	Nette\Latte;
+	Latte;
 
 
 /**
@@ -75,9 +75,9 @@ class CacheMacro extends Nette\Object implements Latte\IMacro
 	/**
 	 * @return void
 	 */
-	public static function initRuntime(Nette\Latte\Template $template, \stdClass $global)
+	public static function initRuntime(Latte\Template $template, \stdClass $global)
 	{
-		if (!empty($global->caches) && $template->getEngine()->getLoader() instanceof Nette\Latte\Loaders\FileLoader) {
+		if (!empty($global->caches) && $template->getEngine()->getLoader() instanceof Latte\Loaders\FileLoader) {
 			end($global->caches)->dependencies[Nette\Caching\Cache::FILES][] = $template->getName();
 		}
 	}

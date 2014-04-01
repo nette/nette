@@ -7,14 +7,15 @@
 
 namespace Nette\Bridges\Framework;
 
-use Nette;
+use Nette,
+	Latte;
 
 
 interface ILatteFactory
 {
 
 	/**
-	 * @return Nette\Latte\Engine
+	 * @return Latte\Engine
 	 */
 	function create();
 

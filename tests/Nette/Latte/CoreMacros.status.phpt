@@ -1,13 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Engine: {status}
+ * Test: Latte\Engine: {status}
  *
  * @author     David Grudl
  */
 
-use Nette\Latte,
-	Nette\Latte\Macros\CoreMacros,
+use Latte\Macros\CoreMacros,
 	Tester\Assert;
 
 
@@ -18,7 +17,7 @@ $latte = new Latte\Engine;
 $latte->setLoader(new Latte\Loaders\StringLoader);
 
 Assert::match('%A%
-<?php $netteHttpResponse->setCode(200) ;if (!$netteHttpResponse->isSent()) $netteHttpResponse->setCode(200) ;
+<?php header((isset($_SERVER["SERVER_PROTOCOL"]) ? $_SERVER["SERVER_PROTOCOL"] : "HTTP/1.1") . " " . 200, TRUE, 200) ;if (!headers_sent()) header((isset($_SERVER["SERVER_PROTOCOL"]) ? $_SERVER["SERVER_PROTOCOL"] : "HTTP/1.1") . " " . 200, TRUE, 200) ;
 ', $latte->compile('
 {status 200}
 {status 200?}

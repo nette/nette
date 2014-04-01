@@ -1,13 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Compiler::expandMacro() and reentrant.
+ * Test: Latte\Compiler::expandMacro() and reentrant.
  *
  * @author     David Grudl
  */
 
-use Nette\Latte,
-	Tester\Assert;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

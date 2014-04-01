@@ -1,10 +1,10 @@
 <?php
 // source: %a%
 
-// prolog Nette\Latte\Macros\CoreMacros
-list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
+// prolog Latte\Macros\CoreMacros
+list($_l, $_g) = Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
-// prolog Nette\Latte\Macros\BlockMacros
+// prolog Latte\Macros\BlockMacros
 //
 // block content
 //
@@ -13,7 +13,7 @@ if (!function_exists($_l->blocks['content'][] = '_%[a-z0-9]+%_content')) { funct
 
 	<ul>
 <?php $iterations = 0; foreach ($people as $person) { ?>
-		<li><?php echo Nette\Latte\Runtime\Filters::escapeHtml($person, ENT_NOQUOTES) ?></li>
+		<li><?php echo Latte\Runtime\Filters::escapeHtml($person, ENT_NOQUOTES) ?></li>
 <?php $iterations++; } ?>
 	</ul>
 <?php

@@ -1,13 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Latte\Engine and JavaScript.
+ * Test: Latte\Engine and JavaScript.
  *
  * @author     David Grudl
  */
 
-use Nette\Latte,
-	Tester\Assert;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -20,7 +19,7 @@ Assert::exception(function() use ($latte) {
 <script> '{$var}' </script>
 EOD
 );
-}, 'Nette\Latte\CompileException', 'Do not place {$var} inside quotes.');
+}, 'Latte\CompileException', 'Do not place {$var} inside quotes.');
 
 
 $latte->compile(<<<'EOD'

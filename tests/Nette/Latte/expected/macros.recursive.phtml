@@ -2,11 +2,11 @@
 %A%
 ?>
 <ul>
-	<li><?php echo Nette\Latte\Runtime\Filters::escapeHtml($hello->{'item'}, ENT_NOQUOTES) ?></li>
-	<li><?php echo Nette\Latte\Runtime\Filters::escapeHtml(function(){}, ENT_NOQUOTES) ?></li>
-	<li><?php echo Nette\Latte\Runtime\Filters::escapeHtml(function(){return}, ENT_NOQUOTES) ?></li>
-	<li><?php echo Nette\Latte\Runtime\Filters::escapeHtml(function() { return; }, ENT_NOQUOTES) ?></li>
-	<li><?php echo Nette\Latte\Runtime\Filters::escapeHtml($template->upper(function(){return}), ENT_NOQUOTES) ?></li>
-	<li><?php echo Nette\Latte\Runtime\Filters::escapeHtml($template->upper(function() { return; }), ENT_NOQUOTES) ?></li>
-	<li><?php echo Nette\Latte\Runtime\Filters::escapeHtml($template->upper(function() { return; }, $item->{10}), ENT_NOQUOTES) ?></li>
+	<li><?php echo Latte\Runtime\Filters::escapeHtml($hello->{'item'}, ENT_NOQUOTES) ?></li>
+	<li><?php echo Latte\Runtime\Filters::escapeHtml(function(){}, ENT_NOQUOTES) ?></li>
+	<li><?php echo Latte\Runtime\Filters::escapeHtml(function(){return}, ENT_NOQUOTES) ?></li>
+	<li><?php echo Latte\Runtime\Filters::escapeHtml(function() { return; }, ENT_NOQUOTES) ?></li>
+	<li><?php echo Latte\Runtime\Filters::escapeHtml($template->upper(function(){return}), ENT_NOQUOTES) ?></li>
+	<li><?php echo Latte\Runtime\Filters::escapeHtml($template->upper(function() { return; }), ENT_NOQUOTES) ?></li>
+	<li><?php echo Latte\Runtime\Filters::escapeHtml($template->upper(function() { return; }, $item->{10}), ENT_NOQUOTES) ?></li>
 </ul>

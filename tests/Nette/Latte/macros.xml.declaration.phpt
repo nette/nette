@@ -1,14 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Latte\Engine: <?xml test.
+ * Test: Latte\Engine: <?xml test.
  *
  * @author     David Grudl
  * @phpini     short_open_tag=on
  */
 
-use Nette\Latte,
-	Tester\Assert;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

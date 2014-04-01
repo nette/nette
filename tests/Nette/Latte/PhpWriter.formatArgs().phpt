@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Latte\PhpWriter::formatArgs()
+ * Test: Latte\PhpWriter::formatArgs()
  *
  * @author     David Grudl
  */
 
-use Nette\Latte\PhpWriter,
-	Nette\Latte\MacroTokens,
+use Latte\PhpWriter,
+	Latte\MacroTokens,
 	Tester\Assert;
 
 
@@ -38,7 +38,7 @@ test(function() { // strings
 	Assert::same( "('hello')",  formatArgs('(hello)') );
 	Assert::exception(function() {
 		formatArgs("'\\\\'1, 2, symbol1, symbol2'");
-	}, 'Nette\Latte\TokenizerException', 'Unexpected %a% on line 1, column 27.');
+	}, 'Latte\CompileException', 'Unexpected %a% on line 1, column 27.');
 });
 
 

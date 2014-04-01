@@ -1,8 +1,8 @@
 <?php
 // source: %a%
 
-// prolog Nette\Latte\Macros\CoreMacros
-list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
+// prolog Latte\Macros\CoreMacros
+list($_l, $_g) = Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
 //
 // main template
@@ -13,20 +13,20 @@ list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9
 <script><?php if (1) { ?><meta /><?php } ?>
 </script>
 
-<?php $netteHttpResponse->setHeader("Content-Type", 'application/xml; charset=utf-8') ?>
+<?php header('Content-Type: application/xml; charset=utf-8') ?>
 
 <ul>
-	<li>Escaped: <?php echo Nette\Latte\Runtime\Filters::escapeXml($hello) ?></li>
+	<li>Escaped: <?php echo Latte\Runtime\Filters::escapeXml($hello) ?></li>
 	<li>Non-escaped: <?php echo $hello ?></li>
-	<li>Escaped expression: <?php echo Nette\Latte\Runtime\Filters::escapeXml('<' . 'b' . '>hello' . '</b>') ?></li>
+	<li>Escaped expression: <?php echo Latte\Runtime\Filters::escapeXml('<' . 'b' . '>hello' . '</b>') ?></li>
 	<li>Non-escaped expression: <?php echo '<' . 'b' . '>hello' . '</b>' ?></li>
-	<li>Array access: <?php echo Nette\Latte\Runtime\Filters::escapeXml($people[1]) ?></li>
-	<li>Html: <?php echo Nette\Latte\Runtime\Filters::escapeXml($el) ?></li>
+	<li>Array access: <?php echo Latte\Runtime\Filters::escapeXml($people[1]) ?></li>
+	<li>Html: <?php echo Latte\Runtime\Filters::escapeXml($el) ?></li>
 </ul>
 
 <style type="text/css">
 <!--
-#<?php echo Nette\Latte\Runtime\Filters::escapeHtmlComment($id) ?> {
+#<?php echo Latte\Runtime\Filters::escapeHtmlComment($id) ?> {
 	background: blue;
 }
 -->
@@ -35,29 +35,29 @@ list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9
 
 <script>
 <!--
-var html = <?php echo Nette\Latte\Runtime\Filters::escapeHtmlComment($el) ?>;
+var html = <?php echo Latte\Runtime\Filters::escapeHtmlComment($el) ?>;
 -->
 </script>
 
 
 <p onclick =
-'alert(<?php echo Nette\Latte\Runtime\Filters::escapeXml($id) ?>);alert("hello");'
- title='<?php echo Nette\Latte\Runtime\Filters::escapeXml($id) ?>"'
+'alert(<?php echo Latte\Runtime\Filters::escapeXml($id) ?>);alert("hello");'
+ title='<?php echo Latte\Runtime\Filters::escapeXml($id) ?>"'
  style =
- "color:<?php echo Nette\Latte\Runtime\Filters::escapeXml($id) ?>;'"
- alt='<?php echo Nette\Latte\Runtime\Filters::escapeXml($el) ?>'
- onfocus="alert(<?php echo Nette\Latte\Runtime\Filters::escapeXml($el) ?>)"
+ "color:<?php echo Latte\Runtime\Filters::escapeXml($id) ?>;'"
+ alt='<?php echo Latte\Runtime\Filters::escapeXml($el) ?>'
+ onfocus="alert(<?php echo Latte\Runtime\Filters::escapeXml($el) ?>)"
 >click on me</p>
 
 
-<!-- <?php echo Nette\Latte\Runtime\Filters::escapeHtmlComment($comment) ?> -->
+<!-- <?php echo Latte\Runtime\Filters::escapeHtmlComment($comment) ?> -->
 
 
 </ul>
 
 
 <ul>
-<?php $iterations = 0; foreach ($people as $person) { ?>	<li><?php echo Nette\Latte\Runtime\Filters::escapeXml($person) ?></li>
+<?php $iterations = 0; foreach ($people as $person) { ?>	<li><?php echo Latte\Runtime\Filters::escapeXml($person) ?></li>
 <?php $iterations++; } ?>
 </ul>
 

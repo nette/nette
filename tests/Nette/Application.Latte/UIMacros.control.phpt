@@ -13,7 +13,7 @@ use Nette\Bridges\ApplicationLatte\UIMacros,
 require __DIR__ . '/../bootstrap.php';
 
 
-$compiler = new Nette\Latte\Compiler;
+$compiler = new Latte\Compiler;
 UIMacros::install($compiler);
 
 // {control ...}
