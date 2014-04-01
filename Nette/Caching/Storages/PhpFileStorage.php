@@ -11,9 +11,7 @@ use Nette;
 
 
 /**
- * PHP files cache storage.
- *
- * @author     David Grudl
+ * @deprecated
  */
 class PhpFileStorage extends FileStorage
 {
