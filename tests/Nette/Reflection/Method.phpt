@@ -18,14 +18,22 @@ class A {
 }
 
 class B extends A {
-	function bar() {}
+	function bar($a, $b) {
+		return $a - $b;
+	}
 }
 
-$method = new Reflection\Method('B', 'foo');
+$b = new B;
+$method = new Reflection\Method($b, 'foo');
 Assert::equal( new Reflection\ClassType('A'), $method->getDeclaringClass() );
-
 
 Assert::null( $method->getExtension() );
 
+Assert::same( 23, $method->getClosure(NULL)->__invoke(20, 3) );
 
+
+$method = new Reflection\Method($b, 'bar');
+Assert::same( 17, $method->getClosure($b)->__invoke(20, 3) );
+
+$method = new Reflection\Method('B', 'foo');
 Assert::same( 23, $method->toCallback()->invoke(20, 3) );

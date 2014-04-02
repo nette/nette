@@ -22,5 +22,5 @@ Assert::equal( new Reflection\Extension('standard'), $function->getExtension() )
 $function = new Reflection\GlobalFunction('foo');
 Assert::null( $function->getExtension() );
 
-
+Assert::same( 23, $function->getClosure()->__invoke(20, 3) );
 Assert::same( 23, $function->toCallback()->invoke(20, 3) );
