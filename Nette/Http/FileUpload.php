@@ -118,7 +118,7 @@ class FileUpload extends Nette\Object
 	 */
 	public function __toString()
 	{
-		return $this->tmpName;
+		return (string) $this->tmpName;
 	}
 
 
