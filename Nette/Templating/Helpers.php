@@ -20,17 +20,10 @@ class Helpers extends Latte\Runtime\Filters
 		'normalize' => 'Nette\Utils\Strings::normalize',
 		'toascii' => 'Nette\Utils\Strings::toAscii',
 		'webalize' => 'Nette\Utils\Strings::webalize',
-		'trim' => 'Nette\Utils\Strings::trim',
 		'padleft' => 'Nette\Utils\Strings::padLeft',
 		'padright' => 'Nette\Utils\Strings::padRight',
 		'reverse' =>  'Nette\Utils\Strings::reverse',
 		'url' => 'rawurlencode',
-		'escapeurl' => 'rawurlencode',
-		'striptags' => 'strip_tags',
-		'substr' => 'Nette\Utils\Strings::substring',
-		'repeat' => 'str_repeat',
-		'implode' => 'implode',
-		'number' => 'number_format',
 	);
 
 
