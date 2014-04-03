@@ -50,7 +50,7 @@
 	},
 	"autoload": {
 		"classmap": ["Nette/"],
-		"files": ["Nette/common/shortcuts.php"]
+		"files": ["Nette/shortcuts.php"]
 	},
 	"minimum-stability": "dev",
 	"extra": {

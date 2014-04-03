@@ -18,4 +18,4 @@ require_once __DIR__ . '/Loaders/NetteLoader.php';
 Nette\Loaders\NetteLoader::getInstance()->register();
 
 
-require_once __DIR__ . '/common/shortcuts.php';
+require_once __DIR__ . '/shortcuts.php';
