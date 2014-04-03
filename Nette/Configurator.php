@@ -22,7 +22,10 @@ use Nette,
  */
 class Configurator extends Object
 {
-	const AUTO = TRUE,
+	/** @deprecated */
+	const DEVELOPMENT = 'development',
+		PRODUCTION = 'production',
+		AUTO = TRUE,
 		NONE = FALSE;
 
 	/** @var array of function(Configurator $sender, DI\Compiler $compiler); Occurs after the compiler is created */

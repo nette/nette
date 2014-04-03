@@ -19,3 +19,5 @@ Nette\Loaders\NetteLoader::getInstance()->register();
 
 
 require_once __DIR__ . '/shortcuts.php';
+
+class_alias('Nette\Configurator', 'Nette\Config\Configurator');

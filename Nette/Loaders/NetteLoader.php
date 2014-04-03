@@ -43,6 +43,7 @@ class NetteLoader
 		'Nette\ArrayList' => 'deprecated/ArrayList',
 		'Nette\Caching\Storages\PhpFileStorage' => 'deprecated/Caching/PhpFileStorage',
 		'Nette\Callback' => 'deprecated/Callback',
+		'Nette\DI\Extensions\NetteAccessor' => 'deprecated/DI/NetteAccessor',
 		'Nette\DateTime' => 'deprecated/DateTime',
 		'Nette\Diagnostics\Bar' => 'deprecated/Diagnostics/Bar',
 		'Nette\Diagnostics\BlueScreen' => 'deprecated/Diagnostics/BlueScreen',
