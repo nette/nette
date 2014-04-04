@@ -28,6 +28,9 @@ class AnnotationsParser
 	/** @var bool */
 	public static $useReflection;
 
+	/** @var bool */
+	public static $useAnnotationClasses = TRUE;
+
 	/** @var array */
 	public static $inherited = array('description', 'param', 'return');
 
@@ -248,7 +251,7 @@ class AnnotationsParser
 			}
 
 			$class = $name . 'Annotation';
-			if (class_exists($class)) {
+			if (self::$useAnnotationClasses && class_exists($class)) {
 				$res[$name][] = new $class(is_array($value) ? $value : array('value' => $value));
 
 			} else {
