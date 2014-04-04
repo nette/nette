@@ -188,3 +188,16 @@ test(function() use ($series) { // disabled one
 
 	Assert::null( $input->getValue() );
 });
+
+test(function() {
+	$_POST = array('select' => 1);
+
+	$form = new Form;
+	$input = $form['select'] = new ChoiceControl(NULL);
+	$input->setItems(array(
+		1 => NULL,
+		2 => 'Red dwarf'
+	));
+
+	Assert::same( 1, $input->getValue() );
+});
