@@ -271,7 +271,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	{
 		$this->validate($config, $this->defaults['latte'], 'nette.latte');
 
-		$latte = $container->addDefinition($this->prefix('latte'))
+		$container->addDefinition($this->prefix('latte'))
 			->setClass('Latte\Engine')
 			->addSetup('setTempDirectory', array($container->expand('%tempDir%/cache/latte')))
 			->addSetup('setAutoRefresh', array($container->parameters['debugMode']))
