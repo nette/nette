@@ -41,6 +41,19 @@ test(function() use ($series) { // Select
 });
 
 
+test(function() use ($series) { // Empty select
+	$_POST = array('select' => 'red-dwarf');
+
+	$form = new Form;
+	$input = $form->addSelect('select');
+
+	Assert::true( $form->isValid() );
+	Assert::same( NULL, $input->getValue() );
+	Assert::same( NULL, $input->getSelectedItem() );
+	Assert::false( $input->isFilled() );
+});
+
+
 test(function() use ($series) { // Select with prompt
 	$_POST = array('select' => 'red-dwarf');
 
