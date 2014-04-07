@@ -30,7 +30,7 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		),
 		'session' => array(
 			'debugger' => FALSE,
-			'autoStart' => 'smart',  // true|false|smart
+			'autoStart' => 'smart', // true|false|smart
 			'expiration' => NULL,
 		),
 		'application' => array(

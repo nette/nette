@@ -140,7 +140,7 @@ class Template extends Nette\Object implements ITemplate
 			if (func_num_args()) {
 				throw $e;
 			}
-			trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
+			trigger_error(sprintf('Exception in %s(): %s in %s:%i', __METHOD__, $e->getMessage(), $e->getFile(), $e->getLine()), E_USER_ERROR);
 		}
 	}
 
