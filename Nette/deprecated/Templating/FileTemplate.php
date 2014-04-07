@@ -79,7 +79,7 @@ class FileTemplate extends Template implements IFileTemplate
 	public function render()
 	{
 		if ($this->file == NULL) { // intentionally ==
-			throw new Nette\InvalidStateException("Template file name was not specified.");
+			throw new Nette\InvalidStateException('Template file name was not specified.');
 		}
 
 		if (!$this->getFilters()) {

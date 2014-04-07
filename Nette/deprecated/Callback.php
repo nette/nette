@@ -46,7 +46,7 @@ class Callback extends Object
 		}
 
 		if (!is_callable($cb, TRUE)) {
-			throw new InvalidArgumentException("Invalid callback.");
+			throw new InvalidArgumentException('Invalid callback.');
 		}
 		$this->cb = $cb;
 	}
