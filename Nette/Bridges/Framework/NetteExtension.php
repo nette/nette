@@ -9,7 +9,6 @@ namespace Nette\Bridges\Framework;
 
 use Nette,
 	Nette\DI\ContainerBuilder,
-	Nette\Utils\Validators,
 	Latte;
 
 
