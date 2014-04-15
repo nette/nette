@@ -59,7 +59,11 @@ class Helpers
 				throw new Nette\InvalidArgumentException('Circular reference detected for variables: ' . implode(', ', array_keys($recursive)) . '.');
 
 			} else {
-				$val = Nette\Utils\Arrays::get($params, explode('.', $part));
+				try {
+					$val = Nette\Utils\Arrays::get($params, explode('.', $part));
+				} catch (Nette\InvalidArgumentException $e) {
+					throw new Nette\InvalidArgumentException("Missing parameter '$part'.", 0, $e);
+				}
 				if ($recursive) {
 					$val = self::expand($val, $params, (is_array($recursive) ? $recursive : array()) + array($part => 1));
 				}
