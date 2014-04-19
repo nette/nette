@@ -85,8 +85,8 @@ class FileTemplate extends Template implements IFileTemplate
 			$this->onPrepareFilters($this);
 		}
 
-		if ($this->useLatte) {
-			return $this->createLatte()->render($this->file, $this->getParameters());
+		if ($latte = $this->getLatte()) {
+			return $latte->render($this->file, $this->getParameters());
 		}
 
 		$cache = new Caching\Cache($storage = $this->getCacheStorage(), 'Nette.FileTemplate');

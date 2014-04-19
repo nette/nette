@@ -22,7 +22,7 @@ class Template extends Nette\Object implements ITemplate
 	public $onPrepareFilters = array();
 
 	/** @var string */
-	protected $useLatte;
+	private $latte;
 
 	/** @var string */
 	private $source;
@@ -77,8 +77,8 @@ class Template extends Nette\Object implements ITemplate
 		if (!$this->filters) {
 			$this->onPrepareFilters($this);
 		}
-		if ($this->useLatte) {
-			return $this->createLatte()->setLoader(new Latte\Loaders\StringLoader)->render($this->source, $this->getParameters());
+		if ($latte = $this->getLatte()) {
+			return $latte->setLoader(new Latte\Loaders\StringLoader)->render($this->source, $this->getParameters());
 		}
 
 		$cache = new Caching\Cache($storage = $this->getCacheStorage(), 'Nette.Template');
@@ -162,17 +162,32 @@ class Template extends Nette\Object implements ITemplate
 			$code = strtr($code, $blocks); // put PHP code back
 		}
 
-		if ($this->useLatte) {
-			return $this->createLatte()->setLoader(new Latte\Loaders\StringLoader)->compile($code);
+		if ($latte = $this->getLatte()) {
+			return $latte->setLoader(new Latte\Loaders\StringLoader)->compile($code);
 		}
 
 		return Helpers::optimizePhp($code);
 	}
 
 
-	protected function createLatte()
+	/********************* template filters & helpers ****************d*g**/
+
+
+	public function setLatte(Latte\Engine $latte)
 	{
-		$latte = new Latte\Engine;
+		$this->latte = $latte;
+	}
+
+
+	/**
+	 * @return Latte\Engine
+	 */
+	public function getLatte()
+	{
+		if (!$this->latte) {
+			return NULL;
+		}
+		$latte = $this->latte instanceof Latte\Engine ? $this->latte : new Latte\Engine;
 
 		foreach ($this->helpers as $key => $callback) {
 			$latte->addFilter($key, $callback);
@@ -194,9 +209,6 @@ class Template extends Nette\Object implements ITemplate
 	}
 
 
-	/********************* template filters & helpers ****************d*g**/
-
-
 	/**
 	 * Registers callback as template compile-time filter.
 	 * @param  callable
@@ -204,9 +216,13 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function registerFilter($callback)
 	{
-		if ($callback instanceof Latte\Engine || strpos(Callback::toString($callback), 'Latte\Engine') !== FALSE) { // back compatibility
-			$this->useLatte = TRUE;
-		} elseif ($this->useLatte) {
+		if ($callback instanceof Latte\Engine) { // back compatibility
+			$this->latte = $callback;
+		} elseif (is_array($callback) && $callback[0] instanceof Latte\Engine) {
+			$this->latte = $callback[0];
+		} elseif (strpos(Callback::toString($callback), 'Latte\Engine') !== FALSE) {
+			$this->latte = TRUE;
+		} elseif ($this->latte) {
 			throw new Nette\DeprecatedException('Adding filters after Latte is not possible.');
 		} else {
 			$this->filters[] = Callback::check($callback);
