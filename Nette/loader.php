@@ -16,8 +16,7 @@ if (PHP_VERSION_ID < 50301) {
 require_once __DIR__ . '/Loaders/NetteLoader.php';
 
 Nette\Loaders\NetteLoader::getInstance()->register();
+Nette\Loaders\NetteLoader::getInstance()->createAliases();
 
 
 require_once __DIR__ . '/shortcuts.php';
-
-class_alias('Nette\Configurator', 'Nette\Config\Configurator');
