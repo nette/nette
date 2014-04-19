@@ -7,7 +7,7 @@
 use Tester\Assert;
 
 
-function testRouteIn(Nette\Application\Routers\Route $route, $url, $expectedPresenter=NULL, $expectedParams=NULL, $expectedUrl=NULL)
+function testRouteIn(Nette\Application\IRouter $route, $url, $expectedPresenter=NULL, $expectedParams=NULL, $expectedUrl=NULL)
 {
 	// ==> $url
 
@@ -39,7 +39,7 @@ function testRouteIn(Nette\Application\Routers\Route $route, $url, $expectedPres
 }
 
 
-function testRouteOut(Nette\Application\Routers\Route $route, $presenter, $params = array())
+function testRouteOut(Nette\Application\IRouter $route, $presenter, $params = array())
 {
 	$url = new Nette\Http\Url('http://example.com');
 	$request = new Nette\Application\Request($presenter, 'GET', $params);
