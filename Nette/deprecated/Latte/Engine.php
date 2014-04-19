@@ -15,4 +15,5 @@ use Latte;
  */
 class Engine extends Latte\Engine
 {
+
 }
