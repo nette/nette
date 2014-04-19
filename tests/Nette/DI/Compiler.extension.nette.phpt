@@ -56,4 +56,4 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 
-Assert::type( 'Nette\Bridges\Framework\ILatteFactory', $container->createService('nette.latte') );
+Assert::type( 'Nette\Bridges\Framework\ILatteFactory', $container->createService('nette.latteFactory') );

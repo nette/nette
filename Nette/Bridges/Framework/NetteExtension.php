@@ -271,15 +271,30 @@ class NetteExtension extends Nette\DI\CompilerExtension
 	{
 		$this->validate($config, $this->defaults['latte'], 'nette.latte');
 
-		$container->addDefinition($this->prefix('latte'))
+		$latteFactory = $container->addDefinition($this->prefix('latteFactory'))
 			->setClass('Latte\Engine')
 			->addSetup('setTempDirectory', array($container->expand('%tempDir%/cache/latte')))
 			->addSetup('setAutoRefresh', array($container->parameters['debugMode']))
 			->addSetup('setContentType', array($config['xhtml'] ? Latte\Compiler::CONTENT_XHTML : Latte\Compiler::CONTENT_HTML))
 			->setImplement('Nette\Bridges\Framework\ILatteFactory');
 
-		$container->addDefinition($this->prefix('template'))
+		$container->addDefinition($this->prefix('templateFactory'))
 			->setClass('Nette\Bridges\ApplicationLatte\TemplateFactory');
+
+		$container->addDefinition($this->prefix('latte'))
+			->setClass('Latte\Engine')
+			->addSetup('::trigger_error', array('Service nette.template is deprecated.', E_USER_DEPRECATED))
+			->addSetup('setTempDirectory', array($container->expand('%tempDir%/cache/latte')))
+			->addSetup('setAutoRefresh', array($container->parameters['debugMode']))
+			->addSetup('setContentType', array($config['xhtml'] ? Latte\Compiler::CONTENT_XHTML : Latte\Compiler::CONTENT_HTML))
+			->setAutowired(FALSE);
+
+		$container->addDefinition($this->prefix('template'))
+			->setClass('Nette\Templating\FileTemplate')
+			->addSetup('::trigger_error', array('Service nette.template is deprecated.', E_USER_DEPRECATED))
+			->addSetup('registerFilter', array(new Nette\DI\Statement(array($latteFactory, 'create'))))
+			->addSetup('registerHelperLoader', array('Nette\Templating\Helpers::loader'))
+			->setAutowired(FALSE);
 	}
 
 
