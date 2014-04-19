@@ -26,7 +26,7 @@ class FileTemplate extends Template implements IFileTemplate
 	 */
 	public function __construct($file = NULL)
 	{
-		trigger_error(__CLASS__ . ' is deprecated.', E_USER_DEPRECATED);
+		//trigger_error(__CLASS__ . ' is deprecated.', E_USER_DEPRECATED);
 		if ($file !== NULL) {
 			$this->setFile($file);
 		}
