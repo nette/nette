@@ -21,7 +21,7 @@ $mail->addTo('Lady Jane <jane@example.com>');
 
 @$template = new FileTemplate;
 $template->setFile('files/template.phtml');
-$template->registerFilter(new Nette\Latte\Engine);
+$template->registerFilter(new Latte\Engine);
 $mail->htmlBody = $template;
 
 $mailer = new TestMailer();

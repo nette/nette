@@ -7,7 +7,8 @@
 
 namespace Nette\Latte;
 
-use Latte;
+use Nette,
+	Latte;
 
 
 /**
@@ -15,5 +16,10 @@ use Latte;
  */
 class Engine extends Latte\Engine
 {
+
+	public function __construct()
+	{
+		trigger_error(__CLASS__ . ' is deprecated.', E_USER_DEPRECATED);
+	}
 
 }
