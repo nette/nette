@@ -217,9 +217,7 @@ abstract class TextBase extends BaseControl
 
 
 	/**
-	 * Regular expression validator: matches control's value regular expression?
-	 * @param  TextBase
-	 * @param  string
+	 * Matches control's value regular expression?
 	 * @return bool
 	 */
 	public static function validatePattern(TextBase $control, $pattern)
@@ -229,8 +227,7 @@ abstract class TextBase extends BaseControl
 
 
 	/**
-	 * Integer validator: is a control's value decimal number?
-	 * @param  TextBase
+	 * Is a control's value decimal number?
 	 * @return bool
 	 */
 	public static function validateInteger(TextBase $control)
@@ -240,8 +237,7 @@ abstract class TextBase extends BaseControl
 
 
 	/**
-	 * Float validator: is a control's value float number?
-	 * @param  TextBase
+	 * Is a control's value float number?
 	 * @return bool
 	 */
 	public static function validateFloat(TextBase $control)

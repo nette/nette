@@ -30,7 +30,6 @@ interface ISupplementalDriver
 
 	/**
 	 * Formats date-time for use in a SQL statement.
-	 * @param  \DateTime
 	 * @return string
 	 */
 	function formatDateTime(\DateTime $value);

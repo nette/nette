@@ -529,7 +529,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
-	 * Equal validator: are control's value and second parameter equal?
+	 * Is control's value equal with second parameter?
 	 * @return bool
 	 */
 	public static function validateEqual(IControl $control, $arg)
@@ -557,7 +557,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
-	 * Filled validator: is control filled?
+	 * Is control filled?
 	 * @return bool
 	 */
 	public static function validateFilled(IControl $control)
@@ -577,7 +577,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
-	 * Valid validator: is control valid?
+	 * Is control valid?
 	 * @return bool
 	 */
 	public static function validateValid(IControl $control)

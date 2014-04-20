@@ -282,7 +282,7 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 		} catch(MissingReferenceException $e) {}
 
 		$this->removeAccessColumn($key);
-		throw new Nette\MemberAccessException("Cannot read an undeclared column \"$key\".");
+		throw new Nette\MemberAccessException("Cannot read an undeclared column '$key'.");
 	}
 
 

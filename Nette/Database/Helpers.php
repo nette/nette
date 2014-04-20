@@ -83,7 +83,7 @@ class Helpers
 		$sql = preg_replace("#(?<=[\\s,(])($keywords1)(?=[\\s,)])#i", "\n\$1", $sql);
 
 		// reduce spaces
-		$sql = preg_replace('#[ \t]{2,}#', " ", $sql);
+		$sql = preg_replace('#[ \t]{2,}#', ' ', $sql);
 
 		$sql = wordwrap($sql, 100);
 		$sql = preg_replace('#([ \t]*\r?\n){2,}#', "\n", $sql);
@@ -131,7 +131,7 @@ class Helpers
 
 
 	/**
-	 * Import SQL dump from file - extreme fast.
+	 * Import SQL dump from file - extremely fast.
 	 * @return int  count of commands
 	 */
 	public static function loadFromFile(Connection $connection, $file)

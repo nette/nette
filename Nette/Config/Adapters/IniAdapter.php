@@ -136,7 +136,7 @@ class IniAdapter extends Nette\Object implements Nette\Config\IAdapter
 				$output[] = "$prefix$key = \"$val\"";
 
 			} else {
-				throw new Nette\InvalidArgumentException("The '$prefix$key' item must be scalar or array, " . gettype($val) ." given.");
+				throw new Nette\InvalidArgumentException(sprintf("The '%s' item must be scalar or array, %s given.", $prefix . $key, gettype($val)));
 			}
 		}
 	}

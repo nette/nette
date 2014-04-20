@@ -139,7 +139,7 @@ class CoreMacros extends MacroSet
 		$ifNode = $node->parentNode;
 		if ($ifNode && $ifNode->name === 'if' && $ifNode->data->capture) {
 			if (isset($ifNode->data->else)) {
-				throw new CompileException("Macro {if} supports only one {else}.");
+				throw new CompileException('Macro {if} supports only one {else}.');
 			}
 			$ifNode->data->else = TRUE;
 			return 'ob_start()';
@@ -211,7 +211,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroCaptureEnd(MacroNode $node, PhpWriter $writer)
 	{
-		return $node->data->variable . $writer->write(" = %modify(ob_get_clean())");
+		return $node->data->variable . $writer->write(' = %modify(ob_get_clean())');
 	}
 
 

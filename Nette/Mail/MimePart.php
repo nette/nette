@@ -72,7 +72,7 @@ class MimePart extends Nette\Object
 					Nette\Utils\Validators::assert($recipient, 'unicode', "header '$name'");
 				}
 				if (preg_match('#[\r\n]#', $recipient)) {
-					throw new Nette\InvalidArgumentException("Name must not contain line separator.");
+					throw new Nette\InvalidArgumentException('Name must not contain line separator.');
 				}
 				Nette\Utils\Validators::assert($email, 'email', "header '$name'");
 				$tmp[$email] = $recipient;
@@ -81,7 +81,7 @@ class MimePart extends Nette\Object
 		} else {
 			$value = (string) $value;
 			if (!Strings::checkEncoding($value)) {
-				throw new Nette\InvalidArgumentException("Header is not valid UTF-8 string.");
+				throw new Nette\InvalidArgumentException('Header is not valid UTF-8 string.');
 			}
 			$this->headers[$name] = preg_replace('#[\r\n]+#', ' ', $value);
 		}

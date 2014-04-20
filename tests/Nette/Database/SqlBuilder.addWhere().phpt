@@ -135,7 +135,7 @@ $e = Assert::exception(function() use ($connection) {
 }, 'Nette\InvalidArgumentException', 'Selection argument must have defined a select column.');
 
 Assert::same('LogicException', get_class($e->getPrevious()));
-Assert::same('Table "book_tag" does not have a primary key.', $e->getPrevious()->getMessage());
+Assert::same("Table 'book_tag' does not have a primary key.", $e->getPrevious()->getMessage());
 
 $reflection = new DiscoveredReflection;
 $connection->setDatabaseReflection($reflection);

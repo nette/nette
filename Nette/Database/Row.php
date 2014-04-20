@@ -49,6 +49,11 @@ class Row extends Nette\ArrayHash
 	}
 
 
+	/**
+	 * Checks if $key exists.
+	 * @param  mixed  key or index
+	 * @return bool
+	 */
 	public function offsetExists($key)
 	{
 		if (is_int($key)) {

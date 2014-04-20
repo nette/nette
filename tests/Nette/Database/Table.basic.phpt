@@ -30,7 +30,7 @@ Assert::same(array(
 $book = $connection->table('book')->get(1);
 Assert::exception(function() use ($book) {
 	$book->unknown_column;
-}, 'Nette\MemberAccessException', 'Cannot read an undeclared column "unknown_column".');
+}, 'Nette\MemberAccessException', "Cannot read an undeclared column 'unknown_column'.");
 
 
 $bookTags = array();
@@ -70,7 +70,7 @@ $connection->setDatabaseReflection(new Nette\Database\Reflection\DiscoveredRefle
 $book = $connection->table('book')->get(1);
 Assert::exception(function() use ($book) {
 	$book->test;
-}, 'Nette\MemberAccessException', 'Cannot read an undeclared column "test".');
+}, 'Nette\MemberAccessException', "Cannot read an undeclared column 'test'.");
 
 Assert::exception(function() use ($book) {
 	$book->ref('test');

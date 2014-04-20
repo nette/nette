@@ -34,7 +34,7 @@ class JsonResponse extends Nette\Object implements Nette\Application\IResponse
 	public function __construct($payload, $contentType = NULL)
 	{
 		if (!is_array($payload) && !is_object($payload)) {
-			throw new Nette\InvalidArgumentException("Payload must be array or object class, " . gettype($payload) . " given.");
+			throw new Nette\InvalidArgumentException(sprintf('Payload must be array or object class, %s given.', gettype($payload)));
 		}
 		$this->payload = $payload;
 		$this->contentType = $contentType ? $contentType : 'application/json';

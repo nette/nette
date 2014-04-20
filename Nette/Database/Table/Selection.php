@@ -131,7 +131,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function getPrimary($need = TRUE)
 	{
 		if ($this->primary === NULL && $need) {
-			throw new \LogicException("Table \"{$this->name}\" does not have a primary key.");
+			throw new \LogicException("Table '{$this->name}' does not have a primary key.");
 		}
 		return $this->primary;
 	}
