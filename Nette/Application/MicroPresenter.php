@@ -63,7 +63,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 
 		$params = $request->getParameters();
 		if (!isset($params['callback'])) {
-			throw new Application\BadRequestException("Parameter callback is missing.");
+			throw new Application\BadRequestException('Parameter callback is missing.');
 		}
 		$params['presenter'] = $this;
 		$callback = $params['callback'];

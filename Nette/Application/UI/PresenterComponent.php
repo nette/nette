@@ -166,7 +166,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 
 			$type = gettype($meta['def']);
 			if (!PresenterComponentReflection::convertType($params[$name], $type)) {
-				throw new InvalidLinkException("Invalid value for persistent parameter '$name' in '{$this->getName()}', expected " . ($type === 'NULL' ? 'scalar' : $type) . ".");
+				throw new InvalidLinkException(sprintf("Invalid value for persistent parameter '%s' in '%s', expected %s.", $name, $this->getName(), $type === 'NULL' ? 'scalar' : $type));
 			}
 
 			if ($params[$name] === $meta['def'] || ($meta['def'] === NULL && is_scalar($params[$name]) && (string) $params[$name] === '')) {

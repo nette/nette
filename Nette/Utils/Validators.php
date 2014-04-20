@@ -260,7 +260,7 @@ class Validators extends Nette\Object
 
 
 	/**
-	 * Checks whether the input is a class, interface or trait
+	 * Checks whether the input is a class, interface or trait.
 	 * @param  string
 	 * @return bool
 	 */

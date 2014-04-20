@@ -56,7 +56,7 @@ class Helpers
 				$res .= '%';
 
 			} elseif (isset($recursive[$part])) {
-				throw new Nette\InvalidArgumentException('Circular reference detected for variables: ' . implode(', ', array_keys($recursive)) . '.');
+				throw new Nette\InvalidArgumentException(sprintf('Circular reference detected for variables: %s.', implode(', ', array_keys($recursive))));
 
 			} else {
 				$val = Nette\Utils\Arrays::get($params, explode('.', $part));

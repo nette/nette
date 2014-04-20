@@ -64,7 +64,7 @@ test(function() use ($connection, $reflection) { // test SqlLiteral
 
 test(function() use ($connection, $reflection) { // test auto type detection
 	$sqlBuilder = new SqlBuilder('book', $connection, $reflection);
-	$sqlBuilder->addWhere('id ? OR id ? OR id ?', 1, "test", array(1, 2));
+	$sqlBuilder->addWhere('id ? OR id ? OR id ?', 1, 'test', array(1, 2));
 	Assert::same(reformat('SELECT * FROM [book] WHERE ([id] = ? OR [id] = ? OR [id] IN (?))'), $sqlBuilder->buildSelectQuery());
 });
 
@@ -89,8 +89,8 @@ test(function() use ($connection, $reflection) { // test empty array
 
 test(function() use ($connection, $reflection) { // backward compatibility
 	$sqlBuilder = new SqlBuilder('book', $connection, $reflection);
-	$sqlBuilder->addWhere('id = ? OR id ? OR id IN ? OR id LIKE ? OR id > ?', 1, 2, array(1, 2), "%test", 3);
-	$sqlBuilder->addWhere('name', "var");
+	$sqlBuilder->addWhere('id = ? OR id ? OR id IN ? OR id LIKE ? OR id > ?', 1, 2, array(1, 2), '%test', 3);
+	$sqlBuilder->addWhere('name', 'var');
 	$sqlBuilder->addWhere('MAIN', 0); // "IN" is not considered as the operator
 	$sqlBuilder->addWhere('id IN (?)', array(1, 2));
 	Assert::same(reformat('SELECT * FROM [book] WHERE ([id] = ? OR [id] = ? OR [id] IN (?) OR [id] LIKE ? OR [id] > ?) AND ([name] = ?) AND (MAIN = ?) AND ([id] IN (?))'), $sqlBuilder->buildSelectQuery());
@@ -220,5 +220,5 @@ test(function() use ($driverName, $context, $connection, $reflection) {
 
 	Assert::exception(function() use ($e) {
 		throw $e->getPrevious();
-	}, 'LogicException', 'Table "book_tag" does not have a primary key.');
+	}, 'LogicException', "Table 'book_tag' does not have a primary key.");
 });

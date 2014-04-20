@@ -42,7 +42,7 @@ abstract class TextBase extends BaseControl
 		if ($value === NULL) {
 			$value = '';
 		} elseif (!is_scalar($value) && !method_exists($value, '__toString')) {
-			throw new Nette\InvalidArgumentException('Value must be scalar or NULL, ' . gettype($value) . " given in field '{$this->name}'.");
+			throw new Nette\InvalidArgumentException(sprintf("Value must be scalar or NULL, %s given in field '%s'.", gettype($value), $this->name));
 		}
 		$this->rawValue = $this->value = $value;
 		return $this;
@@ -129,8 +129,7 @@ abstract class TextBase extends BaseControl
 
 
 	/**
-	 * Email validator: is control's value valid email address?
-	 * @param  TextBase
+	 * Is control's value valid email address?
 	 * @return bool
 	 */
 	public static function validateEmail(TextBase $control)
@@ -140,8 +139,7 @@ abstract class TextBase extends BaseControl
 
 
 	/**
-	 * URL validator: is control's value valid URL?
-	 * @param  TextBase
+	 * Is control's value valid URL?
 	 * @return bool
 	 */
 	public static function validateUrl(TextBase $control)
@@ -177,9 +175,7 @@ abstract class TextBase extends BaseControl
 
 
 	/**
-	 * Regular expression validator: matches control's value regular expression?
-	 * @param  TextBase
-	 * @param  string
+	 * Matches control's value regular expression?
 	 * @return bool
 	 */
 	public static function validatePattern(TextBase $control, $pattern)
@@ -189,8 +185,7 @@ abstract class TextBase extends BaseControl
 
 
 	/**
-	 * Integer validator: is a control's value decimal number?
-	 * @param  TextBase
+	 * Is a control's value decimal number?
 	 * @return bool
 	 */
 	public static function validateInteger(TextBase $control)
@@ -206,8 +201,7 @@ abstract class TextBase extends BaseControl
 
 
 	/**
-	 * Float validator: is a control's value float number?
-	 * @param  TextBase
+	 * Is a control's value float number?
 	 * @return bool
 	 */
 	public static function validateFloat(TextBase $control)

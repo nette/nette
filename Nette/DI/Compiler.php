@@ -257,7 +257,7 @@ class Compiler extends Nette\Object
 
 		$known = array('class', 'create', 'arguments', 'setup', 'autowired', 'inject', 'parameters', 'implement', 'run', 'tags');
 		if ($error = array_diff(array_keys($config), $known)) {
-			throw new Nette\InvalidStateException("Unknown or deprecated key '" . implode("', '", $error) . "' in definition of service.");
+			throw new Nette\InvalidStateException(sprintf("Unknown or deprecated key '%s' in definition of service.", implode("', '", $error)));
 		}
 
 		$arguments = array();

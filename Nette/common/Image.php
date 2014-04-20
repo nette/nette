@@ -154,7 +154,7 @@ class Image extends Object
 	public static function fromFile($file, & $format = NULL)
 	{
 		if (!extension_loaded('gd')) {
-			throw new NotSupportedException("PHP extension GD is not loaded.");
+			throw new NotSupportedException('PHP extension GD is not loaded.');
 		}
 
 		$info = @getimagesize($file); // @ - files smaller than 12 bytes causes read error
@@ -197,7 +197,7 @@ class Image extends Object
 	public static function fromString($s, & $format = NULL)
 	{
 		if (!extension_loaded('gd')) {
-			throw new NotSupportedException("PHP extension GD is not loaded.");
+			throw new NotSupportedException('PHP extension GD is not loaded.');
 		}
 
 		$format = static::getFormatFromString($s);
@@ -216,7 +216,7 @@ class Image extends Object
 	public static function fromBlank($width, $height, $color = NULL)
 	{
 		if (!extension_loaded('gd')) {
-			throw new NotSupportedException("PHP extension GD is not loaded.");
+			throw new NotSupportedException('PHP extension GD is not loaded.');
 		}
 
 		$width = (int) $width;
@@ -539,7 +539,7 @@ class Image extends Object
 				return imagegif($this->getImageResource(), $file);
 
 			default:
-				throw new InvalidArgumentException("Unsupported image type.");
+				throw new InvalidArgumentException('Unsupported image type.');
 		}
 	}
 
@@ -582,7 +582,7 @@ class Image extends Object
 	public function send($type = self::JPEG, $quality = NULL)
 	{
 		if ($type !== self::GIF && $type !== self::PNG && $type !== self::JPEG) {
-			throw new InvalidArgumentException("Unsupported image type.");
+			throw new InvalidArgumentException('Unsupported image type.');
 		}
 		header('Content-Type: ' . image_type_to_mime_type($type));
 		return $this->save(NULL, $quality, $type);

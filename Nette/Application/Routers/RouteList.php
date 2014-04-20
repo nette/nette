@@ -119,7 +119,7 @@ class RouteList extends Nette\ArrayList implements Nette\Application\IRouter
 	public function offsetSet($index, $route)
 	{
 		if (!$route instanceof Nette\Application\IRouter) {
-			throw new Nette\InvalidArgumentException("Argument must be IRouter descendant.");
+			throw new Nette\InvalidArgumentException('Argument must be IRouter descendant.');
 		}
 		parent::offsetSet($index, $route);
 	}

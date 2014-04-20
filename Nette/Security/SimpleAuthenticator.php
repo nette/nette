@@ -44,7 +44,7 @@ class SimpleAuthenticator extends Nette\Object implements IAuthenticator
 				if ((string) $pass === (string) $password) {
 					return new Identity($name);
 				} else {
-					throw new AuthenticationException("Invalid password.", self::INVALID_CREDENTIAL);
+					throw new AuthenticationException('Invalid password.', self::INVALID_CREDENTIAL);
 				}
 			}
 		}

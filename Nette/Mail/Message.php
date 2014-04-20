@@ -244,7 +244,7 @@ class Message extends MimePart
 			foreach (array_reverse($matches) as $m) {
 				$file = rtrim($basePath, '/\\') . '/' . $m[3][0];
 				if (!isset($cids[$file])) {
-					$cids[$file] = substr($this->addEmbeddedFile($file)->getHeader("Content-ID"), 1, -1);
+					$cids[$file] = substr($this->addEmbeddedFile($file)->getHeader('Content-ID'), 1, -1);
 				}
 				$html = substr_replace($html,
 					"{$m[1][0]}{$m[2][0]}cid:{$cids[$file]}",

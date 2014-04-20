@@ -47,7 +47,7 @@ class Container extends Component implements IContainer
 			$name = (string) $name;
 
 		} elseif (!is_string($name)) {
-			throw new Nette\InvalidArgumentException("Component name must be integer or string, " . gettype($name) . " given.");
+			throw new Nette\InvalidArgumentException(sprintf('Component name must be integer or string, %s given.', gettype($name)));
 
 		} elseif (!preg_match('#^[a-zA-Z0-9_]+\z#', $name)) {
 			throw new Nette\InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' given.");
@@ -120,7 +120,7 @@ class Container extends Component implements IContainer
 			$name = (string) $name;
 
 		} elseif (!is_string($name)) {
-			throw new Nette\InvalidArgumentException("Component name must be integer or string, " . gettype($name) . " given.");
+			throw new Nette\InvalidArgumentException(sprintf('Component name must be integer or string, %s given.', gettype($name)));
 
 		} else {
 			$a = strpos($name, self::NAME_SEPARATOR);
@@ -131,7 +131,7 @@ class Container extends Component implements IContainer
 
 			if ($name === '') {
 				if ($need) {
-					throw new Nette\InvalidArgumentException("Component or subcomponent name must not be empty string.");
+					throw new Nette\InvalidArgumentException('Component or subcomponent name must not be empty string.');
 				}
 				return;
 			}

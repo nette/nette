@@ -65,7 +65,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 			$values = iterator_to_array($values);
 
 		} elseif (!is_array($values)) {
-			throw new Nette\InvalidArgumentException('First parameter must be an array, ' . gettype($values) . ' given.');
+			throw new Nette\InvalidArgumentException(sprintf('First parameter must be an array, %s given.', gettype($values)));
 		}
 
 		foreach ($this->getComponents() as $name => $control) {

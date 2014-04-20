@@ -53,7 +53,7 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	 */
 	public function formatDateTime(/*\DateTimeInterface*/ $value)
 	{
-		return $value->format("#m/d/Y H:i:s#");
+		return $value->format('#m/d/Y H:i:s#');
 	}
 
 

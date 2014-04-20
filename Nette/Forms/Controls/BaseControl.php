@@ -561,7 +561,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
-	 * Equal validator: are control's value and second parameter equal?
+	 * Is control's value equal with second parameter?
 	 * @return bool
 	 */
 	public static function validateEqual(IControl $control, $arg)
@@ -590,7 +590,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
-	 * Filled validator: is control filled?
+	 * Is control filled?
 	 * @return bool
 	 */
 	public static function validateFilled(IControl $control)
@@ -610,7 +610,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
-	 * Valid validator: is control valid?
+	 * Is control valid?
 	 * @return bool
 	 */
 	public static function validateValid(IControl $control)
@@ -620,7 +620,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
-	 * Rangle validator: is a control's value number in specified range?
+	 * Is a control's value number in specified range?
 	 * @param  Nette\Forms\IControl
 	 * @param  array  min and max value pair
 	 * @return bool
@@ -646,7 +646,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
-	 * Min-length validator: has control's value minimal count/length?
+	 * Has control's value minimal count/length?
 	 * @return bool
 	 */
 	public static function validateMinLength(IControl $control, $length)
@@ -656,7 +656,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
-	 * Max-length validator: is control's value count/length in limit?
+	 * Is control's value count/length in limit?
 	 * @return bool
 	 */
 	public static function validateMaxLength(IControl $control, $length)

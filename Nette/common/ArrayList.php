@@ -55,7 +55,7 @@ class ArrayList extends Object implements \ArrayAccess, \Countable, \IteratorAgg
 			$this->list[] = $value;
 
 		} elseif ($index < 0 || $index >= count($this->list)) {
-			throw new OutOfRangeException("Offset invalid or out of range");
+			throw new OutOfRangeException('Offset invalid or out of range');
 
 		} else {
 			$this->list[(int) $index] = $value;
@@ -72,7 +72,7 @@ class ArrayList extends Object implements \ArrayAccess, \Countable, \IteratorAgg
 	public function offsetGet($index)
 	{
 		if ($index < 0 || $index >= count($this->list)) {
-			throw new OutOfRangeException("Offset invalid or out of range");
+			throw new OutOfRangeException('Offset invalid or out of range');
 		}
 		return $this->list[(int) $index];
 	}
@@ -98,7 +98,7 @@ class ArrayList extends Object implements \ArrayAccess, \Countable, \IteratorAgg
 	public function offsetUnset($index)
 	{
 		if ($index < 0 || $index >= count($this->list)) {
-			throw new OutOfRangeException("Offset invalid or out of range");
+			throw new OutOfRangeException('Offset invalid or out of range');
 		}
 		array_splice($this->list, (int) $index, 1);
 	}

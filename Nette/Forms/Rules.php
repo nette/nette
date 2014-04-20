@@ -329,5 +329,4 @@ class Rules extends Nette\Object implements \IteratorAggregate
 		return $message;
 	}
 
-
 }

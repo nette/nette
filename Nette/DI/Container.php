@@ -60,18 +60,18 @@ class Container extends Nette\Object
 			throw new Nette\DeprecatedException('Parameter $meta has been removed.');
 
 		} elseif (!is_string($name) || !$name) {
-			throw new Nette\InvalidArgumentException('Service name must be a non-empty string, ' . gettype($name) . ' given.');
+			throw new Nette\InvalidArgumentException(sprintf('Service name must be a non-empty string, %s given.', gettype($name)));
 
 		} elseif (isset($this->registry[$name])) {
 			throw new Nette\InvalidStateException("Service '$name' already exists.");
 
 		} elseif (is_string($service) || is_array($service) || $service instanceof \Closure || $service instanceof Nette\Callback) {
-			trigger_error('Passing factories to ' . __METHOD__ . '() is deprecated; pass the object itself.', E_USER_DEPRECATED);
+			trigger_error(sprintf('Passing factories to %s() is deprecated; pass the object itself.', __METHOD__), E_USER_DEPRECATED);
 			$service = is_string($service) && !preg_match('#\x00|:#', $service) ? new $service : call_user_func($service, $this);
 		}
 
 		if (!is_object($service)) {
-			throw new Nette\InvalidArgumentException('Service must be a object, ' . gettype($service) . ' given.');
+			throw new Nette\InvalidArgumentException(sprintf('Service must be a object, %s given.', gettype($service)));
 		}
 
 		$this->registry[$name] = $service;
@@ -141,8 +141,7 @@ class Container extends Nette\Object
 	{
 		$method = Container::getMethodName($name);
 		if (isset($this->creating[$name])) {
-			throw new Nette\InvalidStateException("Circular reference detected for services: "
-				. implode(', ', array_keys($this->creating)) . ".");
+			throw new Nette\InvalidStateException(sprintf('Circular reference detected for services: %s.', implode(', ', array_keys($this->creating))));
 
 		} elseif (!method_exists($this, $method) || $this->getReflection()->getMethod($method)->getName() !== $method) {
 			throw new MissingServiceException("Service '$name' not found.");
@@ -244,7 +243,7 @@ class Container extends Nette\Object
 	public function callInjects($service)
 	{
 		if (!is_object($service)) {
-			throw new Nette\InvalidArgumentException('Service must be object, ' . gettype($service) . ' given.');
+			throw new Nette\InvalidArgumentException(sprintf('Service must be object, %s given.', gettype($service)));
 		}
 
 		foreach (array_reverse(get_class_methods($service)) as $method) {
