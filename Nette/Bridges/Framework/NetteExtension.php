@@ -100,6 +100,8 @@ class NetteExtension extends Nette\DI\CompilerExtension
 		$this->setupCache($container);
 		$this->setupHttp($container, $config['http']);
 		$this->setupSession($container, $config['session']);
+		$container->addDefinition($this->prefix('messagesStorage'))
+			->setClass('Nette\Application\MessagesStorage');
 		$this->setupSecurity($container, $config['security']);
 		$this->setupApplication($container, $config['application']);
 		$this->setupRouting($container, $config['routing']);
