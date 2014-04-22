@@ -1,6 +1,6 @@
 <?php
 
-array_walk(new ArrayIterator(array(
+defined('NETTE_ALIASES') && empty(NETTE_ALIASES) || array_walk(new ArrayIterator(array(
 	'Nette\Config\Configurator' => 'Nette\Configurator',
 	'Nette\Config\CompilerExtension' => 'Nette\DI\CompilerExtension',
 	'Nette\Diagnostics\Bar' => 'Tracy\Bar',
