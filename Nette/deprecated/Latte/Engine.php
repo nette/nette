@@ -39,4 +39,19 @@ class Engine extends Latte\Engine
 		return $this->setLoader(new Latte\Loaders\StringLoader)->compile($s);
 	}
 
+
+	public function & __get($name)
+	{
+		switch (strtolower($name)) {
+			case 'parser':
+			case 'compiler':
+				$method = 'get' . ucfirst($name);
+				trigger_error("Magic getters are deprecated. Use $method() method instead.", E_USER_DEPRECATED);
+				$return = $this->$method(); // return by reference
+				return $return;
+		}
+
+		return parent::__get($name);
+	}
+
 }
