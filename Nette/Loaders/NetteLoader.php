@@ -101,19 +101,6 @@ class NetteLoader
 
 
 	/**
-	 * @return void
-	 */
-	public function createAliases()
-	{
-		foreach ($this->renamed as $old => $new) {
-			if (!class_exists($old, FALSE)) {
-				class_alias($new, $old);
-			}
-		}
-	}
-
-
-	/**
 	 * Handles autoloading of classes or interfaces.
 	 * @param  string
 	 * @return void
