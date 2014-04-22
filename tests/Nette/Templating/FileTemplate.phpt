@@ -14,8 +14,8 @@ use Nette\Templating\FileTemplate,
 require __DIR__ . '/../bootstrap.php';
 
 
-$latte = new Latte\Engine;
-@$template = new FileTemplate(__DIR__ . '/templates/general.latte');
+$latte = new Nette\Latte\Engine;
+$template = new FileTemplate(__DIR__ . '/templates/general.latte');
 $template->registerFilter($latte);
 $template->registerHelper('translate', 'strrev');
 $template->registerHelper('join', 'implode');

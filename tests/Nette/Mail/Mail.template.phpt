@@ -19,7 +19,7 @@ require __DIR__ . '/Mail.inc';
 $mail = new Message();
 $mail->addTo('Lady Jane <jane@example.com>');
 
-@$template = new FileTemplate;
+$template = new FileTemplate;
 $template->setFile('files/template.phtml');
 $template->registerFilter(new Nette\Latte\Engine);
 $mail->htmlBody = $template;

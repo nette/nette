@@ -8,7 +8,8 @@
 namespace Nette\Templating;
 
 use Nette,
-	Nette\Caching;
+	Nette\Caching,
+	Latte;
 
 
 /**
@@ -86,7 +87,7 @@ class FileTemplate extends Template implements IFileTemplate
 		}
 
 		if ($latte = $this->getLatte()) {
-			return $latte->render($this->file, $this->getParameters());
+			return $latte->setLoader(new Latte\Loaders\FileLoader)->render($this->file, $this->getParameters());
 		}
 
 		$cache = new Caching\Cache($storage = $this->getCacheStorage(), 'Nette.FileTemplate');

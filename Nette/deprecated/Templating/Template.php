@@ -187,7 +187,7 @@ class Template extends Nette\Object implements ITemplate
 		if (!$this->latte) {
 			return NULL;
 		}
-		$latte = $this->latte instanceof Latte\Engine ? $this->latte : new Latte\Engine;
+		$latte = $this->latte instanceof Latte\Engine ? $this->latte : new Nette\Latte\Engine;
 
 		foreach ($this->helpers as $key => $callback) {
 			$latte->addFilter($key, $callback);

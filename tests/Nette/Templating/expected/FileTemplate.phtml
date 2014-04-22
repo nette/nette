@@ -39,6 +39,13 @@ $_l->extends = empty($template->_extended) && isset($_control) && $_control inst
 
 if ($_l->extends) { ob_start();}
 
+// prolog Nette\Bridges\ApplicationLatte\UIMacros
+
+// snippets support
+if (empty($_l->extends) && !empty($_control->snippetMode)) {
+	return Nette\Bridges\ApplicationLatte\UIMacros::renderSnippets($_control, $_l, get_defined_vars());
+}
+
 //
 // main template
 //
@@ -60,6 +67,11 @@ if ($_l->extends) { ob_start();}
 	<li>Array: <?php echo Latte\Runtime\Filters::escapeHtml($template->join($hello ? array('a', 'b', 'c') : NULL), ENT_NOQUOTES) ?>
  <?php echo Latte\Runtime\Filters::escapeHtml($template->join(array('a', 'b', $hello ? 'c' : NULL)), ENT_NOQUOTES) ?></li>
 </ul>
+
+<?php echo Latte\Runtime\Filters::escapeHtml($template->reverse($hello), ENT_NOQUOTES) ?>
+
+<?php echo $hello ?>
+
 
 <input> <input> <input>
 
