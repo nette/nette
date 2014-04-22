@@ -10,7 +10,11 @@ matrix:
     allow_failures:
         - php: hhvm
 
-script: VERBOSE=true ./tests/run-tests.sh -s tests/
+script: vendor/bin/tester tests -s -c tests/php-unix.ini
+
+after_failure:
+    # Print *.actual content
+    - for i in $(find tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
 
 before_script:
     # Install Nette Tester
