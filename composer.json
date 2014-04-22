@@ -50,6 +50,9 @@
 	},
 	"autoload": {
 		"classmap": ["Nette/"],
-		"files": ["Nette/shortcuts.php"]
+		"files": [
+			"Nette/shortcuts.php",
+			"Nette/aliases.php"
+		]
 	}
 }
