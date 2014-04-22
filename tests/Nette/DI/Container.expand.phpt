@@ -24,7 +24,11 @@ Assert::same( array('cache' => '/temp'), $container->expand('%dirs%') );
 
 Assert::exception(function() use ($container) {
 	$container->expand('%bar%');
-}, 'Nette\InvalidArgumentException', "Missing item 'bar'.");
+}, 'Nette\InvalidArgumentException', "Missing parameter 'bar'.");
+
+Assert::exception(function() use ($container) {
+	$container->expand('%foo.bar%');
+}, 'Nette\InvalidArgumentException', "Missing parameter 'foo.bar'.");
 
 Assert::exception(function() use ($container) {
 	$container->parameters['bar'] = array();

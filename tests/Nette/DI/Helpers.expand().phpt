@@ -33,7 +33,7 @@ Assert::same(
 
 Assert::exception(function() {
 	Helpers::expand('%missing%', array());
-}, 'Nette\InvalidArgumentException', "Missing item 'missing'.");
+}, 'Nette\InvalidArgumentException', "Missing parameter 'missing'.");
 
 Assert::exception(function() {
 	Helpers::expand('%key1%a', array('key1' => array('key2' => 123)));
