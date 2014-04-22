@@ -22,4 +22,19 @@ class Engine extends Latte\Engine
 		trigger_error(__CLASS__ . ' is deprecated.', E_USER_DEPRECATED);
 	}
 
+
+	public function & __get($name)
+	{
+		switch (strtolower($name)) {
+			case 'parser':
+			case 'compiler':
+				$method = 'get' . ucfirst($name);
+				trigger_error("Magic getters are deprecated. Use $method() method instead.", E_USER_DEPRECATED);
+				$return = $this->$method(); // return by reference
+				return $return;
+		}
+
+		return parent::__get($name);
+	}
+
 }
