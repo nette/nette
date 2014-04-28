@@ -16,16 +16,11 @@ use Nette,
  */
 class Engine extends Latte\Engine
 {
+	private $fixed = FALSE;
 
 	public function __construct()
 	{
-		$this->onCompile[] = function($latte) {
-			$latte->getParser()->shortNoEscape = TRUE;
-			$latte->getCompiler()->addMacro('cache', new Nette\Bridges\CacheLatte\CacheMacro($latte->getCompiler()));
-			Nette\Bridges\ApplicationLatte\UIMacros::install($latte->getCompiler());
-			Nette\Bridges\FormsLatte\FormMacros::install($latte->getCompiler());
-		};
-
+		$this->getParser()->shortNoEscape = TRUE;
 		$this->addFilter('url', 'rawurlencode');
 		foreach (array('normalize', 'toAscii', 'webalize', 'padLeft', 'padRight', 'reverse') as $name) {
 			$this->addFilter($name, 'Nette\Utils\Strings::' . $name);
@@ -37,6 +32,19 @@ class Engine extends Latte\Engine
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use compile() instead.', E_USER_DEPRECATED);
 		return $this->setLoader(new Latte\Loaders\StringLoader)->compile($s);
+	}
+
+
+	public function getCompiler()
+	{
+		$compiler = parent::getCompiler();
+		if (!$this->fixed) {
+			$this->fixed = TRUE;
+			$compiler->addMacro('cache', new Nette\Bridges\CacheLatte\CacheMacro($compiler));
+			Nette\Bridges\ApplicationLatte\UIMacros::install($compiler);
+			Nette\Bridges\FormsLatte\FormMacros::install($compiler);
+		}
+		return $compiler;
 	}
 
 
