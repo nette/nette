@@ -23,6 +23,7 @@ Assert::same( array('?', '', '', TRUE), $parser->parseMacroTag('? /') );
 Assert::same( array('?', '/', '', FALSE), $parser->parseMacroTag('? / ') );
 Assert::same( array('=', '$var', '', FALSE), $parser->parseMacroTag('$var') );
 Assert::same( array('=', '$var', '|noescape', FALSE), $parser->parseMacroTag('$var|noescape') );
+Assert::same( array('=', '$var', '|noescape', TRUE), $parser->parseMacroTag('$var|noescape/') );
 Assert::same( array('_', '"I love Nette"', '|noescape', FALSE), $parser->parseMacroTag('_"I love Nette"|noescape') );
 Assert::same( array('_', '$var', '', FALSE), $parser->parseMacroTag('_$var') );
 Assert::same( array('_', '$var', '', FALSE), $parser->parseMacroTag('_ $var') );
