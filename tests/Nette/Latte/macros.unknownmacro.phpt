@@ -29,3 +29,11 @@ Assert::exception(function() use ($template) {
 Assert::exception(function() use ($template) {
 	$template->setSource('<script>if (true) {return}</script>')->compile();
 }, 'Nette\Latte\CompileException', 'Unknown macro {return} (in JavaScript or CSS, try to put a space after bracket.)');
+
+Assert::exception(function() use ($template) {
+	$template->setSource('<a n:tag-class=$cond>')->compile();
+}, 'Nette\Latte\CompileException', 'Unknown macro-attribute n:tag-class');
+
+Assert::exception(function() use ($template) {
+	$template->setSource('<a n:inner-class=$cond>')->compile();
+}, 'Nette\Latte\CompileException', 'Unknown macro-attribute n:inner-class');
