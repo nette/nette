@@ -19,6 +19,10 @@ Assert::exception(function() use ($template) {
 }, 'Nette\Latte\CompileException', 'Unknown macro {unknown}');
 
 Assert::exception(function() use ($template) {
+	$template->setSource('{class}')->compile();
+}, 'Nette\Latte\CompileException', 'Unhandled macro {class}');
+
+Assert::exception(function() use ($template) {
 	$template->setSource('<style>body {color:blue}</style>')->compile();
 }, 'Nette\Latte\CompileException', 'Unknown macro {color:blue} (in JavaScript or CSS, try to put a space after bracket.)');
 
