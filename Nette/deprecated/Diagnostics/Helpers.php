@@ -8,7 +8,8 @@
 namespace Nette\Diagnostics;
 
 use Nette,
-	Tracy;
+	Tracy,
+	Tracy\Dumper;
 
 
 /**
@@ -36,6 +37,24 @@ class Helpers extends Tracy\Helpers
 		} else {
 			return Nette\Utils\Html::el('span')->setText($file . ($line ? ":$line" : ''));
 		}
+	}
+
+	public static function htmlDump($var)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use Tracy\Dumper::toHtml() instead.', E_USER_DEPRECATED);
+		return Dumper::toHtml($var);
+	}
+
+	public static function clickableDump($var)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use Tracy\Dumper::toHtml() instead.', E_USER_DEPRECATED);
+		return Dumper::toHtml($var);
+	}
+
+	public static function textDump($var)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use Tracy\Dumper::toText() instead.', E_USER_DEPRECATED);
+		return Dumper::toText($var);
 	}
 
 }
