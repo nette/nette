@@ -23,6 +23,7 @@ class Helpers extends Tracy\Helpers
 	 */
 	public static function editorLink($file, $line)
 	{
+		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
 		if (Debugger::$editor && is_file($file)) {
 			$dir = dirname(strtr($file, '/', DIRECTORY_SEPARATOR));
 			$base = isset($_SERVER['SCRIPT_FILENAME']) ? dirname(dirname(strtr($_SERVER['SCRIPT_FILENAME'], '/', DIRECTORY_SEPARATOR))) : dirname($dir);
