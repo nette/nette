@@ -3,6 +3,7 @@
 array_walk(new ArrayIterator(array(
 	'Nette\Config\Configurator' => 'Nette\Configurator',
 	'Nette\Config\CompilerExtension' => 'Nette\DI\CompilerExtension',
+	'Nette\Diagnostics\Bar' => 'Tracy\Bar',
 	'Nette\Diagnostics\BlueScreen' => 'Tracy\BlueScreen',
 	'Nette\Diagnostics\Dumper' => 'Tracy\Dumper',
 	'Nette\Latte\CompileException' => 'Latte\CompileException',
