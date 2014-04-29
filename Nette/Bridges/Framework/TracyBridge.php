@@ -36,14 +36,14 @@ class TracyBridge
 					'panel' => '<p>' . (is_file($e->sourceName) ? '<b>File:</b> ' . Helpers::editorLink($e->sourceName, $e->sourceLine) : htmlspecialchars($e->sourceName)) . '</p>'
 						. ($e->sourceCode ? '<pre>' . BlueScreen::highlightLine(htmlspecialchars($e->sourceCode), $e->sourceLine) . '</pre>' : ''),
 				);
-			} elseif ($e instanceof Nette\Utils\NeonException && preg_match('#line (\d+)#', $e->getMessage(), $m)) {
+			} elseif ($e instanceof Nette\Neon\Exception && preg_match('#line (\d+)#', $e->getMessage(), $m)) {
 				if ($item = Helpers::findTrace($e->getTrace(), 'Nette\DI\Config\Adapters\NeonAdapter::load')) {
 					return array(
 						'tab' => 'NEON',
 						'panel' => '<p><b>File:</b> ' . Helpers::editorLink($item['args'][0], $m[1]) . '</p>'
 							. BlueScreen::highlightFile($item['args'][0], $m[1])
 					);
-				} elseif ($item = Helpers::findTrace($e->getTrace(), 'Nette\Utils\Neon::decode')) {
+				} elseif ($item = Helpers::findTrace($e->getTrace(), 'Nette\Neon\Decoder::decode')) {
 					return array(
 						'tab' => 'NEON',
 						'panel' => BlueScreen::highlightPhp($item['args'][0], $m[1])

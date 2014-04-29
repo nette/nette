@@ -60,6 +60,9 @@ class NetteLoader
 		'Nette\DateTime' => 'Nette\Utils\DateTime',
 		'Nette\Image' => 'Nette\Utils\Image',
 		'Nette\ObjectMixin' => 'Nette\Utils\ObjectMixin',
+		'Nette\Utils\NeonException' => 'Nette\Neon\Exception',
+		'Nette\Utils\NeonEntity' => 'Nette\Neon\Entity',
+		'Nette\Utils\Neon' => 'Nette\Neon\Neon',
 	);
 
 	/** @var array */
