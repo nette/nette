@@ -1,7 +1,0 @@
-nette:
-	security:
-		users:
-			john: john123
-			admin: {password: admin123, roles: [admin, user]}
-			user: {password: user123}
-			moderator: {password: moderator123, roles: moderator}

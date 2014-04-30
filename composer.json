@@ -18,6 +18,7 @@
 	"require": {
 		"php": ">=5.3.1",
 		"nette/application": "@dev",
+		"nette/bootstrap": "@dev",
 		"nette/caching": "@dev",
 		"nette/component-model": "@dev",
 		"nette/database": "@dev",
