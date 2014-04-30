@@ -69,7 +69,6 @@ class NetteLoader
 	public $list = array(
 		'Nette\Caching\Storages\PhpFileStorage' => 'deprecated/Caching/PhpFileStorage',
 		'Nette\Callback' => 'deprecated/Callback',
-		'Nette\DI\Extensions\NetteAccessor' => 'deprecated/DI/NetteAccessor',
 		'Nette\Diagnostics\Debugger' => 'deprecated/Diagnostics/Debugger',
 		'Nette\Diagnostics\Helpers' => 'deprecated/Diagnostics/Helpers',
 		'Nette\Diagnostics\IBarPanel' => 'deprecated/Diagnostics/IBarPanel',

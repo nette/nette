@@ -1,8 +1,0 @@
-services:
-	app2 < application: # inherits from extended application
-		autowired: no
-
-	application: # extends original application
-		class: MyApp
-		setup: # extends original setup
-			- $errorPresenter(Error)

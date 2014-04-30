@@ -18,6 +18,7 @@
 	"require": {
 		"php": ">=5.3.1",
 		"nette/application": "2.2-rc2",
+		"nette/bootstrap": "2.2-rc1",
 		"nette/caching": "2.2-rc1",
 		"nette/component-model": "2.2-rc1",
 		"nette/database": "2.2-rc2",

@@ -1,5 +1,0 @@
-nette:
-	latte:
-		macros:
-			- LoremIpsumMacros
-			- IpsumLoremMacros::install
