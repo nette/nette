@@ -73,6 +73,7 @@ class NetteLoader
 		'Nette\Diagnostics\Debugger' => 'deprecated/Diagnostics/Debugger',
 		'Nette\Diagnostics\Helpers' => 'deprecated/Diagnostics/Helpers',
 		'Nette\Diagnostics\IBarPanel' => 'deprecated/Diagnostics/IBarPanel',
+		'Nette\Environment' => 'deprecated/Environment',
 		'Nette\Latte\Engine' => 'deprecated/Latte/Engine',
 		'Nette\Templating\FileTemplate' => 'deprecated/Templating/FileTemplate',
 		'Nette\Templating\Helpers' => 'deprecated/Templating/Helpers',
