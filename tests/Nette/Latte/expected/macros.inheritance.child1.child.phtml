@@ -7,7 +7,7 @@ list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
 // block title
 //
 if (!function_exists($_l->blocks['title'][] = '_xxx_title')) { function _xxx_title($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
-?>Homepage | <?php Nette\Latte\Macros\UIMacros::callBlockParent($_l, 'title', get_defined_vars()) ;
+?>Homepage | <?php Nette\Latte\Macros\UIMacros::callBlockParent($_l, 'title', get_defined_vars()) ;Nette\Latte\Macros\UIMacros::callBlockParent($_l, 'title', get_defined_vars()) ;
 }}
 
 //

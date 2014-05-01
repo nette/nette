@@ -449,6 +449,7 @@ if (!empty($_control->snippetMode)) {
 			throw new Nette\InvalidStateException("Cannot include undefined parent block '$name'.");
 		}
 		$block($context, $params);
+		prev($context->blocks[$name]);
 	}
 
 
