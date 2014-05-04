@@ -5,24 +5,6 @@
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
-use Tracy\Debugger;
-
-
-if (!function_exists('dump')) {
-	/**
-	 * Tracy\Debugger::dump() shortcut.
-	 * @tracySkipLocation
-	 */
-	function dump($var)
-	{
-		foreach (func_get_args() as $arg) {
-			Debugger::dump($arg);
-		}
-		return $var;
-	}
-}
-
-
 if (!function_exists('dlog')) {
 	/**
 	 * Tracy\Debugger::log() shortcut.
@@ -30,10 +12,10 @@ if (!function_exists('dlog')) {
 	function dlog($var = NULL)
 	{
 		if (func_num_args() === 0) {
-			Debugger::log(new Exception, 'dlog');
+			Tracy\Debugger::log(new Exception, 'dlog');
 		}
 		foreach (func_get_args() as $arg) {
-			Debugger::log($arg, 'dlog');
+			Tracy\Debugger::log($arg, 'dlog');
 		}
 		return $var;
 	}
