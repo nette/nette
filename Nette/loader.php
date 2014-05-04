@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Nette Framework (version 2.2-rc2 released on 2014-04-28, http://nette.org)
+ * Nette Framework (version 2.2-RC4 released on 2014-05-05, http://nette.org)
  *
  * Copyright (c) 2004, 2014 David Grudl (http://davidgrudl.com)
  */
