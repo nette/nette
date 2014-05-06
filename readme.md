@@ -1,6 +1,9 @@
 [Nette Framework](http://nette.org)
 ===================================
 
+[![Downloads this Month](https://img.shields.io/packagist/dm/nette/nette.svg)](https://packagist.org/packages/nette/nette)
+[![Build Status](https://travis-ci.org/nette/nette.svg?branch=v2.2)](https://travis-ci.org/nette/nette)
+
 Nette Framework is a popular tool for PHP web development. It is designed to be
 as usable and as friendly as possible. It focuses on security and
 performance and is definitely one of the safest PHP frameworks.
@@ -48,7 +51,3 @@ Getting started
 
 The [Quick Start tutorial](http://doc.nette.org/quickstart) gives you a first
 introduction to the framework by creating a simple database driven application.
-
------
-
-[![Build Status](https://secure.travis-ci.org/nette/nette.png?branch=master)](http://travis-ci.org/nette/nette)
