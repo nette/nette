@@ -23,7 +23,7 @@ Fatal error: Call to undefined function missing_function() in %a% on line %d%
 		<div id="netteBluescreenError" class="panel">
 			<h1>Fatal Error</h1>
 
-			<p>Call to undefined function missing_function() <a href="%a%" id="netteBsSearch">search&#x25ba;</a></p>
+			<p>Call to undefined function missing_function() <a href="%a%" id="netteBsSearch" rel="noreferrer">search&#x25ba;</a></p>
 		</div>
 
 
