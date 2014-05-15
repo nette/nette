@@ -157,7 +157,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroIfContent(MacroNode $node, PhpWriter $writer)
 	{
-		if (!$node->htmlNode) {
+		if (!$node->prefix) {
 			throw new CompileException("Unknown macro {{$node->name}}, use n:{$node->name} attribute.");
 		} elseif ($node->prefix !== MacroNode::PREFIX_NONE) {
 			throw new CompileException("Unknown attribute n:{$node->prefix}-{$node->name}, use n:{$node->name} attribute.");

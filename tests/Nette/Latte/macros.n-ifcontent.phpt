@@ -82,7 +82,7 @@ EOD
 
 
 Assert::exception(function() use ($template) {
-	$template->setSource('{ifcontent}')->compile();
+	$template->setSource('<html>{ifcontent}')->compile();
 }, 'Nette\Latte\CompileException', 'Unknown macro {ifcontent}, use n:ifcontent attribute.');
 
 
