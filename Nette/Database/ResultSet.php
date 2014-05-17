@@ -248,7 +248,9 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 
 		$row = new Row;
 		foreach ($this->normalizeRow($data) as $key => $value) {
-			$row->$key = $value;
+			if ($key !== '') {
+				$row->$key = $value;
+			}
 		}
 
 		if ($this->result === NULL && count($data) !== $this->pdoStatement->columnCount()) {
