@@ -91,13 +91,15 @@ class BlueScreen extends Nette\Object
 		$source = explode("\n", highlight_string($source, TRUE));
 		$out = $source[0]; // <code><span color=highlight.html>
 		$source = str_replace('<br />', "\n", $source[1]);
-
 		$out .= static::highlightLine($source, $line, $lines);
-		$out = preg_replace_callback('#">\$(\w+)(&nbsp;)?</span>#', function($m) use ($vars) {
-			return isset($vars[$m[1]])
-				? '" title="' . str_replace('"', '&quot;', strip_tags(Dumper::toHtml($vars[$m[1]]))) . $m[0]
-				: $m[0];
-		}, $out);
+
+		if ($vars) {
+			$out = preg_replace_callback('#">\$(\w+)(&nbsp;)?</span>#', function($m) use ($vars) {
+				return array_key_exists($m[1], $vars)
+					? '" title="' . str_replace('"', '&quot;', trim(strip_tags(Dumper::toHtml($vars[$m[1]])))) . $m[0]
+					: $m[0];
+			}, $out);
+		}
 
 		return "<pre class='php'><div>$out</div></pre>";
 	}
