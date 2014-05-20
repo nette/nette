@@ -11,6 +11,13 @@ use Nette\DI,
 require __DIR__ . '/../bootstrap.php';
 
 
+Assert::exception(function() {
+	$builder = new DI\ContainerBuilder;
+	$builder->addDefinition('one')->setClass('X')->setFactory('Unknown');
+	$builder->generateClasses();
+}, 'Nette\InvalidStateException', "Class Unknown used in service 'one' has not been found or is not instantiable.");
+
+
 interface Bad1
 {
 	static function create();
