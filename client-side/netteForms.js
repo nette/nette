@@ -372,7 +372,7 @@ Nette.toggleControl = function(elem, rules, topSuccess, firsttime) {
 	rules = rules || Nette.parseJSON(elem.getAttribute('data-nette-rules'));
 	var has = false, __hasProp = Object.prototype.hasOwnProperty, handler = function() {
 		Nette.toggleForm(elem.form);
-	};
+	}, handled = [];
 
 	for (var id = 0, len = rules.length; id < len; id++) {
 		var rule = rules[id], op = rule.op.match(/(~)?([^?]+)/);
@@ -402,8 +402,11 @@ Nette.toggleControl = function(elem, rules, topSuccess, firsttime) {
 					els = el.nodeName ? [el] : el; // is radiolist?
 
 				for (var i = 0; i < els.length; i++) {
+					if (!Nette.inArray(handled, els[i])) {
 					Nette.addEvent(els[i], oldIE && el.type in {checkbox: 1, radio: 1} ? 'click' : 'change', handler);
+						handled.push(els[i]);
 				}
+			}
 			}
 			for (var id2 in rule.toggle || []) {
 				if (__hasProp.call(rule.toggle, id2)) {
@@ -468,6 +471,23 @@ Nette.initForm = function(form) {
  */
 Nette.isArray = function(arg) {
 	return Object.prototype.toString.call(arg) === '[object Array]';
+};
+
+
+/**
+ * Search for a specified value within an array.
+ */
+Nette.inArray = function(arr, val) {
+	if (Array.prototype.indexOf) {
+		return arr.indexOf(val) > -1;
+	} else {
+		for (var i = 0; i < arr.length; i++) {
+			if (arr[i] === val) {
+				return true;
+			}
+		}
+		return false;
+	}
 };
 
 
