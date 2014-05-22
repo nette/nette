@@ -16,7 +16,6 @@
 		}
 	],
 	"require": {
-		"php": ">=5.3.1",
 		"nette/application": ">=2.2.0",
 		"nette/bootstrap": ">=2.2.0",
 		"nette/caching": ">=2.2.0",
@@ -36,15 +35,7 @@
 		"nette/tokenizer": ">=2.2.0",
 		"nette/utils": ">=2.2.0",
 		"latte/latte": ">=2.2.0",
-		"tracy/tracy": ">=2.2.0",
-		"ext-iconv": "*",
-		"ext-tokenizer": "*"
-	},
-	"suggest": {
-		"ext-mbstring": "*",
-		"ext-pdo": "*",
-		"ext-gd": "*",
-		"ext-fileinfo": "*"
+		"tracy/tracy": ">=2.2.0"
 	},
 	"require-dev": {
 		"nette/tester": "~1.1"
