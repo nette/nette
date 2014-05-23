@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Environment and loadConfig.
- *
- * @author     David Grudl
  */
 
 use Nette\Environment,

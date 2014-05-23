@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Templating\FileTemplate
- *
- * @author     David Grudl
  */
 
 use Nette\Templating\FileTemplate,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Caching\Storages\PhpFileStorage test.
- *
- * @author     David Grudl
  */
 
 use Nette\Caching\Cache,

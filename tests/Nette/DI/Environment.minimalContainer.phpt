@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Environment minimal usage.
- *
- * @author     David Grudl
  */
 
 use Nette\Environment,
