@@ -79,12 +79,13 @@ if ($_l->extends) {
 
 <p val0 val1 = tmp val2=tmp val3="x"></p> </p>
 
-<p val = <?php echo '"' . htmlSpecialChars($xss) . '"' ?>> </p>
+<p val = <?php echo '"' . Nette\Templating\Helpers::escapeHtml($xss, ENT_COMPAT) . '"' ?>
+ val2=<?php echo '"' . Nette\Templating\Helpers::escapeHtml($mxss, ENT_COMPAT) . '"' ?>> </p>
 
-<p onclick = <?php echo '"' . htmlSpecialChars(Nette\Templating\Helpers::escapeJs($xss)) . '"' ?>> </p>
+<p onclick = <?php echo '"' . Nette\Templating\Helpers::escapeHtml(Nette\Templating\Helpers::escapeJs($xss), ENT_COMPAT) . '"' ?>> </p>
 
-<p ONCLICK ="<?php echo htmlSpecialChars(Nette\Templating\Helpers::escapeJs($xss)) ?>
-" <?php echo '"' . htmlSpecialChars($xss) . '"' ?>> </p>
+<p ONCLICK ="<?php echo Nette\Templating\Helpers::escapeHtml(Nette\Templating\Helpers::escapeJs($xss), ENT_COMPAT) ?>
+" <?php echo '"' . Nette\Templating\Helpers::escapeHtml($xss, ENT_COMPAT) . '"' ?>> </p>
 
 <p val =></p><?php echo Nette\Templating\Helpers::escapeHtml($xss, ENT_NOQUOTES) ?></p>
 
@@ -105,7 +106,8 @@ if ($_l->extends) {
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array(TRUE)) as $foo) { $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person) { ?>
 	<?php if ($iterator->isFirst()) { ?><ul><?php } ?>
 
-	<li id="item-<?php echo htmlSpecialChars($iterator->getCounter()) ?>" class="<?php echo htmlSpecialChars($iterator->isOdd() ? 'odd' : 'even') ?>
+	<li id="item-<?php echo Nette\Templating\Helpers::escapeHtml($iterator->getCounter(), ENT_COMPAT) ?>
+" class="<?php echo Nette\Templating\Helpers::escapeHtml($iterator->isOdd() ? 'odd' : 'even', ENT_COMPAT) ?>
 "><?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></li>
 	<?php if ($iterator->isLast()) { ?></ul><?php } ?>
 
@@ -146,14 +148,14 @@ var prop2 = <?php echo Nette\Templating\Helpers::escapeJs($people) ?>;
 
 
 <p onclick =
-'alert(<?php echo htmlSpecialChars(Nette\Templating\Helpers::escapeJs($xss), ENT_QUOTES) ?>);alert("hello");'
- title='<?php echo htmlSpecialChars($xss, ENT_QUOTES) ?>'
+'alert(<?php echo Nette\Templating\Helpers::escapeHtml(Nette\Templating\Helpers::escapeJs($xss), ENT_QUOTES) ?>);alert("hello");'
+ title='<?php echo Nette\Templating\Helpers::escapeHtml($xss, ENT_QUOTES) ?>'
  STYLE =
- "color:<?php echo htmlSpecialChars(Nette\Templating\Helpers::escapeCss($xss)) ?>;"
- rel="<?php echo htmlSpecialChars($xss) ?>"
- onblur="alert(<?php echo htmlSpecialChars(Nette\Templating\Helpers::escapeJs($xss)) ?>)"
- alt='<?php echo htmlSpecialChars($el, ENT_QUOTES) ?>'
- onfocus="alert(<?php echo htmlSpecialChars(Nette\Templating\Helpers::escapeJs($el)) ?>)"
+ "color:<?php echo Nette\Templating\Helpers::escapeHtml(Nette\Templating\Helpers::escapeCss($xss), ENT_COMPAT) ?>;"
+ rel="<?php echo Nette\Templating\Helpers::escapeHtml($xss, ENT_COMPAT) ?>"
+ onblur="alert(<?php echo Nette\Templating\Helpers::escapeHtml(Nette\Templating\Helpers::escapeJs($xss), ENT_COMPAT) ?>)"
+ alt='<?php echo Nette\Templating\Helpers::escapeHtml($el, ENT_QUOTES) ?>'
+ onfocus="alert(<?php echo Nette\Templating\Helpers::escapeHtml(Nette\Templating\Helpers::escapeJs($el), ENT_COMPAT) ?>)"
 >click on me <?php echo Nette\Templating\Helpers::escapeHtml($xss, ENT_NOQUOTES) ?></p>
 
 
@@ -241,7 +243,7 @@ bold<?php if (array_pop($_l->ifs)) { ?></b><?php } ?>
 normal<?php if (array_pop($_l->ifs)) { ?></b>
 <?php } ?>
 
-<?php if ($_l->ifs[] = (true)) { ?><b<?php if ($_l->tmp = array_filter(array('first'))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>
+<?php if ($_l->ifs[] = (true)) { ?><b<?php if ($_l->tmp = array_filter(array('first'))) echo ' class="' . Nette\Templating\Helpers::escapeHtml(implode(" ", array_unique($_l->tmp)), ENT_COMPAT) . '"' ?>
 ><?php } ?>
 bold<?php if (array_pop($_l->ifs)) { ?></b>
 <?php } ?>
@@ -251,9 +253,9 @@ bold<?php if (array_pop($_l->ifs)) { ?></b>
 
 { }
 
-<p<?php if ($_l->tmp = array_filter(array('foo', (false ? 'first' : NULL), 'odd', ($hello ? 'foo' : 'bar')))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>>n:class</p>
+<p<?php if ($_l->tmp = array_filter(array('foo', (false ? 'first' : NULL), 'odd', ($hello ? 'foo' : 'bar')))) echo ' class="' . Nette\Templating\Helpers::escapeHtml(implode(" ", array_unique($_l->tmp)), ENT_COMPAT) . '"' ?>>n:class</p>
 
-<p<?php if ($_l->tmp = array_filter(array(false ? 'first' : NULL))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>>n:class empty</p>
+<p<?php if ($_l->tmp = array_filter(array(false ? 'first' : NULL))) echo ' class="' . Nette\Templating\Helpers::escapeHtml(implode(" ", array_unique($_l->tmp)), ENT_COMPAT) . '"' ?>>n:class empty</p>
 
 <meta>
 <?php if (true) { ?><meta>
@@ -270,11 +272,11 @@ bold<?php if (array_pop($_l->ifs)) { ?></b>
 
 
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array(1,2,3)) as $foo) { ?>
-	<b<?php if ($_l->tmp = array_filter(array($iterator->even ? 'even' : NULL))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>>item</b>
+	<b<?php if ($_l->tmp = array_filter(array($iterator->even ? 'even' : NULL))) echo ' class="' . Nette\Templating\Helpers::escapeHtml(implode(" ", array_unique($_l->tmp)), ENT_COMPAT) . '"' ?>>item</b>
 <?php $iterations++; } array_pop($_l->its); $iterator = end($_l->its) ?>
 
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array(1, 2, 3)) as $foo) { ?>
-<p<?php if ($_l->tmp = array_filter(array($iterator->even ? 'even' : NULL))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>
+<p<?php if ($_l->tmp = array_filter(array($iterator->even ? 'even' : NULL))) echo ' class="' . Nette\Templating\Helpers::escapeHtml(implode(" ", array_unique($_l->tmp)), ENT_COMPAT) . '"' ?>
 ><?php echo Nette\Templating\Helpers::escapeHtml($foo, ENT_NOQUOTES) ?></p>
 <?php $iterations++; } array_pop($_l->its); $iterator = end($_l->its) ?>
 

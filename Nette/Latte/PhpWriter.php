@@ -356,7 +356,7 @@ class PhpWriter extends Nette\Object
 						} elseif ($context[1] === Compiler::CONTENT_CSS) {
 							$tokens->prepend('Nette\Templating\Helpers::escapeCss(')->append(')');
 						}
-						$tokens->prepend('htmlSpecialChars(')->append($context[0] === Compiler::CONTEXT_SINGLE_QUOTED_ATTR ? ', ENT_QUOTES)' : ')');
+						$tokens->prepend('Nette\Templating\Helpers::escapeHtml(')->append($context[0] === Compiler::CONTEXT_SINGLE_QUOTED_ATTR ? ', ENT_QUOTES)' : ', ENT_COMPAT)');
 						if ($context[0] === Compiler::CONTEXT_UNQUOTED_ATTR) {
 							$tokens->prepend("'\"' . ")->append(" . '\"'");
 						}

@@ -94,7 +94,8 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 ><?php echo $_input->getControl()->getHtml() ?></select>
 
 
-<textarea title="<?php echo htmlSpecialChars(10) ?>"<?php $_input = $_form["area"]; echo $_input->{method_exists($_input, 'getControlPart')?'getControlPart':'getControl'}()->addAttributes(array (
+<textarea title="<?php echo Nette\Templating\Helpers::escapeHtml(10, ENT_COMPAT) ?>
+"<?php $_input = $_form["area"]; echo $_input->{method_exists($_input, 'getControlPart')?'getControlPart':'getControl'}()->addAttributes(array (
   'title' => NULL,
 ))->attributes() ?>><?php echo $_input->getControl()->getHtml() ?></textarea>
 

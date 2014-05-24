@@ -70,8 +70,12 @@ class Helpers
 	 */
 	public static function escapeHtml($s, $quotes = ENT_QUOTES)
 	{
-		if (is_object($s) && ($s instanceof ITemplate || $s instanceof Html || $s instanceof Form)) {
+		if ($quotes === ENT_NOQUOTES && ($s instanceof ITemplate || $s instanceof Html || $s instanceof Form)) {
 			return $s->__toString(TRUE);
+		}
+		$s = (string) $s;
+		if ($quotes !== ENT_NOQUOTES && strpos($s, '`') !== FALSE && strpbrk($s, ' <>"\'') === FALSE) {
+			$s .= ' ';
 		}
 		return htmlSpecialChars($s, $quotes);
 	}

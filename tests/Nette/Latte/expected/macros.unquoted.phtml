@@ -13,6 +13,7 @@ if (!empty($_control->snippetMode)) {
 // main template
 //
 ?>
-<span title=<?php echo '"' . htmlSpecialChars($x) . '"' ?>></span>
+<span title=<?php echo '"' . Nette\Templating\Helpers::escapeHtml($x, ENT_COMPAT) . '"' ?>></span>
 
-<span title=<?php echo '"' . htmlSpecialChars($x) . '"' ?> <?php echo '"' . htmlSpecialChars($x) . '"' ?>></span>
+<span title=<?php echo '"' . Nette\Templating\Helpers::escapeHtml($x, ENT_COMPAT) . '"' ?>
+ <?php echo '"' . Nette\Templating\Helpers::escapeHtml($x, ENT_COMPAT) . '"' ?>></span>
