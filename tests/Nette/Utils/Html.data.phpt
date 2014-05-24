@@ -19,8 +19,9 @@ $el->data['b'] = NULL;
 $el->data['c'] = FALSE;
 $el->data['d'] = '';
 $el->data['e'] = 'two';
+	$el->data['mxss'] = '``two';
 
-Assert::same( '<div data-a="one" data-d="" data-e="two"></div>', (string) $el );
+	Assert::same( '<div data-a="one" data-d="" data-e="two" data-mxss="``two "></div>', (string) $el );
 
 
 // direct

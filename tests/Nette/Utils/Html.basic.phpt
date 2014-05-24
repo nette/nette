@@ -57,6 +57,7 @@ Assert::same( '<span src="image.gif" alt="alt2 alt3" style="float:left" class="t
 
 // attributes escaping
 Assert::same( '<a one=\'"\' two="\'" three="<>" four="&amp;amp;"></a>', (string) Html::el('a')->one('"')->two("'")->three('<>')->four('&amp;') );
+Assert::same( '<a one="``xx "></a>' , (string) Html::el('a')->one("``xx") ); // mXSS
 
 // setText vs. setHtml
 Assert::same( '<p>Hello &amp;ndash; World</p>', (string) Html::el('p')->setText('Hello &ndash; World') );
