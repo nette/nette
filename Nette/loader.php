@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Nette Framework (version 2.1.3 released on 2014-05-12, http://nette.org)
+ * Nette Framework (version 2.1.4 released on 2014-05-24, http://nette.org)
  *
  * Copyright (c) 2004, 2014 David Grudl (http://davidgrudl.com)
  */
@@ -15,7 +15,7 @@ if (PHP_VERSION_ID < 50301) {
 // deprecated
 define('NETTE', TRUE);
 define('NETTE_DIR', __DIR__);
-define('NETTE_VERSION_ID', 20103);
+define('NETTE_VERSION_ID', 20104);
 
 
 // Run NetteLoader
