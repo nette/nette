@@ -19,6 +19,7 @@ $loader->setCacheStorage(new DevNullStorage);
 $loader->addDirectory(__DIR__ . '/files');
 $loader->addDirectory(__DIR__ . '/files/'); // purposely doubled
 $loader->addDirectory(__DIR__ . '/file/interface.php'); // as file
+$loader->addDirectory(__DIR__ . '/file/class.const.php');
 if (PHP_VERSION_ID >= 50400) $loader->addDirectory(__DIR__ . '/file/trait.php');
 $loader->addDirectory(__DIR__ . '/files.robots');
 $loader->register();

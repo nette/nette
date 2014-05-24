@@ -336,7 +336,7 @@ class RobotLoader extends AutoLoader
 					case T_CLASS:
 					case T_INTERFACE:
 					case $T_TRAIT:
-						if ($level === $minLevel) {
+						if ($name && $level === $minLevel) {
 							$classes[] = $namespace . $name;
 						}
 						break;
