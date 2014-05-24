@@ -279,8 +279,8 @@ class PhpWriter extends Nette\Object
 						} elseif ($context[1] === Compiler::CONTENT_CSS) {
 							$s = "Nette\\Templating\\Helpers::escapeCss($s)";
 						}
-						$quote = $context[0] === Compiler::CONTEXT_DOUBLE_QUOTED ? '' : ', ENT_QUOTES';
-						return "htmlSpecialChars($s$quote)";
+						$quote = $context[0] === Compiler::CONTEXT_DOUBLE_QUOTED ? ', ENT_COMPAT' : ', ENT_QUOTES';
+						return "Nette\\Templating\\Helpers::escapeHtml($s$quote)";
 					case Compiler::CONTEXT_COMMENT:
 						return "Nette\\Templating\\Helpers::escapeHtmlComment($s)";
 					case Compiler::CONTENT_JS:
