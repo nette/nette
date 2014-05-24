@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DateTime test.
- *
- * @author     David Grudl
  */
 
 use Tester\Assert;

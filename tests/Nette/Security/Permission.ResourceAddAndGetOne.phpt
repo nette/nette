@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Security\Permission Ensures that basic addition and retrieval of a single Resource works.
- *
- * @author     David Grudl
  */
 
 use Nette\Security\Permission,

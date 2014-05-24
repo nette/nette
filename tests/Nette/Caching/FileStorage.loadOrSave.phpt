@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Caching\Storages\FileStorage & load or save.
- *
- * @author     David Grudl
  */
 
 use Nette\Caching\Cache,

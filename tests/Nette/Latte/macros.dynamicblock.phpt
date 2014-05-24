@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Engine: {block $name} dynamic blocks.
- *
- * @author     David Grudl
  */
 
 use Nette\Latte,

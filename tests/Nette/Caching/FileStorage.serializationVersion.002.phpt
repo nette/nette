@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Caching\Storages\FileStorage @serializationVersion dependency test (continue...).
- *
- * @author     David Grudl
  */
 
 use Nette\Caching\Cache,

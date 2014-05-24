@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Engine: {use ...}
- *
- * @author     David Grudl
  */
 
 use Nette\Latte,

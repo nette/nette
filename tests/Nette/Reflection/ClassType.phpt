@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Reflection\ClassType tests.
- *
- * @author     David Grudl
  */
 
 use Nette\Reflection,

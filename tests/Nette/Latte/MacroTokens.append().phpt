@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\MacroTokens::append()
- *
- * @author     David Grudl
  */
 
 use Nette\Latte\MacroTokens,

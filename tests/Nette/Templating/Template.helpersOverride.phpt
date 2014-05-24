@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Templating\Template helpers override.
- *
- * @author     Filip Procházka
  */
 
 use Nette\Templating\Template,

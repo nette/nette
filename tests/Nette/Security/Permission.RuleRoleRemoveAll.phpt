@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Security\Permission Ensures that removal of all Roles results in Role-specific rules being removed.
- *
- * @author     David Grudl
  */
 
 use Nette\Security\Permission,

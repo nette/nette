@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Reflection\AnnotationsParser comment parser II.
- *
- * @author     David Grudl
  */
 
 use Nette\Reflection,

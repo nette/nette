@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Caching\Storages\FileStorage tags dependency test.
- *
- * @author     David Grudl
  */
 
 use Nette\Caching\Storages\FileStorage,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Debugger Bar in production mode.
- *
- * @author     David Grudl
  * @outputMatch
  */
 

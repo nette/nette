@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Config\Loader: including files
- *
- * @author     David Grudl
  */
 
 use Nette\DI\Config,

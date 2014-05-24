@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Debugger::dump() production vs development
- *
- * @author     David Grudl
  */
 
 use Nette\Diagnostics\Debugger,

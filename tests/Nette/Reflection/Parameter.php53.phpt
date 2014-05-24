@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Reflection\Parameter and closure tests.
- *
- * @author     David Grudl
  */
 
 use Nette\Reflection,

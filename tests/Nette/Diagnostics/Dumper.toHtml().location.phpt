@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Dumper::toHtml() with location
- *
- * @author     David Grudl
  */
 
 use Nette\Diagnostics\Dumper,

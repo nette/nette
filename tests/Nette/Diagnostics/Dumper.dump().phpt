@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Dumper::dump() modes
- *
- * @author     David Grudl
  */
 
 use Nette\Diagnostics\Dumper,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Debugger::fireLog() and exception.
- *
- * @author     David Grudl
  */
 
 use Nette\Diagnostics\Debugger,

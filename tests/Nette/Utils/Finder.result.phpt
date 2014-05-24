@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Utils\Finder result test.
- *
- * @author     David Grudl
  */
 
 use Nette\Utils\Finder,

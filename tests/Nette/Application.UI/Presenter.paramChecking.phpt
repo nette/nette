@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\UI\Presenter and checking params.
- *
- * @author     David Grudl
  */
 
 use Nette\Http,

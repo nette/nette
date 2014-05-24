@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Security\User authentication.
- *
- * @author     David Grudl
  */
 
 use Nette\Security\IAuthenticator,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Loaders\RobotLoader rebuild only once.
- *
- * @author     David Grudl
  */
 
 use Nette\Loaders\RobotLoader,

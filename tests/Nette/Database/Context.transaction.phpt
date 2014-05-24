@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Database\Connection transaction methods.
- *
- * @author     David Grudl
  * @dataProvider? databases.ini
  */
 

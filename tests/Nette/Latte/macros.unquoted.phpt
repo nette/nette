@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Engine: unquoted attributes.
- *
- * @author     Jakub Vrana
  */
 
 use Nette\Latte,

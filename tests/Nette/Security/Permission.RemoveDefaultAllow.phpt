@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Security\Permission Ensures that removing the default allow rule results in default deny rule being assigned.
- *
- * @author     David Grudl
  */
 
 use Nette\Security\Permission,

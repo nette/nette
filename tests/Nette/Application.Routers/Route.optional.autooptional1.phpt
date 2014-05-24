@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\Routers\Route and auto-optional as optional sequences.
- *
- * @author     David Grudl
  */
 
 use Nette\Application\Routers\Route,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Debugger E_RECOVERABLE_ERROR error.
- *
- * @author     David Grudl
  */
 
 use Nette\Diagnostics\Debugger,

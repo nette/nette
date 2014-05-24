@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Engine and JavaScript.
- *
- * @author     David Grudl
  */
 
 use Nette\Latte,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Forms\Container::validate().
- *
- * @author     Filip Procházka
  */
 
 use Nette\Forms\Form,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Security\Permission Ensures that removing the default deny rule results in assertion method being removed.
- *
- * @author     David Grudl
  */
 
 use Nette\Security\Permission,

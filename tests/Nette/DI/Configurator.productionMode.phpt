@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Configurator and production mode.
- *
- * @author     David Grudl
  */
 
 use Nette\Configurator,

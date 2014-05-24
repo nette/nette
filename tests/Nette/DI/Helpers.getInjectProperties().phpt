@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Helpers::getInjectProperties()
- *
- * @author     Jan Tvrdík
  */
 
 namespace A

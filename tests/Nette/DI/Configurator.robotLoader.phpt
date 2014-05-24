@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Configurator::createRobotLoader()
- *
- * @author     David Grudl
  */
 
 use Nette\Configurator,

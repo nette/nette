@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Forms\Rules.
- *
- * @author     David Grudl
  */
 
 use Nette\Forms\Form,

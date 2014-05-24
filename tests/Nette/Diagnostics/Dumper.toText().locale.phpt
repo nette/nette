@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Dumper::toText() locale
- *
- * @author     David Grudl
  */
 
 use Nette\Diagnostics\Dumper,

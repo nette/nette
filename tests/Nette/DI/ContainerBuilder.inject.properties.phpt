@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\ContainerBuilder and inject properties.
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

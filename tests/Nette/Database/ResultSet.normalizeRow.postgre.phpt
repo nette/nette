@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Database\ResultSet::normalizeRow()
- *
- * @author     David Grudl
  * @dataProvider? databases.ini  postgresql
  */
 

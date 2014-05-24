@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Image alpha channel.
- *
- * @author     David Grudl
  */
 
 use Nette\Image,

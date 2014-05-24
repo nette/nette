@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Database\Table: grouping.
- *
- * @author     Jan Skrasek
  * @dataProvider? ../databases.ini
  */
 

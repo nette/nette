@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Mail\Message invalid email addresses.
- *
- * @author     David Grudl
  */
 
 use Nette\Mail\Message,

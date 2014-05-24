@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Security\SimpleAuthenticator
- *
- * @author     Matěj Koubík
  */
 
 use Nette\Security\SimpleAuthenticator,

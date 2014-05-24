@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Engine: isLinkCurrent()
- *
- * @author     David Grudl
  */
 
 use Nette\Latte,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Engine: general XHTML test.
- *
- * @author     David Grudl
  */
 
 use Nette\Latte,

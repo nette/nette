@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\ContainerBuilder and generated accessors.
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

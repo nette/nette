@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Utils\Finder mask tests.
- *
- * @author     David Grudl
  */
 
 use Nette\Utils\Finder,

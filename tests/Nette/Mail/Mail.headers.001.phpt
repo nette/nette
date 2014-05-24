@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Mail\Message invalid headers.
- *
- * @author     David Grudl
  */
 
 use Nette\Mail\Message,

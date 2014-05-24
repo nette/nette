@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Caching\Storages\FileStorage wrap().
- *
- * @author     David Grudl
  */
 
 use Nette\Caching\Cache,

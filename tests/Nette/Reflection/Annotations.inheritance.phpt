@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Reflection\AnnotationsParser inheritance.
- *
- * @author     David Grudl
  */
 
 use Nette\Reflection,

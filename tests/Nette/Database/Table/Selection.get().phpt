@@ -2,9 +2,6 @@
 
 /**
  * Test: Nette\Database\Table: Single row detail.
- *
- * @author     Jakub Vrana
- * @author     Jan Skrasek
  * @dataProvider? ../databases.ini
  */
 

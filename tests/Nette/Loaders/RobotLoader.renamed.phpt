@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Loaders\RobotLoader and renamed classes.
- *
- * @author     David Grudl
  */
 
 use Nette\Loaders\RobotLoader,

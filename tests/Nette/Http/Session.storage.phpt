@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\Session storage.
- *
- * @author     David Grudl
  */
 
 use Nette\Object,

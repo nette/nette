@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Utils\Neon::decode inline hash and array.
- *
- * @author     David Grudl
  */
 
 use Nette\Utils\Neon,

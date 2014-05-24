@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\Response errors.
- *
- * @author     David Grudl
  */
 
 use Nette\Http,

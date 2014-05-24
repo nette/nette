@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Compiler: multiple service inhertance
- *
- * @author     Petr Kessler
  * @package    Nette\DI
  */
 

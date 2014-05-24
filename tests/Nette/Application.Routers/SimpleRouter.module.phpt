@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\Routers\SimpleRouter and modules.
- *
- * @author     David Grudl
  */
 
 use Nette\Http,

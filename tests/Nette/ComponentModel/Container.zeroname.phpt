@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\ComponentModel\Container and '0' name.
- *
- * @author     David Grudl
  */
 
 use Nette\ComponentModel\Container,

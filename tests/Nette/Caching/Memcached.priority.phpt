@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Caching\Storages\MemcachedStorage priority test.
- *
- * @author     David Grudl
  */
 
 use Nette\Caching\Storages\MemcachedStorage,

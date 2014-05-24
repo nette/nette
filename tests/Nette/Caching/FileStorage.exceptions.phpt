@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Caching\Storages\FileStorage exception situations.
- *
- * @author     Matej Kravjar
  */
 
 use Nette\Caching\Cache,

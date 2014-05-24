@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Compiler: nonshared services factories.
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

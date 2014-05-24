@@ -2,9 +2,6 @@
 
 /**
  * Test: Nette\Database\Table: Delete operations
- *
- * @author     Jakub Vrana
- * @author     Jan Skrasek
  * @dataProvider? ../databases.ini
  */
 

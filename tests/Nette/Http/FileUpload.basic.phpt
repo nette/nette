@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\FileUpload basic test.
- *
- * @author     David Grudl
  */
 
 use Nette\Http\FileUpload,

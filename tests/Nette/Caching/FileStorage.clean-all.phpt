@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Caching\Storages\FileStorage clean with Cache::ALL
- *
- * @author     Petr Procházka
  */
 
 use Nette\Caching\Storages\FileStorage,

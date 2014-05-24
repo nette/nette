@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Forms\Controls\ChoiceControl.
- *
- * @author     David Grudl
  */
 
 use Nette\Forms\Form,

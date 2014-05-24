@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Debugger notices and warnings logging.
- *
- * @author     David Grudl
  */
 
 use Nette\Diagnostics\Debugger,

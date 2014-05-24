@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Security\Permission Ensures that an exception is thrown when a non-existent Role is specified as a parent upon Role addition.
- *
- * @author     David Grudl
  */
 
 use Nette\Security\Permission,

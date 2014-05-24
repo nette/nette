@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Config\Adapters\IniAdapter errors.
- *
- * @author     David Grudl
  */
 
 use Nette\DI\Config,

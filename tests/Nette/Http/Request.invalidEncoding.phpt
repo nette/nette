@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\Request invalid encoding.
- *
- * @author     David Grudl
  */
 
 use Nette\Http,

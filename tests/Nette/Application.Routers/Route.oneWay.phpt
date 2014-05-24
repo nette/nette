@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\Routers\Route with OneWay
- *
- * @author     David Grudl
  */
 
 use Nette\Application\Routers\Route,

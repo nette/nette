@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Container magic properties (deprecated).
- *
- * @author     David Grudl
  */
 
 use Nette\DI\Container,

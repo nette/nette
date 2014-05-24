@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Utils\Neon::decode errors.
- *
- * @author     David Grudl
  */
 
 use Nette\Utils\Neon,

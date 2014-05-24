@@ -2,9 +2,6 @@
 
 /**
  * Test: Nette\Database\Table: Related().
- *
- * @author     Jakub Vrana
- * @author     Jan Skrasek
  * @dataProvider? ../databases.ini
  */
 

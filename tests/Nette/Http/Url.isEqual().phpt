@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\Url::isEqual()
- *
- * @author     David Grudl
  */
 
 use Nette\Http\Url,

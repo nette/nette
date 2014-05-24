@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Security\Permission Tests basic Resource inheritance.
- *
- * @author     David Grudl
  */
 
 use Nette\Security\Permission,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Database\Table: Cache observer.
- *
- * @author     Jan Skrasek
  * @dataProvider? ../databases.ini
  */
 

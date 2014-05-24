@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\Url ftp://
- *
- * @author     David Grudl
  */
 
 use Nette\Http\Url,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\Url query manipulation.
- *
- * @author     David Grudl
  */
 
 use Nette\Http\Url,

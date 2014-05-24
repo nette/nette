@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Forms\Controls\HiddenField.
- *
- * @author     David Grudl
  */
 
 use Nette\Forms\Form,

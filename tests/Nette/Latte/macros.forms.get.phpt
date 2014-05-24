@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Engine and FormMacros.
- *
- * @author     David Grudl
  */
 
 use Nette\Latte,

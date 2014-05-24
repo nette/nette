@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Compiler and circular references in parameters.
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

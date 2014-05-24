@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Configurator and headers.
- *
- * @author     David Grudl
  */
 
 use Nette\Configurator,

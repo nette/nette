@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Utils\Tokenizer::getCoordinates
- *
- * @author     David Grudl
  */
 
 use Nette\Utils\Tokenizer,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Compiler: generated services factories.
- *
- * @author     Filip Prochazka
  */
 
 use Nette\DI;

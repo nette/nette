@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Image crop, resize & flip.
- *
- * @author     David Grudl
  */
 
 use Nette\Image,

@@ -2,9 +2,6 @@
 
 /**
  * Test: Nette\Database\Table: Basic operations with DiscoveredReflection.
- *
- * @author     Jakub Vrana
- * @author     Jan Skrasek
  * @dataProvider? ../databases.ini
  */
 

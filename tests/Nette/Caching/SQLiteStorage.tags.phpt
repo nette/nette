@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Caching\Storages\SQLiteStorage tags dependency test.
- *
- * @author     David Grudl
  */
 
 use Nette\Caching\Storages\SQLiteStorage,

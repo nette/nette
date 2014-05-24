@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Config\Adapters\NeonAdapter
- *
- * @author     David Grudl
  */
 
 use Nette\DI\Config,

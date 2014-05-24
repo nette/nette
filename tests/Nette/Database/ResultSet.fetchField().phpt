@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Database\ResultSet: Fetch field.
- *
- * @author     David Grudl
  * @dataProvider? databases.ini
  */
 

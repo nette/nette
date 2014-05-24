@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Parser and $shortNoEscape.
- *
- * @author     Miloslav Hůla
  */
 
 use Nette\Latte,

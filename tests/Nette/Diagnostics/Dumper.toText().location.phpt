@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Dumper::toText() with location
- *
- * @author     David Grudl
  */
 
 use Nette\Diagnostics\Dumper,

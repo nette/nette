@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\ContainerBuilder and generated factories.
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

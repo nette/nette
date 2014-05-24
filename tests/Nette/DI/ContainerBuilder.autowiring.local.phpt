@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\ContainerBuilder and local autowiring.
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

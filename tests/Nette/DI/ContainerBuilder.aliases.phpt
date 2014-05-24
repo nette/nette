@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\ContainerBuilder and aliases.
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

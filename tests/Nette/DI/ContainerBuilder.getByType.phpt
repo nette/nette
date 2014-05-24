@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\ContainerBuilder and Container: getByType()
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Overriding class of service definition defined in CompilerExtension.
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

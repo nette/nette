@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Engine: comments HTML test.
- *
- * @author     David Grudl
  */
 
 use Nette\Latte,

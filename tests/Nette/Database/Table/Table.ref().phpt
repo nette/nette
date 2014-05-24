@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Database\Table: Reference ref().
- *
- * @author     Jan Skrasek
  * @dataProvider? ../databases.ini
  */
 

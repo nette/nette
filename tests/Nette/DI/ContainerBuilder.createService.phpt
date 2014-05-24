@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\ContainerBuilder::createService().
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

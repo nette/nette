@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Helpers::expand()
- *
- * @author     David Grudl
  */
 
 use Nette\DI\Helpers,

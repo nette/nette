@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Macros\UIMacros: {control ...}
- *
- * @author     David Grudl
  */
 
 use Nette\Latte\Macros\UIMacros,

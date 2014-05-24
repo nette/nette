@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Utils\Tokenizer::tokenize with names
- *
- * @author     David Grudl
  */
 
 use Nette\Utils\Tokenizer,

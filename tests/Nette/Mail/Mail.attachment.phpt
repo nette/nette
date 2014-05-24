@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Mail\Message - attachments.
- *
- * @author     David Grudl
  */
 
 use Nette\Mail\Message,

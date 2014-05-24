@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Debugger E_ERROR in console.
- *
- * @author     David Grudl
  */
 
 use Tester\Assert;

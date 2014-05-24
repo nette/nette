@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Container circular reference detection.
- *
- * @author     David Grudl
  */
 
 use Nette\DI\Container,

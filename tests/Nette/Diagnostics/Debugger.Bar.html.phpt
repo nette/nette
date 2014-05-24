@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Debugger Bar in HTML.
- *
- * @author     David Grudl
  * @outputMatch %A%<!-- Nette Debug Bar -->%A%
  */
 

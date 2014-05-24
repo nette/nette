@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Reflection\GlobalFunction tests.
- *
- * @author     David Grudl
  */
 
 use Nette\Reflection,

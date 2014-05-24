@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\SessionSection separated space.
- *
- * @author     David Grudl
  */
 
 use Nette\Http\Session,

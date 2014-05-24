@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Caching\Storages\FileStorage priority test.
- *
- * @author     David Grudl
  */
 
 use Nette\Caching\Storages\FileStorage,

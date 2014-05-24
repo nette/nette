@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Compiler: services by Class.
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

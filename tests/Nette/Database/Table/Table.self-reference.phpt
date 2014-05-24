@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Database\Table: DiscoveredReflection with self-reference.
- *
- * @author     Jan Skrasek
  * @dataProvider? ../databases.ini
  */
 

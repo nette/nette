@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\Routers\Route with optional sequence and two parameters.
- *
- * @author     David Grudl
  */
 
 use Nette\Application\Routers\Route,

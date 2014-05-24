@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Database\Connection query methods.
- *
- * @author     David Grudl
  * @dataProvider? databases.ini
  */
 

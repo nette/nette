@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Reflection\Property tests.
- *
- * @author     David Grudl
  */
 
 use Nette\Reflection,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\Request URI.
- *
- * @author     David Grudl
  */
 
 use Nette\Http,

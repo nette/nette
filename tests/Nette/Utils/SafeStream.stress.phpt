@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Utils\SafeStream stress test.
- *
- * @author     David Grudl
  * @multiple   5
  */
 

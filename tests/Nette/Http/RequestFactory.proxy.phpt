@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\RequestFactory and proxy.
- *
- * @author     David Grudl
  */
 
 use Nette\Http\RequestFactory,

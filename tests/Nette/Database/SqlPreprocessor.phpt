@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Database\SqlPreprocessor
- *
- * @author     David Grudl
  * @dataProvider? databases.ini
  */
 

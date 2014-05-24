@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\Routers\Route with 'required' optional sequences III.
- *
- * @author     David Grudl
  */
 
 use Nette\Application\Routers\Route,

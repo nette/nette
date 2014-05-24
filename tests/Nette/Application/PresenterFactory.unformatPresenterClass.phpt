@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\PresenterFactory.
- *
- * @author     David Grudl
  */
 
 use Nette\Application\PresenterFactory,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Dumper::toHtml()
- *
- * @author     David Grudl
  */
 
 use Nette\Diagnostics\Dumper,

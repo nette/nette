@@ -3,8 +3,6 @@
 /**
  * Test: Nette\Security\Permission Confirm that deleting a role after allowing access to all roles
  * raise undefined index error.
- *
- * @author     David Grudl
  */
 
 use Nette\Security\Permission,

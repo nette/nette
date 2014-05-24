@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Reflection\AnnotationsParser file parser.
- *
- * @author     David Grudl
  */
 
 use Nette\Reflection\AnnotationsParser,

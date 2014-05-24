@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Database\Table\SqlBuilder: addWhere() and placeholders.
- *
- * @author     Jan Skrasek
  * @dataProvider? ../databases.ini
  */
 

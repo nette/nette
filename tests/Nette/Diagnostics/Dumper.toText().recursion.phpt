@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Dumper::toText() recursion
- *
- * @author     David Grudl
  */
 
 use Nette\Diagnostics\Dumper,

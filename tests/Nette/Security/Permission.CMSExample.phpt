@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Security\Permission Ensures that an example for a content management system is operable.
- *
- * @author     David Grudl
  */
 
 use Nette\Security\Permission,

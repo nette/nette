@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Compiler: services tags.
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

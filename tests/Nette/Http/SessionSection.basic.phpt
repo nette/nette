@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\SessionSection basic usage.
- *
- * @author     David Grudl
  */
 
 use Nette\Http\Session,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Forms ignored input.
- *
- * @author     Roman Pavlík
  */
 
 use Nette\Forms\Form,

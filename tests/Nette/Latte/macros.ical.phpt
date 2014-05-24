@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Engine: iCal template
- *
- * @author     David Grudl
  */
 
 use Nette\Latte,

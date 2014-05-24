@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\ContainerBuilder code generator.
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

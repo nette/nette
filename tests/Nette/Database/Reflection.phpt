@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Database\Connection: reflection
- *
- * @author     David Grudl
  * @dataProvider? databases.ini
  */
 

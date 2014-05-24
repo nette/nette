@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Container expand.
- *
- * @author     David Grudl
  */
 
 use Nette\DI\Container,

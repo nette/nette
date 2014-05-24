@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Compiler: constants in config.
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

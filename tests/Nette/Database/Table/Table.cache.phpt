@@ -2,9 +2,6 @@
 
 /**
  * Test: Nette\Database\Table: Caching.
- *
- * @author     Jakub Vrana
- * @author     Jan Skrasek
  * @dataProvider? ../databases.ini
  */
 

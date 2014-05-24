@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Security\Permission Ensure that basic rule removal works.
- *
- * @author     David Grudl
  */
 
 use Nette\Security\Permission,

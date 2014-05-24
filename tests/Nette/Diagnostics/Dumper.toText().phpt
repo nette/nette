@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Dumper::toText()
- *
- * @author     David Grudl
  */
 
 use Nette\Diagnostics\Dumper,

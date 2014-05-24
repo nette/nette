@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Engine and auto-safe URL.
- *
- * @author     David Grudl
  */
 
 use Nette\Latte,

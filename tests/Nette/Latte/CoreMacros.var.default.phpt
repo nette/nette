@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\CoreMacros: {var ...} {default ...}
- *
- * @author     David Grudl
  */
 
 use Nette\Latte\Macros\CoreMacros,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Forms\Controls\ImageButton.
- *
- * @author     David Grudl
  */
 
 use Nette\Forms\Form,

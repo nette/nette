@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Loaders\RobotLoader basic usage.
- *
- * @author     David Grudl
  */
 
 use Nette\Loaders\RobotLoader,

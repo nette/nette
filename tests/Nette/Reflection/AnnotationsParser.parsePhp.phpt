@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Reflection\AnnotationsParser::parsePhp.
- *
- * @author     David Grudl
  */
 
 use Nette\Reflection\AnnotationsParser,

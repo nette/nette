@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\UI\Presenter::link()
- *
- * @author     David Grudl
  */
 
 use Nette\Http,

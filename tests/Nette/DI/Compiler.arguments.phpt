@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Compiler: arguments in config.
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Templating\Helpers::modifyDate()
- *
- * @author     David Grudl
  */
 
 use Nette\Templating\Helpers,

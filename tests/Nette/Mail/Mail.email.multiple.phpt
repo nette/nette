@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Mail\Message - textual body.
- *
- * @author     Stork Dork
  */
 
 use Nette\Mail\Message,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\Routers\Route UTF-8 parameter.
- *
- * @author     David Grudl
  */
 
 use Nette\Application\Routers\Route,

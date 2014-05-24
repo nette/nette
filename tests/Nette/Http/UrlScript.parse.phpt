@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\UrlScript parse.
- *
- * @author     David Grudl
  */
 
 use Nette\Http\UrlScript,

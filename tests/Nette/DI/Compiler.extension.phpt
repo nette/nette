@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Compiler and user extension.
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

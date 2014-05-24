@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\ContainerBuilder and non-shared services.
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

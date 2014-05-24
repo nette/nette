@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Forms\Helpers::generateHtmlName()
- *
- * @author     David Grudl
  */
 
 use Nette\Forms\Form,

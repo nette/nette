@@ -2,8 +2,6 @@
 
 /**
  * Test: NetteModule\MicroPresenter
- *
- * @author     Filip Procházka
  */
 
 use Nette\Application\Request,

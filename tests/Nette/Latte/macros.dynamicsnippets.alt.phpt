@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Engine: dynamic snippets test.
- *
- * @author     David Grudl
  */
 
 use Nette\Latte,

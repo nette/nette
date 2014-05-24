@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\ComponentModel\Container::attached()
- *
- * @author     David Grudl
  */
 
 use Nette\ComponentModel\Container,

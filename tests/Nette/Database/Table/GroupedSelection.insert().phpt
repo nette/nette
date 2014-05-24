@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Database\Table\GroupedSelection: Insert operations
- *
- * @author     Jan Skrasek
  * @dataProvider? ../databases.ini
  */
 

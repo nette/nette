@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Compiler: services factories.
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

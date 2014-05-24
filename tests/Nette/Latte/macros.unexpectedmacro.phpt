@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Engine: unexpected macro.
- *
- * @author     David Grudl
  */
 
 use Nette\Latte,

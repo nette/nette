@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Mail\Message - textual body with attachment.
- *
- * @author     David Grudl
  */
 
 use Nette\Mail\Message,

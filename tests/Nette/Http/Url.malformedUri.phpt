@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\Url malformed URI.
- *
- * @author     David Grudl
  */
 
 use Nette\Http\Url,

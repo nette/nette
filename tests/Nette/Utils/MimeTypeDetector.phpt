@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Utils\MimeTypeDetector::fromFile()
- *
- * @author     David Grudl
  */
 
 use Nette\Utils\MimeTypeDetector,

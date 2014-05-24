@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Dumper::toText() special chars
- *
- * @author     David Grudl
  */
 
 use Nette\Diagnostics\Dumper,

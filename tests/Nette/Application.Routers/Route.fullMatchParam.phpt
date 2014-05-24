@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\Routers\Route and full match parameter.
- *
- * @author     David Grudl
  */
 
 use Nette\Application\Routers\Route,

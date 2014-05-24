@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Debugger::barDump()
- *
- * @author     David Grudl
  * @outputMatch OK!
  */
 

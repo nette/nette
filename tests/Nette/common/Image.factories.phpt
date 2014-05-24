@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Image factories.
- *
- * @author     David Grudl
  */
 
 use Nette\Image,

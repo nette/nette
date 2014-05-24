@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\UI\Presenter::storeRequest()
- *
- * @author     Matěj Koubík
  */
 
 use Nette\Http,

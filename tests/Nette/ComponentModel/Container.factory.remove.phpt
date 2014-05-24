@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\ComponentModel\Container component factory & remove inside.
- *
- * @author     David Grudl
  */
 
 use Nette\ComponentModel\Container,

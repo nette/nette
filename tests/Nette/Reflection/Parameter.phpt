@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Reflection\Parameter tests.
- *
- * @author     David Grudl
  */
 
 use Nette\Reflection,

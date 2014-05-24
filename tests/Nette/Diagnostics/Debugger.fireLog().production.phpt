@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Debugger::fireLog() in production mode.
- *
- * @author     David Grudl
  */
 
 use Nette\Diagnostics\Debugger,

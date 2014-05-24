@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Forms validation of range depends on another control.
- *
- * @author     Karel Hak
  */
 
 use Nette\Forms\Form,

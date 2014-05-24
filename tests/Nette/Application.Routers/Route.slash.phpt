@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\Routers\Route with slash in path.
- *
- * @author     David Grudl
  */
 
 use Nette\Application\Routers\Route,

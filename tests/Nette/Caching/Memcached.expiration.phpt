@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Caching\Storages\MemcachedStorage expiration test.
- *
- * @author     David Grudl
  */
 
 use Nette\Caching\Storages\MemcachedStorage,

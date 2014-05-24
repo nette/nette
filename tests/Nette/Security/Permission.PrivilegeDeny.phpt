@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Security\Permission Ensures that a privilege denied for all Roles upon all Resources works properly.
- *
- * @author     David Grudl
  */
 
 use Nette\Security\Permission,

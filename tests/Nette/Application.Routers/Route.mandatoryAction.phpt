@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\Routers\Route and non-optional action.
- *
- * @author     David Grudl
  */
 
 use Nette\Application\Routers\Route,

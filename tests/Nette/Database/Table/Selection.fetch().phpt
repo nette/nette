@@ -2,9 +2,6 @@
 
 /**
  * Test: Nette\Database\Table: Find one item by URL.
- *
- * @author     Jakub Vrana
- * @author     Jan Skrasek
  * @dataProvider? ../databases.ini
  */
 

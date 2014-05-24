@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Loaders\NetteLoader basic usage.
- *
- * @author     David Grudl
  */
 
 use Tester\Assert;

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Compiler and macro methods calling order.
- *
- * @author     Miloslav Hůla
  */
 
 use Nette\Latte\IMacro,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Reflection\ClassType:is()
- *
- * @author     David Grudl
  */
 
 use Nette\Reflection,

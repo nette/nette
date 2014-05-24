@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\Routers\Route with FilterTable
- *
- * @author     David Grudl
  */
 
 use Nette\Application\Routers\Route,

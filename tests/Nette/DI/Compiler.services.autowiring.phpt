@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Compiler and autowiring.
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

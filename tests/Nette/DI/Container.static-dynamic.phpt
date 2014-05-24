@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Container static & dynamic usage.
- *
- * @author     David Grudl
  */
 
 use Nette\DI\Container,

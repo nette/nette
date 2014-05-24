@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Container errors usage.
- *
- * @author     David Grudl
  */
 
 use Nette\DI\Container,

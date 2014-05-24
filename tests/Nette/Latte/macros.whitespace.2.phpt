@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Engine: whitespace test II.
- *
- * @author     David Grudl
  */
 
 use Nette\Latte,

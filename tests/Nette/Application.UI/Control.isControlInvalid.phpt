@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\UI\Control::isControlInvalid()
- *
- * @author     Jan Tvrdík
  */
 
 use Nette\Application\UI,

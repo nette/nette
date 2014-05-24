@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Engine and FormMacros: {formContainer}
- *
- * @author     Miloslav Hůla
  */
 
 use Nette\Latte,

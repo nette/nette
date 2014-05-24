@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\SessionSection::setExpiration()
- *
- * @author     David Grudl
  */
 
 use Nette\Http\Session,

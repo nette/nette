@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Macros\FormMacros: GET form
- *
- * @author     Filip Procházka
  */
 
 use Nette\Latte\Macros\FormMacros;

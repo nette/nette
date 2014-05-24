@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\Routers\Route with WithAbsolutePath
- *
- * @author     David Grudl
  */
 
 use Nette\Application\Routers\Route,

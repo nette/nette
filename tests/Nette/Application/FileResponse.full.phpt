@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\Responses\FileResponse.
- *
- * @author     Josef Kriz
  */
 
 use Nette\Application\Responses\FileResponse,

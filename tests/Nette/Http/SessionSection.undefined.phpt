@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\SessionSection undefined property.
- *
- * @author     David Grudl
  */
 
 use Nette\Http\Session,

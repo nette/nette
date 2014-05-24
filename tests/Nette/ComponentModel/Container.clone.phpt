@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\ComponentModel\Container cloning.
- *
- * @author     David Grudl
  */
 
 use Nette\ComponentModel\Container,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Caching\Storages\DevNullStorage test.
- *
- * @author     David Grudl
  */
 
 use Nette\Caching\Cache,

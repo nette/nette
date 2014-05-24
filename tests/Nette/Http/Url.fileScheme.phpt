@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\Url file://
- *
- * @author     David Grudl
  */
 
 use Nette\Http\Url,

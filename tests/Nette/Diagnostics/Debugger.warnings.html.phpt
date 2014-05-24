@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Debugger notices and warnings in HTML.
- *
- * @author     David Grudl
  * @outputMatch OK!
  */
 

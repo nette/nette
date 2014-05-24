@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Debugger exception in production & console mode.
- *
- * @author     David Grudl
  * @exitCode   254
  * @httpCode   500
  * @outputMatch ERROR:%A%

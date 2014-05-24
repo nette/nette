@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\UrlScript modify.
- *
- * @author     David Grudl
  */
 
 use Nette\Http\UrlScript,

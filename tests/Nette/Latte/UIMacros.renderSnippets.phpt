@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Macros\UIMacros and renderSnippets.
- *
- * @author     Jan Skrasek
  */
 
 use Nette\Latte,

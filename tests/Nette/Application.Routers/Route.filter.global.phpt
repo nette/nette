@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\Routers\Route with FILTER_IN & FILTER_OUT
- *
- * @author     David Grudl
  */
 
 use Nette\Application\Routers\Route,

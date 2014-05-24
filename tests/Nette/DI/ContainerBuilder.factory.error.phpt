@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\ContainerBuilder and generated factories errors.
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

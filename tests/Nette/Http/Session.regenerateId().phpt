@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\Session::regenerateId()
- *
- * @author     David Grudl
  */
 
 use Nette\Http\Session,

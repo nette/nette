@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Utils\SafeStream basic usage.
- *
- * @author     David Grudl
  */
 
 use Tester\Assert;

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\Routers\CliRouter basic usage
- *
- * @author     David Grudl
  */
 
 use Nette\Http,

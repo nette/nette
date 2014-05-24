@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Caching\Storages\SQLiteStorage basic usage.
- *
- * @author     David Grudl
  */
 
 use Nette\Caching\Cache,

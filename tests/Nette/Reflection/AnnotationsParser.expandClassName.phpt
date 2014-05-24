@@ -2,8 +2,6 @@
 
 /**
  * Test: Expanding class alias to FQN.
- *
- * @author  Miloslav Hůla
  */
 
 use Nette\Reflection\AnnotationsParser,

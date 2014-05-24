@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Config\Helpers::merge()
- *
- * @author     David Grudl
  */
 
 use Nette\DI\Config\Helpers,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Compiler::expandMacro() and reentrant.
- *
- * @author     David Grudl
  */
 
 use Nette\Latte,

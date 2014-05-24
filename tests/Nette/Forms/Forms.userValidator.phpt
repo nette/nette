@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Forms user validator.
- *
- * @author     David Grudl
  */
 
 use Nette\Forms\Form,

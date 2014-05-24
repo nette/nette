@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Caching\Storages\FileStorage start().
- *
- * @author     David Grudl
  */
 
 use Nette\Caching\Cache,

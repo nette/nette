@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\Session error in session_start.
- *
- * @author     David Grudl
  */
 
 use Nette\Http\Session,

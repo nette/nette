@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\Helpers.
- *
- * @author     David Grudl
  */
 
 use Nette\Http\Helpers,

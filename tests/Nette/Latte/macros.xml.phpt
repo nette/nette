@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Engine: {contentType application/xml}
- *
- * @author     David Grudl
  */
 
 use Nette\Latte,

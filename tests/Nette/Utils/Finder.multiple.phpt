@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Utils\Finder multiple sources.
- *
- * @author     David Grudl
  */
 
 use Nette\Utils\Finder,

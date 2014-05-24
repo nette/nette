@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\SessionSection remove.
- *
- * @author     David Grudl
  */
 
 use Nette\Http\Session,

@@ -2,8 +2,6 @@
 
 /**
  * Test: bug 1342
- *
- * @author     Jan Skrasek
  * @dataProvider? ../../databases.ini postgresql
  */
 

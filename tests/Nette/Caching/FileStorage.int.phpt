@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Caching\Storages\FileStorage int keys.
- *
- * @author     David Grudl
  */
 
 use Nette\Caching\Cache,

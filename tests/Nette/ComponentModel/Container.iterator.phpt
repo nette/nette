@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\ComponentModel\Container iterator.
- *
- * @author     David Grudl
  */
 
 use Nette\ComponentModel\Component,

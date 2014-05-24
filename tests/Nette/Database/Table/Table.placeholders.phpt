@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Database\Table\SqlBuilder: Escaping with SqlLiteral.
- *
- * @author     Jan Skrasek
  * @dataProvider? ../databases.ini
  */
 

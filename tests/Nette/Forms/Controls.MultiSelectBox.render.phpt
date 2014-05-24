@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Forms\Controls\MultiSelectBox.
- *
- * @author     David Grudl
  */
 
 use Nette\Forms\Form,

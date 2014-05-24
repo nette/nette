@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\Routers\CliRouter invalid argument
- *
- * @author     David Grudl
  */
 
 use Nette\Http,

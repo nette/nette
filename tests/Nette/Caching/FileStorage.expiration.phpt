@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Caching\Storages\FileStorage expiration test.
- *
- * @author     David Grudl
  */
 
 use Nette\Caching\Cache,

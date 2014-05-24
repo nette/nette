@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Forms\Helpers::createSelectBox()
- *
- * @author     David Grudl
  */
 
 use Nette\Forms\Helpers,

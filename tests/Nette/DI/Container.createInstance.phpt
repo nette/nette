@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\ContainerBuilder and Container: createInstance()
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

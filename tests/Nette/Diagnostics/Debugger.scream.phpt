@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Debugger notices and warnings in scream mode.
- *
- * @author     David Grudl
  * @outputMatchFile Debugger.scream.expect
  */
 

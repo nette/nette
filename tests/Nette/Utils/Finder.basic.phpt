@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Utils\Finder basic usage.
- *
- * @author     David Grudl
  */
 
 use Nette\Utils\Finder,

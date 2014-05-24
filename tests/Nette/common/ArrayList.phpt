@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\ArrayList basic usage.
- *
- * @author     David Grudl
  */
 
 use Nette\ArrayList,

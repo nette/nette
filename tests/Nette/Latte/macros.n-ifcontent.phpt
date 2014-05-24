@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Engine and n:ifcontent.
- *
- * @author     David Grudl
  */
 
 use Nette\Latte,

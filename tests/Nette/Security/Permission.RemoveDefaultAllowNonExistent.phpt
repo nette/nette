@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Security\Permission Ensures that removing non-existent default allow rule does nothing.
- *
- * @author     David Grudl
  */
 
 use Nette\Security\Permission,

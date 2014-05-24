@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Configurator and createContainer errors.
- *
- * @author     David Grudl
  */
 
 use Nette\Configurator,

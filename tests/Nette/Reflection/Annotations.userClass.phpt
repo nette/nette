@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Reflection\AnnotationsParser using user classes.
- *
- * @author     David Grudl
  */
 
 use Nette\Reflection,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Engine: unclosed macro.
- *
- * @author     David Grudl
  */
 
 use Nette\Latte,

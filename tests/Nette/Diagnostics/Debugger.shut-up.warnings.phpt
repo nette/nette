@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Debugger notices and warnings and shut-up operator.
- *
- * @author     David Grudl
  * @outputMatch
  */
 

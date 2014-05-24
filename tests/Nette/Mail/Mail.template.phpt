@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Mail\Message with template.
- *
- * @author     David Grudl
  */
 
 use Nette\Latte,

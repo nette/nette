@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\ComponentModel\Container component named factory 6.
- *
- * @author     David Grudl
  */
 
 use Nette\ComponentModel\Container,

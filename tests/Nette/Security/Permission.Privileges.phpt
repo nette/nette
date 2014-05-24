@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Security\Permission Ensures that multiple privileges work properly.
- *
- * @author     David Grudl
  */
 
 use Nette\Security\Permission,

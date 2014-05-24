@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Application\Routers\RouteList default usage.
- *
- * @author     Filip Procházka
  */
 
 use Nette\Application\Routers\RouteList,

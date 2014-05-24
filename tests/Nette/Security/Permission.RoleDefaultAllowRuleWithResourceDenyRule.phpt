@@ -3,8 +3,6 @@
 /**
  * Test: Nette\Security\Permission Ensures that for a particular Role, a deny rule on a specific Resource is honored before an allow rule
 * on the entire ACL.
- *
- * @author     David Grudl
  */
 
 use Nette\Security\Permission,

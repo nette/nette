@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\DI\Compiler: services setup.
- *
- * @author     David Grudl
  */
 
 use Nette\DI,

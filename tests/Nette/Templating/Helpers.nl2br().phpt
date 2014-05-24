@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Templating\Helpers::nl2br()
- *
- * @author     Filip Procházka
  */
 
 use Nette\Templating\Helpers,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\Session storage.
- *
- * @author     David Grudl
  * @phpversion 5.4
  */
 

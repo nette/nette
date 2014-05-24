@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Http\RequestFactory scriptPath detection.
- *
- * @author     David Grudl
  */
 
 use Nette\Http\RequestFactory,

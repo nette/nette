@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\PhpWriter::formatArray()
- *
- * @author     David Grudl
  */
 
 use Nette\Latte\PhpWriter,

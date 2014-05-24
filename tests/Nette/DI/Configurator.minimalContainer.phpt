@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Configurator and minimal container.
- *
- * @author     David Grudl
  */
 
 use Nette\Configurator,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Caching\Storages\MemcachedStorage files dependency test.
- *
- * @author     David Grudl
  */
 
 use Nette\Caching\Storages\MemcachedStorage,

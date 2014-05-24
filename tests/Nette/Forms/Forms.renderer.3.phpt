@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Forms default rendering with IE fix.
- *
- * @author     David Grudl
  */
 
 use Tester\Assert;

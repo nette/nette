@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\Engine: {block} autoclosing
- *
- * @author     David Grudl
  */
 
 use Nette\Latte,

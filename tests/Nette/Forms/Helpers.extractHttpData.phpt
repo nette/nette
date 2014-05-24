@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Forms\Helpers::extractHttpData()
- *
- * @author     David Grudl
  */
 
 use Nette\Forms\Form,

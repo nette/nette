@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Security\Permission Ensures that the same Resource cannot be added more than once.
- *
- * @author     David Grudl
  */
 
 use Nette\Security\Permission,

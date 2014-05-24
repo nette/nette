@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Database\Connection fetch methods.
- *
- * @author     David Grudl
  * @dataProvider? databases.ini
  */
 

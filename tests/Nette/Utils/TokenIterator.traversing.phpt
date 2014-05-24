@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Utils\TokenIterator traversing
- *
- * @author     David Grudl
  */
 
 use Nette\Utils\Tokenizer,

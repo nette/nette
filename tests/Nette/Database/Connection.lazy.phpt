@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Database\Connection lazy connection.
- *
- * @author     David Grudl
  * @dataProvider? databases.ini
  */
 

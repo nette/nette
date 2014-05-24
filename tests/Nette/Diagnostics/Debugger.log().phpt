@@ -2,9 +2,6 @@
 
 /**
  * Test: Nette\Diagnostics\Debugger logging exceptions in log message.
- *
- * @author     David Grudl
- * @author     Michael Moravec
  */
 
 use Nette\Diagnostics\Debugger,

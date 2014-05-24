@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Database\Table: Shared related data caching.
- *
- * @author     Jan Skrasek
  * @dataProvider? ../databases.ini
  */
 

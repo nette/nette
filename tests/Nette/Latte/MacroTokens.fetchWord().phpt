@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\MacroTokens::fetchWord()
- *
- * @author     David Grudl
  */
 
 use Nette\Latte\MacroTokens,

@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Latte\PhpWriter::formatArgs()
- *
- * @author     David Grudl
  */
 
 use Nette\Latte\PhpWriter,

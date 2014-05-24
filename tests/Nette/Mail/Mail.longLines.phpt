@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Mail\Message - textual body and line longer than 990 characters.
- *
- * @author     Stork Dork
  */
 
 use Nette\Mail\Message,
