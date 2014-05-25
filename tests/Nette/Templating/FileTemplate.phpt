@@ -13,16 +13,13 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $latte = new Latte\Engine;
-@$template = new FileTemplate(__DIR__ . '/templates/general.latte');
+@$template = new FileTemplate(__DIR__ . '/template.latte');
 $template->registerFilter($latte);
 $template->registerHelper('translate', 'strrev');
 $template->registerHelper('join', 'implode');
 $template->registerHelperLoader('Nette\Templating\Helpers::loader');
 
 $template->hello = '<i>Hello</i>';
-$template->xss = 'some&<>"\'/chars';
-$template->people = array('John', 'Mary', 'Paul', ']]> <!--');
-$template->menu = array('about', array('product1', 'product2'), 'contact');
 $template->el = Html::el('div')->title('1/2"');
 
 Assert::matchFile(__DIR__ . '/expected/FileTemplate.phtml', $template->compile());
