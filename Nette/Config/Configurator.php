@@ -50,7 +50,7 @@ class Configurator extends Nette\Object
 	 * @param  bool|string|array
 	 * @return self
 	 */
-	public function setDebugMode($value = TRUE)
+	public function setDebugMode($value = '')
 	{
 		$this->parameters['debugMode'] = is_string($value) || is_array($value) ? static::detectDebugMode($value) : (bool) $value;
 		$this->parameters['productionMode'] = !$this->parameters['debugMode']; // compatibility
