@@ -85,7 +85,7 @@ class Helpers extends Nette\Object
 		if ($count) {
 			$name = substr_replace($name, '', strpos($name, ']'), 1) . ']';
 		}
-		if (is_numeric($name) || in_array($name, self::$unsafeNames)) {
+		if (is_numeric($name) || in_array($name, self::$unsafeNames, TRUE)) {
 			$name = '_' . $name;
 		}
 		return $name;

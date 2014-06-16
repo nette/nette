@@ -373,7 +373,7 @@ class Helpers
 					$php .= $token[1];
 
 				} else {
-					if (!in_array($token[0], array(T_WHITESPACE, T_COMMENT, T_DOC_COMMENT, T_OPEN_TAG))) {
+					if (!in_array($token[0], array(T_WHITESPACE, T_COMMENT, T_DOC_COMMENT, T_OPEN_TAG), TRUE)) {
 						$lastChar = '';
 					}
 					$php .= $token[1];

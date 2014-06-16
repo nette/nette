@@ -168,7 +168,7 @@ class SmtpMailer extends Nette\Object implements IMailer
 	protected function write($line, $expectedCode = NULL, $message = NULL)
 	{
 		fwrite($this->connection, $line . Message::EOL);
-		if ($expectedCode && !in_array((int) $this->read(), (array) $expectedCode)) {
+		if ($expectedCode && !in_array((int) $this->read(), (array) $expectedCode, TRUE)) {
 			throw new SmtpException('SMTP server did not accept ' . ($message ? $message : $line));
 		}
 	}

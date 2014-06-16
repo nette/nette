@@ -84,7 +84,7 @@ class CheckboxList extends MultiChoiceControl
 	{
 		return parent::getControl()->addAttributes(array(
 			'id' => $this->getHtmlId() . '-' . $key,
-			'checked' => in_array($key, (array) $this->value),
+			'checked' => in_array($key, (array) $this->value, TRUE),
 			'disabled' => is_array($this->disabled) ? isset($this->disabled[$key]) : $this->disabled,
 			'required' => NULL,
 			'value' => $key,
