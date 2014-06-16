@@ -266,7 +266,7 @@ class Compiler extends Nette\Object
 
 		} else {
 			$this->htmlNode = new HtmlNode($token->name, $this->htmlNode);
-			$this->htmlNode->isEmpty = in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML))
+			$this->htmlNode->isEmpty = in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML), TRUE)
 				&& isset(Nette\Utils\Html::$emptyElements[strtolower($token->name)]);
 			$this->htmlNode->offset = strlen($this->output);
 			$this->setContext(self::CONTEXT_UNQUOTED_ATTR);
@@ -287,7 +287,7 @@ class Compiler extends Nette\Object
 		$isEmpty = !$htmlNode->closing && (Strings::contains($token->text, '/') || $htmlNode->isEmpty);
 		$end = '';
 
-		if ($isEmpty && in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML))) { // auto-correct
+		if ($isEmpty && in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML), TRUE)) { // auto-correct
 			$token->text = preg_replace('#^.*>#', $htmlNode->isEmpty && $this->contentType === self::CONTENT_XHTML ? ' />' : '>', $token->text);
 			if (!$htmlNode->isEmpty) {
 				$end = "</$htmlNode->name>";
@@ -339,18 +339,18 @@ class Compiler extends Nette\Object
 		$this->htmlNode->attrs[$token->name] = TRUE;
 		$this->output .= $token->text;
 
-		$contextMain = in_array($token->value, array(self::CONTEXT_SINGLE_QUOTED_ATTR, self::CONTEXT_DOUBLE_QUOTED_ATTR))
+		$contextMain = in_array($token->value, array(self::CONTEXT_SINGLE_QUOTED_ATTR, self::CONTEXT_DOUBLE_QUOTED_ATTR), TRUE)
 			? $token->value
 			: self::CONTEXT_UNQUOTED_ATTR;
 
 		$context = NULL;
-		if (in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML))) {
+		if (in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML), TRUE)) {
 			$lower = strtolower($token->name);
 			if (substr($lower, 0, 2) === 'on') {
 				$context = self::CONTENT_JS;
 			} elseif ($lower === 'style') {
 				$context = self::CONTENT_CSS;
-			} elseif (in_array($lower, array('href', 'src', 'action', 'formaction'))
+			} elseif (in_array($lower, array('href', 'src', 'action', 'formaction'), TRUE)
 				|| ($lower === 'data' && strtolower($this->htmlNode->name) === 'object')
 			) {
 				$context = self::CONTENT_URL;
@@ -536,7 +536,7 @@ class Compiler extends Nette\Object
 	 */
 	public function expandMacro($name, $args, $modifiers = NULL, $nPrefix = NULL)
 	{
-		$inScript = in_array($this->context[0], array(self::CONTENT_JS, self::CONTENT_CSS));
+		$inScript = in_array($this->context[0], array(self::CONTENT_JS, self::CONTENT_CSS), TRUE);
 
 		if (empty($this->macros[$name])) {
 			throw new CompileException("Unknown macro {{$name}}" . ($inScript ? ' (in JavaScript or CSS, try to put a space after bracket.)' : ''));

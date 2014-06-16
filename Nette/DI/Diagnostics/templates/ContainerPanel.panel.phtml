@@ -45,7 +45,7 @@ use Nette,
 		</thead>
 		<tbody>
 		<?php foreach ($services as $name => $class): ?>
-		<?php $autowired = in_array($name, $container->findByType($class)); ?>
+		<?php $autowired = in_array($name, $container->findByType($class), TRUE); ?>
 		<tr>
 			<td class="<?php echo isset($registry[$name]) ? 'created' : '' ?>"><?php echo htmlSpecialChars($name) ?></td>
 			<td class="<?php echo $autowired ? 'yes' : '' ?>"><?php echo $autowired ? 'yes' : 'no' ?></td>

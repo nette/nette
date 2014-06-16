@@ -394,7 +394,7 @@ class Debugger
 		}
 
 		$error = error_get_last();
-		if (in_array($error['type'], array(E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE))) {
+		if (in_array($error['type'], array(E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE), TRUE)) {
 			self::_exceptionHandler(Helpers::fixStack(new ErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'])), TRUE);
 
 		} elseif (!connection_aborted() && !self::$productionMode && self::isHtmlMode()) {
