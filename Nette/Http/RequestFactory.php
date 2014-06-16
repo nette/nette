@@ -111,7 +111,7 @@ class RequestFactory extends Nette\Object
 		}
 
 		// GET, POST, COOKIE
-		$useFilter = (!in_array(ini_get('filter.default'), array('', 'unsafe_raw')) || ini_get('filter.default_flags'));
+		$useFilter = (!in_array(ini_get('filter.default'), array('', 'unsafe_raw'), TRUE) || ini_get('filter.default_flags'));
 
 		parse_str($url->query, $query);
 		if (!$query) {

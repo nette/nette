@@ -274,7 +274,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	public function checkRequirements($element)
 	{
 		$user = (array) $element->getAnnotation('User');
-		if (in_array('loggedIn', $user) && !$this->getUser()->isLoggedIn()) {
+		if (in_array('loggedIn', $user, TRUE) && !$this->getUser()->isLoggedIn()) {
 			throw new Application\ForbiddenRequestException;
 		}
 	}

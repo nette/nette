@@ -249,7 +249,7 @@ class Compiler extends Nette\Object
 
 		} else {
 			$this->htmlNodes[] = $htmlNode = new HtmlNode($token->name);
-			$htmlNode->isEmpty = in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML))
+			$htmlNode->isEmpty = in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML), TRUE)
 				&& isset(Nette\Utils\Html::$emptyElements[strtolower($token->name)]);
 			$htmlNode->offset = strlen($this->output);
 			$this->setContext(NULL);
@@ -269,7 +269,7 @@ class Compiler extends Nette\Object
 		$htmlNode = end($this->htmlNodes);
 		$isEmpty = !$htmlNode->closing && (Strings::contains($token->text, '/') || $htmlNode->isEmpty);
 
-		if ($isEmpty && in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML))) { // auto-correct
+		if ($isEmpty && in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML), TRUE)) { // auto-correct
 			$token->text = preg_replace('#^.*>#', $this->contentType === self::CONTENT_XHTML ? ' />' : '>', $token->text);
 		}
 
@@ -316,7 +316,7 @@ class Compiler extends Nette\Object
 		$htmlNode->attrs[$token->name] = TRUE;
 		$this->output .= $token->text;
 		$context = NULL;
-		if ($token->value && in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML))) {
+		if ($token->value && in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML), TRUE)) {
 			$lower = strtolower($token->name);
 			if (substr($lower, 0, 2) === 'on') {
 				$context = self::CONTENT_JS;
@@ -493,7 +493,7 @@ class Compiler extends Nette\Object
 	public function expandMacro($name, $args, $modifiers = NULL, HtmlNode $htmlNode = NULL, $prefix = NULL)
 	{
 		if (empty($this->macros[$name])) {
-			$cdata = $this->htmlNodes && in_array(strtolower(end($this->htmlNodes)->name), array('script', 'style'));
+			$cdata = $this->htmlNodes && in_array(strtolower(end($this->htmlNodes)->name), array('script', 'style'), TRUE);
 			throw new CompileException("Unknown macro {{$name}}" . ($cdata ? " (in JavaScript or CSS, try to put a space after bracket.)" : ''));
 		}
 		foreach (array_reverse($this->macros[$name]) as $macro) {

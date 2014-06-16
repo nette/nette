@@ -155,7 +155,7 @@ class Template extends Nette\Object implements ITemplate
 	public function registerFilter($callback)
 	{
 		$callback = new Nette\Callback($callback);
-		if (in_array($callback, $this->filters)) {
+		if (in_array($callback, $this->filters, TRUE)) {
 			throw new Nette\InvalidStateException("Filter '$callback' was registered twice.");
 		}
 		$this->filters[] = $callback;
