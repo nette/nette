@@ -136,7 +136,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 			if ($count) {
 				$name = substr_replace($name, '', strpos($name, ']'), 1) . ']';
 			}
-			if (is_numeric($name) || in_array($name, array('attributes','children','elements','focus','length','reset','style','submit','onsubmit'))) {
+			if (is_numeric($name) || in_array($name, array('attributes','children','elements','focus','length','reset','style','submit','onsubmit'), TRUE)) {
 				$name .= '_';
 			}
 			$this->htmlName = $name;
