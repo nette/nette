@@ -163,6 +163,9 @@ class Application extends Nette\Object
 	 */
 	public function processException(\Exception $e)
 	{
+		if (!$e instanceof BadRequestException) {
+			$this->httpResponse->warnOnBuffer = FALSE;
+		}
 		if (!$this->httpResponse->isSent()) {
 			$this->httpResponse->setCode($e instanceof BadRequestException ? ($e->getCode() ?: 404) : 500);
 		}
