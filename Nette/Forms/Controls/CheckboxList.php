@@ -34,7 +34,7 @@ class CheckboxList extends MultiChoiceControl
 
 	/**
 	 * Generates control's HTML element.
-	 * @return Nette\Utils\Html
+	 * @return string
 	 */
 	public function getControl()
 	{
