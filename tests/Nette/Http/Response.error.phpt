@@ -31,6 +31,10 @@ Assert::error(function() use ($response) {
 }, E_USER_NOTICE, 'Possible problem: you are sending a HTTP header while already having some data in output buffer%a%');
 
 
+$response->warnOnBuffer = FALSE;
+$response->setHeader('A', 'b');
+
+
 Assert::exception(function() use ($response) {
 	ob_flush();
 	$response->setHeader('A', 'b');
