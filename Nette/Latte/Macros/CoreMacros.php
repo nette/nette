@@ -346,7 +346,7 @@ class CoreMacros extends MacroSet
 			throw new Nette\InvalidArgumentException("Template file name was not specified.");
 
 		} elseif ($template instanceof Nette\Templating\IFileTemplate) {
-			if (substr($destination, 0, 1) !== '/' && substr($destination, 1, 1) !== ':') {
+			if (!preg_match('#/|\\\\|[a-z]:#iA', $destination)) {
 				$destination = dirname($template->getFile()) . '/' . $destination;
 			}
 			$tpl = clone $template;
