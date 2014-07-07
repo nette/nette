@@ -83,6 +83,7 @@ class UploadControl extends BaseControl
 	/**
 	 * Is file size in limit?
 	 * @return bool
+	 * @internal
 	 */
 	public static function validateFileSize(UploadControl $control, $limit)
 	{
@@ -94,6 +95,7 @@ class UploadControl extends BaseControl
 	/**
 	 * Has file specified mime type?
 	 * @return bool
+	 * @internal
 	 */
 	public static function validateMimeType(UploadControl $control, $mimeType)
 	{
@@ -115,6 +117,7 @@ class UploadControl extends BaseControl
 	/**
 	 * Is file image?
 	 * @return bool
+	 * @internal
 	 */
 	public static function validateImage(UploadControl $control)
 	{

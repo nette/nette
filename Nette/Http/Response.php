@@ -283,6 +283,7 @@ class Response extends Nette\Object implements IResponse
 	/**
 	 * Removes duplicate cookies from response.
 	 * @return void
+	 * @internal
 	 */
 	public function removeDuplicateCookies()
 	{

@@ -127,6 +127,7 @@ class PresenterFactory extends Nette\Object implements IPresenterFactory
 	 * Formats presenter class name from its name.
 	 * @param  string
 	 * @return string
+	 * @internal
 	 */
 	public function formatPresenterClass($presenter)
 	{
@@ -139,6 +140,7 @@ class PresenterFactory extends Nette\Object implements IPresenterFactory
 	 * Formats presenter name from class name.
 	 * @param  string
 	 * @return string
+	 * @internal
 	 */
 	public function unformatPresenterClass($class)
 	{
