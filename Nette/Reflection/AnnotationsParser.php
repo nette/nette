@@ -267,6 +267,7 @@ class AnnotationsParser
 	 * Parses PHP file.
 	 * @param  string
 	 * @return array [class => [prop => comment (or 'use' => [alias => class])]
+	 * @internal
 	 */
 	public static function parsePhp($code)
 	{
