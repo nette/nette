@@ -69,7 +69,6 @@ class CsrfProtection extends HiddenField
 
 	/**
 	 * Generates control's HTML element.
-	 *
 	 * @return Nette\Utils\Html
 	 */
 	public function getControl()
@@ -80,6 +79,7 @@ class CsrfProtection extends HiddenField
 
 	/**
 	 * @return bool
+	 * @internal
 	 */
 	public static function validateCsrf(CsrfProtection $control)
 	{

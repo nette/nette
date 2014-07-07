@@ -92,6 +92,7 @@ abstract class TextBase extends BaseControl
 	 * Appends input string filter callback.
 	 * @param  callable
 	 * @return self
+	 * @deprecated
 	 */
 	public function addFilter($filter)
 	{
@@ -131,6 +132,7 @@ abstract class TextBase extends BaseControl
 	/**
 	 * Is control's value valid email address?
 	 * @return bool
+	 * @internal
 	 */
 	public static function validateEmail(TextBase $control)
 	{
@@ -141,6 +143,7 @@ abstract class TextBase extends BaseControl
 	/**
 	 * Is control's value valid URL?
 	 * @return bool
+	 * @internal
 	 */
 	public static function validateUrl(TextBase $control)
 	{
@@ -177,6 +180,7 @@ abstract class TextBase extends BaseControl
 	/**
 	 * Matches control's value regular expression?
 	 * @return bool
+	 * @internal
 	 */
 	public static function validatePattern(TextBase $control, $pattern)
 	{
@@ -187,6 +191,7 @@ abstract class TextBase extends BaseControl
 	/**
 	 * Is a control's value decimal number?
 	 * @return bool
+	 * @internal
 	 */
 	public static function validateInteger(TextBase $control)
 	{
@@ -203,6 +208,7 @@ abstract class TextBase extends BaseControl
 	/**
 	 * Is a control's value float number?
 	 * @return bool
+	 * @internal
 	 */
 	public static function validateFloat(TextBase $control)
 	{
@@ -219,6 +225,7 @@ abstract class TextBase extends BaseControl
 	 * Float string cleanup.
 	 * @param  string
 	 * @return string
+	 * @internal
 	 */
 	public static function filterFloat($s)
 	{

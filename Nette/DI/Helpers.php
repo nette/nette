@@ -14,6 +14,7 @@ use Nette;
  * The DI helpers.
  *
  * @author     David Grudl
+ * @internal
  */
 class Helpers
 {

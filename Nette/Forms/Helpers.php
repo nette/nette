@@ -31,6 +31,7 @@ class Helpers extends Nette\Object
 	 * @param  string  control HTML name
 	 * @param  string  type Form::DATA_TEXT, DATA_LINE, DATA_FILE, DATA_KEYS
 	 * @return string|string[]
+	 * @internal
 	 */
 	public static function extractHttpData(array $data, $htmlName, $type)
 	{

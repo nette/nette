@@ -93,6 +93,7 @@ class Compiler extends Nette\Object
 	}
 
 
+	/** @internal */
 	public function processParameters()
 	{
 		if (isset($this->config['parameters'])) {
@@ -101,6 +102,7 @@ class Compiler extends Nette\Object
 	}
 
 
+	/** @internal */
 	public function processExtensions()
 	{
 		for ($i = 0; $slice = array_slice($this->extensions, $i, 1, TRUE); $i++) {
@@ -118,6 +120,7 @@ class Compiler extends Nette\Object
 	}
 
 
+	/** @internal */
 	public function processServices()
 	{
 		$this->parseServices($this->builder, $this->config);
@@ -130,6 +133,7 @@ class Compiler extends Nette\Object
 	}
 
 
+	/** @internal */
 	public function generateCode($className, $parentName)
 	{
 		foreach ($this->extensions as $extension) {

@@ -563,6 +563,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/**
 	 * Is control's value equal with second parameter?
 	 * @return bool
+	 * @internal
 	 */
 	public static function validateEqual(IControl $control, $arg)
 	{
@@ -582,6 +583,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/**
 	 * Is control's value not equal with second parameter?
 	 * @return bool
+	 * @internal
 	 */
 	public static function validateNotEqual(IControl $control, $arg)
 	{
@@ -592,6 +594,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/**
 	 * Is control filled?
 	 * @return bool
+	 * @internal
 	 */
 	public static function validateFilled(IControl $control)
 	{
@@ -602,6 +605,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/**
 	 * Is control not filled?
 	 * @return bool
+	 * @internal
 	 */
 	public static function validateBlank(IControl $control)
 	{
@@ -612,6 +616,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/**
 	 * Is control valid?
 	 * @return bool
+	 * @internal
 	 */
 	public static function validateValid(IControl $control)
 	{
@@ -624,6 +629,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 * @param  Nette\Forms\IControl
 	 * @param  array  min and max value pair
 	 * @return bool
+	 * @internal
 	 */
 	public static function validateRange(IControl $control, $range)
 	{
@@ -634,6 +640,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/**
 	 * Count/length validator. Range is array, min and max length pair.
 	 * @return bool
+	 * @internal
 	 */
 	public static function validateLength(IControl $control, $range)
 	{
@@ -648,6 +655,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/**
 	 * Has control's value minimal count/length?
 	 * @return bool
+	 * @internal
 	 */
 	public static function validateMinLength(IControl $control, $length)
 	{
@@ -658,6 +666,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/**
 	 * Is control's value count/length in limit?
 	 * @return bool
+	 * @internal
 	 */
 	public static function validateMaxLength(IControl $control, $length)
 	{
