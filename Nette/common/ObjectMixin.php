@@ -292,6 +292,7 @@ class ObjectMixin
 	/**
 	 * Finds whether a variable is of expected type and do non-data-loss conversion.
 	 * @return bool
+	 * @internal
 	 */
 	public static function checkType(& $val, $type)
 	{

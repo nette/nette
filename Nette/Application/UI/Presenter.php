@@ -469,6 +469,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/**
 	 * Finds layout template file name.
 	 * @return string
+	 * @internal
 	 */
 	public function findLayoutTemplateFile()
 	{
@@ -691,6 +692,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/**
 	 * Link to myself.
 	 * @return string
+	 * @deprecated
 	 */
 	public function backlink()
 	{
@@ -701,6 +703,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/**
 	 * Returns the last created Request.
 	 * @return Nette\Application\Request
+	 * @internal
 	 */
 	public function getLastCreatedRequest()
 	{
@@ -712,6 +715,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * Returns the last created Request flag.
 	 * @param  string
 	 * @return bool
+	 * @internal
 	 */
 	public function getLastCreatedRequestFlag($flag)
 	{
@@ -1255,6 +1259,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * Pops parameters for specified component.
 	 * @param  string  component id
 	 * @return array
+	 * @internal
 	 */
 	public function popGlobalParameters($id)
 	{

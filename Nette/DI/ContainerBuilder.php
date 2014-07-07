@@ -179,6 +179,7 @@ class ContainerBuilder extends Nette\Object
 	/**
 	 * Generates $dependencies, $classes and normalizes class names.
 	 * @return array
+	 * @internal
 	 */
 	public function prepareClassList()
 	{
@@ -600,6 +601,7 @@ class ContainerBuilder extends Nette\Object
 	/**
 	 * Formats PHP statement.
 	 * @return string
+	 * @internal
 	 */
 	public function formatPhp($statement, $args)
 	{
@@ -682,6 +684,7 @@ class ContainerBuilder extends Nette\Object
 	/**
 	 * Converts @service or @\Class -> service name and checks its existence.
 	 * @return string  of FALSE, if argument is not service name
+	 * @internal
 	 */
 	public function getServiceName($arg)
 	{
