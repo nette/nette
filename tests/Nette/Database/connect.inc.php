@@ -22,9 +22,6 @@ try {
 	Tester\Environment::skip($e->getMessage());
 }
 
-$options = Tester\DataProvider::load('databases.ini', isset($query) ? $query : NULL);
-$options = isset($_SERVER['argv'][1]) ? $options[$_SERVER['argv'][1]] : reset($options);
-
 try {
 	$connection = new Nette\Database\Connection($options['dsn'], $options['user'], $options['password']);
 } catch (PDOException $e) {
