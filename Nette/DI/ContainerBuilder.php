@@ -258,13 +258,12 @@ class ContainerBuilder extends Nette\Object
 				}
 			}
 			$factory = new Nette\Callback($factory);
-			if (!$factory->isCallable()) {
-				throw new Nette\InvalidStateException("Factory '$factory' is not callable.");
-			}
 			try {
 				$reflection = $factory->toReflection();
 			} catch (\ReflectionException $e) {
-				throw new Nette\InvalidStateException("Missing factory '$factory'.");
+			}
+			if (isset($e) || !$factory->isCallable()) {
+				throw new ServiceCreationException("Factory '$factory' used in service '$name' is not callable.");
 			}
 			$def->class = preg_replace('#[|\s].*#', '', $reflection->getAnnotation('return'));
 			if ($def->class && !class_exists($def->class) && $def->class[0] !== '\\' && $reflection instanceof \ReflectionMethod) {

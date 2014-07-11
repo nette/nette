@@ -117,8 +117,10 @@ class Helpers
 				if ($res[$num] === NULL) {
 					if ($parameter->allowsNull()) {
 						$optCount++;
+					} elseif (class_exists($class) || interface_exists($class)) {
+						throw new ServiceCreationException("Service of type {$class} needed by $method not found. Did you register it in configuration file?");
 					} else {
-						throw new ServiceCreationException("No service of type {$class} found. Make sure the type hint in $method is written correctly and service of this type is registered.");
+						throw new ServiceCreationException("Class {$class} needed by $method not found. Check type hint and 'use' statements.");
 					}
 				} else {
 					if ($container instanceof ContainerBuilder) {
