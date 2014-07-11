@@ -15,7 +15,7 @@ Assert::exception(function() {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setClass('X')->setFactory('Unknown');
 	$builder->generateClasses();
-}, 'Nette\InvalidStateException', "Class Unknown used in service 'one' has not been found or is not instantiable.");
+}, 'Nette\InvalidStateException', "Class Unknown used in service 'one' not found or is not instantiable.");
 
 
 Assert::exception(function() {
@@ -23,7 +23,7 @@ Assert::exception(function() {
 	$builder->addDefinition('one')->setFactory('@two');
 	$builder->addDefinition('two')->setFactory('Unknown');
 	$builder->generateClasses();
-}, 'Nette\InvalidStateException', "Class Unknown used in service 'two' has not been found or is not instantiable.");
+}, 'Nette\InvalidStateException', "Class Unknown used in service 'two' not found or is not instantiable.");
 
 
 Assert::exception(function() {
@@ -44,7 +44,7 @@ Assert::exception(function() {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setImplement('Unknown')->setClass('stdClass');
 	$builder->generateClasses();
-}, 'Nette\InvalidStateException', "Interface Unknown used in service 'one' has not been found.");
+}, 'Nette\InvalidStateException', "Interface Unknown used in service 'one' not found.");
 
 
 interface Bad1
@@ -93,7 +93,7 @@ Assert::exception(function() {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setImplement('Bad4');
 	$builder->generateClasses();
-}, 'Nette\InvalidStateException', "Method Bad4::create() used in service 'one' has not @return annotation.");
+}, 'Nette\InvalidStateException', "Method Bad4::create() used in service 'one' has no @return annotation.");
 
 
 interface Bad5
@@ -106,3 +106,16 @@ Assert::exception(function() {
 	$builder->addDefinition('one')->setImplement('Bad5')->setFactory('stdClass');
 	$builder->generateClasses();
 }, 'Nette\InvalidStateException', "Method Bad5::get() used in service 'one' must have no arguments.");
+
+
+class Bad6
+{
+	protected function create()
+	{}
+}
+
+Assert::exception(function() {
+	$builder = new DI\ContainerBuilder;
+	$builder->addDefinition('one')->setFactory('Bad6::create');
+	$builder->generateClasses();
+}, 'Nette\InvalidStateException', "Factory 'Bad6::create' used in service 'one' is not callable.");

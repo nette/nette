@@ -37,6 +37,9 @@ $builder->addDefinition('test')
 $builder->addDefinition('stdClass')
 	->setClass('stdClass');
 
+$builder->addDefinition('ReflectionClass')
+	->setFactory('ReflectionClass', array('ReflectionClass'));
+
 // run-time
 $code = implode('', $builder->generateClasses());
 file_put_contents(TEMP_DIR . '/code.php', "<?php\n$code");

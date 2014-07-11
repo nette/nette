@@ -252,7 +252,7 @@ class Container extends Nette\Object
 			}
 		}
 
-		foreach (Helpers::getInjectProperties(Nette\Reflection\ClassType::from($service)) as $property => $type) {
+		foreach (Helpers::getInjectProperties(Nette\Reflection\ClassType::from($service), $this) as $property => $type) {
 			$service->$property = $this->getByType($type);
 		}
 	}
