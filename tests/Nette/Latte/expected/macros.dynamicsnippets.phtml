@@ -8,7 +8,8 @@ list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9
 //
 if (!function_exists($_l->blocks['_outer'][] = '_%[a-z0-9]+%__outer')) { function _%[a-z0-9]+%__outer($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->redrawControl('outer', FALSE)
 ;$iterations = 0; foreach (array(1,2,3) as $id) { ?>
-<div id="<?php echo $_dynSnippetId = $_control->getSnippetId("inner-$id") ?>"><?php ob_start() ?>
+		<div id="<?php echo $_dynSnippetId = $_control->getSnippetId("inner-$id") ?>"><?php ob_start() ?>
+
 				#<?php echo Nette\Templating\Helpers::escapeHtml($id, ENT_NOQUOTES) ?>
 
 <?php $_dynSnippets[$_dynSnippetId] = ob_get_flush() ?>

@@ -440,7 +440,7 @@ class Compiler extends Nette\Object
 		if ($isRightmost) {
 			$leftOfs = strrpos("\n$output", "\n");
 			$isLeftmost = $isLeftmost === NULL ? trim(substr($output, $leftOfs)) === '' : $isLeftmost;
-			if ($isLeftmost && substr($code, 0, 11) !== '<?php echo ') {
+			if ($isLeftmost && !preg_match('#<\?php.*\secho\s#As', $code)) {
 				$output = substr($output, 0, $leftOfs); // alone macro without output -> remove indentation
 			} elseif (substr($code, -2) === '?>') {
 				$code .= "\n"; // double newline to avoid newline eating by PHP
