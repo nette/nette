@@ -51,12 +51,6 @@ test(function() {
 });
 
 
-test(function() {
-	$finder = Finder::findDirectories('*')->size('>', 10)->size('< 100b')->from('files');
-	Assert::same(array(), export($finder));
-});
-
-
 test(function() { // date filter
 	$finder = Finder::findFiles('*')->date('> 2020-01-02')->from('files');
 	Assert::same(array(), export($finder));
