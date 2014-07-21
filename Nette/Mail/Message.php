@@ -242,7 +242,7 @@ class Message extends MimePart
 				PREG_OFFSET_CAPTURE
 			);
 			foreach (array_reverse($matches) as $m) {
-				$file = rtrim($basePath, '/\\') . '/' . $m[3][0];
+				$file = rtrim($basePath, '/\\') . '/' . urldecode($m[3][0]);
 				if (!isset($cids[$file])) {
 					$cids[$file] = substr($this->addEmbeddedFile($file)->getHeader('Content-ID'), 1, -1);
 				}
