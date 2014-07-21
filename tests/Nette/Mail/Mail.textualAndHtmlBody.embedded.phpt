@@ -21,7 +21,7 @@ $mail->setSubject('Hello Jane!');
 
 $mail->setBody('Sample text');
 
-$mail->setHTMLBody('<b>Sample text</b> <img src="background.png">', __DIR__ . '/files');
+$mail->setHTMLBody('<b>Sample text</b> <img src="backgroun%64.png">', __DIR__ . '/files');
 // append automatically $mail->addEmbeddedFile('files/background.png');
 
 $mailer = new TestMailer();
