@@ -372,7 +372,7 @@ $counter = 0;
 						<i>inner-code</i><?php if (isset($row['line'])) echo ':', $row['line'] ?>
 					<?php endif ?>
 
-					<?php if (isset($row['file']) && is_file($row['file'])): ?><a href="#" rel="netteBsSrc<?php echo "$level-$key" ?>">source <abbr>&#x25ba;</abbr></a>&nbsp; <?php endif ?>
+					<?php if (isset($row['file']) && is_file($row['file'])): ?><a href="#" rel="netteBsSrc<?php echo "$level-$key" ?>">source <abbr><?php echo $expanded !== $key ? '&#x25ba;' : '&#x25bc;' ?></abbr></a>&nbsp; <?php endif ?>
 
 					<?php if (isset($row['class'])) echo htmlspecialchars($row['class'] . $row['type']) ?>
 					<?php echo htmlspecialchars($row['function']) ?>
