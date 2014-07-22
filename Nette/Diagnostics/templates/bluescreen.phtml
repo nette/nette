@@ -116,7 +116,7 @@ $counter = 0;
 						<i>inner-code</i><?php if (isset($row['line'])) echo ':', $row['line'] ?>
 					<?php endif ?>
 
-					<?php if (isset($row['file']) && is_file($row['file'])): ?><a href="#netteBsSrc<?php echo "$level-$key" ?>" class="nette-toggle-collapsed">source</a>&nbsp; <?php endif ?>
+					<?php if (isset($row['file']) && is_file($row['file'])): ?><a href="#netteBsSrc<?php echo "$level-$key" ?>" class="nette-toggle<?php if ($expanded !== $key) echo '-collapsed' ?>">source</a>&nbsp; <?php endif ?>
 
 					<?php if (isset($row['object'])) echo "<a href='#netteBsObj$level-$key' class='nette-toggle-collapsed'>" ?>
 					<?php if (isset($row['class'])) echo htmlspecialchars($row['class'] . $row['type']) ?>
