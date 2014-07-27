@@ -41,19 +41,20 @@ class Authenticator implements IAuthenticator
 }
 
 
-function onLoggedIn($user) {
-	// TODO: add test
-}
-
-
-function onLoggedOut($user) {
-	// TODO: add test
-}
-
-
 $user = new Nette\Security\User(new MockUserStorage);
-$user->onLoggedIn[] = 'onLoggedIn';
-$user->onLoggedOut[] = 'onLoggedOut';
+
+$counter = (object) array(
+	'login' => 0,
+	'logout' => 0,
+);
+
+$user->onLoggedIn[] = function () use ($counter) {
+	$counter->login++;
+};
+
+$user->onLoggedOut[] = function () use ($counter) {
+	$counter->logout++;
+};
 
 
 Assert::false( $user->isLoggedIn() );
@@ -82,13 +83,16 @@ Assert::exception(function() use ($user) {
 
 // login as john#2
 $user->login('john', 'xxx');
+Assert::same( 1, $counter->login );
 Assert::true( $user->isLoggedIn() );
 Assert::equal( new Identity('John Doe', 'admin'), $user->getIdentity() );
 Assert::same( 'John Doe', $user->getId() );
 
 // login as john#3
 $user->logout(TRUE);
+Assert::same( 1, $counter->logout );
 $user->login( new Identity('John Doe', 'admin') );
+Assert::same( 2, $counter->login );
 Assert::true( $user->isLoggedIn() );
 Assert::equal( new Identity('John Doe', 'admin'), $user->getIdentity() );
 
@@ -96,6 +100,7 @@ Assert::equal( new Identity('John Doe', 'admin'), $user->getIdentity() );
 // log out
 // logging out...
 $user->logout(FALSE);
+Assert::same( 2, $counter->logout );
 
 Assert::false( $user->isLoggedIn() );
 Assert::equal( new Identity('John Doe', 'admin'), $user->getIdentity() );
@@ -103,6 +108,7 @@ Assert::equal( new Identity('John Doe', 'admin'), $user->getIdentity() );
 
 // logging out and clearing identity...
 $user->logout(TRUE);
+Assert::same( 2, $counter->logout ); // not logged in -> logout event not triggered
 
 Assert::false( $user->isLoggedIn() );
 Assert::null( $user->getIdentity() );
@@ -111,4 +117,5 @@ Assert::null( $user->getIdentity() );
 // namespace
 // login as john#2?
 $user->login('john', 'xxx');
+Assert::same( 3, $counter->login );
 Assert::true( $user->isLoggedIn() );
