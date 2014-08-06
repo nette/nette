@@ -390,9 +390,10 @@ class Form extends Container
 	{
 		if (!$this->isSubmitted()) {
 			return;
-		}
 
-		$this->validate();
+		} elseif (!$this->getErrors()) {
+			$this->validate();
+		}
 
 		if ($this->submittedBy instanceof ISubmitterControl) {
 			if ($this->isValid()) {
