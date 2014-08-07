@@ -169,7 +169,7 @@ class Compiler extends Nette\Object
 			$path = array();
 			while (Config\Helpers::isInheriting($def)) {
 				$path[] = $def;
-				$def = $all[$def[Config\Helpers::EXTENDS_KEY]];
+				$def = isset($all[$def[Config\Helpers::EXTENDS_KEY]]) ? $all[$def[Config\Helpers::EXTENDS_KEY]] : array();
 				if (in_array($def, $path, TRUE)) {
 					throw new ServiceCreationException("Circular reference detected for service '$name'.");
 				}
