@@ -42,9 +42,11 @@ class SendmailMailer extends Nette\Object implements IMailer
 		if ($this->commandArgs) {
 			$args[] = (string) $this->commandArgs;
 		}
-		if (call_user_func_array('mail', $args) === FALSE) {
-			$error = error_get_last();
-			throw new Nette\InvalidStateException("Unable to send email: $error[message].");
+		$res = Nette\Utils\Callback::invokeSafe('mail', $args, function($message) use (& $info) {
+			$info = ": $message";
+		});
+		if ($res === FALSE) {
+			throw new Nette\InvalidStateException("Unable to send email$info.");
 		}
 	}
 
