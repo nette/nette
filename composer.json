@@ -16,26 +16,26 @@
 		}
 	],
 	"require": {
-		"nette/application": "2.2.1",
-		"nette/bootstrap": "2.2.1",
+		"nette/application": "2.2.2",
+		"nette/bootstrap": "2.2.2",
 		"nette/caching": "2.2.1",
 		"nette/component-model": "2.2.0",
-		"nette/database": "2.2.1",
-		"nette/di": "2.2.0",
+		"nette/database": "2.2.2",
+		"nette/di": "2.2.1",
 		"nette/finder": "2.2.0",
-		"nette/forms": "2.2.1",
-		"nette/http": "2.2.0",
-		"nette/mail": "2.2.1",
-		"nette/neon": "2.2.1",
-		"nette/php-generator": "2.2.0",
+		"nette/forms": "2.2.2",
+		"nette/http": "2.2.1",
+		"nette/mail": "2.2.2",
+		"nette/neon": "2.2.2",
+		"nette/php-generator": "2.2.1",
 		"nette/reflection": "2.2.0",
 		"nette/robot-loader": "2.2.1",
 		"nette/safe-stream": "2.2.0",
 		"nette/security": "2.2.0",
 		"nette/tokenizer": "2.2.0",
-		"nette/utils": "2.2.1",
-		"latte/latte": "2.2.2",
-		"tracy/tracy": "2.2.2"
+		"nette/utils": "2.2.2",
+		"latte/latte": "2.2.3",
+		"tracy/tracy": "2.2.3"
 	},
 	"require-dev": {
 		"nette/tester": "~1.1"
@@ -43,5 +43,6 @@
 	"autoload": {
 		"classmap": ["Nette/"],
 		"files": ["Nette/loader.php"]
-	}
+	},
+	"minimum-stability": "RC"
 }

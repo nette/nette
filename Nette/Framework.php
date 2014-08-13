@@ -20,9 +20,9 @@ class Framework
 
 	/** Nette Framework version identification */
 	const NAME = 'Nette Framework',
-		VERSION = '2.2.2',
-		VERSION_ID = 20202,
-		REVISION = 'released on 2014-06-26';
+		VERSION = '2.2.3',
+		VERSION_ID = 20203,
+		REVISION = 'released on 2014-08-28';
 
 
 	/**
