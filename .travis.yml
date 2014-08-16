@@ -10,7 +10,9 @@ matrix:
     allow_failures:
         - php: hhvm
 
-script: vendor/bin/tester tests -s -c tests/php-unix.ini
+script:
+    - vendor/bin/tester tests -s -c tests/php-unix.ini
+    - php code-checker/src/code-checker.php -d Nette
 
 after_failure:
     # Print *.actual content
@@ -19,3 +21,4 @@ after_failure:
 before_script:
     # Install Nette Tester
     - composer install --no-interaction --dev --prefer-source
+    - composer create-project nette/code-checker code-checker ~2.2 --no-interaction --prefer-source
