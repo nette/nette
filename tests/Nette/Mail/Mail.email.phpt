@@ -25,6 +25,7 @@ $mail->addTo('doe3@example.com', "John 'jd' Doe");
 
 $mail->addCc('The\Mail <nette@example.com>');
 $mail->addCc('doe4@example.com', 'John Doe');
+$mail->addCc('The.Mail <nette2@example.com>');
 
 $mail->addBcc('Žluťoučký kůň <kun5@example.com>');
 $mail->addBcc('doe5@example.com');
@@ -43,7 +44,8 @@ Reply-To: =?UTF-8?B?xb1sdcWlb3XEjWvDvSBrxa/FiA==?= <kun2@example.com>,
 	John Doe <doe2@example.com>
 To: =?UTF-8?B?xb1sdcWlb3XEjWvDvSAia8WvxYgi?= <kun3@example.com>,
 	John 'jd' Doe <doe3@example.com>
-Cc: The\Mail <nette@example.com>,John Doe <doe4@example.com>
+Cc: "The\\Mail" <nette@example.com>,John Doe <doe4@example.com>,"The.Mail"
+	 <nette2@example.com>
 Bcc: =?UTF-8?B?xb1sdcWlb3XEjWvDvSBrxa/FiA==?= <kun5@example.com>,
 	doe5@example.com
 Return-Path: doe@example.com
