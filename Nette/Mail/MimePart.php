@@ -318,14 +318,15 @@ class MimePart extends Nette\Object
 			return $o . $s;
 		}
 
-		$o .= str_replace("\n ", "\n\t", substr(iconv_mime_encode(str_repeat(' ', $offset), $s, array(
+		$s = iconv_mime_encode(str_repeat(' ', $old = $offset), $s, array(
 			'scheme' => 'B', // Q is broken
 			'input-charset' => 'UTF-8',
 			'output-charset' => 'UTF-8',
-		)), $offset + 2));
+		));
 
-		$offset = strlen($o) - strrpos($o, "\n");
-		return $o;
+		$offset = strlen($s) - strrpos($s, "\n");
+		$s = str_replace("\n ", "\n\t", substr($s, $old + 2)); // adds ': '
+		return $o . $s;
 	}
 
 }
