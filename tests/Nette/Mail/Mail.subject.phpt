@@ -36,9 +36,7 @@ $mailer->send($mail);
 Assert::match( 'MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
-Subject: =?UTF-8?B?dmVyeXZlcnl2ZXJ5dmVyeXZlcnl2ZXJ5dmVyeXZlcnl2ZXI=?=
-	=?UTF-8?B?eXZlcnl2ZXJ5dmVyeXZlcnl2ZXJ5dmVyeXZlcnl2ZXJ5dmVyeXZlcnk=?=
-	=?UTF-8?B?dmVyeXZlcnl2ZXJ5dmVyeXZlcnlsb25nZW1haWw=?=
+Subject: veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongemail
 Message-ID: <%S%@%S%>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
