@@ -129,7 +129,7 @@ class MimePart extends Nette\Object
 			$s = '';
 			foreach ($this->headers[$name] as $email => $name) {
 				if ($name != NULL) { // intentionally ==
-					$s .= self::encodeHeader($name, $offset, strpbrk($name, '.,;<@>()[]"=?'));
+					$s .= self::encodeHeader($name, $offset, TRUE);
 					$email = " <$email>";
 				}
 				$s .= self::append($email . ',', $offset);
@@ -297,9 +297,12 @@ class MimePart extends Nette\Object
 	 * @param  bool
 	 * @return string
 	 */
-	private static function encodeHeader($s, & $offset = 0, $force = FALSE)
+	private static function encodeHeader($s, & $offset = 0, $quotes = FALSE)
 	{
-		if (!$force && strspn($s, "!\"#$%&\'()*+,-./0123456789:;<>@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^`abcdefghijklmnopqrstuvwxyz{|}=? _\r\n\t") === strlen($s)) {
+		if (strspn($s, "!\"#$%&\'()*+,-./0123456789:;<>@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^`abcdefghijklmnopqrstuvwxyz{|}~=? _\r\n\t") === strlen($s)) {
+			if ($quotes && preg_match('#[^ a-zA-Z0-9!\#$%&\'*+/?^_`{|}~-]#', $s)) { // RFC 2822 atext except =
+				return self::append('"' . addcslashes($s, '"\\') . '"', $offset);
+			}
 			return self::append($s, $offset);
 		}
 
