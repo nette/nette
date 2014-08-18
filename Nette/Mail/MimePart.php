@@ -132,22 +132,16 @@ class MimePart extends Nette\Object
 					$s .= self::encodeHeader($name, $offset, strpbrk($name, '.,;<@>()[]"=?'));
 					$email = " <$email>";
 				}
-				$email .= ',';
-				if ($s !== '' && $offset + strlen($email) > self::LINE_LENGTH) {
-					$s .= self::EOL . "\t";
-					$offset = 1;
-				}
-				$s .= $email;
-				$offset += strlen($email);
+				$s .= self::append($email . ',', $offset);
 			}
-			return substr($s, 0, -1); // last comma
+			return ltrim(substr($s, 0, -1)); // last comma
 
 		} elseif (preg_match('#^(\S+; (?:file)?name=)"(.*)"\z#', $this->headers[$name], $m)) { // Content-Disposition
 			$offset += strlen($m[1]);
 			return $m[1] . '"' . self::encodeHeader($m[2], $offset) . '"';
 
 		} else {
-			return self::encodeHeader($this->headers[$name], $offset);
+			return ltrim(self::encodeHeader($this->headers[$name], $offset));
 		}
 	}
 
@@ -305,17 +299,14 @@ class MimePart extends Nette\Object
 	 */
 	private static function encodeHeader($s, & $offset = 0, $force = FALSE)
 	{
+		if (!$force && strspn($s, "!\"#$%&\'()*+,-./0123456789:;<>@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^`abcdefghijklmnopqrstuvwxyz{|}=? _\r\n\t") === strlen($s)) {
+			return self::append($s, $offset);
+		}
+
 		$o = '';
 		if ($offset >= 55) { // maximum for iconv_mime_encode
 			$o = self::EOL . "\t";
 			$offset = 1;
-		}
-
-		if (!$force && strspn($s, "!\"#$%&\'()*+,-./0123456789:;<>@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^`abcdefghijklmnopqrstuvwxyz{|}=? _\r\n\t") === strlen($s)
-			&& ($offset + strlen($s) <= self::LINE_LENGTH)
-		) {
-			$offset += strlen($s);
-			return $o . $s;
 		}
 
 		$s = iconv_mime_encode(str_repeat(' ', $old = $offset), $s, array(
@@ -327,6 +318,17 @@ class MimePart extends Nette\Object
 		$offset = strlen($s) - strrpos($s, "\n");
 		$s = str_replace("\n ", "\n\t", substr($s, $old + 2)); // adds ': '
 		return $o . $s;
+	}
+
+
+	private static function append($s, & $offset = 0)
+	{
+		if ($offset + strlen($s) > self::LINE_LENGTH) {
+			$offset = 1;
+			$s = self::EOL . "\t" . $s;
+		}
+		$offset += strlen($s);
+		return $s;
 	}
 
 }

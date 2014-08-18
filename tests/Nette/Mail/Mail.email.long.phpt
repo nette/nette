@@ -31,9 +31,7 @@ Date: %a%
 To: veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongemail@example.com
 Cc: John Doe
 	 <veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongemail@example.com>
-Bcc: =?UTF-8?B?dmVyeXZlcnl2ZXJ5dmVyeXZlcnl2ZXJ5dmVyeXZlcnl2ZXJ5dmU=?=
-	=?UTF-8?B?cnl2ZXJ5dmVyeXZlcnl2ZXJ5dmVyeXZlcnl2ZXJ5dmVyeXZlcnl2ZXI=?=
-	=?UTF-8?B?eXZlcnl2ZXJ5dmVyeXZlcnlsb25nIG5hbWU=?=
+Bcc: veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylong name
 	 <veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongemail@example.com>
 Message-ID: <%a%@%a%>
 Content-Type: text/plain; charset=UTF-8
