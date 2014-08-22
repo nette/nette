@@ -170,7 +170,7 @@ if (!empty($_control->snippetMode)) {
 	 */
 	public function macroIncludeBlock(MacroNode $node, PhpWriter $writer)
 	{
-		return $writer->write('Nette\Latte\Macros\CoreMacros::includeTemplate(%node.word, %node.array? + get_defined_vars(), $_l->templates[%var])->render()',
+		return $writer->write('echo rtrim(Nette\Latte\Macros\CoreMacros::includeTemplate(%node.word, %node.array? + get_defined_vars(), $_l->templates[%var]))',
 			$this->getCompiler()->getTemplateId());
 	}
 
