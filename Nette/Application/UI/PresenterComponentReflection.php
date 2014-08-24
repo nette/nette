@@ -35,7 +35,7 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 	 */
 	public function getPersistentParams($class = NULL)
 	{
-		$class = $class === NULL ? $this->getName() : $class; // TODO
+		$class = $class === NULL ? $this->getName() : $class;
 		$params = & self::$ppCache[$class];
 		if ($params !== NULL) {
 			return $params;

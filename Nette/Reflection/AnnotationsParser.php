@@ -91,7 +91,6 @@ class AnnotationsParser
 
 		} else {
 			if (!self::$cacheStorage) {
-				// trigger_error('Set a cache storage for annotations parser via Nette\Reflection\AnnotationParser::setCacheStorage().', E_USER_WARNING);
 				self::$cacheStorage = new Nette\Caching\Storages\DevNullStorage;
 			}
 			$outerCache = new Nette\Caching\Cache(self::$cacheStorage, 'Nette.Reflection.Annotations');
@@ -234,7 +233,7 @@ class AnnotationsParser
 		$s = file_get_contents($file);
 
 		if (Strings::match($s, '#//nette'.'loader=(\S*)#')) {
-			return; // TODO: allways ignore?
+			return;
 		}
 
 		$expected = $namespace = $class = $docComment = NULL;

@@ -53,7 +53,6 @@ class Helpers
 			}
 			echo "\t<tr>\n\t\t<th>", $i, "</th>\n";
 			foreach ($row as $col) {
-				//if (is_object($col)) $col = $col->__toString();
 				echo "\t\t<td>", htmlSpecialChars($col), "</td>\n";
 			}
 			echo "\t</tr>\n";

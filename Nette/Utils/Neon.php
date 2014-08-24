@@ -160,7 +160,7 @@ class Neon extends Nette\Object
 	private function parse($indent = NULL, $result = NULL)
 	{
 		$inlineParser = $indent === NULL;
-		$value = $key = $object = NULL;
+		$value = $key = NULL;
 		$hasValue = $hasKey = FALSE;
 		$tokens = self::$tokenizer->tokens;
 		$n = & $this->n;

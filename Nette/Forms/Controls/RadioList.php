@@ -154,7 +154,6 @@ class RadioList extends BaseControl
 
 			$container->add((string) $control . (string) $label . $separator);
 			$control->data('nette-rules', NULL);
-			// TODO: separator after last item?
 		}
 
 		return $container;
