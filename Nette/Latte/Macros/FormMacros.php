@@ -233,7 +233,7 @@ class FormMacros extends MacroSet
 			$control->setOption('rendered', FALSE);
 		}
 		$el = $form->getElementPrototype();
-		$el->action = $action = (string) $el->action;
+		$el->action = (string) $el->action;
 		$el = clone $el;
 		if (strcasecmp($form->getMethod(), 'get') === 0) {
 			$el->action = preg_replace('~\?[^#]*~', '', $el->action, 1);

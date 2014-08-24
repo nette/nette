@@ -28,7 +28,6 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	{
 		$this->connection = $connection;
 		$this->fmtDateTime = isset($options['formatDateTime']) ? $options['formatDateTime'] : 'U';
-		//$connection->query('PRAGMA foreign_keys = ON');
 	}
 
 

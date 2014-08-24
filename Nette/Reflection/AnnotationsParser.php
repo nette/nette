@@ -271,14 +271,14 @@ class AnnotationsParser
 	public static function parsePhp($code)
 	{
 		if (Strings::match($code, '#//nette'.'loader=(\S*)#')) {
-			return; // TODO: allways ignore?
+			return;
 		}
 
 		$tokens = @token_get_all($code);
 		$namespace = $class = $classLevel = $level = $docComment = NULL;
 		$res = $uses = array();
 
-		while (list($key, $token) = each($tokens)) {
+		while (list(, $token) = each($tokens)) {
 			switch (is_array($token) ? $token[0] : $token) {
 				case T_DOC_COMMENT:
 					$docComment = $token[1];
