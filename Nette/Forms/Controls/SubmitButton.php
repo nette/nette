@@ -71,7 +71,6 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	 */
 	public function setValidationScope($scope)
 	{
-		// TODO: implement groups
 		$this->validationScope = (bool) $scope;
 		$this->control->formnovalidate = !$this->validationScope;
 		return $this;

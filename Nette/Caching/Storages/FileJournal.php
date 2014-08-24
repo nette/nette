@@ -804,7 +804,7 @@ class FileJournal extends Nette\Object implements IJournal
 				$nodeId = $node[$search];
 			} else {
 				foreach ($node as $key => $childNode) {
-					if ($key > $search and $key !== self::INFO) {
+					if ($key > $search && $key !== self::INFO) {
 						$nodeId = $childNode;
 						continue 2;
 					}

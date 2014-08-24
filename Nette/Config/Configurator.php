@@ -162,7 +162,7 @@ class Configurator extends Nette\Object
 
 	/**
 	 * Returns system DI container.
-	 * @return \SystemContainer
+	 * @return \SystemContainer|DI\Container
 	 */
 	public function createContainer()
 	{

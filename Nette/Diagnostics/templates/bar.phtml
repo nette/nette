@@ -569,7 +569,7 @@ Nette.Debug.Bar = Nette.Class({
 
 		// restore saved position
 		if (pos = document.cookie.match(new RegExp(bar.dom().id + '=(-?[0-9]+):(-?[0-9]+)'))) {
-			bar.position({left: pos[1], top: pos[2]}); // TODO
+			bar.position({left: pos[1], top: pos[2]});
 		}
 
 		bar.find('a').each(function() {
