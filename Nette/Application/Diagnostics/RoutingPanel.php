@@ -67,6 +67,7 @@ class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	{
 		$this->analyse($this->router);
 		ob_start();
+		$request = $this->request;
 		require __DIR__ . '/templates/RoutingPanel.tab.phtml';
 		return ob_get_clean();
 	}
@@ -79,6 +80,10 @@ class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	public function getPanel()
 	{
 		ob_start();
+		$request = $this->request;
+		$routers = $this->routers;
+		$source = $this->source;
+		$url = $this->httpRequest->getUrl();
 		require __DIR__ . '/templates/RoutingPanel.panel.phtml';
 		return ob_get_clean();
 	}

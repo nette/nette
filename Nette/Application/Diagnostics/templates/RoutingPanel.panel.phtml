@@ -34,17 +34,17 @@ use Nette,
 
 <div class="nette-RoutingPanel">
 <h1>
-<?php if (empty($this->request)): ?>
+<?php if (empty($request)): ?>
 	no route
 <?php else: ?>
-	<?php echo htmlSpecialChars($this->request->getPresenterName() . ':' . (isset($this->request->parameters[Presenter::ACTION_KEY]) ? $this->request->parameters[Presenter::ACTION_KEY] : Presenter::DEFAULT_ACTION) . (isset($this->request->parameters[Presenter::SIGNAL_KEY]) ? " {$this->request->parameters[Presenter::SIGNAL_KEY]}!" : '')) ?>
+	<?php echo htmlSpecialChars($request->getPresenterName() . ':' . (isset($request->parameters[Presenter::ACTION_KEY]) ? $request->parameters[Presenter::ACTION_KEY] : Presenter::DEFAULT_ACTION) . (isset($request->parameters[Presenter::SIGNAL_KEY]) ? " {$request->parameters[Presenter::SIGNAL_KEY]}!" : '')) ?>
 <?php endif ?>
 </h1>
 
 <div class="nette-inner">
-	<p><code><?php echo htmlSpecialChars($this->httpRequest->getUrl()) ?></code></p>
+	<p><code><?php echo htmlSpecialChars($url) ?></code></p>
 
-<?php if (empty($this->routers)): ?>
+<?php if (empty($routers)): ?>
 	<p>No routers defined.</p>
 
 <?php else: ?>
@@ -61,7 +61,7 @@ use Nette,
 	</thead>
 
 	<tbody>
-	<?php foreach ($this->routers as $router): ?>
+	<?php foreach ($routers as $router): ?>
 	<tr class="<?php echo $router['matched'] ?>">
 		<td><?php echo $router['matched'] ?></td>
 
@@ -91,6 +91,6 @@ use Nette,
 	</table>
 <?php endif ?>
 
-	<?php if ($this->source): ?><p><?php echo $this->source ?> in <?php echo Helpers::editorLink($this->source->getFileName(), $this->source->getStartLine()) ?></p><?php endif ?>
+	<?php if ($source): ?><p><?php echo $source ?> in <?php echo Helpers::editorLink($source->getFileName(), $source->getStartLine()) ?></p><?php endif ?>
 </div>
 </div>
