@@ -29,7 +29,7 @@ use Nette,
 </style>
 
 <div class="nette-ContainerPanel">
-<h1><?php echo get_class($this->container) ?></h1>
+<h1><?php echo get_class($container) ?></h1>
 
 <div class="nette-inner">
 	<h2>Services</h2>
@@ -67,7 +67,7 @@ use Nette,
 	<h2>Parameters</h2>
 
 	<div class="nette-ContainerPanel-parameters">
-		<?php echo Dumper::toHtml($this->container->parameters); ?>
+		<?php echo Dumper::toHtml($container->parameters); ?>
 	</div>
 </div>
 </div>
