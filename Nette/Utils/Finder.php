@@ -163,7 +163,6 @@ class Finder extends Nette\Object implements \IteratorAggregate
 	private static function buildPattern($masks)
 	{
 		$pattern = array();
-		// TODO: accept regexp
 		foreach ($masks as $mask) {
 			$mask = rtrim(strtr($mask, '\\', '/'), '/');
 			$prefix = '';

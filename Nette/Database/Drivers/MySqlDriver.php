@@ -114,11 +114,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function getTables()
 	{
-		/*$this->connection->query("
-			SELECT TABLE_NAME as name, TABLE_TYPE = 'VIEW' as view
-			FROM INFORMATION_SCHEMA.TABLES
-			WHERE TABLE_SCHEMA = DATABASE()
-		");*/
 		$tables = array();
 		foreach ($this->connection->query('SHOW FULL TABLES') as $row) {
 			$tables[] = array(
@@ -135,11 +130,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function getColumns($table)
 	{
-		/*$this->connection->query("
-			SELECT *
-			FROM INFORMATION_SCHEMA.COLUMNS
-			WHERE TABLE_NAME = {$this->connection->quote($table)} AND TABLE_SCHEMA = DATABASE()
-		");*/
 		$columns = array();
 		foreach ($this->connection->query('SHOW FULL COLUMNS FROM ' . $this->delimite($table)) as $row) {
 			$type = explode('(', $row['Type']);
@@ -165,12 +155,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function getIndexes($table)
 	{
-		/*$this->connection->query("
-			SELECT *
-			FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
-			WHERE TABLE_NAME = {$this->connection->quote($table)} AND TABLE_SCHEMA = DATABASE()
-			AND REFERENCED_COLUMN_NAME IS NULL
-		");*/
 		$indexes = array();
 		foreach ($this->connection->query('SHOW INDEX FROM ' . $this->delimite($table)) as $row) {
 			$indexes[$row['Key_name']]['name'] = $row['Key_name'];

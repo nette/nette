@@ -158,7 +158,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	 */
 	protected function init()
 	{
-		// TODO: only for back compatiblity - remove?
 		$wrapper = & $this->wrappers['control'];
 		foreach ($this->form->getControls() as $control) {
 			if ($control->isRequired() && isset($wrapper['.required'])) {

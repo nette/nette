@@ -401,7 +401,7 @@ class Route extends Nette\Object implements Application\IRouter
 		}
 
 		if (strpos($url, '//', 2) !== FALSE) {
-			return NULL; // TODO: implement counterpart in match() ?
+			return NULL;
 		}
 
 		$url = ($this->flags & self::SECURED ? 'https:' : 'http:') . $url;
@@ -734,8 +734,7 @@ class Route extends Nette\Object implements Application\IRouter
 	{
 		$s = strtolower($s);
 		$s = preg_replace('#-(?=[a-z])#', ' ', $s);
-		$s = substr(ucwords('x' . $s), 1);
-		//$s = lcfirst(ucwords($s));
+		$s = lcfirst(ucwords($s));
 		$s = str_replace(' ', '', $s);
 		return $s;
 	}
