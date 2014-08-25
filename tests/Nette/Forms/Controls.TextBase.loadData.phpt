@@ -49,6 +49,17 @@ test(function() { // empty value
 });
 
 
+test(function() { // empty value
+	$_POST = array('phone' => '+420 ');
+
+	$form = new Form;
+	$input = $form->addText('phone')
+		->setEmptyValue('+420 ');
+
+	Assert::same( '', $input->getValue() );
+});
+
+
 test(function() { // invalid UTF
 	$_POST = array('invalidutf' => "invalid\xAA\xAA\xAAutf");
 

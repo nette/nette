@@ -152,9 +152,9 @@ test(function() { // validation rule RANGE with setType
 test(function() { // setEmptyValue
 	$form = new Form;
 	$input = $form->addText('text')
-		->setEmptyValue('empty');
+		->setEmptyValue('empty ');
 
-	Assert::same('<input type="text" name="text" id="frm-text" data-nette-empty-value="empty" value="empty">', (string) $input->getControl());
+	Assert::same('<input type="text" name="text" id="frm-text" data-nette-empty-value="empty" value="empty ">', (string) $input->getControl());
 });
 
 

@@ -57,12 +57,12 @@ abstract class TextBase extends BaseControl
 	{
 		$value = $this->value;
 		if (!empty($this->control->maxlength)) {
-			$value = Nette\Utils\Strings::substring($value, 0, $this->control->maxlength);
+			$value = Strings::substring($value, 0, $this->control->maxlength);
 		}
 		foreach ($this->filters as $filter) {
 			$value = (string) call_user_func($filter, $value);
 		}
-		return $value === $this->translate($this->emptyValue) ? '' : $value;
+		return $value === Strings::trim($this->translate($this->emptyValue)) ? '' : $value;
 	}
 
 
@@ -105,7 +105,7 @@ abstract class TextBase extends BaseControl
 	{
 		$el = parent::getControl();
 		if ($this->emptyValue !== '') {
-			$el->attrs['data-nette-empty-value'] = $this->translate($this->emptyValue);
+			$el->attrs['data-nette-empty-value'] = Strings::trim($this->translate($this->emptyValue));
 		}
 		if (isset($el->placeholder)) {
 			$el->placeholder = $this->translate($el->placeholder);
