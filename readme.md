@@ -2,7 +2,6 @@
 ===================================
 
 [![Downloads this Month](https://img.shields.io/packagist/dm/nette/nette.svg)](https://packagist.org/packages/nette/nette)
-[![Build Status](https://travis-ci.org/nette/nette.svg?branch=master)](https://travis-ci.org/nette/nette)
 
 Nette Framework is a popular tool for PHP web development. It is designed to be
 as usable and as friendly as possible. It focuses on security and
