@@ -316,6 +316,7 @@ class MimePart extends Nette\Object
 			'scheme' => 'B', // Q is broken
 			'input-charset' => 'UTF-8',
 			'output-charset' => 'UTF-8',
+			'line-length' => self::LINE_LENGTH,
 		));
 
 		$offset = strlen($s) - strrpos($s, "\n");
