@@ -45,7 +45,7 @@ class Helpers extends Nette\Object
 			foreach ($data as $k => $v) {
 				$data[$k] = $v = static::sanitize($itype, $v);
 				if ($v === NULL) {
-					return array();
+					unset($data[$k]);
 				}
 			}
 			if ($type & Form::DATA_KEYS) {

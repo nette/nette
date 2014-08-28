@@ -75,7 +75,7 @@ test(function() { // files
 
 
 	Assert::equal(array($file, $file), Helpers::extractHttpData(array(
-		'multiple' => array('avatar' => array('x' => $file, $file)),
+		'multiple' => array('avatar' => array('x' => $file, NULL, $file)),
 	), 'multiple[avatar][]', Form::DATA_FILE));
 
 	Assert::equal(array('x' => $file, $file), Helpers::extractHttpData(array(

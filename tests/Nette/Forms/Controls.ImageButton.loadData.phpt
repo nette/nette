@@ -46,7 +46,7 @@ test(function() { // missing data
 test(function() { // malformed data
 	$_POST = array(
 		'malformed1' => array(1),
-		'malformed2' => array(array(NULL), 'x'),
+		'malformed2' => array(array(NULL)),
 	);
 
 	$form = new Form;
