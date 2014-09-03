@@ -22,7 +22,7 @@ class Rules extends Nette\Object implements \IteratorAggregate
 
 	/** @var array */
 	public static $defaultMessages = array(
-		Form::PROTECTION => 'Please submit this form again (security token has expired).',
+		Form::PROTECTION => 'Your session has expired. Please return to the home page and try again.',
 		Form::EQUAL => 'Please enter %s.',
 		Form::NOT_EQUAL => 'This value should not be %s.',
 		Form::FILLED => 'This field is required.',
