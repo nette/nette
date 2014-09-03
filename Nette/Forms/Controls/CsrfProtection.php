@@ -51,7 +51,7 @@ class CsrfProtection extends HiddenField
 		if (!isset($session->token)) {
 			$session->token = Nette\Utils\Strings::random();
 		}
-		return $session->token;
+		return $session->token ^ $this->getSession()->getId();
 	}
 
 
