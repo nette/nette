@@ -220,6 +220,7 @@ class Form extends Container
 			$session->$key = $token = Nette\Utils\Strings::random();
 		}
 		$session->setExpiration($timeout, $key);
+		$token = base64_encode($token ^ $this->getSession()->getId());
 		$this[self::PROTECTOR_ID] = new Controls\HiddenField($token);
 		$this[self::PROTECTOR_ID]->addRule(self::PROTECTION, $message, $token);
 	}
