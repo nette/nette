@@ -195,11 +195,11 @@ Nette.isDisabled = function(elem) {
  * Display error message.
  */
 Nette.addError = function(elem, message) {
-	if (elem.focus) {
-		elem.focus();
-	}
 	if (message) {
 		alert(message);
+	}
+	if (elem.focus) {
+		elem.focus();
 	}
 };
 
