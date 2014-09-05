@@ -111,7 +111,7 @@ class SQLiteStorage extends Nette\Object implements Nette\Caching\IStorage
 	public function clean(array $conditions)
 	{
 		if (!empty($conditions[Cache::ALL])) {
-			$this->pdo->prepare('DELETE FROM cache');
+			$this->pdo->prepare('DELETE FROM cache')->execute();
 
 		} elseif (!empty($conditions[Cache::TAGS])) {
 			$tags = (array) $conditions[Cache::TAGS];
