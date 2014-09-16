@@ -92,11 +92,11 @@ test(function() use ($preprocessor) { // where
 	list($sql, $params) = $preprocessor->process(array('SELECT id FROM author WHERE', array(
 		'id' => NULL,
 		'name' => 'a',
-		'born' => array(1, 2, 3),
+		'born' => array(NULL, 1, 2, 3),
 		'web' => array(),
 	)));
 
-	Assert::same( reformat("SELECT id FROM author WHERE ([id] IS NULL) AND ([name] = 'a') AND ([born] IN (1, 2, 3)) AND (1=0)"), $sql );
+	Assert::same( reformat("SELECT id FROM author WHERE ([id] IS NULL) AND ([name] = 'a') AND ([born] IN (NULL, 1, 2, 3)) AND (1=0)"), $sql );
 	Assert::same( array(), $params );
 });
 

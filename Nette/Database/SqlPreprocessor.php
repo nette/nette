@@ -138,7 +138,7 @@ class SqlPreprocessor extends Nette\Object
 				$value = iterator_to_array($value);
 			}
 
-			if (isset($value[0])) { // non-associative; value, value, value
+			if (array_key_exists(0, $value)) { // non-associative; value, value, value
 				foreach ($value as $v) {
 					if (is_array($v) && isset($v[0])) { // no-associative; (value), (value), (value)
 						$vx[] = '(' . $this->formatValue($v) . ')';
