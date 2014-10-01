@@ -217,7 +217,7 @@ class RequestFactory extends Nette\Object
 
 		// HEADERS
 		if (function_exists('apache_request_headers')) {
-			$headers = array_change_key_case(apache_request_headers(), CASE_LOWER);
+			$headers = apache_request_headers();
 		} else {
 			$headers = array();
 			foreach ($_SERVER as $k => $v) {
@@ -226,7 +226,7 @@ class RequestFactory extends Nette\Object
 				} elseif (strncmp($k, 'CONTENT_', 8)) {
 					continue;
 				}
-				$headers[ strtr(strtolower($k), '_', '-') ] = $v;
+				$headers[ strtr($k, '_', '-') ] = $v;
 			}
 		}
 

@@ -70,7 +70,7 @@ class Request extends Nette\Object implements IRequest
 		$this->post = (array) $post;
 		$this->files = (array) $files;
 		$this->cookies = (array) $cookies;
-		$this->headers = (array) $headers;
+		$this->headers = array_change_key_case((array) $headers, CASE_LOWER);
 		$this->method = $method;
 		$this->remoteAddress = $remoteAddress;
 		$this->remoteHost = $remoteHost;
