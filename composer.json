@@ -27,7 +27,7 @@
 		"ext-fileinfo": ""
 	},
 	"require-dev": {
-		"nette/tester": "~1.1"
+		"nette/tester": "~1.3"
 	},
 	"autoload": {
 		"files": ["Nette/loader.php"]
