@@ -39,7 +39,7 @@
 		"tracy/tracy": ">=2.2.0"
 	},
 	"require-dev": {
-		"nette/tester": "~1.1"
+		"nette/tester": "~1.3"
 	},
 	"autoload": {
 		"classmap": ["Nette/"],
