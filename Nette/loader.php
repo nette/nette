@@ -17,23 +17,21 @@ require_once __DIR__ . '/Loaders/NetteLoader.php';
 
 Nette\Loaders\NetteLoader::getInstance()->register();
 
-array_walk(new ArrayIterator(array(
-	'Nette\Config\Configurator' => 'Nette\Configurator',
-	'Nette\Config\CompilerExtension' => 'Nette\DI\CompilerExtension',
-	'Nette\Diagnostics\Bar' => 'Tracy\Bar',
-	'Nette\Diagnostics\BlueScreen' => 'Tracy\BlueScreen',
-	'Nette\Diagnostics\Dumper' => 'Tracy\Dumper',
-	'Nette\Latte\CompileException' => 'Latte\CompileException',
-	'Nette\Latte\IMacro' => 'Latte\IMacro',
-	'Nette\Latte\Macros\MacroSet' => 'Latte\Macros\MacroSet',
-	'Nette\ArrayHash' => 'Nette\Utils\ArrayHash',
-	'Nette\ArrayList' => 'Nette\Utils\ArrayList',
-	'Nette\DateTime' => 'Nette\Utils\DateTime',
-	'Nette\Image' => 'Nette\Utils\Image',
-	'Nette\ObjectMixin' => 'Nette\Utils\ObjectMixin',
-	'Nette\Utils\NeonException' => 'Nette\Neon\Exception',
-	'Nette\Utils\NeonEntity' => 'Nette\Neon\Entity',
-	'Nette\Utils\Neon' => 'Nette\Neon\Neon',
-)), 'class_alias');
+class_alias('Nette\Configurator', 'Nette\Config\Configurator');
+class_alias('Nette\DI\CompilerExtension', 'Nette\Config\CompilerExtension');
+class_alias('Tracy\Bar', 'Nette\Diagnostics\Bar');
+class_alias('Tracy\BlueScreen', 'Nette\Diagnostics\BlueScreen');
+class_alias('Tracy\Dumper', 'Nette\Diagnostics\Dumper');
+class_alias('Latte\CompileException', 'Nette\Latte\CompileException');
+class_alias('Latte\IMacro', 'Nette\Latte\IMacro');
+class_alias('Latte\Macros\MacroSet', 'Nette\Latte\Macros\MacroSet');
+class_alias('Nette\Utils\ArrayHash', 'Nette\ArrayHash');
+class_alias('Nette\Utils\ArrayList', 'Nette\ArrayList');
+class_alias('Nette\Utils\DateTime', 'Nette\DateTime');
+class_alias('Nette\Utils\Image', 'Nette\Image');
+class_alias('Nette\Utils\ObjectMixin', 'Nette\ObjectMixin');
+class_alias('Nette\Neon\Exception', 'Nette\Utils\NeonException');
+class_alias('Nette\Neon\Entity', 'Nette\Utils\NeonEntity');
+class_alias('Nette\Neon\Neon', 'Nette\Utils\Neon');
 
 require_once __DIR__ . '/shortcuts.php';
