@@ -33,7 +33,7 @@ class FormMacros extends MacroSet
 	{
 		$me = new static($compiler);
 		$me->addMacro('form', array($me, 'macroForm'), 'Nette\Latte\Macros\FormMacros::renderFormEnd($_form)');
-		$me->addMacro('formContainer', array($me, 'macroFormContainer'), '$_form = array_pop($_formStack)');
+		$me->addMacro('formContainer', array($me, 'macroFormContainer'), '$formContainer = $_form = array_pop($_formStack)');
 		$me->addMacro('label', array($me, 'macroLabel'), array($me, 'macroLabelEnd'));
 		$me->addMacro('input', array($me, 'macroInput'), NULL, array($me, 'macroInputAttr'));
 		$me->addMacro('name', array($me, 'macroName'), array($me, 'macroNameEnd'), array($me, 'macroNameAttr'));

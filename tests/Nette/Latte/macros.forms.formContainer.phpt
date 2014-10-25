@@ -27,6 +27,13 @@ $cont2->addCheckbox('input6', 'Input 6');
 
 $cont1->addText('input7', 'Input 7');
 
+$contItems = $form->addContainer('items');
+$items = array(1, 3);
+foreach ($items as $item) {
+	$contItem = $contItems->addContainer($item);
+	$contItem->addText('input', 'Input');
+}
+
 $form->addSubmit('input8', 'Input 8');
 
 

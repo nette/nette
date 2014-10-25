@@ -25,14 +25,24 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 <?php $iterations = 0; foreach ($formContainer->controls AS $name => $field) { ?>
 				<li><?php $_input = is_object($field) ? $field : $_form[$field]; echo $_input->getControl() ?></li>
 <?php $iterations++; } ?>			</ol>
-<?php $_form = array_pop($_formStack) ?>
+<?php $formContainer = $_form = array_pop($_formStack) ?>
 		</td>
 	</tr>
 	<tr>
 		<th><?php if ($_label = $_form["input7"]->getLabel()) echo $_label  ?></th>
 		<td><?php echo $_form["input7"]->getControl() ?></td>
 	</tr>
-<?php $_form = array_pop($_formStack) ?>
+<?php $formContainer = $_form = array_pop($_formStack) ;$_formStack[] = $_form; $formContainer = $_form = $_form["items"] ?>
+	<tr>
+		<th>Items</th>
+		<td>
+<?php $items = array(1, 2, 3) ;$iterations = 0; foreach ($items as $item) { if (!isset($formContainer[$item])) continue ;$_formStack[] = $_form; $formContainer = $_form = is_object($item) ? $item : $_form[$item] ?>
+				<?php echo $_form["input"]->getControl() ?>
+
+<?php $formContainer = $_form = array_pop($_formStack) ;$iterations++; } ?>
+		</td>
+	</tr>
+<?php $formContainer = $_form = array_pop($_formStack) ?>
 	<tr>
 		<th><?php if ($_label = $_form["input8"]->getLabel()) echo $_label  ?></th>
 		<td><?php echo $_form["input8"]->getControl() ?></td>

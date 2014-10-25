@@ -26,6 +26,20 @@
 		<td>{input input7}</td>
 	</tr>
 	{/formContainer}
+	{formContainer items}
+	<tr>
+		<th>Items</th>
+		<td>
+		{var $items = array(1, 2, 3)}
+		{foreach $items as $item}
+			{continueIf !isset($formContainer[$item])}
+			{formContainer $item}
+				{input input}
+			{/formContainer}
+		{/foreach}
+		</td>
+	</tr>
+	{/formContainer}
 	<tr>
 		<th>{label input8 /}</th>
 		<td>{input input8}</td>
