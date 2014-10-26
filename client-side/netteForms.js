@@ -410,7 +410,7 @@ Nette.toggleControl = function(elem, rules, topSuccess, firsttime) {
 			}
 			for (var id2 in rule.toggle || []) {
 				if (__hasProp.call(rule.toggle, id2)) {
-					Nette.toggles[id2] = Nette.toggles[id2] || (success ^ !rule.toggle[id2]);
+					Nette.toggles[id2] = Nette.toggles[id2] || (rule.toggle[id2] ? success : !success);
 				}
 			}
 		}
