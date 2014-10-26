@@ -3,14 +3,15 @@
 list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '%[a-z0-9]+%')
 ;
 // prolog Nette\Latte\Macros\UIMacros
-
-// snippets support
-if (%A%}
-
 //
-// main template
+// block main
 //
-?>
+if (!function_exists($_l->blocks['main'][] = '_%[a-z0-9]+%_main')) { function _%[a-z0-9]+%_main($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
+?>	main
+<?php
+}}
+
+%A%?>
 
 <?php echo rtrim(Nette\Latte\Macros\CoreMacros::includeTemplate('includeblock.inc.latte', get_defined_vars(), $_l->templates['%[a-z0-9]+%'])) ?>
 
