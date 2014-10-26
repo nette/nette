@@ -70,3 +70,12 @@ test(function() { // object
 
 	Assert::same( '2013-07-05 00:00:00', $input->getValue() );
 });
+
+
+test(function() { // persistent
+	$form = new Form;
+	$input = $form['hidden'] = new Nette\Forms\Controls\HiddenField('persistent');
+	$input->setValue('other');
+
+	Assert::same( 'persistent', $input->getValue() );
+});
