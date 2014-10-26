@@ -27,13 +27,13 @@ Assert::match('<input type="hidden" name="_token_" id="frm-_token_" value="%S%">
 $input->setValue(NULL);
 Assert::false(CsrfProtection::validateCsrf($input));
 
-$input->setValue('12345678901234567890123456789012345678');
+call_user_func(array($input, 'Nette\Forms\Controls\BaseControl::setValue'), '12345678901234567890123456789012345678');
 Assert::false(CsrfProtection::validateCsrf($input));
 
 $value = $input->getControl()->value;
-$input->setValue($value);
+call_user_func(array($input, 'Nette\Forms\Controls\BaseControl::setValue'), $value);
 Assert::true(CsrfProtection::validateCsrf($input));
 
 session_regenerate_id();
-$input->setValue($value);
+call_user_func(array($input, 'Nette\Forms\Controls\BaseControl::setValue'), $value);
 Assert::false(CsrfProtection::validateCsrf($input));
