@@ -245,7 +245,7 @@ class Debugger
 					} elseif ($item = Helpers::findTrace($e->getTrace(), 'Nette\Utils\Neon::decode')) {
 						return array(
 							'tab' => 'NEON',
-							'panel' => BlueScreen::highlightPhp($item['args'][0], $m[1])
+							'panel' => BlueScreen::highlightFile($item['args'][0], $m[1])
 						);
 					}
 				}
