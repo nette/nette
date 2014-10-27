@@ -33,6 +33,10 @@ class UserPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	 */
 	public function getTab()
 	{
+		if (headers_sent()) {
+			return;
+		}
+
 		ob_start();
 		$user = $this->user;
 		require __DIR__ . '/templates/UserPanel.tab.phtml';
