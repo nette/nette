@@ -63,7 +63,7 @@ class Request extends Nette\Object implements IRequest
 	{
 		$this->url = $url;
 		if ($query === NULL) {
-			parse_str($url->query, $this->query);
+			parse_str($url->getQuery(), $this->query);
 		} else {
 			$this->query = (array) $query;
 		}
@@ -261,7 +261,7 @@ class Request extends Nette\Object implements IRequest
 	 */
 	public function isSecured()
 	{
-		return $this->url->scheme === 'https';
+		return $this->url->getScheme() === 'https';
 	}
 
 

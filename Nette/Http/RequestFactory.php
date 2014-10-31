@@ -64,19 +64,19 @@ class RequestFactory extends Nette\Object
 	{
 		// DETECTS URI, base path and script path of the request.
 		$url = new UrlScript;
-		$url->scheme = !empty($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'off') ? 'https' : 'http';
-		$url->user = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
-		$url->password = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
+		$url->setScheme(!empty($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'off') ? 'https' : 'http');
+		$url->setUser(isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '');
+		$url->setPassword(isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '');
 
 		// host & port
 		if ((isset($_SERVER[$tmp = 'HTTP_HOST']) || isset($_SERVER[$tmp = 'SERVER_NAME']))
 			&& preg_match('#^([a-z0-9_.-]+|\[[a-f0-9:]+\])(:\d+)?\z#i', $_SERVER[$tmp], $pair)
 		) {
-			$url->host = strtolower($pair[1]);
+			$url->setHost(strtolower($pair[1]));
 			if (isset($pair[2])) {
-				$url->port = (int) substr($pair[2], 1);
+				$url->setPort(substr($pair[2], 1));
 			} elseif (isset($_SERVER['SERVER_PORT'])) {
-				$url->port = (int) $_SERVER['SERVER_PORT'];
+				$url->setPort($_SERVER['SERVER_PORT']);
 			}
 		}
 
@@ -95,12 +95,12 @@ class RequestFactory extends Nette\Object
 
 		$requestUrl = Strings::replace($requestUrl, $this->urlFilters['url']);
 		$tmp = explode('?', $requestUrl, 2);
-		$url->path = Strings::replace($tmp[0], $this->urlFilters['path']);
-		$url->query = isset($tmp[1]) ? $tmp[1] : '';
+		$url->setPath(Strings::replace($tmp[0], $this->urlFilters['path']));
+		$url->setQuery(isset($tmp[1]) ? $tmp[1] : '');
 
 		// normalized url
 		$url->canonicalize();
-		$url->path = Strings::fixEncoding($url->path);
+		$url->setPath(Strings::fixEncoding($url->getPath()));
 
 		// detect script path
 		if (isset($_SERVER['SCRIPT_NAME'])) {
@@ -113,21 +113,21 @@ class RequestFactory extends Nette\Object
 			$script = '/';
 		}
 
-		$path = strtolower($url->path) . '/';
+		$path = strtolower($url->getPath()) . '/';
 		$script = strtolower($script) . '/';
 		$max = min(strlen($path), strlen($script));
 		for ($i = 0; $i < $max; $i++) {
 			if ($path[$i] !== $script[$i]) {
 				break;
 			} elseif ($path[$i] === '/') {
-				$url->scriptPath = substr($url->path, 0, $i + 1);
+				$url->setScriptPath(substr($url->getPath(), 0, $i + 1));
 			}
 		}
 
 		// GET, POST, COOKIE
 		$useFilter = (!in_array(ini_get('filter.default'), array('', 'unsafe_raw'), TRUE) || ini_get('filter.default_flags'));
 
-		parse_str($url->query, $query);
+		parse_str($url->getQuery(), $query);
 		if (!$query) {
 			$query = $useFilter ? filter_input_array(INPUT_GET, FILTER_UNSAFE_RAW) : (empty($_GET) ? array() : $_GET);
 		}

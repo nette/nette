@@ -49,7 +49,7 @@ class Response extends Nette\Object implements IResponse
 			if (is_int(http_response_code())) {
 				$this->code = http_response_code();
 			}
-			header_register_callback($this->removeDuplicateCookies);
+			header_register_callback(array($this, 'removeDuplicateCookies'));
 		}
 	}
 
