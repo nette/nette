@@ -227,11 +227,7 @@ class Request extends Nette\Object implements IRequest
 	public function getHeader($header, $default = NULL)
 	{
 		$header = strtolower($header);
-		if (isset($this->headers[$header])) {
-			return $this->headers[$header];
-		} else {
-			return $default;
-		}
+		return isset($this->headers[$header]) ? $this->headers[$header] : $default;
 	}
 
 
