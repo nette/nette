@@ -83,8 +83,8 @@ class Url extends Nette\Object
 
 
 	/**
-	 * @param  string  URL
-	 * @throws Nette\InvalidArgumentException
+	 * @param  string|self
+	 * @throws Nette\InvalidArgumentException if URL is malformed
 	 */
 	public function __construct($url = NULL)
 	{
@@ -261,7 +261,7 @@ class Url extends Nette\Object
 	/**
 	 * Appends the query part of URI.
 	 * @param  string|array
-	 * @return Url
+	 * @return self
 	 */
 	public function appendQuery($value)
 	{
@@ -406,8 +406,8 @@ class Url extends Nette\Object
 
 
 	/**
-	 * URI comparsion.
-	 * @param  string
+	 * URL comparison.
+	 * @param  string|self
 	 * @return bool
 	 */
 	public function isEqual($url)
@@ -430,8 +430,8 @@ class Url extends Nette\Object
 
 
 	/**
-	 * Transform to canonical form.
-	 * @return Url
+	 * Transforms URL to canonical form.
+	 * @return self
 	 */
 	public function canonicalize()
 	{

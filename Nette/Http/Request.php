@@ -16,8 +16,8 @@ use Nette;
  * @author     David Grudl
  *
  * @property-read UrlScript $url
- * @property-read mixed $query
- * @property-read bool $post
+ * @property-read array $query
+ * @property-read array $post
  * @property-read array $files
  * @property-read array $cookies
  * @property-read string $method
@@ -25,8 +25,8 @@ use Nette;
  * @property-read Url|NULL $referer
  * @property-read bool $secured
  * @property-read bool $ajax
- * @property-read string $remoteAddress
- * @property-read string $remoteHost
+ * @property-read string|NULL $remoteAddress
+ * @property-read string|NULL $remoteHost
  */
 class Request extends Nette\Object implements IRequest
 {
@@ -51,10 +51,10 @@ class Request extends Nette\Object implements IRequest
 	/** @var array */
 	private $headers;
 
-	/** @var string */
+	/** @var string|NULL */
 	private $remoteAddress;
 
-	/** @var string */
+	/** @var string|NULL */
 	private $remoteHost;
 
 
@@ -135,7 +135,7 @@ class Request extends Nette\Object implements IRequest
 	/**
 	 * Returns uploaded file.
 	 * @param  string key (or more keys)
-	 * @return FileUpload
+	 * @return FileUpload|NULL
 	 */
 	public function getFile($key)
 	{
@@ -273,7 +273,7 @@ class Request extends Nette\Object implements IRequest
 
 	/**
 	 * Returns the IP address of the remote client.
-	 * @return string
+	 * @return string|NULL
 	 */
 	public function getRemoteAddress()
 	{
@@ -283,7 +283,7 @@ class Request extends Nette\Object implements IRequest
 
 	/**
 	 * Returns the host of the remote client.
-	 * @return string
+	 * @return string|NULL
 	 */
 	public function getRemoteHost()
 	{
@@ -295,9 +295,9 @@ class Request extends Nette\Object implements IRequest
 
 
 	/**
-	 * Parse Accept-Language header and returns prefered language.
-	 * @param  array   Supported languages
-	 * @return string|null
+	 * Parse Accept-Language header and returns preferred language.
+	 * @param  string[] supported languages
+	 * @return string|NULL
 	 */
 	public function detectLanguage(array $langs)
 	{

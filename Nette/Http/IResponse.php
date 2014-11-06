@@ -91,7 +91,7 @@ interface IResponse
 
 	/**
 	 * Sets the number of seconds before a page cached on a browser expires.
-	 * @param  mixed  timestamp or number of seconds
+	 * @param  string|int|\DateTime  time, value 0 means "until the browser is closed"
 	 * @return void
 	 */
 	function setExpiration($seconds);
@@ -104,7 +104,7 @@ interface IResponse
 
 	/**
 	 * Returns a list of headers to sent.
-	 * @return array
+	 * @return array (name => value)
 	 */
 	function getHeaders();
 

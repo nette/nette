@@ -180,7 +180,7 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 
 	/**
 	 * Sets the expiration of the section or specific variables.
-	 * @param  string|int|DateTime  time, value 0 means "until the browser is closed"
+	 * @param  string|int|\DateTime  time, value 0 means "until the browser is closed"
 	 * @param  mixed   optional list of variables / single variable to expire
 	 * @return self
 	 */

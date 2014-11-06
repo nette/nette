@@ -37,7 +37,7 @@ class Context extends Nette\Object
 
 	/**
 	 * Attempts to cache the sent entity by its last modification date.
-	 * @param  string|int|DateTime  last modified time
+	 * @param  string|int|\DateTime  last modified time
 	 * @param  string  strong entity tag validator
 	 * @return bool
 	 */
