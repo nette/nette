@@ -46,8 +46,8 @@ class Response extends Nette\Object implements IResponse
 	public function __construct()
 	{
 		if (PHP_VERSION_ID >= 50400) {
-			if (is_int(http_response_code())) {
-				$this->code = http_response_code();
+			if (is_int($code = http_response_code())) {
+				$this->code = $code;
 			}
 			header_register_callback(array($this, 'removeDuplicateCookies'));
 		}
@@ -146,7 +146,8 @@ class Response extends Nette\Object implements IResponse
 	{
 		$this->setCode($code);
 		$this->setHeader('Location', $url);
-		echo "<h1>Redirect</h1>\n\n<p><a href=\"" . htmlSpecialChars($url, ENT_IGNORE | ENT_QUOTES) . "\">Please click here to continue</a>.</p>";
+		$escapedUrl = htmlSpecialChars($url, ENT_IGNORE | ENT_QUOTES);
+		echo "<h1>Redirect</h1>\n\n<p><a href=\"$escapedUrl\">Please click here to continue</a>.</p>";
 	}
 
 
@@ -315,6 +316,7 @@ class Response extends Nette\Object implements IResponse
 	{
 		if (headers_sent($file, $line)) {
 			throw new Nette\InvalidStateException('Cannot send header after HTTP headers have been sent' . ($file ? " (output started at $file:$line)." : '.'));
+
 		} elseif ($this->warnOnBuffer && ob_get_length() && !array_filter(ob_get_status(TRUE), function($i) { return !$i['chunk_size']; })) {
 			trigger_error('Possible problem: you are sending a HTTP header while already having some data in output buffer. Try OutputDebugger or start session earlier.', E_USER_NOTICE);
 		}
