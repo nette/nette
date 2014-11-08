@@ -156,7 +156,6 @@ class Callback
 	}
 
 
-
 	/**
 	 * Unwraps closure created by self::closure(), used i.e. by ObjectMixin in PHP < 5.4
 	 * @internal
