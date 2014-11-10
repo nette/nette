@@ -117,7 +117,6 @@
 		doc.body.innerHTML = '<div class="nette-panel nette-mode-window" id="' + this.id + '">' + this.elem.dom().innerHTML + '<\/div>';
 		var winPanel = win.Nette.Debug.getPanel(this.id);
 		win.Nette.Dumper.init();
-		winPanel.reposition();
 		doc.title = this.elem.find('h1').dom().innerHTML;
 
 		var _this = this;
@@ -141,10 +140,7 @@
 	};
 
 	Panel.prototype.reposition = function() {
-		if (this.is(Panel.WINDOW)) {
-			var dE = document.documentElement;
-			window.resizeBy(dE.scrollWidth - dE.clientWidth, dE.scrollHeight - dE.clientHeight);
-		} else {
+		if (!this.is(Panel.WINDOW)) {
 			var pos = this.elem.position();
 			if (pos.width) { // is visible?
 				this.elem.position({right: pos.right, bottom: pos.bottom});
