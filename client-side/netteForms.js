@@ -62,7 +62,7 @@ Nette.getValue = function(elem) {
 		return values;
 
 	} else if (elem.type in {checkbox: 1, radio: 1}) {
-		return elem.checked;
+		return elem.checked && elem.value;
 
 	} else if (elem.type === 'file') {
 		return elem.files || elem.value;
