@@ -151,8 +151,10 @@ class Response extends Nette\Object implements IResponse
 	{
 		$this->setCode($code);
 		$this->setHeader('Location', $url);
-		$escapedUrl = htmlSpecialChars($url, ENT_IGNORE | ENT_QUOTES);
-		echo "<h1>Redirect</h1>\n\n<p><a href=\"$escapedUrl\">Please click here to continue</a>.</p>";
+		if (preg_match('#^https?:|^\s*+[a-z0-9+.-]*+[^:]#i', $url)) {
+			$escapedUrl = htmlSpecialChars($url, ENT_IGNORE | ENT_QUOTES);
+			echo "<h1>Redirect</h1>\n\n<p><a href=\"$escapedUrl\">Please click here to continue</a>.</p>";
+		}
 	}
 
 
