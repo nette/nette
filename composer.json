@@ -24,7 +24,7 @@
 		"nette/di": "2.2.2",
 		"nette/finder": "2.2.0",
 		"nette/forms": "2.2.3",
-		"nette/http": "2.2.3",
+		"nette/http": "2.2.4",
 		"nette/mail": "2.2.3",
 		"nette/neon": "2.2.3",
 		"nette/php-generator": "2.2.1",
