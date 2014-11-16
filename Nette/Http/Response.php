@@ -52,9 +52,7 @@ class Response extends Nette\Object implements IResponse
 		}
 
 		if (PHP_VERSION_ID >= 50401) { // PHP bug #61106
-			header_register_callback(function() { // requires closure due PHP bug #66375
-				$this->removeDuplicateCookies();
-			});
+			header_register_callback($this->removeDuplicateCookies); // requires closure due PHP bug #66375
 		}
 	}
 
