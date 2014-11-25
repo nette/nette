@@ -34,7 +34,7 @@ class UserPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	 */
 	public function getTab()
 	{
-		if (headers_sent()) {
+		if (headers_sent() && !session_id()) {
 			return;
 		}
 
