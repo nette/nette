@@ -372,7 +372,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 			$tmp = is_array($value) ? array(& $value) : array(array(& $value));
 			foreach ($tmp[0] as & $v) {
 				if ($v != NULL && !$v instanceof Html) { // intentionally ==
-					$v = $translator->translate((string) $v, $count);
+					$v = $translator->translate($v, $count);
 				}
 			}
 		}
