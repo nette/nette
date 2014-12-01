@@ -55,6 +55,14 @@ $el->name = 'testname';
 $el->setName('span');
 Assert::same( '<span src="image.gif" alt="alt2 alt3" style="float:left" class="three" lang="" title="0" checked name="testname"></span>', (string) $el );
 
+
+// small & big numbers
+$el = Html::el('span');
+$el->small = 1e-8;
+$el->big = 1e20;
+Assert::same( '<span small="0.00000001" big="100000000000000000000"></span>', (string) $el );
+
+
 // attributes escaping
 Assert::same( '<a one=\'"\' two="\'" three="<>" four="&amp;amp;"></a>', (string) Html::el('a')->one('"')->two("'")->three('<>')->four('&amp;') );
 Assert::same( '<a one="``xx "></a>' , (string) Html::el('a')->one("``xx") ); // mXSS
