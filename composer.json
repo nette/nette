@@ -20,6 +20,28 @@
 		"ext-iconv": "*",
 		"ext-tokenizer": "*"
 	},
+	"replace": {
+		"nette/application": "self.version",
+		"nette/bootstrap": "self.version",
+		"nette/caching": "self.version",
+		"nette/component-model": "self.version",
+		"nette/database": "self.version",
+		"nette/di": "self.version",
+		"nette/finder": "self.version",
+		"nette/forms": "self.version",
+		"nette/http": "self.version",
+		"nette/mail": "self.version",
+		"nette/neon": "self.version",
+		"nette/php-generator": "self.version",
+		"nette/reflection": "self.version",
+		"nette/robot-loader": "self.version",
+		"nette/safe-stream": "self.version",
+		"nette/security": "self.version",
+		"nette/tokenizer": "self.version",
+		"nette/utils": "self.version",
+		"latte/latte": "self.version",
+		"tracy/tracy": "self.version"
+	},
 	"suggest": {
 		"ext-mbstring": "",
 		"ext-pdo": "",
