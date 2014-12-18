@@ -452,7 +452,7 @@ class Url extends Nette\Object
 
 
 	/**
-	 * Similar to rawurldecode, but preserve reserved chars encoded.
+	 * Similar to rawurldecode, but preserves reserved chars encoded.
 	 * @param  string to decode
 	 * @param  string reserved characters
 	 * @return string
@@ -462,14 +462,14 @@ class Url extends Nette\Object
 		// reserved (@see RFC 2396) = ";" | "/" | "?" | ":" | "@" | "&" | "=" | "+" | "$" | ","
 		// within a path segment, the characters "/", ";", "=", "?" are reserved
 		// within a query component, the characters ";", "/", "?", ":", "@", "&", "=", "+", ",", "$" are reserved.
-		preg_match_all('#(?<=%)[a-f0-9][a-f0-9]#i', $s, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
-		foreach (array_reverse($matches) as $match) {
-			$ch = chr(hexdec($match[0][0]));
-			if (strpos($reserved, $ch) === FALSE) {
-				$s = substr_replace($s, $ch, $match[0][1] - 1, 3);
-			}
+		if ($reserved !== '') {
+			$s = preg_replace(
+				'#%(' . substr(chunk_split(bin2hex($reserved), 2, '|'), 0, -1) . ')#i',
+				'%25$1',
+				$s
+			);
 		}
-		return $s;
+		return rawurldecode($s);
 	}
 
 }
