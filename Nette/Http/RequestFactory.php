@@ -19,7 +19,7 @@ use Nette,
 class RequestFactory extends Nette\Object
 {
 	/** @internal */
-	const NONCHARS = '#[^\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}]#u';
+	const CHARS = '#^[\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}]*+\z#u';
 
 	/** @var array */
 	public $urlFilters = array(
@@ -147,7 +147,7 @@ class RequestFactory extends Nette\Object
 						$k = stripslashes($k);
 					}
 
-					if (!$this->binary && is_string($k) && (preg_match(self::NONCHARS, $k) || preg_last_error())) {
+					if (!$this->binary && is_string($k) && (!preg_match(self::CHARS, $k) || preg_last_error())) {
 						// invalid key -> ignore
 
 					} elseif (is_array($v)) {
@@ -158,7 +158,7 @@ class RequestFactory extends Nette\Object
 						if ($gpc && !$useFilter) {
 							$v = stripSlashes($v);
 						}
-						if (!$this->binary && (preg_match(self::NONCHARS, $v) || preg_last_error())) {
+						if (!$this->binary && (!preg_match(self::CHARS, $v) || preg_last_error())) {
 							$v = '';
 						}
 						$list[$key][$k] = $v;
@@ -174,7 +174,7 @@ class RequestFactory extends Nette\Object
 		$list = array();
 		if (!empty($_FILES)) {
 			foreach ($_FILES as $k => $v) {
-				if (!$this->binary && is_string($k) && (preg_match(self::NONCHARS, $k) || preg_last_error())) {
+				if (!$this->binary && is_string($k) && (!preg_match(self::CHARS, $k) || preg_last_error())) {
 					continue;
 				}
 				$v['@'] = & $files[$k];
@@ -190,7 +190,7 @@ class RequestFactory extends Nette\Object
 				if ($gpc) {
 					$v['name'] = stripSlashes($v['name']);
 				}
-				if (!$this->binary && (preg_match(self::NONCHARS, $v['name']) || preg_last_error())) {
+				if (!$this->binary && (!preg_match(self::CHARS, $v['name']) || preg_last_error())) {
 					$v['name'] = '';
 				}
 				if ($v['error'] !== UPLOAD_ERR_NO_FILE) {
@@ -200,7 +200,7 @@ class RequestFactory extends Nette\Object
 			}
 
 			foreach ($v['name'] as $k => $foo) {
-				if (!$this->binary && is_string($k) && (preg_match(self::NONCHARS, $k) || preg_last_error())) {
+				if (!$this->binary && is_string($k) && (!preg_match(self::CHARS, $k) || preg_last_error())) {
 					continue;
 				}
 				$list[] = array(
