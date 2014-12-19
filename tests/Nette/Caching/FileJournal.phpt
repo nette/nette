@@ -17,7 +17,7 @@ function check($result, $condition, $name)
 	Assert::true($condition, $name . ($condition === TRUE ? '' : 'Count: ' . count($result)));
 }
 
-
+FileJournal::$debug = TRUE;
 $journal = new FileJournal(TEMP_DIR);
 
 $journal->write('ok_test1', array(
@@ -177,3 +177,8 @@ $journal->write('ok_test_all_priority', array(
 $result = $journal->clean(array(Cache::ALL => TRUE));
 $result2 = $journal->clean(array(Cache::TAGS => 'test:all'));
 check($result, ($result === NULL and empty($result2)), 'Clean ALL');
+
+$journal->write('a', array(Cache::TAGS => array('gamma')));
+$journal->write('b', array(Cache::TAGS => array('alpha', 'beta', 'gamma')));
+$result = $journal->clean(array(Cache::TAGS => array('alpha', 'beta', 'gamma')));
+check($result, count($result) === 2, 'Remove item with multiple tags');

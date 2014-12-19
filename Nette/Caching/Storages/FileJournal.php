@@ -381,12 +381,12 @@ class FileJournal extends Nette\Object implements IJournal
 			do {
 				$link = $data[$i];
 
-				if (!isset($node[$link])) {
+				if (isset($this->deletedLinks[$link])) {
+					continue;
+				} elseif (!isset($node[$link])) {
 					if (self::$debug) {
 						throw new Nette\InvalidStateException("Link with ID $searchLink is not in node $nodeId.");
 					}
-					continue;
-				} elseif (isset($this->deletedLinks[$link])) {
 					continue;
 				}
 
