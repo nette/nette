@@ -77,8 +77,17 @@ class Json
 	public static function decode($json, $options = 0)
 	{
 		$json = (string) $json;
-		$value = json_decode($json, (bool) ($options & self::FORCE_ARRAY));
-		if ($value === NULL && $json !== '' && strcasecmp($json, 'null')) { // '' do not clean json_last_error
+		if (!preg_match('##u', $json)) {
+			throw new JsonException(static::$messages[5], 5); // workaround for PHP < 5.3.3 & PECL JSON-C
+		}
+
+		$forceArray = (bool) ($options & self::FORCE_ARRAY);
+		if (!$forceArray && preg_match('#(?<=[^\\\\]")\\\\u0000(?:[^"\\\\]|\\\\.)*+"\s*+:#', $json)) { // workaround for json_decode fatal error when object key starts with \u0000
+			throw new JsonException(static::$messages[JSON_ERROR_CTRL_CHAR]);
+		}
+
+		$value = json_decode($json, $forceArray);
+		if ($value === NULL && $json !== '' && strcasecmp($json, 'null')) { // '' is not clearing json_last_error
 			$error = PHP_VERSION_ID >= 50300 ? json_last_error() : 0;
 			throw new JsonException(isset(static::$messages[$error]) ? static::$messages[$error] : 'Unknown error', $error);
 		}
