@@ -7,11 +7,6 @@
  */
 
 
-if (PHP_VERSION_ID < 50301) {
-	throw new Exception('Nette Framework requires PHP 5.3.1 or newer.');
-}
-
-
 // deprecated
 define('NETTE', TRUE);
 define('NETTE_DIR', __DIR__);
