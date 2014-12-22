@@ -20,9 +20,9 @@ class Framework
 
 	/** Nette Framework version identification */
 	const NAME = 'Nette Framework',
-		VERSION = '2.0.17',
-		VERSION_ID = 20017,
-		REVISION = 'released on 2014-10-29';
+		VERSION = '2.0.18',
+		VERSION_ID = 20018,
+		REVISION = 'released on 2014-12-22';
 
 	/** @var bool set to TRUE if your host has disabled function ini_set */
 	public static $iAmUsingBadHost = FALSE;
