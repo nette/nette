@@ -40,6 +40,9 @@
 	"require-dev": {
 		"nette/tester": "~1.3"
 	},
+	"replace": {
+		"nette/deprecated": "2.2"
+	},
 	"autoload": {
 		"classmap": ["Nette/"],
 		"files": ["Nette/loader.php"]
