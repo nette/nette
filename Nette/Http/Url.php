@@ -435,9 +435,9 @@ class Url extends Nette\Object
 	 */
 	public function canonicalize()
 	{
-		$this->path = $this->path === '' ? '/' : self::unescape($this->path, '%/');
+		$this->path = $this->path === '' ? '/' : self::unescape($this->path, '%/#?');
 		$this->host = strtolower(rawurldecode($this->host));
-		$this->query = self::unescape(strtr($this->query, '+', ' '), '%&;=+');
+		$this->query = self::unescape(strtr($this->query, '+', ' '), '%&;=+#');
 		return $this;
 	}
 
