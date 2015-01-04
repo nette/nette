@@ -119,7 +119,7 @@ class Neon extends Nette\Object
 			return Strings::contains($var, '.') ? $var : $var . '.0';
 
 		} else {
-			return json_encode($var);
+			return json_encode($var, PHP_VERSION_ID >= 50400 ? JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES : 0);
 		}
 	}
 
