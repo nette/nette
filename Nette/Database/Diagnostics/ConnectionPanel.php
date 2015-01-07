@@ -101,7 +101,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 
 	public function getTab()
 	{
-		return '<span title="Nette\\Database ' . htmlSpecialChars($this->name) . '">'
+		return '<span title="Nette\\Database ' . htmlSpecialChars($this->name, ENT_QUOTES, 'UTF-8') . '">'
 			. '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAEYSURBVBgZBcHPio5hGAfg6/2+R980k6wmJgsJ5U/ZOAqbSc2GnXOwUg7BESgLUeIQ1GSjLFnMwsKGGg1qxJRmPM97/1zXFAAAAEADdlfZzr26miup2svnelq7d2aYgt3rebl585wN6+K3I1/9fJe7O/uIePP2SypJkiRJ0vMhr55FLCA3zgIAOK9uQ4MS361ZOSX+OrTvkgINSjS/HIvhjxNNFGgQsbSmabohKDNoUGLohsls6BaiQIMSs2FYmnXdUsygQYmumy3Nhi6igwalDEOJEjPKP7CA2aFNK8Bkyy3fdNCg7r9/fW3jgpVJbDmy5+PB2IYp4MXFelQ7izPrhkPHB+P5/PjhD5gCgCenx+VR/dODEwD+A3T7nqbxwf1HAAAAAElFTkSuQmCC" />'
 			. $this->count . ' ' . ($this->count === 1 ? 'query' : 'queries')
 			. ($this->totalTime ? ' / ' . sprintf('%0.1f', $this->totalTime * 1000) . ' ms' : '')
@@ -126,7 +126,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 
 			$s .= '<tr><td>';
 			if ($error) {
-				$s .= '<span title="' . htmlSpecialChars($error, ENT_IGNORE | ENT_QUOTES) . '">ERROR</span>';
+				$s .= '<span title="' . htmlSpecialChars($error, ENT_IGNORE | ENT_QUOTES, 'UTF-8') . '">ERROR</span>';
 			} elseif ($time !== NULL) {
 				$s .= sprintf('%0.3f', $time * 1000);
 			}
@@ -140,13 +140,13 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 			if ($explain) {
 				$s .= "<table id='nette-DbConnectionPanel-row-$counter' class='nette-collapsed'><tr>";
 				foreach ($explain[0] as $col => $foo) {
-					$s .= '<th>' . htmlSpecialChars($col) . '</th>';
+					$s .= '<th>' . htmlSpecialChars($col, ENT_NOQUOTES, 'UTF-8') . '</th>';
 				}
 				$s .= "</tr>";
 				foreach ($explain as $row) {
 					$s .= "<tr>";
 					foreach ($row as $col) {
-						$s .= '<td>' . htmlSpecialChars($col) . '</td>';
+						$s .= '<td>' . htmlSpecialChars($col, ENT_NOQUOTES, 'UTF-8') . '</td>';
 					}
 					$s .= "</tr>";
 				}
@@ -162,7 +162,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 		return $this->count ?
 			'<style class="nette-debug"> #nette-debug td.nette-DbConnectionPanel-sql { background: white !important }
 			#nette-debug .nette-DbConnectionPanel-source { color: #BBB !important } </style>
-			<h1 title="' . htmlSpecialChars($connection->getDsn()) . '">Queries: ' . $this->count
+			<h1 title="' . htmlSpecialChars($connection->getDsn(), ENT_QUOTES, 'UTF-8') . '">Queries: ' . $this->count
 			. ($this->totalTime ? ', time: ' . sprintf('%0.3f', $this->totalTime * 1000) . ' ms' : '') . ', ' . htmlSpecialChars($this->name) . '</h1>
 			<div class="nette-inner nette-DbConnectionPanel">
 			<table>

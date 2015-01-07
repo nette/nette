@@ -77,7 +77,7 @@ class Helpers
 		if ($quotes !== ENT_NOQUOTES && strpos($s, '`') !== FALSE && strpbrk($s, ' <>"\'') === FALSE) {
 			$s .= ' ';
 		}
-		return htmlSpecialChars($s, $quotes);
+		return htmlSpecialChars($s, $quotes, 'UTF-8');
 	}
 
 
@@ -106,7 +106,7 @@ class Helpers
 		// XML 1.0: \x09 \x0A \x0D and C1 allowed directly, C0 forbidden
 		// XML 1.1: \x00 forbidden directly and as a character reference,
 		//   \x09 \x0A \x0D \x85 allowed directly, C0, C1 and \x7F allowed as character references
-		return htmlSpecialChars(preg_replace('#[\x00-\x08\x0B\x0C\x0E-\x1F]+#', '', $s), ENT_QUOTES);
+		return htmlSpecialChars(preg_replace('#[\x00-\x08\x0B\x0C\x0E-\x1F]+#', '', $s), ENT_QUOTES, 'UTF-8');
 	}
 
 

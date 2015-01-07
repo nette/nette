@@ -116,7 +116,7 @@ class Helpers extends Nette\Object
 			$res .= ($res === '' && $wrapperEnd === '' ? '' : $wrapper)
 				. $labelTag . $label->attributes() . '>'
 				. $inputTag . $input->attributes() . (Html::$xhtml ? ' />' : '>')
-				. ($caption instanceof Html ? $caption : htmlspecialchars($caption))
+				. ($caption instanceof Html ? $caption : htmlspecialchars($caption, ENT_NOQUOTES, 'UTF-8'))
 				. '</label>'
 				. $wrapperEnd;
 		}
@@ -149,7 +149,7 @@ class Helpers extends Nette\Object
 					$res .= $caption->setName('option')->addAttributes($option->attrs);
 				} else {
 					$res .= $optionTag . $option->attributes() . '>'
-						. htmlspecialchars($caption)
+						. htmlspecialchars($caption, ENT_NOQUOTES, 'UTF-8')
 						. '</option>';
 				}
 			}

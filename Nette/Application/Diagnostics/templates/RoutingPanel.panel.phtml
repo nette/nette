@@ -33,12 +33,12 @@ use Nette,
 <?php if (empty($request)): ?>
 	no route
 <?php else: ?>
-	<?php echo htmlSpecialChars($request->getPresenterName() . ':' . (isset($request->parameters[Presenter::ACTION_KEY]) ? $request->parameters[Presenter::ACTION_KEY] : Presenter::DEFAULT_ACTION) . (isset($request->parameters[Presenter::SIGNAL_KEY]) ? " {$request->parameters[Presenter::SIGNAL_KEY]}!" : '')) ?>
+	<?php echo htmlSpecialChars($request->getPresenterName() . ':' . (isset($request->parameters[Presenter::ACTION_KEY]) ? $request->parameters[Presenter::ACTION_KEY] : Presenter::DEFAULT_ACTION) . (isset($request->parameters[Presenter::SIGNAL_KEY]) ? " {$request->parameters[Presenter::SIGNAL_KEY]}!" : ''), ENT_NOQUOTES, 'UTF-8') ?>
 <?php endif ?>
 </h1>
 
 <div class="nette-inner">
-	<p><code><?php echo htmlSpecialChars($url) ?></code></p>
+	<p><code><?php echo htmlSpecialChars($url, ENT_IGNORE, 'UTF-8') ?></code></p>
 
 <?php if (empty($routers)): ?>
 	<p>No routers defined.</p>
@@ -61,24 +61,24 @@ use Nette,
 	<tr class="<?php echo $router['matched'] ?>">
 		<td><?php echo $router['matched'] ?></td>
 
-		<td><code title="<?php echo htmlSpecialChars($router['class']) ?>"><?php echo preg_replace('#.+\\\\#', '', htmlSpecialChars($router['class'])) ?></code></td>
+		<td><code title="<?php echo htmlSpecialChars($router['class'], ENT_QUOTES, 'UTF-8') ?>"><?php echo preg_replace('#.+\\\\#', '', htmlSpecialChars($router['class'], ENT_NOQUOTES, 'UTF-8')) ?></code></td>
 
-		<td><code><strong><?php echo htmlSpecialChars($router['mask']) ?></strong></code></td>
+		<td><code><strong><?php echo htmlSpecialChars($router['mask'], ENT_NOQUOTES, 'UTF-8') ?></strong></code></td>
 
 		<td><code>
 		<?php foreach ($router['defaults'] as $key => $value): ?>
-			<?php echo htmlSpecialChars($key), "&nbsp;=&nbsp;", is_string($value) ? htmlSpecialChars($value) . '<br />' : Dumper::toHtml($value, array(Dumper::COLLAPSE => TRUE)) ?>
+			<?php echo htmlSpecialChars($key, ENT_IGNORE, 'UTF-8'), "&nbsp;=&nbsp;", is_string($value) ? htmlSpecialChars($value) . '<br />' : Dumper::toHtml($value, array(Dumper::COLLAPSE => TRUE)) ?>
 		<?php endforeach ?>
 		</code></td>
 
-		<td><code><?php echo htmlSpecialChars($router['module']) ?></code></td>
+		<td><code><?php echo htmlSpecialChars($router['module'], ENT_NOQUOTES, 'UTF-8') ?></code></td>
 
 		<td><?php if ($router['request']): ?><code>
 		<?php $params = $router['request']->getParameters(); ?>
-		<strong><?php echo htmlSpecialChars($router['request']->getPresenterName() . ':' . (isset($params[Presenter::ACTION_KEY]) ? $params[Presenter::ACTION_KEY] : Presenter::DEFAULT_ACTION)) ?></strong><br />
+		<strong><?php echo htmlSpecialChars($router['request']->getPresenterName() . ':' . (isset($params[Presenter::ACTION_KEY]) ? $params[Presenter::ACTION_KEY] : Presenter::DEFAULT_ACTION), ENT_NOQUOTES, 'UTF-8') ?></strong><br />
 		<?php unset($params[Presenter::ACTION_KEY]) ?>
 		<?php foreach ($params as $key => $value): ?>
-			<?php echo htmlSpecialChars($key), "&nbsp;=&nbsp;", is_string($value) ? htmlSpecialChars($value) . '<br />' : Dumper::toHtml($value, array(Dumper::COLLAPSE => TRUE)) ?>
+			<?php echo htmlSpecialChars($key, ENT_IGNORE, 'UTF-8'), "&nbsp;=&nbsp;", is_string($value) ? htmlSpecialChars($value) . '<br />' : Dumper::toHtml($value, array(Dumper::COLLAPSE => TRUE)) ?>
 		<?php endforeach ?>
 		</code><?php endif ?></td>
 	</tr>
