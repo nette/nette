@@ -51,19 +51,21 @@ $tests[] = array(
 	'message' => ini_get('memory_limit'),
 );
 
-$tests['hf'] = array(
-	'title' => '.htaccess file protection',
-	'required' => FALSE,
-	'description' => 'File protection by <code>.htaccess</code> is not present. You must be careful to put files into document_root folder.',
-	'script' => '<script src="assets/denied/checker.js"></script> <script>displayResult("hf", typeof fileProtectionChecker == "undefined")</script>',
-);
+if (!isset($_SERVER['SERVER_SOFTWARE']) || strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') !== FALSE) {
+	$tests['hf'] = array(
+		'title' => '.htaccess file protection',
+		'required' => FALSE,
+		'description' => 'File protection by <code>.htaccess</code> is not present. You must be careful to put files into document_root folder.',
+		'script' => '<script src="assets/denied/checker.js"></script> <script>displayResult("hf", typeof fileProtectionChecker == "undefined")</script>',
+	);
 
-$tests['hr'] = array(
-	'title' => '.htaccess mod_rewrite',
-	'required' => FALSE,
-	'description' => 'Mod_rewrite is probably not present. You will not be able to use Cool URL.',
-	'script' => '<script src="assets/rewrite/checker"></script> <script>displayResult("hr", typeof modRewriteChecker == "boolean")</script>',
-);
+	$tests['hr'] = array(
+		'title' => '.htaccess mod_rewrite',
+		'required' => FALSE,
+		'description' => 'Mod_rewrite is probably not present. You will not be able to use Cool URL.',
+		'script' => '<script src="assets/rewrite/checker"></script> <script>displayResult("hr", typeof modRewriteChecker == "boolean")</script>',
+	);
+}
 
 $tests[] = array(
 	'title' => 'Function ini_set()',
