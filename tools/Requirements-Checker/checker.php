@@ -51,9 +51,8 @@ $tests[] = array(
 	'message' => ini_get('memory_limit'),
 );
 
-$software = (isset($_SERVER['SERVER_SOFTWARE']) ? strtolower($_SERVER['SERVER_SOFTWARE']) : 'unknown');
-if ($software === 'unknown' || strpos($software, 'apache') !== FALSE) {
-	
+if (!isset($_SERVER['SERVER_SOFTWARE']) || stripos($_SERVER['SERVER_SOFTWARE'], 'Apache') !== FALSE) {
+
 	$tests['hf'] = array(
 		'title' => '.htaccess file protection',
 		'required' => FALSE,
