@@ -53,7 +53,7 @@ class Identity extends Nette\Object implements IIdentity
 	 */
 	public function setId($id)
 	{
-		$this->id = is_numeric($id) ? 1 * $id : $id;
+		$this->id = is_numeric($id) && !is_float($tmp = $id * 1) ? $tmp : $id;
 		return $this;
 	}
 
