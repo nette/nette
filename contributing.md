@@ -1,6 +1,6 @@
-How to contribute
-=================
+How to contribute & use the issue tracker
+=========================================
 
-Nette welcomes contributions. If you'd like to contribute,
-please [read the guidelines](http://nette.org/en/contributing).
-Thanks for your contribution!
+This is meta-package. **Please use an issue tracker in one of our [packages](readme.md).**
+
+Thanks!
