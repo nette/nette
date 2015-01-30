@@ -63,7 +63,9 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function formatLike($value, $pos)
 	{
-		$value = strtr($value, array("'" => "''", '\\' => '\\\\', '%' => '\\\\%', '_' => '\\\\_'));
+		$bs = substr($this->connection->quote('\\', \PDO::PARAM_STR), 1, -1); // standard_conforming_strings = on/off
+		$value = substr($this->connection->quote($value, \PDO::PARAM_STR), 1, -1);
+		$value = strtr($value, array('%' => $bs . '%', '_' => $bs . '_', '\\' => '\\\\'));
 		return ($pos <= 0 ? "'%" : "'") . $value . ($pos >= 0 ? "%'" : "'");
 	}
 
