@@ -19,7 +19,7 @@ use Nette,
 class RequestFactory extends Nette\Object
 {
 	/** @internal */
-	const CHARS = '#^[\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}]*+\z#u';
+	const CHARS = '\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}';
 
 	/** @var array */
 	public $urlFilters = array(
@@ -137,6 +137,7 @@ class RequestFactory extends Nette\Object
 		$gpc = (bool) get_magic_quotes_gpc();
 
 		// remove fucking quotes, control characters and check encoding
+		$reChars = '#^[' . self::CHARS . ']*+\z#u';
 		if ($gpc || !$this->binary) {
 			$list = array(& $query, & $post, & $cookies);
 			while (list($key, $val) = each($list)) {
@@ -147,7 +148,7 @@ class RequestFactory extends Nette\Object
 						$k = stripslashes($k);
 					}
 
-					if (!$this->binary && is_string($k) && (!preg_match(self::CHARS, $k) || preg_last_error())) {
+					if (!$this->binary && is_string($k) && (!preg_match($reChars, $k) || preg_last_error())) {
 						// invalid key -> ignore
 
 					} elseif (is_array($v)) {
@@ -158,8 +159,8 @@ class RequestFactory extends Nette\Object
 						if ($gpc && !$useFilter) {
 							$v = stripSlashes($v);
 						}
-						if (!$this->binary && (!preg_match(self::CHARS, $v) || preg_last_error())) {
-							$v = '';
+						if (!$this->binary) {
+							$v = (string) preg_replace('#[^' . self::CHARS . ']+#u', '', $v);
 						}
 						$list[$key][$k] = $v;
 					}
@@ -174,7 +175,7 @@ class RequestFactory extends Nette\Object
 		$list = array();
 		if (!empty($_FILES)) {
 			foreach ($_FILES as $k => $v) {
-				if (!$this->binary && is_string($k) && (!preg_match(self::CHARS, $k) || preg_last_error())) {
+				if (!$this->binary && is_string($k) && (!preg_match($reChars, $k) || preg_last_error())) {
 					continue;
 				}
 				$v['@'] = & $files[$k];
@@ -190,7 +191,7 @@ class RequestFactory extends Nette\Object
 				if ($gpc) {
 					$v['name'] = stripSlashes($v['name']);
 				}
-				if (!$this->binary && (!preg_match(self::CHARS, $v['name']) || preg_last_error())) {
+				if (!$this->binary && (!preg_match($reChars, $v['name']) || preg_last_error())) {
 					$v['name'] = '';
 				}
 				if ($v['error'] !== UPLOAD_ERR_NO_FILE) {
@@ -200,7 +201,7 @@ class RequestFactory extends Nette\Object
 			}
 
 			foreach ($v['name'] as $k => $foo) {
-				if (!$this->binary && is_string($k) && (!preg_match(self::CHARS, $k) || preg_last_error())) {
+				if (!$this->binary && is_string($k) && (!preg_match($reChars, $k) || preg_last_error())) {
 					continue;
 				}
 				$list[] = array(
