@@ -288,9 +288,12 @@ class Compiler extends Nette\Object
 		$end = '';
 
 		if ($isEmpty && in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML), TRUE)) { // auto-correct
-			$token->text = preg_replace('#^.*>#', $htmlNode->isEmpty && $this->contentType === self::CONTENT_XHTML ? ' />' : '>', $token->text);
-			if (!$htmlNode->isEmpty) {
-				$end = "</$htmlNode->name>";
+			$space = substr(strstr($token->text, '>'), 1);
+			$token->text = $htmlNode->isEmpty && $this->contentType === self::CONTENT_XHTML ? ' />' : '>';
+			if ($htmlNode->isEmpty) {
+				$token->text .= $space;
+			} else {
+				$end = "</$htmlNode->name>" . $space;
 			}
 		}
 
