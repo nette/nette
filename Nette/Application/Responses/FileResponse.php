@@ -88,7 +88,8 @@ class FileResponse extends Nette\Object implements Nette\Application\IResponse
 	public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
 	{
 		$httpResponse->setContentType($this->contentType);
-		$httpResponse->setHeader('Content-Disposition', 'attachment; filename="' . $this->name . '"');
+		$httpResponse->setHeader('Content-Disposition', 'attachment; filename="' . $this->name . '"'
+				. '; filename*=utf-8\'\'' . rawurlencode($this->name));
 
 		$filesize = $length = filesize($this->file);
 		$handle = fopen($this->file, 'r');
