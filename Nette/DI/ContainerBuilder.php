@@ -483,6 +483,7 @@ class ContainerBuilder extends Nette\Object
 			}
 			$code .= $this->formatStatement($setup) . ";\n";
 		}
+		$this->currentService = NULL;
 
 		$code .= 'return $service;';
 
