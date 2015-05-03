@@ -334,13 +334,12 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	public function redirect($code, $destination = NULL, $args = array())
 	{
 		if (!is_numeric($code)) { // first parameter is optional
-			$args = $destination;
+			$args = is_array($destination) ? $destination : array_slice(func_get_args(), 1);
 			$destination = $code;
 			$code = NULL;
-		}
 
-		if (!is_array($args)) {
-			$args = array_slice(func_get_args(), is_numeric($code) ? 2 : 1);
+		} elseif (!is_array($args)) {
+			$args = array_slice(func_get_args(), 2);
 		}
 
 		$presenter = $this->getPresenter();
