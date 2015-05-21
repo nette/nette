@@ -40,7 +40,7 @@ Installation
 The best way to install Nette Framework is to download the latest package
 from http://nette.org/download or use [Composer](http://doc.nette.org/composer).
 
-Nette Framework requires PHP 5.3.1 or later. Please run [Requirements
+Nette Framework requires PHP 5.4.4 or later. Please run [Requirements
 Checker](http://doc.nette.org/requirements) to obtain more detailed information.
 
 
