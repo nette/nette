@@ -33,12 +33,10 @@ class Helpers
 			$arr = array(ip2long($ip), ip2long($mask));
 		} else {
 			$arr = unpack('N*', inet_pton($ip) . inet_pton($mask));
-			$size = $size === '' ? 0 : $max - $size;
 		}
-		$bits = implode('', array_map(function ($n) {
-				return sprintf('%032b', $n);
-		}, $arr));
-		return substr($bits, 0, $max - $size) === substr($bits, $max, $max - $size);
+		$bits = implode('', array_map(function ($n) { return sprintf('%032b', $n); }, $arr));
+		$size = $size === '' ? $max : (int) $size;
+		return substr($bits, 0, $size) === substr($bits, $max, $size);
 	}
 
 }
