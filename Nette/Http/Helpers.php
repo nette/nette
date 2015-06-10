@@ -25,18 +25,14 @@ class Helpers
 	public static function ipMatch($ip, $mask)
 	{
 		list($mask, $size) = explode('/', $mask . '/');
-		$ipv4 = strpos($ip, '.');
-		$max = $ipv4 ? 32 : 128;
-		if (($ipv4 xor strpos($mask, '.')) || $size < 0 || $size > $max) {
+		$tmp = function ($n) { return sprintf('%032b', $n); };
+		$ip = implode('', array_map($tmp, unpack('N*', inet_pton($ip))));
+		$mask = implode('', array_map($tmp, unpack('N*', inet_pton($mask))));
+		$max = strlen($ip);
+		if (!$max || $max !== strlen($mask) || $size < 0 || $size > $max) {
 			return FALSE;
-		} elseif ($ipv4) {
-			$arr = array(ip2long($ip), ip2long($mask));
-		} else {
-			$arr = unpack('N*', inet_pton($ip) . inet_pton($mask));
 		}
-		$bits = implode('', array_map(function ($n) { return sprintf('%032b', $n); }, $arr));
-		$size = $size === '' ? $max : (int) $size;
-		return substr($bits, 0, $size) === substr($bits, $max, $size);
+		return strncmp($ip, $mask, $size === '' ? $max : $size) === 0;
 	}
 
 }

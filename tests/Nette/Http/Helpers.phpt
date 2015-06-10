@@ -20,6 +20,8 @@ test(function() {
 	Assert::false( Helpers::ipMatch('192.168.80.0', '192.168.68.233/20') );
 	Assert::true( Helpers::ipMatch('127.0.0.1', '192.168.68.233/0') );
 	Assert::false( Helpers::ipMatch('127.0.0.1', '192.168.68.233/33') );
+
+	Assert::false( Helpers::ipMatch('127.0.0.1', '7F00:0001::') );
 });
 
 
