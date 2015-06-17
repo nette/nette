@@ -38,9 +38,6 @@
 		"latte/latte": "@dev",
 		"tracy/tracy": "@dev"
 	},
-	"require-dev": {
-		"nette/tester": "~1.3"
-	},
 	"autoload": {
 		"classmap": ["Nette/"]
 	},
