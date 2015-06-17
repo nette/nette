@@ -334,7 +334,7 @@ class Debugger
 		}
 
 		$exceptionFilename = NULL;
-		if ($message instanceof \Exception) {
+		if ($message instanceof \Exception || $message instanceof \Throwable) {
 			$exception = $message;
 			while ($exception) {
 				$tmp[] = ($exception instanceof ErrorException
@@ -405,11 +405,11 @@ class Debugger
 
 	/**
 	 * Handler to catch uncaught exception.
-	 * @param  \Exception
+	 * @param  \Exception|\Throwable
 	 * @return void
 	 * @internal
 	 */
-	public static function _exceptionHandler(\Exception $exception, $shutdown = FALSE)
+	public static function _exceptionHandler($exception, $shutdown = FALSE)
 	{
 		if (!self::$enabled) {
 			return;
@@ -426,6 +426,8 @@ class Debugger
 			if (self::$productionMode) {
 				try {
 					self::log($exception, self::ERROR);
+				} catch (\Throwable $e) {
+					echo 'FATAL ERROR: unable to log error';
 				} catch (\Exception $e) {
 					echo 'FATAL ERROR: unable to log error';
 				}
@@ -497,7 +499,7 @@ class Debugger
 
 		if ($severity === E_RECOVERABLE_ERROR || $severity === E_USER_ERROR) {
 			if (Helpers::findTrace(debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : FALSE), '*::__toString')) {
-				$previous = isset($context['e']) && $context['e'] instanceof \Exception ? $context['e'] : NULL;
+				$previous = isset($context['e']) && ($context['e'] instanceof \Exception || $context['e'] instanceof \Throwable) ? $context['e'] : NULL;
 				$e = new ErrorException($message, 0, $severity, $file, $line, $previous);
 				$e->context = $context;
 				self::_exceptionHandler($e);

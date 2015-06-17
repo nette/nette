@@ -53,7 +53,7 @@ class FireLogger extends Nette\Object
 			$item['template'] = array_shift($args);
 		}
 
-		if (isset($args[0]) && $args[0] instanceof \Exception) {
+		if (isset($args[0]) && ($args[0] instanceof \Exception || $args[0] instanceof \Throwable)) {
 			$e = array_shift($args);
 			$trace = $e->getTrace();
 			if (isset($trace[0]['class']) && $trace[0]['class'] === 'Nette\Diagnostics\Debugger'

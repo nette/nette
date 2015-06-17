@@ -66,7 +66,10 @@ class Bar extends Nette\Object
 					'tab' => $tab = (string) $panel->getTab(),
 					'panel' => $tab ? (string) $panel->getPanel() : NULL,
 				);
+			} catch (\Throwable $e) {
 			} catch (\Exception $e) {
+			}
+			if (isset($e)) {
 				$panels[] = array(
 					'id' => "error-" . preg_replace('#[^a-z0-9]+#i', '-', $id),
 					'tab' => "Error in $id",
