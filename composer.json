@@ -38,15 +38,7 @@
 		"latte/latte": "2.3.2",
 		"tracy/tracy": "2.3.2"
 	},
-	"require-dev": {
-		"nette/tester": "~1.3"
-	},
 	"autoload": {
 		"classmap": ["Nette/"]
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-master": "2.3-dev"
-		}
 	}
 }
