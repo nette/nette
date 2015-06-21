@@ -7,8 +7,6 @@
 
 namespace Nette;
 
-use Nette;
-
 
 /**
  * Framework version.
