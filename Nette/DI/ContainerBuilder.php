@@ -7,11 +7,11 @@
 
 namespace Nette\DI;
 
-use Nette,
-	Nette\Utils\Validators,
-	Nette\Utils\Strings,
-	Nette\Reflection,
-	Nette\PhpGenerator\Helpers as PhpHelpers;
+use Nette;
+use Nette\Utils\Validators;
+use Nette\Utils\Strings;
+use Nette\Reflection;
+use Nette\PhpGenerator\Helpers as PhpHelpers;
 
 
 /**
@@ -607,7 +607,7 @@ class ContainerBuilder extends Nette\Object
 	public function formatPhp($statement, $args)
 	{
 		$that = $this;
-		array_walk_recursive($args, function(& $val) use ($that) {
+		array_walk_recursive($args, function (& $val) use ($that) {
 			if ($val instanceof Statement) {
 				$val = ContainerBuilder::literal($that->formatStatement($val));
 

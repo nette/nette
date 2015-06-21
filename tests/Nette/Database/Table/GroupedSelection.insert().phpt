@@ -12,7 +12,7 @@ require __DIR__ . '/../connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/../files/{$driverName}-nette_test1.sql");
 
 
-test(function() use ($context) {
+test(function () use ($context) {
 	$book = $context->table('book')->get(1);
 	$book->related('book_tag')->insert(array('tag_id' => 23));
 
@@ -23,7 +23,7 @@ test(function() use ($context) {
 });
 
 
-test(function() use ($context) { // test counting already fetched rows
+test(function () use ($context) { // test counting already fetched rows
 	$book = $context->table('book')->get(1);
 	iterator_to_array($book->related('book_tag'));
 	$book->related('book_tag')->insert(array('tag_id' => 23));

@@ -4,8 +4,8 @@
  * Test: Nette\Mail\Message - textual and HTML body with attachment.
  */
 
-use Nette\Mail\Message,
-	Tester\Assert;
+use Nette\Mail\Message;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

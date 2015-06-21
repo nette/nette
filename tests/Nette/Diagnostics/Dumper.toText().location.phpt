@@ -4,13 +4,13 @@
  * Test: Nette\Diagnostics\Dumper::toText() with location
  */
 
-use Nette\Diagnostics\Dumper,
-	Tester\Assert;
+use Nette\Diagnostics\Dumper;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-Assert::match( '"Hello" (5)
+Assert::match('"Hello" (5)
 in %a%:%d%
-', Dumper::toText( trim(" Hello "), array("location" => TRUE) ) );
+', Dumper::toText(trim(" Hello "), array("location" => TRUE)));

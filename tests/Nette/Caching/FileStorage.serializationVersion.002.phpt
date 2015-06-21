@@ -4,9 +4,9 @@
  * Test: Nette\Caching\Storages\FileStorage @serializationVersion dependency test (continue...).
  */
 
-use Nette\Caching\Cache,
-	Nette\Caching\Storages\FileStorage,
-	Tester\Assert;
+use Nette\Caching\Cache;
+use Nette\Caching\Storages\FileStorage;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -29,4 +29,4 @@ class Foo
 
 // Changed @serializationVersion
 
-Assert::false( isset($cache[$key]) );
+Assert::false(isset($cache[$key]));

@@ -4,8 +4,8 @@
  * Test: Nette\Application\Routers\Route with 'required' optional sequence.
  */
 
-use Nette\Application\Routers\Route,
-	Tester\Assert;
+use Nette\Application\Routers\Route;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

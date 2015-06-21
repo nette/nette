@@ -4,15 +4,15 @@
  * Test: Nette\Forms\Controls\RadioList.
  */
 
-use Nette\Forms\Form,
-	Nette\DateTime,
-	Tester\Assert;
+use Nette\Forms\Form;
+use Nette\DateTime;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-before(function() {
+before(function () {
 	$_SERVER['REQUEST_METHOD'] = 'POST';
 	$_POST = $_FILES = array();
 });
@@ -26,152 +26,152 @@ $series = array(
 );
 
 
-test(function() use ($series) { // Radio list
+test(function () use ($series) { // Radio list
 	$_POST = array('radio' => 'red-dwarf');
 
 	$form = new Form;
 	$input = $form->addRadioList('radio', NULL, $series);
 
-	Assert::true( $form->isValid() );
-	Assert::same( 'red-dwarf', $input->getValue() );
-	Assert::same( 'Red Dwarf', $input->getSelectedItem() );
-	Assert::true( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::same('red-dwarf', $input->getValue());
+	Assert::same('Red Dwarf', $input->getSelectedItem());
+	Assert::true($input->isFilled());
 });
 
 
-test(function() use ($series) { // Radio list with invalid input
+test(function () use ($series) { // Radio list with invalid input
 	$_POST = array('radio' => 'days-of-our-lives');
 
 	$form = new Form;
 	$input = $form->addRadioList('radio', NULL, $series);
 
-	Assert::true( $form->isValid() );
-	Assert::null( $input->getValue() );
-	Assert::null( $input->getSelectedItem() );
-	Assert::false( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::null($input->getValue());
+	Assert::null($input->getSelectedItem());
+	Assert::false($input->isFilled());
 });
 
 
-test(function() use ($series) { // Indexed arrays
+test(function () use ($series) { // Indexed arrays
 	$_POST = array('zero' => 0);
 
 	$form = new Form;
 	$input = $form->addRadioList('zero', NULL, $series);
 
-	Assert::true( $form->isValid() );
-	Assert::same( 0, $input->getValue() );
-	Assert::same( 0, $input->getRawValue() );
-	Assert::same( 'South Park', $input->getSelectedItem() );
-	Assert::true( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::same(0, $input->getValue());
+	Assert::same(0, $input->getRawValue());
+	Assert::same('South Park', $input->getSelectedItem());
+	Assert::true($input->isFilled());
 });
 
 
-test(function() use ($series) { // empty key
+test(function () use ($series) { // empty key
 	$_POST = array('empty' => '');
 
 	$form = new Form;
 	$input = $form->addRadioList('empty', NULL, $series);
 
-	Assert::true( $form->isValid() );
-	Assert::same( '', $input->getValue() );
-	Assert::same( 'Family Guy', $input->getSelectedItem() );
-	Assert::true( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::same('', $input->getValue());
+	Assert::same('Family Guy', $input->getSelectedItem());
+	Assert::true($input->isFilled());
 });
 
 
-test(function() use ($series) { // missing key
+test(function () use ($series) { // missing key
 	$form = new Form;
 	$input = $form->addRadioList('missing', NULL, $series);
 
-	Assert::true( $form->isValid() );
-	Assert::null( $input->getValue() );
-	Assert::null( $input->getSelectedItem() );
-	Assert::false( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::null($input->getValue());
+	Assert::null($input->getSelectedItem());
+	Assert::false($input->isFilled());
 });
 
 
-test(function() use ($series) { // disabled key
+test(function () use ($series) { // disabled key
 	$_POST = array('disabled' => 'red-dwarf');
 
 	$form = new Form;
 	$input = $form->addRadioList('disabled', NULL, $series)
 		->setDisabled();
 
-	Assert::true( $form->isValid() );
-	Assert::null( $input->getValue() );
-	Assert::false( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::null($input->getValue());
+	Assert::false($input->isFilled());
 });
 
 
-test(function() use ($series) { // malformed data
+test(function () use ($series) { // malformed data
 	$_POST = array('malformed' => array(NULL));
 
 	$form = new Form;
 	$input = $form->addRadioList('malformed', NULL, $series);
 
-	Assert::true( $form->isValid() );
-	Assert::null( $input->getValue() );
-	Assert::null( $input->getSelectedItem() );
-	Assert::false( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::null($input->getValue());
+	Assert::null($input->getSelectedItem());
+	Assert::false($input->isFilled());
 });
 
 
-test(function() use ($series) { // setItems without keys
+test(function () use ($series) { // setItems without keys
 	$_POST = array('select' => 'red-dwarf');
 
 	$form = new Form;
 	$input = $form->addRadioList('select')->setItems(array_keys($series), FALSE);
 
-	Assert::true( $form->isValid() );
-	Assert::same( 'red-dwarf', $input->getValue() );
-	Assert::same( 'red-dwarf', $input->getSelectedItem() );
-	Assert::true( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::same('red-dwarf', $input->getValue());
+	Assert::same('red-dwarf', $input->getSelectedItem());
+	Assert::true($input->isFilled());
 });
 
 
-test(function() use ($series) { // setValue() and invalid argument
+test(function () use ($series) { // setValue() and invalid argument
 	$form = new Form;
 	$input = $form->addRadioList('radio', NULL, $series);
 	$input->setValue(NULL);
 
-	Assert::exception(function() use ($input) {
+	Assert::exception(function () use ($input) {
 		$input->setValue('unknown');
 	}, 'Nette\InvalidArgumentException', "Value 'unknown' is out of allowed range ['red-dwarf', 'the-simpsons', 0, ''] in field 'radio'.");
 });
 
 
-test(function() { // object as value
+test(function () { // object as value
 	$form = new Form;
 	$input = $form->addRadioList('radio', NULL, array('2013-07-05 00:00:00' => 1))
 		->setValue(new DateTime('2013-07-05'));
 
-	Assert::same( '2013-07-05 00:00:00', $input->getValue() );
+	Assert::same('2013-07-05 00:00:00', $input->getValue());
 });
 
 
-test(function() { // object as item
+test(function () { // object as item
 	$form = new Form;
 	$input = $form->addRadioList('radio')
 		->setItems(array(new DateTime('2013-07-05')), FALSE)
 		->setValue(new DateTime('2013-07-05'));
 
-	Assert::same( '2013-07-05 00:00:00', $input->getValue() );
+	Assert::same('2013-07-05 00:00:00', $input->getValue());
 });
 
 
-test(function() use ($series) { // disabled one
+test(function () use ($series) { // disabled one
 	$_POST = array('radio' => 'red-dwarf');
 
 	$form = new Form;
 	$input = $form->addRadioList('radio', NULL, $series)
 		->setDisabled(array('red-dwarf'));
 
-	Assert::null( $input->getValue() );
+	Assert::null($input->getValue());
 
 	unset($form['radio']);
 	$input = new Nette\Forms\Controls\RadioList(NULL, $series);
 	$input->setDisabled(array('red-dwarf'));
 	$form['radio'] = $input;
 
-	Assert::null( $input->getValue() );
+	Assert::null($input->getValue());
 });

@@ -4,9 +4,9 @@
  * Test: Nette\ComponentModel\Container iterator.
  */
 
-use Nette\ComponentModel\Component,
-	Nette\ComponentModel\Container,
-	Tester\Assert;
+use Nette\ComponentModel\Component;
+use Nette\ComponentModel\Container;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -33,67 +33,67 @@ $c->getComponent('one')->getComponent('inner2')->addComponent(new Button, 'butto
 
 // Normal
 $list = $c->getComponents();
-Assert::same( array(
+Assert::same(array(
 	"one",
 	"two",
 	"button1",
-), array_keys(iterator_to_array($list)) );
+), array_keys(iterator_to_array($list)));
 
 
 // Filter
 $list = $c->getComponents(FALSE, 'Button');
-Assert::same( array(
+Assert::same(array(
 	"button1",
-), array_keys(iterator_to_array($list)) );
+), array_keys(iterator_to_array($list)));
 
 
 // RecursiveIteratorIterator
 $list = new RecursiveIteratorIterator($c->getComponents(), 1);
-Assert::same( array(
+Assert::same(array(
 	"one",
 	"inner",
 	"inner2",
 	"button2",
 	"two",
 	"button1",
-), array_keys(iterator_to_array($list)) );
+), array_keys(iterator_to_array($list)));
 
 
 // Recursive
 $list = $c->getComponents(TRUE);
-Assert::same( array(
+Assert::same(array(
 	"one",
 	"inner",
 	"inner2",
 	"button2",
 	"two",
 	"button1",
-), array_keys(iterator_to_array($list)) );
+), array_keys(iterator_to_array($list)));
 
 
 // Recursive CHILD_FIRST
 $list = $c->getComponents(-1);
-Assert::same( array(
+Assert::same(array(
 	"inner",
 	"button2",
 	"inner2",
 	"one",
 	"two",
 	"button1",
-), array_keys(iterator_to_array($list)) );
+), array_keys(iterator_to_array($list)));
 
 
 // Recursive & filter I
 $list = $c->getComponents(TRUE, 'Button');
-Assert::same( array(
+Assert::same(array(
 	"button2",
 	"button1",
-), array_keys(iterator_to_array($list)) );
+), array_keys(iterator_to_array($list)));
 
 
 // Recursive & filter II
 $list = $c->getComponents(TRUE, 'Nette\ComponentModel\Container');
-Assert::same( array(
+Assert::same(array(
 	"one",
 	"inner2",
-), array_keys(iterator_to_array($list)) );
+), array_keys(iterator_to_array($list)));

@@ -4,20 +4,20 @@
  * Test: Nette\Forms\Controls\Checkbox.
  */
 
-use Nette\Forms\Form,
-	Tester\Assert;
+use Nette\Forms\Form;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-before(function() {
+before(function () {
 	$_SERVER['REQUEST_METHOD'] = 'POST';
 	$_POST = $_FILES = array();
 });
 
 
-test(function() {
+test(function () {
 	$_POST = array(
 		'off' => '',
 		'on' => 1,
@@ -26,33 +26,33 @@ test(function() {
 	$form = new Form;
 	$input = $form->addCheckbox('off');
 
-	Assert::false( $input->getValue() );
-	Assert::false( $input->isFilled() );
+	Assert::false($input->getValue());
+	Assert::false($input->isFilled());
 
 	$input = $form->addCheckbox('on');
 
-	Assert::true( $input->getValue() );
-	Assert::true( $input->isFilled() );
+	Assert::true($input->getValue());
+	Assert::true($input->isFilled());
 });
 
 
-test(function() { // malformed data
+test(function () { // malformed data
 	$_POST = array('malformed' => array(NULL));
 
 	$form = new Form;
 	$input = $form->addCheckbox('malformed');
 
-	Assert::false( $input->getValue() );
-	Assert::false( $input->isFilled() );
+	Assert::false($input->getValue());
+	Assert::false($input->isFilled());
 });
 
 
-test(function() { // setValue() and invalid argument
+test(function () { // setValue() and invalid argument
 	$form = new Form;
 	$input = $form->addCheckbox('checkbox');
 	$input->setValue(NULL);
 
-	Assert::exception(function() use ($input) {
+	Assert::exception(function () use ($input) {
 		$input->setValue(array());
 	}, 'Nette\InvalidArgumentException', "Value must be scalar or NULL, array given in field 'checkbox'.");
 });

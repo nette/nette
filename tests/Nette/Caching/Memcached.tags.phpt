@@ -4,10 +4,10 @@
  * Test: Nette\Caching\Storages\MemcachedStorage tags dependency test.
  */
 
-use Nette\Caching\Storages\MemcachedStorage,
-	Nette\Caching\Storages\FileJournal,
-	Nette\Caching\Cache,
-	Tester\Assert;
+use Nette\Caching\Storages\MemcachedStorage;
+use Nette\Caching\Storages\FileJournal;
+use Nette\Caching\Cache;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -43,7 +43,7 @@ $cache->clean(array(
 	Cache::TAGS => 'one',
 ));
 
-Assert::false( isset($cache['nette-tags-key1']) );
-Assert::false( isset($cache['nette-tags-key2']) );
-Assert::true( isset($cache['nette-tags-key3']) );
-Assert::true( isset($cache['nette-tags-key4']) );
+Assert::false(isset($cache['nette-tags-key1']));
+Assert::false(isset($cache['nette-tags-key2']));
+Assert::true(isset($cache['nette-tags-key3']));
+Assert::true(isset($cache['nette-tags-key4']));

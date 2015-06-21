@@ -7,8 +7,8 @@
 
 namespace Nette\Diagnostics;
 
-use Nette,
-	ErrorException;
+use Nette;
+use ErrorException;
 
 
 /**
@@ -228,7 +228,7 @@ class Debugger
 		if (!self::$blueScreen) {
 			self::$blueScreen = new BlueScreen;
 			self::$blueScreen->collapsePaths[] = dirname(__DIR__);
-			self::$blueScreen->addPanel(function($e) {
+			self::$blueScreen->addPanel(function ($e) {
 				if ($e instanceof Nette\Templating\FilterException) {
 					return array(
 						'tab' => 'Template',
@@ -363,7 +363,7 @@ class Debugger
 			$exceptionFilename = self::$logDirectory . '/' . $exceptionFilename;
 			if (empty($saved) && $logHandle = @fopen($exceptionFilename, 'w')) {
 				ob_start(); // double buffer prevents sending HTTP headers in some PHP
-				ob_start(function($buffer) use ($logHandle) { fwrite($logHandle, $buffer); }, 4096);
+				ob_start(function ($buffer) use ($logHandle) { fwrite($logHandle, $buffer); }, 4096);
 				self::getBlueScreen()->render($exception);
 				ob_end_flush();
 				ob_end_clean();

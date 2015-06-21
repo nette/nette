@@ -4,9 +4,9 @@
  * Test: Nette\Forms\Controls\CheckboxList.
  */
 
-use Nette\Forms\Form,
-	Nette\Utils\Html,
-	Tester\Assert;
+use Nette\Forms\Form;
+use Nette\Utils\Html;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -21,7 +21,7 @@ class Translator implements Nette\Localization\ITranslator
 }
 
 
-test(function() {
+test(function () {
 	$form = new Form;
 	$input = $form->addCheckboxList('list', 'Label', array(
 		'a' => 'First',
@@ -43,7 +43,7 @@ test(function() {
 });
 
 
-test(function() { // checked
+test(function () { // checked
 	$form = new Form;
 	$input = $form->addCheckboxList('list', 'Label', array(
 		'a' => 'First',
@@ -54,7 +54,7 @@ test(function() { // checked
 });
 
 
-test(function() { // translator
+test(function () { // translator
 	$form = new Form;
 	$input = $form->addCheckboxList('list', 'Label', array(
 		'a' => 'First',
@@ -71,7 +71,7 @@ test(function() { // translator
 });
 
 
-test(function() { // Html
+test(function () { // Html
 	$form = new Form;
 	$input = $form->addCheckboxList('list', Html::el('b', 'Label'), array(
 		'a' => Html::el('b', 'First'),
@@ -86,7 +86,7 @@ test(function() { // Html
 });
 
 
-test(function() { // validation rules
+test(function () { // validation rules
 	$form = new Form;
 	$input = $form->addCheckboxList('list', 'Label', array(
 		'a' => 'First',
@@ -98,7 +98,7 @@ test(function() { // validation rules
 });
 
 
-test(function() { // container
+test(function () { // container
 	$form = new Form;
 	$container = $form->addContainer('container');
 	$input = $container->addCheckboxList('list', 'Label', array(
@@ -110,7 +110,7 @@ test(function() { // container
 });
 
 
-test(function() { // separator prototype
+test(function () { // separator prototype
 	$form = new Form;
 	$input = $form->addCheckboxList('list', NULL, array(
 		'a' => 'b',
@@ -121,7 +121,7 @@ test(function() { // separator prototype
 });
 
 
-test(function() { // disabled all
+test(function () { // disabled all
 	$form = new Form;
 	$input = $form->addCheckboxList('list', 'Label', array(
 		'a' => 'First',
@@ -132,7 +132,7 @@ test(function() { // disabled all
 });
 
 
-test(function() { // disabled one
+test(function () { // disabled one
 	$form = new Form;
 	$input = $form->addCheckboxList('list', 'Label', array(
 		'a' => 'First',

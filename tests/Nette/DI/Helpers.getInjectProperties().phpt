@@ -56,16 +56,16 @@ namespace
 	$refA = ClassType::from('A\AClass');
 	$refB = ClassType::from('A\B\BClass');
 
-	Assert::same( array(
+	Assert::same(array(
 		'varA' => 'A\AInjected',
 		'varB' => 'A\B\BInjected',
 		'varC' => '\A\AInjected',
-	), Helpers::getInjectProperties($refA) );
+	), Helpers::getInjectProperties($refA));
 
-	Assert::same( array(
+	Assert::same(array(
 		'varF' => 'A\B\BInjected',
 		'varA' => 'A\AInjected',
 		'varB' => 'A\B\BInjected',
 		'varC' => '\A\AInjected',
-	), Helpers::getInjectProperties($refB) );
+	), Helpers::getInjectProperties($refB));
 }

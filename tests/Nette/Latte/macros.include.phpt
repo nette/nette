@@ -4,11 +4,11 @@
  * Test: Nette\Latte\Engine: {include file}
  */
 
-use Nette\Latte,
-	Nette\Utils\Html,
-	Nette\Templating\FileTemplate,
-	Nette\Templating\Template,
-	Tester\Assert;
+use Nette\Latte;
+use Nette\Utils\Html;
+use Nette\Templating\FileTemplate;
+use Nette\Templating\Template;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -34,6 +34,6 @@ Assert::matchFile("$path.inc3.phtml", $cache->phtml['include3.latte']);
 $template = new Template;
 $template->registerFilter($latte);
 $template->setSource('{include somefile.latte}');
-Assert::exception(function() use ($template) {
+Assert::exception(function () use ($template) {
 	$template->render();
 }, 'Nette\NotSupportedException', 'Macro {include "filename"} is supported only with Nette\Templating\IFileTemplate.');

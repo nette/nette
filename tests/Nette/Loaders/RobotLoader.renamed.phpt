@@ -4,9 +4,9 @@
  * Test: Nette\Loaders\RobotLoader and renamed classes.
  */
 
-use Nette\Loaders\RobotLoader,
-	Nette\Caching\Storages\DevNullStorage,
-	Tester\Assert;
+use Nette\Loaders\RobotLoader;
+use Nette\Caching\Storages\DevNullStorage;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

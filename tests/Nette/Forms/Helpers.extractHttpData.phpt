@@ -4,15 +4,15 @@
  * Test: Nette\Forms\Helpers::extractHttpData()
  */
 
-use Nette\Forms\Form,
-	Nette\Forms\Helpers,
-	Tester\Assert;
+use Nette\Forms\Form;
+use Nette\Forms\Helpers;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-test(function() { // non-multiple
+test(function () { // non-multiple
 	Assert::same('jim', Helpers::extractHttpData(array('name' => 'jim'), 'name', Form::DATA_LINE));
 	Assert::same('jim', Helpers::extractHttpData(array('name' => 'jim'), 'name', Form::DATA_TEXT));
 
@@ -23,17 +23,17 @@ test(function() { // non-multiple
 	Assert::same('0', Helpers::extractHttpData(array('zero' => '0'), 'zero', Form::DATA_LINE));
 	Assert::same('', Helpers::extractHttpData(array('empty' => ''), 'empty', Form::DATA_LINE));
 
-	Assert::null( Helpers::extractHttpData(array(), 'missing', Form::DATA_LINE));
-	Assert::null( Helpers::extractHttpData(array('invalid' => '1'), 'invalid[name]', Form::DATA_LINE));
-	Assert::null( Helpers::extractHttpData(array('invalid' => array('')), 'invalid', Form::DATA_LINE));
-	Assert::null( Helpers::extractHttpData(array('invalid' => array('')), 'invalid', Form::DATA_TEXT));
+	Assert::null(Helpers::extractHttpData(array(), 'missing', Form::DATA_LINE));
+	Assert::null(Helpers::extractHttpData(array('invalid' => '1'), 'invalid[name]', Form::DATA_LINE));
+	Assert::null(Helpers::extractHttpData(array('invalid' => array('')), 'invalid', Form::DATA_LINE));
+	Assert::null(Helpers::extractHttpData(array('invalid' => array('')), 'invalid', Form::DATA_TEXT));
 
 	Assert::same('a  b   c', Helpers::extractHttpData(array('text' => "  a\r b \n c "), 'text', Form::DATA_LINE));
 	Assert::same("  a\n b \n c ", Helpers::extractHttpData(array('text' => "  a\r b \n c "), 'text', Form::DATA_TEXT));
 });
 
 
-test(function() { // multiple
+test(function () { // multiple
 	Assert::same(array('1', '2'), Helpers::extractHttpData(array('multi' => array('1', '2')), 'multi[]', Form::DATA_LINE));
 	Assert::same(array('1', '2'), Helpers::extractHttpData(array('multi' => array('1', '2')), 'multi[]', Form::DATA_TEXT));
 	Assert::same(array('1', '2'), Helpers::extractHttpData(array('multi' => array('x' => '1', 2 => '2')), 'multi[]', Form::DATA_TEXT));
@@ -55,7 +55,7 @@ test(function() { // multiple
 });
 
 
-test(function() { // files
+test(function () { // files
 	$file = new Nette\Http\FileUpload(array(
 		'name' => 'license.txt',
 		'type' => NULL,
@@ -66,10 +66,10 @@ test(function() { // files
 
 	Assert::equal($file, Helpers::extractHttpData(array('avatar' => $file), 'avatar', Form::DATA_FILE));
 
-	Assert::null( Helpers::extractHttpData(array(), 'missing', Form::DATA_FILE));
-	Assert::null( Helpers::extractHttpData(array('invalid' => NULL), 'invalid', Form::DATA_FILE));
-	Assert::null( Helpers::extractHttpData(array('invalid' => array(NULL)), 'invalid', Form::DATA_FILE));
-	Assert::null( Helpers::extractHttpData(array(
+	Assert::null(Helpers::extractHttpData(array(), 'missing', Form::DATA_FILE));
+	Assert::null(Helpers::extractHttpData(array('invalid' => NULL), 'invalid', Form::DATA_FILE));
+	Assert::null(Helpers::extractHttpData(array('invalid' => array(NULL)), 'invalid', Form::DATA_FILE));
+	Assert::null(Helpers::extractHttpData(array(
 		'multiple' => array('avatar' => array($file, $file)),
 	), 'multiple[avatar]', Form::DATA_FILE));
 

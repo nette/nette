@@ -4,9 +4,9 @@
  * Test: Nette\Application\Responses\FileResponse.
  */
 
-use Nette\Application\Responses\FileResponse,
-	Nette\Http,
-	Tester\Assert;
+use Nette\Application\Responses\FileResponse;
+use Nette\Http;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -16,7 +16,7 @@ if (PHP_SAPI === 'cli') {
 }
 
 
-test(function() {
+test(function () {
 	$file = __FILE__;
 	$fileResponse = new FileResponse($file);
 	$origData = file_get_contents($file);
@@ -27,12 +27,12 @@ test(function() {
 	ob_start();
 	$fileResponse->send(new Http\Request(new Http\UrlScript), $response = new Http\Response);
 
-	Assert::same( $origData, ob_get_clean() );
-	Assert::same( 'attachment; filename="' . $fileName . '"; filename*=utf-8\'\'' . rawurlencode($fileName), $response->getHeader('Content-Disposition') );
+	Assert::same($origData, ob_get_clean());
+	Assert::same('attachment; filename="' . $fileName . '"; filename*=utf-8\'\'' . rawurlencode($fileName), $response->getHeader('Content-Disposition'));
 });
 
 
-test(function() {
+test(function () {
 	$file = __FILE__;
 	$fileName = 'žluťoučký kůň.txt';
 	$fileResponse = new FileResponse($file, $fileName);
@@ -41,6 +41,6 @@ test(function() {
 	ob_start();
 	$fileResponse->send(new Http\Request(new Http\UrlScript), $response = new Http\Response);
 
-	Assert::same( $origData, ob_get_clean() );
+	Assert::same($origData, ob_get_clean());
 	Assert::same('attachment; filename="' . $fileName . '"; filename*=utf-8\'\'' . rawurlencode($fileName), $response->getHeader('Content-Disposition'));
 });

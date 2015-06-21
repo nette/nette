@@ -4,14 +4,14 @@
  * Test: Nette\Security\Identity.
  */
 
-use Nette\Security\Identity,
-	Tester\Assert;
+use Nette\Security\Identity;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-test(function() {
+test(function () {
 	$id = new Identity(12, 'admin', array('name' => 'John'));
 
 	Assert::same(12, $id->getId());
@@ -23,7 +23,7 @@ test(function() {
 });
 
 
-test(function() {
+test(function () {
 	$id = new Identity('12');
 	Assert::same(12, $id->getId());
 

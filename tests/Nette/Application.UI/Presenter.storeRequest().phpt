@@ -4,11 +4,11 @@
  * Test: Nette\Application\UI\Presenter::storeRequest()
  */
 
-use Nette\Http,
-	Nette\Application,
-	Nette\DI,
-	Nette\Security,
-	Tester\Assert;
+use Nette\Http;
+use Nette\Application;
+use Nette\DI;
+use Nette\Security;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

@@ -4,8 +4,8 @@
  * Test: Nette\Configurator and createContainer.
  */
 
-use Nette\Configurator,
-	Tester\Assert;
+use Nette\Configurator;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -23,16 +23,16 @@ $configurator->addParameters(array(
 $container = $configurator->addConfig('files/configurator.basic.neon', 'production')
 	->createContainer();
 
-Assert::same( 'overwritten', $container->parameters['wwwDir'] );
-Assert::same( 'hello world', $container->parameters['foo'] );
-Assert::same( 'hello world', $container->parameters['foo2'] );
-Assert::same( 'overwritten', $container->parameters['foo3'] );
-Assert::same( 'hello', $container->parameters['bar'] );
-Assert::same( 'hello world', constant('BAR') );
-Assert::same( 'Europe/Prague', date_default_timezone_get() );
+Assert::same('overwritten', $container->parameters['wwwDir']);
+Assert::same('hello world', $container->parameters['foo']);
+Assert::same('hello world', $container->parameters['foo2']);
+Assert::same('overwritten', $container->parameters['foo3']);
+Assert::same('hello', $container->parameters['bar']);
+Assert::same('hello world', constant('BAR'));
+Assert::same('Europe/Prague', date_default_timezone_get());
 
-Assert::same( array(
+Assert::same(array(
 	'dsn' => 'sqlite2::memory:',
 	'user' => 'dbuser',
 	'password' => 'secret',
-), $container->parameters['database'] );
+), $container->parameters['database']);

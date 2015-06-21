@@ -4,14 +4,14 @@
  * Test: Nette\Diagnostics\Dumper::toText() special chars
  */
 
-use Nette\Diagnostics\Dumper,
-	Tester\Assert;
+use Nette\Diagnostics\Dumper;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-Assert::match( "array (9)
+Assert::match("array (9)
    0 => \"\"
    1 => \" \"
    2 => \"utf \n\r\t string\" (14)

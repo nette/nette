@@ -4,9 +4,9 @@
  * Test: CompileExceptions have correct line number in mixed php/latte template
  */
 
-use Nette\Latte,
-	Nette\Templating\Template,
-	Tester\Assert;
+use Nette\Latte;
+use Nette\Templating\Template;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

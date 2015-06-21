@@ -4,8 +4,8 @@
  * Test: Nette\Application\Routers\Route with Modules
  */
 
-use Nette\Application\Routers\Route,
-	Tester\Assert;
+use Nette\Application\Routers\Route;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -22,9 +22,9 @@ testRouteIn($route, '/abc', 'module:submodule:Abc', array(
 ), '/abc?test=testvalue');
 
 testRouteIn($route, '/');
-Assert::null( testRouteOut($route, 'Homepage') );
-Assert::null( testRouteOut($route, 'Module:Homepage') );
-Assert::same( 'http://example.com/homepage', testRouteOut($route, 'Module:Submodule:Homepage') );
+Assert::null(testRouteOut($route, 'Homepage'));
+Assert::null(testRouteOut($route, 'Module:Homepage'));
+Assert::same('http://example.com/homepage', testRouteOut($route, 'Module:Submodule:Homepage'));
 
 
 $route = new Route('<presenter>', array(
@@ -36,9 +36,9 @@ testRouteIn($route, '/', 'Module:Submodule:Default', array(
 	'test' => 'testvalue',
 ), '/?test=testvalue');
 
-Assert::null( testRouteOut($route, 'Homepage') );
-Assert::null( testRouteOut($route, 'Module:Homepage') );
-Assert::same( 'http://example.com/homepage', testRouteOut($route, 'Module:Submodule:Homepage') );
+Assert::null(testRouteOut($route, 'Homepage'));
+Assert::null(testRouteOut($route, 'Module:Homepage'));
+Assert::same('http://example.com/homepage', testRouteOut($route, 'Module:Submodule:Homepage'));
 
 
 $route = new Route('<module>/<presenter>', array(
@@ -49,9 +49,9 @@ testRouteIn($route, '/module.submodule', 'Module:Submodule:AnyDefault', array(
 	'test' => 'testvalue',
 ), '/module.submodule/?test=testvalue');
 
-Assert::null( testRouteOut($route, 'Homepage') );
-Assert::same( 'http://example.com/module/homepage', testRouteOut($route, 'Module:Homepage') );
-Assert::same( 'http://example.com/module.submodule/homepage', testRouteOut($route, 'Module:Submodule:Homepage') );
+Assert::null(testRouteOut($route, 'Homepage'));
+Assert::same('http://example.com/module/homepage', testRouteOut($route, 'Module:Homepage'));
+Assert::same('http://example.com/module.submodule/homepage', testRouteOut($route, 'Module:Submodule:Homepage'));
 
 
 $route = new Route('<module>/<presenter>', array(
@@ -63,6 +63,6 @@ testRouteIn($route, '/module.submodule', 'Module:Submodule:Default', array(
 	'test' => 'testvalue',
 ), '/?test=testvalue');
 
-Assert::null( testRouteOut($route, 'Homepage') );
-Assert::same( 'http://example.com/module/homepage', testRouteOut($route, 'Module:Homepage') );
-Assert::same( 'http://example.com/module.submodule/homepage', testRouteOut($route, 'Module:Submodule:Homepage') );
+Assert::null(testRouteOut($route, 'Homepage'));
+Assert::same('http://example.com/module/homepage', testRouteOut($route, 'Module:Homepage'));
+Assert::same('http://example.com/module.submodule/homepage', testRouteOut($route, 'Module:Submodule:Homepage'));

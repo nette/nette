@@ -4,8 +4,8 @@
  * Test: Nette\Http\Response redirect.
  */
 
-use Nette\Http,
-	Tester\Assert;
+use Nette\Http;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

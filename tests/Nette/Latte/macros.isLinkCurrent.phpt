@@ -4,9 +4,9 @@
  * Test: Nette\Latte\Engine: isLinkCurrent()
  */
 
-use Nette\Latte,
-	Nette\Templating\Template,
-	Tester\Assert;
+use Nette\Latte;
+use Nette\Templating\Template;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

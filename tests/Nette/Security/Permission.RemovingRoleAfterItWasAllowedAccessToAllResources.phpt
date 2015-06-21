@@ -5,8 +5,8 @@
  * raise undefined index error.
  */
 
-use Nette\Security\Permission,
-	Tester\Assert;
+use Nette\Security\Permission;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -24,4 +24,4 @@ $acl->allow(NULL,'Test','xxx');
 $acl->removeRole('test0');
 
 // Check after fix
-Assert::false( $acl->hasRole('test0') );
+Assert::false($acl->hasRole('test0'));

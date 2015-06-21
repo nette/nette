@@ -4,8 +4,8 @@
  * Test: Nette\Security\Permission Ensures that removal of all Roles works.
  */
 
-use Nette\Security\Permission,
-	Tester\Assert;
+use Nette\Security\Permission;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -14,4 +14,4 @@ require __DIR__ . '/../bootstrap.php';
 $acl = new Permission;
 $acl->addRole('guest');
 $acl->removeAllRoles();
-Assert::false( $acl->hasRole('guest') );
+Assert::false($acl->hasRole('guest'));

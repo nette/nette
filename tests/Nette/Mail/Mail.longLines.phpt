@@ -4,8 +4,8 @@
  * Test: Nette\Mail\Message - textual body and line longer than 990 characters.
  */
 
-use Nette\Mail\Message,
-	Tester\Assert;
+use Nette\Mail\Message;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -27,7 +27,7 @@ $mail->setBody('Žluťoučký kůň' . str_repeat('x', 990));
 $mailer = new TestMailer();
 $mailer->send($mail);
 
-Assert::match( <<<EOD
+Assert::match(<<<EOD
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
@@ -55,4 +55,4 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 EOD
-, TestMailer::$output );
+, TestMailer::$output);

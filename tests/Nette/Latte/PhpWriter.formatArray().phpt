@@ -4,9 +4,9 @@
  * Test: Nette\Latte\PhpWriter::formatArray()
  */
 
-use Nette\Latte\PhpWriter,
-	Nette\Latte\MacroTokens,
-	Tester\Assert;
+use Nette\Latte\PhpWriter;
+use Nette\Latte\MacroTokens;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -18,19 +18,19 @@ function formatArray($args) {
 }
 
 
-test(function() { // symbols
-	Assert::same( 'array()',  formatArray('') );
-	Assert::same( 'array(1)',  formatArray('1') );
-	Assert::same( "array('symbol')",  formatArray('symbol') );
-	Assert::same( "array(1, 2, 'symbol1', 'symbol-2')",  formatArray('1, 2, symbol1, symbol-2') );
+test(function () { // symbols
+	Assert::same('array()',  formatArray(''));
+	Assert::same('array(1)',  formatArray('1'));
+	Assert::same("array('symbol')",  formatArray('symbol'));
+	Assert::same("array(1, 2, 'symbol1', 'symbol-2')",  formatArray('1, 2, symbol1, symbol-2'));
 });
 
 
-test(function() { // simplified arrays
-	Assert::same( 'array(array(\'item\', 123, array(), $item[1]))',  formatArray('[item, 123, [], $item[1]]') );
+test(function () { // simplified arrays
+	Assert::same('array(array(\'item\', 123, array(), $item[1]))',  formatArray('[item, 123, [], $item[1]]'));
 });
 
 
-test(function() { // expand
-	Assert::same( 'array_merge(array(\'item\', $list, ), $list, array())',  formatArray('item, $list, (expand) $list') );
+test(function () { // expand
+	Assert::same('array_merge(array(\'item\', $list, ), $list, array())',  formatArray('item, $list, (expand) $list'));
 });

@@ -4,8 +4,8 @@
  * Test: Nette\Configurator and services inheritance and overwriting.
  */
 
-use Nette\Configurator,
-	Tester\Assert;
+use Nette\Configurator;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -18,4 +18,4 @@ $container = $configurator->addConfig('files/configurator.inheritance4.neon')
 	->createContainer();
 
 
-Assert::type( 'Nette\Application\Application', $container->getService('application') );
+Assert::type('Nette\Application\Application', $container->getService('application'));

@@ -7,12 +7,12 @@
 
 namespace Nette\Latte\Macros;
 
-use Nette,
-	Nette\Latte,
-	Nette\Latte\MacroNode,
-	Nette\Latte\PhpWriter,
-	Nette\Latte\CompileException,
-	Nette\Utils\Strings;
+use Nette;
+use Nette\Latte;
+use Nette\Latte\MacroNode;
+use Nette\Latte\PhpWriter;
+use Nette\Latte\CompileException;
+use Nette\Utils\Strings;
 
 
 /**
@@ -51,7 +51,7 @@ class UIMacros extends MacroSet
 		$me->addMacro('widget', array($me, 'macroControl')); // deprecated - use control
 		$me->addMacro('control', array($me, 'macroControl'));
 
-		$me->addMacro('href', NULL, NULL, function(MacroNode $node, PhpWriter $writer) use ($me) {
+		$me->addMacro('href', NULL, NULL, function (MacroNode $node, PhpWriter $writer) use ($me) {
 			return ' ?> href="<?php ' . $me->macroLink($node, $writer) . ' ?>"<?php ';
 		});
 		$me->addMacro('plink', array($me, 'macroLink'));

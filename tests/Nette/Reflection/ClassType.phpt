@@ -4,8 +4,8 @@
  * Test: Nette\Reflection\ClassType tests.
  */
 
-use Nette\Reflection,
-	Tester\Assert;
+use Nette\Reflection;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -24,46 +24,46 @@ class Bar extends Foo implements Countable
 }
 
 
-Assert::equal( new Reflection\ClassType('Bar'), Reflection\ClassType::from('Bar') );
-Assert::equal( new Reflection\ClassType('Bar'), Reflection\ClassType::from(new Bar) );
+Assert::equal(new Reflection\ClassType('Bar'), Reflection\ClassType::from('Bar'));
+Assert::equal(new Reflection\ClassType('Bar'), Reflection\ClassType::from(new Bar));
 
 
 $rc = Reflection\ClassType::from('Bar');
 
-Assert::null( $rc->getExtension() );
+Assert::null($rc->getExtension());
 
 
-Assert::equal( array(
+Assert::equal(array(
 	'Countable' => new Reflection\ClassType('Countable'),
-), $rc->getInterfaces() );
+), $rc->getInterfaces());
 
 
-Assert::equal( new Reflection\ClassType('Foo'), $rc->getParentClass() );
+Assert::equal(new Reflection\ClassType('Foo'), $rc->getParentClass());
 
 
-Assert::null( $rc->getConstructor() );
+Assert::null($rc->getConstructor());
 
 
-Assert::equal( new Reflection\Method('Foo', 'f'), $rc->getMethod('f') );
+Assert::equal(new Reflection\Method('Foo', 'f'), $rc->getMethod('f'));
 
 
-Assert::exception(function() use ($rc) {
+Assert::exception(function () use ($rc) {
 	$rc->getMethod('doesntExist');
 }, 'ReflectionException', 'Method Bar::doesntExist() does not exist');
 
-Assert::equal( array(
+Assert::equal(array(
 	new Reflection\Method('Bar', 'count'),
 	new Reflection\Method('Foo', 'f'),
-), $rc->getMethods() );
+), $rc->getMethods());
 
 
-Assert::equal( new Reflection\Property('Bar', 'var'), $rc->getProperty('var') );
+Assert::equal(new Reflection\Property('Bar', 'var'), $rc->getProperty('var'));
 
 
-Assert::exception(function() use ($rc) {
+Assert::exception(function () use ($rc) {
 	$rc->getProperty('doesntExist');
 }, 'ReflectionException', 'Property Bar::$doesntExist does not exist');
 
-Assert::equal( array(
+Assert::equal(array(
 	new Reflection\Property('Bar', 'var'),
-), $rc->getProperties() );
+), $rc->getProperties());

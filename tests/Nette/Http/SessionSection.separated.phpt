@@ -4,8 +4,8 @@
  * Test: Nette\Http\SessionSection separated space.
  */
 
-use Nette\Http\Session,
-	Tester\Assert;
+use Nette\Http\Session;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -22,7 +22,7 @@ $namespace3b = $session->getSection('default');
 $namespace1->a = 'apple';
 $namespace2->a = 'pear';
 $namespace3->a = 'orange';
-Assert::true( $namespace1->a !== $namespace2->a && $namespace1->a !== $namespace3->a && $namespace2->a !== $namespace3->a );
-Assert::same( $namespace1->a, $namespace1b->a );
-Assert::same( $namespace2->a, $namespace2b->a );
-Assert::same( $namespace3->a, $namespace3b->a );
+Assert::true($namespace1->a !== $namespace2->a && $namespace1->a !== $namespace3->a && $namespace2->a !== $namespace3->a);
+Assert::same($namespace1->a, $namespace1b->a);
+Assert::same($namespace2->a, $namespace2b->a);
+Assert::same($namespace3->a, $namespace3b->a);

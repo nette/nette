@@ -4,8 +4,8 @@
  * Test: Nette\DI\ContainerBuilder and generated factories with parameters.
  */
 
-use Nette\DI,
-	Tester\Assert;
+use Nette\DI;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -47,11 +47,11 @@ require TEMP_DIR . '/code.php';
 
 $container = new Container;
 
-Assert::type( 'StdClassFactory', $container->getService('one') );
-Assert::type( 'StdClassFactory', $container->getService('two') );
+Assert::type('StdClassFactory', $container->getService('one'));
+Assert::type('StdClassFactory', $container->getService('two'));
 
-Assert::type( 'stdClass', $container->getService('four') );
-Assert::same( $container->getService('four')->a, $container->getService('three') );
+Assert::type('stdClass', $container->getService('four'));
+Assert::same($container->getService('four')->a, $container->getService('three'));
 
-Assert::type( 'stdClass', $container->getService('five') );
-Assert::same( $container->getService('five')->a, $container->getService('three') );
+Assert::type('stdClass', $container->getService('five'));
+Assert::same($container->getService('five')->a, $container->getService('three'));

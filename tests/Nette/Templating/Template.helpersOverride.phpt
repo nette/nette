@@ -4,8 +4,8 @@
  * Test: Nette\Templating\Template helpers override.
  */
 
-use Nette\Templating\Template,
-	Tester\Assert;
+use Nette\Templating\Template;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -36,5 +36,5 @@ $template->registerHelperLoader('Nette\Templating\Helpers::loader');
 $template->registerHelperLoader('MyHelpers::loader');
 
 
-Assert::same( '1978-01-23', $template->date(new \Datetime('Mon, 23 Jan 1978 10:00:00 GMT'), 'd.m.Y') );
-Assert::same( array('MyHelpers::date'), Notes::fetch() );
+Assert::same('1978-01-23', $template->date(new \Datetime('Mon, 23 Jan 1978 10:00:00 GMT'), 'd.m.Y'));
+Assert::same(array('MyHelpers::date'), Notes::fetch());

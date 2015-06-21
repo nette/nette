@@ -5,8 +5,8 @@
  * @outputMatch %A%<!-- Nette Debug Bar -->%A%
  */
 
-use Nette\Diagnostics\Debugger,
-	Tester\Assert;
+use Nette\Diagnostics\Debugger;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

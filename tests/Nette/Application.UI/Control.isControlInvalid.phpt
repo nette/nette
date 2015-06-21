@@ -4,8 +4,8 @@
  * Test: Nette\Application\UI\Control::isControlInvalid()
  */
 
-use Nette\Application\UI,
-	Tester\Assert;
+use Nette\Application\UI;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -17,7 +17,7 @@ class TestControl extends UI\Control
 }
 
 
-test(function() {
+test(function () {
 	$control = new TestControl();
 	$child = new TestControl();
 	$control->addComponent($child, 'foo');
@@ -28,7 +28,7 @@ test(function() {
 });
 
 
-test(function() {
+test(function () {
 	$control = new TestControl();
 	$child = new Nette\ComponentModel\Container();
 	$grandChild = new TestControl();

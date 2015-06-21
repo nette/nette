@@ -4,8 +4,8 @@
  * Test: Nette\Caching\Cache load().
  */
 
-use Nette\Caching\Cache,
-	Tester\Assert;
+use Nette\Caching\Cache;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -17,12 +17,12 @@ require __DIR__ . '/Cache.inc';
 $storage = new TestStorage();
 $cache = new Cache($storage, 'ns');
 
-$value = $cache->load('key', function() {
+$value = $cache->load('key', function () {
 	return 'value';
 });
 Assert::equal('value', $value);
 
-$data = $cache->load('key', function() {
+$data = $cache->load('key', function () {
 	return "won't load this value"; // will read from storage
 });
 Assert::equal('value', $data['data']);
@@ -33,13 +33,13 @@ $dependencies = array(Cache::TAGS => 'tag');
 $storage = new TestStorage();
 $cache = new Cache($storage, 'ns');
 
-$value = $cache->load('key', function(& $deps) use ($dependencies) {
+$value = $cache->load('key', function (& $deps) use ($dependencies) {
 	$deps = $dependencies;
 	return 'value';
 });
 Assert::equal('value', $value);
 
-$data = $cache->load('key', function() {
+$data = $cache->load('key', function () {
 	return "won't load this value"; // will read from storage
 });
 Assert::equal('value', $data['data']);

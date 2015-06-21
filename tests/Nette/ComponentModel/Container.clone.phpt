@@ -4,10 +4,10 @@
  * Test: Nette\ComponentModel\Container cloning.
  */
 
-use Nette\ComponentModel\Container,
-	Nette\Object,
-	Nette\ComponentModel\IContainer,
-	Tester\Assert;
+use Nette\ComponentModel\Container;
+use Nette\Object;
+use Nette\ComponentModel\IContainer;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -47,7 +47,7 @@ class TestClass extends Container implements ArrayAccess
 }
 
 
-Object::extensionMethod('Nette\\ComponentModel\\IContainer::export', function($thisObj) {
+Object::extensionMethod('Nette\\ComponentModel\\IContainer::export', function ($thisObj) {
 	$res = array("({$thisObj->reflection->name})" => $thisObj->name);
 	if ($thisObj instanceof IContainer) {
 		foreach ($thisObj->getComponents() as $name => $obj) {
@@ -74,30 +74,30 @@ $a['b']->monitor('a');
 $a['b']->monitor('a');
 $a['b']['c']->monitor('a');
 
-Assert::same( array(
+Assert::same(array(
 	'B::ATTACHED(A)',
 	'C::ATTACHED(A)',
 ), Notes::fetch());
 
-Assert::same( 'b-c-d-e', $a['b']['c']['d']['e']->lookupPath('A', FALSE) );
+Assert::same('b-c-d-e', $a['b']['c']['d']['e']->lookupPath('A', FALSE));
 
 
 // ==> clone 'c'
 $dolly = clone $a['b']['c'];
 
-Assert::same( array(
+Assert::same(array(
 	'C::detached(A)',
 ), Notes::fetch());
 
-Assert::null( $dolly['d']['e']->lookupPath('A', FALSE) );
+Assert::null($dolly['d']['e']->lookupPath('A', FALSE));
 
-Assert::same( 'd-e', $dolly['d']['e']->lookupPath('C', FALSE) );
+Assert::same('d-e', $dolly['d']['e']->lookupPath('C', FALSE));
 
 
 // ==> clone 'b'
 $dolly = clone $a['b'];
 
-Assert::same( array(
+Assert::same(array(
 	'C::detached(A)',
 	'B::detached(A)',
 ), Notes::fetch());
@@ -106,12 +106,12 @@ Assert::same( array(
 // ==> a['dolly'] = 'b'
 $a['dolly'] = $dolly;
 
-Assert::same( array(
+Assert::same(array(
 	'C::ATTACHED(A)',
 	'B::ATTACHED(A)',
 ), Notes::fetch());
 
-Assert::same( array(
+Assert::same(array(
 	'(A)' => NULL,
 	'children' => array(
 		'b' => array(
@@ -151,4 +151,4 @@ Assert::same( array(
 			),
 		),
 	),
-), $a->export() );
+), $a->export());

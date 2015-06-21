@@ -7,10 +7,8 @@
 use Tester\Assert;
 
 
-function testRouteIn(Nette\Application\IRouter $route, $url, $expectedPresenter=NULL, $expectedParams=NULL, $expectedUrl=NULL)
+function testRouteIn(Nette\Application\IRouter $route, $url, $expectedPresenter = NULL, $expectedParams = NULL, $expectedUrl = NULL)
 {
-	// ==> $url
-
 	$url = new Nette\Http\UrlScript("http://example.com$url");
 	$url->appendQuery(array(
 		'test' => 'testvalue',
@@ -24,17 +22,17 @@ function testRouteIn(Nette\Application\IRouter $route, $url, $expectedPresenter=
 	if ($request) { // matched
 		$params = $request->getParameters();
 		//asort($params);
-		Assert::same( $expectedPresenter, $request->getPresenterName() );
-		Assert::same( $expectedParams, $params );
+		Assert::same($expectedPresenter, $request->getPresenterName());
+		Assert::same($expectedParams, $params);
 
 		unset($params['extra']);
 		$request->setParameters($params);
 		$result = $route->constructUrl($request, $url);
 		$result = strncmp($result, 'http://example.com', 18) ? $result : substr($result, 18);
-		Assert::same( $expectedUrl, $result );
+		Assert::same($expectedUrl, $result);
 
 	} else { // not matched
-		Assert::null( $expectedPresenter );
+		Assert::null($expectedPresenter);
 	}
 }
 

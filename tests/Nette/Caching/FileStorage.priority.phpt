@@ -4,10 +4,10 @@
  * Test: Nette\Caching\Storages\FileStorage priority test.
  */
 
-use Nette\Caching\Storages\FileStorage,
-	Nette\Caching\Storages\FileJournal,
-	Nette\Caching\Cache,
-	Tester\Assert;
+use Nette\Caching\Storages\FileStorage;
+use Nette\Caching\Storages\FileJournal;
+use Nette\Caching\Cache;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -38,7 +38,7 @@ $cache->clean(array(
 	Cache::PRIORITY => '200',
 ));
 
-Assert::false( isset($cache['key1']) );
-Assert::false( isset($cache['key2']) );
-Assert::true( isset($cache['key3']) );
-Assert::true( isset($cache['key4']) );
+Assert::false(isset($cache['key1']));
+Assert::false(isset($cache['key2']));
+Assert::true(isset($cache['key3']));
+Assert::true(isset($cache['key4']));

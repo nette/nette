@@ -4,8 +4,8 @@
  * Test: Nette\DI\Container and inject methods.
  */
 
-use Nette\DI,
-	Tester\Assert;
+use Nette\DI;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -62,4 +62,4 @@ $container = new Container;
 
 $test = new Test2;
 $container->callInjects($test);
-Assert::same( array('Test1::injectOptional', 'Test1::injectA', 'Test1::inject', 'Test2::injectC'), $test->injects );
+Assert::same(array('Test1::injectOptional', 'Test1::injectA', 'Test1::inject', 'Test2::injectC'), $test->injects);

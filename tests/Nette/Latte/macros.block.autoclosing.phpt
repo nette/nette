@@ -4,8 +4,8 @@
  * Test: Nette\Latte\Engine: {block} autoclosing
  */
 
-use Nette\Latte,
-	Tester\Assert;
+use Nette\Latte;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

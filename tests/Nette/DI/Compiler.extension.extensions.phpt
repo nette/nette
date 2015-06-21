@@ -4,8 +4,8 @@
  * Test: Nette\DI\Compiler and ExtensionsExtension.
  */
 
-use Nette\DI,
-	Tester\Assert;
+use Nette\DI;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -31,4 +31,4 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 
-Assert::same( 'hello', $container->parameters['foo'] );
+Assert::same('hello', $container->parameters['foo']);

@@ -4,8 +4,8 @@
  * Test: Nette\Application\Routers\Route default usage.
  */
 
-use Nette\Application\Routers\Route,
-	Tester\Assert;
+use Nette\Application\Routers\Route;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -15,13 +15,13 @@ require __DIR__ . '/Route.inc';
 
 $route = new Route('<presenter>/<action=default>/<id= \d{1,3}>');
 
-Assert::same( 'http://example.com/homepage/', testRouteOut($route, 'Homepage') );
+Assert::same('http://example.com/homepage/', testRouteOut($route, 'Homepage'));
 
-Assert::same( 'http://example.com/homepage/', testRouteOut($route, 'Homepage', array('action' => 'default')) );
+Assert::same('http://example.com/homepage/', testRouteOut($route, 'Homepage', array('action' => 'default')));
 
-Assert::null( testRouteOut($route, 'Homepage', array('id' => 'word')) );
+Assert::null(testRouteOut($route, 'Homepage', array('id' => 'word')));
 
-Assert::same( 'http://example.com/front.homepage/', testRouteOut($route, 'Front:Homepage') );
+Assert::same('http://example.com/front.homepage/', testRouteOut($route, 'Front:Homepage'));
 
 testRouteIn($route, '/presenter/action/12/any');
 

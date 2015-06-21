@@ -4,10 +4,10 @@
  * Test: Nette\Latte\Engine: general snippets test.
  */
 
-use Nette\Latte,
-	Nette\Utils\Html,
-	Nette\Templating\FileTemplate,
-	Tester\Assert;
+use Nette\Latte;
+use Nette\Utils\Html;
+use Nette\Templating\FileTemplate;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

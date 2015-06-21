@@ -4,8 +4,8 @@
  * Test: Nette\Http\Request files.
  */
 
-use Nette\Http,
-	Tester\Assert;
+use Nette\Http;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -100,15 +100,15 @@ $_FILES = array(
 $factory = new Http\RequestFactory;
 $request = $factory->createHttpRequest();
 
-Assert::type( 'Nette\Http\FileUpload', $request->files['file1'] );
-Assert::type( 'Nette\Http\FileUpload', $request->files['file2'][2] );
-Assert::type( 'Nette\Http\FileUpload', $request->files['file3']['y']['z'] );
-Assert::type( 'Nette\Http\FileUpload', $request->files['file3'][1] );
+Assert::type('Nette\Http\FileUpload', $request->files['file1']);
+Assert::type('Nette\Http\FileUpload', $request->files['file2'][2]);
+Assert::type('Nette\Http\FileUpload', $request->files['file3']['y']['z']);
+Assert::type('Nette\Http\FileUpload', $request->files['file3'][1]);
 
-Assert::false( isset($request->files['file0']) );
-Assert::true( isset($request->files['file1']) );
+Assert::false(isset($request->files['file0']));
+Assert::true(isset($request->files['file1']));
 
-Assert::null( $request->getFile('file1', 'a') );
+Assert::null($request->getFile('file1', 'a'));
 
-Assert::null( $request->getFile('empty1') );
-Assert::same( array(NULL), $request->getFile('empty2') );
+Assert::null($request->getFile('empty1'));
+Assert::same(array(NULL), $request->getFile('empty2'));

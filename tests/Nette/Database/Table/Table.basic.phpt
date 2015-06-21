@@ -12,7 +12,7 @@ require __DIR__ . '/../connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/../files/{$driverName}-nette_test1.sql");
 
 
-test(function() use ($context) {
+test(function () use ($context) {
 	$book = $context->table('book')->where('id = ?', 1)->select('id, title')->fetch()->toArray();  // SELECT `id`, `title` FROM `book` WHERE (`id` = ?)
 	Assert::same(array(
 		'id' => 1,
@@ -21,7 +21,7 @@ test(function() use ($context) {
 });
 
 
-test(function() use ($context) {
+test(function () use ($context) {
 	$book = $context->table('book')->select('id, title')->where('id = ?', 1)->fetch()->toArray();  // SELECT `id`, `title` FROM `book` WHERE (`id` = ?)
 	Assert::same(array(
 		'id' => 1,
@@ -30,15 +30,15 @@ test(function() use ($context) {
 });
 
 
-test(function() use ($context) {
+test(function () use ($context) {
 	$book = $context->table('book')->get(1);
-	Assert::exception(function() use ($book) {
+	Assert::exception(function () use ($book) {
 		$book->unknown_column;
 	}, 'Nette\MemberAccessException', "Cannot read an undeclared column 'unknown_column'.");
 });
 
 
-test(function() use ($context) {
+test(function () use ($context) {
 	$bookTags = array();
 	foreach ($context->table('book') as $book) {  // SELECT * FROM `book`
 		$bookTags[$book->title] = array(
@@ -72,22 +72,22 @@ test(function() use ($context) {
 });
 
 
-test(function() use ($connection) {
+test(function () use ($connection) {
 	$context = new Nette\Database\Context(
 		$connection,
 		new Nette\Database\Reflection\DiscoveredReflection($connection)
 	);
 
 	$book = $context->table('book')->get(1);
-	Assert::exception(function() use ($book) {
+	Assert::exception(function () use ($book) {
 		$book->test;
 	}, 'Nette\MemberAccessException', "Cannot read an undeclared column 'test'.");
 
-	Assert::exception(function() use ($book) {
+	Assert::exception(function () use ($book) {
 		$book->ref('test');
 	}, 'Nette\Database\Reflection\MissingReferenceException', 'No reference found for $book->test.');
 
-	Assert::exception(function() use ($book) {
+	Assert::exception(function () use ($book) {
 		$book->related('test');
 	}, 'Nette\Database\Reflection\MissingReferenceException', 'No reference found for $book->related(test).');
 });

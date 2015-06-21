@@ -4,8 +4,8 @@
  * Test: Nette\DI\ContainerBuilder and generated factories with inject methods.
  */
 
-use Nette\DI,
-	Tester\Assert;
+use Nette\DI;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -51,9 +51,9 @@ require TEMP_DIR . '/code.php';
 
 $container = new Container;
 
-Assert::type( 'LoremFactory', $container->getService('lorem') );
+Assert::type('LoremFactory', $container->getService('lorem'));
 
 $lorem = $container->getService('lorem')->create();
 
-Assert::type( 'Lorem', $lorem );
-Assert::type( 'Ipsum', $lorem->ipsum );
+Assert::type('Lorem', $lorem);
+Assert::type('Ipsum', $lorem->ipsum);

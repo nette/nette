@@ -17,7 +17,7 @@ $form->addSubmit('submit', 'Send');
 
 $form->fireEvents();
 
-Assert::match( '<form action="" method="post">
+Assert::match('<form action="" method="post">
 
 <table>
 <tr>
@@ -28,4 +28,4 @@ Assert::match( '<form action="" method="post">
 </table>
 
 <div><input type="hidden" name="userid" id="frm-userid" value=""><!--[if IE]><input type=IEbug disabled style="display:none"><![endif]--></div>
-</form>', $form->__toString(TRUE) );
+</form>', $form->__toString(TRUE));

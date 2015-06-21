@@ -4,8 +4,8 @@
  * Test: Nette\DI\Compiler: services setup.
  */
 
-use Nette\DI,
-	Tester\Assert;
+use Nette\DI;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -54,7 +54,7 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 
-Assert::type( 'Nette\Latte\Engine', $container->createService('nette.latte') );
+Assert::type('Nette\Latte\Engine', $container->createService('nette.latte'));
 
 Assert::same(array(
 	'LoremIpsumMacros',

@@ -4,9 +4,9 @@
  * Test: Nette\Forms\Controls\UploadControl.
  */
 
-use Nette\Forms\Form,
-	Nette\Http\FileUpload,
-	Tester\Assert;
+use Nette\Forms\Form;
+use Nette\Http\FileUpload;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -54,44 +54,44 @@ $_FILES = array(
 );
 
 
-test(function() {
+test(function () {
 	$form = new Form;
 	$input = $form->addUpload('avatar');
 
-	Assert::true( $form->isValid() );
-	Assert::equal( new FileUpload(array(
+	Assert::true($form->isValid());
+	Assert::equal(new FileUpload(array(
 		'name' => 'license.txt',
 		'type' => '',
 		'size' => 3013,
 		'tmp_name' => __DIR__ . '/files/logo.gif',
 		'error' => 0,
-	)), $input->getValue() );
-	Assert::true( $input->isFilled() );
+	)), $input->getValue());
+	Assert::true($input->isFilled());
 });
 
 
-test(function() { // container
+test(function () { // container
 	$form = new Form;
 	$input = $form->addContainer('container')->addUpload('avatar');
 
-	Assert::true( $form->isValid() );
-	Assert::equal( new FileUpload(array(
+	Assert::true($form->isValid());
+	Assert::equal(new FileUpload(array(
 		'name' => '',
 		'type' => '',
 		'size' => 3013,
 		'tmp_name' => 'C:\\PHP\\temp\\php1D5C.tmp',
 		'error' => 0,
-	)), $input->getValue() );
-	Assert::true( $input->isFilled() );
+	)), $input->getValue());
+	Assert::true($input->isFilled());
 });
 
 
-test(function() { // multiple (in container)
+test(function () { // multiple (in container)
 	$form = new Form;
 	$input = $form->addContainer('multiple')->addUpload('avatar', NULL, TRUE);
 
-	Assert::true( $form->isValid() );
-	Assert::equal( array(new FileUpload(array(
+	Assert::true($form->isValid());
+	Assert::equal(array(new FileUpload(array(
 		'name' => 'image.gif',
 		'type' => '',
 		'size' => 100,
@@ -103,97 +103,97 @@ test(function() { // multiple (in container)
 		'size' => 200,
 		'tmp_name' => __DIR__ . '/files/logo.gif',
 		'error' => 0,
-	))), $input->getValue() );
-	Assert::true( $input->isFilled() );
+	))), $input->getValue());
+	Assert::true($input->isFilled());
 });
 
 
-test(function() { // missing data
+test(function () { // missing data
 	$form = new Form;
 	$input = $form->addUpload('empty', NULL, TRUE)
 		->setRequired();
 
-	Assert::false( $form->isValid() );
-	Assert::equal( array(), $input->getValue() );
-	Assert::false( $input->isFilled() );
+	Assert::false($form->isValid());
+	Assert::equal(array(), $input->getValue());
+	Assert::false($input->isFilled());
 });
 
 
-test(function() { // empty data
+test(function () { // empty data
 	$form = new Form;
 	$input = $form->addUpload('missing')
 		->setRequired();
 
-	Assert::false( $form->isValid() );
-	Assert::equal( new FileUpload(array()), $input->getValue() );
-	Assert::false( $input->isFilled() );
+	Assert::false($form->isValid());
+	Assert::equal(new FileUpload(array()), $input->getValue());
+	Assert::false($input->isFilled());
 });
 
 
-test(function() { // malformed data
+test(function () { // malformed data
 	$form = new Form;
 	$input = $form->addUpload('invalid1');
 
-	Assert::true( $form->isValid() );
-	Assert::equal( new FileUpload(array()), $input->getValue() );
-	Assert::false( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::equal(new FileUpload(array()), $input->getValue());
+	Assert::false($input->isFilled());
 
 	$form = new Form;
 	$input = $form->addUpload('invalid2');
 
-	Assert::true( $form->isValid() );
-	Assert::equal( new FileUpload(array()), $input->getValue() );
-	Assert::false( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::equal(new FileUpload(array()), $input->getValue());
+	Assert::false($input->isFilled());
 
 	$form = new Form;
 	$input = $form->addUpload('avatar', NULL, TRUE);
 
-	Assert::true( $form->isValid() );
-	Assert::equal( array(), $input->getValue() );
-	Assert::false( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::equal(array(), $input->getValue());
+	Assert::false($input->isFilled());
 
 	$form = new Form;
 	$input = $form->addContainer('multiple')->addUpload('avatar');
 
-	Assert::true( $form->isValid() );
-	Assert::equal( new FileUpload(array()), $input->getValue() );
-	Assert::false( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::equal(new FileUpload(array()), $input->getValue());
+	Assert::false($input->isFilled());
 });
 
 
-test(function() { // validators
+test(function () { // validators
 	$form = new Form;
 	$input = $form->addUpload('avatar')
 		->addRule($form::MAX_FILE_SIZE, NULL, 3000);
 
-	Assert::false( $input::validateFileSize($input, 3012) );
-	Assert::true( $input::validateFileSize($input, 3013) );
+	Assert::false($input::validateFileSize($input, 3012));
+	Assert::true($input::validateFileSize($input, 3013));
 
-	Assert::true( $input::validateMimeType($input, 'image/gif') );
-	Assert::true( $input::validateMimeType($input, 'image/*') );
-	Assert::false( $input::validateMimeType($input, 'text/*') );
-	Assert::true( $input::validateMimeType($input, 'text/css,image/*') );
-	Assert::true( $input::validateMimeType($input, array('text/css', 'image/*')) );
-	Assert::false( $input::validateMimeType($input, array()) );
+	Assert::true($input::validateMimeType($input, 'image/gif'));
+	Assert::true($input::validateMimeType($input, 'image/*'));
+	Assert::false($input::validateMimeType($input, 'text/*'));
+	Assert::true($input::validateMimeType($input, 'text/css,image/*'));
+	Assert::true($input::validateMimeType($input, array('text/css', 'image/*')));
+	Assert::false($input::validateMimeType($input, array()));
 
-	Assert::true( $input::validateImage($input) );
+	Assert::true($input::validateImage($input));
 });
 
 
-test(function() { // validators on multiple files
+test(function () { // validators on multiple files
 	$form = new Form;
 	$input = $form->addContainer('multiple')->addUpload('avatar', NULL, TRUE)
 		->addRule($form::MAX_FILE_SIZE, NULL, 3000);
 
-	Assert::false( $input::validateFileSize($input, 150) );
-	Assert::true( $input::validateFileSize($input, 300) );
+	Assert::false($input::validateFileSize($input, 150));
+	Assert::true($input::validateFileSize($input, 300));
 
-	Assert::true( $input::validateMimeType($input, 'image/gif') );
-	Assert::true( $input::validateMimeType($input, 'image/*') );
-	Assert::false( $input::validateMimeType($input, 'text/*') );
-	Assert::true( $input::validateMimeType($input, 'text/css,image/*') );
-	Assert::true( $input::validateMimeType($input, array('text/css', 'image/*')) );
-	Assert::false( $input::validateMimeType($input, array()) );
+	Assert::true($input::validateMimeType($input, 'image/gif'));
+	Assert::true($input::validateMimeType($input, 'image/*'));
+	Assert::false($input::validateMimeType($input, 'text/*'));
+	Assert::true($input::validateMimeType($input, 'text/css,image/*'));
+	Assert::true($input::validateMimeType($input, array('text/css', 'image/*')));
+	Assert::false($input::validateMimeType($input, array()));
 
-	Assert::true( $input::validateImage($input) );
+	Assert::true($input::validateImage($input));
 });

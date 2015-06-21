@@ -10,7 +10,7 @@ use Tester\Assert;
 require __DIR__ . '/connect.inc.php'; // create $connection
 
 
-test(function() use ($context) {
+test(function () use ($context) {
 	// numeric field
 	$row = $context->fetch("SELECT 123 AS {$context->getConnection()->getSupplementalDriver()->delimite('123')}, NULL as nullcol");
 	Assert::same(123, $row->{123});

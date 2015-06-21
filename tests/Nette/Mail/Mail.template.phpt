@@ -4,10 +4,10 @@
  * Test: Nette\Mail\Message with template.
  */
 
-use Nette\Latte,
-	Nette\Mail\Message,
-	Nette\Templating\FileTemplate,
-	Tester\Assert;
+use Nette\Latte;
+use Nette\Mail\Message;
+use Nette\Templating\FileTemplate;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

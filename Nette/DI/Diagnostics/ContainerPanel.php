@@ -7,8 +7,8 @@
 
 namespace Nette\DI\Diagnostics;
 
-use Nette,
-	Nette\DI\Container;
+use Nette;
+use Nette\DI\Container;
 
 
 /**

@@ -4,8 +4,8 @@
  * Test: Nette\Http\SessionSection basic usage.
  */
 
-use Nette\Http\Session,
-	Tester\Assert;
+use Nette\Http\Session;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -21,20 +21,20 @@ $namespace['o'] = 'orange';
 foreach ($namespace as $key => $val) {
 	$tmp[] = "$key=$val";
 }
-Assert::same( array(
+Assert::same(array(
 	'a=apple',
 	'p=pear',
 	'o=orange',
-), $tmp );
+), $tmp);
 
 
-Assert::true( isset($namespace['p']) );
-Assert::true( isset($namespace->o) );
-Assert::false( isset($namespace->undefined) );
+Assert::true(isset($namespace['p']));
+Assert::true(isset($namespace->o));
+Assert::false(isset($namespace->undefined));
 
 unset($namespace['a']);
 unset($namespace->p);
 unset($namespace->o);
 unset($namespace->undef);
 
-Assert::same( '', http_build_query($namespace->getIterator()) );
+Assert::same('', http_build_query($namespace->getIterator()));

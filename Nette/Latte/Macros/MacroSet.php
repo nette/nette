@@ -7,9 +7,9 @@
 
 namespace Nette\Latte\Macros;
 
-use Nette,
-	Nette\Latte,
-	Nette\Latte\MacroNode;
+use Nette;
+use Nette\Latte;
+use Nette\Latte\MacroNode;
 
 
 /**

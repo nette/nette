@@ -17,7 +17,7 @@ Assert::same(
 	$context->table('author')->limit(2)->getSql()
 );
 
-Assert::exception(function() use ($context) {
+Assert::exception(function () use ($context) {
 	$context->table('author')->limit(2, 10)->getSql();
 }, 'Nette\NotSupportedException', 'Offset is not supported by this database.');
 
@@ -36,10 +36,10 @@ Assert::same(
 	$context->table('author')->page(0, 10)->getSql()
 );
 
-Assert::exception(function() use ($context) {
+Assert::exception(function () use ($context) {
 	$context->table('author')->page(2, 10, $count)->getSql();
 }, 'Nette\NotSupportedException', 'Offset is not supported by this database.');
 
-Assert::exception(function() use ($context) {
+Assert::exception(function () use ($context) {
 	$context->table('author')->page(2, 2, $count)->getSql();
 }, 'Nette\NotSupportedException', 'Offset is not supported by this database.');

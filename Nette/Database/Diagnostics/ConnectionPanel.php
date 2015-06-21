@@ -7,8 +7,8 @@
 
 namespace Nette\Database\Diagnostics;
 
-use Nette,
-	Nette\Database\Helpers;
+use Nette;
+use Nette\Database\Helpers;
 
 
 /**

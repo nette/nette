@@ -24,7 +24,7 @@ namespace Test {
 
 namespace Test2 {
 
-	function() use ($a) {
+	function () use ($a) {
 	};
 
 	class TestClass3

@@ -4,8 +4,8 @@
  * Test: Nette\Forms user validator.
  */
 
-use Nette\Forms\Form,
-	Tester\Assert;
+use Nette\Forms\Form;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

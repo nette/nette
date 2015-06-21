@@ -4,10 +4,10 @@
  * Test: Nette\Security\User authorization.
  */
 
-use Nette\Security\IAuthenticator,
-	Nette\Security\Identity,
-	Nette\Security\IAuthorizator,
-	Tester\Assert;
+use Nette\Security\IAuthenticator;
+use Nette\Security\Identity;
+use Nette\Security\IAuthorizator;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -62,12 +62,12 @@ class Authorizator implements IAuthorizator
 $user = new Nette\Security\User(new MockUserStorage);
 
 // guest
-Assert::false( $user->isLoggedIn() );
+Assert::false($user->isLoggedIn());
 
 
-Assert::same( array('guest'), $user->getRoles() );
-Assert::false( $user->isInRole('admin') );
-Assert::true( $user->isInRole('guest') );
+Assert::same(array('guest'), $user->getRoles());
+Assert::false($user->isInRole('admin'));
+Assert::true($user->isInRole('guest'));
 
 
 // authenticated
@@ -77,26 +77,26 @@ $user->setAuthenticator($handler);
 // login as john
 $user->login('john', 'xxx');
 
-Assert::true( $user->isLoggedIn() );
-Assert::same( array('admin'), $user->getRoles() );
-Assert::true( $user->isInRole('admin') );
-Assert::false( $user->isInRole('guest') );
+Assert::true($user->isLoggedIn());
+Assert::same(array('admin'), $user->getRoles());
+Assert::true($user->isInRole('admin'));
+Assert::false($user->isInRole('guest'));
 
 
 // authorization
-Assert::exception(function() use ($user) {
+Assert::exception(function () use ($user) {
 	$user->isAllowed('delete_file');
 }, 'Nette\InvalidStateException', 'Authorizator has not been set.');
 
 $handler = new Authorizator;
 $user->setAuthorizator($handler);
 
-Assert::true( $user->isAllowed('delete_file') );
-Assert::false( $user->isAllowed('sleep_with_jany') );
+Assert::true($user->isAllowed('delete_file'));
+Assert::false($user->isAllowed('sleep_with_jany'));
 
 
 // log out
 // logging out...
 $user->logout(FALSE);
 
-Assert::false( $user->isAllowed('delete_file') );
+Assert::false($user->isAllowed('delete_file'));

@@ -5,8 +5,8 @@
  * @multiple   5
  */
 
-use Nette\Caching\Storages\FileStorage,
-	Tester\Assert;
+use Nette\Caching\Storages\FileStorage;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -61,13 +61,13 @@ for ($counter=0; $counter<1000; $counter++) {
 }
 
 
-Assert::same( array(
+Assert::same(array(
 	'ok' => 1000,
 	'notfound' => 0,
 	'error' => 0,
 	'cantwrite' => 0,
 	'cantdelete' => 0,
-), $hits );
+), $hits);
 
 // expected results are:
 //    [ok] => 1000       // should be 1000. If unlink() is used, sum [ok] + [notfound] should be 1000

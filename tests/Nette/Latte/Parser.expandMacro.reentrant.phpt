@@ -4,8 +4,8 @@
  * Test: Nette\Latte\Compiler::expandMacro() and reentrant.
  */
 
-use Nette\Latte,
-	Tester\Assert;
+use Nette\Latte;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -16,6 +16,6 @@ $set = new Latte\Macros\MacroSet($compiler);
 $set->addMacro('test', 'echo %node.word', 'echo %node.word');
 
 $node = $compiler->expandMacro('test', 'first second', '');
-Assert::same( '<?php echo "first" ?>',  $node->openingCode );
+Assert::same('<?php echo "first" ?>',  $node->openingCode);
 $node->macro->nodeClosed($node);
-Assert::same( '<?php echo "first" ?>',  $node->closingCode );
+Assert::same('<?php echo "first" ?>',  $node->closingCode);

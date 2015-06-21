@@ -4,8 +4,8 @@
  * Test: NetteModule\MicroPresenter
  */
 
-use Nette\Application\Request,
-	Tester\Assert;
+use Nette\Application\Request;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -22,11 +22,11 @@ class Invokable extends Nette\Object
 
 $container = id(new Nette\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
 
-test(function() use ($container) {
+test(function () use ($container) {
 	$presenter = new NetteModule\MicroPresenter($container);
 
 	$presenter->run(new Request('Nette:Micro', 'GET', array(
-		'callback' => function($id, $page) {
+		'callback' => function ($id, $page) {
 			Notes::add('Callback id ' . $id . ' page ' . $page);
 		},
 		'id' => 1,
@@ -38,7 +38,7 @@ test(function() use ($container) {
 });
 
 
-test(function() use ($container) {
+test(function () use ($container) {
 	$presenter = new NetteModule\MicroPresenter($container);
 
 	$presenter->run(new Request('Nette:Micro', 'GET', array(

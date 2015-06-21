@@ -4,9 +4,9 @@
  * Test: Nette\Latte\Engine: {control ...}
  */
 
-use Nette\Latte,
-	Nette\Object,
-	Tester\Assert;
+use Nette\Latte;
+use Nette\Object;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -16,8 +16,8 @@ class MockComponent extends Object
 {
 	function getComponent($name)
 	{
-		Notes::add( __METHOD__ );
-		Notes::add( func_get_args() );
+		Notes::add(__METHOD__);
+		Notes::add(func_get_args());
 		return new MockControl;
 	}
 
@@ -29,8 +29,8 @@ class MockControl extends Object
 
 	function __call($name, $args)
 	{
-		Notes::add( __METHOD__ );
-		Notes::add( func_get_args() );
+		Notes::add(__METHOD__);
+		Notes::add(func_get_args());
 	}
 
 }
@@ -64,7 +64,7 @@ $template->name = 'form';
 {control form var1 => 5, 1, 2}
 ');
 
-Assert::same( array(
+Assert::same(array(
 	"MockComponent::getComponent", array("name"),
 	"MockControl::__call", array("render", array()),
 	"MockComponent::getComponent", array("form"),
@@ -82,4 +82,4 @@ Assert::same( array(
 	"MockControl::__call", array("render", array("var1", 1, 2)),
 	"MockComponent::getComponent", array("form"),
 	"MockControl::__call", array("render", array(array("var1" => 5, 0 => 1, 1 => 2))),
-), Notes::fetch() );
+), Notes::fetch());

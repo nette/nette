@@ -151,7 +151,7 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 		}
 
 		foreach ($this->structure['hasMany'] as & $table) {
-			uksort($table, function($a, $b) {
+			uksort($table, function ($a, $b) {
 				return strlen($a) - strlen($b);
 			});
 		}
@@ -166,7 +166,7 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 		}
 
 		if (isset($this->structure['belongsTo'][$table])) {
-			uksort($this->structure['belongsTo'][$table], function($a, $b) {
+			uksort($this->structure['belongsTo'][$table], function ($a, $b) {
 				return strlen($a) - strlen($b);
 			});
 		}

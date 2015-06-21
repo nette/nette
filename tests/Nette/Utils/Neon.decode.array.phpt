@@ -4,39 +4,39 @@
  * Test: Nette\Utils\Neon::decode block hash and array.
  */
 
-use Nette\Utils\Neon,
-	Tester\Assert;
+use Nette\Utils\Neon;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-Assert::same( array(
+Assert::same(array(
 	'a' => array(1, 2),
 	'b' => 1,
 ), Neon::decode('
 a: {1, 2, }
-b: 1') );
+b: 1'));
 
 
-Assert::same( array(
+Assert::same(array(
 	'a' => 'x',
 	'x',
 ), Neon::decode('
 a: x
-- x') );
+- x'));
 
 
-Assert::same( array(
+Assert::same(array(
 	'x',
 	'a' => 'x',
 ), Neon::decode('
 - x
 a: x
-') );
+'));
 
 
-Assert::same( array(
+Assert::same(array(
 	'x' => array(
 		'x',
 		'a' => 'x',
@@ -45,10 +45,10 @@ Assert::same( array(
 x:
 	- x
 	a: x
-') );
+'));
 
 
-Assert::same( array(
+Assert::same(array(
 	'x' => array(
 		'y' => array(
 			NULL,
@@ -60,10 +60,10 @@ x:
 	y:
 		-
 	a: x
-') );
+'));
 
 
-Assert::same( array(
+Assert::same(array(
 	'x' => array(
 		'a' => 1,
 		'b' => 2,
@@ -73,10 +73,10 @@ x: {
 	a: 1
 b: 2
 }
-') );
+'));
 
 
-Assert::same( array(
+Assert::same(array(
 	'one',
 	'two',
 ), Neon::decode('
@@ -84,4 +84,4 @@ Assert::same( array(
 	one
 two
 }
-') );
+'));

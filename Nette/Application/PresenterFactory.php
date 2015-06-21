@@ -91,7 +91,7 @@ class PresenterFactory extends Nette\Object implements IPresenterFactory
 			// internal autoloading
 			$file = $this->formatPresenterFile($name);
 			if (is_file($file) && is_readable($file)) {
-				call_user_func(function() use ($file) { require $file; });
+				call_user_func(function () use ($file) { require $file; });
 			}
 
 			if (!class_exists($class)) {

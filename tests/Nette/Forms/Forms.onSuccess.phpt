@@ -4,8 +4,8 @@
  * Test: Nette\Forms onSuccess.
  */
 
-use Nette\Forms\Form,
-	Tester\Assert;
+use Nette\Forms\Form;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -18,20 +18,20 @@ $called = array();
 $form = new Form;
 $form->addText('name');
 $form->addSubmit('submit');
-$form->onSuccess[] = function() use (& $called) {
+$form->onSuccess[] = function () use (& $called) {
 	$called[] = 1;
 };
-$form->onSuccess[] = function($form) use (& $called) {
+$form->onSuccess[] = function ($form) use (& $called) {
 	$called[] = 2;
 	$form['name']->addError('error');
 };
-$form->onSuccess[] = function() use (& $called) {
+$form->onSuccess[] = function () use (& $called) {
 	$called[] = 3;
 };
-$form->onSuccess[] = function() use (& $called) {
+$form->onSuccess[] = function () use (& $called) {
 	$called[] = 4;
 };
-$form->onError[] = function() use (& $called) {
+$form->onError[] = function () use (& $called) {
 	$called[] = 'err';
 };
 

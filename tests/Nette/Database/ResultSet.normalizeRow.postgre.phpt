@@ -15,10 +15,10 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/files/pgsql-nette_
 $res = $context->query('SELECT * FROM types');
 
 $row = $res->fetch();
-Assert::type( 'string', $row->money );
+Assert::type('string', $row->money);
 unset($row->money);
 
-Assert::equal( array(
+Assert::equal(array(
 	'smallint' => 1,
 	'integer' => 1,
 	'bigint' => 1,
@@ -49,9 +49,9 @@ Assert::equal( array(
 	'path' => '((10,20),(30,40))',
 	'point' => '(10,20)',
 	'polygon' => '((10,20),(30,40))',
-), (array) $row );
+), (array) $row);
 
-Assert::same( array(
+Assert::same(array(
 	'smallint' => 0,
 	'integer' => 0,
 	'bigint' => 0,
@@ -83,9 +83,9 @@ Assert::same( array(
 	'path' => '((10,20),(30,40))',
 	'point' => '(10,20)',
 	'polygon' => '((10,20),(30,40))',
-), (array) $res->fetch() );
+), (array) $res->fetch());
 
-Assert::same( array(
+Assert::same(array(
 	'smallint' => NULL,
 	'integer' => NULL,
 	'bigint' => NULL,
@@ -117,11 +117,11 @@ Assert::same( array(
 	'path' => NULL,
 	'point' => NULL,
 	'polygon' => NULL,
-), (array) $res->fetch() );
+), (array) $res->fetch());
 
 
 $res = $context->query('SELECT "integer" AS a, "text" AS a FROM types');
 
-Assert::same( array(
+Assert::same(array(
 	'a' => 'a',
-), (array) @$res->fetch() );
+), (array) @$res->fetch());

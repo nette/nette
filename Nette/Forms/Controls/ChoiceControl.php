@@ -59,7 +59,7 @@ abstract class ChoiceControl extends BaseControl
 	public function setValue($value)
 	{
 		if ($value !== NULL && !array_key_exists((string) $value, $this->items)) {
-			$range = Nette\Utils\Strings::truncate(implode(', ', array_map(function($s) { return var_export($s, TRUE); }, array_keys($this->items))), 70, '...');
+			$range = Nette\Utils\Strings::truncate(implode(', ', array_map(function ($s) { return var_export($s, TRUE); }, array_keys($this->items))), 70, '...');
 			throw new Nette\InvalidArgumentException("Value '$value' is out of allowed range [$range] in field '{$this->name}'.");
 		}
 		$this->value = $value === NULL ? NULL : key(array((string) $value => NULL));

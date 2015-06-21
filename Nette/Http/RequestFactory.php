@@ -7,8 +7,8 @@
 
 namespace Nette\Http;
 
-use Nette,
-	Nette\Utils\Strings;
+use Nette;
+use Nette\Utils\Strings;
 
 
 /**

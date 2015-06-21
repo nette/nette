@@ -4,8 +4,8 @@
  * Test: Nette\Forms validateMaxPostSize
  */
 
-use Nette\Forms\Form,
-	Tester\Assert;
+use Nette\Forms\Form;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -19,5 +19,5 @@ $form->addHidden('x');
 $form->isSuccess();
 
 $errors = $form->getErrors();
-Assert::same( 1, count($errors) );
-Assert::match( 'The size of the uploaded file can be up to %d% bytes.', $errors[0] );
+Assert::same(1, count($errors));
+Assert::match('The size of the uploaded file can be up to %d% bytes.', $errors[0]);

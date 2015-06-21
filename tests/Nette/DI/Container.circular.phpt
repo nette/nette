@@ -4,8 +4,8 @@
  * Test: Nette\DI\Container circular reference detection.
  */
 
-use Nette\DI\Container,
-	Tester\Assert;
+use Nette\DI\Container;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -29,6 +29,6 @@ class MyContainer extends Container
 
 $container = new MyContainer;
 
-Assert::exception(function() use ($container) {
+Assert::exception(function () use ($container) {
 	$container->getService('one');
 }, 'Nette\InvalidStateException', "Circular reference detected for services: one, two.");

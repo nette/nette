@@ -4,8 +4,8 @@
  * Test: Nette\Latte\Engine and JavaScript.
  */
 
-use Nette\Latte,
-	Tester\Assert;
+use Nette\Latte;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -20,7 +20,7 @@ $template->setSource(<<<'EOD'
 EOD
 );
 
-Assert::exception(function() use ($template) {
+Assert::exception(function () use ($template) {
 	$template->compile();
 }, 'Nette\Latte\CompileException', 'Do not place {$var} inside quotes.');
 

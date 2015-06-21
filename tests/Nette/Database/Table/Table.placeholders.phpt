@@ -13,7 +13,7 @@ require __DIR__ . '/../connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/../files/{$driverName}-nette_test1.sql");
 
 
-test(function() use ($context, $driverName) {
+test(function () use ($context, $driverName) {
 	// Leave literals lower-cased, also not-delimiting them is tested.
 	switch ($driverName) {
 		case 'mysql':
@@ -43,7 +43,7 @@ test(function() use ($context, $driverName) {
 });
 
 
-test(function() use ($context) {
+test(function () use ($context) {
 	$bookTagsCount = array();
 	$books = $context
 		->table('book')
@@ -63,7 +63,7 @@ test(function() use ($context) {
 });
 
 
-test(function() use ($context, $driverName) {
+test(function () use ($context, $driverName) {
 	if ($driverName === 'mysql') {
 		$authors = array();
 		$selection = $context->table('author')->order('FIELD(name, ?)', array('Jakub Vrana', 'David Grudl', 'Geek'));
@@ -76,7 +76,7 @@ test(function() use ($context, $driverName) {
 });
 
 
-test(function() use ($context) { // Test placeholder for GroupedSelection
+test(function () use ($context) { // Test placeholder for GroupedSelection
 	$books = $context->table('author')->get(11)->related('book')->order('title = ? DESC', 'Test');
 	foreach ($books as $book) {}
 

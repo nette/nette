@@ -4,8 +4,8 @@
  * Test: Nette\DI\Compiler: services by Class.
  */
 
-use Nette\DI,
-	Tester\Assert;
+use Nette\DI;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -36,9 +36,9 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 
-Assert::type( 'Lorem', $container->getService('one') );
-Assert::type( 'Ipsum', $container->getService('two') );
-Assert::type( 'Lorem', $container->getService('three') );
-Assert::same( $container->getService('one'), $container->getService('three') );
-Assert::type( 'Lorem', $container->getService('four') );
-Assert::same( $container->getService('one'), $container->getService('four') );
+Assert::type('Lorem', $container->getService('one'));
+Assert::type('Ipsum', $container->getService('two'));
+Assert::type('Lorem', $container->getService('three'));
+Assert::same($container->getService('one'), $container->getService('three'));
+Assert::type('Lorem', $container->getService('four'));
+Assert::same($container->getService('one'), $container->getService('four'));

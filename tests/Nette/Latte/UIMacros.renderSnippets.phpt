@@ -4,8 +4,8 @@
  * Test: Nette\Latte\Macros\UIMacros and renderSnippets.
  */
 
-use Nette\Latte,
-	Tester\Assert;
+use Nette\Latte;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -41,7 +41,7 @@ class TestPresenter extends Nette\Application\UI\Presenter
 
 	function createComponentMulti()
 	{
-		return new Nette\Application\UI\Multiplier(function() {
+		return new Nette\Application\UI\Multiplier(function () {
 			$control = new InnerControl();
 			$control->redrawControl();
 			return $control;

@@ -7,8 +7,8 @@
 
 namespace Nette;
 
-use Nette,
-	Nette\DI;
+use Nette;
+use Nette\DI;
 
 
 /**
@@ -28,7 +28,7 @@ class Configurator extends Object
 		PRODUCTION = 'production',
 		NONE = FALSE;
 
-	/** @var array of function(Configurator $sender, DI\Compiler $compiler); Occurs after the compiler is created */
+	/** @var array of function (Configurator $sender, DI\Compiler $compiler); Occurs after the compiler is created */
 	public $onCompile;
 
 	/** @var array */

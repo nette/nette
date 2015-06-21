@@ -4,9 +4,9 @@
  * Test: Nette\Application\Routers\RouteList default usage.
  */
 
-use Nette\Application\Routers\RouteList,
-	Nette\Application\Routers\Route,
-	Tester\Assert;
+use Nette\Application\Routers\RouteList;
+use Nette\Application\Routers\Route;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

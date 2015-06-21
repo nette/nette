@@ -4,9 +4,9 @@
  * Test: Nette\Caching\Storages\FileStorage items dependency test.
  */
 
-use Nette\Caching\Cache,
-	Nette\Caching\Storages\FileStorage,
-	Tester\Assert;
+use Nette\Caching\Cache;
+use Nette\Caching\Storages\FileStorage;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -23,13 +23,13 @@ $cache->save($key, $value, array(
 	Cache::ITEMS => array('dependent'),
 ));
 
-Assert::true( isset($cache[$key]) );
+Assert::true(isset($cache[$key]));
 
 
 // Modifing dependent cached item
 $cache['dependent'] = 'hello world';
 
-Assert::false( isset($cache[$key]) );
+Assert::false(isset($cache[$key]));
 
 
 // Writing cache...
@@ -37,14 +37,14 @@ $cache->save($key, $value, array(
 	Cache::ITEMS => 'dependent',
 ));
 
-Assert::true( isset($cache[$key]) );
+Assert::true(isset($cache[$key]));
 
 
 // Modifing dependent cached item
 sleep(2);
 $cache['dependent'] = 'hello europe';
 
-Assert::false( isset($cache[$key]) );
+Assert::false(isset($cache[$key]));
 
 
 // Writing cache...
@@ -52,10 +52,10 @@ $cache->save($key, $value, array(
 	Cache::ITEMS => 'dependent',
 ));
 
-Assert::true( isset($cache[$key]) );
+Assert::true(isset($cache[$key]));
 
 
 // Deleting dependent cached item
 $cache['dependent'] = NULL;
 
-Assert::false( isset($cache[$key]) );
+Assert::false(isset($cache[$key]));

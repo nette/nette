@@ -4,9 +4,9 @@
  * Test: Nette\Forms\Controls\CsrfProtection.
  */
 
-use Nette\Forms\Controls\CsrfProtection,
-	Nette\Forms\Form,
-	Tester\Assert;
+use Nette\Forms\Controls\CsrfProtection;
+use Nette\Forms\Form;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -21,7 +21,7 @@ $input = $form->addProtection('Security token did not match. Possible CSRF attac
 
 $form->fireEvents();
 
-Assert::same( array('Security token did not match. Possible CSRF attack.'), $form->getErrors() );
+Assert::same(array('Security token did not match. Possible CSRF attack.'), $form->getErrors());
 Assert::match('<input type="hidden" name="_token_" id="frm-_token_" value="%S%">', (string) $input->getControl());
 
 $input->setValue(NULL);

@@ -4,8 +4,8 @@
  * Test: Nette\Utils\Finder filters.
  */
 
-use Nette\Utils\Finder,
-	Tester\Assert;
+use Nette\Utils\Finder;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -20,7 +20,7 @@ function export($iterator)
 }
 
 
-test(function() { // size filter
+test(function () { // size filter
 	$finder = Finder::findFiles('*')->size('>8kB')->from('files');
 	Assert::same(array(
 		'files/images/logo.gif',
@@ -28,7 +28,7 @@ test(function() { // size filter
 });
 
 
-test(function() {
+test(function () {
 	$finder = Finder::findFiles('*')->size('> 10')->size('< 100b')->from('files');
 	Assert::same(array(
 		'files/file.txt',
@@ -38,7 +38,7 @@ test(function() {
 });
 
 
-test(function() {
+test(function () {
 	$finder = Finder::find('*')->size('>', 10)->size('< 100b')->from('files');
 	Assert::same(array(
 		'files/file.txt',
@@ -51,22 +51,22 @@ test(function() {
 });
 
 
-test(function() { // date filter
+test(function () { // date filter
 	$finder = Finder::findFiles('*')->date('> 2020-01-02')->from('files');
 	Assert::same(array(), export($finder));
 });
 
 
-test(function() { // custom filters
-	Finder::extensionMethod('length', function($finder, $length) {
-		return $finder->filter(function($file) use ($length) {
+test(function () { // custom filters
+	Finder::extensionMethod('length', function ($finder, $length) {
+		return $finder->filter(function ($file) use ($length) {
 			return strlen($file->getFilename()) == $length;
 		});
 	});
 });
 
 
-test(function() {
+test(function () {
 	$finder = Finder::findFiles('*')->length(6)->from('files');
 	Assert::same(array(
 		'files/subdir/readme',

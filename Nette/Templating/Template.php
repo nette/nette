@@ -7,9 +7,9 @@
 
 namespace Nette\Templating;
 
-use Nette,
-	Nette\Caching,
-	Nette\Utils\Callback;
+use Nette;
+use Nette\Caching;
+use Nette\Utils\Callback;
 
 
 /**
@@ -19,7 +19,7 @@ use Nette,
  */
 class Template extends Nette\Object implements ITemplate
 {
-	/** @var array of function(Template $sender); Occurs before a template is compiled - implement to customize the filters */
+	/** @var array of function (Template $sender); Occurs before a template is compiled - implement to customize the filters */
 	public $onPrepareFilters = array();
 
 	/** @var string */

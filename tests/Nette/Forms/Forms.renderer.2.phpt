@@ -4,9 +4,9 @@
  * Test: Nette\Forms default rendering.
  */
 
-use Nette\Utils\Html,
-	Nette\Forms\Form,
-	Tester\Assert;
+use Nette\Utils\Html;
+use Nette\Forms\Form;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -123,4 +123,4 @@ $defaults = array(
 $form->setDefaults($defaults);
 $form->fireEvents();
 
-Assert::matchFile(__DIR__ . '/Forms.renderer.2.expect', $form->__toString(TRUE) );
+Assert::matchFile(__DIR__ . '/Forms.renderer.2.expect', $form->__toString(TRUE));

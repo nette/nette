@@ -4,9 +4,9 @@
  * Test: Nette\Forms\Controls\TextArea.
  */
 
-use Nette\Forms\Form,
-	Nette\Utils\Html,
-	Tester\Assert;
+use Nette\Forms\Form;
+use Nette\Utils\Html;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -21,7 +21,7 @@ class Translator implements Nette\Localization\ITranslator
 }
 
 
-test(function() {
+test(function () {
 	$form = new Form;
 	$input = $form->addTextArea('text', 'Label')
 		->setValue('&text')
@@ -36,7 +36,7 @@ test(function() {
 });
 
 
-test(function() { // translator
+test(function () { // translator
 	$form = new Form;
 	$input = $form->addTextArea('text', 'Label')
 		->setAttribute('placeholder', 'place')
@@ -49,7 +49,7 @@ test(function() { // translator
 });
 
 
-test(function() { // Html with translator
+test(function () { // Html with translator
 	$form = new Form;
 	$input = $form->addTextArea('text', Html::el('b', 'Label'))
 		->setTranslator(new Translator);
@@ -59,7 +59,7 @@ test(function() { // Html with translator
 });
 
 
-test(function() { // validation rule LENGTH
+test(function () { // validation rule LENGTH
 	$form = new Form;
 	$input = $form->addTextArea('text')
 		->addRule($form::LENGTH, NULL, array(10, 20));
@@ -68,7 +68,7 @@ test(function() { // validation rule LENGTH
 });
 
 
-test(function() { // validation rule MAX_LENGTH
+test(function () { // validation rule MAX_LENGTH
 	$form = new Form;
 	$input = $form->addTextArea('text')
 		->addRule($form::MAX_LENGTH, NULL, 30)
@@ -78,7 +78,7 @@ test(function() { // validation rule MAX_LENGTH
 });
 
 
-test(function() { // container
+test(function () { // container
 	$form = new Form;
 	$container = $form->addContainer('container');
 	$input = $container->addTextArea('text');

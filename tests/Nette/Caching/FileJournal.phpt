@@ -4,9 +4,9 @@
  * Test: Nette\Caching\Storages\FileJournal basic test.
  */
 
-use Nette\Caching\Storages\FileJournal,
-	Nette\Caching\Cache,
-	Tester\Assert;
+use Nette\Caching\Storages\FileJournal;
+use Nette\Caching\Cache;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

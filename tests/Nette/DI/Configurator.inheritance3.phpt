@@ -4,8 +4,8 @@
  * Test: Nette\Configurator and services inheritance and overwriting.
  */
 
-use Nette\Configurator,
-	Tester\Assert;
+use Nette\Configurator;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -17,6 +17,6 @@ $configurator->setTempDirectory(TEMP_DIR);
 $configurator->addConfig('files/configurator.inheritance3.neon');
 
 
-Assert::exception(function() use ($configurator) {
+Assert::exception(function () use ($configurator) {
 	$configurator->createContainer();
 }, 'Nette\DI\ServiceCreationException', "Circular reference detected for service 'application'.");

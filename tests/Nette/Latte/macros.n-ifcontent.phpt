@@ -4,8 +4,8 @@
  * Test: Nette\Latte\Engine and n:ifcontent.
  */
 
-use Nette\Latte,
-	Tester\Assert;
+use Nette\Latte;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -81,11 +81,11 @@ EOD
 , (string) $template);
 
 
-Assert::exception(function() use ($template) {
+Assert::exception(function () use ($template) {
 	$template->setSource('<html>{ifcontent}')->compile();
 }, 'Nette\Latte\CompileException', 'Unknown macro {ifcontent}, use n:ifcontent attribute.');
 
 
-Assert::exception(function() use ($template) {
+Assert::exception(function () use ($template) {
 	$template->setSource('<div n:inner-ifcontent>')->compile();
 }, 'Nette\Latte\CompileException', 'Unknown attribute n:inner-ifcontent, use n:ifcontent attribute.');

@@ -4,8 +4,8 @@
  * Test: Nette\DI\Compiler and addExtension on loadConfiguration stage.
  */
 
-use Nette\DI\CompilerExtension,
-	Tester\Assert;
+use Nette\DI\CompilerExtension;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -78,7 +78,7 @@ Assert::true($extensions['foo']->loaded);
 Assert::true($extensions['bar']->loaded);
 Assert::true($extensions['baz']->loaded);
 
-Assert::same( array('FooExtension', 'BazExtension', 'BarExtension'), Notes::fetch() );
+Assert::same(array('FooExtension', 'BazExtension', 'BarExtension'), Notes::fetch());
 
 
 // second running

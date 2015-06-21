@@ -11,13 +11,13 @@ use Tester\Assert;
 require __DIR__ . '/../bootstrap.php';
 
 
-before(function() {
+before(function () {
 	$_SERVER['REQUEST_METHOD'] = 'POST';
 	$_GET = $_POST = $_FILES = array();
 });
 
 
-test(function() {
+test(function () {
 	$name = 'name';
 	$_POST = array(Form::TRACKER_ID => $name, 'send2' => '');
 
@@ -26,12 +26,12 @@ test(function() {
 	$btn2 = $form->addSubmit('send2');
 	$btn3 = $form->addSubmit('send3');
 
-	Assert::true( $form->isSuccess() );
-	Assert::same( $btn2, $form->isSubmitted() );
+	Assert::true($form->isSuccess());
+	Assert::same($btn2, $form->isSubmitted());
 });
 
 
-test(function() {
+test(function () {
 	$name = 'name';
 	$_POST = array(Form::TRACKER_ID => $name, 'send2' => array('x' => 1, 'y' => 1));
 
@@ -40,6 +40,6 @@ test(function() {
 	$btn2 = $form->addImage('send2');
 	$btn3 = $form->addImage('send3');
 
-	Assert::true( $form->isSuccess() );
-	Assert::same( $btn2, $form->isSubmitted() );
+	Assert::true($form->isSuccess());
+	Assert::same($btn2, $form->isSubmitted());
 });

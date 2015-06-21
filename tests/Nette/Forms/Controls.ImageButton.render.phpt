@@ -4,9 +4,9 @@
  * Test: Nette\Forms\Controls\Button.
  */
 
-use Nette\Forms\Form,
-	Nette\Utils\Html,
-	Tester\Assert;
+use Nette\Forms\Form;
+use Nette\Utils\Html;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -21,7 +21,7 @@ class Translator implements Nette\Localization\ITranslator
 }
 
 
-test(function() {
+test(function () {
 	$form = new Form;
 	$input = $form->addImage('button', 'image.gif');
 
@@ -31,7 +31,7 @@ test(function() {
 });
 
 
-test(function() { // translator
+test(function () { // translator
 	$form = new Form;
 	$input = $form->addImage('button', 'image.gif');
 	$input->setTranslator(new Translator);
@@ -40,7 +40,7 @@ test(function() { // translator
 });
 
 
-test(function() { // no validation rules
+test(function () { // no validation rules
 	$form = new Form;
 	$input = $form->addImage('button', 'image.gif')->setRequired('required');
 
@@ -48,7 +48,7 @@ test(function() { // no validation rules
 });
 
 
-test(function() { // container
+test(function () { // container
 	$form = new Form;
 	$container = $form->addContainer('container');
 	$input = $container->addImage('button', 'image.gif');

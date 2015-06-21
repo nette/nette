@@ -4,9 +4,9 @@
  * Test: Nette\Forms\Controls\UploadControl.
  */
 
-use Nette\Forms\Form,
-	Nette\Utils\Html,
-	Tester\Assert;
+use Nette\Forms\Form;
+use Nette\Utils\Html;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -21,7 +21,7 @@ class Translator implements Nette\Localization\ITranslator
 }
 
 
-test(function() {
+test(function () {
 	$form = new Form;
 	$input = $form->addUpload('file', 'Label');
 
@@ -34,7 +34,7 @@ test(function() {
 });
 
 
-test(function() { // multiple
+test(function () { // multiple
 	$form = new Form;
 	$input = $form->addUpload('file', 'Label', TRUE);
 
@@ -42,7 +42,7 @@ test(function() { // multiple
 });
 
 
-test(function() { // Html with translator
+test(function () { // Html with translator
 	$form = new Form;
 	$input = $form->addUpload('file', 'Label');
 	$input->setTranslator(new Translator);
@@ -53,7 +53,7 @@ test(function() { // Html with translator
 });
 
 
-test(function() { // validation rules
+test(function () { // validation rules
 	$form = new Form;
 	$input = $form->addUpload('file')->setRequired('required');
 
@@ -61,7 +61,7 @@ test(function() { // validation rules
 });
 
 
-test(function() { // container
+test(function () { // container
 	$form = new Form;
 	$container = $form->addContainer('container');
 	$input = $container->addUpload('file');

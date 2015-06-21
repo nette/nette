@@ -4,8 +4,8 @@
  * Test: Nette\Application\Routers\Route with FILTER_IN & FILTER_OUT using string <=> object conversion
  */
 
-use Nette\Application\Routers\Route,
-	Tester\Assert;
+use Nette\Application\Routers\Route;
+use Tester\Assert;
 
 
 
@@ -22,10 +22,10 @@ $identityMap[2] = new Object(2);
 $route = new Route('<parameter>', array(
 	'presenter' => 'presenter',
 	'parameter' => array(
-		Route::FILTER_IN => function($s) use ($identityMap) {
+		Route::FILTER_IN => function ($s) use ($identityMap) {
 			return isset($identityMap[$s]) ? $identityMap[$s] : NULL;
 		},
-		Route::FILTER_OUT => function($obj) {
+		Route::FILTER_OUT => function ($obj) {
 			return $obj instanceof Object ? $obj->getId() : NULL;
 		},
 	),
@@ -46,7 +46,7 @@ Assert::same('http://example.com/1', testRouteOut($route, 'presenter', array(
 // Doesn't match
 testRouteIn($route, '/3/');
 
-Assert::null( testRouteOut($route, 'presenter', array(
+Assert::null(testRouteOut($route, 'presenter', array(
 	'parameter' => NULL,
 )));
 

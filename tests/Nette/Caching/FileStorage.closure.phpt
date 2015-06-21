@@ -4,9 +4,9 @@
  * Test: Nette\Caching\Storages\FileStorage & Nette\Callback & Closure.
  */
 
-use Nette\Caching\Cache,
-	Nette\Caching\Storages\FileStorage,
-	Tester\Assert;
+use Nette\Caching\Cache;
+use Nette\Caching\Storages\FileStorage;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -18,35 +18,35 @@ $value = range("\x00", "\xFF");
 
 $cache = new Cache(new FileStorage(TEMP_DIR));
 
-Assert::false( isset($cache[$key]) );
+Assert::false(isset($cache[$key]));
 
 
 // Writing cache using Closure...
-$res = $cache->save($key, function() use ($value) {
+$res = $cache->save($key, function () use ($value) {
 	return $value;
 });
 
-Assert::same( $res, $value );
+Assert::same($res, $value);
 
-Assert::same( $cache->load($key), $value );
+Assert::same($cache->load($key), $value);
 
 
 // Removing from cache using unset()...
 unset($cache[$key]);
 
 // Writing cache using Nette\Callback...
-$res = $cache->save($key, new Nette\Callback(function() use ($value) {
+$res = $cache->save($key, new Nette\Callback(function () use ($value) {
 	return $value;
 }));
 
-Assert::same( $res, $value );
+Assert::same($res, $value);
 
-Assert::same( $cache->load($key), $value );
+Assert::same($cache->load($key), $value);
 
 
 // Removing from cache using NULL callback...
-$cache->save($key, function() {
+$cache->save($key, function () {
 	return NULL;
 });
 
-Assert::false( isset($cache[$key]) );
+Assert::false(isset($cache[$key]));

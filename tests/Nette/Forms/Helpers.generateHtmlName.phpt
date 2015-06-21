@@ -4,15 +4,15 @@
  * Test: Nette\Forms\Helpers::generateHtmlName()
  */
 
-use Nette\Forms\Form,
-	Nette\Forms\Helpers,
-	Tester\Assert;
+use Nette\Forms\Form;
+use Nette\Forms\Helpers;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-test(function() {
+test(function () {
 	Assert::same('name', Helpers::generateHtmlName('name'));
 	Assert::same('first[name]', Helpers::generateHtmlName('first-name'));
 	Assert::same('first[second][name]', Helpers::generateHtmlName('first-second-name'));

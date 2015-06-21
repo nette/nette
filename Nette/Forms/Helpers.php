@@ -7,9 +7,9 @@
 
 namespace Nette\Forms;
 
-use Nette,
-	Nette\Utils\Strings,
-	Nette\Utils\Html;
+use Nette;
+use Nette\Utils\Strings;
+use Nette\Utils\Html;
 
 
 /**

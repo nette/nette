@@ -4,8 +4,8 @@
  * Test: Nette\ComponentModel\Container component factory 2.
  */
 
-use Nette\ComponentModel\Container,
-	Tester\Assert;
+use Nette\ComponentModel\Container;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -23,4 +23,4 @@ class TestClass extends Container
 
 
 $a = new TestClass;
-Assert::same( 'b', $a->getComponent('b')->name );
+Assert::same('b', $a->getComponent('b')->name);

@@ -82,13 +82,13 @@ class Form extends Container
 	/** @internal protection token ID */
 	const PROTECTOR_ID = '_token_';
 
-	/** @var array of function(Form $sender); Occurs when the form is submitted and successfully validated */
+	/** @var array of function (Form $sender); Occurs when the form is submitted and successfully validated */
 	public $onSuccess;
 
-	/** @var array of function(Form $sender); Occurs when the form is submitted and is not valid */
+	/** @var array of function (Form $sender); Occurs when the form is submitted and is not valid */
 	public $onError;
 
-	/** @var array of function(Form $sender); Occurs when the form is submitted */
+	/** @var array of function (Form $sender); Occurs when the form is submitted */
 	public $onSubmit;
 
 	/** @var mixed or NULL meaning: not detected yet */

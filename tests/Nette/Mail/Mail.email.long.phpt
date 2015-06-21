@@ -4,8 +4,8 @@
  * Test: Nette\Mail\Message valid email addresses.
  */
 
-use Nette\Mail\Message,
-	Tester\Assert;
+use Nette\Mail\Message;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -24,7 +24,7 @@ $mail->addBcc('veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryv
 $mailer = new TestMailer();
 $mailer->send($mail);
 
-Assert::match( <<<EOD
+Assert::match(<<<EOD
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
@@ -37,4 +37,4 @@ Message-ID: <%a%@%a%>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 EOD
-, TestMailer::$output );
+, TestMailer::$output);

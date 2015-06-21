@@ -4,8 +4,8 @@
  * Test: Nette\Mail\Message - attachments.
  */
 
-use Nette\Mail\Message,
-	Tester\Assert;
+use Nette\Mail\Message;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -19,7 +19,7 @@ $mail = new Message();
 $mail->addAttachment(__DIR__ . '/files/example.zip', NULL, 'application/zip');
 $mailer->send($mail);
 
-Assert::match( <<<EOD
+Assert::match(<<<EOD
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
@@ -43,7 +43,7 @@ AAgAJ4gyOyaRKmdAAAAAQQAAAAsAAAAAAAAAAAAgAAAAAAAAAHZlcnNpb24udHh0UEsFBgAAAAAB
 AAEAOQAAAGkAAAAAAA==
 ----------%S%--
 EOD
-, TestMailer::$output );
+, TestMailer::$output);
 
 
 $mail = new Message();
@@ -51,7 +51,7 @@ $mail->addAttachment(__DIR__ . '/files/example.zip', NULL, 'application/zip')
 	->setEncoding(Message::ENCODING_QUOTED_PRINTABLE);
 $mailer->send($mail);
 
-Assert::match( <<<EOD
+Assert::match(<<<EOD
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
@@ -72,7 +72,7 @@ Content-Disposition: attachment; filename="example.zip"
 PK=03=04=14=00=00=00=08=00'=882;&=91*g@=00=00=00A=00=00=00=0B=00=00=00versi=%A%00
 ----------%S%--
 EOD
-, TestMailer::$output );
+, TestMailer::$output);
 
 
 $mail = new Message();
@@ -80,7 +80,7 @@ $name = iconv('UTF-8', 'WINDOWS-1250', 'žluťoučký.zip');
 $mail->addAttachment($name, file_get_contents(__DIR__ . '/files/example.zip'), 'application/zip');
 $mailer->send($mail);
 
-Assert::match( <<<EOD
+Assert::match(<<<EOD
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
@@ -104,4 +104,4 @@ AAgAJ4gyOyaRKmdAAAAAQQAAAAsAAAAAAAAAAAAgAAAAAAAAAHZlcnNpb24udHh0UEsFBgAAAAAB
 AAEAOQAAAGkAAAAAAA==
 ----------%S%--
 EOD
-, TestMailer::$output );
+, TestMailer::$output);

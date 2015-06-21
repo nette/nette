@@ -4,9 +4,9 @@
  * Test: Nette\Application\Routers\SimpleRouter basic functions.
  */
 
-use Nette\Http,
-	Nette\Application\Routers\SimpleRouter,
-	Tester\Assert;
+use Nette\Http;
+use Nette\Application\Routers\SimpleRouter;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -28,11 +28,11 @@ $url->setQuery(array(
 $httpRequest = new Http\Request($url);
 
 $req = $router->match($httpRequest);
-Assert::same( 'myPresenter',  $req->getPresenterName() );
-Assert::same( 'action',  $req->parameters['action'] );
-Assert::same( '12',  $req->parameters['id'] );
-Assert::same( 'testvalue',  $req->parameters['test'] );
-Assert::same( 'anyvalue',  $req->parameters['any'] );
+Assert::same('myPresenter',  $req->getPresenterName());
+Assert::same('action',  $req->parameters['action']);
+Assert::same('12',  $req->parameters['id']);
+Assert::same('testvalue',  $req->parameters['test']);
+Assert::same('anyvalue',  $req->parameters['any']);
 
 $url = $router->constructUrl($req, $httpRequest->url);
-Assert::same( 'http://nette.org/file.php?action=action&test=testvalue&presenter=myPresenter',  $url );
+Assert::same('http://nette.org/file.php?action=action&test=testvalue&presenter=myPresenter',  $url);

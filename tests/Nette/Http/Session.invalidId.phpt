@@ -4,9 +4,9 @@
  * Test: Nette\Http\Session error in session_start.
  */
 
-use Nette\Http\Session,
-	Nette\Http\SessionSection,
-	Tester\Assert;
+use Nette\Http\Session;
+use Nette\Http\SessionSection;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

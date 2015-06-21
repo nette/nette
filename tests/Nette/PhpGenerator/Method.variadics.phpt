@@ -5,9 +5,9 @@
  * @phpversion 5.6
  */
 
-use Nette\PhpGenerator\Method,
-	Nette\PhpGenerator\Parameter,
-	Tester\Assert;
+use Nette\PhpGenerator\Method;
+use Nette\PhpGenerator\Parameter;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -69,7 +69,7 @@ $method = (new Method)
 	->setBody('return 42;');
 $method->addParameter('foo');
 $method->addParameter('bar');
-$method->addParameter('baz', []);
+$method->addParameter('baz', array());
 
 Assert::match(
 'function variadic($foo, $bar, ...$baz)

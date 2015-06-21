@@ -4,9 +4,9 @@
  * Test: Nette\Forms\Controls\MultiSelectBox.
  */
 
-use Nette\Forms\Form,
-	Nette\Utils\Html,
-	Tester\Assert;
+use Nette\Forms\Form;
+use Nette\Utils\Html;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -21,7 +21,7 @@ class Translator implements Nette\Localization\ITranslator
 }
 
 
-test(function() {
+test(function () {
 	$form = new Form;
 	$input = $form->addMultiSelect('list', 'Label', array(
 		'a' => 'First',
@@ -37,7 +37,7 @@ test(function() {
 });
 
 
-test(function() { // selected
+test(function () { // selected
 	$form = new Form;
 	$input = $form->addMultiSelect('list', 'Label', array(
 		'a' => 'First',
@@ -48,7 +48,7 @@ test(function() { // selected
 });
 
 
-test(function() { // translator & groups
+test(function () { // translator & groups
 	$form = new Form;
 	$input = $form->addMultiSelect('list', 'Label', array(
 		'a' => 'First',
@@ -62,7 +62,7 @@ test(function() { // translator & groups
 });
 
 
-test(function() { // Html with translator & groups
+test(function () { // Html with translator & groups
 	$form = new Form;
 	$input = $form->addMultiSelect('list', Html::el('b', 'Label'), array(
 		'a' => Html::el('option', 'First')->class('class'),
@@ -76,7 +76,7 @@ test(function() { // Html with translator & groups
 });
 
 
-test(function() { // validation rules
+test(function () { // validation rules
 	$form = new Form;
 	$input = $form->addMultiSelect('list', 'Label', array(
 		'a' => 'First',
@@ -87,7 +87,7 @@ test(function() { // validation rules
 });
 
 
-test(function() { // container
+test(function () { // container
 	$form = new Form;
 	$container = $form->addContainer('container');
 	$input = $container->addMultiSelect('list', 'Label', array(
@@ -99,7 +99,7 @@ test(function() { // container
 });
 
 
-test(function() { // disabled all
+test(function () { // disabled all
 	$form = new Form;
 	$input = $form->addMultiSelect('list', 'Label', array(
 		'a' => 'First',
@@ -110,7 +110,7 @@ test(function() { // disabled all
 });
 
 
-test(function() { // disabled one
+test(function () { // disabled one
 	$form = new Form;
 	$input = $form->addMultiSelect('list', 'Label', array(
 		'a' => 'First',

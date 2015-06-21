@@ -7,8 +7,8 @@
 
 namespace Nette\Forms\Controls;
 
-use Nette,
-	Nette\Http\FileUpload;
+use Nette;
+use Nette\Http\FileUpload;
 
 
 /**

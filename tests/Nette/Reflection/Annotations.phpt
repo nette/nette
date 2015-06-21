@@ -4,8 +4,8 @@
  * Test: Nette\Reflection & annotations.
  */
 
-use Nette\Reflection,
-	Tester\Assert;
+use Nette\Reflection;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -30,35 +30,35 @@ class TestClass
 
 $rc = new Reflection\ClassType('TestClass');
 
-test(function() use ($rc) { // Class annotations
+test(function () use ($rc) { // Class annotations
 
 	$tmp = $rc->getAnnotations();
 
-	Assert::same( 'John Doe',  $tmp['author'][0] );
-	Assert::true( $tmp['renderable'][0] );
+	Assert::same('John Doe',  $tmp['author'][0]);
+	Assert::true($tmp['renderable'][0]);
 
-	Assert::true( $rc->hasAnnotation('author'), "has('author')' );
-	Assert::same( 'John Doe",  $rc->getAnnotation('author') );
+	Assert::true($rc->hasAnnotation('author'), "has('author')');
+	Assert::same('John Doe",  $rc->getAnnotation('author'));
 });
 
 
-test(function() use ($rc) { // Method annotations
+test(function () use ($rc) { // Method annotations
 
 	$rm = $rc->getMethod('foo');
 	$tmp = $rm->getAnnotations();
 
-	Assert::true( $tmp['AJAX'][0] );
-	Assert::true( $rm->hasAnnotation('AJAX'), "has('AJAX')" );
-	Assert::true( $rm->getAnnotation('AJAX') );
+	Assert::true($tmp['AJAX'][0]);
+	Assert::true($rm->hasAnnotation('AJAX'), "has('AJAX')");
+	Assert::true($rm->getAnnotation('AJAX'));
 });
 
 
-test(function() use ($rc) { // Property annotations
+test(function () use ($rc) { // Property annotations
 
 	$rp = $rc->getProperty('foo');
 	$tmp = $rp->getAnnotations();
 
-	Assert::true( $tmp['secured'][0] );
-	Assert::true( $rp->hasAnnotation('secured'), "has('secured')" );
-	Assert::true( $rp->getAnnotation('secured') );
+	Assert::true($tmp['secured'][0]);
+	Assert::true($rp->hasAnnotation('secured'), "has('secured')");
+	Assert::true($rp->getAnnotation('secured'));
 });

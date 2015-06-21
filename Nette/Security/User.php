@@ -37,10 +37,10 @@ class User extends Nette\Object
 	/** @var string  default role for authenticated user without own identity */
 	public $authenticatedRole = 'authenticated';
 
-	/** @var array of function(User $sender); Occurs when the user is successfully logged in */
+	/** @var array of function (User $sender); Occurs when the user is successfully logged in */
 	public $onLoggedIn;
 
-	/** @var array of function(User $sender); Occurs when the user is logged out */
+	/** @var array of function (User $sender); Occurs when the user is logged out */
 	public $onLoggedOut;
 
 	/** @var IUserStorage Session storage for current user */

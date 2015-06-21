@@ -4,8 +4,8 @@
  * Test: Nette\Latte\Parser and $shortNoEscape.
  */
 
-use Nette\Latte,
-	Tester\Assert;
+use Nette\Latte;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -26,6 +26,6 @@ $latte->parser->shortNoEscape = FALSE;
 $template->setSource('{="<>"}');
 Assert::match('&lt;&gt;', (string) $template);
 
-Assert::error(function() use ($template) {
+Assert::error(function () use ($template) {
 	$template->setSource('{!="<>"}')->compile();
 }, E_USER_DEPRECATED, 'The noescape shortcut {!...} is deprecated, use {...|noescape} modifier on line 1.');

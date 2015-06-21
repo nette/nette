@@ -4,8 +4,8 @@
  * Test: Nette\Diagnostics\Debugger::timer()
  */
 
-use Nette\Diagnostics\Debugger,
-	Tester\Assert;
+use Nette\Diagnostics\Debugger;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -19,6 +19,6 @@ Debugger::timer('foo');
 
 sleep(1);
 
-Assert::same( 2.0, round(Debugger::timer(), 1) );
+Assert::same(2.0, round(Debugger::timer(), 1));
 
-Assert::same( 1.0, round(Debugger::timer('foo'), 1) );
+Assert::same(1.0, round(Debugger::timer('foo'), 1));

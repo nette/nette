@@ -5,11 +5,11 @@ namespace Test\Space;
 
 class Foo {}
 
-use AAA,
-	BBB as B,
-	CCC\DDD,
-	EEE\FFF as F,
-	\GGG as G;
+use AAA;
+use BBB as B;
+use CCC\DDD;
+use EEE\FFF as F;
+use \GGG as G;
 
 class Bar {}
 

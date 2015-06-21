@@ -4,9 +4,9 @@
  * Test: Nette\Application\Routers\SimpleRouter with secured connection.
  */
 
-use Nette\Http,
-	Nette\Application,
-	Tester\Assert;
+use Nette\Http;
+use Nette\Application;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -31,4 +31,4 @@ $req = new Application\Request(
 );
 
 $url = $router->constructUrl($req, $httpRequest->url);
-Assert::same( 'https://nette.org/file.php?presenter=othermodule%3Apresenter',  $url );
+Assert::same('https://nette.org/file.php?presenter=othermodule%3Apresenter',  $url);

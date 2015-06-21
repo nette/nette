@@ -7,8 +7,8 @@
 
 namespace Nette\Forms\Controls;
 
-use Nette,
-	Nette\Utils\Html;
+use Nette;
+use Nette\Utils\Html;
 
 
 /**

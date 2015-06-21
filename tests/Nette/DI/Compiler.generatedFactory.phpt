@@ -124,33 +124,33 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 
-Assert::type( 'ILoremFactory', $container->getService('lorem') );
+Assert::type('ILoremFactory', $container->getService('lorem'));
 $lorem = $container->getService('lorem')->create();
-Assert::type( 'Lorem', $lorem );
-Assert::type( 'Ipsum', $lorem->ipsum );
-Assert::same( $container->getService('ipsum'), $lorem->ipsum );
+Assert::type('Lorem', $lorem);
+Assert::type('Ipsum', $lorem->ipsum);
+Assert::same($container->getService('ipsum'), $lorem->ipsum);
 
 
-Assert::type( 'IFinderFactory', $container->getService('finder') );
+Assert::type('IFinderFactory', $container->getService('finder'));
 $finder = $container->getService('finder')->create();
-Assert::type( 'Nette\Utils\Finder', $finder );
+Assert::type('Nette\Utils\Finder', $finder);
 
 
-Assert::type( 'IArticleFactory', $container->getService('article') );
+Assert::type('IArticleFactory', $container->getService('article'));
 $article = $container->getService('article')->create('nemam');
-Assert::type( 'Article', $article );
-Assert::same( 'nemam', $article->title );
+Assert::type('Article', $article);
+Assert::same('nemam', $article->title);
 
 
-Assert::type( 'IFooFactory', $container->getService('foo') );
+Assert::type('IFooFactory', $container->getService('foo'));
 $foo = $container->getService('foo')->create($container->getService('baz'));
-Assert::type( 'Foo', $foo );
-Assert::type( 'Bar', $foo->bar );
+Assert::type('Foo', $foo);
+Assert::type('Bar', $foo->bar);
 Assert::same($container->getService('bar'), $foo->bar);
-Assert::type( 'Baz', $foo->baz );
+Assert::type('Baz', $foo->baz);
 Assert::same($container->getService('baz'), $foo->baz);
 
-Assert::type( 'ILoremFactory', $container->getByType('ILoremFactory') );
+Assert::type('ILoremFactory', $container->getByType('ILoremFactory'));
 
 
 Assert::type('IArticleFactory', $container->getService('article2'));

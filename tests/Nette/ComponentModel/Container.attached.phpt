@@ -4,8 +4,8 @@
  * Test: Nette\ComponentModel\Container::attached()
  */
 
-use Nette\ComponentModel\Container,
-	Tester\Assert;
+use Nette\ComponentModel\Container;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -62,7 +62,7 @@ $b['c']['d'] = $d;
 // 'a' becoming 'b' parent
 $a = new A;
 $a['b'] = $b;
-Assert::same( array(
+Assert::same(array(
 	'C::ATTACHED(A)',
 	'B::ATTACHED(A)',
 ), Notes::fetch());
@@ -70,7 +70,7 @@ Assert::same( array(
 
 // removing 'b' from 'a'
 unset($a['b']);
-Assert::same( array(
+Assert::same(array(
 	'C::detached(A)',
 	'B::detached(A)',
 ), Notes::fetch());
@@ -78,14 +78,14 @@ Assert::same( array(
 // 'a' becoming 'b' parent
 $a['b'] = $b;
 
-Assert::same( 'b-c-d-e', $d['e']->lookupPath('A') );
-Assert::same( $a, $d['e']->lookup('A') );
-Assert::same( 'b-c-d-e', $d['e']->lookupPath(NULL) );
-Assert::same( $a, $d['e']->lookup(NULL) );
-Assert::same( 'c-d-e', $d['e']->lookupPath('B') );
-Assert::same( $b, $d['e']->lookup('B') );
+Assert::same('b-c-d-e', $d['e']->lookupPath('A'));
+Assert::same($a, $d['e']->lookup('A'));
+Assert::same('b-c-d-e', $d['e']->lookupPath(NULL));
+Assert::same($a, $d['e']->lookup(NULL));
+Assert::same('c-d-e', $d['e']->lookupPath('B'));
+Assert::same($b, $d['e']->lookup('B'));
 
-Assert::same( $a['b-c'], $b['c'] );
+Assert::same($a['b-c'], $b['c']);
 Notes::fetch(); // clear
 
 

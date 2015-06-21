@@ -4,9 +4,9 @@
  * Test: Nette\Latte\Engine: {extends ...} test II.
  */
 
-use Nette\Latte,
-	Nette\Templating\FileTemplate,
-	Tester\Assert;
+use Nette\Latte;
+use Nette\Templating\FileTemplate;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

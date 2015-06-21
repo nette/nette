@@ -4,9 +4,9 @@
  * Test: Nette\Caching\Storages\FileStorage & namespace test.
  */
 
-use Nette\Caching\Storages\FileStorage,
-	Nette\Caching\Cache,
-	Tester\Assert;
+use Nette\Caching\Storages\FileStorage;
+use Nette\Caching\Cache;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -21,14 +21,14 @@ $cacheB = new Cache($storage, 'b');
 $cacheA['key'] = 'hello';
 $cacheB['key'] = 'world';
 
-Assert::true( isset($cacheA['key']) );
-Assert::true( isset($cacheB['key']) );
-Assert::same( $cacheA['key'], 'hello' );
-Assert::same( $cacheB['key'], 'world' );
+Assert::true(isset($cacheA['key']));
+Assert::true(isset($cacheB['key']));
+Assert::same($cacheA['key'], 'hello');
+Assert::same($cacheB['key'], 'world');
 
 
 // Removing from cache #2 using unset()...
 unset($cacheB['key']);
 
-Assert::true( isset($cacheA['key']) );
-Assert::false( isset($cacheB['key']) );
+Assert::true(isset($cacheA['key']));
+Assert::false(isset($cacheB['key']));

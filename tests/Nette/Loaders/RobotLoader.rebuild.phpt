@@ -4,9 +4,9 @@
  * Test: Nette\Loaders\RobotLoader rebuild only once.
  */
 
-use Nette\Loaders\RobotLoader,
-	Nette\Caching\Storages\DevNullStorage,
-	Tester\Assert;
+use Nette\Loaders\RobotLoader;
+use Nette\Caching\Storages\DevNullStorage;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -26,4 +26,4 @@ $a = new A;
 
 rename(TEMP_DIR . '/file2.php', TEMP_DIR . '/file4.php');
 
-Assert::false( class_exists('B') );
+Assert::false(class_exists('B'));

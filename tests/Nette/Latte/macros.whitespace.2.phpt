@@ -4,8 +4,8 @@
  * Test: Nette\Latte\Engine: whitespace test II.
  */
 
-use Nette\Latte,
-	Tester\Assert;
+use Nette\Latte;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

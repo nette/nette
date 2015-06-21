@@ -4,8 +4,8 @@
  * Test: Nette\DI\ContainerBuilder and generated factories with arguments.
  */
 
-use Nette\DI,
-	Tester\Assert;
+use Nette\DI;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

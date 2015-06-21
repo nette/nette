@@ -64,10 +64,10 @@ for ($counter = 0; $counter < 300; $counter++) {
 	}
 }
 
-Assert::same( array(
+Assert::same(array(
 	'ok' => $counter,   // should be 1000. If unlink() is used, sum [ok] + [notfound] should be 1000
 	'notfound' => 0,    // means 'file not found', should be 0 if unlink() is not used
 	'error' => 0,       // means 'file contents is damaged', MUST be 0
 	'cantwrite' => 0,   // means 'somebody else is writing this file'
 	'cantdelete' => 0,  // means 'unlink() has timeout',  should be 0
-), $hits );
+), $hits);

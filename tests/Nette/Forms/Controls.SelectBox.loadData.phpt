@@ -4,15 +4,15 @@
  * Test: Nette\Forms\Controls\SelectBox.
  */
 
-use Nette\Forms\Form,
-	Nette\DateTime,
-	Tester\Assert;
+use Nette\Forms\Form;
+use Nette\DateTime;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-before(function() {
+before(function () {
 	$_SERVER['REQUEST_METHOD'] = 'POST';
 	$_POST = $_FILES = array();
 });
@@ -26,46 +26,46 @@ $series = array(
 );
 
 
-test(function() use ($series) { // Select
+test(function () use ($series) { // Select
 	$_POST = array('select' => 'red-dwarf');
 
 	$form = new Form;
 	$input = $form->addSelect('select', NULL, $series);
 
-	Assert::true( $form->isValid() );
-	Assert::same( 'red-dwarf', $input->getValue() );
-	Assert::same( 'Red Dwarf', $input->getSelectedItem() );
-	Assert::true( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::same('red-dwarf', $input->getValue());
+	Assert::same('Red Dwarf', $input->getSelectedItem());
+	Assert::true($input->isFilled());
 });
 
 
-test(function() use ($series) { // Empty select
+test(function () use ($series) { // Empty select
 	$_POST = array('select' => 'red-dwarf');
 
 	$form = new Form;
 	$input = $form->addSelect('select');
 
-	Assert::true( $form->isValid() );
-	Assert::same( NULL, $input->getValue() );
-	Assert::same( NULL, $input->getSelectedItem() );
-	Assert::false( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::same(NULL, $input->getValue());
+	Assert::same(NULL, $input->getSelectedItem());
+	Assert::false($input->isFilled());
 });
 
 
-test(function() use ($series) { // Select with prompt
+test(function () use ($series) { // Select with prompt
 	$_POST = array('select' => 'red-dwarf');
 
 	$form = new Form;
 	$input = $form->addSelect('select', NULL, $series)->setPrompt('Select series');
 
-	Assert::true( $form->isValid() );
-	Assert::same( 'red-dwarf', $input->getValue() );
-	Assert::same( 'Red Dwarf', $input->getSelectedItem() );
-	Assert::true( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::same('red-dwarf', $input->getValue());
+	Assert::same('Red Dwarf', $input->getSelectedItem());
+	Assert::true($input->isFilled());
 });
 
 
-test(function() use ($series) { // Select with optgroups
+test(function () use ($series) { // Select with optgroups
 	$_POST = array('select' => 'red-dwarf');
 
 	$form = new Form;
@@ -79,127 +79,127 @@ test(function() use ($series) { // Select with optgroups
 		),
 	));
 
-	Assert::true( $form->isValid() );
-	Assert::same( 'red-dwarf', $input->getValue() );
-	Assert::same( 'Red Dwarf', $input->getSelectedItem() );
-	Assert::true( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::same('red-dwarf', $input->getValue());
+	Assert::same('Red Dwarf', $input->getSelectedItem());
+	Assert::true($input->isFilled());
 });
 
 
-test(function() use ($series) { // Select with invalid input
+test(function () use ($series) { // Select with invalid input
 	$_POST = array('select' => 'days-of-our-lives');
 
 	$form = new Form;
 	$input = $form->addSelect('select', NULL, $series);
 
-	Assert::false( $form->isValid() );
-	Assert::null( $input->getValue() );
-	Assert::null( $input->getSelectedItem() );
-	Assert::false( $input->isFilled() );
+	Assert::false($form->isValid());
+	Assert::null($input->getValue());
+	Assert::null($input->getSelectedItem());
+	Assert::false($input->isFilled());
 });
 
 
-test(function() use ($series) { // Select with prompt and invalid input
+test(function () use ($series) { // Select with prompt and invalid input
 	$form = new Form;
 	$input = $form->addSelect('select', NULL, $series)->setPrompt('Select series');
 
-	Assert::true( $form->isValid() );
-	Assert::null( $input->getValue() );
-	Assert::null( $input->getSelectedItem() );
-	Assert::false( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::null($input->getValue());
+	Assert::null($input->getSelectedItem());
+	Assert::false($input->isFilled());
 });
 
 
-test(function() use ($series) { // Indexed arrays
+test(function () use ($series) { // Indexed arrays
 	$_POST = array('zero' => 0);
 
 	$form = new Form;
 	$input = $form->addSelect('zero', NULL, $series);
 
-	Assert::true( $form->isValid() );
-	Assert::same( 0, $input->getValue() );
-	Assert::same( 0, $input->getRawValue() );
-	Assert::same( 'South Park', $input->getSelectedItem() );
-	Assert::true( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::same(0, $input->getValue());
+	Assert::same(0, $input->getRawValue());
+	Assert::same('South Park', $input->getSelectedItem());
+	Assert::true($input->isFilled());
 });
 
 
-test(function() use ($series) { // empty key
+test(function () use ($series) { // empty key
 	$_POST = array('empty' => '');
 
 	$form = new Form;
 	$input = $form->addSelect('empty', NULL, $series);
 
-	Assert::true( $form->isValid() );
-	Assert::same( '', $input->getValue() );
-	Assert::same( 'Family Guy', $input->getSelectedItem() );
-	Assert::true( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::same('', $input->getValue());
+	Assert::same('Family Guy', $input->getSelectedItem());
+	Assert::true($input->isFilled());
 });
 
 
-test(function() use ($series) { // missing key
+test(function () use ($series) { // missing key
 	$form = new Form;
 	$input = $form->addSelect('missing', NULL, $series);
 
-	Assert::false( $form->isValid() );
-	Assert::null( $input->getValue() );
-	Assert::null( $input->getSelectedItem() );
-	Assert::false( $input->isFilled() );
+	Assert::false($form->isValid());
+	Assert::null($input->getValue());
+	Assert::null($input->getSelectedItem());
+	Assert::false($input->isFilled());
 });
 
 
-test(function() use ($series) { // disabled key
+test(function () use ($series) { // disabled key
 	$_POST = array('disabled' => 'red-dwarf');
 
 	$form = new Form;
 	$input = $form->addSelect('disabled', NULL, $series)
 		->setDisabled();
 
-	Assert::true( $form->isValid() );
-	Assert::null( $input->getValue() );
+	Assert::true($form->isValid());
+	Assert::null($input->getValue());
 });
 
 
-test(function() use ($series) { // malformed data
+test(function () use ($series) { // malformed data
 	$_POST = array('malformed' => array(NULL));
 
 	$form = new Form;
 	$input = $form->addSelect('malformed', NULL, $series);
 
-	Assert::false( $form->isValid() );
-	Assert::null( $input->getValue() );
-	Assert::null( $input->getSelectedItem() );
-	Assert::false( $input->isFilled() );
+	Assert::false($form->isValid());
+	Assert::null($input->getValue());
+	Assert::null($input->getSelectedItem());
+	Assert::false($input->isFilled());
 });
 
 
-test(function() use ($series) { // setItems without keys
+test(function () use ($series) { // setItems without keys
 	$_POST = array('select' => 'red-dwarf');
 
 	$form = new Form;
 	$input = $form->addSelect('select')->setItems(array_keys($series), FALSE);
-	Assert::same( array(
+	Assert::same(array(
 		'red-dwarf' => 'red-dwarf',
 		'the-simpsons' => 'the-simpsons',
 		0 => 0,
 		'' => '',
-	), $input->getItems() );
+	), $input->getItems());
 
-	Assert::true( $form->isValid() );
-	Assert::same( 'red-dwarf', $input->getValue() );
-	Assert::same( 'red-dwarf', $input->getSelectedItem() );
-	Assert::true( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::same('red-dwarf', $input->getValue());
+	Assert::same('red-dwarf', $input->getSelectedItem());
+	Assert::true($input->isFilled());
 });
 
 
-test(function() use ($series) { // setItems without keys
+test(function () use ($series) { // setItems without keys
 	$form = new Form;
 	$input = $form->addSelect('select')->setItems(range(1, 5), FALSE);
-	Assert::same( array(1 => 1, 2, 3, 4, 5), $input->getItems() );
+	Assert::same(array(1 => 1, 2, 3, 4, 5), $input->getItems());
 });
 
 
-test(function() { // setItems without keys with optgroups
+test(function () { // setItems without keys with optgroups
 	$_POST = array('select' => 'red-dwarf');
 
 	$form = new Form;
@@ -208,34 +208,34 @@ test(function() { // setItems without keys with optgroups
 		'uk' => array('red-dwarf'),
 	), FALSE);
 
-	Assert::true( $form->isValid() );
-	Assert::same( 'red-dwarf', $input->getValue() );
-	Assert::same( 'red-dwarf', $input->getSelectedItem() );
-	Assert::true( $input->isFilled() );
+	Assert::true($form->isValid());
+	Assert::same('red-dwarf', $input->getValue());
+	Assert::same('red-dwarf', $input->getSelectedItem());
+	Assert::true($input->isFilled());
 });
 
 
-test(function() use ($series) { // setValue() and invalid argument
+test(function () use ($series) { // setValue() and invalid argument
 	$form = new Form;
 	$input = $form->addSelect('select', NULL, $series);
 	$input->setValue(NULL);
 
-	Assert::exception(function() use ($input) {
+	Assert::exception(function () use ($input) {
 		$input->setValue('unknown');
 	}, 'Nette\InvalidArgumentException', "Value 'unknown' is out of allowed range ['red-dwarf', 'the-simpsons', 0, ''] in field 'select'.");
 });
 
 
-test(function() { // object as value
+test(function () { // object as value
 	$form = new Form;
 	$input = $form->addSelect('select', NULL, array('2013-07-05 00:00:00' => 1))
 		->setValue(new DateTime('2013-07-05'));
 
-	Assert::same( '2013-07-05 00:00:00', $input->getValue() );
+	Assert::same('2013-07-05 00:00:00', $input->getValue());
 });
 
 
-test(function() { // object as item
+test(function () { // object as item
 	$form = new Form;
 	$input = $form->addSelect('select')
 		->setItems(array(
@@ -244,28 +244,28 @@ test(function() { // object as item
 		), FALSE)
 		->setValue('2013-07-05 00:00:00');
 
-	Assert::equal( new DateTime('2013-07-05'), $input->getSelectedItem() );
+	Assert::equal(new DateTime('2013-07-05'), $input->getSelectedItem());
 });
 
 
-test(function() use ($series) { // disabled one
+test(function () use ($series) { // disabled one
 	$_POST = array('select' => 'red-dwarf');
 
 	$form = new Form;
 	$input = $form->addSelect('select', NULL, $series)
 		->setDisabled(array('red-dwarf'));
 
-	Assert::null( $input->getValue() );
+	Assert::null($input->getValue());
 
 	unset($form['select']);
 	$input = new Nette\Forms\Controls\SelectBox(NULL, $series);
 	$input->setDisabled(array('red-dwarf'));
 	$form['select'] = $input;
 
-	Assert::null( $input->getValue() );
+	Assert::null($input->getValue());
 });
 
-test(function() {
+test(function () {
 	$_POST = array('select' => 1);
 
 	$form = new Form;
@@ -274,5 +274,5 @@ test(function() {
 		2 => 'Red dwarf'
 	));
 
-	Assert::same( 1, $input->getValue() );
+	Assert::same(1, $input->getValue());
 });

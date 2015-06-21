@@ -4,8 +4,8 @@
  * Test: Nette\Diagnostics\Dumper::toText() recursion
  */
 
-use Nette\Diagnostics\Dumper,
-	Tester\Assert;
+use Nette\Diagnostics\Dumper;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -13,7 +13,7 @@ require __DIR__ . '/../bootstrap.php';
 
 $arr = array(1, 2, 3);
 $arr[] = & $arr;
-Assert::match( 'array (4)
+Assert::match('array (4)
    0 => 1
    1 => 2
    2 => 3
@@ -22,13 +22,13 @@ Assert::match( 'array (4)
    |  1 => 2
    |  2 => 3
    |  3 => array (4) [ RECURSION ]
-', Dumper::toText($arr) );
+', Dumper::toText($arr));
 
 
 $arr = (object) array('x' => 1, 'y' => 2);
 $arr->z = & $arr;
-Assert::match( 'stdClass #%h%
+Assert::match('stdClass #%h%
    x => 1
    y => 2
    z => stdClass #%h% { RECURSION }
-', Dumper::toText($arr) );
+', Dumper::toText($arr));

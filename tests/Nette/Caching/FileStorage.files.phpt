@@ -4,9 +4,9 @@
  * Test: Nette\Caching\Storages\FileStorage files dependency test.
  */
 
-use Nette\Caching\Cache,
-	Nette\Caching\Storages\FileStorage,
-	Tester\Assert;
+use Nette\Caching\Cache;
+use Nette\Caching\Storages\FileStorage;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -29,13 +29,13 @@ $cache->save($key, $value, array(
 	),
 ));
 
-Assert::true( isset($cache[$key]) );
+Assert::true(isset($cache[$key]));
 
 
 // Modifing dependent file
 file_put_contents($dependentFile, 'a');
 
-Assert::false( isset($cache[$key]) );
+Assert::false(isset($cache[$key]));
 
 
 // Writing cache...
@@ -43,7 +43,7 @@ $cache->save($key, $value, array(
 	Cache::FILES => $dependentFile,
 ));
 
-Assert::true( isset($cache[$key]) );
+Assert::true(isset($cache[$key]));
 
 
 // Modifing dependent file
@@ -51,4 +51,4 @@ sleep(2);
 file_put_contents($dependentFile, 'b');
 clearstatcache();
 
-Assert::false( isset($cache[$key]) );
+Assert::false(isset($cache[$key]));

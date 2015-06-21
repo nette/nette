@@ -4,8 +4,8 @@
  * Test: Nette\Forms translating controls with translatable strings wrapped in objects
  */
 
-use Nette\Forms\Form,
-	Tester\Assert;
+use Nette\Forms\Form;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -36,7 +36,7 @@ class StringWrapper
 
 
 
-test(function() {
+test(function () {
 	$form = new Form;
 	$form->setTranslator(new Translator);
 
@@ -49,7 +49,7 @@ test(function() {
 
 
 
-test(function() {
+test(function () {
 	$form = new Form;
 	$form->setTranslator(new Translator);
 
@@ -62,7 +62,7 @@ test(function() {
 
 
 
-test(function() {
+test(function () {
 	$form = new Form;
 	$form->setTranslator(new Translator);
 
@@ -77,7 +77,7 @@ test(function() {
 
 
 
-test(function() {
+test(function () {
 	$form = new Form;
 	$form->setTranslator(new Translator);
 

@@ -7,8 +7,8 @@
 
 namespace Nette\Database\Table;
 
-use Nette,
-	Nette\Database\Reflection\MissingReferenceException;
+use Nette;
+use Nette\Database\Reflection\MissingReferenceException;
 
 
 /**

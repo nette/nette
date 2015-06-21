@@ -4,9 +4,9 @@
  * Test: Nette\Forms\Controls\Button & SubmitButton
  */
 
-use Nette\Forms\Form,
-	Nette\Utils\Html,
-	Tester\Assert;
+use Nette\Forms\Form;
+use Nette\Utils\Html;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -21,7 +21,7 @@ class Translator implements Nette\Localization\ITranslator
 }
 
 
-test(function() {
+test(function () {
 	$form = new Form;
 	$input = $form->addButton('button', 'Caption');
 
@@ -32,7 +32,7 @@ test(function() {
 });
 
 
-test(function() { // translator
+test(function () { // translator
 	$form = new Form;
 	$input = $form->addButton('button', 'Caption');
 	$input->setTranslator(new Translator);
@@ -42,7 +42,7 @@ test(function() { // translator
 });
 
 
-test(function() { // Html with translator
+test(function () { // Html with translator
 	$form = new Form;
 	$input = $form->addButton('button', Html::el('b', 'Caption'));
 	$input->setTranslator(new Translator);
@@ -52,7 +52,7 @@ test(function() { // Html with translator
 });
 
 
-test(function() { // no validation rules
+test(function () { // no validation rules
 	$form = new Form;
 	$input = $form->addButton('button', 'Caption')->setRequired('required');
 
@@ -60,7 +60,7 @@ test(function() { // no validation rules
 });
 
 
-test(function() { // container
+test(function () { // container
 	$form = new Form;
 	$container = $form->addContainer('container');
 	$input = $container->addButton('button', 'Caption');
@@ -69,7 +69,7 @@ test(function() { // container
 });
 
 
-test(function() { // SubmitButton
+test(function () { // SubmitButton
 	$form = new Form;
 	$input = $form->addSubmit('button', 'Caption');
 
@@ -80,7 +80,7 @@ test(function() { // SubmitButton
 });
 
 
-test(function() { // SubmitButton with scope
+test(function () { // SubmitButton with scope
 	$form = new Form;
 	$input = $form->addSubmit('button', 'Caption')->setValidationScope(FALSE);
 
@@ -88,7 +88,7 @@ test(function() { // SubmitButton with scope
 });
 
 
-test(function() { // SubmitButton with scope
+test(function () { // SubmitButton with scope
 	$form = new Form;
 	$text = $form->addText('text');
 	$select = $form->addSelect('select');

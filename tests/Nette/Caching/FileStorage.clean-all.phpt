@@ -4,9 +4,9 @@
  * Test: Nette\Caching\Storages\FileStorage clean with Cache::ALL
  */
 
-use Nette\Caching\Storages\FileStorage,
-	Nette\Caching\Cache,
-	Tester\Assert;
+use Nette\Caching\Storages\FileStorage;
+use Nette\Caching\Cache;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -21,7 +21,7 @@ $cacheA['test2'] = 'Grudl';
 $cacheB['test1'] = 'divaD';
 $cacheB['test2'] = 'ldurG';
 
-Assert::same( 'David Grudl divaD ldurG', implode(' ',array(
+Assert::same('David Grudl divaD ldurG', implode(' ',array(
 	$cacheA['test1'],
 	$cacheA['test2'],
 	$cacheB['test1'],
@@ -30,10 +30,10 @@ Assert::same( 'David Grudl divaD ldurG', implode(' ',array(
 
 $storage->clean(array(Cache::ALL => TRUE));
 
-Assert::null( $cacheA['test1'] );
+Assert::null($cacheA['test1']);
 
-Assert::null( $cacheA['test2'] );
+Assert::null($cacheA['test2']);
 
-Assert::null( $cacheB['test1'] );
+Assert::null($cacheB['test1']);
 
-Assert::null( $cacheB['test2'] );
+Assert::null($cacheB['test2']);

@@ -4,10 +4,10 @@
  * Test: Nette\Latte\Engine: {block $name} dynamic blocks.
  */
 
-use Nette\Latte,
-	Nette\Templating\FileTemplate,
-	Nette\Utils\Html,
-	Tester\Assert;
+use Nette\Latte;
+use Nette\Templating\FileTemplate;
+use Nette\Utils\Html;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

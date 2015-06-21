@@ -7,8 +7,8 @@
 
 namespace Nette\Application\UI;
 
-use Nette,
-	Nette\Application\BadRequestException;
+use Nette;
+use Nette\Application\BadRequestException;
 
 
 /**

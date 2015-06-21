@@ -4,8 +4,8 @@
  * Test: Nette\DI\ContainerBuilder and aliases.
  */
 
-use Nette\DI,
-	Tester\Assert;
+use Nette\DI;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -66,19 +66,19 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 
-Assert::type( 'Service', $container->getService('service') );
-Assert::type( 'Service', $container->getService('aliasedService') );
-Assert::type( 'Service', $container->getService('aliasedServiceViaClass') );
+Assert::type('Service', $container->getService('service'));
+Assert::type('Service', $container->getService('aliasedService'));
+Assert::type('Service', $container->getService('aliasedServiceViaClass'));
 
-Assert::type( 'ServiceFactory', $container->getService('serviceFactory') );
-Assert::type( 'ServiceFactory2', $container->getService('serviceFactoryViaClass') );
+Assert::type('ServiceFactory', $container->getService('serviceFactory'));
+Assert::type('ServiceFactory2', $container->getService('serviceFactoryViaClass'));
 
-Assert::type( 'ServiceFactory', $container->getService('aliasedFactory') );
-Assert::type( 'ServiceFactory', $container->getService('aliasedFactoryViaClass') );
-Assert::type( 'ServiceFactory', $container->getService('aliasForFactory') );
-Assert::type( 'ServiceFactory', $container->getService('aliasForFactoryViaClass') );
+Assert::type('ServiceFactory', $container->getService('aliasedFactory'));
+Assert::type('ServiceFactory', $container->getService('aliasedFactoryViaClass'));
+Assert::type('ServiceFactory', $container->getService('aliasForFactory'));
+Assert::type('ServiceFactory', $container->getService('aliasForFactoryViaClass'));
 
 // autowiring test
-Assert::type( 'Service', $container->getByType('Service') );
-Assert::type( 'ServiceFactory', $container->getByType('ServiceFactory') );
-Assert::type( 'ServiceFactory2', $container->getByType('ServiceFactory2') );
+Assert::type('Service', $container->getByType('Service'));
+Assert::type('ServiceFactory', $container->getByType('ServiceFactory'));
+Assert::type('ServiceFactory2', $container->getByType('ServiceFactory2'));

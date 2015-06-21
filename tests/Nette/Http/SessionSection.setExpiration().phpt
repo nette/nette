@@ -4,8 +4,8 @@
  * Test: Nette\Http\SessionSection::setExpiration()
  */
 
-use Nette\Http\Session,
-	Tester\Assert;
+use Nette\Http\Session;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -15,7 +15,7 @@ $session = new Session(new Nette\Http\Request(new Nette\Http\UrlScript), new Net
 
 $session->setExpiration('+10 seconds');
 
-test(function() use ($session) { // try to expire whole namespace
+test(function () use ($session) { // try to expire whole namespace
 	$namespace = $session->getSection('expire');
 	$namespace->a = 'apple';
 	$namespace->p = 'pear';
@@ -27,11 +27,11 @@ test(function() use ($session) { // try to expire whole namespace
 	$session->start();
 
 	$namespace = $session->getSection('expire');
-	Assert::same( '', http_build_query($namespace->getIterator()) );
+	Assert::same('', http_build_query($namespace->getIterator()));
 });
 
 
-test(function() use ($session) { // try to expire only 1 of the keys
+test(function () use ($session) { // try to expire only 1 of the keys
 	$namespace = $session->getSection('expireSingle');
 	$namespace->setExpiration(1, 'g');
 	$namespace->g = 'guava';
@@ -42,12 +42,12 @@ test(function() use ($session) { // try to expire only 1 of the keys
 	$session->start();
 
 	$namespace = $session->getSection('expireSingle');
-	Assert::same( 'p=plum', http_build_query($namespace->getIterator()) );
+	Assert::same('p=plum', http_build_query($namespace->getIterator()));
 });
 
 
 // small expiration
-Assert::error(function() use ($session) {
+Assert::error(function () use ($session) {
 	$namespace = $session->getSection('tmp');
 	$namespace->setExpiration(100);
 }, E_USER_NOTICE, "The expiration time is greater than the session expiration 10 seconds");

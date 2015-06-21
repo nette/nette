@@ -4,29 +4,29 @@
  * Test: Nette\Latte\MacroTokens::fetchWord()
  */
 
-use Nette\Latte\MacroTokens,
-	Tester\Assert;
+use Nette\Latte\MacroTokens;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-test(function() {
+test(function () {
 	$tokenizer = new MacroTokens('');
-	Assert::false( $tokenizer->fetchWord() );
-	Assert::same( '',  $tokenizer->joinAll() );
+	Assert::false($tokenizer->fetchWord());
+	Assert::same('',  $tokenizer->joinAll());
 });
 
 
-test(function() {
+test(function () {
 	$tokenizer = new MacroTokens('$1d-,a');
-	Assert::same( '$1d-',  $tokenizer->fetchWord() );
-	Assert::same( 'a',  $tokenizer->joinAll() );
+	Assert::same('$1d-',  $tokenizer->fetchWord());
+	Assert::same('a',  $tokenizer->joinAll());
 });
 
 
-test(function() {
+test(function () {
 	$tokenizer = new MacroTokens('"item\'1""item2"');
-	Assert::same( '"item\'1""item2"',  $tokenizer->fetchWord() );
-	Assert::same( '',  $tokenizer->joinAll() );
+	Assert::same('"item\'1""item2"',  $tokenizer->fetchWord());
+	Assert::same('',  $tokenizer->joinAll());
 });

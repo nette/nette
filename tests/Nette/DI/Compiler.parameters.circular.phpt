@@ -4,14 +4,14 @@
  * Test: Nette\DI\Compiler and circular references in parameters.
  */
 
-use Nette\DI,
-	Tester\Assert;
+use Nette\DI;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-Assert::exception(function() {
+Assert::exception(function () {
 	$loader = new DI\Config\Loader;
 	$compiler = new DI\Compiler;
 	$compiler->compile($loader->load('files/compiler.parameters.circular.ini'), 'Container', 'Nette\DI\Container');

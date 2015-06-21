@@ -7,8 +7,8 @@
 
 namespace Nette\Reflection;
 
-use Nette,
-	Nette\ObjectMixin;
+use Nette;
+use Nette\ObjectMixin;
 
 
 /**

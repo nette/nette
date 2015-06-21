@@ -7,8 +7,8 @@
 
 namespace Nette\Application\Routers;
 
-use Nette,
-	Nette\Application;
+use Nette;
+use Nette\Application;
 
 
 /**

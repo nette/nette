@@ -4,8 +4,8 @@
  * Common code for Mail test cases.
  */
 
-use Nette\Mail\Message,
-	Nette\Mail\IMailer;
+use Nette\Mail\Message;
+use Nette\Mail\IMailer;
 
 
 class TestMailer implements IMailer

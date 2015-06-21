@@ -90,7 +90,7 @@ class Session extends Nette\Object
 		}
 
 		// session_start returns FALSE on failure only sometimes
-		Nette\Utils\Callback::invokeSafe('session_start', array(), function($message) use (& $error) {
+		Nette\Utils\Callback::invokeSafe('session_start', array(), function ($message) use (& $error) {
 			$error = $message;
 		});
 

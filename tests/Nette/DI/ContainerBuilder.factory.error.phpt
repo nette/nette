@@ -4,21 +4,21 @@
  * Test: Nette\DI\ContainerBuilder and generated factories errors.
  */
 
-use Nette\DI,
-	Tester\Assert;
+use Nette\DI;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-Assert::exception(function() {
+Assert::exception(function () {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setClass('X')->setFactory('Unknown');
 	$builder->generateClasses();
 }, 'Nette\InvalidStateException', "Class Unknown used in service 'one' not found or is not instantiable.");
 
 
-Assert::exception(function() {
+Assert::exception(function () {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setFactory('@two');
 	$builder->addDefinition('two')->setFactory('Unknown');
@@ -26,21 +26,21 @@ Assert::exception(function() {
 }, 'Nette\InvalidStateException', "Class Unknown used in service 'two' not found or is not instantiable.");
 
 
-Assert::exception(function() {
+Assert::exception(function () {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setFactory('stdClass::foo');
 	$builder->generateClasses();
 }, 'Nette\InvalidStateException', "Factory 'stdClass::foo' used in service 'one' is not callable.");
 
 
-Assert::exception(function() {
+Assert::exception(function () {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setFactory('Nette\DI\Container::foo'); // has __magic
 	$builder->generateClasses();
 }, 'Nette\InvalidStateException', "Factory 'Nette\\DI\\Container::foo' used in service 'one' is not callable.");
 
 
-Assert::exception(function() {
+Assert::exception(function () {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setImplement('Unknown')->setClass('stdClass');
 	$builder->generateClasses();
@@ -52,7 +52,7 @@ interface Bad1
 	static function create();
 }
 
-Assert::exception(function() {
+Assert::exception(function () {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setImplement('Bad1')->setFactory('stdClass');
 	$builder->generateClasses();
@@ -64,7 +64,7 @@ interface Bad2
 	function createx();
 }
 
-Assert::exception(function() {
+Assert::exception(function () {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setImplement('Bad2')->setFactory('stdClass');
 	$builder->generateClasses();
@@ -77,7 +77,7 @@ interface Bad3
 	function create();
 }
 
-Assert::exception(function() {
+Assert::exception(function () {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setImplement('Bad3')->setFactory('stdClass');
 	$builder->generateClasses();
@@ -89,7 +89,7 @@ interface Bad4
 	function create();
 }
 
-Assert::exception(function() {
+Assert::exception(function () {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setImplement('Bad4');
 	$builder->generateClasses();
@@ -101,7 +101,7 @@ interface Bad5
 	function get($arg);
 }
 
-Assert::exception(function() {
+Assert::exception(function () {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setImplement('Bad5')->setFactory('stdClass');
 	$builder->generateClasses();
@@ -114,7 +114,7 @@ class Bad6
 	{}
 }
 
-Assert::exception(function() {
+Assert::exception(function () {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setFactory('Bad6::create');
 	$builder->generateClasses();

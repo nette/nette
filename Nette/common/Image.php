@@ -448,9 +448,9 @@ class Image extends Object
 	public function sharpen()
 	{
 		imageconvolution($this->getImageResource(), array( // my magic numbers ;)
-			array( -1, -1, -1 ),
-			array( -1, 24, -1 ),
-			array( -1, -1, -1 ),
+			array(-1, -1, -1),
+			array(-1, 24, -1),
+			array(-1, -1, -1),
 		), 16, 0);
 		return $this;
 	}

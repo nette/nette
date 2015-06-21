@@ -4,9 +4,9 @@
  * Test: Nette\Caching\Storages\FileStorage sliding expiration test.
  */
 
-use Nette\Caching\Cache,
-	Nette\Caching\Storages\FileStorage,
-	Tester\Assert;
+use Nette\Caching\Cache;
+use Nette\Caching\Storages\FileStorage;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -30,7 +30,7 @@ for ($i = 0; $i < 5; $i++) {
 	sleep(1);
 	clearstatcache();
 
-	Assert::true( isset($cache[$key]) );
+	Assert::true(isset($cache[$key]));
 
 }
 
@@ -38,4 +38,4 @@ for ($i = 0; $i < 5; $i++) {
 sleep(5);
 clearstatcache();
 
-Assert::false( isset($cache[$key]) );
+Assert::false(isset($cache[$key]));

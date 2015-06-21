@@ -4,24 +4,24 @@
  * Test: Nette\Http\Request headers.
  */
 
-use Nette\Http,
-	Tester\Assert;
+use Nette\Http;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-test(function() {
+test(function () {
 	$request = new Http\Request(new Http\UrlScript);
 	Assert::same(array(), $request->getHeaders());
 });
 
-test(function() {
+test(function () {
 	$request = new Http\Request(new Http\UrlScript, NULL, NULL, NULL, NULL, array());
 	Assert::same(array(), $request->getHeaders());
 });
 
-test(function() {
+test(function () {
 	$request = new Http\Request(new Http\UrlScript, NULL, NULL, NULL, NULL, array(
 		'one' => '1',
 		'TWO' => '2',

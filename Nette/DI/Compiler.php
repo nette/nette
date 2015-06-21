@@ -7,8 +7,8 @@
 
 namespace Nette\DI;
 
-use Nette,
-	Nette\Utils\Validators;
+use Nette;
+use Nette\Utils\Validators;
 
 
 /**
@@ -55,7 +55,7 @@ class Compiler extends Nette\Object
 	public function getExtensions($type = NULL)
 	{
 		return $type
-			? array_filter($this->extensions, function($item) use ($type) { return $item instanceof $type; })
+			? array_filter($this->extensions, function ($item) use ($type) { return $item instanceof $type; })
 			: $this->extensions;
 	}
 

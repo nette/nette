@@ -4,8 +4,8 @@
  * Test: Nette\Http\Response errors.
  */
 
-use Nette\Http,
-	Tester\Assert;
+use Nette\Http;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -24,7 +24,7 @@ $response->setHeader('A', 'b'); // full buffer
 ob_end_clean();
 
 
-Assert::error(function() use ($response) {
+Assert::error(function () use ($response) {
 	ob_start(NULL, 4096);
 	echo '  ';
 	$response->setHeader('A', 'b');
@@ -35,7 +35,7 @@ $response->warnOnBuffer = FALSE;
 $response->setHeader('A', 'b');
 
 
-Assert::exception(function() use ($response) {
+Assert::exception(function () use ($response) {
 	ob_flush();
 	$response->setHeader('A', 'b');
 }, 'Nette\InvalidStateException', 'Cannot send header after HTTP headers have been sent (output started at ' . __FILE__ . ':' . (__LINE__ - 2) . ').');

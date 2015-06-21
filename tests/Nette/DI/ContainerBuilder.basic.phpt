@@ -4,8 +4,8 @@
  * Test: Nette\DI\ContainerBuilder code generator.
  */
 
-use Nette\DI,
-	Tester\Assert;
+use Nette\DI;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -65,47 +65,47 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 
-Assert::type( 'Service', $container->getService('one') );
-Assert::false( $container->hasService('One') );
-Assert::false( $container->hasService('oNe') );
+Assert::type('Service', $container->getService('one'));
+Assert::false($container->hasService('One'));
+Assert::false($container->hasService('oNe'));
 
-Assert::same( array(
+Assert::same(array(
 	array('__construct', array())
-), $container->getService('one')->methods );
+), $container->getService('one')->methods);
 
-Assert::type( 'Service', $container->getService('three') );
-Assert::same( array(
+Assert::type('Service', $container->getService('three'));
+Assert::same(array(
 	array('__construct', array('a', 'b'))
-), $container->getService('three')->methods );
+), $container->getService('three')->methods);
 
-Assert::type( 'Service', $container->getService('four') );
-Assert::same( array(
+Assert::type('Service', $container->getService('four'));
+Assert::same(array(
 	array('__construct', array('a', 'b')),
 	array('methodA', array('a', 'b')),
 	array('methodB', array(1, 2)),
 	array('methodC', array($container->getService('four'), $container)),
 	array('methodD', array($container->getService('one'))),
-), $container->getService('four')->methods );
+), $container->getService('four')->methods);
 
-Assert::type( 'Service', $container->getService('five') );
-Assert::same( array(
+Assert::type('Service', $container->getService('five'));
+Assert::same(array(
 	array('__construct', array(array()))
-), $container->getService('five')->methods );
+), $container->getService('five')->methods);
 
-Assert::type( 'Service', $container->getService('six') );
-Assert::same( array(
+Assert::type('Service', $container->getService('six'));
+Assert::same(array(
 	array('__construct', array(array('a', 'b'))),
 	array('methodA', array('a', 'b')),
-), $container->getService('six')->methods );
+), $container->getService('six')->methods);
 
-Assert::type( 'Service', $container->getService('seven') );
-Assert::same( array(
+Assert::type('Service', $container->getService('seven'));
+Assert::same(array(
 	array('__construct', array(array('a', 'b'))),
 	array('methodA', array('a', 'b')),
 	array('methodA', array()),
-), $container->getService('six')->methods );
+), $container->getService('six')->methods);
 
-Assert::same( array(
+Assert::same(array(
 	array('__construct', array(array($container->getService('six')))),
 	array('methodA', array('a')),
-), $container->getService('seven')->methods );
+), $container->getService('seven')->methods);

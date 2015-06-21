@@ -4,8 +4,8 @@
  * Test: Nette\Mail\Message - textual body.
  */
 
-use Nette\Mail\Message,
-	Tester\Assert;
+use Nette\Mail\Message;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -27,7 +27,7 @@ $mail->setBody('Žluťoučký kůň');
 $mailer = new TestMailer();
 $mailer->send($mail);
 
-Assert::match( <<<EOD
+Assert::match(<<<EOD
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
@@ -42,4 +42,4 @@ Content-Transfer-Encoding: 8bit
 
 Žluťoučký kůň
 EOD
-, TestMailer::$output );
+, TestMailer::$output);

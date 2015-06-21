@@ -14,7 +14,7 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/files/sqlite-nette
 
 $res = $context->query('SELECT * FROM types');
 
-Assert::equal( array(
+Assert::equal(array(
 	'int' => 1,
 	'integer' => 1,
 	'tinyint' => 1,
@@ -42,9 +42,9 @@ Assert::equal( array(
 	'boolean' => TRUE,
 	'date' => new Nette\DateTime('2012-10-13'),
 	'datetime' => new Nette\DateTime('2012-10-13 10:10:10'),
-), (array) $res->fetch() );
+), (array) $res->fetch());
 
-Assert::equal( array(
+Assert::equal(array(
 	'int' => 0,
 	'integer' => 0,
 	'tinyint' => 0,
@@ -72,9 +72,9 @@ Assert::equal( array(
 	'boolean' => FALSE,
 	'date' => new Nette\DateTime('1970-01-01'),
 	'datetime' => new Nette\DateTime('1970-01-01 00:00:00'),
-), (array) $res->fetch() );
+), (array) $res->fetch());
 
-Assert::same( array(
+Assert::same(array(
 	'int' => NULL,
 	'integer' => NULL,
 	'tinyint' => NULL,
@@ -102,11 +102,11 @@ Assert::same( array(
 	'boolean' => NULL,
 	'date' => NULL,
 	'datetime' => NULL,
-), (array) $res->fetch() );
+), (array) $res->fetch());
 
 
 $res = $context->query('SELECT [int] AS a, [text] AS a FROM types');
 
-Assert::same( array(
+Assert::same(array(
 	'a' => 'a',
-), (array) @$res->fetch() );
+), (array) @$res->fetch());

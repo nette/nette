@@ -4,8 +4,8 @@
  * Test: Nette\Utils\Finder multiple sources.
  */
 
-use Nette\Utils\Finder,
-	Tester\Assert;
+use Nette\Utils\Finder;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -20,7 +20,7 @@ function export($iterator)
 }
 
 
-test(function() { // recursive
+test(function () { // recursive
 	$finder = Finder::find('*')->from('files/subdir/subdir2', 'files/images');
 	Assert::same(array(
 		'files/images/logo.gif',
@@ -34,13 +34,13 @@ test(function() { // recursive
 		'files/subdir/subdir2/file.txt',
 	), export($finder));
 
-	Assert::exception(function() {
+	Assert::exception(function () {
 		Finder::find('*')->from('files/subdir/subdir2')->from('files/images');
 	}, 'Nette\InvalidStateException', '');
 });
 
 
-test(function() { // non-recursive
+test(function () { // non-recursive
 	$finder = Finder::find('*')->in('files/subdir/subdir2', 'files/images');
 	Assert::same(array(
 		'files/images/logo.gif',
@@ -54,7 +54,7 @@ test(function() { // non-recursive
 		'files/subdir/subdir2/file.txt',
 	), export($finder));
 
-	Assert::exception(function() {
+	Assert::exception(function () {
 		Finder::find('*')->in('files/subdir/subdir2')->in('files/images');
 	}, 'Nette\InvalidStateException', '');
 });

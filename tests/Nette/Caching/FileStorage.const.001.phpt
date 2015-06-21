@@ -4,9 +4,9 @@
  * Test: Nette\Caching\Storages\FileStorage constant dependency test.
  */
 
-use Nette\Caching\Cache,
-	Nette\Caching\Storages\FileStorage,
-	Tester\Assert;
+use Nette\Caching\Cache;
+use Nette\Caching\Storages\FileStorage;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -26,4 +26,4 @@ $cache->save($key, $value, array(
 	Cache::CONSTS => 'ANY_CONST',
 ));
 
-Assert::true( isset($cache[$key]) );
+Assert::true(isset($cache[$key]));

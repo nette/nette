@@ -4,8 +4,8 @@
  * Test: Nette\Application\Routers\Route with FILTER_IN & FILTER_OUT
  */
 
-use Nette\Application\Routers\Route,
-	Tester\Assert;
+use Nette\Application\Routers\Route;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -15,7 +15,7 @@ require __DIR__ . '/Route.inc';
 
 $route = new Route('<presenter>', array(
 	NULL => array(
-		Route::FILTER_IN => function(array $arr) {
+		Route::FILTER_IN => function (array $arr) {
 			if (substr($arr['presenter'], 0, 3) !== 'Abc') {
 				return NULL;
 			}
@@ -23,7 +23,7 @@ $route = new Route('<presenter>', array(
 			$arr['param'] .= '.in';
 			return $arr;
 		},
-		Route::FILTER_OUT => function(array $arr) {
+		Route::FILTER_OUT => function (array $arr) {
 			if (substr($arr['presenter'], 0, 3) !== 'Abc') {
 				return NULL;
 			}

@@ -4,8 +4,8 @@
  * Test: Nette\Reflection\AnnotationsParser using user classes.
  */
 
-use Nette\Reflection,
-	Tester\Assert;
+use Nette\Reflection;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -33,7 +33,7 @@ class TestClass {
 // Class annotations
 
 $rc = new Reflection\ClassType('TestClass');
-Assert::equal( array(
+Assert::equal(array(
 	'secured' => array(
 		new SecuredAnnotation(array(
 			'role' => NULL,
@@ -41,10 +41,10 @@ Assert::equal( array(
 			'value' => 'disabled',
 		)),
 	),
-), $rc->getAnnotations() );
+), $rc->getAnnotations());
 
 
-Assert::equal( array(
+Assert::equal(array(
 	'secured' => array(
 		new SecuredAnnotation(array(
 			'role' => 'admin',
@@ -52,4 +52,4 @@ Assert::equal( array(
 			'value' => NULL,
 		)),
 	),
-), $rc->getProperty('foo')->getAnnotations() );
+), $rc->getProperty('foo')->getAnnotations());

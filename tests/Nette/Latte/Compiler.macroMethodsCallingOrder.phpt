@@ -4,11 +4,11 @@
  * Test: Nette\Latte\Compiler and macro methods calling order.
  */
 
-use Nette\Latte\IMacro,
-	Nette\Latte\MacroNode,
-	Nette\Latte\Parser,
-	Nette\Latte\Compiler,
-	Tester\Assert;
+use Nette\Latte\IMacro;
+use Nette\Latte\MacroNode;
+use Nette\Latte\Parser;
+use Nette\Latte\Compiler;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -53,7 +53,7 @@ $compiler = new Compiler;
 $compiler->addMacro('foo', $macro);
 $compiler->compile($parser->parse($latte));
 
-Assert::same( array(
+Assert::same(array(
 	'initialize',
 
 	array('nodeOpened', NULL, FALSE, NULL),
@@ -74,4 +74,4 @@ Assert::same( array(
 	array('nodeClosed', 'div4', TRUE, 'tag'),
 
 	'finalize',
-), $macro->calls );
+), $macro->calls);

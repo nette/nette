@@ -4,15 +4,15 @@
  * Test: Nette\Forms\Helpers::createInputList()
  */
 
-use Nette\Forms\Helpers,
-	Nette\Utils\Html,
-	Tester\Assert;
+use Nette\Forms\Helpers;
+use Nette\Utils\Html;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-test(function() {
+test(function () {
 	Assert::same(
 		'',
 		Helpers::createInputList(array())

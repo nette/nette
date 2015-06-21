@@ -41,7 +41,7 @@ use Nette;
  * Adding method to class (i.e. to all instances) works similar to JavaScript
  * prototype property. The syntax for adding a new method is:
  * <code>
- * MyClass::extensionMethod('newMethod', function(MyClass $obj, $arg, ...) { ... });
+ * MyClass::extensionMethod('newMethod', function (MyClass $obj, $arg, ...) { ... });
  * $obj = new MyClass;
  * $obj->newMethod($x);
  * </code>

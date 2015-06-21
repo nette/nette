@@ -4,8 +4,8 @@
  * Test: Nette\Reflection\Property tests.
  */
 
-use Nette\Reflection,
-	Tester\Assert;
+use Nette\Reflection;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -21,4 +21,4 @@ class B extends A
 }
 
 $propInfo = new Reflection\Property('B', 'prop');
-Assert::equal( new Reflection\ClassType('A'), $propInfo->getDeclaringClass() );
+Assert::equal(new Reflection\ClassType('A'), $propInfo->getDeclaringClass());

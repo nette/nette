@@ -7,11 +7,11 @@
 
 namespace Nette\Latte\Macros;
 
-use Nette,
-	Nette\Latte,
-	Nette\Latte\CompileException,
-	Nette\Latte\MacroNode,
-	Nette\Latte\PhpWriter;
+use Nette;
+use Nette\Latte;
+use Nette\Latte\CompileException;
+use Nette\Latte\MacroNode;
+use Nette\Latte\PhpWriter;
 
 
 /**

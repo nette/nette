@@ -7,8 +7,8 @@
 
 namespace Nette\DI\Config\Adapters;
 
-use Nette,
-	Nette\DI\Config\Helpers;
+use Nette;
+use Nette\DI\Config\Helpers;
 
 
 /**

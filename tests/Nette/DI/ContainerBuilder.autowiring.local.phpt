@@ -4,8 +4,8 @@
  * Test: Nette\DI\ContainerBuilder and local autowiring.
  */
 
-use Nette\DI,
-	Tester\Assert;
+use Nette\DI;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -59,11 +59,11 @@ $container = new Container;
 
 
 $foo = $container->getService('foo');
-Assert::type( 'Foo', $foo );
-Assert::null( $foo->arg );
+Assert::type('Foo', $foo);
+Assert::null($foo->arg);
 
-Assert::type( 'M1', $container->getService('m1') );
-Assert::same( $foo->arg, $container->getService('m1') );
+Assert::type('M1', $container->getService('m1'));
+Assert::same($foo->arg, $container->getService('m1'));
 
-Assert::type( 'M2', $container->getService('m2') );
-Assert::same( $foo->arg, $container->getService('m2') );
+Assert::type('M2', $container->getService('m2'));
+Assert::same($foo->arg, $container->getService('m2'));

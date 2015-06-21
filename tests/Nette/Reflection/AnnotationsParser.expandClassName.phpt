@@ -4,8 +4,8 @@
  * Test: Expanding class alias to FQN.
  */
 
-use Nette\Reflection\AnnotationsParser,
-	Tester\Assert;
+use Nette\Reflection\AnnotationsParser;
+use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 
@@ -18,13 +18,13 @@ $rcFoo = new \ReflectionClass('Test\Space\Foo');
 $rcBar = new \ReflectionClass('Test\Space\Bar');
 
 
-Assert::exception( function() use ($rcTest) {
+Assert::exception(function () use ($rcTest) {
 	AnnotationsParser::expandClassName('', $rcTest);
-}, 'Nette\InvalidArgumentException', 'Class name must not be empty.' );
+}, 'Nette\InvalidArgumentException', 'Class name must not be empty.');
 
 
-Assert::same( 'A', AnnotationsParser::expandClassName('A', $rcTest) );
-Assert::same( 'A\B', AnnotationsParser::expandClassName('C', $rcTest) );
+Assert::same('A', AnnotationsParser::expandClassName('A', $rcTest));
+Assert::same('A\B', AnnotationsParser::expandClassName('C', $rcTest));
 
 
 /*
@@ -114,6 +114,6 @@ $cases = array(
 	),
 );
 foreach ($cases as $alias => $fqn) {
-	Assert::same( $fqn[0], AnnotationsParser::expandClassName($alias, $rcFoo) );
-	Assert::same( $fqn[1], AnnotationsParser::expandClassName($alias, $rcBar) );
+	Assert::same($fqn[0], AnnotationsParser::expandClassName($alias, $rcFoo));
+	Assert::same($fqn[1], AnnotationsParser::expandClassName($alias, $rcBar));
 }

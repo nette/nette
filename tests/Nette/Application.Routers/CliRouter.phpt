@@ -4,9 +4,9 @@
  * Test: Nette\Application\Routers\CliRouter basic usage
  */
 
-use Nette\Http,
-	Nette\Application\Routers\CliRouter,
-	Tester\Assert;
+use Nette\Http;
+use Nette\Application\Routers\CliRouter;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -32,9 +32,9 @@ $router = new CliRouter(array(
 ));
 $req = $router->match($httpRequest);
 
-Assert::same( 'homepage', $req->getPresenterName() );
+Assert::same('homepage', $req->getPresenterName());
 
-Assert::same( array(
+Assert::same(array(
 	'id' => 12,
 	'user' => 'john doe',
 	'action' => 'default',
@@ -42,9 +42,9 @@ Assert::same( array(
 	'verbose' => TRUE,
 	'pass' => 'se cret',
 	'wait' => TRUE,
-), $req->parameters );
+), $req->parameters);
 
-Assert::true( $req->isMethod('cli') );
+Assert::true($req->isMethod('cli'));
 
 
-Assert::null( $router->constructUrl($req, $httpRequest->url) );
+Assert::null($router->constructUrl($req, $httpRequest->url));

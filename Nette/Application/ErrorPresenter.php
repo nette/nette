@@ -7,9 +7,9 @@
 
 namespace NetteModule;
 
-use Nette,
-	Nette\Application,
-	Nette\Diagnostics\Debugger;
+use Nette;
+use Nette\Application;
+use Nette\Diagnostics\Debugger;
 
 
 /**

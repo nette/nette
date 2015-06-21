@@ -7,8 +7,8 @@
 
 namespace Nette\Database;
 
-use Nette,
-	PDO;
+use Nette;
+use PDO;
 
 
 /**
@@ -22,10 +22,10 @@ use Nette,
  */
 class Connection extends Nette\Object
 {
-	/** @var array of function(Connection $connection); Occurs after connection is established */
+	/** @var array of function (Connection $connection); Occurs after connection is established */
 	public $onConnect;
 
-	/** @var array of function(Connection $connection, ResultSet|Exception $result); Occurs after query is executed */
+	/** @var array of function (Connection $connection, ResultSet|Exception $result); Occurs after query is executed */
 	public $onQuery;
 
 	/** @var array */

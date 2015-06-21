@@ -4,8 +4,8 @@
  * Test: Nette\Mail\Message - textual body with attachment.
  */
 
-use Nette\Mail\Message,
-	Tester\Assert;
+use Nette\Mail\Message;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -26,7 +26,7 @@ $mail->addAttachment(__DIR__ . '/files/example.zip', NULL, 'application/zip');
 $mailer = new TestMailer();
 $mailer->send($mail);
 
-Assert::match( <<<EOD
+Assert::match(<<<EOD
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
@@ -53,4 +53,4 @@ AAgAJ4gyOyaRKmdAAAAAQQAAAAsAAAAAAAAAAAAgAAAAAAAAAHZlcnNpb24udHh0UEsFBgAAAAAB
 AAEAOQAAAGkAAAAAAA==
 ----------%S%--
 EOD
-, TestMailer::$output );
+, TestMailer::$output);

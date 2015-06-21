@@ -4,10 +4,10 @@
  * Test: Nette\Latte\Engine and FormMacros.
  */
 
-use Nette\Latte,
-	Nette\Templating\FileTemplate,
-	Nette\Forms\Form,
-	Tester\Assert;
+use Nette\Latte;
+use Nette\Templating\FileTemplate;
+use Nette\Forms\Form;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

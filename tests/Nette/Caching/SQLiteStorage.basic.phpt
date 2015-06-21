@@ -4,9 +4,9 @@
  * Test: Nette\Caching\Storages\SQLiteStorage basic usage.
  */
 
-use Nette\Caching\Cache,
-	Nette\Caching\Storages\SQLiteStorage,
-	Tester\Assert;
+use Nette\Caching\Cache;
+use Nette\Caching\Storages\SQLiteStorage;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -23,34 +23,34 @@ $value = range("\x00", "\xFF");
 
 $cache = new Cache(new SQLiteStorage(TEMP_DIR . '/db.db3'));
 
-Assert::false( isset($cache[$key]) );
+Assert::false(isset($cache[$key]));
 
-Assert::null( $cache[$key] );
+Assert::null($cache[$key]);
 
 
 // Writing cache...
 $cache[$key] = $value;
 
 
-Assert::true( isset($cache[$key]) );
+Assert::true(isset($cache[$key]));
 
-Assert::same( $cache[$key], $value );
+Assert::same($cache[$key], $value);
 
 
 // Removing from cache using unset()...
 unset($cache[$key]);
 
-Assert::false( isset($cache[$key]) );
+Assert::false(isset($cache[$key]));
 
 
 // Removing from cache using set NULL...
 $cache[$key] = $value;
 $cache[$key] = NULL;
 
-Assert::false( isset($cache[$key]) );
+Assert::false(isset($cache[$key]));
 
 
 // Writing cache...
 $cache->save($key, $value);
 
-Assert::same( $cache->load($key), $value );
+Assert::same($cache->load($key), $value);

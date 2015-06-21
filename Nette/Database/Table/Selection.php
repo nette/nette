@@ -7,8 +7,8 @@
 
 namespace Nette\Database\Table;
 
-use Nette,
-	Nette\Database\ISupplementalDriver;
+use Nette;
+use Nette\Database\ISupplementalDriver;
 
 
 /**

@@ -4,8 +4,8 @@
  * Test: Nette\Security\Permission Tests basic Resource inheritance.
  */
 
-use Nette\Security\Permission,
-	Tester\Assert;
+use Nette\Security\Permission;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -16,14 +16,14 @@ $acl->addResource('city');
 $acl->addResource('building', 'city');
 $acl->addResource('room', 'building');
 
-Assert::same( array('city', 'building', 'room'), $acl->getResources() );
-Assert::true( $acl->resourceInheritsFrom('building', 'city', TRUE) );
-Assert::true( $acl->resourceInheritsFrom('room', 'building', TRUE) );
-Assert::true( $acl->resourceInheritsFrom('room', 'city') );
-Assert::false( $acl->resourceInheritsFrom('room', 'city', TRUE) );
-Assert::false( $acl->resourceInheritsFrom('city', 'building') );
-Assert::false( $acl->resourceInheritsFrom('building', 'room') );
-Assert::false( $acl->resourceInheritsFrom('city', 'room') );
+Assert::same(array('city', 'building', 'room'), $acl->getResources());
+Assert::true($acl->resourceInheritsFrom('building', 'city', TRUE));
+Assert::true($acl->resourceInheritsFrom('room', 'building', TRUE));
+Assert::true($acl->resourceInheritsFrom('room', 'city'));
+Assert::false($acl->resourceInheritsFrom('room', 'city', TRUE));
+Assert::false($acl->resourceInheritsFrom('city', 'building'));
+Assert::false($acl->resourceInheritsFrom('building', 'room'));
+Assert::false($acl->resourceInheritsFrom('city', 'room'));
 
 $acl->removeResource('building');
-Assert::false( $acl->hasResource('room') );
+Assert::false($acl->hasResource('room'));

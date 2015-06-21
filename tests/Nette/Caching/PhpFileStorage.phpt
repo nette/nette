@@ -4,9 +4,9 @@
  * Test: Nette\Caching\Storages\PhpFileStorage test.
  */
 
-use Nette\Caching\Cache,
-	Nette\Caching\Storages\PhpFileStorage,
-	Tester\Assert;
+use Nette\Caching\Cache;
+use Nette\Caching\Storages\PhpFileStorage;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -18,17 +18,17 @@ $value = '<?php echo "Hello World" ?>';
 $cache = new Cache(new PhpFileStorage(TEMP_DIR));
 
 
-Assert::false( isset($cache[$key]) );
+Assert::false(isset($cache[$key]));
 
-Assert::null( $cache[$key] );
+Assert::null($cache[$key]);
 
 // Writing cache...
 $cache[$key] = $value;
 
-Assert::true( isset($cache[$key]) );
+Assert::true(isset($cache[$key]));
 
-Assert::truthy( preg_match('#[0-9a-f]+\.php\z#', $cache[$key]['file']) );
-Assert::type( 'resource', $cache[$key]['handle'] );
+Assert::truthy(preg_match('#[0-9a-f]+\.php\z#', $cache[$key]['file']));
+Assert::type('resource', $cache[$key]['handle']);
 
 $var = $cache[$key];
 
@@ -39,6 +39,6 @@ $var = $cache[$key];
 
 ob_start();
 include $var['file'];
-Assert::same( 'Hello World', ob_get_clean() );
+Assert::same('Hello World', ob_get_clean());
 
 fclose($var['handle']);

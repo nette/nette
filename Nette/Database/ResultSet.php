@@ -7,8 +7,8 @@
 
 namespace Nette\Database;
 
-use Nette,
-	PDO;
+use Nette;
+use PDO;
 
 
 /**

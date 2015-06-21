@@ -4,8 +4,8 @@
  * Test: Nette\Configurator and minimal container.
  */
 
-use Nette\Configurator,
-	Tester\Assert;
+use Nette\Configurator;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -18,9 +18,9 @@ $configurator->addParameters(array(
 ));
 $container = $configurator->createContainer();
 
-Assert::type( 'SystemContainer', $container );
+Assert::type('SystemContainer', $container);
 
-Assert::same( array(
+Assert::same(array(
 	'appDir' => __DIR__,
 	'wwwDir' => NULL,
 	'debugMode' => FALSE,
@@ -34,28 +34,28 @@ Assert::same( array(
 	),
 	'tempDir' => TEMP_DIR,
 	'hello' => 'world',
-), $container->parameters );
+), $container->parameters);
 
-Assert::type( 'Nette\Caching\Storages\FileJournal', $container->getService('nette.cacheJournal') );
-Assert::type( 'Nette\Caching\Storages\FileStorage', $container->getService('cacheStorage') );
-Assert::type( 'Nette\Caching\Storages\PhpFileStorage', $container->getService('nette.templateCacheStorage') );
-Assert::type( 'Nette\Http\Request', $container->getService('httpRequest') );
-Assert::type( 'Nette\Http\Response', $container->getService('httpResponse') );
-Assert::type( 'Nette\Http\Context', $container->getService('nette.httpContext') );
-Assert::type( 'Nette\Http\Session', $container->getService('session') );
-Assert::type( 'Nette\Security\User', $container->getService('user') );
-Assert::type( 'Nette\Http\UserStorage', $container->getService('nette.userStorage') );
-Assert::type( 'Nette\Application\Application', $container->getService('application') );
-Assert::type( 'Nette\Application\Routers\RouteList', $container->getService('router') );
-Assert::type( 'Nette\Application\PresenterFactory', $container->getService('nette.presenterFactory') );
-Assert::type( 'Nette\Mail\SendmailMailer', $container->getService('nette.mailer') );
+Assert::type('Nette\Caching\Storages\FileJournal', $container->getService('nette.cacheJournal'));
+Assert::type('Nette\Caching\Storages\FileStorage', $container->getService('cacheStorage'));
+Assert::type('Nette\Caching\Storages\PhpFileStorage', $container->getService('nette.templateCacheStorage'));
+Assert::type('Nette\Http\Request', $container->getService('httpRequest'));
+Assert::type('Nette\Http\Response', $container->getService('httpResponse'));
+Assert::type('Nette\Http\Context', $container->getService('nette.httpContext'));
+Assert::type('Nette\Http\Session', $container->getService('session'));
+Assert::type('Nette\Security\User', $container->getService('user'));
+Assert::type('Nette\Http\UserStorage', $container->getService('nette.userStorage'));
+Assert::type('Nette\Application\Application', $container->getService('application'));
+Assert::type('Nette\Application\Routers\RouteList', $container->getService('router'));
+Assert::type('Nette\Application\PresenterFactory', $container->getService('nette.presenterFactory'));
+Assert::type('Nette\Mail\SendmailMailer', $container->getService('nette.mailer'));
 
-Assert::type( 'Nette\Latte\Engine', $container->createService('nette.latte') );
-Assert::type( 'Nette\Templating\FileTemplate', $container->createService('nette.template') );
+Assert::type('Nette\Latte\Engine', $container->createService('nette.latte'));
+Assert::type('Nette\Templating\FileTemplate', $container->createService('nette.template'));
 
 if (PHP_SAPI !== 'cli') {
 	$headers = headers_list();
-	Assert::contains( 'X-Frame-Options: SAMEORIGIN', $headers );
-	Assert::contains( 'Content-Type: text/html; charset=utf-8', $headers );
-	Assert::contains( 'X-Powered-By: Nette Framework', $headers );
+	Assert::contains('X-Frame-Options: SAMEORIGIN', $headers);
+	Assert::contains('Content-Type: text/html; charset=utf-8', $headers);
+	Assert::contains('X-Powered-By: Nette Framework', $headers);
 }

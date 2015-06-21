@@ -7,9 +7,9 @@
 
 namespace Nette\DI\Extensions;
 
-use Nette,
-	Nette\DI\ContainerBuilder,
-	Nette\Utils\Validators;
+use Nette;
+use Nette\DI\ContainerBuilder;
+use Nette\Utils\Validators;
 
 
 /**

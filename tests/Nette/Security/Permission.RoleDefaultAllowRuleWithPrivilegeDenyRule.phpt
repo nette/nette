@@ -5,8 +5,8 @@
  * rule on the entire ACL.
  */
 
-use Nette\Security\Permission,
-	Tester\Assert;
+use Nette\Security\Permission;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -18,4 +18,4 @@ $acl->addRole('staff', 'guest');
 $acl->deny();
 $acl->allow('staff');
 $acl->deny('staff', NULL, array('privilege1', 'privilege2'));
-Assert::false( $acl->isAllowed('staff', NULL, 'privilege1') );
+Assert::false($acl->isAllowed('staff', NULL, 'privilege1'));

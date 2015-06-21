@@ -12,7 +12,7 @@ require __DIR__ . '/../connect.inc.php'; // create $connection
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/../files/{$driverName}-nette_test1.sql");
 
 
-test(function() use ($context) { // Testing Selection caching
+test(function () use ($context) { // Testing Selection caching
 	$bookSelection = $context->table('book')->wherePrimary(2);
 	Assert::same(reformat('SELECT * FROM [book] WHERE ([book].[id] = ?)'), $bookSelection->getSql());
 
@@ -35,7 +35,7 @@ test(function() use ($context) { // Testing Selection caching
 });
 
 
-test(function() use ($context) { // Testing GroupedSelection reinvalidation caching
+test(function () use ($context) { // Testing GroupedSelection reinvalidation caching
 	foreach ($context->table('author') as $author) {
 		$stack[] = $selection = $author->related('book.author_id')->order('title');
 		foreach ($selection as $book) {
@@ -62,12 +62,12 @@ test(function() use ($context) { // Testing GroupedSelection reinvalidation cach
 });
 
 
-before(function() use ($cacheMemoryStorage) {
+before(function () use ($cacheMemoryStorage) {
 	$cacheMemoryStorage->clean(array(Nette\Caching\Cache::ALL => TRUE));
 });
 
 
-test(function() use ($context) {
+test(function () use ($context) {
 	$selection = $context->table('book');
 	foreach ($selection as $book) {
 		$book->id;
@@ -89,7 +89,7 @@ test(function() use ($context) {
 });
 
 
-test(function() use ($context) {
+test(function () use ($context) {
 	$relatedStack = array();
 	foreach ($context->table('author') as $author) {
 		$relatedStack[] = $related = $author->related('book.author_id');
@@ -107,7 +107,7 @@ test(function() use ($context) {
 });
 
 
-test(function() use ($context) {
+test(function () use ($context) {
 	$author = $context->table('author')->get(11);
 	$books = $author->related('book')->where('translator_id', 99); // 0 rows
 	foreach ($books as $book) {}
@@ -120,7 +120,7 @@ test(function() use ($context) {
 });
 
 
-test(function() use ($context) { // Test saving the union of needed cols, the second call is subset
+test(function () use ($context) { // Test saving the union of needed cols, the second call is subset
 	$author = $context->table('author')->get(11);
 	$books = $author->related('book');
 	foreach ($books as $book) {
@@ -144,7 +144,7 @@ test(function() use ($context) { // Test saving the union of needed cols, the se
 });
 
 
-test(function() use ($context) { // Test saving the union of needed cols, the second call is not subset
+test(function () use ($context) { // Test saving the union of needed cols, the second call is not subset
 	$author = $context->table('author')->get(11);
 	$books = $author->related('book');
 	foreach ($books as $book) {

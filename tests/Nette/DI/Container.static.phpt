@@ -4,8 +4,8 @@
  * Test: Nette\DI\Container static usage.
  */
 
-use Nette\DI\Container,
-	Tester\Assert;
+use Nette\DI\Container;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -28,14 +28,14 @@ class MyContainer extends Container
 
 $container = new MyContainer;
 
-Assert::true( $container->hasService('one') );
-Assert::false( $container->hasService('undefined') );
+Assert::true($container->hasService('one'));
+Assert::false($container->hasService('undefined'));
 
-Assert::type( 'stdClass', $container->getService('one') );
-Assert::same( $container->getService('one'), $container->getService('one') ); // shared
+Assert::type('stdClass', $container->getService('one'));
+Assert::same($container->getService('one'), $container->getService('one')); // shared
 
 
 // bad method
-Assert::exception(function() use ($container) {
+Assert::exception(function () use ($container) {
 	$container->getService('two');
 }, 'Nette\UnexpectedValueException', "Unable to create service 'two', value returned by method createServiceTwo() is not object.");
