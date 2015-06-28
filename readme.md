@@ -2,6 +2,9 @@
 ===================================
 
 [![Downloads this Month](https://img.shields.io/packagist/dm/nette/nette.svg)](https://packagist.org/packages/nette/nette)
+[![Latest Stable Version](https://poser.pugx.org/nette/nette/v/stable)](https://github.com/nette/nette/releases)
+[![License](https://img.shields.io/badge/license-New%20BSD-blue.svg)](https://github.com/nette/nette/blob/master/license.md)
+[![Join the chat at Gitter](https://img.shields.io/badge/Gitter-join%20chat-green.svg)](https://gitter.im/nette/nette)
 
 Nette Framework is a popular tool for PHP web development. It is designed to be
 as usable and as friendly as possible. It focuses on security and
