@@ -127,7 +127,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 	public function redrawControl($snippet = NULL, $redraw = TRUE)
 	{
 		if ($redraw) {
-			$this->invalidSnippets[$snippet] = TRUE;
+			$this->invalidSnippets[$snippet === NULL ? "\0" : $snippet] = TRUE;
 
 		} elseif ($snippet === NULL) {
 			$this->invalidSnippets = array();
@@ -182,7 +182,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 			}
 
 		} else {
-			return isset($this->invalidSnippets[NULL]) || isset($this->invalidSnippets[$snippet]);
+			return isset($this->invalidSnippets["\0"]) || isset($this->invalidSnippets[$snippet]);
 		}
 	}
 
