@@ -527,7 +527,12 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 						if ($v !== NULL && $v !== FALSE) {
 							$q = strpos($v, '"') === FALSE ? '"' : "'";
 							$s .= ' data-' . $k . '='
-								. $q . str_replace(array('&', $q), array('&amp;', $q === '"' ? '&quot;' : '&#39;'), $v)
+								. $q
+								. str_replace(
+									array('&', $q, '<'),
+									array('&amp;', $q === '"' ? '&quot;' : '&#39;', self::$xhtml ? '&lt;' : '<'),
+									$v
+								)
 								. (strpos($v, '`') !== FALSE && strpbrk($v, ' <>"\'') === FALSE ? ' ' : '')
 								. $q;
 						}
@@ -557,7 +562,12 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 
 			$q = strpos($value, '"') === FALSE ? '"' : "'";
 			$s .= ' ' . $key . '='
-				. $q . str_replace(array('&', $q), array('&amp;', $q === '"' ? '&quot;' : '&#39;'), $value)
+				. $q
+				. str_replace(
+					array('&', $q, '<'),
+					array('&amp;', $q === '"' ? '&quot;' : '&#39;', self::$xhtml ? '&lt;' : '<'),
+					$value
+				)
 				. (strpos($value, '`') !== FALSE && strpbrk($value, ' <>"\'') === FALSE ? ' ' : '')
 				. $q;
 		}
