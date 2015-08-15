@@ -42,9 +42,6 @@ The downloaded package includes the following directories:
 
 - `tests`: contains Nette Framework unit tests and testing tool.
 
-- `tools`: contains supporting tools such as the Requirements Checker, script that
-    can check if your system meets the requirements for running Nette Framework.
-
 
 Getting started
 ---------------
