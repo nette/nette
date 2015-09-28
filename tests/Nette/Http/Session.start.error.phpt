@@ -13,6 +13,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 ini_set('session.save_path', ';;;');
+ini_set('session.gc_probability', '0');
 
 
 $session = new Session(new Nette\Http\Request(new Nette\Http\UrlScript), new Nette\Http\Response);

@@ -21,6 +21,7 @@ $response = new Http\Response;
 
 $response->setCookie('test', 'value', 0);
 $headers = array_values(array_diff(headers_list(), $old, array('Set-Cookie:')));
+$headers = str_replace('HttpOnly', 'httponly', $headers);
 Assert::same(array(
 	'Set-Cookie: test=value; path=/; httponly',
 ), $headers);
@@ -28,6 +29,7 @@ Assert::same(array(
 
 $response->setCookie('test', 'newvalue', 0);
 $headers = array_values(array_diff(headers_list(), $old, array('Set-Cookie:')));
+$headers = str_replace('HttpOnly', 'httponly', $headers);
 Assert::same(array(
 	'Set-Cookie: test=newvalue; path=/; httponly',
 ), $headers);
