@@ -154,7 +154,7 @@ class FileUpload extends Nette\Object
 		if (!call_user_func(is_uploaded_file($this->tmpName) ? 'move_uploaded_file' : 'rename', $this->tmpName, $dest)) {
 			throw new Nette\InvalidStateException("Unable to move uploaded file '$this->tmpName' to '$dest'.");
 		}
-		chmod($dest, 0666);
+		@chmod($dest, 0666); // @ - possible low permission to chmod
 		$this->tmpName = $dest;
 		return $this;
 	}
