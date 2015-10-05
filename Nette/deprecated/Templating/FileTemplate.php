@@ -7,9 +7,9 @@
 
 namespace Nette\Templating;
 
-use Nette,
-	Nette\Caching,
-	Latte;
+use Nette;
+use Nette\Caching;
+use Latte;
 
 
 /**

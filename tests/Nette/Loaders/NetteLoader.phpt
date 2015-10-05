@@ -11,15 +11,15 @@ require __DIR__ . '/../../../vendor/nette/tester/Tester/bootstrap.php';
 require __DIR__ . '/../../../Nette/Loaders/NetteLoader.php';
 
 
-Assert::false( class_exists('Nette\Framework') );
+Assert::false(class_exists('Nette\Environment'));
 
 Nette\Loaders\NetteLoader::getInstance()->register();
 
-Assert::true( class_exists('Nette\Framework') );
+Assert::true(class_exists('Nette\Environment'));
 
 
 require __DIR__ . '/../bootstrap.php';
 
-Assert::error(function() {
+Assert::error(function () {
 	class_exists('Nette\Http\User');
 }, E_USER_WARNING, 'Class Nette\Http\User has been renamed to Nette\Security\User.');

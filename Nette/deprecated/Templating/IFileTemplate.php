@@ -7,8 +7,6 @@
 
 namespace Nette\Templating;
 
-use Nette;
-
 
 /**
  * @deprecated

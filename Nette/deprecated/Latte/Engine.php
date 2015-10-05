@@ -7,8 +7,8 @@
 
 namespace Nette\Latte;
 
-use Nette,
-	Latte;
+use Nette;
+use Latte;
 
 
 /**

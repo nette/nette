@@ -7,10 +7,10 @@
 
 namespace Nette\Templating;
 
-use Nette,
-	Nette\Caching,
-	Nette\Utils\Callback,
-	Latte;
+use Nette;
+use Nette\Caching;
+use Nette\Utils\Callback;
+use Latte;
 
 
 /**
@@ -18,7 +18,7 @@ use Nette,
  */
 class Template extends Nette\Object implements ITemplate
 {
-	/** @var array of function(Template $sender); Occurs before a template is compiled - implement to customize the filters */
+	/** @var array of function (Template $sender); Occurs before a template is compiled - implement to customize the filters */
 	public $onPrepareFilters = array();
 
 	/** @var string */
@@ -57,7 +57,7 @@ class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Returns template source code.
-	 * @return source
+	 * @return string
 	 */
 	public function getSource()
 	{
@@ -97,7 +97,9 @@ class Template extends Nette\Object implements ITemplate
 
 	protected static function load(/*$code, $params, $isFile*/)
 	{
-		foreach (func_get_arg(1) as $__k => $__v) $$__k = $__v;
+		foreach (func_get_arg(1) as $__k => $__v) {
+			$$__k = $__v;
+		}
 		unset($__k, $__v);
 		if (func_get_arg(2)) {
 			include func_get_arg(0);
@@ -194,7 +196,7 @@ class Template extends Nette\Object implements ITemplate
 		}
 
 		foreach ($this->helperLoaders as $callback) {
-			$latte->addFilter(NULL, function($name) use ($callback, $latte) {
+			$latte->addFilter(NULL, function ($name) use ($callback, $latte) {
 				if ($res = call_user_func($callback, $name)) {
 					$latte->addFilter($name, $res);
 				}
@@ -460,12 +462,12 @@ class Template extends Nette\Object implements ITemplate
 					$res .= $token[1];
 					continue;
 
-				} elseif ($token[0] === T_OPEN_TAG && $token[1] === '<?' && isset($tokens[$n+1][1]) && $tokens[$n+1][1] === 'xml') {
+				} elseif ($token[0] === T_OPEN_TAG && $token[1] === '<?' && isset($tokens[$n + 1][1]) && $tokens[$n + 1][1] === 'xml') {
 					$php = & $res;
 					$token[1] = '<<?php ?>?';
 
 				} elseif ($token[0] === T_OPEN_TAG || $token[0] === T_OPEN_TAG_WITH_ECHO) {
-					$res .= $id = "<@php:p" . count($blocks) . "@";
+					$res .= $id = '<@php:p' . count($blocks) . '@';
 					$php = & $blocks[$id];
 				}
 				$php .= $token[1];

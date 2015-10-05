@@ -4,9 +4,9 @@
  * Test: Nette\Mail\Message with template.
  */
 
-use Nette\Mail\Message,
-	Nette\Templating\FileTemplate,
-	Tester\Assert;
+use Nette\Mail\Message;
+use Nette\Templating\FileTemplate;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

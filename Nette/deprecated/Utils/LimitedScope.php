@@ -37,7 +37,9 @@ class LimitedScope
 	{
 		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
 		if (func_num_args() > 1) {
-			foreach (func_get_arg(1) as $__k => $__v) $$__k = $__v;
+			foreach (func_get_arg(1) as $__k => $__v) {
+				$$__k = $__v;
+			}
 			unset($__k, $__v);
 		}
 		$res = eval('?>' . func_get_arg(0));
@@ -58,7 +60,9 @@ class LimitedScope
 	{
 		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
 		if (func_num_args() > 1 && is_array(func_get_arg(1))) {
-			foreach (func_get_arg(1) as $__k => $__v) $$__k = $__v;
+			foreach (func_get_arg(1) as $__k => $__v) {
+				$$__k = $__v;
+			}
 			unset($__k, $__v);
 		}
 		return include func_get_arg(0);

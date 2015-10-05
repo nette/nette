@@ -4,9 +4,9 @@
  * Test: Nette\Templating\FileTemplate
  */
 
-use Nette\Templating\FileTemplate,
-	Nette\Utils\Html,
-	Tester\Assert;
+use Nette\Templating\FileTemplate;
+use Nette\Utils\Html;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
