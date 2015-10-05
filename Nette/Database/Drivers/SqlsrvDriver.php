@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (http://nette.org)
- * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
+ * This file is part of the Nette Framework (https://nette.org)
+ * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Nette\Database\Drivers;
@@ -36,7 +36,7 @@ class SqlsrvDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	 */
 	public function delimite($name)
 	{
-		/** @see http://msdn.microsoft.com/en-us/library/ms176027.aspx */
+		/** @see https://msdn.microsoft.com/en-us/library/ms176027.aspx */
 		return '[' . str_replace(']', ']]', $name) . ']';
 	}
 
@@ -55,7 +55,7 @@ class SqlsrvDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	 */
 	public function formatDateTime(/*\DateTimeInterface*/ $value)
 	{
-		/** @see http://msdn.microsoft.com/en-us/library/ms187819.aspx */
+		/** @see https://msdn.microsoft.com/en-us/library/ms187819.aspx */
 		return $value->format("'Y-m-d H:i:s'");
 	}
 
@@ -65,7 +65,7 @@ class SqlsrvDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	 */
 	public function formatLike($value, $pos)
 	{
-		/** @see http://msdn.microsoft.com/en-us/library/ms179859.aspx */
+		/** @see https://msdn.microsoft.com/en-us/library/ms179859.aspx */
 		$value = strtr($value, array("'" => "''", '%' => '[%]', '_' => '[_]', '[' => '[[]'));
 		return ($pos <= 0 ? "'%" : "'") . $value . ($pos >= 0 ? "%'" : "'");
 	}

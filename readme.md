@@ -1,4 +1,4 @@
-[Nette Framework](http://nette.org)
+[Nette Framework](https://nette.org)
 ===================================
 
 [![Downloads this Month](https://img.shields.io/packagist/dm/nette/nette.svg)](https://packagist.org/packages/nette/nette)
@@ -15,14 +15,14 @@ Requirements
 ------------
 
 Nette Framework requires PHP 5.3.1 or later. Please run [Requirements
-Checker](http://doc.nette.org/requirements) to obtain more detailed information.
+Checker](https://doc.nette.org/requirements) to obtain more detailed information.
 
 
 Installation
 ------------
 
 The best way to install Nette Framework is to download the latest package
-from http://nette.org/download or use [Composer](http://doc.nette.org/composer).
+from https://nette.org/download or use [Composer](https://doc.nette.org/composer).
 The downloaded package includes the following directories:
 
 - `Nette`: this directory contains the source code of Nette Framework. This is
@@ -46,5 +46,5 @@ The downloaded package includes the following directories:
 Getting started
 ---------------
 
-The [Quick Start tutorial](http://doc.nette.org/quickstart) gives you a first
+The [Quick Start tutorial](https://doc.nette.org/quickstart) gives you a first
 introduction to the framework by creating a simple database driven application.

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (http://nette.org)
- * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
+ * This file is part of the Nette Framework (https://nette.org)
+ * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Nette\Database\Drivers;
@@ -27,7 +27,7 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function delimite($name)
 	{
-		// @see http://msdn.microsoft.com/en-us/library/ms176027.aspx
+		// @see https://msdn.microsoft.com/en-us/library/ms176027.aspx
 		return '[' . str_replace(array('[', ']'), array('[[', ']]'), $name) . ']';
 	}
 
