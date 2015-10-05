@@ -1,4 +1,4 @@
-[Nette Framework](http://nette.org)
+[Nette Framework](https://nette.org)
 ===================================
 
 [![Downloads this Month](https://img.shields.io/packagist/dm/nette/nette.svg)](https://packagist.org/packages/nette/nette)
@@ -13,42 +13,42 @@ performance and is definitely one of the safest PHP frameworks.
 Nette Framework speaks your language and helps you to easily build better websites.
 
 It contains these packages:
-- [Application](http://github.com/nette/application)
-- [Bootstrap](http://github.com/nette/bootstrap)
-- [Caching](http://github.com/nette/caching)
-- [Component Model](http://github.com/nette/component-model)
-- [Database](http://github.com/nette/database)
-- [DI](http://github.com/nette/di)
-- [Finder](http://github.com/nette/finder)
-- [Forms](http://github.com/nette/forms)
-- [Http](http://github.com/nette/http)
-- [Mail](http://github.com/nette/mail)
-- [Neon](http://github.com/nette/neon)
-- [Php Generator](http://github.com/nette/php-generator)
-- [Reflection](http://github.com/nette/reflection)
-- [Robot Loader](http://github.com/nette/robot-loader)
-- [Safe Stream](http://github.com/nette/safe-stream)
-- [Security](http://github.com/nette/security)
-- [Tokenizer](http://github.com/nette/tokenizer)
-- [Utils](http://github.com/nette/utils)
-- [Latte](http://latte.nette.org)
-- [Tracy](http://tracy.nette.org)
-- [deprecated](http://github.com/nette/deprecated)
-- and [Tester](http://tester.nette.org)
+- [Application](https://github.com/nette/application)
+- [Bootstrap](https://github.com/nette/bootstrap)
+- [Caching](https://github.com/nette/caching)
+- [Component Model](https://github.com/nette/component-model)
+- [Database](https://github.com/nette/database)
+- [DI](https://github.com/nette/di)
+- [Finder](https://github.com/nette/finder)
+- [Forms](https://github.com/nette/forms)
+- [Http](https://github.com/nette/http)
+- [Mail](https://github.com/nette/mail)
+- [Neon](https://github.com/nette/neon)
+- [Php Generator](https://github.com/nette/php-generator)
+- [Reflection](https://github.com/nette/reflection)
+- [Robot Loader](https://github.com/nette/robot-loader)
+- [Safe Stream](https://github.com/nette/safe-stream)
+- [Security](https://github.com/nette/security)
+- [Tokenizer](https://github.com/nette/tokenizer)
+- [Utils](https://github.com/nette/utils)
+- [Latte](https://latte.nette.org)
+- [Tracy](https://tracy.nette.org)
+- [deprecated](https://github.com/nette/deprecated)
+- and [Tester](https://tester.nette.org)
 
 
 Installation
 ------------
 
 The best way to install Nette Framework is to download the latest package
-from http://nette.org/download or use [Composer](http://doc.nette.org/composer).
+from https://nette.org/download or use [Composer](https://doc.nette.org/composer).
 
 Nette Framework requires PHP 5.3.1 or later. Please run [Requirements
-Checker](http://doc.nette.org/requirements) to obtain more detailed information.
+Checker](https://doc.nette.org/requirements) to obtain more detailed information.
 
 
 Getting started
 ---------------
 
-The [Quick Start tutorial](http://doc.nette.org/quickstart) gives you a first
+The [Quick Start tutorial](https://doc.nette.org/quickstart) gives you a first
 introduction to the framework by creating a simple database driven application.
