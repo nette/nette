@@ -4,7 +4,7 @@
  * Requirements Checker: This script will check if your system meets
  * the requirements for running Nette Framework.
  *
- * This file is part of the Nette Framework (http://nette.org)
+ * This file is part of the Nette Framework (https://nette.org)
  */
 
 
