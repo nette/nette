@@ -7,8 +7,6 @@
 
 namespace Nette;
 
-use Nette;
-
 
 /**
  * Framework version.
@@ -17,8 +15,8 @@ class Framework
 {
 
 	const NAME = 'Nette Framework',
-		VERSION = '2.3.5',
-		VERSION_ID = 20305,
-		REVISION = 'released on 2015-08-23';
+		VERSION = '2.3.6',
+		VERSION_ID = 20306,
+		REVISION = 'released on 2015-10-12';
 
 }
