@@ -92,7 +92,11 @@ class Helpers
 		if ($s && ($s[0] === '-' || $s[0] === '>' || $s[0] === '!')) {
 			$s = ' ' . $s;
 		}
-		return str_replace('-', '- ', $s); // dash is very problematic character in comments
+		$s = str_replace('--', '- - ', $s);
+		if (substr($s, -1) === '-') {
+			$s .= ' ';
+		}
+		return $s;
 	}
 
 
