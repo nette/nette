@@ -16,7 +16,7 @@
 		}
 	],
 	"require": {
-		"nette/application": "2.3.6",
+		"nette/application": "2.3.7",
 		"nette/bootstrap": "2.3.3",
 		"nette/caching": "2.3.3",
 		"nette/component-model": "2.2.4",
