@@ -130,7 +130,12 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 		if ($data instanceof Nette\Callback || $data instanceof \Closure) {
 			$this->storage->lock($key);
-			$data = call_user_func_array($data, array(& $dependencies));
+			try {
+				$data = call_user_func_array($data, array(& $dependencies));
+			} catch (\Exception $e) {
+				$this->storage->remove($key);
+				throw $e;
+			}
 		}
 
 		if ($data === NULL) {
