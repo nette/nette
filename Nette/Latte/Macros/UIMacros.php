@@ -95,7 +95,7 @@ class UIMacros extends MacroSet
 				$prolog[] = "//\n// block $name\n//\n"
 					. "if (!function_exists(\$_l->blocks[" . var_export($name, TRUE) . "][] = '$func')) { "
 					. "function $func(\$_l, \$_args) { foreach (\$_args as \$__k => \$__v) \$\$__k = \$__v"
-					. ($snippet ? '; $_control->redrawControl(' . var_export(substr($name, 1), TRUE) . ', FALSE)' : '')
+					. ($snippet ? '; $_control->redrawControl(' . var_export((string) substr($name, 1), TRUE) . ', FALSE)' : '')
 					. "\n?>$code<?php\n}}";
 			}
 			$prolog[] = "//\n// end of blocks\n//";
@@ -475,13 +475,13 @@ if (!empty($_control->snippetMode)) {
 		$payload = $control->getPresenter()->getPayload();
 		if (isset($local->blocks)) {
 			foreach ($local->blocks as $name => $function) {
-				if ($name[0] !== '_' || !$control->isControlInvalid(substr($name, 1))) {
+				if ($name[0] !== '_' || !$control->isControlInvalid((string) substr($name, 1))) {
 					continue;
 				}
 				ob_start();
 				$function = reset($function);
 				$snippets = $function($local, $params + array('_snippetMode' => TRUE));
-				$payload->snippets[$id = $control->getSnippetId(substr($name, 1))] = ob_get_clean();
+				$payload->snippets[$id = $control->getSnippetId((string) substr($name, 1))] = ob_get_clean();
 				if ($snippets !== NULL) { // pass FALSE from snippetArea
 					if ($snippets) {
 						$payload->snippets += $snippets;
