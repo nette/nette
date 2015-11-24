@@ -132,6 +132,9 @@ class Cache extends Nette\Object implements \ArrayAccess
 			$this->storage->lock($key);
 			try {
 				$data = call_user_func_array($data, array(& $dependencies));
+			} catch (\Throwable $e) {
+				$this->storage->remove($key);
+				throw $e;
 			} catch (\Exception $e) {
 				$this->storage->remove($key);
 				throw $e;
