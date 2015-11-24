@@ -114,7 +114,10 @@ class Template extends Nette\Object implements ITemplate
 			$this->render();
 			return ob_get_clean();
 
+		} catch (\Throwable $e) {
 		} catch (\Exception $e) {
+		}
+		if (isset($e)) {
 			ob_end_clean();
 			if (func_num_args()) {
 				throw $e;

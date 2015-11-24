@@ -96,7 +96,10 @@ class Link extends Nette\Object
 		try {
 			return (string) $this->component->link($this->destination, $this->params);
 
+		} catch (\Throwable $e) {
 		} catch (\Exception $e) {
+		}
+		if (isset($e)) {
 			if (func_num_args()) {
 				throw $e;
 			}
