@@ -114,14 +114,14 @@ class Route extends Nette\Object implements Application\IRouter
 	public function __construct($mask, $metadata = array(), $flags = 0)
 	{
 		if (is_string($metadata)) {
-			$a = strrpos($metadata, ':');
+			$a = strrpos($tmp = $metadata, ':');
 			if (!$a) {
 				throw new Nette\InvalidArgumentException("Second argument must be array or string in format Presenter:action, '$metadata' given.");
 			}
-			$metadata = array(
-				self::PRESENTER_KEY => substr($metadata, 0, $a),
-				'action' => $a === strlen($metadata) - 1 ? NULL : substr($metadata, $a + 1),
-			);
+			$metadata = array(self::PRESENTER_KEY => substr($tmp, 0, $a));
+			if ($a < strlen($tmp) - 1) {
+				$metadata['action'] = substr($tmp, $a + 1);
+			}
 		} elseif ($metadata instanceof \Closure || $metadata instanceof Nette\Callback) {
 			$metadata = array(
 				self::PRESENTER_KEY => 'Nette:Micro',
