@@ -206,6 +206,13 @@ $tests[] = array(
 );
 
 $tests[] = array(
+	'title' => 'Intl extension',
+	'required' => FALSE,
+	'passed' => class_exists('Transliterator', FALSE),
+	'description' => 'Class Transliterator is absent, the output of Nette\Utils\Strings::webalize() and Nette\Utils\Strings::toAscii() may not be accurate for non-latin alphabets.',
+);
+
+$tests[] = array(
 	'title' => 'HTTP_HOST or SERVER_NAME',
 	'required' => TRUE,
 	'passed' => isset($_SERVER['HTTP_HOST']) || isset($_SERVER['SERVER_NAME']),
