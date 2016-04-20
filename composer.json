@@ -18,7 +18,7 @@
 	"require": {
 		"nette/application": "^2.4",
 		"nette/bootstrap": "^2.4",
-		"nette/caching": "^2.4",
+		"nette/caching": "^2.5",
 		"nette/component-model": "^2.3",
 		"nette/database": "^2.4",
 		"nette/deprecated": "^2.3",
