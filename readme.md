@@ -12,7 +12,7 @@ performance and is definitely one of the safest PHP frameworks.
 
 Nette Framework speaks your language and helps you to easily build better websites.
 
-It contains these packages:
+This is meta-package. It contains these packages:
 - [Application](https://github.com/nette/application)
 - [Bootstrap](https://github.com/nette/bootstrap)
 - [Caching](https://github.com/nette/caching)
@@ -43,9 +43,8 @@ Installation
 The best way to install Nette Framework is to download the latest package
 from https://nette.org/download or use [Composer](https://doc.nette.org/composer).
 
-All Nette components are 100% compatible with PHP 7. Minimal required version of
+All Nette components are 100% compatible with PHP 7.1. Minimal required version of
 PHP is 5.6.0 for Nette Framework 2.4 and PHP 5.3.1 for Nette Framework 2.3.
-Please run [Requirements Checker](https://doc.nette.org/requirements) to obtain more detailed information.
 
 
 Getting started
