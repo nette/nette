@@ -21,7 +21,6 @@
 		"nette/caching": "^3.0",
 		"nette/component-model": "^3.0",
 		"nette/database": "^3.0",
-		"nette/deprecated": "^3.0",
 		"nette/di": "^3.0",
 		"nette/finder": "^3.0",
 		"nette/forms": "^3.0",
