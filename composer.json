@@ -29,7 +29,6 @@
 		"nette/mail": "^3.0",
 		"nette/neon": "^3.0",
 		"nette/php-generator": "^3.0",
-		"nette/reflection": "^2.4",
 		"nette/robot-loader": "^3.0",
 		"nette/safe-stream": "^2.4",
 		"nette/security": "^3.0",
