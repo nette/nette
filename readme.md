@@ -25,7 +25,6 @@ This is meta-package. It contains these packages:
 - [Mail](https://github.com/nette/mail)
 - [Neon](https://github.com/nette/neon)
 - [Php Generator](https://github.com/nette/php-generator)
-- [Reflection](https://github.com/nette/reflection)
 - [Robot Loader](https://github.com/nette/robot-loader)
 - [Safe Stream](https://github.com/nette/safe-stream)
 - [Security](https://github.com/nette/security)
@@ -33,7 +32,6 @@ This is meta-package. It contains these packages:
 - [Utils](https://github.com/nette/utils)
 - [Latte](https://latte.nette.org)
 - [Tracy](https://tracy.nette.org)
-- [deprecated](https://github.com/nette/deprecated)
 - and [Tester](https://tester.nette.org)
 
 
