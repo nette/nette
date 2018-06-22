@@ -10,6 +10,8 @@ Nette Framework is a popular tool for PHP web development. It is designed to be
 as usable and as friendly as possible. It focuses on security and
 performance and is definitely one of the safest PHP frameworks.
 
+If you like Nette, **[please make a donation now](https://nette.org/donate)**. Thank you!
+
 Nette Framework speaks your language and helps you to easily build better websites.
 
 This is meta-package. It contains these packages:
