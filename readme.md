@@ -43,7 +43,7 @@ Installation
 The best way to install Nette Framework is to download the latest package
 from https://nette.org/download or use [Composer](https://doc.nette.org/composer).
 
-All Nette components are 100% compatible with PHP 7.1. Minimal required version of
+All Nette components are 100% compatible with PHP 7.3. Minimal required version of
 PHP is 5.6.0 for Nette Framework 2.4 and PHP 5.3.1 for Nette Framework 2.3.
 
 
