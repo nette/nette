@@ -4,7 +4,7 @@
 	"description": "👪 Nette Framework - innovative framework for fast and easy development of secured web applications in PHP (metapackage)",
 	"keywords": ["framework", "mvc", "metapackage"],
 	"homepage": "https://nette.org",
-	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
+	"license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
 	"authors": [
 		{
 			"name": "David Grudl",
