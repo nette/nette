@@ -13,6 +13,7 @@ services:
     - memcached
 
 before_script:
+    - if [ $TRAVIS_PHP_VERSION == "5.3.3" ]; then composer --global config disable-tls true; composer --global config secure-http false; fi
     # Install Nette Tester & Code Checker
     - travis_retry composer install --no-interaction --prefer-dist
     - travis_retry composer create-project nette/code-checker code-checker ~2.5 --no-interaction
@@ -26,8 +27,8 @@ before_script:
 git:
     depth: 10
 
-sudo: false
-
 cache:
     directories:
         - $HOME/.composer/cache
+
+dist: precise
