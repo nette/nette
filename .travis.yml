@@ -7,7 +7,7 @@ php:
 
 script:
     - VERBOSE=true ./tests/run-tests.sh -s tests/
-    - php code-checker/src/code-checker.php -i use.latte
+    - php code-checker/src/code-checker.php --ignore use.latte --ignore tests/Nette/Latte/templates
 
 services:
     - memcached
