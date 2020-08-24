@@ -13,6 +13,7 @@ services:
     - memcached
 
 before_script:
+    - if [ $TRAVIS_PHP_VERSION == "5.3.3" ]; then composer --global config disable-tls true; composer --global config secure-http false; fi
     # Install Nette Tester & Code Checker
     - composer install --no-interaction --dev --prefer-source
     - composer create-project nette/code-checker code-checker ~2.2 --no-interaction --prefer-source
@@ -22,3 +23,5 @@ before_script:
 
     # Create Postgre database
     - psql -c 'CREATE DATABASE nette_test' -U postgres
+
+dist: precise
