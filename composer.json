@@ -25,13 +25,13 @@
 		"nette/forms": "^3.0",
 		"nette/http": "^3.1",
 		"nette/mail": "^3.1",
-		"nette/php-generator": "^3.5",
+		"nette/php-generator": "^3.5 || ^4.0",
 		"nette/robot-loader": "^3.3",
 		"nette/safe-stream": "^2.4",
 		"nette/security": "^3.1",
 		"nette/tokenizer": "^3.0",
 		"nette/utils": "^3.2",
-		"latte/latte": "^2.9",
+		"latte/latte": "^2.9 || ^3.0",
 		"tracy/tracy": "^2.8"
 
 	},
