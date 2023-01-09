@@ -29,7 +29,6 @@
 		"nette/robot-loader": "^4.0",
 		"nette/safe-stream": "^3.0",
 		"nette/security": "^3.2",
-		"nette/tokenizer": "^3.1",
 		"nette/utils": "^4.0",
 		"latte/latte": "^3.0",
 		"tracy/tracy": "^2.10"
