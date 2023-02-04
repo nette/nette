@@ -33,26 +33,26 @@ Libraries & Framework
 ---------------------
 
 Nette consists of a number of handy standalone libraries, which can be used in any codebase, for example combined with WordPress or another framework. Careful, some of them are highly addictive! These are the components that Nette Framework is built on:
-- [Application](https://github.com/nette/application)
-- [Bootstrap](https://github.com/nette/bootstrap)
-- [Caching](https://github.com/nette/caching)
-- [Component Model](https://github.com/nette/component-model)
-- [Database](https://github.com/nette/database)
-- [DI](https://github.com/nette/di)
-- [Finder](https://github.com/nette/finder)
-- [Forms](https://github.com/nette/forms)
-- [Http](https://github.com/nette/http)
-- [Mail](https://github.com/nette/mail)
-- [Neon](https://github.com/nette/neon)
-- [Php Generator](https://github.com/nette/php-generator)
-- [Robot Loader](https://github.com/nette/robot-loader)
-- [Safe Stream](https://github.com/nette/safe-stream)
-- [Security](https://github.com/nette/security)
-- [Tokenizer](https://github.com/nette/tokenizer)
-- [Utils](https://github.com/nette/utils)
-- [Latte](https://latte.nette.org)
-- [Tracy](https://tracy.nette.org)
-- and [Tester](https://tester.nette.org)
 
-
-All Nette components are 100% compatible with PHP 7.4.
+- [Application](https://github.com/nette/application) – The kernel of web application
+- [Bootstrap](https://github.com/nette/bootstrap) – Bootstrap of your application
+- [Caching](https://github.com/nette/caching) – Cache layer with set of storages
+- [Component Model](https://github.com/nette/component-model) – Foundation for component systems
+- [DI](https://github.com/nette/di) – Dependency Injection Container
+- [Finder](https://github.com/nette/finder) – Find files and directories with an intuitive API
+- [Database](https://github.com/nette/database) – Database layer
+- [Forms](https://github.com/nette/forms) – Greatly facilitates secure web forms
+- [Http](https://github.com/nette/http) – Layer for the HTTP request & response
+- [Latte](https://github.com/nette/latte) – Amazing template engine
+- [Mail](https://github.com/nette/mail) – Sending E-mails
+- [Neon](https://github.com/nette/neon) – Loads and dumps NEON format
+- [Php Generator](https://github.com/nette/php-generator) – PHP code generator
+- [Robot Loader](https://github.com/nette/robot-loader) – The most comfortable autoloading
+- [Routing](https://github.com/nette/routing) – Routing
+- [Safe Stream](https://github.com/nette/safe-stream) – Safe atomic operations with files
+- [Security](https://github.com/nette/security) – Provides access control system
+- [Schema](https://github.com/nette/schema) – User data validation
+- [Tester](https://github.com/nette/tester) – Enjoyable unit testing in PHP
+- [Tracy](https://github.com/nette/tracy) – Debugging tool you will love ♥
+- [Tokenizer](https://github.com/nette/tokenizer) – Source code tokenizer
+- [Utils](https://github.com/nette/utils) – Utilities and Core Classes
