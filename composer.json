@@ -24,7 +24,7 @@
 		"nette/finder": "^2.6 || ^3.0",
 		"nette/forms": "^3.1",
 		"nette/http": "^3.2",
-		"nette/mail": "^3.1",
+		"nette/mail": "^3.1 || ^4.0",
 		"nette/php-generator": "^3.6 || ^4.0",
 		"nette/robot-loader": "^3.4 || ^4.0",
 		"nette/safe-stream": "^2.5 || ^3.0",
