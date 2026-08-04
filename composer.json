@@ -34,6 +34,9 @@
 		"latte/latte": ">=3.1",
 		"tracy/tracy": ">=2.12"
 	},
+	"require-dev": {
+		"nette/tester": ">=2.6"
+	},
 	"autoload": {
 		"classmap": ["Nette/"]
 	},
